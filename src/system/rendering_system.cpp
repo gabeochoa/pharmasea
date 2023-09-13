@@ -14,9 +14,12 @@ namespace system_manager {
 namespace render_manager {
 
 struct ProgressBarConfig {
+    enum Type { Horizontal, Vertical } type = Horizontal;
     vec3 position = {0, 0, 0};
+    vec3 scale = {1, 1, 1};
     float pct_full = 1.f;
-    float height = -1;
+    float y_offset = -1;
+    float x_offset = -1;
     float pct_warning = -1.f;
     float pct_error = -1.f;
 };
@@ -31,36 +34,72 @@ void DrawProgressBar(const ProgressBarConfig& config) {
     }
     Color background = ui::UI_THEME.from_usage(ui::theme::Usage::Background);
 
-    float y_height = config.height != -1 ? config.height : 1.75f * TILESIZE;
+    float y_offset =
+        config.y_offset != -1 ? config.y_offset : 1.75f * config.scale.x;
+    float x_offset = config.x_offset != -1 ? config.x_offset : 0;
     const vec3 pos = config.position;
+
+    if (config.type == ProgressBarConfig::Horizontal) {
+        raylib::rlPushMatrix();
+        {
+            raylib::rlTranslatef(pos.x, pos.y, pos.z);
+
+            vec3 size = {
+                config.scale.x,
+                config.scale.y / 3.f,
+                config.scale.z / 10.f,
+            };
+            const float x_size =
+                fmax(0.000001f, util::lerp(0, size.x, config.pct_full));
+
+            DrawCubeCustom(
+                {
+                    x_offset + (x_size / 2.f) - (config.scale.x / 4.f),
+                    y_offset,  //
+                    0          //
+                },
+                x_size, size.y, size.z, 0, primary, primary);
+
+            DrawCubeCustom(
+                {
+                    x_offset + (x_size / 2.f) + (config.scale.x / 4.f),
+                    y_offset,  //
+                    0          //
+                },
+                size.x - x_size, size.y, size.z, 0, background, background);
+        }
+        raylib::rlPopMatrix();
+        return;
+    }
 
     raylib::rlPushMatrix();
     {
         raylib::rlTranslatef(pos.x, pos.y, pos.z);
 
         vec3 size = {
-            TILESIZE,
-            TILESIZE / 3.f,
-            TILESIZE / 10.f,
+            config.scale.x / 3.f,
+            config.scale.y,
+            config.scale.z / 10.f,
         };
-        const float x_size =
-            fmax(0.000001f, util::lerp(0, size.x, config.pct_full));
+
+        const float y_size =
+            fmax(0.000001f, util::lerp(0, size.y, config.pct_full));
 
         DrawCubeCustom(
             {
-                (x_size / 2.f) - (TILESIZE / 4.f),
-                y_height,  //
-                0          //
+                x_offset,  //
+                y_offset + (y_size / 2.f) - (config.scale.y / 4.f),
+                0  //
             },
-            x_size, size.y, size.z, 0, primary, primary);
+            size.x, y_size, size.z, 0, primary, primary);
 
         DrawCubeCustom(
             {
-                (x_size / 2.f) + (TILESIZE / 4.f),
-                y_height,  //
-                0          //
+                x_offset,  //
+                y_offset + (y_size / 2.f) + (config.scale.y / 4.f),
+                0  //
             },
-            size.x - x_size, size.y, size.z, 0, background, background);
+            size.x, size.y - y_size, size.z, 0, background, background);
     }
     raylib::rlPopMatrix();
 }
@@ -376,9 +415,12 @@ void render_patience(const Entity& entity, float) {
     const HasPatience& hp = entity.get<HasPatience>();
     if (hp.pct() >= 1.f) return;
 
-    DrawProgressBar(ProgressBarConfig{.position = transform.pos(),
+    DrawProgressBar(ProgressBarConfig{.type = ProgressBarConfig::Vertical,
+                                      .position = transform.pos(),
+                                      .scale = {0.75f, 0.75f, 0.75f},
                                       .pct_full = hp.pct(),
-                                      .height = 3.f,
+                                      .y_offset = 2.f * TILESIZE,
+                                      .x_offset = -0.45f * TILESIZE,
                                       .pct_warning = 0.2f,
                                       .pct_error = 0.05f});
 }
@@ -398,10 +440,10 @@ void render_speech_bubble(const Entity& entity, float) {
     GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
     raylib::Texture texture = TextureLibrary::get().get(cod.icon_name());
     raylib::DrawBillboard(cam.camera, texture,
-                          vec3{position.x,                     //
-                               position.y + (TILESIZE * 2.f),  //
-                               position.z},                    //
-                          TILESIZE,                            //
+                          vec3{position.x + (TILESIZE * 0.05f),  //
+                               position.y + (TILESIZE * 2.f),    //
+                               position.z},                      //
+                          0.75f * TILESIZE,                      //
                           raylib::WHITE);
 }
 
