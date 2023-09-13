@@ -20,6 +20,8 @@ struct StreamerSafeLayer : public Layer {
     virtual void onDraw(float) override {
         // Dont draw on the main menu
         if (MenuState::get().is(menu::State::Root)) return;
+        // TODO we probably also want to hide it when doing key binding
+        // and maybe in network layer too
 
         if (Settings::get().data.show_streamer_safe_box) {
             int x_pos = WIN_W() - streamer_box_size - streamer_box_padd;
