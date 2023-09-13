@@ -131,18 +131,21 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
         using namespace ui;
 
         const auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto content = rect::tpad(window, 20);
-        content = rect::lpad(content, 20);
-        content = rect::rpad(content, 75);
+        auto content = rect::tpad(window, 50);
+        content = rect::lpad(content, 0);
+        content = rect::rpad(content, 30);
 
-        auto [left, right] = rect::vsplit<2>(content, 10);
-        left = rect::lpad(left, 20);
-        left = rect::tpad(left, 20);
-        left = rect::bpad(left, 75);
+        auto left = rect::rpad(content, 30);
+        auto right = rect::lpad(content, 30);
 
-        right = rect::rpad(right, 80);
-        right = rect::tpad(right, 20);
-        right = rect::bpad(right, 75);
+        left = rect::tpad(left, 10);
+        left = rect::lpad(left, 10);
+        left = rect::bpad(left, 90);
+        left = rect::rpad(left, 90);
+
+        right = rect::tpad(right, 10);
+        right = rect::rpad(right, 90);
+        right = rect::bpad(right, 90);
 
         Drink drink = get_drink_for_selected_id();
 
@@ -152,7 +155,9 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
 
         div(Widget{right}, ui::theme::Secondary);
 
-        const auto title = rect::bpad(right, 20);
+        auto title = rect::bpad(right, 20);
+        title = rect::lpad(title, 5);
+
         auto description = rect::tpad(right, 20);
         description = rect::lpad(description, 10);
 
@@ -172,8 +177,9 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
             i++;
         });
 
-        auto index = rect::tpad(content, 90);
-        index = rect::lpad(index, 90);
+        auto index = rect::tpad(content, 80);
+        index = rect::lpad(index, 10);
+        index = rect::rpad(index, 20);
 
         text(Widget{index},
              fmt::format("{:2}/{}", selected_recipe + 1, num_recipes()));

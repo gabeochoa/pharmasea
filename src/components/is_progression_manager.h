@@ -16,6 +16,9 @@ struct IsProgressionManager : public BaseComponent {
     void init() {
         unlock_drink(Drink::coke);
         unlock_ingredient(Ingredient::Soda);
+
+        enabledDrinks.set();
+
         log_trace("create: {} {}", enabledDrinks, enabledIngredients);
     }
 
