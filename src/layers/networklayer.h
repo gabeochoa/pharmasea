@@ -267,9 +267,10 @@ struct NetworkLayer : public Layer {
 
             auto [_a, label, ip_addr, control] = rect::hsplit<4>(your_ip, 30);
 
-            auto ip = should_show_host_ip ? my_ip_address : "***.***.***.***";
             // TODO not translated
             text(Widget{label}, "Your IP is:");
+
+            auto ip = should_show_host_ip ? my_ip_address : "***.***.***.***";
             text(Widget{ip_addr}, ip);
 
             auto [check, copy] = rect::vsplit<2>(control, 5);

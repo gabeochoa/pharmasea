@@ -18,10 +18,17 @@ struct ProgressBarConfig {
     float pct_full = 1.f;
     float height = -1;
     float pct_warning = -1.f;
+    float pct_error = -1.f;
 };
 
 void DrawProgressBar(const ProgressBarConfig& config) {
     Color primary = ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
+    if (config.pct_warning != -1.f && config.pct_full < config.pct_warning) {
+        primary = ui::UI_THEME.from_usage(ui::theme::Usage::Accent);
+    }
+    if (config.pct_error != -1.f && config.pct_full < config.pct_error) {
+        primary = ui::UI_THEME.from_usage(ui::theme::Usage::Error);
+    }
     Color background = ui::UI_THEME.from_usage(ui::theme::Usage::Background);
 
     float y_height = config.height != -1 ? config.height : 1.75f * TILESIZE;
@@ -36,7 +43,8 @@ void DrawProgressBar(const ProgressBarConfig& config) {
             TILESIZE / 3.f,
             TILESIZE / 10.f,
         };
-        const float x_size = fmax(0.1f, util::lerp(0, size.x, config.pct_full));
+        const float x_size =
+            fmax(0.000001f, util::lerp(0, size.x, config.pct_full));
 
         DrawCubeCustom(
             {
@@ -371,7 +379,8 @@ void render_patience(const Entity& entity, float) {
     DrawProgressBar(ProgressBarConfig{.position = transform.pos(),
                                       .pct_full = hp.pct(),
                                       .height = 3.f,
-                                      .pct_warning = 0.2f});
+                                      .pct_warning = 0.2f,
+                                      .pct_error = 0.05f});
 }
 
 void render_speech_bubble(const Entity& entity, float) {
