@@ -481,6 +481,9 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
 }
 
 void process_is_container_and_should_update_item(Entity& entity, float) {
+    if (entity.is_missing<IsItemContainer>()) return;
+     IsItemContainer& iic = entity.get<IsItemContainer>();
+
     if (entity.is_missing<Indexer>()) return;
     Indexer& indexer = entity.get<Indexer>();
     // user didnt change the index so we are good to wait
@@ -496,10 +499,7 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
     }
 
     auto pos = entity.get<Transform>().as2();
-
-    backfill_empty_container(EntityType::Alcohol, entity, pos, indexer.value());
-    backfill_empty_container(EntityType::Fruit, entity, pos,
-                             entity.get<Indexer>().value());
+    backfill_empty_container(iic.type(), entity, pos, indexer.value());
     indexer.mark_change_completed();
 }
 
