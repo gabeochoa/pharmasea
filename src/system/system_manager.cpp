@@ -459,28 +459,25 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
 }
 
 void process_is_container_and_should_backfill_item(Entity& entity, float) {
+    if (entity.is_missing<IsItemContainer>()) return;
+     IsItemContainer& iic = entity.get<IsItemContainer>();
+
     if (entity.is_missing<CanHoldItem>()) return;
     const CanHoldItem& canHold = entity.get<CanHoldItem>();
     if (canHold.is_holding_item()) return;
 
-    // TODO speed have each <> return true/false if it worked
-    //      then can skip the rest, are there any that can hold mixed ?
-    // TODO can we dynamically figure out what to run?
-
     auto pos = entity.get<Transform>().as2();
 
-    backfill_empty_container(EntityType::SodaSpout, entity, pos);
-    backfill_empty_container(EntityType::Drink, entity, pos);
-    backfill_empty_container(EntityType::Mop, entity, pos);
-    backfill_empty_container(EntityType::MopBuddy, entity, pos);
-    backfill_empty_container(EntityType::SimpleSyrup, entity, pos);
+    // TODO today we assume that if you have one then we should it for 
+    // the value but maybe we need a way to mark it 
+    if (entity.has<Indexer>()) {
+        backfill_empty_container(iic.type(), entity, pos,
+                                 entity.get<Indexer>().value());
+        entity.get<Indexer>().mark_change_completed();
+        return;
+    }
 
-    if (entity.is_missing<Indexer>()) return;
-    backfill_empty_container(EntityType::Alcohol, entity, pos,
-                             entity.get<Indexer>().value());
-    backfill_empty_container(EntityType::Fruit, entity, pos,
-                             entity.get<Indexer>().value());
-    entity.get<Indexer>().mark_change_completed();
+    backfill_empty_container(iic.type(), entity, pos);
 }
 
 void process_is_container_and_should_update_item(Entity& entity, float) {
