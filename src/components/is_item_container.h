@@ -7,7 +7,7 @@
 struct IsItemContainer : public BaseComponent {
     IsItemContainer() : item_type(EntityType::Unknown) {}
 
-    IsItemContainer(EntityType type) : item_type(type) {}
+    explicit IsItemContainer(EntityType type) : item_type(type) {}
     virtual ~IsItemContainer() {}
 
     [[nodiscard]] virtual bool is_matching_item(std::shared_ptr<Item> item) {
@@ -15,9 +15,15 @@ struct IsItemContainer : public BaseComponent {
     }
 
     [[nodiscard]] EntityType type() const { return item_type; }
+    [[nodiscard]] bool should_use_indexer() const { return uses_indexer; }
 
     IsItemContainer& set_max_generations(int mx) {
         max_gens = mx;
+        return *this;
+    }
+
+    IsItemContainer& set_uses_indexer(bool v) {
+        uses_indexer = v;
         return *this;
     }
 
@@ -36,6 +42,7 @@ struct IsItemContainer : public BaseComponent {
     int gens = 0;
     int max_gens = -1;
     EntityType item_type;
+    bool uses_indexer;
 
     friend bitsery::Access;
     template<typename S>

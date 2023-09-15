@@ -462,6 +462,8 @@ void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
 void make_medicine_cabinet(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container, {EntityType::MedicineCabinet}, pos,
                                   EntityType::Alcohol);
+    container.get<IsItemContainer>().set_uses_indexer(true);
+
     container.addComponent<Indexer>((int) ingredient::Alcohols.size());
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
@@ -507,6 +509,7 @@ void make_fruit_basket(Entity& container, vec2 pos) {
     // TODO right now lets just worry about lemon first we can come back and
     // handle other fruits later
     container.addComponent<Indexer>((int) ingredient::Fruits.size());
+    container.get<IsItemContainer>().set_uses_indexer(true);
     //
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {

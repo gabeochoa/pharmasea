@@ -468,9 +468,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
 
     auto pos = entity.get<Transform>().as2();
 
-    // TODO today we assume that if you have one then we should it for 
-    // the value but maybe we need a way to mark it 
-    if (entity.has<Indexer>()) {
+    if (iic.should_use_indexer() && entity.has<Indexer>()) {
         backfill_empty_container(iic.type(), entity, pos,
                                  entity.get<Indexer>().value());
         entity.get<Indexer>().mark_change_completed();
@@ -484,6 +482,7 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
     if (entity.is_missing<IsItemContainer>()) return;
      IsItemContainer& iic = entity.get<IsItemContainer>();
 
+    if (!iic.should_use_indexer()) return;
     if (entity.is_missing<Indexer>()) return;
     Indexer& indexer = entity.get<Indexer>();
     // user didnt change the index so we are good to wait
