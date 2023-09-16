@@ -2,6 +2,8 @@
 #pragma once
 
 #include "../components/has_timer.h"
+#include "../entity.h"
+#include "../entity_helper.h"
 #include "base_game_renderer.h"
 
 struct RoundTimerLayer : public BaseGameRendererLayer {
@@ -13,7 +15,8 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
     virtual ~RoundTimerLayer() {}
 
     virtual bool shouldSkipRender() override {
-        return !GameState::get().should_render_timer();
+        if (!GameState::get().should_render_timer()) return true;
+        return false;
     }
 
     /*
@@ -45,8 +48,8 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
 
     virtual void onDrawUI(float) override {
         using namespace ui;
-
-        // TODO move to shouldSkip?
+        // not putting these in shouldSkip since we expect this to exist like
+        // 99% of the time
         auto entity = get_timer_entity();
         if (!entity) return;
         const HasTimer& ht = entity->get<HasTimer>();

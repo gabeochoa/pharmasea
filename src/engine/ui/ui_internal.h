@@ -3,6 +3,8 @@
 
 #include "../globals_register.h"
 
+// TODO again this is not a real .h file, this file just gets pasted in ui.h
+
 namespace ui {
 
 namespace internal {
@@ -75,7 +77,7 @@ inline void draw_text(const std::string& content, Rectangle parent, int z_index,
 
 inline void draw_rect_color(Rectangle rect, int z_index, Color c) {
     callback_registry.register_call(
-        context, [=]() { DrawRectangleRounded(rect, 0.15f, 4, c); }, z_index);
+        context, [=]() { DrawRectangleRounded(rect, 0.25f, 4, c); }, z_index);
 }
 
 inline void draw_rect(

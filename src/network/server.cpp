@@ -236,6 +236,7 @@ void Server::process_player_control_packet(
 
     if (!player) return;
 
+    // vvv i think we already did this but not 100% sure
     // TODO interpolate our old position and new position so its smoother
     SystemManager::get().process_inputs(Entities{player}, info.inputs);
     auto updated_position = player->get<Transform>().pos();

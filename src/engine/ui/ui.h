@@ -150,10 +150,9 @@ inline ElementResult button(const Widget& widget,
     focus::handle_tabbing(widget);
 
     if (background) {
-        // TODO Add way to control color
+        // We dont allow customization because
+        // you should be using the themed colors
         auto color_usage = ui::theme::Usage::Primary;
-
-        // TODO add style for 'hover' state
         if (focus::is_hot(widget.id)) {
             color_usage = ui::theme::Usage::Accent;
         }
@@ -514,8 +513,6 @@ inline ElementResult textfield(const Widget& widget,
 
     // render
     {
-        // TODO support the css color?
-        //    widget.get_usage_color("background-color")
         internal::draw_rect(widget.get_rect(), widget.z_index,
                             focus::is_active_and_hot(widget.id)
                                 ? ui::theme::Usage::Secondary
