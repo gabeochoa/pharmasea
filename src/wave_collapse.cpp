@@ -1,5 +1,4 @@
-
-#include "map_generation.h"
+#include "wave_collapse.h"
 
 #include "engine/bitset_utils.h"
 
