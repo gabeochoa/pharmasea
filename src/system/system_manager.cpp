@@ -460,7 +460,7 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
 
 void process_is_container_and_should_backfill_item(Entity& entity, float) {
     if (entity.is_missing<IsItemContainer>()) return;
-     IsItemContainer& iic = entity.get<IsItemContainer>();
+    IsItemContainer& iic = entity.get<IsItemContainer>();
 
     if (entity.is_missing<CanHoldItem>()) return;
     const CanHoldItem& canHold = entity.get<CanHoldItem>();
@@ -480,7 +480,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
 
 void process_is_container_and_should_update_item(Entity& entity, float) {
     if (entity.is_missing<IsItemContainer>()) return;
-     IsItemContainer& iic = entity.get<IsItemContainer>();
+    IsItemContainer& iic = entity.get<IsItemContainer>();
 
     if (!iic.should_use_indexer()) return;
     if (entity.is_missing<Indexer>()) return;
@@ -981,6 +981,7 @@ void run_timer(Entity& entity, float dt) {
     ht.reset_round_switch_timer().reset_timer();
 }
 
+// TODO this function is 75% of our game update time spent
 void update_sophie(Entity& entity, float) {
     if (entity.is_missing<HasTimer>()) return;
 
@@ -994,7 +995,7 @@ void update_sophie(Entity& entity, float) {
         return;
 
     // Handle customers finally leaving the store
-    auto _customers_in_store = [&entity]() {
+    const auto _customers_in_store = [&entity]() {
         // TODO with the others siwtch to something else... customer
         // spawner?
         const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
@@ -1014,7 +1015,7 @@ void update_sophie(Entity& entity, float) {
     };
 
     // Handle some player is holding furniture
-    auto _player_holding_furniture = [&entity]() {
+    const auto _player_holding_furniture = [&entity]() {
         bool all_empty = true;
         // TODO i want to to do it this way: but players are not in
         // entities, so its not possible
@@ -1035,7 +1036,7 @@ void update_sophie(Entity& entity, float) {
         return;
     };
 
-    auto _bar_not_clean = [&entity]() {
+    const auto _bar_not_clean = [&entity]() {
         bool has_vomit =
             !(EntityHelper::getAllWithType(EntityType::Vomit)).empty();
 
@@ -1044,7 +1045,7 @@ void update_sophie(Entity& entity, float) {
         return;
     };
 
-    auto _overlapping_furniture = [&]() {
+    const auto _overlapping_furniture = [&]() {
         // We dont have a way to say "in map" ie user-controllable
         // vs outside map so we just have to check everything
 
@@ -1084,7 +1085,7 @@ void update_sophie(Entity& entity, float) {
 
     // TODO merge with map generation validation?
     // Run lightweight map validation
-    auto _lightweight_map_validation = [&entity]() {
+    const auto _lightweight_map_validation = [&entity]() {
         // find customer
         auto customer_opt =
             EntityHelper::getFirstMatching([](const Entity& e) -> bool {
@@ -1557,8 +1558,8 @@ void SystemManager::always_update(const Entities& entities, float dt) {
     });
 }
 
-void SystemManager::game_like_update(const Entities& entities, float dt) {
-    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
+void SystemManager::game_like_update(const Entities& entity_list, float dt) {
+    for_each(entity_list, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
         Entity& entity = *e_ptr;
 
         system_manager::run_timer(entity, dt);
@@ -1577,8 +1578,8 @@ void SystemManager::game_like_update(const Entities& entities, float dt) {
 }
 
 void SystemManager::in_round_update(
-    const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
-    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
+    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
+    for_each(entity_list, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
         Entity& entity = *e_ptr;
         //
         system_manager::reset_customers_that_need_resetting(entity);
@@ -1605,15 +1606,15 @@ void SystemManager::in_round_update(
 }
 
 void SystemManager::planning_update(
-    const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
-    for_each(entities, dt, [](std::shared_ptr<Entity> entity_ptr, float dt) {
+    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
+    for_each(entity_list, dt, [](std::shared_ptr<Entity> entity_ptr, float dt) {
         Entity& entity = *entity_ptr;
         system_manager::update_held_furniture_position(entity, dt);
     });
 }
 
-void SystemManager::progression_update(const Entities& entities, float dt) {
-    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
+void SystemManager::progression_update(const Entities& entity_list, float dt) {
+    for_each(entity_list, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
         Entity& entity = *e_ptr;
         system_manager::progression::collect_upgrade_options(entity, dt);
     });
