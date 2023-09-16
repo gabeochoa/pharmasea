@@ -19,10 +19,10 @@
 struct SeedManagerLayer : public Layer {
     std::shared_ptr<GameCam> cam;
     std::shared_ptr<ui::UIContext> ui_context;
-    Map* map_ptr;
+    Map* map_ptr = nullptr;
     // We use a temp string because we dont want to touch the real one until the
     // user says Okay
-    std::string tempSeed = "";
+    std::string tempSeed;
 
     SeedManagerLayer()
         : Layer(strings::menu::GAME),

@@ -5,9 +5,10 @@
 #include "base_component.h"
 
 struct IsItemContainer : public BaseComponent {
-    IsItemContainer() : item_type(EntityType::Unknown) {}
+    IsItemContainer() : item_type(EntityType::Unknown), uses_indexer(false) {}
 
-    explicit IsItemContainer(EntityType type) : item_type(type) {}
+    explicit IsItemContainer(EntityType type)
+        : item_type(type), uses_indexer(false) {}
     virtual ~IsItemContainer() {}
 
     [[nodiscard]] virtual bool is_matching_item(std::shared_ptr<Item> item) {

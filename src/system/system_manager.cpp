@@ -460,7 +460,7 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
 
 void process_is_container_and_should_backfill_item(Entity& entity, float) {
     if (entity.is_missing<IsItemContainer>()) return;
-    IsItemContainer& iic = entity.get<IsItemContainer>();
+    const IsItemContainer& iic = entity.get<IsItemContainer>();
 
     if (entity.is_missing<CanHoldItem>()) return;
     const CanHoldItem& canHold = entity.get<CanHoldItem>();
@@ -480,7 +480,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
 
 void process_is_container_and_should_update_item(Entity& entity, float) {
     if (entity.is_missing<IsItemContainer>()) return;
-    IsItemContainer& iic = entity.get<IsItemContainer>();
+    const IsItemContainer& iic = entity.get<IsItemContainer>();
 
     if (!iic.should_use_indexer()) return;
     if (entity.is_missing<Indexer>()) return;
@@ -734,7 +734,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
 
 void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
-    IsTriggerArea& ita = entity.get<IsTriggerArea>();
+    const IsTriggerArea& ita = entity.get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
 
     const auto _choose_option = [](int option_chosen) {

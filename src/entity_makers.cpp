@@ -468,7 +468,7 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
     container.addComponent<HasWork>().init(
         [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
             if (GameState::get().is_not(game::State::InRound)) return;
-            Indexer& indexer = owner.get<Indexer>();
+            const Indexer& indexer = owner.get<Indexer>();
             if (indexer.max() < 2) return;
 
             const float amt = 2.f;
@@ -843,7 +843,7 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
                                           Entity& /* person */, float dt) {
         if (GameState::get().is_not(game::State::InRound)) return;
         const IsItem& ii = owner.get<IsItem>();
-        HasSubtype& hasSubtype = owner.get<HasSubtype>();
+        const HasSubtype& hasSubtype = owner.get<HasSubtype>();
         Ingredient fruit_type = ingredient::Fruits[hasSubtype.get_type_index()];
 
         // Can only handle blendables right now

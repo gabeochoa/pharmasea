@@ -7,7 +7,6 @@
 #include "base_game_renderer.h"
 
 struct RoundTimerLayer : public BaseGameRendererLayer {
-    std::shared_ptr<ui::UIContext> ui_context;
     float _pct = 0.f;
 
     RoundTimerLayer() : BaseGameRendererLayer("RoundTimer") {}

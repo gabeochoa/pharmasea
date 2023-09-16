@@ -47,25 +47,6 @@ struct NetworkLayer : public Layer {
         }
     }
 
-    void setup_mp_test() {
-        if (network::mp_test::run_init++ < (120 * 3)) return;
-
-        if (network::mp_test::is_host) {
-            MenuState::get().set(menu::State::Network);
-            network_info->set_role(network::Info::Role::s_Host);
-
-            MenuState::get().set(menu::State::Game);
-            GameState::get().set(game::State::Lobby);
-        } else {
-            MenuState::get().set(menu::State::Network);
-            network_info->set_role(network::Info::Role::s_Client);
-        }
-
-        network_info->lock_in_username();
-        network_info->host_ip_address() = Settings::get().last_used_ip();
-        network_info->lock_in_ip();
-    }
-
     virtual ~NetworkLayer() { network::Info::shutdown_connections(); }
 
     bool onCharPressedEvent(CharPressedEvent& event) override {
@@ -96,9 +77,6 @@ struct NetworkLayer : public Layer {
     }
 
     virtual void onUpdate(float dt) override {
-        if (network::mp_test::enabled) {
-            setup_mp_test();
-        }
         // NOTE: this has to go above the checks since it always has to run
         network_info->tick(dt);
 

@@ -23,8 +23,8 @@
 #include "job.h"
 #include "strings.h"
 
-typedef std::vector<std::shared_ptr<Entity>> Entities;
-typedef std::vector<RefEntity> RefEntities;
+using Entities = std::vector<std::shared_ptr<Entity>>;
+using RefEntities = std::vector<RefEntity>;
 extern Entities client_entities_DO_NOT_USE;
 extern Entities server_entities_DO_NOT_USE;
 
@@ -129,7 +129,7 @@ struct EntityHelper {
     template<typename T>
     static std::vector<RefEntity> getAllWithComponent() {
         std::vector<RefEntity> matching;
-        for (auto& e : get_entities()) {
+        for (const auto& e : get_entities()) {
             if (!e) continue;
             if (e->has<T>()) matching.push_back(*e);
         }

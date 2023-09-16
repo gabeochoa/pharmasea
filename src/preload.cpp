@@ -221,10 +221,10 @@ void Preload::load_config() {
         std::cout << "DEFAULT_MAP read from file: " << EXAMPLE_MAP.size()
                   << std::endl;
 
-        const auto theme_name = contents["theme"];
-        const auto j_themes = contents["themes"];
+        const auto& theme_name = contents["theme"];
+        const auto& j_themes = contents["themes"];
 
-        for (auto& theme_obj : j_themes.get<nlohmann::json::object_t>()) {
+        for (const auto& theme_obj : j_themes.get<nlohmann::json::object_t>()) {
             std::string key = theme_obj.first;
             auto theme_data = theme_obj.second;
             ui::themes[key] = ui::UITheme(_to_color(theme_data["font"]),  //

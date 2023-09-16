@@ -257,7 +257,8 @@ inline void WIQ_wait_and_return(Entity& entity) {
     return;
 }
 
-inline vec2 WIQ_add_to_queue_and_get_position(Entity& reg, Entity& customer) {
+inline vec2 WIQ_add_to_queue_and_get_position(Entity& reg,
+                                              const Entity& customer) {
     VALIDATE(reg.has<HasWaitingQueue>(),
              "Trying to get-next-queue-pos for entity which doesnt have a "
              "waiting queue ");
@@ -271,7 +272,7 @@ inline vec2 WIQ_add_to_queue_and_get_position(Entity& reg, Entity& customer) {
     return reg.get<Transform>().tile_infront((next_position + 1));
 }
 
-inline int WIQ_position_in_line(Entity& reg, Entity& customer) {
+inline int WIQ_position_in_line(const Entity& reg, const Entity& customer) {
     // VALIDATE(customer, "entity passed to position-in-line should not be
     // null"); VALIDATE(reg, "entity passed to position-in-line should not be
     // null");
@@ -322,7 +323,7 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
     OptEntity best_target = {};
     int best_pos = -1;
     for (Entity& r : all_registers) {
-        HasWaitingQueue& hwq = r.get<HasWaitingQueue>();
+        const HasWaitingQueue& hwq = r.get<HasWaitingQueue>();
         if (hwq.is_full()) continue;
         int rpos = hwq.get_next_pos();
 
