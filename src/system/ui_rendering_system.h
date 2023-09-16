@@ -1,6 +1,7 @@
 
 
 #include "../components/can_order_drink.h"
+#include "../components/has_patience.h"
 #include "../components/has_speech_bubble.h"
 #include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
@@ -13,7 +14,7 @@ namespace ui {
 
 struct OrderCard {
     raylib::Texture icon;
-    float time_left;
+    float pct_time_left;
     int z_index;
 };
 static std::vector<OrderCard> orders_to_render;
@@ -50,14 +51,14 @@ inline void render_current_register_queue(float dt) {
 
                 // Hide any that arent "visible"
                 if (entity.get<HasSpeechBubble>().disabled()) continue;
+                // if (!entity.get<HasPatience>().should_pass_time()) continue;
 
                 raylib::Texture texture =  //
                     TextureLibrary::get().get(
                         entity.get<CanOrderDrink>().icon_name());
 
-                orders_to_render.emplace_back(OrderCard{texture,
-                                                        // TODO add patience
-                                                        10.f, (int) index});
+                orders_to_render.emplace_back(OrderCard{
+                    texture, entity.get<HasPatience>().pct(), (int) index});
             }
         }
     }
@@ -91,6 +92,16 @@ inline void render_current_register_queue(float dt) {
     // ::ui::UI_THEME.from_usage(::ui::theme::Background));
     // }
 
+    // TODO :WARNING_COLORS: Eventually merge this with the one in
+    // rendering_system
+    const auto _pct_to_color = [](float pct) {
+        if (pct < 0.05f)
+            return ::ui::UI_THEME.from_usage(::ui::theme::Usage::Error);
+        if (pct < 0.2f)
+            return ::ui::UI_THEME.from_usage(::ui::theme::Usage::Accent);
+        return ::ui::UI_THEME.from_usage(::ui::theme::Usage::Primary);
+    };
+
     for (int i = 0; i < fmin(num_queue, max_num_cards); i++) {
         if (show_see_more && i == (max_num_cards - 1)) {
             // TODO render see more
@@ -98,14 +109,13 @@ inline void render_current_register_queue(float dt) {
             continue;
         }
 
+        auto card = orders_to_render[i];
+
         auto card_index_rect =
             Rectangle{queue_window.x + (card_rect.width * i), queue_window.y,
                       card_rect.width, card_rect.height};
-        raylib::DrawRectangleRounded(
-            card_index_rect, 0.5f, 8,
-            ::ui::UI_THEME.from_usage(::ui::theme::Primary));
-
-        auto card = orders_to_render[i];
+        raylib::DrawRectangleRounded(card_index_rect, 0.5f, 8,
+                                     _pct_to_color(card.pct_time_left));
 
         float scale = 2.f;
         raylib::DrawTextureEx(card.icon, {card_index_rect.x, card_index_rect.y},

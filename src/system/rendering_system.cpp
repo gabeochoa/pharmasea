@@ -25,6 +25,8 @@ struct ProgressBarConfig {
 };
 
 void DrawProgressBar(const ProgressBarConfig& config) {
+    // TODO :WARNING_COLORS: Eventually merge this with the one in
+    // ui_rendering_system
     Color primary = ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
     if (config.pct_warning != -1.f && config.pct_full < config.pct_warning) {
         primary = ui::UI_THEME.from_usage(ui::theme::Usage::Accent);
@@ -415,14 +417,17 @@ void render_patience(const Entity& entity, float) {
     const HasPatience& hp = entity.get<HasPatience>();
     if (hp.pct() >= 1.f) return;
 
-    DrawProgressBar(ProgressBarConfig{.type = ProgressBarConfig::Vertical,
-                                      .position = transform.pos(),
-                                      .scale = {0.75f, 0.75f, 0.75f},
-                                      .pct_full = hp.pct(),
-                                      .y_offset = 2.f * TILESIZE,
-                                      .x_offset = -0.45f * TILESIZE,
-                                      .pct_warning = 0.2f,
-                                      .pct_error = 0.05f});
+    DrawProgressBar(
+        ProgressBarConfig{.type = ProgressBarConfig::Vertical,
+                          .position = transform.pos(),
+                          .scale = {0.75f, 0.75f, 0.75f},
+                          .pct_full = hp.pct(),
+                          .y_offset = 2.f * TILESIZE,
+                          .x_offset = -0.45f * TILESIZE,
+                          // dont change this numbers without updating
+                          // the ones in ui_rendering_system
+                          .pct_warning = 0.2f,
+                          .pct_error = 0.05f});
 }
 
 void render_speech_bubble(const Entity& entity, float) {
