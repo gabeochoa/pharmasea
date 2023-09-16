@@ -6,7 +6,6 @@ kanban-plugin: basic
 
 ## backlog
 
-- [ ] button hover state color change
 - [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
 - [ ] Add "powered by raylib" intro card (and other intro cards) like cat v roomba: https://github.com/raysan5/raylib-games/tree/master/cat_vs_roomba/src
 - [ ] Create Doors
@@ -17,20 +16,14 @@ kanban-plugin: basic
 - [ ] Fix corner walls
 - [ ] Upgrade Astar to ThetaStar (worth doing?)
 - [ ] support for tile sheets
-- [ ] Ailments have OTC solution
-- [ ] Ailments have Rx solution
-- [ ] Customers who took OTC come back again
-- [ ] Different sizes of pill bottle? (S/M/L)
 - [ ] Consider using https://github.com/raysan5/rres for resources
 - [ ] Particle system?
 - [ ] Spritesheet animator
-- [ ] unrelated: proggy clean font: https://www.dafont.com/proggy-clean.font
 - [ ] consider switching to https://github.com/graphitemaster/0xABAD1DEA for all of our static globals
 - [ ] Look into if its worth using fmod for sound: https://www.fmod.com/
 - [ ] Investigate Fiber jobs: http://gdcvault.com/play/1022186/Parallelizing-the-Naughty-Dog-Engine
 - [ ] Create / Use a flatmap/flatset for better cache locality on smaller data sets
 - [ ] Should we be using arena allocators?
-- [ ] Ability to poll a specific folder for new / changed files
 
 
 ## infra changes
@@ -45,8 +38,6 @@ kanban-plugin: basic
 - [ ] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
 - [ ] Simple Syrup doesnt dissapear after one use and its kinda the only one that does that…
 - [ ] During planning its hard to know what each machine it, not obvious
-- [ ] Need a recipe book
-- [ ] revamp the names
 - [ ] penalty if you make too much extra? waste too much ingredients
 - [ ] highlight spots on the map where this thing can go
 - [ ] Text doesnt rotate based on the camera
@@ -61,19 +52,12 @@ kanban-plugin: basic
 - [ ] - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
 - [ ] at round 3 the people got stuck in line as if there was an invis person at the front
 - [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
-- [ ] BUG: When host opens settings, probably dont bring everyone else too
+- [ ] mojito model is big square  
 
 
 ## no repro
 
 - [ ] cosmopolitan model is invisible
-
-
-## done
-
-- [x] fix trash model location
-
-
 
 
 %% kanban:settings
