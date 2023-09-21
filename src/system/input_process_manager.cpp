@@ -238,15 +238,14 @@ void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
     cui.publish(dt, camAngle);
 }
 
-void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
+void process_player_movement_input(Entity& entity, float dt,
                                    float cam_angle_deg, InputName input_name,
                                    float input_amount) {
-    if (entity->is_missing<Transform>()) return;
-    Transform& transform = entity->get<Transform>();
-    std::shared_ptr<Entity> player = dynamic_pointer_cast<Entity>(entity);
+    if (entity.is_missing<Transform>()) return;
+    Transform& transform = entity.get<Transform>();
 
-    if (entity->is_missing<HasBaseSpeed>()) return;
-    const HasBaseSpeed& hasBaseSpeed = entity->get<HasBaseSpeed>();
+    if (entity.is_missing<HasBaseSpeed>()) return;
+    const HasBaseSpeed& hasBaseSpeed = entity.get<HasBaseSpeed>();
 
     // Convert camera angle from degrees to radians
     float cam_angle_rad = util::deg2rad(cam_angle_deg + 90.f);
@@ -285,7 +284,7 @@ void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
             break;
     }
 
-    person_update_given_new_pos(entity->id, transform, *player, dt,
+    person_update_given_new_pos(entity.id, transform, entity, dt,
                                 new_position_x, new_position_z);
 };
 
@@ -716,7 +715,7 @@ void process_input(const std::shared_ptr<Entity> entity,
                 case InputName::PlayerForward:
                 case InputName::PlayerBack:
                     return process_player_movement_input(
-                        entity, frame_dt, cam_angle, input_name, 1.f);
+                        *entity, frame_dt, cam_angle, input_name, 1.f);
                 default:
                     break;
             }
