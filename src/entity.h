@@ -212,6 +212,7 @@ struct OptEntity {
     const Entity* operator->() const { return value(); }
 
     Entity& asE() { return data.value(); }
+    const Entity& asE() const { return data.value(); }
 
     operator RefEntity() { return data.value(); }
     operator RefEntity() const { return data.value(); }
