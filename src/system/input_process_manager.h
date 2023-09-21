@@ -6,9 +6,8 @@
 
 namespace system_manager {
 
-void person_update_given_new_pos(int id, Transform& transform,
-                                 std::shared_ptr<Entity> person, float,
-                                 vec3 new_pos_x, vec3 new_pos_z);
+void person_update_given_new_pos(int id, Transform& transform, Entity& person,
+                                 float, vec3 new_pos_x, vec3 new_pos_z);
 namespace input_process_manager {
 
 [[nodiscard]] bool is_collidable(Entity& entity, OptEntity other = {});

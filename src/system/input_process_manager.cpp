@@ -24,9 +24,8 @@
 
 namespace system_manager {
 
-void person_update_given_new_pos(int id, Transform& transform,
-                                 std::shared_ptr<Entity> person, float,
-                                 vec3 new_pos_x, vec3 new_pos_z) {
+void person_update_given_new_pos(int id, Transform& transform, Entity& person,
+                                 float, vec3 new_pos_x, vec3 new_pos_z) {
     // TODO if anything spawns in anything else then it cant move,
     // we need some way to handle popping people back to spawn or something if
     // they get stuck
@@ -44,12 +43,11 @@ void person_update_given_new_pos(int id, Transform& transform,
             if (id == entity.id) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (!system_manager::input_process_manager::is_collidable(
-                    entity, *person)) {
+            if (!system_manager::input_process_manager::is_collidable(entity,
+                                                                      person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
-            if (!system_manager::input_process_manager::is_collidable(
-                    *person)) {
+            if (!system_manager::input_process_manager::is_collidable(person)) {
                 return EntityHelper::ForEachFlow::Continue;
             }
             if (CheckCollisionBoxes(
@@ -287,7 +285,7 @@ void process_player_movement_input(std::shared_ptr<Entity> entity, float dt,
             break;
     }
 
-    person_update_given_new_pos(entity->id, transform, player, dt,
+    person_update_given_new_pos(entity->id, transform, *player, dt,
                                 new_position_x, new_position_z);
 };
 
