@@ -143,7 +143,7 @@ void person_update_given_new_pos(int id, Transform& transform, Entity& person,
 namespace input_process_manager {
 
 // return true if the item has collision and is currently collidable
-bool is_collidable(Entity& entity, OptEntity other) {
+bool is_collidable(const Entity& entity, OptEntity other) {
     // by default we disable collisions when you are holding something
     // since its generally inside your bounding box
     if (entity.has<CanBeHeld>() && entity.get<CanBeHeld>().is_held()) {

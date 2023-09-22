@@ -10,7 +10,7 @@ void person_update_given_new_pos(int id, Transform& transform, Entity& person,
                                  float, vec3 new_pos_x, vec3 new_pos_z);
 namespace input_process_manager {
 
-[[nodiscard]] bool is_collidable(Entity& entity, OptEntity other = {});
+[[nodiscard]] bool is_collidable(const Entity& entity, OptEntity other = {});
 
 void collect_user_input(std::shared_ptr<Entity> entity, float dt);
 void process_player_movement_input(Entity& entity, float dt,
