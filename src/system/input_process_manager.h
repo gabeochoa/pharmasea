@@ -18,7 +18,7 @@ void process_player_movement_input(Entity& entity, float dt,
 
 namespace planning {
 
-void rotate_furniture(const std::shared_ptr<Entity> player);
+void rotate_furniture(const Entity& player);
 
 void drop_held_furniture(Entity& player);
 
@@ -26,18 +26,16 @@ void drop_held_furniture(Entity& player);
 // spots around you and just prioritize the one you are facing
 //
 
-void handle_grab_or_drop(const std::shared_ptr<Entity>& player);
+void handle_grab_or_drop(Entity& player);
 
 }  // namespace planning
 
 namespace inround {
 
-void work_furniture(const std::shared_ptr<Entity> player, float frame_dt);
-
-void handle_drop(const std::shared_ptr<Entity>& player);
-
-void handle_grab(const std::shared_ptr<Entity>& player);
-void handle_grab_or_drop(const std::shared_ptr<Entity>& player);
+void work_furniture(Entity& player, float frame_dt);
+void handle_drop(Entity& player);
+void handle_grab(Entity& player);
+void handle_grab_or_drop(Entity& player);
 
 }  // namespace inround
 
