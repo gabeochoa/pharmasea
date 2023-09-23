@@ -390,18 +390,18 @@ void process_grabber_items(Entity& entity, float) {
     auto behind =
         transform.offsetFaceDirection(transform.face_direction(), 180);
     auto match = EntityHelper::getMatchingEntityInFront(
-        transform.as2(), 1.f, behind, [&entity](Entity& furn) {
+        transform.as2(), 1.f, behind, [&entity](const Entity& furn) {
             // cant be us
             if (entity.id == furn.id) return false;
             // needs to be able to hold something
             if (furn.is_missing<CanHoldItem>()) return false;
-            CanHoldItem& furnCHI = furn.get<CanHoldItem>();
+            const CanHoldItem& furnCHI = furn.get<CanHoldItem>();
             // doesnt have anything
             if (furnCHI.empty()) return false;
 
             // Can we hold the item it has?
             bool can_hold = entity.get<CanHoldItem>().can_hold(
-                *(furnCHI.item()), RespectFilter::All);
+                *(furnCHI.const_item()), RespectFilter::All);
 
             // we cant
             if (!can_hold) return false;
