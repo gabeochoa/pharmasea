@@ -232,7 +232,7 @@ void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
 
     // run the input on the local client
     system_manager::input_process_manager::process_input(
-        entity, {cui.read(), dt, camAngle});
+        *entity, {cui.read(), dt, camAngle});
 
     // Actually save the inputs if there were any
     cui.publish(dt, camAngle);
@@ -704,45 +704,44 @@ void handle_grab_or_drop(Entity& player) {
 
 }  // namespace inround
 
-void process_input(const std::shared_ptr<Entity> entity,
-                   const UserInput& input) {
-    const auto _proc_single_input_name =
-        [](const std::shared_ptr<Entity> entity, const InputName& input_name,
-           float frame_dt, float cam_angle) {
-            switch (input_name) {
-                case InputName::PlayerLeft:
-                case InputName::PlayerRight:
-                case InputName::PlayerForward:
-                case InputName::PlayerBack:
-                    return process_player_movement_input(
-                        *entity, frame_dt, cam_angle, input_name, 1.f);
-                default:
-                    break;
-            }
+void process_input(Entity& entity, const UserInput& input) {
+    const auto _proc_single_input_name = [](Entity& entity,
+                                            const InputName& input_name,
+                                            float frame_dt, float cam_angle) {
+        switch (input_name) {
+            case InputName::PlayerLeft:
+            case InputName::PlayerRight:
+            case InputName::PlayerForward:
+            case InputName::PlayerBack:
+                return process_player_movement_input(
+                    entity, frame_dt, cam_angle, input_name, 1.f);
+            default:
+                break;
+        }
 
-            switch (input_name) {
-                case InputName::PlayerRotateFurniture:
-                    planning::rotate_furniture(*entity);
-                    break;
-                case InputName::PlayerPickup:
-                    // grab_or_drop(entity);
-                    {
-                        if (GameState::get().in_round()) {
-                            inround::handle_grab_or_drop(*entity);
-                        } else if (GameState::get().is(game::State::Planning)) {
-                            planning::handle_grab_or_drop(*entity);
-                        } else {
-                            // TODO we probably want to handle messing
-                            // around in the lobby
-                        }
+        switch (input_name) {
+            case InputName::PlayerRotateFurniture:
+                planning::rotate_furniture(entity);
+                break;
+            case InputName::PlayerPickup:
+                // grab_or_drop(entity);
+                {
+                    if (GameState::get().in_round()) {
+                        inround::handle_grab_or_drop(entity);
+                    } else if (GameState::get().is(game::State::Planning)) {
+                        planning::handle_grab_or_drop(entity);
+                    } else {
+                        // TODO we probably want to handle messing
+                        // around in the lobby
                     }
-                    break;
-                case InputName::PlayerDoWork:
-                    work_furniture(*entity, frame_dt);
-                default:
-                    break;
-            }
-        };
+                }
+                break;
+            case InputName::PlayerDoWork:
+                work_furniture(entity, frame_dt);
+            default:
+                break;
+        }
+    };
 
     const InputSet input_set = std::get<0>(input);
     const float frame_dt = std::get<1>(input);

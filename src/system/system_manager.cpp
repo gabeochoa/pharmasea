@@ -1491,7 +1491,8 @@ void SystemManager::process_inputs(const Entities& entities,
     for (const auto& entity : entities) {
         if (entity->is_missing<RespondsToUserInput>()) continue;
         for (auto input : inputs) {
-            system_manager::input_process_manager::process_input(entity, input);
+            system_manager::input_process_manager::process_input(*entity,
+                                                                 input);
         }
     }
 }

@@ -39,8 +39,7 @@ void handle_grab_or_drop(Entity& player);
 
 }  // namespace inround
 
-void process_input(const std::shared_ptr<Entity> entity,
-                   const UserInput& input);
+void process_input(Entity& entity, const UserInput& input);
 
 }  // namespace input_process_manager
 }  // namespace system_manager
