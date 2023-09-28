@@ -286,6 +286,35 @@ OptEntity EntityHelper::getClosestMatchingEntity(
     return best_so_far;
 }
 
+bool EntityHelper::hasOverlappingSolidEntitiesInRange(vec2 range_min,
+                                                      vec2 range_max) {
+    bool has_overlapping = false;
+    for (const std::shared_ptr<Entity>& e : get_entities()) {
+        if (!e->has<IsSolid>()) continue;
+        const auto pos = e->get<Transform>().as2();
+        if (pos.x > range_max.x || pos.x < range_min.x) continue;
+        if (pos.y > range_max.y || pos.y < range_min.y) continue;
+
+        for (const std::shared_ptr<Entity>& e2 : get_entities()) {
+            if (e2->id == e->id) continue;
+            if (!e2->has<IsSolid>()) continue;
+            const auto pos2 = e2->get<Transform>().as2();
+            if (pos2.x > range_max.x || pos2.x < range_min.x) continue;
+            if (pos2.y > range_max.y || pos2.y < range_min.y) continue;
+
+            if (pos.x == pos2.x && pos.y == pos2.y) {
+                has_overlapping = true;
+                break;
+            }
+        }
+
+        if (has_overlapping) {
+            break;
+        }
+    }
+    return has_overlapping;
+}
+
 // TODO :INFRA: i think this is slower because we are doing "outside mesh"
 // as outside we should probably have just make some tiles for inside the
 // map
