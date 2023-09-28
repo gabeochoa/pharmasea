@@ -1499,8 +1499,7 @@ void SystemManager::process_state_change(
     if (state_transitioned_round_to_planning) {
         state_transitioned_round_to_planning = false;
 
-        for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
-            Entity& entity = *e_ptr;
+        for_each(entities, dt, [](Entity& entity, float dt) {
             // TODO make a namespace for transition functions
             system_manager::delete_floating_items_when_leaving_inround(entity);
             system_manager::delete_held_items_when_leaving_inround(entity);
@@ -1521,8 +1520,7 @@ void SystemManager::process_state_change(
 
     if (state_transitioned_planning_to_round) {
         state_transitioned_planning_to_round = false;
-        for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float) {
-            Entity& entity = *e_ptr;
+        for_each(entities, dt, [](Entity& entity, float) {
             system_manager::handle_autodrop_furniture_when_exiting_planning(
                 entity);
             system_manager::release_mop_buddy_at_start_of_day(entity);
@@ -1530,15 +1528,13 @@ void SystemManager::process_state_change(
     }
 
     // All transitions
-    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
-        Entity& entity = *e_ptr;
+    for_each(entities, dt, [](Entity& entity, float dt) {
         system_manager::refetch_dynamic_model_names(entity, dt);
     });
 }
 
-void SystemManager::always_update(const Entities& entities, float dt) {
-    for_each(entities, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
-        Entity& entity = *e_ptr;
+void SystemManager::always_update(const Entities& entity_list, float dt) {
+    for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::reset_highlighted(entity, dt);
         // TODO should be just planning + lobby?
         // maybe a second one for highlighting items?
@@ -1557,9 +1553,7 @@ void SystemManager::always_update(const Entities& entities, float dt) {
 }
 
 void SystemManager::game_like_update(const Entities& entity_list, float dt) {
-    for_each(entity_list, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
-        Entity& entity = *e_ptr;
-
+    for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::run_timer(entity, dt);
         system_manager::process_pnumatic_pipe_pairing(entity, dt);
 
@@ -1577,9 +1571,7 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
 
 void SystemManager::in_round_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-    for_each(entity_list, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
-        Entity& entity = *e_ptr;
-        //
+    for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::reset_customers_that_need_resetting(entity);
         //
         system_manager::job_system::in_round_update(entity, dt);
@@ -1605,15 +1597,13 @@ void SystemManager::in_round_update(
 
 void SystemManager::planning_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-    for_each(entity_list, dt, [](std::shared_ptr<Entity> entity_ptr, float dt) {
-        Entity& entity = *entity_ptr;
+    for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::update_held_furniture_position(entity, dt);
     });
 }
 
 void SystemManager::progression_update(const Entities& entity_list, float dt) {
-    for_each(entity_list, dt, [](std::shared_ptr<Entity> e_ptr, float dt) {
-        Entity& entity = *e_ptr;
+    for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::progression::collect_upgrade_options(entity, dt);
     });
 }
@@ -1625,12 +1615,9 @@ void SystemManager::render_entities(const Entities& entities, float dt) const {
     // debug only
     system_manager::render_manager::render_walkable_spots(dt);
 
-    for_each(entities, dt,
-             [debug_mode_on](std::shared_ptr<Entity> entity_ptr, float dt) {
-                 const Entity& entity = *entity_ptr;
-                 system_manager::render_manager::render(entity, dt,
-                                                        debug_mode_on);
-             });
+    for_each(entities, dt, [debug_mode_on](const Entity& entity, float dt) {
+        system_manager::render_manager::render(entity, dt, debug_mode_on);
+    });
 }
 
 void SystemManager::render_ui(const Entities& entities, float dt) const {

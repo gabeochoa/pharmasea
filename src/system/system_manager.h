@@ -47,23 +47,23 @@ struct SystemManager {
 
     void on_game_state_change(game::State new_state, game::State old_state);
 
-    void for_each(
-        Entities& entities, float dt,
-        const std::function<void(std::shared_ptr<Entity>, float)>& cb) {
+    // TODO this probably shouldnt be const but it can be since it holds
+    // shared_ptrs
+    void for_each(const Entities& entities, float dt,
+                  const std::function<void(Entity&, float)>& cb) {
         std::ranges::for_each(entities,
                               [cb, dt](std::shared_ptr<Entity> entity) {
                                   if (!entity) return;
-                                  cb(entity, dt);
+                                  cb(*entity, dt);
                               });
     }
 
-    void for_each(
-        const Entities& entities, float dt,
-        const std::function<void(std::shared_ptr<Entity>, float)>& cb) const {
+    void for_each(const Entities& entities, float dt,
+                  const std::function<void(const Entity&, float)>& cb) const {
         std::ranges::for_each(std::as_const(entities),
                               [cb, dt](std::shared_ptr<Entity> entity) {
                                   if (!entity) return;
-                                  cb(entity, dt);
+                                  cb(*entity, dt);
                               });
     }
 
