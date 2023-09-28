@@ -739,16 +739,15 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
     const auto _choose_option = [](int option_chosen) {
         GameState::get().toggle_to_planning();
-        for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
-            if (!e) continue;
-            if (check_type(*e, EntityType::Player)) {
-                move_player_SERVER_ONLY(*e, game::State::Planning);
-                continue;
+        SystemManager::get().for_each_old([&option_chosen](Entity& e) {
+            if (check_type(e, EntityType::Player)) {
+                move_player_SERVER_ONLY(e, game::State::Planning);
+                return;
             }
 
-            if (e->is_missing<IsProgressionManager>()) continue;
+            if (e.is_missing<IsProgressionManager>()) return;
 
-            IsProgressionManager& ipm = e->get<IsProgressionManager>();
+            IsProgressionManager& ipm = e.get<IsProgressionManager>();
             // choose given option
 
             // reset options so it collections new ones next upgrade round
@@ -769,7 +768,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             // TODO spawn any new machines / ingredient sources it needs we
             // dont already have
             __spawn_machines_for_newly_unlocked_drink(option);
-        }
+        });
     };
 
     switch (ita.type) {
@@ -781,12 +780,10 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             // TODO only for host...
 
             GameState::get().toggle_to_planning();
-
-            for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
-                if (!e) continue;
-                if (!check_type(*e, EntityType::Player)) continue;
-                move_player_SERVER_ONLY(*e, game::State::Planning);
-            }
+            SystemManager::get().for_each_old([](Entity& e) {
+                if (!check_type(e, EntityType::Player)) return;
+                move_player_SERVER_ONLY(e, game::State::Planning);
+            });
         } break;
         case IsTriggerArea::Progression_Option1:
             _choose_option(0);
@@ -964,13 +961,12 @@ void run_timer(Entity& entity, float dt) {
         } break;
         case game::State::InRound: {
             GameState::get().set(game::State::Progression);
-            for (std::shared_ptr<Entity> e : SystemManager::get().oldAll) {
-                if (!e) continue;
-                if (check_type(*e, EntityType::Player)) {
-                    move_player_SERVER_ONLY(*e, game::State::Progression);
-                    continue;
+            SystemManager::get().for_each_old([](Entity& e) {
+                if (check_type(e, EntityType::Player)) {
+                    move_player_SERVER_ONLY(e, game::State::Progression);
+                    return;
                 }
-            }
+            });
         } break;
         default:
             log_warn("processing round switch timer but no state handler {}",
@@ -1023,6 +1019,7 @@ void update_sophie(Entity& entity, float) {
         // auto players =
         // EntityHelper::getAllWithComponent<CanHoldFurniture>();
 
+        // TODO need support for 'break' to use for_each_old
         for (std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
             if (!e) continue;
             if (e->is_missing<CanHoldFurniture>()) continue;

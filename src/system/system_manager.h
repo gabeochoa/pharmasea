@@ -27,6 +27,20 @@ struct SystemManager {
 
     void process_inputs(const Entities& entities, const UserInputs& inputs);
 
+    void for_each_old(const std::function<void(Entity&)>& cb) {
+        std::ranges::for_each(oldAll, [cb](std::shared_ptr<Entity> entity) {
+            if (!entity) return;
+            cb(*entity);
+        });
+    }
+
+    void for_each_old(const std::function<void(Entity&)>& cb) const {
+        std::ranges::for_each(oldAll, [cb](std::shared_ptr<Entity> entity) {
+            if (!entity) return;
+            cb(*entity);
+        });
+    }
+
    private:
     bool state_transitioned_round_to_planning = false;
     bool state_transitioned_planning_to_round = false;
