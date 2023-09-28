@@ -1582,7 +1582,7 @@ void SystemManager::in_round_update(
         //
         system_manager::reset_customers_that_need_resetting(entity);
         //
-        system_manager::job_system::in_round_update(e_ptr, dt);
+        system_manager::job_system::in_round_update(entity, dt);
         system_manager::process_grabber_items(entity, dt);
         system_manager::process_conveyer_items(entity, dt);
         system_manager::process_grabber_filter(entity, dt);

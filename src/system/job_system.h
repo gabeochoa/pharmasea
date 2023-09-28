@@ -47,9 +47,9 @@ inline void render_job_visual(const Entity& entity, float) {
         });
 }
 
-inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpj = entity->get<CanPerformJob>();
+inline void ensure_has_job(Entity& entity, float) {
+    if (entity.is_missing<CanPerformJob>()) return;
+    CanPerformJob& cpj = entity.get<CanPerformJob>();
     if (cpj.has_job()) return;
 
     // TODO handle employee ai
@@ -61,8 +61,10 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
     VALIDATE(!sophies.empty(), "there should always be a sophie");
     const Entity& sophie = sophies[0];
 
+    const Transform& transform = entity.get<Transform>();
+    const auto pos = transform.as2();
+
     if (sophie.get<HasTimer>().store_is_closed()) {
-        auto pos = entity->get<Transform>().as2();
         cpj.update(Job::create_job_of_type(pos, vec2{GATHER_SPOT, GATHER_SPOT},
                                            JobType::Leaving));
         return;
@@ -71,7 +73,6 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
     auto& personal_queue = cpj.job_queue();
     if (personal_queue.empty()) {
         // No job and nothing in the queue? grab the next default one then
-        auto pos = entity->get<Transform>().as2();
         cpj.update(Job::create_job_of_type(pos, pos, cpj.get_next_job_type()));
         // TODO i really want to not return right here but the job is
         // nullptr if i do
@@ -86,19 +87,18 @@ inline void ensure_has_job(std::shared_ptr<Entity> entity, float) {
     personal_queue.pop();
 }
 
-inline void run_job_tick(const std::shared_ptr<Entity>& entity, float dt) {
-    if (entity->is_missing<CanPerformJob>()) return;
-    entity->get<CanPerformJob>().run_tick(entity, dt);
+inline void run_job_tick(Entity& entity, float dt) {
+    if (entity.is_missing<CanPerformJob>()) return;
+    entity.get<CanPerformJob>().run_tick(entity, dt);
 }
 
-inline void cleanup_completed_job(const std::shared_ptr<Entity>& entity,
-                                  float) {
+inline void cleanup_completed_job(Entity& entity, float) {
     // TODO probably can just live in 'in_round_update'?
-    if (entity->is_missing<CanPerformJob>()) return;
-    entity->get<CanPerformJob>().cleanup_if_completed();
+    if (entity.is_missing<CanPerformJob>()) return;
+    entity.get<CanPerformJob>().cleanup_if_completed();
 }
 
-inline void in_round_update(const std::shared_ptr<Entity>& entity, float dt) {
+inline void in_round_update(Entity& entity, float dt) {
     cleanup_completed_job(entity, dt);
     ensure_has_job(entity, dt);
     run_job_tick(entity, dt);
