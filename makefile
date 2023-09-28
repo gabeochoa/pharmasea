@@ -115,6 +115,9 @@ translate:
 findstr:
 	grep -r "\"" src/ | grep -v "preload"  | grep -v "game.cpp" | grep -v "src//strings.h" | grep -v "include" | grep -v "src//test" | grep -v "src//engine" | grep -v "src//dataclass" | grep -v "log" | grep -v "TODO" | grep -v "VALIDATE" 
 
+cleansave:
+	rm "/Users/gabeochoa/Library/Application Support/pharmasea/settings.bin"
+
 # When using lldb, you have to run these commands:
 # 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION
 # 	c

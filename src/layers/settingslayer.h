@@ -192,8 +192,6 @@ struct SettingsLayer : public Layer {
 
                 text(Widget{label}, text_lookup(strings::i18n::SHOW_SAFE_BOX));
 
-                // TODO default value wont be setup correctly without this
-                // bool sssb = Settings::get().data.show_streamer_safe_box;
                 if (auto result = checkbox(
                         Widget{control},
                         CheckboxData{
@@ -210,8 +208,6 @@ struct SettingsLayer : public Layer {
 
                 text(Widget{label}, text_lookup(strings::i18n::ENABLE_PPS));
 
-                // TODO default value wont be setup correctly without this
-                // bool sssb = Settings::get().data.enable_postprocessing;
                 if (auto result = checkbox(
                         Widget{control},
                         CheckboxData{
