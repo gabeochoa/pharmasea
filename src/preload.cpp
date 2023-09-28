@@ -213,13 +213,12 @@ void Preload::load_config() {
 
     load_json_config_file("settings.json", [&](const nlohmann::json& contents) {
         LOG_LEVEL = contents.value("LOG_LEVEL", 2);
-        std::cout << "LOG_LEVEL read from file: " << LOG_LEVEL << std::endl;
+        log_info("LOG_LEVEL read from file: {}", LOG_LEVEL);
 
         DEADZONE = contents.value("DEADZONE", 0.25f);
 
         EXAMPLE_MAP = contents["DEFAULT_MAP"];
-        std::cout << "DEFAULT_MAP read from file: " << EXAMPLE_MAP.size()
-                  << std::endl;
+        log_info("DEFAULT_MAP read from file: {}", EXAMPLE_MAP.size());
 
         const auto& theme_name = contents["theme"];
         const auto& j_themes = contents["themes"];
@@ -241,10 +240,8 @@ void Preload::load_config() {
 }
 
 void Preload::load_models() {
-    if (!ENABLE_MODELS)
-    // TODO log
-    {
-        std::cout << "Skipping Model Loading" << std::endl;
+    if (!ENABLE_MODELS) {
+        log_warn("Skipping Model Loading");
         return;
     }
 

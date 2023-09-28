@@ -165,12 +165,7 @@ struct GameState : public StateManager2<game::State> {
         return is_update_state(previous());
     }
 
-    [[nodiscard]] bool is_lobby_like() const {
-        return is(game::State::Lobby);  // TODO this is needed to get collisions
-                                        // in lobby mode but breaks game
-                                        // furniture loading for some reason
-                                        //|| is(game::State::InMenu);
-    }
+    [[nodiscard]] bool is_lobby_like() const { return is(game::State::Lobby); }
 
     // This means whether or not we should run certain things like:
     // - world timer
