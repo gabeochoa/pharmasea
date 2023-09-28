@@ -76,6 +76,9 @@ msgstr "emuloV cisuM"
 msgid "Resolution"
 msgstr "noituloseR"
 
+msgid "Theme"
+msgstr "emehT"
+
 msgid "Language"
 msgstr "egaugnaL"
 
@@ -106,6 +109,9 @@ msgstr "retsiger a ot htap a si ereht litnu emag trats t'naC"
 msgid "Can't start game until your bar is all clean"
 msgstr "naelc lla si rab ruoy litnu emag trats t'naC"
 
+msgid "Can't start game if you have furniture overlapping"
+msgstr "gnippalrevo erutinruf evah uoy fi emag trats t'naC"
+
 msgid "Loading..."
 msgstr "...gnidaoL"
 
@@ -120,6 +126,9 @@ msgstr "DESOLC"
 
 msgid "Next Round Starting In"
 msgstr "nI gnitratS dnuoR txeN"
+
+msgid "Character Switcher"
+msgstr "rehctiwS retcarahC"
 
 msgid "ABCDEFGHIJKLMNOPQRSTUVWXYZ "
 msgstr " ZYXWVUTSRQPONMLKJIHGFEDCBA"

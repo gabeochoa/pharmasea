@@ -13,13 +13,12 @@ int main(int argc, char* argv[]) {
     tests::run_all();
 
     if (TESTS_ONLY) {
-        std::cout << "All tests ran " << std::endl;
+        log_info("All tests ran ");
         return 0;
     }
 
-    std::cout << "Executable Path: " << fs::current_path() << std::endl;
-    std::cout << "Canon Path: " << fs::canonical(fs::current_path())
-              << std::endl;
+    log_info("Executable Path: {}", fs::current_path());
+    log_info("Canon Path: {}", fs::canonical(fs::current_path()));
 
     startup();
     defer(Settings::get().write_save_file());

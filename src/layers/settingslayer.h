@@ -17,7 +17,6 @@ using namespace ui;
 // (though some settings probably dont need to show)
 
 struct SettingsLayer : public Layer {
-    // TODO add way to get into keybindings mode
     enum ActiveWindow {
         Root = 0,
         KeyBindings = 1,
@@ -94,7 +93,6 @@ struct SettingsLayer : public Layer {
     }
 
     void exit_layer() {
-        // TODO when you hit escape also need to call exit_layer
         Preload::get().write_keymap();
         MenuState::get().go_back();
     }
@@ -142,8 +140,7 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(ui_theme, 30);
                 control = rect::rpad(control, 30);
 
-                // TODO get updated string
-                text(Widget{label}, text_lookup(strings::i18n::RESOLUTION));
+                text(Widget{label}, text_lookup(strings::i18n::THEME));
                 if (auto result = dropdown(
                         Widget{control},
                         DropdownData{

@@ -224,6 +224,7 @@ constexpr const char* ENABLE_PPS = "Enable Post-Processing Shaders";
 constexpr const char* MASTER_VOLUME = "Master Volume";
 constexpr const char* MUSIC_VOLUME = "Music Volume";
 constexpr const char* RESOLUTION = "Resolution";
+constexpr const char* THEME = "Theme";
 constexpr const char* LANGUAGE = "Language";
 
 constexpr const char* GENERAL = "General";
