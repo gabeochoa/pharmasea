@@ -6,6 +6,7 @@
 #include <raylib/glfw3.h>
 
 #include <algorithm>
+#include <fstream>
 
 #include "../external_include.h"
 //
