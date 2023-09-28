@@ -26,7 +26,7 @@ struct StateManager2 {
 
     [[nodiscard]] bool is(T s) const { return state == s; }
     [[nodiscard]] bool is_not(T s) const { return state != s; }
-    [[nodiscard]] inline const std::string_view tostring() const {
+    [[nodiscard]] inline std::string_view tostring() const {
         return magic_enum::enum_name(state);
     }
 

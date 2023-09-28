@@ -16,7 +16,7 @@
 
 namespace network {
 
-typedef std::pair<internal::Client_t, std::string> ClientMessage;
+using ClientMessage = std::pair<internal::Client_t, std::string>;
 
 struct Server {
     static std::thread start(int port);
@@ -29,7 +29,7 @@ struct Server {
                                      float face_direction,
                                      const std::string& name);
     int get_client_id_for_entity(const Entity& entity) {
-        for (auto player : players) {
+        for (const auto& player : players) {
             if (player.second->id == entity.id) {
                 return player.first;
             }

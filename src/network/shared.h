@@ -182,13 +182,13 @@ struct ClientPacket {
         long long last_ping = -1;
     };
 
-    typedef std::variant<
-        ClientPacket::AnnouncementInfo, ClientPacket::PlayerControlInfo,
-        ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
-        ClientPacket::MapInfo, ClientPacket::MapSeedInfo,
-        ClientPacket::PlayerInfo, ClientPacket::PlayerLeaveInfo,
-        ClientPacket::PlayerRareInfo, ClientPacket::PingInfo>
-        Msg;
+    using Msg =
+        std::variant<ClientPacket::AnnouncementInfo,
+                     ClientPacket::PlayerControlInfo,
+                     ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
+                     ClientPacket::MapInfo, ClientPacket::MapSeedInfo,
+                     ClientPacket::PlayerInfo, ClientPacket::PlayerLeaveInfo,
+                     ClientPacket::PlayerRareInfo, ClientPacket::PingInfo>;
 
     Msg msg;
 };
