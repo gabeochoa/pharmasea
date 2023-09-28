@@ -8,6 +8,7 @@
 #include "map_generation.h"
 #include "network/server.h"
 #include "recipe_library.h"
+#include "system/system_manager.h"
 #include "vec_util.h"
 
 void LevelInfo::update_seed(const std::string& s) {

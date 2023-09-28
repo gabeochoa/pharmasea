@@ -1,10 +1,10 @@
 
 #pragma once
 
+#include "engine/random.h"
 #include "entity.h"
 #include "entity_helper.h"
 #include "entity_makers.h"
-#include "system/system_manager.h"
 
 constexpr int MIN_MAP_SIZE = 10;
 constexpr int MAX_MAP_SIZE = 25;
