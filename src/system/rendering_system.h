@@ -25,7 +25,7 @@ namespace render_manager {
 void draw_valid_colored_box(const Transform& transform,
                             const SimpleColoredBoxRenderer& renderer,
                             bool is_highlighted);
-void update_character_model_from_index(std::shared_ptr<Entity> entity, float);
+void update_character_model_from_index(Entity& entity, float);
 bool render_simple_highlighted(const Entity& entity, float);
 bool render_simple_normal(const Entity& entity, float);
 bool render_bounding_box(const Entity& entity, float);

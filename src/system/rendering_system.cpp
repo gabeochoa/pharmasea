@@ -131,17 +131,15 @@ void draw_valid_colored_box(const Transform& transform,
                    transform.sizez(), transform.facing, f, b);
 }
 
-void update_character_model_from_index(std::shared_ptr<Entity> entity, float) {
-    if (!entity) return;
-
-    if (entity->is_missing<UsesCharacterModel>()) return;
-    UsesCharacterModel& usesCharacterModel = entity->get<UsesCharacterModel>();
+void update_character_model_from_index(Entity& entity, float) {
+    if (entity.is_missing<UsesCharacterModel>()) return;
+    UsesCharacterModel& usesCharacterModel = entity.get<UsesCharacterModel>();
 
     if (usesCharacterModel.value_same_as_last_render()) return;
 
-    if (entity->is_missing<ModelRenderer>()) return;
+    if (entity.is_missing<ModelRenderer>()) return;
 
-    ModelRenderer& renderer = entity->get<ModelRenderer>();
+    ModelRenderer& renderer = entity.get<ModelRenderer>();
 
     // TODO this should be the same as all other rendere updates for players
     renderer.update_model_name(usesCharacterModel.fetch_model_name());

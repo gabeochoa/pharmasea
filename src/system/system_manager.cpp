@@ -1551,8 +1551,8 @@ void SystemManager::always_update(const Entities& entities, float dt) {
         // TODO this is in the render manager but its not really a
         // render thing but at the same time it kinda is idk This could
         // run only in lobby if we wanted to distinguish
-        system_manager::render_manager::update_character_model_from_index(e_ptr,
-                                                                          dt);
+        system_manager::render_manager::update_character_model_from_index(
+            entity, dt);
     });
 }
 
