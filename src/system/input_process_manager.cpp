@@ -185,9 +185,9 @@ bool is_collidable(const Entity& entity, OptEntity other) {
     return false;
 }
 
-void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
-    if (entity->is_missing<CollectsUserInput>()) return;
-    CollectsUserInput& cui = entity->get<CollectsUserInput>();
+void collect_user_input(Entity& entity, float dt) {
+    if (entity.is_missing<CollectsUserInput>()) return;
+    CollectsUserInput& cui = entity.get<CollectsUserInput>();
 
     // Theres no players not in game menu state,
     const menu::State state = menu::State::Game;
@@ -232,7 +232,7 @@ void collect_user_input(std::shared_ptr<Entity> entity, float dt) {
 
     // run the input on the local client
     system_manager::input_process_manager::process_input(
-        *entity, {cui.read(), dt, camAngle});
+        entity, {cui.read(), dt, camAngle});
 
     // Actually save the inputs if there were any
     cui.publish(dt, camAngle);

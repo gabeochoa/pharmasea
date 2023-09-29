@@ -1464,7 +1464,7 @@ void SystemManager::update_local_players(const Entities& players, float dt) {
     for (const auto& entity : players) {
         // TODO fix this if we have more than one local player
         firstPlayerID = entity->id;
-        system_manager::input_process_manager::collect_user_input(entity, dt);
+        system_manager::input_process_manager::collect_user_input(*entity, dt);
     }
 }
 

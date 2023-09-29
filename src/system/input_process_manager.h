@@ -12,7 +12,7 @@ namespace input_process_manager {
 
 [[nodiscard]] bool is_collidable(const Entity& entity, OptEntity other = {});
 
-void collect_user_input(std::shared_ptr<Entity> entity, float dt);
+void collect_user_input(Entity& entity, float dt);
 void process_player_movement_input(Entity& entity, float dt,
                                    InputName input_name, float input_amount);
 
