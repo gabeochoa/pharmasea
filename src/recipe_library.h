@@ -63,9 +63,9 @@ static IngredientBitSet get_req_ingredients_for_drink(Drink drink) {
     return recip.ingredients | recip.prereqs;
 }
 
-static std::string get_icon_name_for_drink(Drink drink) {
+static const std::string& get_icon_name_for_drink(Drink drink) {
     return RecipeLibrary::get().get(get_string_for_drink(drink)).icon_name;
 }
-static std::string get_model_name_for_drink(Drink drink) {
+static const std::string& get_model_name_for_drink(Drink drink) {
     return RecipeLibrary::get().get(get_string_for_drink(drink)).base_name;
 }

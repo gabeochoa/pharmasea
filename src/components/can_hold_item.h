@@ -14,18 +14,13 @@
 
 struct CanHoldItem : public BaseComponent {
     CanHoldItem() : held_by(EntityType::Unknown), filter(EntityFilter()) {}
-    CanHoldItem(EntityType hb) : held_by(hb), filter(EntityFilter()) {}
+    explicit CanHoldItem(EntityType hb) : held_by(hb), filter(EntityFilter()) {}
 
     virtual ~CanHoldItem() {}
 
     [[nodiscard]] bool empty() const { return held_item == nullptr; }
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
-
-    template<typename T>
-    [[nodiscard]] std::shared_ptr<T> asT() const {
-        return dynamic_pointer_cast<T>(held_item);
-    }
 
     CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
         if (held_item != nullptr && !held_item->cleanup &&

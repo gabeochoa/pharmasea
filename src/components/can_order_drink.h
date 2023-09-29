@@ -44,7 +44,7 @@ struct CanOrderDrink : public BaseComponent {
         return order_state == OrderState::Ordering;
     }
 
-    [[nodiscard]] const std::string icon_name() const {
+    [[nodiscard]] std::string icon_name() const {
         // TODO this doesnt work today
         if (order_state == OrderState::DrinkingNow) return "jug";
         return get_icon_name_for_drink(current_order);
