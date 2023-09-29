@@ -14,11 +14,11 @@ namespace raylib {
 const bool SHOW_LETTER_BOUNDRY = false;
 const bool SHOW_TEXT_BOUNDRY = false;
 
-typedef struct WaveTextConfig {
+using WaveTextConfig = struct WaveTextConfig {
     vec3 waveRange;
     vec3 waveSpeed;
     vec3 waveOffset;
-} WaveTextConfig;
+};
 
 static void DrawTextCodepoint3D(Font font, int codepoint, vec3 position,
                                 float fontSize, bool backface, Color tint) {
