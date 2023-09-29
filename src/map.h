@@ -27,7 +27,7 @@ struct Map {
     // the serializer uses the default contructor
     Map() {}
 
-    Map(const std::string& _seed) : seed(_seed) {
+    explicit Map(const std::string& _seed) : seed(_seed) {
         // TODO :NOTE: this is needed for the items to be regenerated
         update_seed(seed);
     }

@@ -32,7 +32,7 @@ struct IsDrink : public BaseComponent {
     [[nodiscard]] bool matches_recipe(const Drink& drink_name) const {
         return matches_recipe(
             RecipeLibrary::get()
-                .get(std::string(magic_enum::enum_name(drink_name)).c_str())
+                .get(std::string(magic_enum::enum_name(drink_name)))
                 .ingredients);
     }
 

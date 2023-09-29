@@ -5,7 +5,7 @@
 
 struct Entity;
 
-typedef std::function<void(Entity&, bool)> OnChangeFn;
+using OnChangeFn = std::function<void(Entity&, bool)>;
 
 struct CanBeHighlighted : public BaseComponent {
     virtual ~CanBeHighlighted() {}
@@ -19,7 +19,7 @@ struct CanBeHighlighted : public BaseComponent {
         highlighted = is_h;
     }
 
-    void set_on_change(OnChangeFn cb) { onchange = cb; }
+    void set_on_change(const OnChangeFn& cb) { onchange = cb; }
 
    private:
     bool highlighted;

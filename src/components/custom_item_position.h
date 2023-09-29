@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <iostream>
+
 #include "../vendor_include.h"
 #include "base_component.h"
 #include "transform.h"

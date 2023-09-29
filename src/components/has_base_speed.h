@@ -18,9 +18,6 @@ struct HasBaseSpeed : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
         // We dont serialize because its fully serverside
-        //
-        // s.value4b(base_speed);
     }
 };

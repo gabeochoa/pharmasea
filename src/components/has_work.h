@@ -38,11 +38,9 @@ struct HasWork : public BaseComponent {
         return pct_work_complete * length;
     }
 
-    typedef std::function<void(Entity& owner, HasWork&, Entity& person,
-                               float dt)>
-        WorkFn;
+    using WorkFn = std::function<void(Entity&, HasWork&, Entity&, float)>;
 
-    void init(WorkFn worker) { do_work = worker; }
+    void init(const WorkFn& worker) { do_work = worker; }
 
     [[nodiscard]] bool should_reset_on_empty() const { return reset_on_empty; }
     void set_reset_on_empty(bool roe) { reset_on_empty = roe; }

@@ -8,7 +8,7 @@ struct ShowsProgressBar : public BaseComponent {
     enum Enabled { Always, Planning, InRound } type;
 
     ShowsProgressBar() : type(Enabled::Always) {}
-    ShowsProgressBar(Enabled e) : type(e) {}
+    explicit ShowsProgressBar(Enabled e) : type(e) {}
 
     virtual ~ShowsProgressBar() {}
 

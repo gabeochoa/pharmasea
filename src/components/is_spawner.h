@@ -105,7 +105,7 @@ struct IsSpawner : public BaseComponent {
     SpawnFn spawn_fn;
     ValidationSpawnFn validation_spawn_fn;
 
-    std::string spawn_sound = "";
+    std::string spawn_sound;
 
     friend bitsery::Access;
     template<typename S>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 //
 #include "base_component.h"
 
@@ -11,11 +12,11 @@ struct HasName : public BaseComponent {
         name_length = (int) _name.size();
     }
 
-    const std::string name() const { return _name; }
+    const std::string& name() const { return _name; }
 
    private:
     int name_length = 1;
-    std::string _name = "";
+    std::string _name;
 
     friend bitsery::Access;
     template<typename S>

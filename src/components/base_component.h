@@ -10,7 +10,7 @@
 #include "../globals.h"
 
 struct Entity;
-typedef std::vector<std::shared_ptr<Entity>> Entities;
+using Entities = std::vector<std::shared_ptr<Entity>>;
 
 struct BaseComponent;
 constexpr int max_num_components = 64;

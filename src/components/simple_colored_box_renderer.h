@@ -6,13 +6,14 @@
 struct SimpleColoredBoxRenderer : public BaseComponent {
     virtual ~SimpleColoredBoxRenderer() {}
 
-    void update(Color face, Color base) {
+    auto& update_face(Color face) {
         face_color = face;
-        base_color = base;
+        return *this;
     }
-
-    void update_face(Color face) { face_color = face; }
-    void update_base(Color base) { base_color = base; }
+    auto& update_base(Color base) {
+        base_color = base;
+        return *this;
+    }
 
     [[nodiscard]] Color face() const { return face_color; }
     [[nodiscard]] Color base() const { return base_color; }

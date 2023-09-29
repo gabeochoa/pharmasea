@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <iostream>
 //
 #include "../entity_type.h"
 #include "base_component.h"

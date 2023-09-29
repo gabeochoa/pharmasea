@@ -5,7 +5,7 @@
 #include "../entity_helper.h"
 #include "base_component.h"
 
-typedef int EntityID;
+using EntityID = int;
 
 struct HasRopeToItem : public BaseComponent {
     virtual ~HasRopeToItem() {}

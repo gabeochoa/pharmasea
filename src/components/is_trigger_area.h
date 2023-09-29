@@ -11,7 +11,7 @@ struct IsTriggerArea : public BaseComponent {
         Progression_Option2,
     } type = Unset;
 
-    IsTriggerArea(Type type)
+    explicit IsTriggerArea(Type type)
         : type(type), wanted_entrants(1), completion_time_max(2.f) {}
 
     IsTriggerArea() : IsTriggerArea(Unset) {}

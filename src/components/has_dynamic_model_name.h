@@ -20,8 +20,8 @@ struct HasDynamicModelName : public BaseComponent {
     };
 
     virtual ~HasDynamicModelName() {}
-    typedef std::function<std::string(const Entity&, const std::string&)>
-        ModelNameFetcher;
+    using ModelNameFetcher =
+        std::function<std::string(const Entity&, const std::string&)>;
 
     [[nodiscard]] std::string fetch(const Entity& owner) const {
         if (!initialized)
@@ -49,7 +49,7 @@ struct HasDynamicModelName : public BaseComponent {
     }
 
     void init(EntityType type, DynamicType dyn_type,
-              ModelNameFetcher fet = nullptr) {
+              const ModelNameFetcher& fet = nullptr) {
         initialized = true;
         base_name = std::string(util::convertToSnakeCase<EntityType>(type));
         dynamic_type = dyn_type;

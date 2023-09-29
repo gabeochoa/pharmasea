@@ -26,7 +26,10 @@ struct CollectsUserInput : public BaseComponent {
         return *this;
     }
 
-    [[nodiscard]] bool empty() const { return inputs.empty(); }
+    [[nodiscard]] bool empty() const {
+        bool empty = inputs.empty();
+        return empty;
+    }
 
     [[nodiscard]] UserInputs& inputs_NETWORK_ONLY() { return inputs; }
     void clear() { inputs.clear(); }

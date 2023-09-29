@@ -4,7 +4,7 @@
 
 #include "base_component.h"
 
-typedef int EntityID;
+using EntityID = int;
 
 struct HasWaitingQueue : public BaseComponent {
     static const int max_queue_size = 3;

@@ -9,11 +9,11 @@
 #include "../entity.h"
 #include "base_component.h"
 
-typedef std::function<Ingredient(Entity&)> IngredientFetcherFn;
+using IngredientFetcherFn = std::function<Ingredient(Entity&)>;
 
 struct AddsIngredient : public BaseComponent {
     AddsIngredient() {}
-    AddsIngredient(IngredientFetcherFn ig) : fetcher(ig) {}
+    explicit AddsIngredient(const IngredientFetcherFn& ig) : fetcher(ig) {}
 
     virtual ~AddsIngredient() {}
 

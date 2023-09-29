@@ -117,7 +117,9 @@ void add_person_components(Entity& person, DebugOptions options = {}) {
     if (ENABLE_MODELS) {
         person.addComponent<ModelRenderer>(strings::model::CHARACTER_DUCK);
     } else {
-        person.addComponent<SimpleColoredBoxRenderer>().update(RED, PINK);
+        person.addComponent<SimpleColoredBoxRenderer>()
+            .update_base(RED)
+            .update_face(PINK);
     }
 
     if (options.enableCharacterModel) {
@@ -226,7 +228,9 @@ void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
 
     // For renderers we prioritize the ModelRenderer and will fall back if we
     // need
-    furniture.addComponent<SimpleColoredBoxRenderer>().update(face, base);
+    furniture.addComponent<SimpleColoredBoxRenderer>()
+        .update_face(face)
+        .update_base(base);
     if (ENABLE_MODELS) {
         furniture.addComponent<ModelRenderer>(options.type);
     }
@@ -611,7 +615,9 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
         height,
     });
 
-    trigger_area.addComponent<SimpleColoredBoxRenderer>().update(PINK, PINK);
+    trigger_area.addComponent<SimpleColoredBoxRenderer>()
+        .update_face(PINK)
+        .update_base(PINK);
     trigger_area.addComponent<IsTriggerArea>(type);
 }
 
@@ -984,8 +990,9 @@ void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     // TODO maybe one day add some kind of ui that shows when the next
     // person is coming? that migth be good to be part of the round
     // timer ui?
-    customer_spawner.addComponent<SimpleColoredBoxRenderer>().update(PINK,
-                                                                     PINK);
+    customer_spawner.addComponent<SimpleColoredBoxRenderer>()
+        .update_face(PINK)
+        .update_base(PINK);
     const auto sfn = std::bind(&make_customer, std::placeholders::_1,
                                std::placeholders::_2, true);
 
