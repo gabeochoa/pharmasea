@@ -142,80 +142,71 @@ void update_held_furniture_position(Entity& entity, float) {
     can_hold_furniture.furniture()->get<Transform>().update(new_pos);
 }
 
-// TODO should held item position be a physical movement or just visual?
-// does it matter if the reach/pickup is working as expected
-void update_held_item_position(Entity& entity, float) {
-    if (entity.is_missing<CanHoldItem>()) return;
-
-    CanHoldItem& can_hold_item = entity.get<CanHoldItem>();
-    if (can_hold_item.empty()) return;
-
+vec3 get_new_held_position_custom(Entity& entity) {
     const Transform& transform = entity.get<Transform>();
-
     vec3 new_pos = transform.pos();
 
-    if (entity.has<CustomHeldItemPosition>()) {
-        const CustomHeldItemPosition& custom_item_position =
-            entity.get<CustomHeldItemPosition>();
+    const CustomHeldItemPosition& custom_item_position =
+        entity.get<CustomHeldItemPosition>();
 
-        switch (custom_item_position.positioner) {
-            case CustomHeldItemPosition::Positioner::Table:
-                new_pos.y += TILESIZE / 2;
+    switch (custom_item_position.positioner) {
+        case CustomHeldItemPosition::Positioner::Table:
+            new_pos.y += TILESIZE / 2;
+            break;
+        case CustomHeldItemPosition::Positioner::ItemHoldingItem:
+            new_pos.x += 0;
+            new_pos.y += 0;
+            break;
+        case CustomHeldItemPosition::Positioner::Blender:
+            new_pos.x += 0;
+            new_pos.y += TILESIZE * 2.f;
+            break;
+        case CustomHeldItemPosition::Positioner::Conveyer: {
+            if (entity.is_missing<ConveysHeldItem>()) {
+                log_warn("A conveyer positioned item needs ConveysHeldItem");
                 break;
-            case CustomHeldItemPosition::Positioner::ItemHoldingItem:
-                new_pos.x += 0;
-                new_pos.y += 0;
+            }
+            const ConveysHeldItem& conveysHeldItem =
+                entity.get<ConveysHeldItem>();
+            if (transform.face_direction() &
+                Transform::FrontFaceDirection::FORWARD) {
+                new_pos.z += TILESIZE * conveysHeldItem.relative_item_pos;
+            }
+            if (transform.face_direction() &
+                Transform::FrontFaceDirection::RIGHT) {
+                new_pos.x += TILESIZE * conveysHeldItem.relative_item_pos;
+            }
+            if (transform.face_direction() &
+                Transform::FrontFaceDirection::BACK) {
+                new_pos.z -= TILESIZE * conveysHeldItem.relative_item_pos;
+            }
+            if (transform.face_direction() &
+                Transform::FrontFaceDirection::LEFT) {
+                new_pos.x -= TILESIZE * conveysHeldItem.relative_item_pos;
+            }
+            new_pos.y += TILESIZE / 4;
+        } break;
+        case CustomHeldItemPosition::Positioner::PnumaticPipe: {
+            if (entity.is_missing<IsPnumaticPipe>()) {
+                log_warn("pipe positioned item needs ispnumaticpipe");
                 break;
-            case CustomHeldItemPosition::Positioner::Blender:
-                new_pos.x += 0;
-                new_pos.y += TILESIZE * 2.f;
+            }
+            if (entity.is_missing<ConveysHeldItem>()) {
+                log_warn("pipe positioned item needs ConveysHeldItem");
                 break;
-            case CustomHeldItemPosition::Positioner::Conveyer: {
-                if (entity.is_missing<ConveysHeldItem>()) {
-                    log_warn(
-                        "A conveyer positioned item needs ConveysHeldItem");
-                    break;
-                }
-                const ConveysHeldItem& conveysHeldItem =
-                    entity.get<ConveysHeldItem>();
-                if (transform.face_direction() &
-                    Transform::FrontFaceDirection::FORWARD) {
-                    new_pos.z += TILESIZE * conveysHeldItem.relative_item_pos;
-                }
-                if (transform.face_direction() &
-                    Transform::FrontFaceDirection::RIGHT) {
-                    new_pos.x += TILESIZE * conveysHeldItem.relative_item_pos;
-                }
-                if (transform.face_direction() &
-                    Transform::FrontFaceDirection::BACK) {
-                    new_pos.z -= TILESIZE * conveysHeldItem.relative_item_pos;
-                }
-                if (transform.face_direction() &
-                    Transform::FrontFaceDirection::LEFT) {
-                    new_pos.x -= TILESIZE * conveysHeldItem.relative_item_pos;
-                }
-                new_pos.y += TILESIZE / 4;
-            } break;
-            case CustomHeldItemPosition::Positioner::PnumaticPipe: {
-                if (entity.is_missing<IsPnumaticPipe>()) {
-                    log_warn("pipe positioned item needs ispnumaticpipe");
-                    break;
-                }
-                if (entity.is_missing<ConveysHeldItem>()) {
-                    log_warn("pipe positioned item needs ConveysHeldItem");
-                    break;
-                }
-                const ConveysHeldItem& conveysHeldItem =
-                    entity.get<ConveysHeldItem>();
-                int mult = entity.get<IsPnumaticPipe>().recieving ? 1 : -1;
-                new_pos.y +=
-                    mult * TILESIZE * conveysHeldItem.relative_item_pos;
-            } break;
-        }
-        can_hold_item.item()->get<Transform>().update(new_pos);
-        return;
+            }
+            const ConveysHeldItem& conveysHeldItem =
+                entity.get<ConveysHeldItem>();
+            int mult = entity.get<IsPnumaticPipe>().recieving ? 1 : -1;
+            new_pos.y += mult * TILESIZE * conveysHeldItem.relative_item_pos;
+        } break;
     }
+    return new_pos;
+}
 
+vec3 get_new_held_position_default(Entity& entity) {
+    const Transform& transform = entity.get<Transform>();
+    vec3 new_pos = transform.pos();
     // Default
     if (transform.face_direction() & Transform::FrontFaceDirection::FORWARD) {
         new_pos.z += TILESIZE;
@@ -229,6 +220,21 @@ void update_held_item_position(Entity& entity, float) {
     if (transform.face_direction() & Transform::FrontFaceDirection::LEFT) {
         new_pos.x -= TILESIZE;
     }
+    return new_pos;
+}
+
+// TODO should held item position be a physical movement or just visual?
+// does it matter if the reach/pickup is working as expected
+void update_held_item_position(Entity& entity, float) {
+    if (entity.is_missing<CanHoldItem>()) return;
+
+    CanHoldItem& can_hold_item = entity.get<CanHoldItem>();
+    if (can_hold_item.empty()) return;
+
+    vec3 new_pos = entity.has<CustomHeldItemPosition>()
+                       ? get_new_held_position_custom(entity)
+                       : get_new_held_position_default(entity);
+
     can_hold_item.item()->get<Transform>().update(new_pos);
 }
 
