@@ -565,20 +565,17 @@ void handle_drop(Entity& player) {
                 std::shared_ptr<Item> item = player.get<CanHoldItem>().item();
 
                 const auto item_container_is_matching_item =
-                    [](std::shared_ptr<Entity> entity,
+                    [](const Entity& entity,
                        std::shared_ptr<Item> item = nullptr) {
                         if (!item) return false;
-                        if (!entity) return false;
-                        if (entity->is_missing<IsItemContainer>()) return false;
-                        IsItemContainer& itemContainer =
-                            entity->get<IsItemContainer>();
+                        if (entity.is_missing<IsItemContainer>()) return false;
+                        const IsItemContainer& itemContainer =
+                            entity.get<IsItemContainer>();
                         return itemContainer.is_matching_item(item);
                     };
 
                 // Handle item containers
-                bool matches_item = item_container_is_matching_item(
-                    EntityHelper::getEntityAsSharedPtr(const_cast<Entity&>(f)),
-                    item);
+                bool matches_item = item_container_is_matching_item(f, item);
                 if (matches_item) return true;
 
                 // This check has to go after the item containers,
@@ -631,13 +628,11 @@ void handle_drop(Entity& player) {
         _place_item_onto_furniture,
     };
 
-    for (auto fn : fns) {
+    for (const auto& fn : fns) {
         auto item_merged = fn();
         if (item_merged) break;
         log_info("{}", item_merged.error());
     }
-
-    return;
 }
 
 void handle_grab(Entity& player) {
