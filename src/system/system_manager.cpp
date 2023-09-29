@@ -139,7 +139,9 @@ void update_held_furniture_position(Entity& entity, float) {
         new_pos.x -= TILESIZE;
     }
 
-    can_hold_furniture.furniture()->get<Transform>().update(new_pos);
+    OptEntity furniture =
+        EntityHelper::getEntityForID(can_hold_furniture.furniture_id());
+    furniture->get<Transform>().update(new_pos);
 }
 
 vec3 get_new_held_position_custom(Entity& entity) {

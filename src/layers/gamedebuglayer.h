@@ -61,6 +61,13 @@ struct GameDebugLayer : public Layer {
             if (map_ptr) {
                 OptEntity player = map_ptr->get_remote_with_cui();
                 if (player) {
+                    EntityID furniture_id =
+                        player->get<CanHoldFurniture>().is_holding_furniture()
+                            ? player->get<CanHoldFurniture>().furniture_id()
+                            : -1;
+                    OptEntity furniture =
+                        EntityHelper::getEntityForID(furniture_id);
+
                     auto [id_div, position_div, holding_div, item_div] =
                         rect::hsplit<4>(player_info, 10);
 
@@ -69,12 +76,8 @@ struct GameDebugLayer : public Layer {
                          fmt::format("{}", (player->get<Transform>().pos())));
                     text(Widget{holding_div},
                          fmt::format("holding furniture?: {}",
-                                     player->get<CanHoldFurniture>()
-                                             .is_holding_furniture()
-                                         ? player->get<CanHoldFurniture>()
-                                               .furniture()
-                                               ->get<DebugName>()
-                                               .name()
+                                     furniture
+                                         ? furniture->get<DebugName>().name()
                                          : "Empty"));
                     text(
                         Widget{item_div},

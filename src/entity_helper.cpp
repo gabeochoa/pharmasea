@@ -172,6 +172,8 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
 }
 
 OptEntity EntityHelper::getEntityForID(EntityID id) {
+    if (id == -1) return {};
+
     for (const auto& e : get_entities()) {
         if (!e) continue;
         if (e->id == id) return *e;

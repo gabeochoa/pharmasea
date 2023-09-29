@@ -324,7 +324,8 @@ void rotate_furniture(const Entity& player) {
 
 void drop_held_furniture(Entity& player) {
     CanHoldFurniture& ourCHF = player.get<CanHoldFurniture>();
-    std::shared_ptr<Furniture> hf = ourCHF.furniture();
+    EntityID furn_id = ourCHF.furniture_id();
+    OptEntity hf = EntityHelper::getEntityForID(furn_id);
     if (!hf) {
         log_info(" id:{} we'd like to drop but our hands are empty", player.id);
         return;
@@ -344,7 +345,7 @@ void drop_held_furniture(Entity& player) {
         hf->get<CanBeHeld>().set_is_being_held(false);
         hf->get<Transform>().update(drop_location);
 
-        ourCHF.update(nullptr);
+        ourCHF.update(-1);
         log_info("we {} dropped the furniture {} we were holding", player.id,
                  hf->id);
 
@@ -383,8 +384,10 @@ void handle_grab_or_drop(Entity& player) {
         // no match
         if (!closest_furniture) return;
 
-        ourCHF.update(EntityHelper::getEntityAsSharedPtr(closest_furniture));
-        ourCHF.furniture()->get<CanBeHeld>().set_is_being_held(true);
+        ourCHF.update(closest_furniture->id);
+        OptEntity furniture =
+            EntityHelper::getEntityForID(ourCHF.furniture_id());
+        furniture->get<CanBeHeld>().set_is_being_held(true);
 
         EntityHelper::invalidatePathCache();
 

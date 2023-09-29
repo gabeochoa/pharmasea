@@ -4,35 +4,26 @@
 
 #include "base_component.h"
 
-struct Entity;
+using EntityID = int;
 
 struct CanHoldFurniture : public BaseComponent {
     virtual ~CanHoldFurniture() {}
 
-    [[nodiscard]] bool empty() const { return held_furniture == nullptr; }
+    [[nodiscard]] bool empty() const { return held_furniture_id == -1; }
     [[nodiscard]] bool is_holding_furniture() const { return !empty(); }
 
-    template<typename T>
-    [[nodiscard]] std::shared_ptr<T> asT() const {
-        return dynamic_pointer_cast<T>(held_furniture);
-    }
+    void update(EntityID furniture_id) { held_furniture_id = furniture_id; }
 
-    void update(std::shared_ptr<Entity> furniture) {
-        held_furniture = furniture;
-    }
-
-    [[nodiscard]] std::shared_ptr<Entity> furniture() const {
-        return held_furniture;
-    }
+    [[nodiscard]] EntityID furniture_id() const { return held_furniture_id; }
 
    private:
-    std::shared_ptr<Entity> held_furniture = nullptr;
+    int held_furniture_id = -1;
 
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        s.ext(held_furniture, bitsery::ext::StdSmartPtr{});
+        s.value4b(held_furniture_id);
     }
 };
