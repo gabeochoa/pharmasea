@@ -356,10 +356,36 @@ void Server::process_player_join_packet(
     // overwrite it so its already there
     int client_id = incoming_client.client_id;
 
+    const auto get_position_for_current_state = [=]() -> vec3 {
+        vec3 default_pos = {LOBBY_ORIGIN, 0.f, LOBBY_ORIGIN};
+
+        // Not in game just spawn them in the lobby
+        if (current_menu_state != menu::State::Game) return default_pos;
+
+        switch (current_game_state) {
+            case game::InMenu:
+            case game::Lobby:
+            case game::Paused:
+                return default_pos;
+            case game::InRound:
+            case game::Planning:
+                return {0.f, 0.f, 0.f};
+            case game::Progression:
+                return {PROGRESSION_ORIGIN, 0.f, PROGRESSION_ORIGIN};
+        }
+
+        return default_pos;
+    };
+
     // create the player if they dont already exist
     if (!players.contains(client_id)) {
         std::shared_ptr<Entity> E = std::make_shared<Entity>();
-        make_player(*E, {LOBBY_ORIGIN, 0, LOBBY_ORIGIN});
+
+        // We want to place the character correctly near someone else if
+        // possible
+        vec3 position = get_position_for_current_state();
+
+        make_player(*E, position);
         players[client_id] = E;
     }
 

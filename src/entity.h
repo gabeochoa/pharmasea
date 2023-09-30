@@ -201,6 +201,10 @@ struct OptEntity {
 
     const Entity* value() const { return &(data.value().get()); }
     const Entity* operator*() const { return value(); }
+    // TODO look into switching this to using functional monadic stuff
+    // i think optional.transform can take and handle calling functions on an
+    // optional without having to expose the underlying value or existance of
+    // value
     const Entity* operator->() const { return value(); }
 
     Entity& asE() { return data.value(); }
