@@ -11,7 +11,6 @@
 #include "engine/assert.h"
 #include "engine/log.h"
 #include "engine/type_name.h"
-#include "strings.h"
 //
 #include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
@@ -22,13 +21,6 @@ using bitsery::ext::PointerObserver;
 using bitsery::ext::PointerOwner;
 using bitsery::ext::PointerType;
 using StdMap = bitsery::ext::StdMap;
-
-#include "drawing_util.h"
-#include "engine/util.h"
-#include "globals.h"
-#include "preload.h"
-#include "text_util.h"
-#include "vec_util.h"
 
 using ComponentBitSet = std::bitset<max_num_components>;
 // originally this was a std::array<BaseComponent*, max_num_components> but i

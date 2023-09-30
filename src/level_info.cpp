@@ -5,6 +5,7 @@
 #include "components/is_progression_manager.h"
 #include "components/is_trigger_area.h"
 #include "engine/globals.h"
+#include "engine/texture_library.h"
 #include "map_generation.h"
 #include "network/server.h"
 #include "recipe_library.h"

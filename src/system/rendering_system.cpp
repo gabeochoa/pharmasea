@@ -5,7 +5,10 @@
 #include "../components/has_patience.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/is_progression_manager.h"
+#include "../drawing_util.h"
+#include "../engine/texture_library.h"
 #include "../engine/ui/theme.h"
+#include "../preload.h"
 #include "system_manager.h"
 
 extern ui::UITheme UI_THEME;
