@@ -39,6 +39,11 @@
             "folder": "images",
             "filename": "hand.png",
             "library_name": "hand"
+        },
+        {
+            "folder": "images",
+            "filename": "trashcan.png",
+            "library_name": "trashcan"
         }
     ]
 }

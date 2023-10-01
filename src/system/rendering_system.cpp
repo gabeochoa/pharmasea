@@ -471,14 +471,16 @@ void render_floor_marker(const Entity& entity, float) {
 
 void render_trash_marker(const Entity& entity) {
     const Transform& transform = entity.get<Transform>();
-
-    auto font = Preload::get().font;
-    auto fsize = 500.f;
     vec3 position = transform.pos();
-    position.y += TILESIZE * 1.5f;
 
-    // TODO eventually replace with a trash icon
-    raylib::DrawText3D(font, "X", position, fsize, 0, 0, false, WHITE);
+    raylib::Texture texture = TextureLibrary::get().get("trashcan");
+    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+    raylib::DrawBillboard(cam.camera, texture,
+                          vec3{position.x + (TILESIZE * 0.05f),  //
+                               position.y + (TILESIZE * 2.f),    //
+                               position.z},                      //
+                          0.75f * TILESIZE,                      //
+                          raylib::WHITE);
 }
 
 void render_patience(const Entity& entity, float) {
