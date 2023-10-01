@@ -585,7 +585,12 @@ void delete_trash_when_leaving_planning(Entity& entity) {
     const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
     if (ifm.type != IsFloorMarker::Planning_TrashArea) return;
 
-    // TODO actually delete marked items
+    for (int i = 0; i < ifm.num_marked(); i++) {
+        EntityID id = ifm.marked_ids()[i];
+        OptEntity marked_entity = EntityHelper::getEntityForID(id);
+        if (!marked_entity) continue;
+        marked_entity->cleanup = true;
+    }
 }
 
 void delete_customers_when_leaving_inround(Entity& entity) {
