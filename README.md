@@ -61,6 +61,67 @@ and then just checkout that hash (sorry im not doing releases / tags atm)
 I am publishing some releases on itch, you can find the url in the code or build the game and click the itch.io icon. 
 if you need the password join the discord and say hi!
 
+### alpha_0.23.10.01
+
+Known Issues
+- (Progression) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (UI) Controls are not remappable in UI 
+- (UI) No reset-to-default state for controls
+- (Game) Roomba guy doesnt like to clean vomit at the customer de-spawn point..
+- (Game) Map generator always makes basically the same map
+- (Game) No way to know if you made the wrong drink 
+- (Game) Can place items where it collides with your body
+- (Game) Trash Area can delete things you likely need for future rounds 
+
+impact
+- Sounds
+    - Sound Effects for adding most ingredients
+    - Sound for picking up and dropping items 
+    - Sound for moving around the UI / clicking buttons
+    - Blender Sound 
+    - Sound FX slider in settings (to turn off new sounds if you dont want them)  
+    - Add in Game music though its kinda annoying 
+- Furniture
+    - Added a holder for the mop guy so you can move his spawn point 
+- For customers with low patience, we now change the color of the progress bar and the UI cards when running out of time
+- Ability to lock the camera to the default view if youd like 
+- Floor Markers
+    - Add Trash Area where you can delete items (doesnt validate anything at the moment)
+        - Items in the trash area will have a trash icon 
+    - Added area for where new machines spawn
+    - Warning for when you forget items in the spawn area 
+- We now show how many customers will be coming in the next round 
+- Better recipe book so you can still play while reading (though its kinda hard with controller) 
+- Customer progress bars will look much nicer now
+
+
+bug fixes
+- Crashes
+    - fixed stealing drinks back from customers
+    - disabled register path rendering 
+- Game Breaking
+    - Fixed issue where controllers couldnt navigate settings page when in pause menu
+    - Fixed issue where progression transition would break if you were in debug mode
+    - Fixed issue where SimpleSyrup wasnt spawning 
+    - Added controller controls for recipe book 
+- Annoying 
+    - Fixed issue where some items were not getting deleted at the end of day 
+    - Fixed issue where customers were never vomitting 
+    - Made it easier to use gamepad to navigate dropdown (though can still be better) 
+    - Better spawn points for new players when game is already in progress 
+ 
+better eng 
+- Add warning when text size is below accessibility guidelines 
+- Lots of includes changes which should help reduce recompiles
+- Automatically detect new types of item containers (reduces class of easy to make bugs) 
+- Better file splitting 
+- Lots of constness
+- Reduce lots of shared_ptr uses
+- Cleanup some unused files
+- Convert some typedefs to using 
+- Change some couts to log_infos
+- Add warning when playing sounds on server (they will only play for host)_ 
 
 ### alpha_0.23.09.09
 
