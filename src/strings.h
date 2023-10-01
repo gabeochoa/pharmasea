@@ -127,6 +127,8 @@ namespace sounds {
 
 constexpr const char* ROBLOX = "roblox";
 constexpr const char* VOMIT = "vom";
+constexpr const char* SELECT = "select";
+constexpr const char* CLICK = "click";
 
 }  // namespace sounds
 

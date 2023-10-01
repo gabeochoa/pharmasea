@@ -125,6 +125,19 @@ struct Preload {
                 .c_str(),
             strings::sounds::VOMIT);
 
+        SoundLibrary::get().load(
+            Files::get()
+                .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
+                .c_str(),
+            strings::sounds::SELECT);
+
+        SoundLibrary::get().load(
+            Files::get()
+                // TODO replace sound
+                .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
+                .c_str(),
+            strings::sounds::CLICK);
+
         Files::get().for_resources_in_folder(
             strings::settings::SOUNDS, "pa_announcements",
             [](const std::string& name, const std::string& filename) {

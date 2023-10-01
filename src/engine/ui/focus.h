@@ -65,7 +65,11 @@ inline void active_if_mouse_inside(const Widget& widget,
 
 inline bool is_mouse_click(const Widget& widget) {
     bool let_go_of_mouse = !mouse_info.leftDown;
-    return let_go_of_mouse && is_active_and_hot(widget.id);
+    bool was_click = let_go_of_mouse && is_active_and_hot(widget.id);
+    if (was_click) {
+        ui::sounds::select();
+    }
+    return was_click;
 }
 
 inline void handle_tabbing(const Widget& widget) {

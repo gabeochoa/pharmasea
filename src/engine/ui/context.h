@@ -11,6 +11,7 @@
 #include "../statemanager.h"
 #include "../type_name.h"
 #include "raylib.h"
+#include "sound.h"
 //
 #include "../font_sizer.h"
 #include "../uuid.h"
@@ -150,6 +151,7 @@ struct IUIContextInputManager {
         int code = KeyMap::get_key_code(STATE, name);
         bool a = _pressedWithoutEat(code);
         if (a) {
+            ui::sounds::select();
             eatKey();
             return a;
         }
@@ -157,6 +159,7 @@ struct IUIContextInputManager {
         GamepadButton butt = KeyMap::get_button(STATE, name);
         bool b = _pressedButtonWithoutEat(butt);
         if (b) {
+            ui::sounds::select();
             eatButton();
             return b;
         }
@@ -171,6 +174,7 @@ struct IUIContextInputManager {
                      })
                      .value_or(false);
         if (c) {
+            ui::sounds::select();
             eatAxis();
         }
         return c;

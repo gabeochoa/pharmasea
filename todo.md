@@ -46,7 +46,6 @@ kanban-plugin: basic
 - [ ] penalty if you make too much extra? waste too much ingredients
 - [ ] highlight spots on the map where this thing can go
 - [ ] Text doesnt rotate based on the camera
-- [ ] Hard to know what each machine does
 - [ ] Tell the player how many customers are coming this round
 - [ ] Not clear you can cycle through alcohols
 - [ ] guys keep coming back to register. eventually need to add money system or something
