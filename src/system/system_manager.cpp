@@ -662,7 +662,20 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
     // Because prereqs are handled, we dont need do check for them and can
     // assume that those bits will handle checking for it
 
-    bitset_utils::for_each_enabled_bit(possibleNewIGs, [](size_t index) {
+    OptEntity spawn_area =
+        EntityHelper::getFirstMatching([](const Entity& entity) {
+            if (entity.is_missing<IsFloorMarker>()) return false;
+            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+            return fm.type == IsFloorMarker::Type::Planning_SpawnArea;
+        });
+
+    if (!spawn_area) {
+        // TODO need to guarantee this exists
+        log_error("Could not find spawn area entity");
+    }
+
+    bitset_utils::for_each_enabled_bit(possibleNewIGs, [spawn_area](
+                                                           size_t index) {
         Ingredient ig = magic_enum::enum_value<Ingredient>(index);
 
         switch (ig) {
@@ -685,7 +698,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
 
                 auto et = EntityType::MedicineCabinet;
                 auto& entity = EntityHelper::createEntity();
-                convert_to_type(et, entity, {8, 8});
+                convert_to_type(et, entity, spawn_area->get<Transform>().as2());
 
             } break;
             case Pineapple:
@@ -702,7 +715,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
 
                 auto et = EntityType::PillDispenser;
                 auto& entity = EntityHelper::createEntity();
-                convert_to_type(et, entity, {8, 8});
+                convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
             case PinaJuice:
             case OrangeJuice:
@@ -717,7 +730,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
 
                 auto et = EntityType::Blender;
                 auto& entity = EntityHelper::createEntity();
-                convert_to_type(et, entity, {8, 8});
+                convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
             case SimpleSyrup: {
                 if (EntityHelper::doesAnyExistWithType(
@@ -727,7 +740,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 }
                 auto et = EntityType::SimpleSyrupHolder;
                 auto& entity = EntityHelper::createEntity();
-                convert_to_type(et, entity, {8, 8});
+                convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
             // TODO implement for these once thye have spawners
             case Salt:
