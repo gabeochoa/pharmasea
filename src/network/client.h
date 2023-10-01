@@ -6,6 +6,7 @@
 //
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
+#include "../engine/sound_library.h"
 
 namespace network {
 extern long long total_ping;
@@ -292,6 +293,20 @@ struct Client {
                 there_ping = info.pong - info.ping;
                 return_ping = pong - info.pong;
                 total_ping = pong - info.ping;
+            } break;
+
+            case ClientPacket::MsgType::PlaySound: {
+                ClientPacket::PlaySoundInfo info =
+                    std::get<ClientPacket::PlaySoundInfo>(packet.msg);
+
+                // TODO find a way to play a sound at a position?
+                // vec2 _pos = {
+                // info.location[0],
+                // info.location[1],
+                // };
+
+                SoundLibrary::get().play(info.sound.c_str());
+
             } break;
 
             default:

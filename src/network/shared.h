@@ -120,6 +120,7 @@ struct ClientPacket {
         PlayerLocation,
         PlayerRare,
         Ping,
+        PlaySound,
     } msg_type;
 
     struct PingInfo {
@@ -182,13 +183,19 @@ struct ClientPacket {
         long long last_ping = -1;
     };
 
+    struct PlaySoundInfo {
+        float location[2];
+        std::string sound;
+    };
+
     using Msg =
         std::variant<ClientPacket::AnnouncementInfo,
                      ClientPacket::PlayerControlInfo,
                      ClientPacket::PlayerJoinInfo, ClientPacket::GameStateInfo,
                      ClientPacket::MapInfo, ClientPacket::MapSeedInfo,
                      ClientPacket::PlayerInfo, ClientPacket::PlayerLeaveInfo,
-                     ClientPacket::PlayerRareInfo, ClientPacket::PingInfo>;
+                     ClientPacket::PlayerRareInfo, ClientPacket::PingInfo,
+                     ClientPacket::PlaySoundInfo>;
 
     Msg msg;
 };
@@ -229,6 +236,10 @@ inline std::ostream& operator<<(std::ostream& os,
             },
             [&](ClientPacket::PingInfo info) {
                 return fmt::format("Ping({}, {})", info.ping, info.pong);
+            },
+            [&](ClientPacket::PlaySoundInfo info) {
+                return fmt::format("PlaySound({} {}, {})", info.location[0],
+                                   info.location[1], info.sound);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }}
         // namespace network
@@ -309,6 +320,11 @@ void serialize(S& s, ClientPacket& packet) {
               [](S& s, ClientPacket::PingInfo& info) {
                   s.value8b(info.ping);
                   s.value8b(info.pong);
+              },
+              [](S& s, ClientPacket::PlaySoundInfo& info) {
+                  s.value4b(info.location[0]);
+                  s.value4b(info.location[1]);
+                  s.text1b(info.sound, network::MAX_SOUND_LENGTH);
               },
           });
 }

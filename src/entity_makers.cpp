@@ -728,8 +728,9 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
     addsIG.decrement_uses();
 
     // TODO only do this for liquid adds
-    // TODO add more sounds
-    SoundLibrary::get().play(strings::sounds::WATER);
+    // TODO add more sounds for different ingredients
+    network::Server::play_sound(drink.get<Transform>().as2(),
+                                strings::sounds::WATER);
 
     // We do == 0 because infinite is -1
     if (addsIG.uses_left() == 0) {
@@ -865,7 +866,8 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
             return;
         }
 
-        SoundLibrary::get().play(strings::sounds::BLENDER);
+        network::Server::play_sound(owner.get<Transform>().as2(),
+                                    strings::sounds::BLENDER);
 
         const float amt = 0.75f;
         hasWork.increase_pct(amt * dt);

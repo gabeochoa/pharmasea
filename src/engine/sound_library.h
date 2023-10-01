@@ -27,7 +27,7 @@ struct SoundLibrary {
         if (is_server()) {
             log_warn(
                 "You are playing sounds in the server, only the host will "
-                "hear these (trying to play {})",
+                "hear these (trying to play '{}')",
                 name);
         }
         PlaySound(get(name));

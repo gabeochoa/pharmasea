@@ -24,6 +24,8 @@ struct Server {
     static void forward_packet(const ClientPacket& p);
     static void stop();
 
+    static void play_sound(vec2 position, const std::string& sound);
+
     //
     void send_player_location_packet(int client_id, const vec3& pos,
                                      float face_direction,

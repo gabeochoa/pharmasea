@@ -12,7 +12,7 @@ struct BaseGameRendererLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
 
     BaseGameRendererLayer(const std::string& name)
-        : Layer(name.c_str()), ui_context(std::make_shared<ui::UIContext>()) {}
+        : Layer(name), ui_context(std::make_shared<ui::UIContext>()) {}
     virtual ~BaseGameRendererLayer() {}
 
     virtual void onUpdate(float) override {}

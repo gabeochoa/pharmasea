@@ -2,6 +2,8 @@
 
 #include <thread>
 
+#include "shared.h"
+
 namespace network {
 
 static std::shared_ptr<Server> g_server;
@@ -20,6 +22,24 @@ void Server::queue_packet(const ClientPacket& p) {
 }
 void Server::forward_packet(const ClientPacket& p) {
     g_server->packet_queue.push_back(p);
+}
+
+void Server::play_sound(vec2 position, const std::string& sound) {
+    Server::forward_packet(  //
+        ClientPacket{
+            //
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = ClientPacket::MsgType::PlaySound,
+            .msg =
+                ClientPacket::PlaySoundInfo{
+                    //
+                    .location = {position.x, position.y},
+                    .sound = sound
+                    //
+                }
+            //
+        }  //
+    );
 }
 
 void Server::stop() { g_server->running = false; }
