@@ -36,6 +36,7 @@ struct IsFloorMarker : public BaseComponent {
     void clear() { next_index = 0; }
 
     [[nodiscard]] int num_marked() const { return next_index + 1; }
+    [[nodiscard]] bool has_any_marked() const { return next_index != 0; }
 
    private:
     std::array<int, MAX_FLOOR_MARKERS> marked_entities;

@@ -116,6 +116,28 @@ void transform_snapper(Entity& entity, float) {
                                                : transform.raw());
 }
 
+// TODO should merge this with the trash one?
+void mark_item_in_spawn_area(Entity& entity, float) {
+    if (!check_type(entity, EntityType::FloorMarker)) return;
+    if (entity.is_missing<IsFloorMarker>()) return;
+    IsFloorMarker& ifm = entity.get<IsFloorMarker>();
+    if (ifm.type != IsFloorMarker::Planning_SpawnArea) return;
+
+    ifm.clear();
+
+    for (const auto& e : SystemManager::get().oldAll) {
+        if (!e) continue;
+        if (e->id == entity.id) continue;
+        // TODO only count things that can be trashed...
+        if (CheckCollisionBoxes(
+                e->get<Transform>().bounds(),
+                entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
+            log_info(" marking {} ", e->get<DebugName>().name());
+            ifm.mark(e->id);
+        }
+    }
+}
+
 void mark_trash_furniture(Entity& entity, float) {
     if (!check_type(entity, EntityType::FloorMarker)) return;
     if (entity.is_missing<IsFloorMarker>()) return;
@@ -1116,6 +1138,27 @@ void update_sophie(Entity& entity, float) {
         return;
     };
 
+    const auto _forgot_item_in_spawn_area = [&]() {
+        OptEntity spawn_area =
+            EntityHelper::getFirstMatching([](const Entity& entity) {
+                if (entity.is_missing<IsFloorMarker>()) return false;
+                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                return fm.type == IsFloorMarker::Type::Planning_SpawnArea;
+            });
+
+        bool has_item_in_spawn_area = false;
+
+        if (spawn_area) {
+            const IsFloorMarker& ifm = spawn_area->get<IsFloorMarker>();
+            has_item_in_spawn_area = ifm.has_any_marked();
+        }
+
+        entity.get<HasTimer>().write_reason(
+            HasTimer::WaitingReason::ItemInSpawnArea, has_item_in_spawn_area);
+
+        return;
+    };
+
     // TODO merge with map generation validation?
     // Run lightweight map validation
     const auto _lightweight_map_validation = [&entity]() {
@@ -1194,6 +1237,7 @@ void update_sophie(Entity& entity, float) {
         _player_holding_furniture,  //
         _bar_not_clean,             //
         _overlapping_furniture,     //
+        _forgot_item_in_spawn_area,
         _lightweight_map_validation,
     };
 
@@ -1637,6 +1681,7 @@ void SystemManager::planning_update(
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::update_held_furniture_position(entity, dt);
         system_manager::mark_trash_furniture(entity, dt);
+        system_manager::mark_item_in_spawn_area(entity, dt);
     });
 }
 

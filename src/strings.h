@@ -253,6 +253,8 @@ constexpr const char* BAR_NOT_CLEAN =
     "Can't start game until your bar is all clean";
 constexpr const char* FURNITURE_OVERLAPPING =
     "Can't start game if you have furniture overlapping";
+constexpr const char* ITEMS_IN_SPAWN_AREA =
+    "Can't start game if you have furniture still in the spawn area";
 constexpr const char* LOADING = "Loading...";
 constexpr const char* OPEN = "OPEN";
 constexpr const char* CLOSING = "CLOSING";
