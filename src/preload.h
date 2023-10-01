@@ -144,6 +144,12 @@ struct Preload {
                 .c_str(),
             strings::sounds::WATER);
 
+        SoundLibrary::get().load(
+            Files::get()
+                .fetch_resource_path(strings::settings::SOUNDS, "blender.ogg")
+                .c_str(),
+            strings::sounds::BLENDER);
+
         Files::get().for_resources_in_folder(
             strings::settings::SOUNDS, "pa_announcements",
             [](const std::string& name, const std::string& filename) {
