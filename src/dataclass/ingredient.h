@@ -48,6 +48,13 @@ enum Ingredient {
     SimpleSyrup,
 };
 
+enum IngredientSoundType {
+    Solid,
+    Liquid,
+    Ice,
+    Viscous,
+};
+
 namespace ingredient {
 constexpr std::array<Ingredient, 7> Alcohols = {{
     Rum,
@@ -70,6 +77,43 @@ constexpr CEMap<Ingredient, Ingredient, Fruits.size()> BlendConvert = {{{
     {Orange, OrangeJuice},
     {Pineapple, PinaJuice},
 }}};
+
+// We could do this in a funciton switch if we add a ton of types or new
+// ingredients
+constexpr CEMap<Ingredient, IngredientSoundType,
+                magic_enum::enum_count<Ingredient>()>
+    IngredientSoundType = {{{
+        //
+        {Invalid, Solid},
+        {Salt, Solid},
+        {MintLeaf, Solid},
+        {Lemon, Solid},
+        {Lime, Solid},
+        {Orange, Solid},
+        {Cranberries, Solid},
+        {Pineapple, Solid},
+        {Coconut, Solid},
+        //
+        {Soda, Liquid},
+        {Rum, Liquid},
+        {Tequila, Liquid},
+        {Vodka, Liquid},
+        {Whiskey, Liquid},
+        {Gin, Liquid},
+        {TripleSec, Liquid},
+        {Bitters, Liquid},
+        {LemonJuice, Liquid},
+        {LimeJuice, Liquid},
+        {OrangeJuice, Liquid},
+        {CranberryJuice, Liquid},
+        {CoconutCream, Liquid},
+        {PinaJuice, Liquid},
+        //
+        {IceCubes, Ice},
+        {IceCrushed, Ice},
+        //
+        {SimpleSyrup, Viscous},
+    }}};
 
 }  // namespace ingredient
 

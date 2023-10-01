@@ -727,10 +727,18 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
     isdrink.add_ingredient(ing);
     addsIG.decrement_uses();
 
-    // TODO only do this for liquid adds
-    // TODO add more sounds for different ingredients
-    network::Server::play_sound(drink.get<Transform>().as2(),
-                                strings::sounds::WATER);
+    IngredientSoundType sound_type = ingredient::IngredientSoundType[ing];
+    switch (sound_type) {
+        case Solid:
+        case Ice:
+        case Viscous:
+            // TODO add new sounds for other ingredient types
+            break;
+        case Liquid:
+            network::Server::play_sound(drink.get<Transform>().as2(),
+                                        strings::sounds::WATER);
+            break;
+    }
 
     // We do == 0 because infinite is -1
     if (addsIG.uses_left() == 0) {
