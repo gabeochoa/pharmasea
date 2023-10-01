@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "is_server.h"
 #include "library.h"
 #include "singleton.h"
 
@@ -22,7 +23,15 @@ struct SoundLibrary {
         impl.load(filename, name);
     }
 
-    void play(const char* name) { PlaySound(get(name)); }
+    void play(const char* name) {
+        if (is_server()) {
+            log_warn(
+                "You are playing sounds in the server, only the host will "
+                "hear these (trying to play {})",
+                name);
+        }
+        PlaySound(get(name));
+    }
 
     void play_random_match(const std::string& prefix) {
         impl.get_random_match(prefix).map(raylib::PlaySound);
