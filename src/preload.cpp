@@ -17,7 +17,10 @@ i18n::LocalizationText* localization;
 
 namespace wfc {
 MapGenerationInformation MAP_GEN_INFO;
-}
+vec3 MAX_SPOT;
+Rectangle SPAWN_AREA;
+Rectangle TRASH_AREA;
+}  // namespace wfc
 
 namespace ui {
 UITheme UI_THEME = UITheme();
@@ -399,6 +402,15 @@ void Preload::load_map_generation_info() {
         "map_generator_input.json", [](const nlohmann::json& contents) {
             MAP_GEN_INFO.rows = contents.value("max_rows", 3);
             MAP_GEN_INFO.cols = contents.value("max_cols", 3);
+
+            MAX_SPOT = vec3{
+                static_cast<float>(MAP_GEN_INFO.rows),
+                0,
+                static_cast<float>(MAP_GEN_INFO.cols),
+            };
+
+            SPAWN_AREA = Rectangle{MAX_SPOT.x - 4, MAX_SPOT.z - 12, 2, 4};
+            TRASH_AREA = Rectangle{MAX_SPOT.x - 4, MAX_SPOT.z - 4, 2, 4};
 
             auto jpatterns = contents["patterns"];
 

@@ -11,6 +11,12 @@
 #include "recipe_library.h"
 #include "system/system_manager.h"
 #include "vec_util.h"
+#include "wave_collapse.h"
+
+namespace wfc {
+extern Rectangle SPAWN_AREA;
+extern Rectangle TRASH_AREA;
+}  // namespace wfc
 
 void LevelInfo::update_seed(const std::string& s) {
     // TODO implement this
@@ -105,7 +111,7 @@ void LevelInfo::generate_default_seed() {
     EntityHelper::invalidatePathCache();
 }
 
-void generate_in_game_map_wfc(const std::string& seed) {
+vec2 generate_in_game_map_wfc(const std::string& seed) {
     // int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     // int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     // int rows = 5;
@@ -115,17 +121,47 @@ void generate_in_game_map_wfc(const std::string& seed) {
     wc.run();
 
     generation::helper helper(wc.get_lines());
-    helper.generate();
+    vec2 max_location = helper.generate();
     helper.validate();
     EntityHelper::invalidatePathCache();
+
+    return max_location;
+}
+
+void LevelInfo::add_outside_triggers(vec2 origin) {
+    {
+        auto& entity = EntityHelper::createEntity();
+        vec3 position = {
+            origin.x + wfc::SPAWN_AREA.x,
+            TILESIZE / -2.f,
+            origin.y + wfc::SPAWN_AREA.y,
+        };
+        furniture::make_trigger_area(entity, position, wfc::SPAWN_AREA.width,
+                                     wfc::SPAWN_AREA.height,
+                                     IsTriggerArea::Lobby_PlayGame);
+    }
+
+    {
+        auto& entity = EntityHelper::createEntity();
+        vec3 position = {
+            origin.x + wfc::TRASH_AREA.x,
+            TILESIZE / -2.f,
+            origin.y + wfc::TRASH_AREA.y,
+        };
+        furniture::make_trigger_area(entity, position, wfc::TRASH_AREA.width,
+                                     wfc::TRASH_AREA.height,
+                                     IsTriggerArea::Progression_Option1);
+    }
 }
 
 void LevelInfo::generate_in_game_map() {
     if (seed == "default_seed") {
         generate_default_seed();
+        add_outside_triggers({0, 0});
         return;
     }
-    generate_in_game_map_wfc(seed);
+    vec2 mx = generate_in_game_map_wfc(seed);
+    add_outside_triggers(mx);
 
     return;
 

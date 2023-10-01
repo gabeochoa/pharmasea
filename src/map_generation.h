@@ -51,14 +51,16 @@ struct helper {
     vec2 x = {0, 0};
     vec2 z = {0, 0};
 
-    helper(const std::vector<std::string>& l) : lines(l) {}
+    explicit helper(const std::vector<std::string>& l) : lines(l) {}
 
-    void generate(std::function<Entity&()>&& add_to_map = nullptr) {
+    vec2 generate(std::function<Entity&()>&& add_to_map = nullptr) {
         vec2 origin = find_origin();
 
         const auto default_create = []() -> Entity& {
             return EntityHelper::createEntity();
         };
+
+        vec2 max_location = origin;
 
         for (int i = 0; i < (int) lines.size(); i++) {
             auto line = lines[i];
@@ -72,8 +74,13 @@ struct helper {
                     generate_entity_from_character(default_create, ch,
                                                    location);
                 }
+                if (location.x >= max_location.x &&
+                    location.y >= max_location.y) {
+                    max_location = location;
+                }
             }
         }
+        return max_location;
     }
 
     EntityType convert_character_to_type(char ch) {

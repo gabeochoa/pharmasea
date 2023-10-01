@@ -67,6 +67,7 @@ struct LevelInfo {
     void generate_in_game_map();
     auto get_rand_walkable();
     auto get_rand_walkable_register();
+    void add_outside_triggers(vec2 origin);
 
    private:
     friend bitsery::Access;
