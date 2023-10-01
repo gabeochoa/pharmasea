@@ -106,9 +106,9 @@ struct SettingsLayer : public Layer {
         footer = rect::bpad(footer, 50);
 
         {
-            auto [master_vol, music_vol, ui_theme, resolution, language,
-                  streamer, postprocessing, snapCamera] =
-                rect::hsplit<8>(rect::bpad(rows, 85), 20);
+            auto [master_vol, music_vol, sfx_vol, ui_theme, resolution,
+                  language, streamer, postprocessing, snapCamera] =
+                rect::hsplit<9>(rect::bpad(rows, 85), 20);
 
             {
                 auto [label, control] = rect::vsplit(master_vol, 30);
@@ -133,6 +133,19 @@ struct SettingsLayer : public Layer {
                                {.value = Settings::get().data.music_volume});
                     result) {
                     Settings::get().update_music_volume(result.as<float>());
+                }
+            }
+
+            {
+                auto [label, control] = rect::vsplit(sfx_vol, 30);
+                control = rect::rpad(control, 30);
+
+                text(Widget{label}, text_lookup(strings::i18n::SOUND_VOLUME));
+                if (auto result =
+                        slider(Widget{control},
+                               {.value = Settings::get().data.sound_volume});
+                    result) {
+                    Settings::get().update_sound_volume(result.as<float>());
                 }
             }
 

@@ -19,6 +19,7 @@
 #include "music_library.h"
 #include "resolution.h"
 #include "singleton.h"
+#include "sound_library.h"
 #include "util.h"
 // TODO we should not be reaches outside of engine
 #include "../strings.h"
@@ -46,6 +47,7 @@ struct Data {
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;
     float music_volume = 0.5f;
+    float sound_volume = 0.5f;
     bool show_streamer_safe_box = false;
     std::string username;
     bool enable_postprocessing = true;
@@ -61,6 +63,7 @@ struct Data {
         s.object(resolution);
         s.value4b(master_volume);
         s.value4b(music_volume);
+        s.value4b(sound_volume);
         s.value1b(show_streamer_safe_box);
         s.text1b(username, network::MAX_NAME_LENGTH);
         s.value1b(enable_postprocessing);
@@ -76,6 +79,7 @@ struct Data {
            << data.resolution.height << std::endl;
         os << "master vol: " << data.master_volume << std::endl;
         os << "music vol: " << data.music_volume << std::endl;
+        os << "sound vol: " << data.sound_volume << std::endl;
         os << "Safe box: " << data.show_streamer_safe_box << std::endl;
         os << "username: " << data.username << std::endl;
         os << "post_processing: " << data.enable_postprocessing << std::endl;
@@ -153,6 +157,7 @@ struct Settings {
         log_info("master volume changed to {}", data.master_volume);
 
         MusicLibrary::get().update_volume(data.music_volume);
+        SoundLibrary::get().update_volume(data.sound_volume);
 
         raylib::SetMasterVolume(data.master_volume);
     }
@@ -160,6 +165,11 @@ struct Settings {
     void update_music_volume(float nv) {
         data.music_volume = util::clamp(nv, 0.f, 1.f);
         MusicLibrary::get().update_volume(data.music_volume);
+    }
+
+    void update_sound_volume(float nv) {
+        data.sound_volume = util::clamp(nv, 0.f, 1.f);
+        SoundLibrary::get().update_volume(data.sound_volume);
     }
 
     void update_streamer_safe_box(bool sssb) {
@@ -185,7 +195,7 @@ struct Settings {
     // TODO these could be private and inside the ctor/dtor with RAII if we are
     // okay with running on get() and ignoring the result
 
-    // TODO music volumes only see to take effect once you open SettingsLayer
+    // TODO music volumes only seem to take effect once you open SettingsLayer
     bool load_save_file() {
         std::ifstream ifs(Files::get().settings_filepath());
         if (!ifs.is_open()) {
@@ -311,6 +321,7 @@ struct Settings {
         // version doesnt need update
         update_window_size(data.resolution);
         update_music_volume(data.music_volume);
+        update_sound_volume(data.sound_volume);
         update_master_volume(data.master_volume);
         update_streamer_safe_box(data.show_streamer_safe_box);
         update_language_name(data.lang_name);

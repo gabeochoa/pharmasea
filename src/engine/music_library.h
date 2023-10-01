@@ -30,6 +30,8 @@ struct MusicLibrary {
     void unload_all() { impl.unload_all(); }
 
    private:
+    // This note is also referenced in sound library
+    //
     // Note: this is set from settings
     // we store this because when a new music is added it uses the default
     // volume instead of the one in settings because we are reactive. this
@@ -43,7 +45,7 @@ struct MusicLibrary {
         }
 
         void update_volume(float new_v) {
-            for (auto kv : storage) {
+            for (const auto& kv : storage) {
                 log_info("updating music volume for {} to {}", kv.first, new_v);
                 raylib::SetMusicVolume(kv.second, new_v);
             }

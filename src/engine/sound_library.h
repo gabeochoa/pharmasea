@@ -10,9 +10,6 @@ SINGLETON_FWD(SoundLibrary)
 struct SoundLibrary {
     SINGLETON(SoundLibrary)
 
-    // TODO if we add a "sound effects" volume slider, we have to do the logic
-    // from MusicLibrary
-
     [[nodiscard]] raylib::Sound& get(const std::string& name) {
         return impl.get(name);
     }
@@ -37,9 +34,17 @@ struct SoundLibrary {
         impl.get_random_match(prefix).map(raylib::PlaySound);
     }
 
+    void update_volume(float new_v) {
+        impl.update_volume(new_v);
+        current_volume = new_v;
+    }
+
     void unload_all() { impl.unload_all(); }
 
    private:
+    // Note: Read note in MusicLibrary
+    float current_volume = 1.f;
+
     struct SoundLibraryImpl : Library<raylib::Sound> {
         virtual raylib::Sound convert_filename_to_object(
             const char*, const char* filename) override {
@@ -47,6 +52,13 @@ struct SoundLibrary {
         }
         virtual void unload(raylib::Sound sound) override {
             raylib::UnloadSound(sound);
+        }
+
+        void update_volume(float new_v) {
+            for (const auto& kv : storage) {
+                log_info("updating sound volume for {} to {}", kv.first, new_v);
+                raylib::SetSoundVolume(kv.second, new_v);
+            }
         }
     } impl;
 };
