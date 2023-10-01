@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Include="..\README.md" />
     <None Include="..\resources\config\settings.json" />
+    <None Include="..\src\makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\bitsery_include.h" />
@@ -195,8 +196,10 @@
     <ClInclude Include="..\src\text_util.h" />
     <ClInclude Include="..\src\vec_util.h" />
     <ClInclude Include="..\src\vendor_include.h" />
+    <ClInclude Include="..\src\wave_collapse.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\engine\app.cpp" />
     <ClCompile Include="..\src\engine\files.cpp" />
     <ClCompile Include="..\src\engine\globals_register.cpp" />
@@ -208,12 +211,12 @@
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
     <ClCompile Include="..\src\level_info.cpp" />
-    <ClCompile Include="..\src\map_generation.cpp" />
     <ClCompile Include="..\src\network\server.cpp" />
     <ClCompile Include="..\src\preload.cpp" />
     <ClCompile Include="..\src\system\input_process_manager.cpp" />
     <ClCompile Include="..\src\system\rendering_system.cpp" />
     <ClCompile Include="..\src\system\system_manager.cpp" />
+    <ClCompile Include="..\src\wave_collapse.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
