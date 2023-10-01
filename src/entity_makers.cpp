@@ -992,14 +992,16 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
             if (cod.num_alcoholic_drinks_had <= 0) return false;
 
             IsSpawner& vom_spewer = entity.get<IsSpawner>();
-            vom_spewer.set_total(randIn(0, cod.num_alcoholic_drinks_had));
+            vom_spewer.increase_total(randIn(0, cod.num_alcoholic_drinks_had));
             vom_spewer.set_time_between(2.f);
 
             return true;
         })
         // check if there is already vomit in that spot
         .enable_prevent_duplicates()
-        .set_total(0)
+        // This has to be 1 so that the above validation function runs at least
+        // once
+        .set_total(1)
         .set_time_between(2.f);
     // TODO should we by default give the mop? or should you be able to
     // clean by hand but slowly?

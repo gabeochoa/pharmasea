@@ -43,6 +43,11 @@ struct IsSpawner : public BaseComponent {
         return *this;
     }
 
+    auto& increase_total(int mx) {
+        max_spawned += mx;
+        return *this;
+    }
+
     // TODO probably need a thing to specify the units
     auto& set_time_between(float s) {
         spread = s;
