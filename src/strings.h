@@ -131,6 +131,8 @@ constexpr const char* SELECT = "select";
 constexpr const char* CLICK = "click";
 constexpr const char* WATER = "water";
 constexpr const char* BLENDER = "blender";
+constexpr const char* SOLID = "solid";
+constexpr const char* ICE = "ice";
 
 }  // namespace sounds
 
