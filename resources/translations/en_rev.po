@@ -73,6 +73,9 @@ msgstr "emuloV retsaM"
 msgid "Music Volume"
 msgstr "emuloV cisuM"
 
+msgid "SFX Volume"
+msgstr "emuloV XFS"
+
 msgid "Resolution"
 msgstr "noituloseR"
 
