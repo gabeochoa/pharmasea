@@ -456,6 +456,29 @@ void render_floor_marker(const Entity& entity, float) {
 
     // we dont need this since the caller of render_floor_marker doesnt return
     // render_simple_normal(entity, dt);
+
+    // Next lets draw the trash marker
+    const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
+    if (ifm.type == IsFloorMarker::Type::Planning_TrashArea) {
+        for (int i = 0; i < ifm.num_marked(); i++) {
+            EntityID id = ifm.marked_ids()[i];
+            OptEntity marked_entity = EntityHelper::getEntityForID(id);
+            if (!marked_entity) continue;
+            render_trash_marker(marked_entity.asE());
+        }
+    }
+}
+
+void render_trash_marker(const Entity& entity) {
+    const Transform& transform = entity.get<Transform>();
+
+    auto font = Preload::get().font;
+    auto fsize = 500.f;
+    vec3 position = transform.pos();
+    position.y += TILESIZE * 1.5f;
+
+    // TODO eventually replace with a trash icon
+    raylib::DrawText3D(font, "X", position, fsize, 0, 0, false, WHITE);
 }
 
 void render_patience(const Entity& entity, float) {

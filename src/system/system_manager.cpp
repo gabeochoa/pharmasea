@@ -116,6 +116,26 @@ void transform_snapper(Entity& entity, float) {
                                                : transform.raw());
 }
 
+void mark_trash_furniture(Entity& entity, float) {
+    if (!check_type(entity, EntityType::FloorMarker)) return;
+    if (entity.is_missing<IsFloorMarker>()) return;
+    IsFloorMarker& ifm = entity.get<IsFloorMarker>();
+    if (ifm.type != IsFloorMarker::Planning_TrashArea) return;
+
+    ifm.clear();
+
+    for (const auto& e : SystemManager::get().oldAll) {
+        if (!e) continue;
+        if (e->id == entity.id) continue;
+        // TODO only count things that can be trashed...
+        if (CheckCollisionBoxes(
+                e->get<Transform>().bounds(),
+                entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
+            ifm.mark(e->id);
+        }
+    }
+}
+
 // TODO if cannot be placed in this spot make it obvious to the user
 void update_held_furniture_position(Entity& entity, float) {
     if (entity.is_missing_any<Transform, CanHoldFurniture>()) return;
@@ -559,6 +579,15 @@ void release_mop_buddy_at_start_of_day(Entity& entity) {
     chi.update(nullptr, -1);
 }
 
+void delete_trash_when_leaving_planning(Entity& entity) {
+    if (!check_type(entity, EntityType::FloorMarker)) return;
+    if (entity.is_missing<IsFloorMarker>()) return;
+    const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
+    if (ifm.type != IsFloorMarker::Planning_TrashArea) return;
+
+    // TODO actually delete marked items
+}
+
 void delete_customers_when_leaving_inround(Entity& entity) {
     // TODO im thinking this might not be enough if we have
     // robots that can order for people or something
@@ -670,7 +699,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
         });
 
     if (!spawn_area) {
-        // TODO need to guarantee this exists
+        // TODO need to guarantee this exists long before we get here
         log_error("Could not find spawn area entity");
     }
 
@@ -697,6 +726,8 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 }
 
                 auto et = EntityType::MedicineCabinet;
+                // TODO can we combine all these places and just use the switch
+                // to validate if we need to spawn and what type to spawn?
                 auto& entity = EntityHelper::createEntity();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
 
@@ -1524,6 +1555,7 @@ void SystemManager::process_state_change(
             system_manager::handle_autodrop_furniture_when_exiting_planning(
                 entity);
             system_manager::release_mop_buddy_at_start_of_day(entity);
+            system_manager::delete_trash_when_leaving_planning(entity);
         });
     }
 
@@ -1599,6 +1631,7 @@ void SystemManager::planning_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::update_held_furniture_position(entity, dt);
+        system_manager::mark_trash_furniture(entity, dt);
     });
 }
 

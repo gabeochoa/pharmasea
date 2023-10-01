@@ -8,6 +8,7 @@
 #include <bitsery/ext/std_bitset.h>
 #include <bitsery/ext/std_map.h>
 #include <bitsery/ext/std_optional.h>
+#include <bitsery/ext/std_set.h>
 #include <bitsery/ext/std_smart_ptr.h>
 #include <bitsery/ext/std_tuple.h>
 #include <bitsery/ext/std_variant.h>
