@@ -46,7 +46,6 @@ kanban-plugin: basic
 - [ ] penalty if you make too much extra? waste too much ingredients
 - [ ] highlight spots on the map where this thing can go
 - [ ] Text doesnt rotate based on the camera
-- [ ] Tell the player how many customers are coming this round
 - [ ] Not clear you can cycle through alcohols
 - [ ] guys keep coming back to register. eventually need to add money system or something
 - [ ] Should alcohol have to be put back? should it be like the soda / simple syrup
@@ -64,13 +63,14 @@ kanban-plugin: basic
 - [ ] mojito model is big square
 - [ ] having pathfinding crashes when rendering the waiting queue
 - [ ] controls dont work for gamepad in settings during game
-- [ ] vomit is broken not working
 - [ ] lime doesnt want to go into drink when cup is in register
 
 
 ## complete
 
 **Complete**
+- [x] Tell the player how many customers are coming this round
+- [x] vomit is broken not working
 - [x] Client player cant change settings because menu::State is being overriden by host
 - [x] if you take the drink back from the customer you crash
 - [x] Automatically teleport new players when joining InRound / Planning etc
