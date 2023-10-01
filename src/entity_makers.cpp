@@ -9,6 +9,7 @@
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
 #include "dataclass/ingredient.h"
+#include "engine/sound_library.h"
 #include "engine/ui/color.h"
 #include "engine/util.h"
 #include "entity.h"
@@ -725,6 +726,9 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 
     isdrink.add_ingredient(ing);
     addsIG.decrement_uses();
+
+    // TODO only do this for liquid adds
+    SoundLibrary::get().play(strings::sounds::WATER);
 
     // We do == 0 because infinite is -1
     if (addsIG.uses_left() == 0) {

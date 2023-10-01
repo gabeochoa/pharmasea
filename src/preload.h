@@ -138,6 +138,12 @@ struct Preload {
                 .c_str(),
             strings::sounds::CLICK);
 
+        SoundLibrary::get().load(
+            Files::get()
+                .fetch_resource_path(strings::settings::SOUNDS, "water.ogg")
+                .c_str(),
+            strings::sounds::WATER);
+
         Files::get().for_resources_in_folder(
             strings::settings::SOUNDS, "pa_announcements",
             [](const std::string& name, const std::string& filename) {
