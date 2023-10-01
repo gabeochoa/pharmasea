@@ -658,9 +658,12 @@ void handle_grab(Entity& player) {
 
         OptEntity closest_furniture = EntityHelper::getClosestMatchingFurniture(
             playerT, cho.reach(), [&player](const Entity& furn) -> bool {
-                // You should not be able to take from a named character
-                // ie other player / customer
-                if (furn.has<HasName>()) return false;
+                // You should not be able to take from
+                // other player / customer
+                if (check_type(furn, EntityType::Customer)) return false;
+                if (check_type(furn, EntityType::Player)) return false;
+                if (check_type(furn, EntityType::RemotePlayer)) return false;
+
                 // This furniture can never hold anything so no
                 // match
                 if (furn.is_missing<CanHoldItem>()) return false;
