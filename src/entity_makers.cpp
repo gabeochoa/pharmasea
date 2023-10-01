@@ -6,6 +6,7 @@
 #include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
+#include "components/is_floor_marker.h"
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
 #include "dataclass/ingredient.h"
@@ -63,7 +64,7 @@ void register_all_components() {
         DebugName, Transform, HasName,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
-        IsDrink, IsPnumaticPipe, IsProgressionManager,
+        IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
@@ -606,6 +607,23 @@ void make_mop_holder(Entity& mop_holder, vec2 pos) {
             .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
+void make_floor_marker(Entity& floor_marker, vec3 pos, float width,
+                       float height, IsFloorMarker::Type type) {
+    make_entity(floor_marker, {EntityType::FloorMarker}, pos);
+
+    floor_marker.get<Transform>().update_size({
+        width,
+        TILESIZE / 20.f,
+        height,
+    });
+
+    floor_marker.addComponent<SimpleColoredBoxRenderer>()
+        .update_face(PINK)
+        .update_base(PINK);
+
+    floor_marker.addComponent<IsFloorMarker>(type);
+}
+
 void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
                        float height, IsTriggerArea::Type type) {
     make_entity(trigger_area, {EntityType::TriggerArea}, pos);
@@ -1121,6 +1139,7 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
             make_mop_buddy(entity, location);
         } break;
         case EntityType::TriggerArea:
+        case EntityType::FloorMarker:
         case EntityType::Vomit:
         case EntityType::SodaSpout:
         case EntityType::Drink:

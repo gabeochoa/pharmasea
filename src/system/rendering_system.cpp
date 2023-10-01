@@ -412,6 +412,52 @@ void render_trigger_area(const Entity& entity, float dt) {
     render_simple_normal(entity, dt);
 }
 
+void render_floor_marker(const Entity& entity, float) {
+    if (entity.is_missing<IsFloorMarker>()) return;
+
+    const Transform& transform = entity.get<Transform>();
+
+    vec3 pos = transform.pos();
+    vec3 size = transform.size();
+
+    vec3 text_position = {pos.x - (size.x / 2.f),     //
+                          pos.y + (TILESIZE / 10.f),  //
+                          pos.z - (size.z / 3.f)};
+
+    auto font = Preload::get().font;
+    // TODO eventually we can detect the size to fit the text correctly
+    // but thats more of an issue for translations since i can manually
+    // place the english
+    auto fsize = 500.f;
+
+    const auto _get_string = [](const Entity& entity) {
+        switch (entity.get<IsFloorMarker>().type) {
+            case IsFloorMarker::Unset:
+                return "";
+            case IsFloorMarker::Planning_SpawnArea:
+                return text_lookup(strings::i18n::FLOORMARKER_NEW_ITEMS);
+            case IsFloorMarker::Planning_TrashArea:
+                return text_lookup(strings::i18n::FLOORMARKER_TRASH);
+        }
+        return "";
+    };
+
+    const std::string title = _get_string(entity);
+
+    log_ifx(title.empty(), LogLevel::LOG_WARN,
+            "Rendering trigger area with empty text string: id{} pos{}",
+            entity.id, pos);
+
+    raylib::DrawText3D(font, title.c_str(), text_position, fsize,
+                       4,      // font spacing
+                       4,      // line spacing
+                       false,  // backface
+                       WHITE);
+
+    // we dont need this since the caller of render_floor_marker doesnt return
+    // render_simple_normal(entity, dt);
+}
+
 void render_patience(const Entity& entity, float) {
     if (entity.is_missing<HasPatience>()) return;
     const Transform& transform = entity.get<Transform>();
@@ -498,6 +544,10 @@ void render_normal(const Entity& entity, float dt) {
     if (entity.has<IsTriggerArea>()) {
         render_trigger_area(entity, dt);
         return;
+    }
+
+    if (entity.has<IsFloorMarker>()) {
+        render_floor_marker(entity, dt);
     }
 
     if (entity.has<CanBeHighlighted>() &&

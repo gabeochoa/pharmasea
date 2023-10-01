@@ -260,6 +260,9 @@ constexpr const char* CLOSED = "CLOSED";
 constexpr const char* NEXT_ROUND_COUNTDOWN = "Next Round Starting In";
 constexpr const char* CHARACTER_SWITCHER = "Character Switcher";
 
+constexpr const char* FLOORMARKER_TRASH = "Trash";
+constexpr const char* FLOORMARKER_NEW_ITEMS = "New Items";
+
 constexpr const char* FAKESTRING_CAPS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 constexpr const char* FAKESTRING_NAPS = "abcdefghijklmnopqrstuvwxyz ";
 constexpr const char* FAKESTRING_NUMS = "0123456789_-+=/[];,.<>?:";

@@ -409,15 +409,16 @@ void Preload::load_map_generation_info() {
                 static_cast<float>(MAP_GEN_INFO.cols),
             };
 
-            SPAWN_AREA = Rectangle{MAX_SPOT.x - 4, MAX_SPOT.z - 12, 2, 4};
-            TRASH_AREA = Rectangle{MAX_SPOT.x - 4, MAX_SPOT.z - 4, 2, 4};
+            // TODO so we draw from the center and this will look off
+            SPAWN_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z - 12, 7, 2};
+            TRASH_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z - 4, 7, 2};
 
             auto jpatterns = contents["patterns"];
 
             int id = 0;
             for (auto jpat : jpatterns) {
                 Connections connections;
-                for (auto c : jpat["connections"]) {
+                for (const auto& c : jpat["connections"]) {
                     connections.insert(
                         magic_enum::enum_cast<wfc::Rose>(c.get<std::string>())
                             .value());

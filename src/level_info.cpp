@@ -2,6 +2,7 @@
 #include "level_info.h"
 
 #include "camera.h"
+#include "components/is_floor_marker.h"
 #include "components/is_progression_manager.h"
 #include "components/is_trigger_area.h"
 #include "engine/globals.h"
@@ -136,9 +137,9 @@ void LevelInfo::add_outside_triggers(vec2 origin) {
             TILESIZE / -2.f,
             origin.y + wfc::SPAWN_AREA.y,
         };
-        furniture::make_trigger_area(entity, position, wfc::SPAWN_AREA.width,
+        furniture::make_floor_marker(entity, position, wfc::SPAWN_AREA.width,
                                      wfc::SPAWN_AREA.height,
-                                     IsTriggerArea::Lobby_PlayGame);
+                                     IsFloorMarker::Type::Planning_SpawnArea);
     }
 
     {
@@ -148,9 +149,9 @@ void LevelInfo::add_outside_triggers(vec2 origin) {
             TILESIZE / -2.f,
             origin.y + wfc::TRASH_AREA.y,
         };
-        furniture::make_trigger_area(entity, position, wfc::TRASH_AREA.width,
+        furniture::make_floor_marker(entity, position, wfc::TRASH_AREA.width,
                                      wfc::TRASH_AREA.height,
-                                     IsTriggerArea::Progression_Option1);
+                                     IsFloorMarker::Type::Planning_TrashArea);
     }
 }
 

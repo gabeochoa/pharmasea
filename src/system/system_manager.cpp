@@ -819,7 +819,9 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             ita.update_subtitle(text_lookup(strings::i18n::LOADING));
             return;
         } break;
-        default:
+        case IsTriggerArea::Unset:
+        case IsTriggerArea::Progression_Option1:
+        case IsTriggerArea::Progression_Option2:
             break;
     }
 

@@ -5,6 +5,7 @@
 #include <string>  // for basic_string
 
 #include "components/has_work.h"
+#include "components/is_floor_marker.h"
 #include "components/is_trigger_area.h"
 #include "engine/ui/color.h"
 #include "entity.h"   // for Item, DebugOptions, Entity
@@ -34,6 +35,8 @@ void make_fast_forward(Entity&, vec2 pos);
 // TODO :BE: i dont like that we need to include ITA here...
 void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
                        float height, IsTriggerArea::Type type);
+void make_floor_marker(Entity& floor_marker, vec3 pos, float width,
+                       float height, IsFloorMarker::Type type);
 
 }  // namespace furniture
 

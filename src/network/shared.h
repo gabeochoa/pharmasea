@@ -76,7 +76,7 @@ struct PolymorphicBaseClass<BaseComponent>
           UsesCharacterModel, ShowsProgressBar, DebugName, HasDynamicModelName,
           IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,
           HasRopeToItem, HasSubtype, IsItem, IsDrink, AddsIngredient,
-          CanOrderDrink, IsPnumaticPipe, IsProgressionManager,
+          CanOrderDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};
