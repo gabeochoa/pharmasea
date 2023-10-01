@@ -65,7 +65,6 @@ kanban-plugin: basic
 - [ ] having pathfinding crashes when rendering the waiting queue
 - [ ] controls dont work for gamepad in settings during game
 - [ ] vomit is broken not working
-- [ ] if you take the drink back from the customer you crash
 - [ ] lime doesnt want to go into drink when cup is in register
 
 
@@ -73,6 +72,7 @@ kanban-plugin: basic
 
 **Complete**
 - [x] Client player cant change settings because menu::State is being overriden by host
+- [x] if you take the drink back from the customer you crash
 - [x] Automatically teleport new players when joining InRound / Planning etc
 
 
