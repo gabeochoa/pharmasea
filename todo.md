@@ -33,6 +33,11 @@ kanban-plugin: basic
 - [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
 
 
+## no repro
+
+- [ ] cosmopolitan model is invisible
+
+
 ## design decisions
 
 - [ ] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
@@ -41,23 +46,37 @@ kanban-plugin: basic
 - [ ] penalty if you make too much extra? waste too much ingredients
 - [ ] highlight spots on the map where this thing can go
 - [ ] Text doesnt rotate based on the camera
+- [ ] Hard to know what each machine does
+- [ ] Tell the player how many customers are coming this round
+- [ ] Not clear you can cycle through alcohols
+- [ ] guys keep coming back to register. eventually need to add money system or something
+- [ ] Should alcohol have to be put back? should it be like the soda / simple syrup
+- [ ] add practice mode to learn recipe
+- [ ] need preview for where item will go
 
 
 ## broke
 
-- [ ] Client player cant change settings because menu::State is being overriden by host
-- [ ] Automatically teleport new players when joining InRound / Planning etc
 - [ ] default language is reverse which is confusing
 - [ ] PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way
 - [ ] - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
 - [ ] at round 3 the people got stuck in line as if there was an invis person at the front
 - [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
-- [ ] mojito model is big square  
+- [ ] mojito model is big square
+- [ ] having pathfinding crashes when rendering the waiting queue
+- [ ] controls dont work for gamepad in settings during game
+- [ ] vomit is broken not working
+- [ ] if you take the drink back from the customer you crash
+- [ ] lime doesnt want to go into drink when cup is in register
 
 
-## no repro
+## complete
 
-- [ ] cosmopolitan model is invisible
+**Complete**
+- [x] Client player cant change settings because menu::State is being overriden by host
+- [x] Automatically teleport new players when joining InRound / Planning etc
+
+
 
 
 %% kanban:settings
