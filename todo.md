@@ -40,7 +40,6 @@ kanban-plugin: basic
 
 ## design decisions
 
-- [ ] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
 - [ ] Simple Syrup doesnt dissapear after one use and its kinda the only one that does that…
 - [ ] During planning its hard to know what each machine it, not obvious
 - [ ] penalty if you make too much extra? waste too much ingredients
@@ -61,8 +60,7 @@ kanban-plugin: basic
 - [ ] at round 3 the people got stuck in line as if there was an invis person at the front
 - [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
 - [ ] mojito model is big square
-- [ ] having pathfinding crashes when rendering the waiting queue
-- [ ] controls dont work for gamepad in settings during game
+- [ ] having pathfinding crashes when rendering the waiting queue (disabled it for now )
 - [ ] lime doesnt want to go into drink when cup is in register
 
 
@@ -70,10 +68,12 @@ kanban-plugin: basic
 
 **Complete**
 - [x] Tell the player how many customers are coming this round
+- [x] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
 - [x] vomit is broken not working
 - [x] Client player cant change settings because menu::State is being overriden by host
 - [x] if you take the drink back from the customer you crash
 - [x] Automatically teleport new players when joining InRound / Planning etc
+- [x] controls dont work for gamepad in settings during game
 
 
 

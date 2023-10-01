@@ -132,6 +132,7 @@ inline void startup() {
         //
         new HandLayer(),
         new ToastLayer(),
+        new SettingsLayer(),
         //
         new PauseLayer(),
         //
@@ -146,7 +147,6 @@ inline void startup() {
         new NetworkLayer(),
         new GameLayer(),
         new AboutLayer(),
-        new SettingsLayer(),
         new MenuLayer(),
     };
     for (auto& layer : layers) App::get().pushLayer(layer);
