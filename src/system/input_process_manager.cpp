@@ -20,6 +20,7 @@
 #include "../components/transform.h"
 #include "../entity.h"
 #include "../entity_helper.h"
+#include "../network/server.h"
 #include "expected.hpp"
 
 namespace system_manager {
@@ -334,9 +335,8 @@ void drop_held_furniture(Entity& player) {
     vec3 drop_location =
         vec::snap(vec::to3(player.get<Transform>().tile_infront(1)));
 
-    bool can_place = EntityHelper::isWalkable(vec::to2(drop_location));
-
     // TODO right now this doesnt work
+    bool can_place = EntityHelper::isWalkable(vec::to2(drop_location));
     // you cant place items back where they spawned originally when the map
     // generated
     can_place = true;
@@ -350,6 +350,10 @@ void drop_held_furniture(Entity& player) {
                  hf->id);
 
         EntityHelper::invalidatePathCache();
+
+        // TODO :PICKUP: i dont like that these are spread everywhere,
+        network::Server::play_sound(player.get<Transform>().as2(),
+                                    strings::sounds::PLACE);
     }
 
     // TODO need to make sure it doesnt place ontop of another
@@ -390,6 +394,10 @@ void handle_grab_or_drop(Entity& player) {
         furniture->get<CanBeHeld>().set_is_being_held(true);
 
         EntityHelper::invalidatePathCache();
+
+        // TODO :PICKUP: i dont like that these are spread everywhere,
+        network::Server::play_sound(player.get<Transform>().as2(),
+                                    strings::sounds::PICKUP);
 
         // TODO
         // NOTE: we want to remove the furniture ONLY from the nav mesh
@@ -628,10 +636,18 @@ void handle_drop(Entity& player) {
         _place_item_onto_furniture,
     };
 
+    bool item_merged = false;
     for (const auto& fn : fns) {
-        auto item_merged = fn();
-        if (item_merged) break;
-        log_info("{}", item_merged.error());
+        auto was_merged = fn();
+        item_merged |= was_merged.value_or(false);
+        if (was_merged) break;
+        log_info("{}", was_merged.error());
+    }
+
+    if (item_merged) {
+        // TODO :PICKUP: i dont like that these are spread everywhere,
+        network::Server::play_sound(player.get<Transform>().as2(),
+                                    strings::sounds::PLACE);
     }
 }
 
@@ -672,7 +688,12 @@ void handle_grab(Entity& player) {
     };
 
     bool picked_up_item = _try_to_pickup_item_from_furniture();
-    if (picked_up_item) return;
+    if (picked_up_item) {
+        // TODO :PICKUP: i dont like that these are spread everywhere,
+        network::Server::play_sound(player.get<Transform>().as2(),
+                                    strings::sounds::PICKUP);
+        return;
+    }
 
     // Handles the non-furniture grabbing case
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
@@ -690,6 +711,10 @@ void handle_grab(Entity& player) {
 
     player.get<CanHoldItem>().update(
         EntityHelper::getEntityAsSharedPtr(closest_item), player.id);
+
+    // TODO :PICKUP: i dont like that these are spread everywhere,
+    network::Server::play_sound(player.get<Transform>().as2(),
+                                strings::sounds::PICKUP);
     return;
 }
 

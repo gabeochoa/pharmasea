@@ -133,6 +133,8 @@ constexpr const char* WATER = "water";
 constexpr const char* BLENDER = "blender";
 constexpr const char* SOLID = "solid";
 constexpr const char* ICE = "ice";
+constexpr const char* PICKUP = "pickup";
+constexpr const char* PLACE = "place";
 
 }  // namespace sounds
 
