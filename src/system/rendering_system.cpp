@@ -667,6 +667,20 @@ void render_walkable_spots(float) {
     }
 }
 
+void render_held_furniture_preview(const Entity& entity, float) {
+    if (entity.is_missing<CanHoldFurniture>()) return;
+    const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
+    if (chf.empty()) return;
+    const Transform& transform = entity.get<Transform>();
+
+    vec3 drop_location = entity.get<Transform>().drop_location();
+    bool walkable = EntityHelper::isWalkable(vec::to2(drop_location));
+
+    vec3 size = (transform.size() * 1.2f);
+    DrawCubeCustom(drop_location, size.x, size.y, size.z, transform.facing,
+                   walkable ? GREEN : RED, walkable ? GREEN : RED);
+}
+
 }  // namespace render_manager
 }  // namespace system_manager
 
@@ -729,6 +743,7 @@ void render(const Entity& entity, float dt, bool is_debug) {
     if (is_debug) render_debug(entity, dt);
 
     render_normal(entity, dt);
+    render_held_furniture_preview(entity, dt);
     render_floating_name(entity, dt);
     render_progress_bar(entity, dt);
 }

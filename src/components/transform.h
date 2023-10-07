@@ -216,6 +216,12 @@ struct Transform : public BaseComponent {
         return DirectionToFrontFaceMap.at(r);
     }
 
+    // This exists so that its easy to make sure the real location
+    // matches the preview location
+    [[nodiscard]] vec3 drop_location() const {
+        return vec::snap(vec::to3(tile_infront(1)));
+    }
+
     // TODO private
     float facing = 0.f;
 

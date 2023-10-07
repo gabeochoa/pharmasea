@@ -332,8 +332,7 @@ void drop_held_furniture(Entity& player) {
         return;
     }
 
-    vec3 drop_location =
-        vec::snap(vec::to3(player.get<Transform>().tile_infront(1)));
+    vec3 drop_location = player.get<Transform>().drop_location();
 
     // TODO right now this doesnt work
     bool can_place = EntityHelper::isWalkable(vec::to2(drop_location));
