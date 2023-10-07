@@ -116,13 +116,8 @@ void transform_snapper(Entity& entity, float) {
                                                : transform.raw());
 }
 
-// TODO should merge this with the trash one?
-void mark_item_in_spawn_area(Entity& entity, float) {
-    if (!check_type(entity, EntityType::FloorMarker)) return;
-    if (entity.is_missing<IsFloorMarker>()) return;
+void mark_entity_in_floor_marker(Entity& entity) {
     IsFloorMarker& ifm = entity.get<IsFloorMarker>();
-    if (ifm.type != IsFloorMarker::Planning_SpawnArea) return;
-
     ifm.clear();
 
     for (const auto& e : SystemManager::get().oldAll) {
@@ -139,24 +134,20 @@ void mark_item_in_spawn_area(Entity& entity, float) {
     }
 }
 
+void mark_item_in_spawn_area(Entity& entity, float) {
+    if (!check_type(entity, EntityType::FloorMarker)) return;
+    if (entity.is_missing<IsFloorMarker>()) return;
+    IsFloorMarker& ifm = entity.get<IsFloorMarker>();
+    if (ifm.type != IsFloorMarker::Planning_SpawnArea) return;
+    mark_entity_in_floor_marker(entity);
+}
+
 void mark_trash_furniture(Entity& entity, float) {
     if (!check_type(entity, EntityType::FloorMarker)) return;
     if (entity.is_missing<IsFloorMarker>()) return;
     IsFloorMarker& ifm = entity.get<IsFloorMarker>();
     if (ifm.type != IsFloorMarker::Planning_TrashArea) return;
-
-    ifm.clear();
-
-    for (const auto& e : SystemManager::get().oldAll) {
-        if (!e) continue;
-        if (e->id == entity.id) continue;
-        // TODO only count things that can be trashed...
-        if (CheckCollisionBoxes(
-                e->get<Transform>().bounds(),
-                entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
-            ifm.mark(e->id);
-        }
-    }
+    mark_entity_in_floor_marker(entity);
 }
 
 // TODO if cannot be placed in this spot make it obvious to the user
