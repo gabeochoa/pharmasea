@@ -56,7 +56,8 @@ struct SoundLibrary {
 
         void update_volume(float new_v) {
             for (const auto& kv : storage) {
-                log_info("updating sound volume for {} to {}", kv.first, new_v);
+                log_trace("updating sound volume for {} to {}", kv.first,
+                          new_v);
                 raylib::SetSoundVolume(kv.second, new_v);
             }
         }

@@ -128,7 +128,8 @@ void mark_item_in_spawn_area(Entity& entity, float) {
     for (const auto& e : SystemManager::get().oldAll) {
         if (!e) continue;
         if (e->id == entity.id) continue;
-        // TODO only count things that can be trashed...
+        if (check_type(entity, EntityType::Player)) continue;
+        // TODO only count things that are solid?
         if (CheckCollisionBoxes(
                 e->get<Transform>().bounds(),
                 entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
