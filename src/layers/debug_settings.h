@@ -15,10 +15,12 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     bool should_show_overlay = false;
     bool debug_ui_enabled = false;
     bool no_clip_enabled = false;
+    bool skip_ingredient_match = false;
 
     DebugSettingsLayer() : BaseGameRendererLayer("DebugSettings") {
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
         GLOBALS.set("no_clip_enabled", &no_clip_enabled);
+        GLOBALS.set("skip_ingredient_match", &skip_ingredient_match);
     }
 
     void toggle_to_planning() {
@@ -40,6 +42,13 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         if (KeyMap::get_button(menu::State::Game,
                                InputName::ToggleNetworkView) == event.button) {
             no_clip_enabled = !no_clip_enabled;
+            return true;
+        }
+
+        if (KeyMap::get_button(menu::State::Game,
+                               InputName::SkipIngredientMatch) ==
+            event.button) {
+            skip_ingredient_match = !skip_ingredient_match;
             return true;
         }
 
@@ -76,6 +85,16 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                                  InputName::ToggleDebugSettings) ==
             event.keycode) {
             should_show_overlay = !should_show_overlay;
+            return true;
+        }
+
+        // TODO can we catch if you are using get_button in onKeyPressed and
+        // warn?
+
+        if (KeyMap::get_key_code(menu::State::Game,
+                                 InputName::SkipIngredientMatch) ==
+            event.keycode) {
+            skip_ingredient_match = !skip_ingredient_match;
             return true;
         }
 
@@ -179,8 +198,8 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         auto content = rect::lpad(window, 10);
         content = rect::rpad(content, 90);
 
-        const auto [_a, debug_mode, no_clip, game_state, enabled_drinks, _b] =
-            rect::hsplit<6>(content, 10);
+        const auto [_a, debug_mode, no_clip, skip_ingredient_check, game_state,
+                    enabled_drinks, _b] = rect::hsplit<7>(content, 10);
 
         {
             auto [label, control] = rect::vsplit(debug_mode, 30);
@@ -188,8 +207,6 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
 
             text(Widget{label}, "Debug Mode");
 
-            // TODO default value wont be setup correctly without this
-            // bool sssb = Settings::get().data.show_streamer_safe_box;
             if (auto result =
                     checkbox(Widget{control},
                              CheckboxData{.selected = debug_ui_enabled});
@@ -204,14 +221,27 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
 
             text(Widget{label}, "No Clip");
 
-            // TODO default value wont be setup correctly without this
-            // bool sssb = Settings::get().data.show_streamer_safe_box;
             if (auto result = checkbox(
                     Widget{control}, CheckboxData{.selected = no_clip_enabled});
                 result) {
                 no_clip_enabled = result.as<bool>();
             }
         }
+
+        {
+            auto [label, control] = rect::vsplit(skip_ingredient_check, 30);
+            control = rect::rpad(control, 10);
+
+            text(Widget{label}, "Skip Ingredient Check");
+
+            if (auto result =
+                    checkbox(Widget{control},
+                             CheckboxData{.selected = skip_ingredient_match});
+                result) {
+                skip_ingredient_match = result.as<bool>();
+            }
+        }
+
         draw_game_state_controls(game_state);
     }
 };

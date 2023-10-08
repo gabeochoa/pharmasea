@@ -445,9 +445,15 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
 
     // TODO how many ingredients have to be correct?
     // as people get more drunk they should care less and less
-
+    //
     bool all_ingredients_match =
         drink->get<IsDrink>().matches_recipe(canOrderDrink.recipe());
+
+    // For debug, if we have this set, just assume it was correct
+    bool skip_ing_match =
+        GLOBALS.get_or_default<bool>("skip_ingredient_match", false);
+    if (skip_ing_match) all_ingredients_match = true;
+
     if (!all_ingredients_match) {
         system_manager::logging_manager::announce(entity,
                                                   "this isnt what i ordered");
