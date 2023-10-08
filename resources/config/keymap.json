@@ -118,6 +118,12 @@
                 "value": "GAMEPAD_BUTTON_RIGHT_FACE_UP"
             }
         ],
+        "SkipIngredientMatch": [
+            {
+                "type": 0,
+                "value": 73
+            }
+        ],
         "ToggleDebug": [
             {
                 "type": 0,
@@ -140,6 +146,10 @@
             {
                 "type": 0,
                 "value": 61
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_MIDDLE_LEFT"
             }
         ],
         "ToggleToInRound": [

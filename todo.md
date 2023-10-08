@@ -44,7 +44,6 @@ kanban-plugin: basic
 - [ ] During planning its hard to know what each machine it, not obvious
 - [ ] penalty if you make too much extra? waste too much ingredients
 - [ ] highlight spots on the map where this thing can go
-- [ ] need preview for where item will go
 - [ ] Text doesnt rotate based on the camera
 - [ ] Not clear you can cycle through alcohols
 - [ ] guys keep coming back to register. eventually need to add money system or something
@@ -67,6 +66,7 @@ kanban-plugin: basic
 ## complete
 
 **Complete**
+- [x] need preview for where item will go
 - [x] Tell the player how many customers are coming this round
 - [x] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
 - [x] vomit is broken not working

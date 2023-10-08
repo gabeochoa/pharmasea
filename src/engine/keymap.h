@@ -58,6 +58,8 @@ enum InputName {
     PlayerDoWork,
     ShowRecipeBook,
 
+    // TODO dont show any below in the settings page
+
     // Debug Only
     ToggleToPlanning,
     ToggleToInRound,
@@ -65,6 +67,7 @@ enum InputName {
     ToggleNetworkView,
     ToggleLobby,
     ToggleDebugSettings,
+    SkipIngredientMatch,
 };
 
 typedef std::bitset<magic_enum::enum_count<InputName>()> InputSet;
@@ -553,6 +556,10 @@ struct KeyMap {
 
         game_map[InputName::ToggleDebugSettings] = {
             raylib::KEY_GRAVE,
+        };
+
+        game_map[InputName::SkipIngredientMatch] = {
+            raylib::KEY_I,
         };
     }
 

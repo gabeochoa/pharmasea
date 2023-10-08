@@ -68,7 +68,7 @@ inline std::deque<vec2> reconstruct_path(std::deque<vec2> path,
 }
 
 inline std::deque<vec2> find_path_impl(
-    vec2 start, vec2 end, std::function<bool(vec2 pos)> is_walkable) {
+    vec2 start, vec2 end, const std::function<bool(vec2 pos)>& is_walkable) {
     if (!is_walkable(end)) {
         return std::deque<vec2>{};
     }
@@ -88,11 +88,13 @@ inline std::deque<vec2> find_path_impl(
 
     while (!openset.empty()) {
         i++;
-        if (i > 1000) {
-            log_warn("astar: hit interation limit");
+        vec2 cur = get_lowest_f(openset, fscore);
+
+        if (i > 10000) {
+            log_warn("astar: hit interation limit and still {} away",
+                     vec::distance(cur, end));
             break;
         }
-        vec2 cur = get_lowest_f(openset, fscore);
 
         for (auto it = openset.begin(); it != openset.end();) {
             if (it->x == cur.x && it->y == cur.y)
@@ -127,8 +129,8 @@ inline std::deque<vec2> find_path_impl(
 }
 
 // TODO should we add a cache here?
-inline std::deque<vec2> find_path(vec2 start, vec2 end,
-                                  std::function<bool(vec2 pos)> is_walkable) {
+inline std::deque<vec2> find_path(
+    vec2 start, vec2 end, const std::function<bool(vec2 pos)>& is_walkable) {
     return astar::find_path_impl(start, end, is_walkable);
 }
 
