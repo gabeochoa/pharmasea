@@ -42,9 +42,10 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         using namespace ui;
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto content = rect::tpad(window, 25);
+        auto content = rect::tpad(window, 30);
         content = rect::lpad(content, 20);
         content = rect::rpad(content, 75);
+        content = rect::bpad(content, 80);
 
         auto entity = get_timer_entity();
         if (!entity) return;
