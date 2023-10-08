@@ -52,18 +52,18 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         const HasTimer& ht = entity->get<HasTimer>();
         if (ht.type != HasTimer::Renderer::Round) return;
 
+        auto reason_spots =
+            rect::hsplit<HasTimer::WaitingReason::WaitingReasonLast>(content,
+                                                                     10);
+
         if (ht.block_state_change_reasons.none()) {
-            text(Widget{content},
+            text(Widget{reason_spots[0]},
                  fmt::format(
                      "{}: {}", text_lookup(strings::i18n::NEXT_ROUND_COUNTDOWN),
                      (int) ceil(util::trunc(ht.roundSwitchCountdown, 1))),
                  theme::Usage::Font, true);
             return;
         }
-
-        auto reason_spots =
-            rect::hsplit<HasTimer::WaitingReason::WaitingReasonLast>(content,
-                                                                     10);
 
         std::vector<std::string> active_reasons;
         for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {

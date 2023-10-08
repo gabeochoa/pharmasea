@@ -58,8 +58,8 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         window = rect::tpad(window, 10);
         window = rect::rpad(window, 20);
-        window = rect::bpad(window, 20);
         window = rect::lpad(window, 10);
+        window = rect::bpad(window, 20);
 
         const vec2 center = {
             window.x + (window.width / 2.f),

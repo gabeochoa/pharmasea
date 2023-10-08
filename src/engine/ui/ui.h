@@ -91,9 +91,10 @@ inline ElementResult text(const Widget& widget, const std::string& content,
     if (content.empty()) return false;
     if (draw_background) {
         internal::draw_rect_color(rect, widget.z_index, {0, 0, 0, 180});
-        internal::draw_text(text_lookup(content.c_str()),
-                            rect::expand_px(rect, 2.f), widget.z_index,
-                            ui::theme::Usage::DarkFont);
+        // Disable the dark text since it doesnt align correctly
+        // internal::draw_text(text_lookup(content.c_str()),
+        // rect::expand_px(rect, 2.f), widget.z_index,
+        // ui::theme::Usage::DarkFont);
     }
     internal::draw_text(text_lookup(content.c_str()), rect, widget.z_index,
                         color_usage);
