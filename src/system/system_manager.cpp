@@ -1026,6 +1026,8 @@ void run_timer(Entity& entity, float dt) {
     // the timer expired, time to switch rounds
     // but first need to check if we can or not
 
+    // TODO do we need to read the other reasons here? oct 8 '23
+
     const auto _validate_if_round_can_end = [&hastimer = std::as_const(ht)]() {
         switch (GameState::get().read()) {
             case game::State::Planning: {
@@ -1102,16 +1104,18 @@ void update_sophie(Entity& entity, float) {
         const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
         bool all_gone = true;
+        std::optional<vec2> pos = {};
         for (const Entity& e :
              EntityHelper::getAllWithType(EntityType::Customer)) {
             if (vec::distance(e.get<Transform>().as2(), endpos) >
                 TILESIZE * 2.f) {
                 all_gone = false;
+                pos = e.get<Transform>().as2();
                 break;
             }
         }
         entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::CustomersInStore, !all_gone);
+            HasTimer::WaitingReason::CustomersInStore, !all_gone, pos);
         return;
     };
 
@@ -1134,16 +1138,22 @@ void update_sophie(Entity& entity, float) {
             }
         }
         entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::HoldingFurniture, !all_empty);
+            HasTimer::WaitingReason::HoldingFurniture, !all_empty,
+            // players can figure it out on their own
+            {});
         return;
     };
 
     const auto _bar_not_clean = [&entity]() {
-        bool has_vomit =
-            !(EntityHelper::getAllWithType(EntityType::Vomit)).empty();
+        const auto vomits = EntityHelper::getAllWithType(EntityType::Vomit);
+        bool has_vomit = !(vomits.empty());
+
+        std::optional<vec2> vom_position =
+            has_vomit ? (vomits[0].get().get<Transform>().as2())
+                      : std::optional<vec2>{};
 
         entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::BarNotClean, has_vomit);
+            HasTimer::WaitingReason::BarNotClean, has_vomit, vom_position);
         return;
     };
 
@@ -1157,8 +1167,9 @@ void update_sophie(Entity& entity, float) {
             {-50, -50}, {50, 50});
 
         entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::FurnitureOverlapping, has_overlapping);
-
+            HasTimer::WaitingReason::FurnitureOverlapping, has_overlapping,
+            // TODO find which thing is overlapping
+            vec2{10.f, 10.f});
         return;
     };
 
@@ -1178,7 +1189,9 @@ void update_sophie(Entity& entity, float) {
         }
 
         entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::ItemInSpawnArea, has_item_in_spawn_area);
+            HasTimer::WaitingReason::ItemInSpawnArea, has_item_in_spawn_area,
+            // TODO find item in spawn area
+            {});
 
         return;
     };
@@ -1212,9 +1225,12 @@ void update_sophie(Entity& entity, float) {
             return false;
         };
 
+        std::optional<vec2> non_pathable_reg_location = {};
+        std::optional<vec2> bad_spot_reg_location = {};
         for (const Entity& r : all_registers) {
             if (_has_blocked_spot(r)) {
                 reg_with_bad_spots++;
+                bad_spot_reg_location = r.get<Transform>().as2();
             }
 
             auto new_path = astar::find_path(
@@ -1227,6 +1243,7 @@ void update_sophie(Entity& entity, float) {
 
             if (new_path.empty()) {
                 reg_with_no_pathing++;
+                non_pathable_reg_location = r.get<Transform>().as2();
             }
         }
 
@@ -1235,19 +1252,21 @@ void update_sophie(Entity& entity, float) {
         if (reg_with_bad_spots == (int) all_registers.size()) {
             // TODO maybe we could add a separate error message for this
             entity.get<HasTimer>().write_reason(
-                HasTimer::WaitingReason::NoPathToRegister, true);
+                HasTimer::WaitingReason::NoPathToRegister, true,
+                bad_spot_reg_location);
             return;
         }
 
         if (reg_with_no_pathing == (int) all_registers.size()) {
             // TODO maybe we could add a separate error message for this
             entity.get<HasTimer>().write_reason(
-                HasTimer::WaitingReason::NoPathToRegister, true);
+                HasTimer::WaitingReason::NoPathToRegister, true,
+                non_pathable_reg_location);
             return;
         }
 
         entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::NoPathToRegister, false);
+            HasTimer::WaitingReason::NoPathToRegister, false, {});
 
         return;
     };

@@ -1,9 +1,12 @@
 
 #pragma once
 
+#include "../components/collects_user_input.h"
 #include "../components/has_timer.h"
+#include "../components/transform.h"
 #include "../entity.h"
 #include "../entity_helper.h"
+#include "../map.h"
 #include "base_game_renderer.h"
 
 struct RoundEndReasonLayer : public BaseGameRendererLayer {
@@ -13,6 +16,14 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
 
     OptEntity get_timer_entity() {
         return EntityHelper::getFirstWithComponent<HasTimer>();
+    }
+
+    OptEntity get_player_entity() {
+        // TODO why doesnt this work?
+        // return EntityHelper::getFirstWithComponent<CollectsUserInput>();
+        auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+        if (!map_ptr) return {};
+        return map_ptr->get_remote_with_cui();
     }
 
     virtual bool shouldSkipRender() override { return !shouldRender(); }
@@ -66,9 +77,12 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         }
 
         std::vector<std::string> active_reasons;
+        std::vector<vec2> active_locations;
+        // TODO Why does this start a 1?
         for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {
             if (ht.read_reason(i)) {
                 active_reasons.push_back(ht.text_reason(i));
+                active_locations.push_back(ht.reason_location(i));
             }
         }
 
@@ -76,6 +90,29 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         for (auto txt : active_reasons) {
             text(Widget{reason_spots[i]}, active_reasons[i], theme::Usage::Font,
                  true);
+
+            // TODO eventually i would like this to be a 3d arrow
+            // that rotates to the right place
+            // but for now lets just draw text
+            OptEntity player = get_player_entity();
+            std::optional<vec2> possible_location = active_locations[i];
+
+            if (player && possible_location.has_value()) {
+                vec2 player_location = player->get<Transform>().as2();
+                vec2 location = vec2{possible_location.value().x,
+                                     possible_location.value().y};
+
+                vec2 diff{fabs(player_location.x - location.x),
+                          fabs(player_location.y - location.y)};
+
+                const auto location_text = fmt::format("{}", vec::snap(diff));
+
+                reason_spots[i].x += reason_spots[i].width;
+                reason_spots[i].width = 100.f;
+                text(Widget{reason_spots[i]}, location_text, theme::Usage::Font,
+                     true);
+            }
+
             i++;
         }
     }

@@ -51,6 +51,7 @@ struct HasTimer : public BaseComponent {
 
         // other pcomponent
         s.ext(block_state_change_reasons, bitsery::ext::StdBitset{});
+        s.container(block_state_change_locations);
         s.value4b(roundSwitchCountdown);
         s.value4b(roundSwitchCountdownReset);
         s.value4b(dayCount);
@@ -75,6 +76,8 @@ struct HasTimer : public BaseComponent {
     } waiting_reason = None;
 
     std::bitset<WaitingReason::WaitingReasonLast> block_state_change_reasons;
+    std::array<vec2, WaitingReasonLast> block_state_change_locations;
+    vec2 invalid_location = vec2{999.f, 999.f};
 
     [[nodiscard]] const char* text_reason(WaitingReason wr) const {
         switch (wr) {
@@ -103,6 +106,17 @@ struct HasTimer : public BaseComponent {
         return text_reason(name);
     }
 
+    [[nodiscard]] std::optional<vec2> reason_location(int i) const {
+        vec2 pos = block_state_change_locations[i];
+        // Theres some issue with serializing optional<vec> so instead
+        // we just put a magic value and when we see that on client
+        // we are good to just pretend it was invalid
+        if (vec::distance(pos, invalid_location) < 1.f) {
+            return {};
+        }
+        return pos;
+    }
+
     [[nodiscard]] bool read_reason(WaitingReason wr) const {
         return read_reason(magic_enum::enum_integer<WaitingReason>(wr));
     }
@@ -111,9 +125,11 @@ struct HasTimer : public BaseComponent {
         return block_state_change_reasons.test(i);
     }
 
-    void write_reason(WaitingReason wr, bool value) {
+    void write_reason(WaitingReason wr, bool value,
+                      std::optional<vec2> location) {
         auto i = magic_enum::enum_integer<WaitingReason>(wr);
         block_state_change_reasons[i] = value;
+        block_state_change_locations[i] = location.value_or(invalid_location);
         if (value) roundSwitchCountdown = roundSwitchCountdownReset;
     }
 
