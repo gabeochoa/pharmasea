@@ -544,7 +544,8 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
 
                 const IsProgressionManager& progressionManager =
                     sophie->get<IsProgressionManager>();
-                cod.current_order = progressionManager.get_random_drink();
+                cod.current_order =
+                    progressionManager.get_random_unlocked_drink();
             }
 
             vec2 start = entity.get<Transform>().as2();

@@ -24,6 +24,7 @@ struct IsProgressionManager : public BaseComponent {
         log_trace("unlocking drink {}", magic_enum::enum_name<Drink>(drink));
         enabledDrinks.set(drink);
         log_trace("unlock drink: {} {}", enabledDrinks, enabledIngredients);
+        lastUnlockedDrink = drink;
         return *this;
     }
 
@@ -41,7 +42,7 @@ struct IsProgressionManager : public BaseComponent {
         return enabledIngredients;
     }
 
-    Drink get_random_drink() const {
+    Drink get_random_unlocked_drink() const {
         log_trace("get random: {} {}", enabledDrinks, enabledIngredients);
         int drinkSetBit = bitset_utils::get_random_enabled_bit(enabledDrinks);
         if (drinkSetBit == -1) {
@@ -75,6 +76,8 @@ struct IsProgressionManager : public BaseComponent {
         return !is_ingredient_unlocked(ingredient);
     }
 
+    [[nodiscard]] Drink get_last_unlocked() const { return lastUnlockedDrink; }
+
     // TODO make private
     bool isUpgradeRound = true;
     bool collectedOptions = false;
@@ -83,6 +86,7 @@ struct IsProgressionManager : public BaseComponent {
 
     DrinkSet enabledDrinks;
     IngredientBitSet enabledIngredients;
+    Drink lastUnlockedDrink = coke;
 
    private:
     friend bitsery::Access;

@@ -5,8 +5,13 @@
 
 struct Entity;
 
-typedef std::function<void(Entity&, vec2)> SpawnFn;
-typedef std::function<bool(Entity&, vec2)> ValidationSpawnFn;
+struct SpawnInfo {
+    vec2 location;
+    bool is_first_this_round;
+};
+
+using SpawnFn = std::function<void(Entity&, const SpawnInfo&)>;
+using ValidationSpawnFn = std::function<bool(Entity&, const SpawnInfo&)>;
 
 struct IsSpawner : public BaseComponent {
     virtual ~IsSpawner() {}
@@ -78,13 +83,13 @@ struct IsSpawner : public BaseComponent {
         countdown += spread;
     }
 
-    void spawn(Entity& entity, vec2 pos) {
-        spawn_fn(entity, pos);
+    void spawn(Entity& entity, SpawnInfo info) {
+        spawn_fn(entity, info);
         num_spawned++;
     }
 
-    [[nodiscard]] bool validate(Entity& entity, vec2 pos) {
-        return validation_spawn_fn ? validation_spawn_fn(entity, pos) : true;
+    [[nodiscard]] bool validate(Entity& entity, SpawnInfo info) {
+        return validation_spawn_fn ? validation_spawn_fn(entity, info) : true;
     }
 
     [[nodiscard]] bool prevent_dupes() const {

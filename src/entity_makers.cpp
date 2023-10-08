@@ -658,10 +658,10 @@ void make_sophie(Entity& sophie, vec3 pos) {
     sophie.addComponent<IsProgressionManager>().init();
 }
 
-void make_vomit(Entity& vomit, vec2 pos) {
+void make_vomit(Entity& vomit, const SpawnInfo& info) {
     make_entity(vomit, {.type = EntityType::Vomit});
 
-    vomit.get<Transform>().init({pos.x, 0, pos.y},
+    vomit.get<Transform>().init({info.location.x, 0, info.location.y},
                                 {TILESIZE, TILESIZE, TILESIZE});
     if (ENABLE_MODELS) {
         vomit.addComponent<ModelRenderer>(EntityType::Vomit);
@@ -981,15 +981,33 @@ void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
 
 }  // namespace items
 
-void make_customer(Entity& customer, vec2 p, bool has_order) {
+void make_customer(Entity& customer, SpawnInfo info, bool has_order) {
     make_aiperson(customer, DebugOptions{.type = EntityType::Customer},
-                  vec::to3(p));
+                  vec::to3(info.location));
 
     // TODO set a random character model ?
     customer.addComponent<HasName>().update(get_random_name());
 
     // TODO for now, eventually move to customer spawner
-    if (has_order) customer.addComponent<CanOrderDrink>();
+    if (has_order) {
+        CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();
+        // If we are the first guy spawned this round, force the drink to be the
+        // most recently unlocked one
+        if (info.is_first_this_round) {
+            const auto sophie =
+                EntityHelper::getFirstWithComponent<IsProgressionManager>();
+            if (sophie) {
+                const IsProgressionManager& ipp =
+                    sophie->get<IsProgressionManager>();
+
+                cod.set_first_order(ipp.get_last_unlocked());
+            } else {
+                log_warn(
+                    "Spawning first customer but could not find progression "
+                    "manager");
+            }
+        }
+    }
 
     customer.addComponent<HasPatience>().update_max(20.f);
 
@@ -1004,7 +1022,7 @@ void make_customer(Entity& customer, vec2 p, bool has_order) {
         .addComponent<IsSpawner>()  //
         .set_fn(&furniture::make_vomit)
         .set_spawn_sound(strings::sounds::VOMIT)
-        .set_validation_fn([](Entity& entity, vec2) {
+        .set_validation_fn([](Entity& entity, const SpawnInfo&) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet
             if (cod.num_orders_had <= 0) return false;

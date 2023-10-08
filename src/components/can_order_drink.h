@@ -59,10 +59,17 @@ struct CanOrderDrink : public BaseComponent {
         }
     }
 
+    auto& set_first_order(Drink d) {
+        forced_first_order = d;
+        return *this;
+    }
+
     // TODO make private
     int num_orders_rem = -1;
     int num_orders_had = 0;
     Drink current_order;
+
+    std::optional<Drink> forced_first_order;
 
     int num_alcoholic_drinks_had = 0;
 

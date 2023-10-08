@@ -976,8 +976,13 @@ void process_spawner(Entity& entity, float dt) {
     bool is_time_to_spawn = iss.pass_time(dt);
     if (!is_time_to_spawn) return;
 
+    SpawnInfo info{
+        .location = pos,
+        .is_first_this_round = (iss.get_num_spawned() == 0),
+    };
+
     // If there is a validation function check that first
-    bool can_spawn_here_and_now = iss.validate(entity, pos);
+    bool can_spawn_here_and_now = iss.validate(entity, info);
     if (!can_spawn_here_and_now) return;
 
     bool should_prev_dupes = iss.prevent_dupes();
@@ -994,7 +999,7 @@ void process_spawner(Entity& entity, float dt) {
     }
 
     auto& new_ent = EntityHelper::createEntity();
-    iss.spawn(new_ent, pos);
+    iss.spawn(new_ent, info);
     iss.post_spawn_reset();
 
     if (iss.has_spawn_sound()) {
@@ -1462,9 +1467,14 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
     {
         // TODO eventually read from game settings
+
         cod.num_orders_rem = randIn(0, 1);
         cod.num_orders_had = 0;
-        cod.current_order = progressionManager.get_random_drink();
+        // If we have a forced order use that otherwise grab a random unlocked
+        // drink
+        cod.current_order = cod.forced_first_order.value_or(
+            progressionManager.get_random_unlocked_drink());
+        cod.forced_first_order = {};
         cod.order_state = CanOrderDrink::OrderState::Ordering;
     }
 
