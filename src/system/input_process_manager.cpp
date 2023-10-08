@@ -749,6 +749,13 @@ void process_input(Entity& entity, const UserInput& input) {
                 break;
         }
 
+        // Because of predictive input, we run this _proc_single as the client
+        // and as the server
+        //
+        // For the client we only care about player movement, so if we are not
+        // the server then just skip the rest
+        if (!is_server()) return;
+
         switch (input_name) {
             case InputName::PlayerRotateFurniture:
                 planning::rotate_furniture(entity);

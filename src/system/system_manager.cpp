@@ -128,7 +128,7 @@ void mark_entity_in_floor_marker(Entity& entity) {
         if (CheckCollisionBoxes(
                 e->get<Transform>().bounds(),
                 entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
-            log_info(" marking {} ", e->get<DebugName>().name());
+            log_trace(" FloorMarker marking {} ", e->get<DebugName>().name());
             ifm.mark(e->id);
         }
     }
