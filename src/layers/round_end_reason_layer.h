@@ -42,7 +42,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         using namespace ui;
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto content = rect::tpad(window, 20);
+        auto content = rect::tpad(window, 25);
         content = rect::lpad(content, 20);
         content = rect::rpad(content, 75);
 
