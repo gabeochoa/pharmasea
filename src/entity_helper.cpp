@@ -290,7 +290,13 @@ OptEntity EntityHelper::getClosestMatchingEntity(
 
 bool EntityHelper::hasOverlappingSolidEntitiesInRange(vec2 range_min,
                                                       vec2 range_max) {
-    bool has_overlapping = false;
+    OptEntity e =
+        EntityHelper::getOverlappingSolidEntityInRange(range_min, range_max);
+    return e.valid();
+}
+
+OptEntity EntityHelper::getOverlappingSolidEntityInRange(vec2 range_min,
+                                                         vec2 range_max) {
     for (const std::shared_ptr<Entity>& e : get_entities()) {
         if (!e->has<IsSolid>()) continue;
         const auto pos = e->get<Transform>().as2();
@@ -305,16 +311,11 @@ bool EntityHelper::hasOverlappingSolidEntitiesInRange(vec2 range_min,
             if (pos2.y > range_max.y || pos2.y < range_min.y) continue;
 
             if (pos.x == pos2.x && pos.y == pos2.y) {
-                has_overlapping = true;
-                break;
+                return *e;
             }
         }
-
-        if (has_overlapping) {
-            break;
-        }
     }
-    return has_overlapping;
+    return {};
 }
 
 // TODO :INFRA: i think this is slower because we are doing "outside mesh"

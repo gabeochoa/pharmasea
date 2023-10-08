@@ -1163,13 +1163,17 @@ void update_sophie(Entity& entity, float) {
 
         // Right now the map is starting at 00 and at most is  -50,-50 to 50,50
 
-        bool has_overlapping = EntityHelper::hasOverlappingSolidEntitiesInRange(
-            {-50, -50}, {50, 50});
+        OptEntity overlapping_entity =
+            EntityHelper::getOverlappingSolidEntityInRange({-50, -50},
+                                                           {50, 50});
+        bool has_overlapping = overlapping_entity.valid();
+        std::optional<vec2> pos =
+            has_overlapping ? overlapping_entity->get<Transform>().as2()
+                            : std::optional<vec2>{};
 
         entity.get<HasTimer>().write_reason(
             HasTimer::WaitingReason::FurnitureOverlapping, has_overlapping,
-            // TODO find which thing is overlapping
-            vec2{10.f, 10.f});
+            pos);
         return;
     };
 

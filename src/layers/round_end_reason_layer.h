@@ -77,7 +77,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         }
 
         std::vector<std::string> active_reasons;
-        std::vector<vec2> active_locations;
+        std::vector<std::optional<vec2>> active_locations;
         // TODO Why does this start a 1?
         for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {
             if (ht.read_reason(i)) {

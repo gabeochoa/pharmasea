@@ -145,6 +145,9 @@ struct EntityHelper {
         return {};
     }
 
+    static OptEntity getOverlappingSolidEntityInRange(vec2 range_min,
+                                                      vec2 range_max);
+
     static bool hasOverlappingSolidEntitiesInRange(vec2 range_min,
                                                    vec2 range_max);
 
