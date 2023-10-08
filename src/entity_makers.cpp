@@ -512,8 +512,6 @@ void make_fruit_basket(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container, {EntityType::PillDispenser}, pos,
                                   EntityType::Fruit);
 
-    // TODO right now lets just worry about lemon first we can come back and
-    // handle other fruits later
     container.addComponent<Indexer>((int) ingredient::Fruits.size());
     container.get<IsItemContainer>().set_uses_indexer(true);
     //
@@ -522,6 +520,9 @@ void make_fruit_basket(Entity& container, vec2 pos) {
             const float amt = 2.f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
+                // TODO :backfill-correct: This should match whats in backfill
+                // container
+
                 const auto sophie =
                     EntityHelper::getFirstWithComponent<IsProgressionManager>();
                 if (!sophie) {

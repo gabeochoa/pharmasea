@@ -511,8 +511,35 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
     auto pos = entity.get<Transform>().as2();
 
     if (iic.should_use_indexer() && entity.has<Indexer>()) {
-        backfill_empty_container(iic.type(), entity, pos,
-                                 entity.get<Indexer>().value());
+        Indexer& indexer = entity.get<Indexer>();
+
+        // TODO :backfill-correct: This should match whats in container_haswork
+
+        // TODO For now we are okay doing this because the other indexer
+        // (alcohol) always unlocks rum first which is index 0. if that changes
+        // we gotta update this
+        if (check_type(entity, EntityType::PillDispenser)) {
+            const auto sophie =
+                EntityHelper::getFirstWithComponent<IsProgressionManager>();
+            if (!sophie) {
+                log_warn("was unable to fetch progression manager");
+                return;
+            }
+            const IsProgressionManager& ipp =
+                sophie->get<IsProgressionManager>();
+
+            size_t i = 0;
+            do {
+                i++;
+                indexer.increment();
+                if (i > (size_t) indexer.max()) break;
+            } while (
+                // TODO we only need the check_type above because we dont have a
+                // way to know which indexer we are operating on
+                ipp.is_ingredient_locked(ingredient::Fruits[indexer.value()]));
+        }
+
+        backfill_empty_container(iic.type(), entity, pos, indexer.value());
         entity.get<Indexer>().mark_change_completed();
         return;
     }
