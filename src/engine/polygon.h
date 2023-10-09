@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include <cstddef>
 #include <vector>
 
 #include "../external_include.h"
-//
 #include "../vec_util.h"
 #include "log.h"
 
@@ -21,7 +21,7 @@ struct Polygon {
 
     Polygon() {}
 
-    Polygon(Rectangle rect) {
+    explicit Polygon(Rectangle rect) {
         this->add(vec2{rect.x, rect.y});
         this->add(vec2{rect.x + rect.width, rect.y});
         this->add(vec2{rect.x, rect.y + rect.height});
@@ -29,6 +29,8 @@ struct Polygon {
 
     std::vector<vec3> as_3d() {
         std::vector<vec3> three_d;
+        three_d.reserve(hull.size());
+
         for (auto p : hull) {
             three_d.push_back(vec::to3(p));
         }
@@ -125,7 +127,6 @@ struct Polygon {
 
         andrew_chain();
         // grahamScan(p);
-        return;
     }
 
     float cross(vec2 o, vec2 a, vec2 b) const {

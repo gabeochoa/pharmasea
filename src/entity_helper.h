@@ -17,6 +17,7 @@
 #include "globals.h"
 
 //
+#include "engine/navmesh.h"
 #include "engine/statemanager.h"
 #include "entity.h"
 #include "entity_makers.h"
@@ -32,6 +33,10 @@ extern std::set<int> permanant_ids;
 extern std::map<vec2, bool> cache_is_walkable;
 
 struct EntityHelper {
+    static NavMesh& getNavMesh();
+    static void addToNavMesh(const Entity&);
+    static void removeFromNavMesh(const Entity&);
+
     struct CreationOptions {
         bool is_permanent;
     };
@@ -151,28 +156,11 @@ struct EntityHelper {
     static bool hasOverlappingSolidEntitiesInRange(vec2 range_min,
                                                    vec2 range_max);
 
-    // TODO :INFRA: i think this is slower because we are doing "outside mesh"
-    // as outside we should probably have just make some tiles for inside the
-    // map
-    // ('.' on map for example) and use those to mark where people can walk and
-    // where they cant
-    // static bool isWalkable_impl(const vec2& pos) {
-    // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-    // if (!nav) {
-    // return true;
-    // }
-    //
-    // for (auto kv : nav->entityShapes) {
-    // auto s = kv.second;
-    // if (s.inside(pos)) return false;
-    // }
-    // return true;
-    // }
-
     // TODO :PBUG: need to invalidate any current valid paths
     static void invalidatePathCacheLocation(vec2 pos);
     static void invalidatePathCache();
     static bool isWalkable(vec2 pos);
+    static bool isWalkableNavMesh(const vec2& pos);
 
     // each target get and path find runs through all entities
     // so this will just get slower and slower over time
