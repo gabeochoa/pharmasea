@@ -180,9 +180,10 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
                                     goal, p_size()));
         }
         // what happens if we get here and the path is still empty?
-        VALIDATE(!path_empty(), "path should no longer be empty");
-        log_warn("no pathing even after noclip... {} {} {}=>{}",
-                 entity.get<DebugName>().name(), entity.id, me, goal);
+        if (path_empty()) {
+            log_warn("no pathing even after noclip... {} {} {}=>{}",
+                     entity.get<DebugName>().name(), entity.id, me, goal);
+        }
     };
 
     const auto _grab_local_target = [this](const Entity& entity) {
