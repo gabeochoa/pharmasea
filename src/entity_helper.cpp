@@ -339,7 +339,8 @@ OptEntity EntityHelper::getOverlappingSolidEntityInRange(vec2 range_min,
 // TODO :PBUG: need to invalidate any current valid paths
 void EntityHelper::invalidatePathCacheLocation(vec2 pos) {
     if (!is_server()) {
-        log_error("client code is trying to invalide path cache");
+        // Turning off the warning because of input_process_manager _proc_single
+        // log_warn("client code is trying to invalide path cache");
         return;
     }
     cache_is_walkable.erase(pos);
@@ -347,7 +348,8 @@ void EntityHelper::invalidatePathCacheLocation(vec2 pos) {
 
 void EntityHelper::invalidatePathCache() {
     if (!is_server()) {
-        log_error("client code is trying to invalide path cache");
+        // Turning off the warning because of input_process_manager _proc_single
+        // log_warn("client code is trying to invalide path cache");
         return;
     }
     cache_is_walkable.clear();
