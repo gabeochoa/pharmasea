@@ -49,6 +49,9 @@ kanban-plugin: basic
 - [ ] guys keep coming back to register. eventually need to add money system or something
 - [ ] Should alcohol have to be put back? should it be like the soda / simple syrup
 - [ ] add practice mode to learn recipe
+- [ ] why should you clean up the bar? do people not want to come in? <br><br>cant serve until its clean?
+- [ ] Should the roomba only spawn by default for single player games? Should it spawn at the beginning ever?
+- [ ] We probably need some way in Progression screen to know what the new drink's recipe is like
 
 
 ## broke
@@ -61,6 +64,12 @@ kanban-plugin: basic
 - [ ] mojito model is big square
 - [ ] having pathfinding crashes when rendering the waiting queue (disabled it for now )
 - [ ] lime doesnt want to go into drink when cup is in register
+- [ ] mai tai has no model
+- [ ] drop preview box sometimes has the wrong color
+- [ ] lime wont go in unless i add lime juice first?
+- [ ] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
+- [ ] Roomba keeps getting stuck at exit
+- [ ] day 3 doesnt work, i think it skips unlock screen and that breaks it
 
 
 ## complete
