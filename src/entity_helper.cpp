@@ -1,18 +1,56 @@
 #include "entity_helper.h"
 
+#include "engine/navmesh.h"
+#include "engine/polygon.h"
 #include "system/input_process_manager.h"
+#include "vec_util.h"
 
 Entities client_entities_DO_NOT_USE;
 Entities server_entities_DO_NOT_USE;
+NavMesh server_navMesh;
 
 std::set<int> permanant_ids;
 std::map<vec2, bool> cache_is_walkable;
+std::map<vec2, bool> navcache_is_walkable;
 
 ///////////////////////////////////
 ///
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+NavMesh& EntityHelper::getNavMesh() {
+    if (!is_server()) {
+        log_warn(
+            "You are fetching nav mesh on client which will be empty or could "
+            "crash");
+    }
+    return server_navMesh;
+}
+
+Polygon getPolyForEntity(const Entity& entity) {
+    const Transform& transform = entity.get<Transform>();
+    const BoundingBox& box = transform.bounds();
+    return Polygon(Rectangle{box.min.x, box.min.z, box.max.x - box.min.x,
+                             box.max.z - box.min.z});
+}
+
+void EntityHelper::addToNavMesh(const Entity& entity) {
+    // Note: addShape merges shapes next to each other
+    //      this reduces the amount of loops overall
+    server_navMesh.addShape(getPolyForEntity(entity));
+    server_navMesh.addEntity(entity.id, getPolyForEntity(entity));
+
+    log_info("added entity to nav mesh {}{}", entity.get<DebugName>().name(),
+             entity.id);
+
+    cache_is_walkable.clear();
+}
+
+void EntityHelper::removeFromNavMesh(const Entity& entity) {
+    server_navMesh.removeEntity(entity.id);
+    cache_is_walkable.clear();
+}
 
 Entities& EntityHelper::get_entities() {
     if (is_server()) {
@@ -45,22 +83,11 @@ Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
 
     invalidatePathCache();
 
-    if (options.is_permanent) {
+    if (!options.is_permanent) {
         permanant_ids.insert(e->id);
     }
 
     return *e;
-
-    // if (!e->add_to_navmesh()) {
-    // return;
-    // }
-    // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-    // Note: addShape merges shapes next to each other
-    //      this reduces the amount of loops overall
-
-    // nav->addShape(getPolyForEntity(e));
-    // nav->addEntity(e->id, getPolyForEntity(e));
-    // cache_is_walkable.clear();
 }
 
 void EntityHelper::markIDForCleanup(int e_id) {
@@ -76,12 +103,6 @@ void EntityHelper::markIDForCleanup(int e_id) {
 }
 
 void EntityHelper::removeEntity(int e_id) {
-    // if (e->add_to_navmesh()) {
-    // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-    // nav->removeEntity(e->id);
-    // cache_is_walkable.clear();
-    // }
-
     auto& entities = get_entities();
 
     auto newend = std::remove_if(
@@ -90,17 +111,6 @@ void EntityHelper::removeEntity(int e_id) {
 
     entities.erase(newend, entities.end());
 }
-
-//  Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
-// vec2 pos = vec::to2(e->snap_position());
-// Rectangle rect = {
-// pos.x,
-// pos.y,
-// TILESIZE,
-// TILESIZE,
-// };
-// return Polygon(rect);
-// }
 
 void EntityHelper::cleanup() {
     // Cleanup entities marked cleanup
@@ -318,24 +328,6 @@ OptEntity EntityHelper::getOverlappingSolidEntityInRange(vec2 range_min,
     return {};
 }
 
-// TODO :INFRA: i think this is slower because we are doing "outside mesh"
-// as outside we should probably have just make some tiles for inside the
-// map
-// ('.' on map for example) and use those to mark where people can walk and
-// where they cant
-// static bool isWalkable_impl(const vec2& pos) {
-// auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-// if (!nav) {
-// return true;
-// }
-//
-// for (auto kv : nav->entityShapes) {
-// auto s = kv.second;
-// if (s.inside(pos)) return false;
-// }
-// return true;
-// }
-
 // TODO :PBUG: need to invalidate any current valid paths
 void EntityHelper::invalidatePathCacheLocation(vec2 pos) {
     if (!is_server()) {
@@ -351,6 +343,27 @@ void EntityHelper::invalidatePathCache() {
         return;
     }
     cache_is_walkable.clear();
+}
+
+// TODO :INFRA: i think this is slower because we are doing "outside mesh"
+// as outside we should probably have just make some tiles for inside the
+// map
+// ('.' on map for example) and use those to mark where people can walk and
+// where they cant
+bool EntityHelper::isWalkableNavMesh(const vec2& pos) {
+    const auto impl = [=]() {
+        for (const auto& kv : server_navMesh.entityShapes) {
+            auto s = kv.second;
+            if (s.inside(pos)) return false;
+        }
+        return true;
+    };
+
+    if (!navcache_is_walkable.contains(pos)) {
+        bool walkable = impl();
+        navcache_is_walkable[pos] = walkable;
+    }
+    return navcache_is_walkable[pos];
 }
 
 bool EntityHelper::isWalkable(vec2 pos) {

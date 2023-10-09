@@ -10,6 +10,7 @@
 #include "../camera.h"
 #include "../engine.h"
 #include "../engine/layer.h"
+#include "../engine/navmesh.h"
 #include "../map.h"
 #include "raylib.h"
 
@@ -122,16 +123,31 @@ struct GameLayer : public Layer {
             raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f},
                               (vec2){256.0f, 256.0f}, DARKGRAY);
             if (map_ptr) map_ptr->onDraw(dt);
-            // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-            // if (nav) {
-            // for (auto kv : nav->entityShapes) {
-            // DrawLineStrip2Din3D(kv.second.hull, PINK);
-            // }
-            //
-            // for (auto kv : nav->shapes) {
-            // DrawLineStrip2Din3D(kv.hull, PINK);
-            // }
-            // }
+
+            {
+                for (int i = -50; i < 50; i++) {
+                    for (int j = -50; j < 50; j++) {
+                        vec3 pos = vec3{1.f * i, 0, 1.f * j};
+                        bool is_walkable =
+                            EntityHelper::isWalkableNavMesh(vec::to2(pos));
+                        // if (!is_walkable) continue;
+
+                        DrawCubeV(pos,
+                                  vec3{TILESIZE, TILESIZE / 10.f, TILESIZE},
+                                  is_walkable ? GREEN : RED);
+                    }
+                }
+            }
+            if (false) {
+                const NavMesh& nav = EntityHelper::getNavMesh();
+                for (const auto& kv : nav.entityShapes) {
+                    DrawLineStrip2Din3D(kv.second.hull, PINK);
+                }
+
+                for (const auto& kv : nav.shapes) {
+                    DrawLineStrip2Din3D(kv.hull, PINK);
+                }
+            }
         }
         raylib::EndMode3D();
     }

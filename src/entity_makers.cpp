@@ -249,6 +249,8 @@ void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
         furniture.addComponent<CanBeHeld>();
         furniture.addComponent<CanBeHighlighted>();
     }
+
+    if (is_static) EntityHelper::addToNavMesh(furniture);
 }
 
 void process_table_working(Entity& table, HasWork& hasWork, Entity& player,
@@ -262,8 +264,6 @@ void process_table_working(Entity& table, HasWork& hasWork, Entity& player,
     // hasWork.call()
     HasWork& itemHasWork = tableCHI.item()->get<HasWork>();
     itemHasWork.call(hasWork, *tableCHI.item(), player, dt);
-
-    return;
 }
 
 void make_table(Entity& table, vec2 pos) {

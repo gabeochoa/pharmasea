@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "external_include.h"
+#include "../external_include.h"
 //
 #include "polygon.h"
 
@@ -14,10 +14,9 @@ struct NavMesh {
     void removeEntity(int e_id) {
         auto it = entityShapes.find(e_id);
         if (it != entityShapes.end()) entityShapes.erase(it);
-        return;
     }
 
-    void addShape(Polygon p, bool merge = true) {
+    void addShape(const Polygon& p, bool merge = true) {
         shapes.push_back(p);
 
         if (!merge) return;
@@ -40,7 +39,7 @@ struct NavMesh {
         }
     }
 
-    void removeShape(Polygon p) {
+    void removeShape(const Polygon& p) {
         // TODO this might split the shape in two
         // how do we figure out if we need to split ...
         for (auto& s : shapes) {
@@ -52,7 +51,7 @@ struct NavMesh {
         }
     }
 
-    bool overlap(Polygon a, Polygon b) const {
+    bool overlap(const Polygon& a, const Polygon& b) const {
         // first check if the two max radii circles overlap
         for (size_t i = 0; i < a.points.size(); i++) {
             if (b.inside(a.points[i])) return true;
@@ -60,4 +59,3 @@ struct NavMesh {
         return false;
     }
 };
-static NavMesh __navmesh___DO_NOT_USE_DIRECTLY;
