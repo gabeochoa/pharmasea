@@ -112,6 +112,8 @@ struct IsTriggerArea : public BaseComponent {
         s.value4b(completion_time_max);
         s.value4b(completion_time_passed);
 
+        s.value4b(type);
+
         s.value4b(max_title_length);
         s.text1b(_title, max_title_length);
         s.text1b(_subtitle, max_title_length);

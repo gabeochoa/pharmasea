@@ -329,7 +329,6 @@ void render_trigger_area(const Entity& entity, float dt) {
     // TODO add progress bar when all players are inside
 
     const IsTriggerArea& ita = entity.get<IsTriggerArea>();
-
     const Transform& transform = entity.get<Transform>();
 
     vec3 pos = transform.pos();
@@ -410,6 +409,43 @@ void render_trigger_area(const Entity& entity, float dt) {
     }
 
     render_simple_normal(entity, dt);
+
+    const auto _render_drink_preview = [&](IsTriggerArea::Type type) {
+        const auto sophies = EntityHelper::getAllWithType(EntityType::Sophie);
+        VALIDATE(!sophies.empty(), "there should always be a sophie");
+        const Entity& sophie = sophies[0];
+        const IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+        Drink drink = type == IsTriggerArea::Progression_Option1 ? ipm.option1
+                                                                 : ipm.option2;
+
+        const auto font = Preload::get().font;
+        const auto start_position =
+            transform.raw() + vec3{0, 1.0f * TILESIZE, -2.f * TILESIZE};
+
+        raylib::DrawFloatingText(start_position, font,
+                                 get_string_for_drink(drink).c_str());
+
+        auto ingredients = get_recipe_for_drink(drink);
+        int i = 0;
+
+        bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
+            Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
+            raylib::DrawFloatingText(
+                start_position - vec3{0, 0.3f * (i + 1), 0}, font,
+                fmt::format("{}", get_string_for_ingredient(ig)).c_str());
+            i++;
+        });
+    };
+
+    switch (ita.type) {
+        case IsTriggerArea::Unset:
+        case IsTriggerArea::Lobby_PlayGame:
+            break;
+        case IsTriggerArea::Progression_Option1:
+        case IsTriggerArea::Progression_Option2:
+            _render_drink_preview(ita.type);
+            break;
+    }
 }
 
 void render_floor_marker(const Entity& entity, float) {
@@ -454,8 +490,8 @@ void render_floor_marker(const Entity& entity, float) {
                        false,  // backface
                        WHITE);
 
-    // we dont need this since the caller of render_floor_marker doesnt return
-    // render_simple_normal(entity, dt);
+    // we dont need this since the caller of render_floor_marker doesnt
+    // return render_simple_normal(entity, dt);
 
     // Next lets draw the trash marker
     const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
@@ -527,9 +563,9 @@ void render_speech_bubble(const Entity& entity, float) {
 void render_waiting_queue(const Entity& entity, float) {
     if (entity.is_missing<HasWaitingQueue>()) return;
 
-    // TODO this keep crashing the game if you put the pumpkin holder somewhere
-    // else? im wondering if it has to do with the server thread killing the
-    // cache?
+    // TODO this keep crashing the game if you put the pumpkin holder
+    // somewhere else? im wondering if it has to do with the server thread
+    // killing the cache?
     return;
 
     const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
@@ -552,7 +588,8 @@ void render_waiting_queue(const Entity& entity, float) {
     }
 }
 
-// TODO theres two functions called render normal, maybe we should address this
+// TODO theres two functions called render normal, maybe we should address
+// this
 void render_normal(const Entity& entity, float dt) {
     //  TODO for now while we do dev work render it
     render_debug_subtype(entity, dt);
@@ -644,7 +681,8 @@ void render_progress_bar(const Entity& entity, float) {
 }
 
 void render_walkable_spots(float) {
-    // TODO For some reason this also triggers the walkable.contains segfault
+    // TODO For some reason this also triggers the walkable.contains
+    // segfault
     return;
 
     if (!GLOBALS.get<bool>("debug_ui_enabled")) return;

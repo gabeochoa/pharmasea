@@ -95,5 +95,8 @@ struct IsProgressionManager : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.ext(enabledDrinks, bitsery::ext::StdBitset{});
         s.ext(enabledIngredients, bitsery::ext::StdBitset{});
+
+        s.value4b(option1);
+        s.value4b(option2);
     }
 };
