@@ -48,3 +48,17 @@ template<typename T, std::size_t Size>
                                   [&key](const auto &v) { return v == key; });
     return itr != std::end(array);
 }
+
+template<typename T, std::size_t Size>
+[[nodiscard]] constexpr int index_of(const std::array<T, Size> &array,
+                                     const T &key) {
+    const auto itr = std::find(std::begin(array), std::end(array), key);
+    if (itr != std::end(array)) {
+        // Calculate the index by subtracting the beginning iterator
+        // from the found iterator
+        return static_cast<int>(std::distance(std::begin(array), itr));
+    } else {
+        // Item not found
+        return -1;
+    }
+}
