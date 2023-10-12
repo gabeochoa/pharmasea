@@ -465,6 +465,15 @@ void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
         CustomHeldItemPosition::Positioner::PnumaticPipe);
 }
 
+void make_single_alcohol(Entity& container, vec2 pos, int alcohol_index) {
+    furniture::make_itemcontainer(container, {EntityType::SingleAlcohol}, pos,
+                                  EntityType::Alcohol);
+
+    container.get<IsItemContainer>().set_uses_indexer(true);
+    container.addComponent<Indexer>((int) ingredient::Alcohols.size())
+        .set_value(alcohol_index);
+}
+
 void make_medicine_cabinet(Entity& container, vec2 pos) {
     furniture::make_itemcontainer(container, {EntityType::MedicineCabinet}, pos,
                                   EntityType::Alcohol);
@@ -1157,6 +1166,7 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::MopBuddy: {
             make_mop_buddy(entity, location);
         } break;
+        case EntityType::SingleAlcohol:
         case EntityType::TriggerArea:
         case EntityType::FloorMarker:
         case EntityType::Vomit:

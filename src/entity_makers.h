@@ -37,6 +37,7 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
                        float height, IsTriggerArea::Type type);
 void make_floor_marker(Entity& floor_marker, vec3 pos, float width,
                        float height, IsFloorMarker::Type type);
+void make_single_alcohol(Entity&, vec2, int);
 
 }  // namespace furniture
 
