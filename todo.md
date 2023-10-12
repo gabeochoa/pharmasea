@@ -51,6 +51,7 @@ kanban-plugin: basic
 - [ ] add practice mode to learn recipe
 - [ ] why should you clean up the bar? do people not want to come in? <br><br>cant serve until its clean?
 - [ ] Should the roomba only spawn by default for single player games? Should it spawn at the beginning ever?
+- [ ] Add purchasing medicine cab
 
 
 ## broke

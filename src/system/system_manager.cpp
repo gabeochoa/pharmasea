@@ -765,18 +765,37 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
             case Gin:
             case TripleSec:
             case Bitters: {
-                if (EntityHelper::doesAnyExistWithType(
-                        EntityType::MedicineCabinet)) {
-                    // nothing needed to do
-                    return;
+                {
+                    // nothing needed to do since this supports all alcs
+                    if (EntityHelper::doesAnyExistWithType(
+                            EntityType::MedicineCabinet)) {
+                        // TODO right now theres no way to get this, eventually
+                        // allow purchasing this
+                        return;
+                    }
+
+                    int alc_index =
+                        index_of<Ingredient, ingredient::Alcohols.size()>(
+                            ingredient::Alcohols, ig);
+
+                    // Does a single one exist for this alcohol
+                    if (EntityHelper::doesAnyExistMatchingFilter(
+                            [alc_index](const Entity& entity) {
+                                if (!check_type(entity,
+                                                EntityType::SingleAlcohol))
+                                    return false;
+                                if (entity.is_missing<Indexer>()) return false;
+                                return entity.get<Indexer>().value() ==
+                                       alc_index;
+                            })) {
+                        // nothing needed to do
+                        return;
+                    }
+
+                    auto& entity = EntityHelper::createEntity();
+                    furniture::make_single_alcohol(
+                        entity, spawn_area->get<Transform>().as2(), alc_index);
                 }
-
-                auto et = EntityType::MedicineCabinet;
-                // TODO can we combine all these places and just use the switch
-                // to validate if we need to spawn and what type to spawn?
-                auto& entity = EntityHelper::createEntity();
-                convert_to_type(et, entity, spawn_area->get<Transform>().as2());
-
             } break;
             case Pineapple:
             case Orange:
