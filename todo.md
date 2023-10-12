@@ -51,7 +51,6 @@ kanban-plugin: basic
 - [ ] add practice mode to learn recipe
 - [ ] why should you clean up the bar? do people not want to come in? <br><br>cant serve until its clean?
 - [ ] Should the roomba only spawn by default for single player games? Should it spawn at the beginning ever?
-- [ ] We probably need some way in Progression screen to know what the new drink's recipe is like
 
 
 ## broke
@@ -80,6 +79,7 @@ kanban-plugin: basic
 - [x] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
 - [x] vomit is broken not working
 - [x] Client player cant change settings because menu::State is being overriden by host
+- [x] We probably need some way in Progression screen to know what the new drink's recipe is like
 - [x] if you take the drink back from the customer you crash
 - [x] Automatically teleport new players when joining InRound / Planning etc
 - [x] controls dont work for gamepad in settings during game
