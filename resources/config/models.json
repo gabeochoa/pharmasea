@@ -478,6 +478,14 @@
         },
         {
             "folder": "models/kennynl",
+            "filename": "bathroomSinkSquare.obj",
+            "library_name": "ice_machine",
+            "size_scale": 1.2,
+            "position_offset": [0.0,-0.5,0.05],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "lampRoundFloor.obj",
             "library_name": "mop",
             "size_scale": 3.0,

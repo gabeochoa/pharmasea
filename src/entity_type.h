@@ -41,6 +41,7 @@ enum struct EntityType {
     MopBuddyHolder,
     MopBuddy,
     SimpleSyrupHolder,
+    IceMachine,
 
     //
     // Items

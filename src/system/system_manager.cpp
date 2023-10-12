@@ -838,12 +838,21 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 auto& entity = EntityHelper::createEntity();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
+            case IceCubes:
+            case IceCrushed: {
+                if (EntityHelper::doesAnyExistWithType(
+                        EntityType::IceMachine)) {
+                    // nothing needed to do
+                    return;
+                }
+                auto et = EntityType::IceMachine;
+                auto& entity = EntityHelper::createEntity();
+                convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+            } break;
             // TODO implement for these once thye have spawners
             case Salt:
             case MintLeaf:
             case Invalid:
-            case IceCubes:
-            case IceCrushed:
                 break;
         }
     });
@@ -1421,7 +1430,7 @@ void process_squirter(Entity& entity, float) {
     std::shared_ptr<Entity> drink = sqCHI.item();
     std::shared_ptr<Item> item = closest_furniture->get<CanHoldItem>().item();
 
-    bool cleanup = items::_add_ingredient_to_drink_NO_VALIDATION(*drink, *item);
+    bool cleanup = items::_add_item_to_drink_NO_VALIDATION(*drink, *item);
     if (cleanup) {
         closest_furniture->get<CanHoldItem>().update(nullptr, -1);
     }

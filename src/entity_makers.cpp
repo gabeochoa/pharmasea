@@ -58,6 +58,49 @@
 #include "recipe_library.h"
 #include "strings.h"
 
+namespace items {
+// Returns true if item was cleaned up
+bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient ing) {
+    IsDrink& isdrink = drink.get<IsDrink>();
+    isdrink.add_ingredient(ing);
+
+    IngredientSoundType sound_type = ingredient::IngredientSoundType.at(ing);
+
+    switch (sound_type) {
+        case Viscous:
+            // TODO add new sounds for other ingredient types
+        case Solid:
+            network::Server::play_sound(drink.get<Transform>().as2(),
+                                        strings::sounds::SOLID);
+            break;
+        case Ice:
+            network::Server::play_sound(drink.get<Transform>().as2(),
+                                        strings::sounds::ICE);
+            break;
+        case Liquid:
+            network::Server::play_sound(drink.get<Transform>().as2(),
+                                        strings::sounds::WATER);
+            break;
+    }
+    return true;
+}
+
+bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
+    AddsIngredient& addsIG = toadd.get<AddsIngredient>();
+    Ingredient ing = addsIG.get(toadd);
+
+    _add_ingredient_to_drink_NO_VALIDATION(drink, ing);
+
+    addsIG.decrement_uses();
+    // We do == 0 because infinite is -1
+    if (addsIG.uses_left() == 0) {
+        toadd.cleanup = true;
+        return true;
+    }
+    return false;
+}
+}  // namespace items
+
 void register_all_components() {
     Entity* entity = new Entity();
     entity->addAll<  //
@@ -465,6 +508,34 @@ void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
         CustomHeldItemPosition::Positioner::PnumaticPipe);
 }
 
+void make_ice_machine(Entity& machine, vec2 pos) {
+    furniture::make_furniture(
+        machine, DebugOptions{.type = EntityType::IceMachine}, pos);
+
+    machine.addComponent<HasWork>().init(
+        [](Entity&, HasWork& hasWork, Entity& player, float dt) {
+            CanHoldItem& chi = player.get<CanHoldItem>();
+            if (chi.empty()) return;
+            std::shared_ptr<Item> item = chi.item();
+            if (!check_type(*item, EntityType::Drink)) return;
+
+            Ingredient ing = Ingredient::IceCubes;
+
+            IsDrink& isdrink = item->get<IsDrink>();
+            if (isdrink.has_ingredient(ing)) return;
+
+            const float amt = 1.0f;
+            hasWork.increase_pct(amt * dt);
+
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+
+                items::_add_ingredient_to_drink_NO_VALIDATION(*item, ing);
+            }
+        });
+    machine.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
+}
+
 void make_single_alcohol(Entity& container, vec2 pos, int alcohol_index) {
     furniture::make_itemcontainer(container, {EntityType::SingleAlcohol}, pos,
                                   EntityType::Alcohol);
@@ -745,45 +816,10 @@ void make_mop(Item& mop, vec2 pos) {
         .set_hb_filter(EntityType::Player);
 }
 
-// Returns true if item was cleaned up
-bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
-    IsDrink& isdrink = drink.get<IsDrink>();
-
-    AddsIngredient& addsIG = toadd.get<AddsIngredient>();
-    Ingredient ing = addsIG.get(toadd);
-
-    isdrink.add_ingredient(ing);
-    addsIG.decrement_uses();
-
-    IngredientSoundType sound_type = ingredient::IngredientSoundType.at(ing);
-    switch (sound_type) {
-        case Viscous:
-            // TODO add new sounds for other ingredient types
-        case Solid:
-            network::Server::play_sound(drink.get<Transform>().as2(),
-                                        strings::sounds::SOLID);
-            break;
-        case Ice:
-            network::Server::play_sound(drink.get<Transform>().as2(),
-                                        strings::sounds::ICE);
-            break;
-        case Liquid:
-            network::Server::play_sound(drink.get<Transform>().as2(),
-                                        strings::sounds::WATER);
-            break;
-    }
-
-    // We do == 0 because infinite is -1
-    if (addsIG.uses_left() == 0) {
-        toadd.cleanup = true;
-        return true;
-    }
-    return false;
-}
-
 void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
                            float dt) {
     if (GameState::get().is_not(game::State::InRound)) return;
+
     auto _process_add_ingredient = [&]() {
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         // not holding anything
@@ -802,8 +838,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         hasWork.increase_pct(amt * dt);
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
-            bool cleaned_up =
-                _add_ingredient_to_drink_NO_VALIDATION(drink, *item);
+            bool cleaned_up = _add_item_to_drink_NO_VALIDATION(drink, *item);
             if (cleaned_up) playerCHI.update(nullptr, -1);
         }
     };
@@ -1159,6 +1194,9 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::SimpleSyrupHolder: {
             furniture::make_simple_syrup_holder(entity, location);
+        } break;
+        case EntityType::IceMachine: {
+            furniture::make_ice_machine(entity, location);
         } break;
         case EntityType::SimpleSyrup: {
             items::make_simple_syrup(entity, location);

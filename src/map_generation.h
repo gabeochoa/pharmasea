@@ -31,6 +31,7 @@ const char MED_CAB = 'M';
 const char FRUIT = 'F';
 const char BLENDER = 'b';
 const char SODA_MACHINE = 'S';
+const char ICE_MACHINE = 'I';
 
 const char CUPBOARD = 'd';
 const char SIMPLE_SYRUP = 'y';
@@ -161,6 +162,9 @@ struct helper {
             } break;
             case MOP_BUDDY: {
                 return EntityType::MopBuddyHolder;
+            } break;
+            case ICE_MACHINE: {
+                return EntityType::IceMachine;
             } break;
             case 32: {
                 // space
