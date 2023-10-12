@@ -30,6 +30,10 @@ struct Indexer : public BaseComponent {
     [[nodiscard]] int max() const { return max_value; }
 
     void update_max(int mx) { max_value = mx; }
+    auto& set_value(int val) {
+        index = val;
+        return *this;
+    }
 
    private:
     int index;
