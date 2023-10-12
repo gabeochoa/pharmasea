@@ -207,6 +207,15 @@ bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
     return false;
 }
 
+bool EntityHelper::doesAnyExistMatchingFilter(
+    const std::function<bool(RefEntity)>& filter) {
+    for (const std::shared_ptr<Entity>& e : get_entities()) {
+        if (!e) continue;
+        if (filter(*e)) return true;
+    }
+    return false;
+}
+
 std::vector<RefEntity> EntityHelper::getFilteredEntitiesInRange(
     vec2 pos, float range, std::function<bool(RefEntity)> filter) {
     std::vector<RefEntity> matching;
