@@ -754,14 +754,13 @@ void process_input(Entity& entity, const UserInput& input) {
         //
         // For the client we only care about player movement, so if we are not
         // the server then just skip the rest
+
+        // TODO we would like to disable this so placing preview works
+        // however it breaks all pickup/drop on non host client...
+        if (!is_server()) return;
         //
-        // if (!is_server()) return;
-        //
-        // ^^^ We cant use this because we actually do rely on pick/up
-        // because players arent serialized.
-        //
-        // So the canHoldFurniture isnt set correctly for our player
-        // if it was then we could just do the above without problems
+        // ^^^ This breaks clientside held furniture, which means the preview
+        // wont work with this
 
         switch (input_name) {
             case InputName::PlayerRotateFurniture:
