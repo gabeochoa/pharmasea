@@ -6,7 +6,7 @@
 #include "external_include.h"
 //
 
-typedef int EntityID;
+using EntityID = int;
 struct Entity;
 
 enum JobType {
@@ -81,7 +81,6 @@ struct Job {
 
     void run_job_tick(Entity& entity, float dt) {
         state = _run_job_tick(entity, dt);
-        return;
     }
 
     Job() {}
