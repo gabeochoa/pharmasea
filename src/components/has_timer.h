@@ -2,6 +2,7 @@
 
 #include "../engine/log.h"
 #include "../engine/statemanager.h"
+#include "../vec_util.h"
 #include "base_component.h"
 
 struct HasTimer : public BaseComponent {

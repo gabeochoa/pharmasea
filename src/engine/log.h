@@ -15,8 +15,6 @@ enum LogLevel {
     LOG_IF = 5,
 };
 
-extern int LOG_LEVEL;
-
 // TODO log to file
 
 // TODO right now having some issues with MSVC and not getting any decent error
