@@ -4,6 +4,7 @@
 
 Entities client_entities_DO_NOT_USE;
 Entities server_entities_DO_NOT_USE;
+NamedEntities named_entities_DO_NOT_USE;
 
 std::set<int> permanant_ids;
 std::map<vec2, bool> cache_is_walkable;
