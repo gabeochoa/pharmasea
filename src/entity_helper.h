@@ -147,6 +147,14 @@ struct EntityHelper {
         return {};
     }
 
+    static OptEntity getFirstOfType(EntityType type) {
+        for (const auto& e : get_entities()) {
+            if (!e) continue;
+            if (check_type(*e, type)) return *e;
+        }
+        return {};
+    }
+
     static OptEntity getOverlappingSolidEntityInRange(vec2 range_min,
                                                       vec2 range_max);
 

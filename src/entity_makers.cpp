@@ -416,10 +416,9 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
 
             // TODO i dont think the spawner is working correctly
             {
-                auto customer_spawners =
-                    EntityHelper::getAllWithType(EntityType::CustomerSpawner);
-                Entity& spawner = customer_spawners[0];
-                IsSpawner& isp = spawner.get<IsSpawner>();
+                OptEntity customer_spawner =
+                    EntityHelper::getFirstOfType(EntityType::CustomerSpawner);
+                IsSpawner& isp = customer_spawner->get<IsSpawner>();
                 isp.pass_time(amt * dt);
             }
 
