@@ -6,6 +6,7 @@
 #include "components/has_base_speed.h"
 #include "components/has_patience.h"
 #include "components/has_speech_bubble.h"
+#include "components/has_timer.h"
 #include "components/has_waiting_queue.h"
 #include "components/is_drink.h"
 #include "components/is_progression_manager.h"
@@ -15,6 +16,17 @@
 #include "entity_helper.h"
 #include "globals.h"
 #include "system/logging_system.h"
+
+float get_remaining_time() {
+    // TODO get a singleton?
+    OptEntity sophie =
+        EntityHelper::getFirstWithComponent<IsProgressionManager>();
+    if (!sophie) {
+        return 90.f;
+    }
+    const HasTimer& hasTimer = sophie->get<HasTimer>();
+    return hasTimer.totalRoundTime - hasTimer.currentRoundTime;
+}
 
 HasWaitingQueue& HasWaitingQueue::add_customer(const Entity& customer) {
     log_info("we are adding {} {} to the line in position {}", customer.id,
@@ -509,9 +521,7 @@ Job::State LeavingJob::run_state_working_at_end(Entity& entity, float) {
         std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
             start,
             // TODO create a global so they all leave to the same spot
-            vec2{GATHER_SPOT, GATHER_SPOT},
-            // TODO replace with remaining round time so they dont come back
-            90.f);
+            vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time());
         entity.get<CanPerformJob>().push_onto_queue(jshared);
     }
     return (Job::State::Completed);
@@ -560,9 +570,7 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
             std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
                 start,
                 // TODO create a global so they all leave to the same spot
-                vec2{GATHER_SPOT, GATHER_SPOT},
-                // TODO replace with remaining round time so they dont come back
-                90.f);
+                vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time());
             entity.get<CanPerformJob>().push_onto_queue(jshared);
         }
         return (Job::State::Completed);
