@@ -15,6 +15,31 @@ std::map<vec2, bool> cache_is_walkable;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
+OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
+    bool has_in_cache = named_entities_DO_NOT_USE.contains(name);
+    if (!has_in_cache) {
+        OptEntity opt_e = {};
+        switch (name) {
+            case NamedEntity::Sophie:
+                opt_e = getFirstOfType(EntityType::Sophie);
+                break;
+        }
+        if (!opt_e.has_value()) return {};
+        named_entities_DO_NOT_USE.insert(std::make_pair(name, opt_e.value()));
+    }
+    return *(named_entities_DO_NOT_USE[name]);
+}
+
+Entity& EntityHelper::getNamedEntity(const NamedEntity& name) {
+    log_trace("Trying to fetch {}", magic_enum::enum_name<NamedEntity>(name));
+    OptEntity opt_e = getPossibleNamedEntity(name);
+    if (!opt_e.has_value()) {
+        log_error("Trying to fetch {} but didnt find it...",
+                  magic_enum::enum_name<NamedEntity>(name));
+    }
+    return *(opt_e.value());
+}
+
 Entities& EntityHelper::get_entities() {
     if (is_server()) {
         return server_entities_DO_NOT_USE;

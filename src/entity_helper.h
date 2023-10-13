@@ -48,6 +48,9 @@ struct EntityHelper {
     static Entity& createPermanentEntity();
     static Entity& createEntityWithOptions(const CreationOptions& options);
 
+    static Entity& getNamedEntity(const NamedEntity& name);
+    static OptEntity getPossibleNamedEntity(const NamedEntity& name);
+
     // TODO :BE: maybe return the entity id or something
     template<typename... TArgs>
     static RefEntity createItem(TArgs... args) {
