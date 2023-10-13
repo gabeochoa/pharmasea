@@ -400,32 +400,29 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
     // TODO translate
     fast_forward.addComponent<HasName>().update("Fast-Forward Day");
 
-    fast_forward.addComponent<HasWork>().init(
-        [](Entity&, HasWork& hasWork, Entity&, float dt) {
-            const float amt = 15.f;
+    fast_forward.addComponent<HasWork>().init([](Entity&, HasWork& hasWork,
+                                                 Entity&, float dt) {
+        const float amt = 15.f;
 
-            {
-                auto sophie =
-                    EntityHelper::getFirstWithComponent<IsProgressionManager>();
-                if (sophie) {
-                    HasTimer& ht = sophie->get<HasTimer>();
-                    ht.pass_time(amt * dt);
-                    hasWork.update_pct(1.f - ht.pct());
-                }
-            }
+        {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            HasTimer& ht = sophie.get<HasTimer>();
+            ht.pass_time(amt * dt);
+            hasWork.update_pct(1.f - ht.pct());
+        }
 
-            // TODO i dont think the spawner is working correctly
-            {
-                OptEntity customer_spawner =
-                    EntityHelper::getFirstOfType(EntityType::CustomerSpawner);
-                IsSpawner& isp = customer_spawner->get<IsSpawner>();
-                isp.pass_time(amt * dt);
-            }
+        // TODO i dont think the spawner is working correctly
+        {
+            OptEntity customer_spawner =
+                EntityHelper::getFirstOfType(EntityType::CustomerSpawner);
+            IsSpawner& isp = customer_spawner->get<IsSpawner>();
+            isp.pass_time(amt * dt);
+        }
 
-            if (hasWork.is_work_complete()) {
-                hasWork.reset_pct();
-            }
-        });
+        if (hasWork.is_work_complete()) {
+            hasWork.reset_pct();
+        }
+    });
 
     fast_forward.addComponent<ShowsProgressBar>(
         ShowsProgressBar::Enabled::InRound);
@@ -550,39 +547,34 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
     container.get<IsItemContainer>().set_uses_indexer(true);
 
     container.addComponent<Indexer>((int) ingredient::Alcohols.size());
-    container.addComponent<HasWork>().init(
-        [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
-            if (GameState::get().is_not(game::State::InRound)) return;
-            const Indexer& indexer = owner.get<Indexer>();
-            if (indexer.max() < 2) return;
+    container.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
+                                              Entity&, float dt) {
+        if (GameState::get().is_not(game::State::InRound)) return;
+        const Indexer& indexer = owner.get<Indexer>();
+        if (indexer.max() < 2) return;
 
-            const float amt = 2.f;
-            hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) {
-                const auto sophie =
-                    EntityHelper::getFirstWithComponent<IsProgressionManager>();
-                if (!sophie) {
-                    log_warn("was unable to fetch progression manager");
-                    return;
-                }
-                const IsProgressionManager& ipp =
-                    sophie->get<IsProgressionManager>();
+        const float amt = 2.f;
+        hasWork.increase_pct(amt * dt);
+        if (hasWork.is_work_complete()) {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const IsProgressionManager& ipp =
+                sophie.get<IsProgressionManager>();
 
-                size_t i = 0;
-                do {
-                    i++;
-                    owner.get<Indexer>().increment();
-                    // TODO will show something even if you dont have it
-                    // unlocked, we just need a way to say "hey theres no
-                    // alcohol unlocked, just skip all of this
-                    if (i > ingredient::Alcohols.size()) break;
+            size_t i = 0;
+            do {
+                i++;
+                owner.get<Indexer>().increment();
+                // TODO will show something even if you dont have it
+                // unlocked, we just need a way to say "hey theres no
+                // alcohol unlocked, just skip all of this
+                if (i > ingredient::Alcohols.size()) break;
 
-                } while (ipp.is_ingredient_locked(
-                    ingredient::Alcohols[owner.get<Indexer>().value()]));
+            } while (ipp.is_ingredient_locked(
+                ingredient::Alcohols[owner.get<Indexer>().value()]));
 
-                hasWork.reset_pct();
-            }
-        });
+            hasWork.reset_pct();
+        }
+    });
     container.addComponent<ShowsProgressBar>(
         ShowsProgressBar::Enabled::InRound);
 }
@@ -594,37 +586,32 @@ void make_fruit_basket(Entity& container, vec2 pos) {
     container.addComponent<Indexer>((int) ingredient::Fruits.size());
     container.get<IsItemContainer>().set_uses_indexer(true);
     //
-    container.addComponent<HasWork>().init(
-        [](Entity& owner, HasWork& hasWork, Entity&, float dt) {
-            const float amt = 2.f;
-            hasWork.increase_pct(amt * dt);
-            if (hasWork.is_work_complete()) {
-                // TODO :backfill-correct: This should match whats in backfill
-                // container
+    container.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
+                                              Entity&, float dt) {
+        const float amt = 2.f;
+        hasWork.increase_pct(amt * dt);
+        if (hasWork.is_work_complete()) {
+            // TODO :backfill-correct: This should match whats in backfill
+            // container
 
-                const auto sophie =
-                    EntityHelper::getFirstWithComponent<IsProgressionManager>();
-                if (!sophie) {
-                    log_warn("was unable to fetch progression manager");
-                    return;
-                }
-                const IsProgressionManager& ipp =
-                    sophie->get<IsProgressionManager>();
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const IsProgressionManager& ipp =
+                sophie.get<IsProgressionManager>();
 
-                size_t i = 0;
-                do {
-                    i++;
-                    owner.get<Indexer>().increment();
-                    // TODO will show lemon even if you dont have it unlocked,
-                    // we just need a way to say "hey theres no fruits
-                    // unlocked, just skip all of this
-                    if (i > ingredient::Fruits.size()) break;
-                } while (ipp.is_ingredient_locked(
-                    ingredient::Fruits[owner.get<Indexer>().value()]));
+            size_t i = 0;
+            do {
+                i++;
+                owner.get<Indexer>().increment();
+                // TODO will show lemon even if you dont have it unlocked,
+                // we just need a way to say "hey theres no fruits
+                // unlocked, just skip all of this
+                if (i > ingredient::Fruits.size()) break;
+            } while (ipp.is_ingredient_locked(
+                ingredient::Fruits[owner.get<Indexer>().value()]));
 
-                hasWork.reset_pct();
-            }
-        });
+            hasWork.reset_pct();
+        }
+    });
     container.addComponent<ShowsProgressBar>(
         ShowsProgressBar::Enabled::InRound);
 }
@@ -1037,18 +1024,11 @@ void make_customer(Entity& customer, SpawnInfo info, bool has_order) {
         // If we are the first guy spawned this round, force the drink to be the
         // most recently unlocked one
         if (info.is_first_this_round) {
-            const auto sophie =
-                EntityHelper::getFirstWithComponent<IsProgressionManager>();
-            if (sophie) {
-                const IsProgressionManager& ipp =
-                    sophie->get<IsProgressionManager>();
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const IsProgressionManager& ipp =
+                sophie.get<IsProgressionManager>();
 
-                cod.set_first_order(ipp.get_last_unlocked());
-            } else {
-                log_warn(
-                    "Spawning first customer but could not find progression "
-                    "manager");
-            }
+            cod.set_first_order(ipp.get_last_unlocked());
         }
     }
 

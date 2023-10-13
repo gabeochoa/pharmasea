@@ -99,36 +99,31 @@ struct GameDebugLayer : public Layer {
         // Round Info
         {
             if (map_ptr) {
-                OptEntity sophie =
-                    EntityHelper::getFirstWithComponent<IsProgressionManager>();
-                if (sophie) {
-                    const HasTimer& hasTimer = sophie->get<HasTimer>();
+                Entity& sophie =
+                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
+                const HasTimer& hasTimer = sophie.get<HasTimer>();
 
-                    auto [round_time_div, round_spawn_div, drinks_div,
-                          ingredients_div] = rect::hsplit<4>(round_info, 10);
+                auto [round_time_div, round_spawn_div, drinks_div,
+                      ingredients_div] = rect::hsplit<4>(round_info, 10);
 
-                    text(Widget{round_time_div},
-                         fmt::format("Round Length: {:.0f}/{}",
-                                     hasTimer.currentRoundTime,
-                                     hasTimer.totalRoundTime));
+                text(Widget{round_time_div},
+                     fmt::format("Round Length: {:.0f}/{}",
+                                 hasTimer.currentRoundTime,
+                                 hasTimer.totalRoundTime));
 
-                    {
-                        auto [num_spawned, countdown] =
-                            rect::hsplit<2>(round_spawn_div);
+                {
+                    auto [num_spawned, countdown] =
+                        rect::hsplit<2>(round_spawn_div);
 
-                        auto spawners = EntityHelper::getAllWithType(
-                            EntityType::CustomerSpawner);
+                    auto spawners = EntityHelper::getAllWithType(
+                        EntityType::CustomerSpawner);
 
-                        Entity& spawner = spawners[0];
-                        const IsSpawner& iss = spawner.get<IsSpawner>();
-                        text(Widget{num_spawned},
-                             fmt::format("Num Spawned: {} / {}",
-                                         iss.get_num_spawned(),
-                                         iss.get_max_spawned()));
-                    }
-
-                } else {
-                    text(Widget{round_info}, "No matching sophie found");
+                    Entity& spawner = spawners[0];
+                    const IsSpawner& iss = spawner.get<IsSpawner>();
+                    text(Widget{num_spawned},
+                         fmt::format("Num Spawned: {} / {}",
+                                     iss.get_num_spawned(),
+                                     iss.get_max_spawned()));
                 }
             } else {
                 text(Widget{round_info}, "Map not valid");

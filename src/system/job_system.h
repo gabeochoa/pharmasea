@@ -57,9 +57,7 @@ inline void ensure_has_job(Entity& entity, float) {
     // TODO handle paying for your cart
 
     // IF the store is closed then leave
-    const auto sophies = EntityHelper::getAllWithType(EntityType::Sophie);
-    VALIDATE(!sophies.empty(), "there should always be a sophie");
-    const Entity& sophie = sophies[0];
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
 
     const Transform& transform = entity.get<Transform>();
     const auto pos = transform.as2();

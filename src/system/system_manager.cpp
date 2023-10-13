@@ -519,14 +519,9 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
         // (alcohol) always unlocks rum first which is index 0. if that changes
         // we gotta update this
         if (check_type(entity, EntityType::PillDispenser)) {
-            const auto sophie =
-                EntityHelper::getFirstWithComponent<IsProgressionManager>();
-            if (!sophie) {
-                log_warn("was unable to fetch progression manager");
-                return;
-            }
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const IsProgressionManager& ipp =
-                sophie->get<IsProgressionManager>();
+                sophie.get<IsProgressionManager>();
 
             size_t i = 0;
             do {
@@ -948,16 +943,15 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
     switch (ita.type) {
         case IsTriggerArea::Progression_Option1:  // fall through
         case IsTriggerArea::Progression_Option2: {
-            OptEntity sophie =
-                EntityHelper::getFirstWithComponent<IsProgressionManager>();
-            if (!sophie) {
-                log_warn(
-                    "trying to update progression options but cant find "
-                    "sophie");
+            if (GameState::get().is_not(game::State::Progression)) {
+                ita.update_title("(internal)");
+                ita.update_subtitle("(internal)");
                 return;
             }
+
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const IsProgressionManager& ipm =
-                sophie->get<IsProgressionManager>();
+                sophie.get<IsProgressionManager>();
 
             if (!ipm.collectedOptions) {
                 ita.update_title("(internal)");
@@ -1509,12 +1503,10 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
     if (cod.order_state != CanOrderDrink::OrderState::NeedsReset) return;
 
-    OptEntity sophie =
-        EntityHelper::getFirstWithComponent<IsProgressionManager>();
-    VALIDATE(sophie, "sophie should exist for sure");
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
 
     const IsProgressionManager& progressionManager =
-        sophie->get<IsProgressionManager>();
+        sophie.get<IsProgressionManager>();
 
     {
         // TODO eventually read from game settings
@@ -1541,14 +1533,9 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
 void update_progression(Entity& entity, float) {
     if (entity.is_missing<HasProgression>()) return;
-    OptEntity sophie =
-        EntityHelper::getFirstWithComponent<IsProgressionManager>();
-    VALIDATE(sophie, "sophie should exist for sure");
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
 
-    // const IsProgressionManager& progressionManager =
-    // sophie->get<IsProgressionManager>();
-
-    const HasTimer& hasTimer = sophie->get<HasTimer>();
+    const HasTimer& hasTimer = sophie.get<HasTimer>();
     const int day_count = hasTimer.dayCount;
 
     if (check_type(entity, EntityType::CustomerSpawner)) {

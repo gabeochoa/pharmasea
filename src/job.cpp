@@ -18,13 +18,8 @@
 #include "system/logging_system.h"
 
 float get_remaining_time() {
-    // TODO get a singleton?
-    OptEntity sophie =
-        EntityHelper::getFirstWithComponent<IsProgressionManager>();
-    if (!sophie) {
-        return 90.f;
-    }
-    const HasTimer& hasTimer = sophie->get<HasTimer>();
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const HasTimer& hasTimer = sophie.get<HasTimer>();
     return hasTimer.totalRoundTime - hasTimer.currentRoundTime;
 }
 
@@ -549,12 +544,10 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
 
             // get next order
             {
-                OptEntity sophie =
-                    EntityHelper::getFirstWithComponent<IsProgressionManager>();
-                VALIDATE(sophie, "sophie should exist for sure");
-
+                Entity& sophie =
+                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
                 const IsProgressionManager& progressionManager =
-                    sophie->get<IsProgressionManager>();
+                    sophie.get<IsProgressionManager>();
                 cod.current_order =
                     progressionManager.get_random_unlocked_drink();
             }
