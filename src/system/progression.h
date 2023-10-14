@@ -21,7 +21,7 @@ inline void collect_upgrade_options(Entity& entity, float) {
         // TODO right now just do every other, but itll likely be less often
         // since theres not that many drinks, maybe every 5th round?
         ipm.isUpgradeRound = !ipm.isUpgradeRound;
-        GameState::get().set(game::State::Planning);
+        GameState::get().transition_to_store();
         log_info("not an upgrade round see ya");
         return;
     }
