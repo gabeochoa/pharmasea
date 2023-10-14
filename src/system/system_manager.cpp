@@ -1534,7 +1534,7 @@ void reset_customers_that_need_resetting(Entity& entity) {
     }
 }
 
-void update_progression(Entity& entity, float) {
+void update_new_max_customers(Entity& entity, float) {
     if (entity.is_missing<HasProgression>()) return;
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
 
@@ -1570,22 +1570,10 @@ void reduce_impatient_customers(Entity& entity, float dt) {
 
 void SystemManager::on_game_state_change(game::State new_state,
                                          game::State old_state) {
-    // log_warn("system manager on gamestate change from {} to {}",
-    // old_state, new_state);
+    log_warn("system manager on gamestate change from {} to {}", old_state,
+             new_state);
 
-    if (old_state == game::State::InRound &&
-        // We do both states here because we dont always know if its an upgrade
-        // round or not for now these things run on every end of round
-        // but we might need to add a more specific one in the future
-        (new_state == game::State::Progression ||
-         new_state == game::State::Planning)) {
-        state_transitioned_round_to_planning = true;
-    }
-
-    if (old_state == game::State::Planning &&
-        new_state == game::State::InRound) {
-        state_transitioned_planning_to_round = true;
-    }
+    transitions.emplace_back(std::make_pair(old_state, new_state));
 }
 
 void SystemManager::update_all_entities(const Entities& players, float dt) {
@@ -1646,9 +1634,9 @@ void SystemManager::process_inputs(const Entities& entities,
 
 void SystemManager::process_state_change(
     const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
-    if (state_transitioned_round_to_planning) {
-        state_transitioned_round_to_planning = false;
+    if (transitions.empty()) return;
 
+    const auto onRoundFinished = [&]() {
         for_each(entities, dt, [](Entity& entity, float dt) {
             // TODO make a namespace for transition functions
             system_manager::delete_floating_items_when_leaving_inround(entity);
@@ -1659,29 +1647,35 @@ void SystemManager::process_state_change(
             system_manager::increment_day_count(entity, dt);
 
             // Handle updating all the things that rely on progression
-            system_manager::update_progression(entity, dt);
+            system_manager::update_new_max_customers(entity, dt);
 
             // I think this will only happen when you debug change round while
             // customers are already in line, but doesnt hurt to reset
             system_manager::reset_register_queue_when_leaving_inround(entity);
             // TODO reset haswork's
         });
-    }
+    };
 
-    if (state_transitioned_planning_to_round) {
-        state_transitioned_planning_to_round = false;
+    const auto onRoundStarted = [&]() {
         for_each(entities, dt, [](Entity& entity, float) {
             system_manager::handle_autodrop_furniture_when_exiting_planning(
                 entity);
             system_manager::release_mop_buddy_at_start_of_day(entity);
             system_manager::delete_trash_when_leaving_planning(entity);
         });
+    };
+
+    for (const auto& transition : transitions) {
+        const auto [old_state, new_state] = transition;
+        if (old_state == game::State::InRound) {
+            onRoundFinished();
+        }
+        if (new_state == game::State::InRound) {
+            onRoundStarted();
+        }
     }
 
-    // All transitions
-    for_each(entities, dt, [](Entity& entity, float dt) {
-        system_manager::refetch_dynamic_model_names(entity, dt);
-    });
+    transitions.clear();
 }
 
 void SystemManager::always_update(const Entities& entity_list, float dt) {
@@ -1694,6 +1688,15 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
         system_manager::update_held_item_position(entity, dt);
 
         system_manager::process_trigger_area(entity, dt);
+
+        // TODO :SPEED: originally this was running in "process_game_state"
+        // and only supposed to run on transitions but
+        // when i fixed it to actually run only on transitions
+        // it broke the model for vodka (just different one) and lime
+        // (invisible)
+        //
+        // For now its okay to stay here its just a perf thing
+        system_manager::refetch_dynamic_model_names(entity, dt);
 
         // TODO this is in the render manager but its not really a
         // render thing but at the same time it kinda is idk This could

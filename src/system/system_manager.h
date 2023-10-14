@@ -42,9 +42,8 @@ struct SystemManager {
     }
 
    private:
-    bool state_transitioned_round_to_planning = false;
-    bool state_transitioned_planning_to_round = false;
-
+    using Transition = std::pair<game::State, game::State>;
+    std::vector<Transition> transitions;
     void on_game_state_change(game::State new_state, game::State old_state);
 
     // TODO this probably shouldnt be const but it can be since it holds
