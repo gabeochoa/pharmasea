@@ -1608,9 +1608,9 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
         if (GameState::get().is_lobby_like()) {
             //
-        }
-
-        else if (GameState::get().is(game::State::Progression)) {
+        } else if (GameState::get().is(game::State::Store)) {
+            store_update(entities, dt);
+        } else if (GameState::get().is(game::State::Progression)) {
             progression_update(entities, dt);
         } else if (GameState::get().is_game_like()) {
             if (GameState::get().in_round()) {
@@ -1759,6 +1759,10 @@ void SystemManager::progression_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::progression::collect_upgrade_options(entity, dt);
     });
+}
+
+void SystemManager::store_update(const Entities& entity_list, float dt) {
+    for_each(entity_list, dt, [](Entity&, float) {});
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {

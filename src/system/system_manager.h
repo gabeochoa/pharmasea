@@ -73,4 +73,5 @@ struct SystemManager {
     void in_round_update(const Entities& entity_list, float dt);
     void planning_update(const Entities& entity_list, float dt);
     void progression_update(const Entities& entity_list, float dt);
+    void store_update(const Entities&, float);
 };
