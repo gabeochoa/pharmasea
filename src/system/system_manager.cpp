@@ -49,7 +49,6 @@
 #include "../components/uses_character_model.h"
 ///
 
-#include "../camera.h"  /// probably needed by map and not included in there
 #include "../engine/astar.h"
 #include "../engine/tracy.h"
 #include "../entity.h"
@@ -862,11 +861,12 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     if (ita.progress() < 1.f) return;
 
     const auto _choose_option = [](int option_chosen) {
-        GameState::get().transition_to_planning();
+        GameState::get().transition_to_store();
 
+        // TODO we could replace this with get all of type
         SystemManager::get().for_each_old([](Entity& e) {
             if (check_type(e, EntityType::Player)) {
-                move_player_SERVER_ONLY(e, game::State::Planning);
+                move_player_SERVER_ONLY(e, game::State::Store);
                 return;
             }
         });
