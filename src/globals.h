@@ -25,6 +25,7 @@ constexpr int MAX_SEARCH_RANGE = 100;
 
 constexpr float LOBBY_ORIGIN = 50.f;
 constexpr float PROGRESSION_ORIGIN = -50.f;
+constexpr float STORE_ORIGIN = -100.f;
 
 static bool ENABLE_MODELS = true;
 static bool ENABLE_SOUND = true;

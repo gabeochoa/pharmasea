@@ -126,7 +126,7 @@ struct Client {
             // want this in the array that is serialized, this should only live
             // in remote_players
             Entity* entity = new Entity();
-            make_remote_player(*entity, {LOBBY_ORIGIN, 0, LOBBY_ORIGIN});
+            make_remote_player(*entity, {LOBBY_ORIGIN, 0, 0});
             remote_players[client_id] = std::shared_ptr<Entity>(entity);
             const auto& rp = remote_players[client_id];
             rp->get<HasClientID>().update(client_id);

@@ -7,7 +7,6 @@
 #include "log.h"
 #include "singleton.h"
 
-// TODO eventually extract this piece to engine
 template<typename T>
 struct StateManager2 {
     [[nodiscard]] T read() const { return state; }
@@ -115,6 +114,7 @@ enum State {
     Planning = 3,
     Paused = 4,
     Progression = 5,
+    Store = 6,
 };
 
 inline std::ostream& operator<<(std::ostream& os, const State& state) {

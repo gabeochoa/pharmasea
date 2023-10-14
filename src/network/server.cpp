@@ -377,7 +377,7 @@ void Server::process_player_join_packet(
     int client_id = incoming_client.client_id;
 
     const auto get_position_for_current_state = [=]() -> vec3 {
-        vec3 default_pos = {LOBBY_ORIGIN, 0.f, LOBBY_ORIGIN};
+        vec3 default_pos = {LOBBY_ORIGIN, 0.f, 0.f};
 
         // Not in game just spawn them in the lobby
         if (current_menu_state != menu::State::Game) return default_pos;
@@ -391,7 +391,9 @@ void Server::process_player_join_packet(
             case game::Planning:
                 return {0.f, 0.f, 0.f};
             case game::Progression:
-                return {PROGRESSION_ORIGIN, 0.f, PROGRESSION_ORIGIN};
+                return {PROGRESSION_ORIGIN, 0.f, 0.f};
+            case game::Store:
+                return {STORE_ORIGIN, 0.f, 0.f};
         }
 
         return default_pos;

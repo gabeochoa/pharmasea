@@ -81,14 +81,17 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
             return;
             break;
         case game::Lobby: {
-            position = {LOBBY_ORIGIN, 0, LOBBY_ORIGIN};
+            position = {LOBBY_ORIGIN, 0, 0};
         } break;
         case game::InRound:  // fall through
         case game::Planning: {
             position = {0, 0, 0};
         } break;
         case game::Progression: {
-            position = {PROGRESSION_ORIGIN, 0, PROGRESSION_ORIGIN};
+            position = {PROGRESSION_ORIGIN, 0, 0};
+        } break;
+        case game::Store: {
+            position = {STORE_ORIGIN, 0, 0};
         } break;
     }
 

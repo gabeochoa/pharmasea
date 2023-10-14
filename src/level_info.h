@@ -53,8 +53,8 @@ struct LevelInfo {
     void ensure_generated_map(const std::string& new_seed);
 
    private:
-    vec3 lobby_origin = {LOBBY_ORIGIN, 0, LOBBY_ORIGIN};
-    vec3 progression_origin = {PROGRESSION_ORIGIN, 0, PROGRESSION_ORIGIN};
+    vec3 lobby_origin = {LOBBY_ORIGIN, 0, 0};
+    vec3 progression_origin = {PROGRESSION_ORIGIN, 0, 0};
 
     void generate_lobby_map();
     void generate_progression_map();

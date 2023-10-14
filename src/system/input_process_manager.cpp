@@ -430,6 +430,7 @@ void handle_drop(Entity& player) {
         return true;
     };
 
+    /*
     // This is for example putting a pill into a bag you are holding
     // taking an item and placing it into the container in your hand
     const auto _merge_item_from_furniture_into_hand_item =
@@ -485,6 +486,7 @@ void handle_drop(Entity& player) {
         closest_furniture->get<CanHoldItem>().update(nullptr, -1);
         return true;
     };
+    */
 
     // This is like placing an item onto a plate and immediately picking
     // it up it should only apply when the merged item isnt valid in
@@ -502,6 +504,7 @@ void handle_drop(Entity& player) {
                 >();
         }
      * */
+    /*
     const auto _merge_item_from_furniture_around_hand_item =
         [&player]() -> tl::expected<bool, std::string> {
         const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
@@ -560,6 +563,7 @@ void handle_drop(Entity& player) {
         closest_furniture->get<CanHoldItem>().update(nullptr, -1);
         return true;
     };
+    */
 
     const auto _place_item_onto_furniture =
         [&]() -> tl::expected<bool, std::string> {
