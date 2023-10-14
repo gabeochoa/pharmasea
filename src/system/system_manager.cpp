@@ -863,15 +863,17 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
     const auto _choose_option = [](int option_chosen) {
         GameState::get().transition_to_planning();
-        SystemManager::get().for_each_old([&option_chosen](Entity& e) {
+
+        SystemManager::get().for_each_old([](Entity& e) {
             if (check_type(e, EntityType::Player)) {
                 move_player_SERVER_ONLY(e, game::State::Planning);
                 return;
             }
+        });
 
-            if (e.is_missing<IsProgressionManager>()) return;
-
-            IsProgressionManager& ipm = e.get<IsProgressionManager>();
+        {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
             // choose given option
 
             // reset options so it collections new ones next upgrade round
@@ -892,7 +894,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             // TODO spawn any new machines / ingredient sources it needs we
             // dont already have
             __spawn_machines_for_newly_unlocked_drink(option);
-        });
+        }
     };
 
     switch (ita.type) {
