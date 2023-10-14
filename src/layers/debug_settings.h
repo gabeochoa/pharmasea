@@ -23,13 +23,13 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         GLOBALS.set("skip_ingredient_match", &skip_ingredient_match);
     }
 
-    void toggle_to_planning() {
-        GameState::get().toggle_to_planning();
+    void transition_to_planning() {
+        GameState::get().transition_to_planning();
         EntityHelper::invalidatePathCache();
     }
 
-    void toggle_to_inround() {
-        GameState::get().toggle_to_inround();
+    void transition_to_inround() {
+        GameState::get().transition_to_inround();
         EntityHelper::invalidatePathCache();
     }
 
@@ -62,12 +62,12 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
 
         if (KeyMap::get_button(menu::State::Game,
                                InputName::ToggleToPlanning) == event.button) {
-            toggle_to_planning();
+            transition_to_planning();
             return true;
         }
         if (KeyMap::get_button(menu::State::Game, InputName::ToggleToInRound) ==
             event.button) {
-            toggle_to_inround();
+            transition_to_inround();
             return true;
         }
         return ui_context->process_gamepad_button_event(event);
@@ -114,12 +114,12 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::ToggleToPlanning) ==
             event.keycode) {
-            toggle_to_planning();
+            transition_to_planning();
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::ToggleToInRound) == event.keycode) {
-            toggle_to_inround();
+            transition_to_inround();
             return true;
         }
         return ui_context->process_keyevent(event);

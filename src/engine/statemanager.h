@@ -189,6 +189,6 @@ struct GameState : public StateManager2<game::State> {
         return read();
     }
 
-    void toggle_to_planning() { return set(game::State::Planning); }
-    void toggle_to_inround() { return set(game::State::InRound); }
+    void transition_to_planning() { return set(game::State::Planning); }
+    void transition_to_inround() { return set(game::State::InRound); }
 };

@@ -862,7 +862,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     if (ita.progress() < 1.f) return;
 
     const auto _choose_option = [](int option_chosen) {
-        GameState::get().toggle_to_planning();
+        GameState::get().transition_to_planning();
         SystemManager::get().for_each_old([&option_chosen](Entity& e) {
             if (check_type(e, EntityType::Player)) {
                 move_player_SERVER_ONLY(e, game::State::Planning);
@@ -903,7 +903,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             // TODO should be lobby only?
             // TODO only for host...
 
-            GameState::get().toggle_to_planning();
+            GameState::get().transition_to_planning();
             SystemManager::get().for_each_old([](Entity& e) {
                 if (!check_type(e, EntityType::Player)) return;
                 move_player_SERVER_ONLY(e, game::State::Planning);
