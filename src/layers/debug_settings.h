@@ -4,7 +4,11 @@
 #include "../entity_helper.h"
 #include "base_game_renderer.h"
 
-constexpr CEMap<int, game::State, 5> choosable_game_states = {{{
+constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //
+                                     - 1  // InMenu
+);
+
+constexpr CEMap<int, game::State, CHOOSABLE_STATES> choosable_game_states = {{{
     {2, game::State::InRound},
     {3, game::State::Planning},
     {5, game::State::Progression},
