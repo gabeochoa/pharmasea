@@ -506,6 +506,28 @@ void render_floor_marker(const Entity& entity, float) {
             render_trash_marker(marked_entity.asE());
         }
     }
+    if (ifm.type == IsFloorMarker::Type::Store_PurchaseArea) {
+        for (int i = 0; i < ifm.num_marked(); i++) {
+            EntityID id = ifm.marked_ids()[i];
+            OptEntity marked_entity = EntityHelper::getEntityForID(id);
+            if (!marked_entity) continue;
+            render_dollarsign_marker(marked_entity.asE());
+        }
+    }
+}
+
+void render_dollarsign_marker(const Entity& entity) {
+    const Transform& transform = entity.get<Transform>();
+    vec3 position = transform.pos();
+
+    raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
+    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+    raylib::DrawBillboard(cam.camera, texture,
+                          vec3{position.x + (TILESIZE * 0.05f),  //
+                               position.y + (TILESIZE * 2.f),    //
+                               position.z},                      //
+                          0.75f * TILESIZE,                      //
+                          raylib::WHITE);
 }
 
 void render_trash_marker(const Entity& entity) {

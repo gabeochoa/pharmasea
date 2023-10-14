@@ -59,6 +59,11 @@
             "folder": "images",
             "filename": "trashcan.png",
             "library_name": "trashcan"
+        },
+        {
+            "folder": "images",
+            "filename": "dollar_sign.png",
+            "library_name": "dollar_sign"
         }
     ]
 }
