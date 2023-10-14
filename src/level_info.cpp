@@ -118,6 +118,12 @@ void LevelInfo::generate_store_map() {
             entity, store_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
             IsFloorMarker::Type::Store_PurchaseArea);
     }
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_floor_marker(
+            entity, store_origin + vec3{-5, TILESIZE / -2.f, 0}, 8, 3,
+            IsFloorMarker::Type::Store_SpawnArea);
+    }
 }
 
 void LevelInfo::generate_default_seed() {

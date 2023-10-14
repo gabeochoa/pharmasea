@@ -983,7 +983,6 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
         "Trying to update trigger area title but type {} not handled "
         "anywhere",
         ita.type);
-    return;
 }
 
 void process_trigger_area(Entity& entity, float dt) {
@@ -1568,6 +1567,45 @@ void reduce_impatient_customers(Entity& entity, float dt) {
     if (hp.pct() <= 0) hp.reset();
 }
 
+namespace store {
+
+void cleanup_old_store_options() {
+    // TODO instead we should just keep track of the store spawned ones and
+    // delete them floormarked
+    float rad = 20;
+    const auto ents = EntityHelper::getAllInRange(
+        {STORE_ORIGIN - rad, -1.f * rad}, {STORE_ORIGIN + rad, rad});
+
+    for (Entity& entity : ents) {
+        entity.cleanup = true;
+    }
+}
+
+void generate_store_options() {
+    // Figure out what kinds of things we can spawn generally
+    // - what is spawnable?
+    // - are they capped by progression? (alcohol / fruits for sure right?)
+    // choose a couple options to spawn
+    // - how many?
+    // spawn them
+    // - use the place machine thing
+
+    OptEntity spawn_area =
+        EntityHelper::getFirstMatching([](const Entity& entity) {
+            if (entity.is_missing<IsFloorMarker>()) return false;
+            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+            return fm.type == IsFloorMarker::Type::Store_SpawnArea;
+        });
+
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_single_alcohol(entity,
+                                       spawn_area->get<Transform>().as2(), 0);
+    }
+}
+
+}  // namespace store
+
 }  // namespace system_manager
 
 void SystemManager::on_game_state_change(game::State new_state,
@@ -1667,6 +1705,11 @@ void SystemManager::process_state_change(
         });
     };
 
+    const auto onStoreEntered = [&]() {
+        system_manager::store::cleanup_old_store_options();
+        system_manager::store::generate_store_options();
+    };
+
     for (const auto& transition : transitions) {
         const auto [old_state, new_state] = transition;
         if (old_state == game::State::InRound) {
@@ -1674,6 +1717,9 @@ void SystemManager::process_state_change(
         }
         if (new_state == game::State::InRound) {
             onRoundStarted();
+        }
+        if (new_state == game::State::Store) {
+            onStoreEntered();
         }
     }
 
@@ -1751,9 +1797,22 @@ void SystemManager::in_round_update(
     });
 }
 
+void SystemManager::store_update(const Entities& entity_list, float dt) {
+    for_each(entity_list, dt, [](Entity& entity, float dt) {
+        // If you add something here think should it also go in planning?
+        system_manager::update_held_furniture_position(entity, dt);
+        system_manager::mark_item_in_floor_area(entity, dt);
+
+        // game like
+        system_manager::process_is_container_and_should_backfill_item(entity,
+                                                                      dt);
+    });
+}
+
 void SystemManager::planning_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
+        // If you add something here think should it also go in store?
         system_manager::update_held_furniture_position(entity, dt);
         system_manager::mark_item_in_floor_area(entity, dt);
     });
@@ -1761,12 +1820,10 @@ void SystemManager::planning_update(
 
 void SystemManager::progression_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
+        // TODO this runs every progression frame when it probably just needs to
+        // run on transition
         system_manager::progression::collect_upgrade_options(entity, dt);
     });
-}
-
-void SystemManager::store_update(const Entities& entity_list, float dt) {
-    for_each(entity_list, dt, [](Entity&, float) {});
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {
