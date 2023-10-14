@@ -1039,7 +1039,9 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
 
     customer.addComponent<HasSpeechBubble>();
 
-    customer.get<HasBaseSpeed>().update(5.f);
+    const auto debug_mode_on =
+        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    customer.get<HasBaseSpeed>().update(debug_mode_on ? 20.f : 5.f);
     customer.get<CanPerformJob>().update(WaitInQueue, Wandering);
 
     // TODO if we do dirty-cups, we should have people leave them on any flat

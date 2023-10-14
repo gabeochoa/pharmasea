@@ -97,7 +97,7 @@ struct GameDebugLayer : public Layer {
         }
 
         // Round Info
-        {
+        if (GameState::get().is(game::State::InRound)) {
             if (map_ptr) {
                 Entity& sophie =
                     EntityHelper::getNamedEntity(NamedEntity::Sophie);
