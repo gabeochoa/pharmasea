@@ -80,7 +80,9 @@ inline void collect_upgrade_options(Entity& entity, float) {
     // std::shuffle(std::begin(options), std::end(options), rng);
 
     if (options.size() < 2) {
-        log_warn("no options, figure out what to do in this case");
+        // No more options so just go direct to the store
+        ipm.isUpgradeRound = false;
+        GameState::get().transition_to_store();
         return;
     }
 
