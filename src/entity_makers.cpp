@@ -1011,7 +1011,7 @@ void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
 
 }  // namespace items
 
-void make_customer(Entity& customer, SpawnInfo info, bool has_order) {
+void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     make_aiperson(customer, DebugOptions{.type = EntityType::Customer},
                   vec::to3(info.location));
 

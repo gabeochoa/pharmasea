@@ -18,7 +18,7 @@
 #include "system/logging_system.h"
 
 float get_remaining_time() {
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const HasTimer& hasTimer = sophie.get<HasTimer>();
     return hasTimer.totalRoundTime - hasTimer.currentRoundTime;
 }
@@ -262,7 +262,6 @@ inline void WIQ_wait_and_return(Entity& entity) {
     // Add the current job to the queue,
     // and then add the waiting job
     cpj.push_and_reset(new WaitJob(cpj.job_start(), cpj.job_start(), 1.f));
-    return;
 }
 
 inline vec2 WIQ_add_to_queue_and_get_position(Entity& reg,
@@ -291,7 +290,7 @@ inline int WIQ_position_in_line(const Entity& reg, const Entity& customer) {
     return hwq.has_matching_person(customer.id);
 }
 
-inline void WIQ_leave_line(Entity& reg, Entity& customer) {
+inline void WIQ_leave_line(Entity& reg, const Entity& customer) {
     // VALIDATE(customer, "entity passed to leave-line should not be null");
     // VALIDATE(reg, "register passed to leave-line should not be null");
     VALIDATE(

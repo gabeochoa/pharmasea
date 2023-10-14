@@ -25,7 +25,8 @@ OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
                 break;
         }
         if (!opt_e.has_value()) return {};
-        named_entities_DO_NOT_USE.insert(std::make_pair(name, opt_e.value()));
+        named_entities_DO_NOT_USE.insert(
+            std::make_pair(name, (Entity*) opt_e.value()));
     }
     return *(named_entities_DO_NOT_USE[name]);
 }
