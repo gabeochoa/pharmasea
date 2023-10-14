@@ -113,14 +113,17 @@ constexpr const char* CHARACTER_BEAR = "character_bear";
 constexpr const char* CHARACTER_DOG = "character_dog";
 constexpr const char* CHARACTER_DUCK = "character_duck";
 constexpr const char* CHARACTER_ROGUE = "character_rogue";
+constexpr const char* CHARACTER_GABE = "character_gabe";
+constexpr const char* CHARACTER_GABE2 = "character_gabe2";
+constexpr const char* CHARACTER_RUTH = "character_ruth";
 
 }  // namespace model
 
-const std::array<std::string, 4> character_models = {
-    strings::model::CHARACTER_BEAR,
-    strings::model::CHARACTER_DOG,
-    strings::model::CHARACTER_DUCK,
-    strings::model::CHARACTER_ROGUE,
+const std::array<std::string, 7> character_models = {
+    strings::model::CHARACTER_BEAR, strings::model::CHARACTER_DOG,
+    strings::model::CHARACTER_DUCK, strings::model::CHARACTER_ROGUE,
+    strings::model::CHARACTER_GABE, strings::model::CHARACTER_GABE2,
+    strings::model::CHARACTER_RUTH,
 };
 
 namespace sounds {

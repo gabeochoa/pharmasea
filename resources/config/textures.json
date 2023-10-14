@@ -17,6 +17,21 @@
         },
         {
             "folder": "images",
+            "filename": "character_gabe2_mug.png",
+            "library_name": "character_gabe2_mug"
+        },
+        {
+            "folder": "images",
+            "filename": "character_ruth_mug.png",
+            "library_name": "character_ruth_mug"
+        },
+        {
+            "folder": "images",
+            "filename": "character_gabe_mug.png",
+            "library_name": "character_gabe_mug"
+        },
+        {
+            "folder": "images",
             "filename": "character_duck_mug.png",
             "library_name": "character_duck_mug"
         },

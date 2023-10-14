@@ -57,6 +57,30 @@
             "rotation_angle": 0.0
         },
         {
+            "folder": "models",
+            "filename": "me.glb",
+            "library_name": "character_gabe",
+            "size_scale": 2.5,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models",
+            "filename": "me2.glb",
+            "library_name": "character_gabe2",
+            "size_scale": 2.5,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models",
+            "filename": "ruth.glb",
+            "library_name": "character_ruth",
+            "size_scale": 2.5,
+            "position_offset": [0,-0.5,0],
+            "rotation_angle": 180.0
+        },
+        {
             "folder": "models/kaykit",
             "filename": "character_bear.gltf",
             "library_name": "character_bear",
@@ -208,6 +232,30 @@
             "folder": "models/kaykit",
             "filename": "bottle_C_green.gltf.glb",
             "library_name": "whiskey",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "Barrel_A.obj",
+            "library_name": "barrel_a",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "Barrel_B.obj",
+            "library_name": "barrel_b",
+            "size_scale": 1.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kaykit",
+            "filename": "Barrel_C.obj",
+            "library_name": "barrel_c",
             "size_scale": 1.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
