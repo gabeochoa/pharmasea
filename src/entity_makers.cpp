@@ -402,7 +402,10 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
 
     fast_forward.addComponent<HasWork>().init([](Entity&, HasWork& hasWork,
                                                  Entity&, float dt) {
-        const float amt = 15.f;
+        const auto debug_mode_on =
+            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+
+        const float amt = debug_mode_on ? 100.f : 15.f;
 
         {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
