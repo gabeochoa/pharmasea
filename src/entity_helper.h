@@ -164,18 +164,19 @@ struct EntityHelper {
         return {};
     }
 
+    static RefEntities getAllInRange(vec2 range_min, vec2 range_max);
+
     static OptEntity getOverlappingSolidEntityInRange(vec2 range_min,
                                                       vec2 range_max);
 
     static bool hasOverlappingSolidEntitiesInRange(vec2 range_min,
                                                    vec2 range_max);
 
-    // TODO :INFRA: i think this is slower because we are doing "outside mesh"
-    // as outside we should probably have just make some tiles for inside the
-    // map
-    // ('.' on map for example) and use those to mark where people can walk and
-    // where they cant
-    // static bool isWalkable_impl(const vec2& pos) {
+    // TODO :INFRA: i think this is slower because we are doing "outside
+    // mesh" as outside we should probably have just make some tiles for
+    // inside the map
+    // ('.' on map for example) and use those to mark where people can walk
+    // and where they cant static bool isWalkable_impl(const vec2& pos) {
     // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
     // if (!nav) {
     // return true;
