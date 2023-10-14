@@ -25,6 +25,16 @@ struct AboutLayer : public Layer {
         return ui_context->process_keyevent(event);
     }
 
+    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
+        if (MenuState::get().is_not(menu::State::About)) return false;
+        if (KeyMap::get_button(menu::State::UI, InputName::MenuBack) ==
+            event.button) {
+            MenuState::get().go_back();
+            return true;
+        }
+        return ui_context->process_gamepad_button_event(event);
+    }
+
     virtual void onUpdate(float) override {
         // TODO can we just pass the "active menu state" to the layer
         // constructor and have app / layer handle this for us?
