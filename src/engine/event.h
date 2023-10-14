@@ -153,7 +153,8 @@ enum MouseCode {
 
 class MouseMovedEvent : public Event {
    public:
-    MouseMovedEvent(const float x, const float y) : mouseX(x), mouseY(y) {}
+    explicit MouseMovedEvent(const float x, const float y)
+        : mouseX(x), mouseY(y) {}
 
     float x() const { return mouseX; }
     float y() const { return mouseY; }
@@ -201,9 +202,9 @@ struct MouseButtonEvent : public Event {
 
 struct MouseButtonPressedEvent : public MouseButtonEvent {
    public:
-    MouseButtonPressedEvent(const int b)
+    explicit MouseButtonPressedEvent(const int b)
         : MouseButtonEvent(static_cast<MouseCode>(b)) {}
-    MouseButtonPressedEvent(const MouseCode b) : MouseButtonEvent(b) {}
+    explicit MouseButtonPressedEvent(const MouseCode b) : MouseButtonEvent(b) {}
 
     std::string toString() const override {
         return fmt::format("MouseButtonPressedEvent: {}", button);
@@ -214,9 +215,10 @@ struct MouseButtonPressedEvent : public MouseButtonEvent {
 
 struct MouseButtonReleasedEvent : public MouseButtonEvent {
    public:
-    MouseButtonReleasedEvent(const int b)
+    explicit MouseButtonReleasedEvent(const int b)
         : MouseButtonEvent(static_cast<MouseCode>(b)) {}
-    MouseButtonReleasedEvent(const MouseCode b) : MouseButtonEvent(b) {}
+    explicit MouseButtonReleasedEvent(const MouseCode b)
+        : MouseButtonEvent(b) {}
 
     std::string toString() const override {
         return fmt::format("MouseButtonReleasedEvent: ", button);
@@ -227,9 +229,9 @@ struct MouseButtonReleasedEvent : public MouseButtonEvent {
 
 struct MouseButtonUpEvent : public MouseButtonEvent {
    public:
-    MouseButtonUpEvent(const int b)
+    explicit MouseButtonUpEvent(const int b)
         : MouseButtonEvent(static_cast<MouseCode>(b)) {}
-    MouseButtonUpEvent(const MouseCode b) : MouseButtonEvent(b) {}
+    explicit MouseButtonUpEvent(const MouseCode b) : MouseButtonEvent(b) {}
 
     std::string toString() const override {
         return fmt::format("MouseButtonUpEvent: {}", button);
@@ -240,9 +242,9 @@ struct MouseButtonUpEvent : public MouseButtonEvent {
 
 struct MouseButtonDownEvent : public MouseButtonEvent {
    public:
-    MouseButtonDownEvent(const int b)
+    explicit MouseButtonDownEvent(const int b)
         : MouseButtonEvent(static_cast<MouseCode>(b)) {}
-    MouseButtonDownEvent(const MouseCode b) : MouseButtonEvent(b) {}
+    explicit MouseButtonDownEvent(const MouseCode b) : MouseButtonEvent(b) {}
 
     std::string toString() const override {
         return fmt::format("MouseButtonDownEvent: ", button);
