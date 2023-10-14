@@ -945,9 +945,10 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             return;
         } break;
         case IsTriggerArea::Store_BackToPlanning: {
-            // TODO translate
-            ita.update_title(text_lookup("purchase and return"));
-            ita.update_subtitle(text_lookup("purchase and return"));
+            ita.update_title(
+                text_lookup(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
+            ita.update_subtitle(
+                text_lookup(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
             return;
         } break;
         case IsTriggerArea::Unset:

@@ -475,6 +475,8 @@ void render_floor_marker(const Entity& entity, float) {
                 return text_lookup(strings::i18n::FLOORMARKER_NEW_ITEMS);
             case IsFloorMarker::Planning_TrashArea:
                 return text_lookup(strings::i18n::FLOORMARKER_TRASH);
+            case IsFloorMarker::Store_PurchaseArea:
+                return text_lookup(strings::i18n::FLOORMARKER_STORE_PURCHASE);
         }
         return "";
     };

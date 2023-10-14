@@ -265,8 +265,11 @@ constexpr const char* CLOSED = "CLOSED";
 constexpr const char* NEXT_ROUND_COUNTDOWN = "Next Round Starting In";
 constexpr const char* CHARACTER_SWITCHER = "Character Switcher";
 
+constexpr const char* TRIGGERAREA_PURCHASE_FINISH = "Submit and Return";
+
 constexpr const char* FLOORMARKER_TRASH = "Trash";
 constexpr const char* FLOORMARKER_NEW_ITEMS = "New Items";
+constexpr const char* FLOORMARKER_STORE_PURCHASE = "Place to Purchase";
 
 constexpr const char* FAKESTRING_CAPS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 constexpr const char* FAKESTRING_NAPS = "abcdefghijklmnopqrstuvwxyz ";
