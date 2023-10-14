@@ -1602,6 +1602,45 @@ void generate_store_options() {
         furniture::make_single_alcohol(entity,
                                        spawn_area->get<Transform>().as2(), 0);
     }
+
+    {
+        auto et = EntityType::IceMachine;
+        auto& entity = EntityHelper::createEntity();
+        convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+    }
+}
+
+void move_purchased_furniture() {
+    // Grab the overlap area so we can see what it marked
+    OptEntity purchase_area =
+        EntityHelper::getFirstMatching([](const Entity& entity) {
+            if (entity.is_missing<IsFloorMarker>()) return false;
+            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+            return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
+        });
+    const IsFloorMarker& ifm = purchase_area->get<IsFloorMarker>();
+
+    // Grab the plannig spawn area so we can place in the right spot
+    OptEntity spawn_area =
+        EntityHelper::getFirstMatching([](const Entity& entity) {
+            if (entity.is_missing<IsFloorMarker>()) return false;
+            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+            return fm.type == IsFloorMarker::Type::Planning_SpawnArea;
+        });
+    vec3 spawn_position = spawn_area->get<Transform>().pos();
+
+    // for every marked, move them over
+    for (int i = 0; i < ifm.num_marked(); i++) {
+        EntityID id = ifm.marked_ids()[i];
+        OptEntity marked_entity = EntityHelper::getEntityForID(id);
+        if (!marked_entity) continue;
+        log_info("moving marked entity to planning {} {} ", id,
+                 marked_entity->get<DebugName>().name());
+
+        Transform& transform = marked_entity->get<Transform>();
+        transform.update(spawn_position);
+        transform.update_y(0);
+    }
 }
 
 }  // namespace store
@@ -1706,8 +1745,12 @@ void SystemManager::process_state_change(
     };
 
     const auto onStoreEntered = [&]() {
-        system_manager::store::cleanup_old_store_options();
         system_manager::store::generate_store_options();
+    };
+
+    const auto onStoreLeave = [&]() {
+        system_manager::store::move_purchased_furniture();
+        system_manager::store::cleanup_old_store_options();
     };
 
     for (const auto& transition : transitions) {
@@ -1720,6 +1763,9 @@ void SystemManager::process_state_change(
         }
         if (new_state == game::State::Store) {
             onStoreEntered();
+        }
+        if (old_state == game::State::Store) {
+            onStoreLeave();
         }
     }
 
