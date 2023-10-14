@@ -9,6 +9,7 @@ struct IsTriggerArea : public BaseComponent {
         Lobby_PlayGame,
         Progression_Option1,
         Progression_Option2,
+        Store_BackToPlanning,
     } type = Unset;
 
     explicit IsTriggerArea(Type type)

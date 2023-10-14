@@ -915,6 +915,13 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::Progression_Option2:
             _choose_option(1);
             break;
+        case IsTriggerArea::Store_BackToPlanning: {
+            GameState::get().transition_to_planning();
+            SystemManager::get().for_each_old([](Entity& e) {
+                if (!check_type(e, EntityType::Player)) return;
+                move_player_SERVER_ONLY(e, game::State::Planning);
+            });
+        } break;
     }
 }
 
@@ -933,6 +940,12 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
         case IsTriggerArea::Lobby_PlayGame: {
             ita.update_title(text_lookup(strings::i18n::START_GAME));
             ita.update_subtitle(text_lookup(strings::i18n::LOADING));
+            return;
+        } break;
+        case IsTriggerArea::Store_BackToPlanning: {
+            // TODO translate
+            ita.update_title(text_lookup("purchase and return"));
+            ita.update_subtitle(text_lookup("purchase and return"));
             return;
         } break;
         case IsTriggerArea::Unset:

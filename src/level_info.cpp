@@ -105,6 +105,15 @@ void LevelInfo::generate_progression_map() {
     }
 }
 
+void LevelInfo::generate_store_map() {
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_trigger_area(
+            entity, store_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
+            IsTriggerArea::Store_BackToPlanning);
+    }
+}
+
 void LevelInfo::generate_default_seed() {
     generation::helper helper(EXAMPLE_MAP);
     helper.generate();
@@ -344,5 +353,6 @@ void LevelInfo::ensure_generated_map(const std::string& new_seed) {
 
     generate_lobby_map();
     generate_progression_map();
+    generate_store_map();
     generate_in_game_map();
 }
