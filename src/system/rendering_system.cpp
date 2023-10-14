@@ -471,6 +471,9 @@ void render_floor_marker(const Entity& entity, float) {
         switch (entity.get<IsFloorMarker>().type) {
             case IsFloorMarker::Unset:
                 return "";
+            // TODO for not use the other one but eventually probably just make
+            // it invisible
+            case IsFloorMarker::Store_SpawnArea:
             case IsFloorMarker::Planning_SpawnArea:
                 return text_lookup(strings::i18n::FLOORMARKER_NEW_ITEMS);
             case IsFloorMarker::Planning_TrashArea:

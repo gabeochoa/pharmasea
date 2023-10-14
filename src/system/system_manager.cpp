@@ -118,7 +118,9 @@ void transform_snapper(Entity& entity, float) {
                                                : transform.raw());
 }
 
-void mark_entity_in_floor_marker(Entity& entity) {
+void mark_item_in_floor_area(Entity& entity, float) {
+    if (!check_type(entity, EntityType::FloorMarker)) return;
+    if (entity.is_missing<IsFloorMarker>()) return;
     IsFloorMarker& ifm = entity.get<IsFloorMarker>();
     ifm.clear();
 
@@ -134,22 +136,6 @@ void mark_entity_in_floor_marker(Entity& entity) {
             ifm.mark(e->id);
         }
     }
-}
-
-void mark_item_in_spawn_area(Entity& entity, float) {
-    if (!check_type(entity, EntityType::FloorMarker)) return;
-    if (entity.is_missing<IsFloorMarker>()) return;
-    IsFloorMarker& ifm = entity.get<IsFloorMarker>();
-    if (ifm.type != IsFloorMarker::Planning_SpawnArea) return;
-    mark_entity_in_floor_marker(entity);
-}
-
-void mark_trash_furniture(Entity& entity, float) {
-    if (!check_type(entity, EntityType::FloorMarker)) return;
-    if (entity.is_missing<IsFloorMarker>()) return;
-    IsFloorMarker& ifm = entity.get<IsFloorMarker>();
-    if (ifm.type != IsFloorMarker::Planning_TrashArea) return;
-    mark_entity_in_floor_marker(entity);
 }
 
 // TODO if cannot be placed in this spot make it obvious to the user
@@ -1769,8 +1755,7 @@ void SystemManager::planning_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::update_held_furniture_position(entity, dt);
-        system_manager::mark_trash_furniture(entity, dt);
-        system_manager::mark_item_in_spawn_area(entity, dt);
+        system_manager::mark_item_in_floor_area(entity, dt);
     });
 }
 
