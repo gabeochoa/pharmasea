@@ -16,6 +16,12 @@ std::map<vec2, bool> cache_is_walkable;
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
+    if (!is_server()) {
+        // TODO this doesnt yet work on client side
+        log_warn(
+            "This will not work on the client side yet (trying to fetch {})",
+            magic_enum::enum_name<NamedEntity>(name));
+    }
     bool has_in_cache = named_entities_DO_NOT_USE.contains(name);
     if (!has_in_cache) {
         OptEntity opt_e = {};
