@@ -5,6 +5,7 @@
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
+#include "../components/can_order_drink.h"
 #include "../components/can_perform_job.h"
 #include "../components/custom_item_position.h"
 #include "../components/has_timer.h"
@@ -63,9 +64,14 @@ inline void ensure_has_job(Entity& entity, float) {
     const auto pos = transform.as2();
 
     if (sophie.get<HasTimer>().store_is_closed()) {
-        cpj.update(Job::create_job_of_type(pos, vec2{GATHER_SPOT, GATHER_SPOT},
-                                           JobType::Leaving));
-        return;
+        // Since there are non customer ais (roomba)
+        // we need to only send them home if they are a customer
+        // this is a reasonable way for now
+        if (entity.has<CanOrderDrink>()) {
+            cpj.update(Job::create_job_of_type(
+                pos, vec2{GATHER_SPOT, GATHER_SPOT}, JobType::Leaving));
+            return;
+        }
     }
 
     auto& personal_queue = cpj.job_queue();
