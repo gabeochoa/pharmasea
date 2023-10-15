@@ -22,7 +22,11 @@ struct IsTriggerArea : public BaseComponent {
     [[nodiscard]] const std::string& title() const { return _title; }
     [[nodiscard]] const std::string& subtitle() const { return _subtitle; }
     [[nodiscard]] bool should_wave() const {
-        return has_min_matching_entrants();
+        return has_min_matching_entrants()
+               // TODO this doesnt work because we dont serialize
+               // the std::function which means its always returning true
+               // for client
+               && should_progress();
     }
 
     [[nodiscard]] int max_entrants() const { return wanted_entrants; }
