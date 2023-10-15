@@ -63,6 +63,7 @@ inline void ensure_has_job(Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
     const auto pos = transform.as2();
 
+    // TODO if the store is closed skip the rest of orders?
     if (sophie.get<HasTimer>().store_is_closed()) {
         // Since there are non customer ais (roomba)
         // we need to only send them home if they are a customer

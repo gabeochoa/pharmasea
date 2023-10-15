@@ -26,23 +26,23 @@ struct IsFloorMarker : public BaseComponent {
     [[nodiscard]] const auto& marked_ids() const { return marked_entities; }
 
     void mark(int entity_id) {
-        if (next_index >= MAX_FLOOR_MARKERS) {
+        if (marked_entities.size() >= MAX_FLOOR_MARKERS) {
             log_warn("can only mark {} items and already marked that many",
                      MAX_FLOOR_MARKERS);
             return;
         }
-        marked_entities[next_index] = entity_id;
-        next_index++;
+        marked_entities.push_back(entity_id);
     }
 
-    void clear() { next_index = 0; }
+    void clear() { marked_entities.clear(); }
 
-    [[nodiscard]] int num_marked() const { return next_index + 1; }
-    [[nodiscard]] bool has_any_marked() const { return next_index != 0; }
+    [[nodiscard]] size_t num_marked() const { return marked_entities.size(); }
+    [[nodiscard]] bool has_any_marked() const {
+        return !marked_entities.empty();
+    }
 
    private:
-    std::array<int, MAX_FLOOR_MARKERS> marked_entities;
-    int next_index = 0;
+    std::vector<int> marked_entities;
 
     friend bitsery::Access;
     template<typename S>
@@ -50,7 +50,6 @@ struct IsFloorMarker : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.value4b(type);
 
-        s.value4b(next_index);
-        s.container4b(marked_entities);
+        s.container4b(marked_entities, MAX_FLOOR_MARKERS);
     }
 };

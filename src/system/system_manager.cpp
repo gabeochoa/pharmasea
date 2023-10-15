@@ -118,6 +118,13 @@ void transform_snapper(Entity& entity, float) {
                                                : transform.raw());
 }
 
+void clear_all_floor_markers(Entity& entity, float) {
+    if (!check_type(entity, EntityType::FloorMarker)) return;
+    if (entity.is_missing<IsFloorMarker>()) return;
+    IsFloorMarker& ifm = entity.get<IsFloorMarker>();
+    ifm.clear();
+}
+
 void mark_item_in_floor_area(Entity& entity, float) {
     if (!check_type(entity, EntityType::FloorMarker)) return;
     if (entity.is_missing<IsFloorMarker>()) return;
@@ -128,6 +135,7 @@ void mark_item_in_floor_area(Entity& entity, float) {
         if (!e) continue;
         if (e->id == entity.id) continue;
         if (check_type(entity, EntityType::Player)) continue;
+        if (e->is_missing<IsSolid>()) continue;
         // TODO only count things that are solid?
         if (CheckCollisionBoxes(
                 e->get<Transform>().bounds(),
@@ -1771,6 +1779,9 @@ void SystemManager::process_state_change(
 
 void SystemManager::always_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
+        system_manager::clear_all_floor_markers(entity, dt);
+        system_manager::mark_item_in_floor_area(entity, dt);
+
         system_manager::reset_highlighted(entity, dt);
         // TODO should be just planning + lobby?
         // maybe a second one for highlighting items?
@@ -1844,7 +1855,6 @@ void SystemManager::store_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         // If you add something here think should it also go in planning?
         system_manager::update_held_furniture_position(entity, dt);
-        system_manager::mark_item_in_floor_area(entity, dt);
 
         // game like
         system_manager::process_is_container_and_should_backfill_item(entity,
@@ -1857,7 +1867,6 @@ void SystemManager::planning_update(
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         // If you add something here think should it also go in store?
         system_manager::update_held_furniture_position(entity, dt);
-        system_manager::mark_item_in_floor_area(entity, dt);
     });
 }
 
