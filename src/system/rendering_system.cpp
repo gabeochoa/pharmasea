@@ -616,6 +616,33 @@ void render_waiting_queue(const Entity& entity, float) {
     }
 }
 
+void render_price(const Entity& entity, float) {
+    int price = get_price_for_entity_type(entity.get<DebugName>().get_type());
+    if (price == -1) return;
+
+    if (entity.is_missing<Transform>()) return;
+    const Transform& transform = entity.get<Transform>();
+
+    // TODO rotate the name with the camera?
+    raylib::DrawFloatingText(
+        transform.raw() + vec3{0, 0.5f * TILESIZE, 0.2f * TILESIZE},
+        Preload::get().font, fmt::format("${}", price).c_str(), 200, BLUE);
+}
+
+void render_machine_name(const Entity& entity, float) {
+    if (entity.is_missing<IsSolid>()) return;
+    if (entity.is_missing<Transform>()) return;
+    const Transform& transform = entity.get<Transform>();
+
+    const auto machine_name =
+        magic_enum::enum_name<EntityType>(entity.get<DebugName>().get_type());
+
+    // TODO rotate the name with the camera?
+    raylib::DrawFloatingText(
+        transform.raw() + vec3{0, 1.0f * TILESIZE, 0.2f * TILESIZE},
+        Preload::get().font, std::string(machine_name).c_str(), 200);
+}
+
 // TODO theres two functions called render normal, maybe we should address
 // this
 void render_normal(const Entity& entity, float dt) {
@@ -643,6 +670,12 @@ void render_normal(const Entity& entity, float dt) {
 
     if (entity.has<CanBeHighlighted>() &&
         entity.get<CanBeHighlighted>().is_highlighted()) {
+        // TODO should we only render when highlighted?
+        if (GameState::get().is(game::State::Store)) {
+            render_machine_name(entity, dt);
+            render_price(entity, dt);
+        }
+
         bool used = render_model_highlighted(entity, dt);
         if (!used) {
             render_simple_highlighted(entity, dt);
