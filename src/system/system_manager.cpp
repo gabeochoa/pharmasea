@@ -66,64 +66,6 @@ extern ui::UITheme UI_THEME;
 
 namespace system_manager {
 
-int get_price_for_entity_type(EntityType type) {
-    switch (type) {
-        case EntityType::Cupboard:
-        case EntityType::Trash:
-        case EntityType::Table:
-        case EntityType::Register:
-            return 10;
-        case EntityType::SodaMachine:
-        case EntityType::SingleAlcohol:
-        case EntityType::Blender:
-        case EntityType::IceMachine:
-        case EntityType::SimpleSyrupHolder:
-        case EntityType::MopHolder:
-            return 20;
-        case EntityType::MedicineCabinet:
-        case EntityType::PillDispenser:
-        case EntityType::Conveyer:
-            return 100;
-        case EntityType::Grabber:
-        case EntityType::MopBuddyHolder:
-            return 200;
-        case EntityType::Squirter:
-        case EntityType::FilteredGrabber:
-        case EntityType::PnumaticPipe:
-            return 500;
-            // Non buyables
-        case EntityType::FastForward:
-        case EntityType::MopBuddy:
-        case EntityType::SodaSpout:
-        case EntityType::Drink:
-        case EntityType::Alcohol:
-        case EntityType::Fruit:
-        case EntityType::FruitJuice:
-        case EntityType::SimpleSyrup:
-        case EntityType::Vomit:
-        case EntityType::Mop:
-        case EntityType::TriggerArea:
-        case EntityType::FloorMarker:
-        case EntityType::CustomerSpawner:
-        case EntityType::Sophie:
-        case EntityType::RemotePlayer:
-        case EntityType::Player:
-        case EntityType::Customer:
-        case EntityType::CharacterSwitcher:
-        case EntityType::MapRandomizer:
-        case EntityType::Wall:
-        case EntityType::Unknown:
-        case EntityType::x:
-        case EntityType::y:
-        case EntityType::z:
-        case EntityType::MAX_ENTITY_TYPE:
-            log_warn("You should probably not need the price for this {}",
-                     magic_enum::enum_name<EntityType>(type));
-            break;
-    }
-    return 0;
-}
-
 void move_player_SERVER_ONLY(Entity& entity, game::State location) {
     if (!is_server()) {
         log_warn(
@@ -1643,15 +1585,16 @@ void cart_management(Entity& entity, float) {
 
     int amount_in_cart = 0;
 
-    for (int i = 0; i < ifm.num_marked(); i++) {
+    for (size_t i = 0; i < ifm.num_marked(); i++) {
         EntityID id = ifm.marked_ids()[i];
         OptEntity marked_entity = EntityHelper::getEntityForID(id);
         if (!marked_entity) continue;
 
         // TODO need to add support for free
 
-        amount_in_cart += get_price_for_entity_type(
-            marked_entity->get<DebugName>().get_type());
+        amount_in_cart +=
+            std::max(0, get_price_for_entity_type(
+                            marked_entity->get<DebugName>().get_type()));
     }
 
     OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
