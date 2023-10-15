@@ -617,7 +617,7 @@ void delete_trash_when_leaving_planning(Entity& entity) {
     const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
     if (ifm.type != IsFloorMarker::Planning_TrashArea) return;
 
-    for (int i = 0; i < ifm.num_marked(); i++) {
+    for (size_t i = 0; i < ifm.num_marked(); i++) {
         EntityID id = ifm.marked_ids()[i];
         OptEntity marked_entity = EntityHelper::getEntityForID(id);
         if (!marked_entity) continue;
@@ -1668,7 +1668,7 @@ void move_purchased_furniture() {
     int amount_in_cart = 0;
 
     // for every marked, move them over
-    for (int i = 0; i < ifm.num_marked(); i++) {
+    for (size_t i = 0; i < ifm.num_marked(); i++) {
         EntityID id = ifm.marked_ids()[i];
         OptEntity marked_entity = EntityHelper::getEntityForID(id);
         if (!marked_entity) continue;

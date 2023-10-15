@@ -502,7 +502,7 @@ void render_floor_marker(const Entity& entity, float) {
     // Next lets draw the trash marker
     const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
     if (ifm.type == IsFloorMarker::Type::Planning_TrashArea) {
-        for (int i = 0; i < ifm.num_marked(); i++) {
+        for (size_t i = 0; i < ifm.num_marked(); i++) {
             EntityID id = ifm.marked_ids()[i];
             OptEntity marked_entity = EntityHelper::getEntityForID(id);
             if (!marked_entity) continue;
@@ -510,7 +510,7 @@ void render_floor_marker(const Entity& entity, float) {
         }
     }
     if (ifm.type == IsFloorMarker::Type::Store_PurchaseArea) {
-        for (int i = 0; i < ifm.num_marked(); i++) {
+        for (size_t i = 0; i < ifm.num_marked(); i++) {
             EntityID id = ifm.marked_ids()[i];
             OptEntity marked_entity = EntityHelper::getEntityForID(id);
             if (!marked_entity) continue;
