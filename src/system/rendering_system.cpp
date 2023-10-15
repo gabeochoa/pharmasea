@@ -620,15 +620,19 @@ void render_waiting_queue(const Entity& entity, float) {
 void render_price(const Entity& entity, float) {
     int price = get_price_for_entity_type(entity.get<DebugName>().get_type());
     if (price == -1) return;
-    if (entity.has<IsFreeInStore>()) return;
 
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
+    vec3 location = transform.raw() + vec3{0, 0.5f * TILESIZE, 0.2f * TILESIZE};
+
+    bool is_free = entity.has<IsFreeInStore>();
+    if (is_free) price = 0;
+
     // TODO rotate the name with the camera?
-    raylib::DrawFloatingText(
-        transform.raw() + vec3{0, 0.5f * TILESIZE, 0.2f * TILESIZE},
-        Preload::get().font, fmt::format("${}", price).c_str(), 200, BLUE);
+    raylib::DrawFloatingText(location, Preload::get().font,
+                             fmt::format("${}", price).c_str(), 200,
+                             is_free ? GREEN : BLUE);
 }
 
 void render_machine_name(const Entity& entity, float) {
