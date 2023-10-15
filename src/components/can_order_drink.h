@@ -73,6 +73,9 @@ struct CanOrderDrink : public BaseComponent {
 
     int num_alcoholic_drinks_had = 0;
 
+    int tab_cost = 0;
+    int tip = 0;
+
    private:
     friend bitsery::Access;
     template<typename S>

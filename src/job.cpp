@@ -473,6 +473,17 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
 
     canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
 
+    // mark how much we are paying for this drink
+    // + how much we will tip
+    {
+        int price = 10;  // get_price_for_drink(canOrderDrink.current_order);
+        canOrderDrink.tab_cost += price;
+
+        const HasPatience& hasPatience = entity.get<HasPatience>();
+        int tip = (int) fmax(0, ceil(price * 0.8f * hasPatience.pct()));
+        canOrderDrink.tip += tip;
+    }
+
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
     ourCHI.update(regCHI.item(), entity.id);
     regCHI.update(nullptr, -1);
@@ -558,14 +569,33 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
                 create_job_of_type(start, start, JobType::WaitInQueue));
             entity.get<CanPerformJob>().push_onto_queue(jshared);
         } else {
-            // TODO why do they go back to the register before leaving?
+            // Now we are fully done so lets pay.
+
+            // TODO add a new job type to go pay, for now just pay when they are
+            // done drinking, they will still go the register but the pay
+            // happens here
+            {
+                Entity& sophie =
+                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
+                IsBank& bank = sophie.get<IsBank>();
+                bank.deposit(cod.tab_cost);
+                bank.deposit(cod.tip);
+
+                // i dont think we need to do this, but just in case
+                cod.tab_cost = 0;
+                cod.tip = 0;
+            }
+
             cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
             std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
+                // TODO they go back to the register before leaving becausd
+                // start here..
                 start,
                 // TODO create a global so they all leave to the same spot
                 vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time());
             entity.get<CanPerformJob>().push_onto_queue(jshared);
         }
+
         return (Job::State::Completed);
     }
     return (Job::State::WorkingAtEnd);
