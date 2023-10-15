@@ -39,5 +39,13 @@ struct StoreLayer : public BaseGameRendererLayer {
             text(Widget{spawn_count},
                  fmt::format("Balance: {}", bank.balance()));
         }
+
+        {
+            Rectangle spawn_count(window);
+            spawn_count.y += 120;
+
+            const IsBank& bank = sophie->get<IsBank>();
+            text(Widget{spawn_count}, fmt::format("In Cart: {}", bank.cart()));
+        }
     }
 };
