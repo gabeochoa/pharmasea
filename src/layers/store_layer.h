@@ -30,22 +30,24 @@ struct StoreLayer : public BaseGameRendererLayer {
 
         OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
         if (!sophie.valid()) return;
+        const IsBank& bank = sophie->get<IsBank>();
+        int balance = bank.balance();
+        int cart = bank.cart();
 
         {
             Rectangle spawn_count(window);
             spawn_count.y += 60;
 
-            const IsBank& bank = sophie->get<IsBank>();
-            text(Widget{spawn_count},
-                 fmt::format("Balance: {}", bank.balance()));
+            text(Widget{spawn_count}, fmt::format("Balance: {}", balance));
         }
 
         {
             Rectangle spawn_count(window);
             spawn_count.y += 120;
 
-            const IsBank& bank = sophie->get<IsBank>();
-            text(Widget{spawn_count}, fmt::format("In Cart: {}", bank.cart()));
+            text(Widget{spawn_count}, fmt::format("In Cart: {}", cart),
+                 cart <= balance ? ui::theme::Usage::Font
+                                 : ui::theme::Usage::Error);
         }
     }
 };
