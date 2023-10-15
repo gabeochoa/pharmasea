@@ -94,10 +94,22 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         div(Widget{rounded_rect}, is_day ? theme::Primary : theme::Background);
         text(Widget{rounded_rect}, get_status_text(ht));
 
+        {
+            Rectangle spawn_count(rounded_rect);
+            spawn_count.y += 60;
+
+            OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+            if (sophie.valid()) {
+                const IsBank& bank = sophie->get<IsBank>();
+                text(Widget{spawn_count},
+                     fmt::format("Balance: {}", bank.balance()));
+            }
+        }
+
         // Only show the customer count during planning
         if (GameState::get().is(game::State::Planning)) {
             Rectangle spawn_count(rounded_rect);
-            spawn_count.y += 60;
+            spawn_count.y += 120;
 
             auto spawners =
                 EntityHelper::getAllWithType(EntityType::CustomerSpawner);
@@ -106,16 +118,6 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             const IsSpawner& iss = spawner.get<IsSpawner>();
             text(Widget{spawn_count},
                  fmt::format("Customers Coming: {}", iss.get_max_spawned()));
-        }
-        if (GameState::get().is(game::State::InRound) ||
-            GameState::get().is(game::State::Store)) {
-            Rectangle spawn_count(rounded_rect);
-            spawn_count.y += 60;
-
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            IsBank& bank = sophie.get<IsBank>();
-            text(Widget{spawn_count},
-                 fmt::format("Balance: {}", bank.balance()));
         }
     }
 };
