@@ -731,7 +731,9 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
         EntityHelper::getFirstMatching([](const Entity& entity) {
             if (entity.is_missing<IsFloorMarker>()) return false;
             const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            return fm.type == IsFloorMarker::Type::Store_SpawnArea;
+            // Note we spawn free items in the purchase area so its more obvious
+            // that they are free
+            return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
         });
 
     if (!spawn_area) {
@@ -1617,7 +1619,7 @@ void cart_management(Entity& entity, float) {
             return ita.type == IsTriggerArea::Type::Store_BackToPlanning;
         });
     if (purchase_area.valid()) {
-        bool _ = purchase_area->get<IsTriggerArea>().should_progress();
+        (void) purchase_area->get<IsTriggerArea>().should_progress();
     }
 }
 
