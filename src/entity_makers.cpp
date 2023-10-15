@@ -8,6 +8,7 @@
 #include "components/has_subtype.h"
 #include "components/is_bank.h"
 #include "components/is_floor_marker.h"
+#include "components/is_free_in_store.h"
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
 #include "dataclass/ingredient.h"
@@ -109,6 +110,7 @@ void register_all_components() {
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
+        IsFreeInStore,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,

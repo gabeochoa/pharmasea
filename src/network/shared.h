@@ -34,6 +34,7 @@
 #include "../components/indexer.h"
 #include "../components/is_bank.h"
 #include "../components/is_drink.h"
+#include "../components/is_free_in_store.h"
 #include "../components/is_item.h"
 #include "../components/is_item_container.h"
 #include "../components/is_pnumatic_pipe.h"
@@ -78,7 +79,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,
           HasRopeToItem, HasSubtype, IsItem, IsDrink, AddsIngredient,
           CanOrderDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker,
-          IsBank,
+          IsBank, IsFreeInStore,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

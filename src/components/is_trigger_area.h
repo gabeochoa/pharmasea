@@ -26,6 +26,9 @@ struct IsTriggerArea : public BaseComponent {
                // TODO this doesnt work because we dont serialize
                // the std::function which means its always returning true
                // for client
+               // - we could fix this by doing a switch(type){logic()} in system
+               // instead of attaching the function here and storing
+               // last_frame_valid
                && should_progress();
     }
 

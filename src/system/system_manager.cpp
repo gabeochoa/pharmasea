@@ -735,7 +735,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
         EntityHelper::getFirstMatching([](const Entity& entity) {
             if (entity.is_missing<IsFloorMarker>()) return false;
             const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            return fm.type == IsFloorMarker::Type::Planning_SpawnArea;
+            return fm.type == IsFloorMarker::Type::Store_SpawnArea;
         });
 
     if (!spawn_area) {
@@ -746,6 +746,12 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
     bitset_utils::for_each_enabled_bit(possibleNewIGs, [spawn_area](
                                                            size_t index) {
         Ingredient ig = magic_enum::enum_value<Ingredient>(index);
+
+        const auto make_free_machine = []() -> Entity& {
+            auto& entity = EntityHelper::createEntity();
+            entity.addComponent<IsFreeInStore>();
+            return entity;
+        };
 
         switch (ig) {
             case Soda: {
@@ -786,7 +792,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                         return;
                     }
 
-                    auto& entity = EntityHelper::createEntity();
+                    auto& entity = make_free_machine();
                     furniture::make_single_alcohol(
                         entity, spawn_area->get<Transform>().as2(), alc_index);
                 }
@@ -804,7 +810,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 }
 
                 auto et = EntityType::PillDispenser;
-                auto& entity = EntityHelper::createEntity();
+                auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
             case PinaJuice:
@@ -819,7 +825,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 }
 
                 auto et = EntityType::Blender;
-                auto& entity = EntityHelper::createEntity();
+                auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
             case SimpleSyrup: {
@@ -829,7 +835,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                     return;
                 }
                 auto et = EntityType::SimpleSyrupHolder;
-                auto& entity = EntityHelper::createEntity();
+                auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
             case IceCubes:
@@ -840,7 +846,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                     return;
                 }
                 auto et = EntityType::IceMachine;
-                auto& entity = EntityHelper::createEntity();
+                auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
             // TODO implement for these once thye have spawners
@@ -1593,7 +1599,8 @@ void cart_management(Entity& entity, float) {
         OptEntity marked_entity = EntityHelper::getEntityForID(id);
         if (!marked_entity) continue;
 
-        // TODO need to add support for free
+        // Its free!
+        if (marked_entity->has<IsFreeInStore>()) continue;
 
         amount_in_cart +=
             std::max(0, get_price_for_entity_type(

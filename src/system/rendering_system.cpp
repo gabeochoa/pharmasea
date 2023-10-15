@@ -4,6 +4,7 @@
 #include "../components/has_client_id.h"
 #include "../components/has_patience.h"
 #include "../components/has_waiting_queue.h"
+#include "../components/is_free_in_store.h"
 #include "../components/is_progression_manager.h"
 #include "../drawing_util.h"
 #include "../engine/texture_library.h"
@@ -619,6 +620,7 @@ void render_waiting_queue(const Entity& entity, float) {
 void render_price(const Entity& entity, float) {
     int price = get_price_for_entity_type(entity.get<DebugName>().get_type());
     if (price == -1) return;
+    if (entity.has<IsFreeInStore>()) return;
 
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
