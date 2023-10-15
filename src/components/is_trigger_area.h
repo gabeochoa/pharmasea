@@ -4,8 +4,10 @@
 #include "../engine/log.h"
 #include "base_component.h"
 
+struct IsTriggerArea;
+
 using ValidationResult = std::pair<bool, std::string>;
-using ValidationFn = std::function<ValidationResult()>;
+using ValidationFn = std::function<ValidationResult(const IsTriggerArea&)>;
 
 struct IsTriggerArea : public BaseComponent {
     enum Type {
@@ -99,7 +101,7 @@ struct IsTriggerArea : public BaseComponent {
     [[nodiscard]] bool should_progress() const {
         if (is_server()) {
             last_validation_result =
-                validation_cb ? validation_cb() : std::pair{true, ""};
+                validation_cb ? validation_cb(*this) : std::pair{true, ""};
         }
         // If we are the client, then just use the serialized value
         // since we cant run the validation cb

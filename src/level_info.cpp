@@ -114,42 +114,63 @@ void LevelInfo::generate_store_map() {
             entity, store_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Store_BackToPlanning);
 
-        entity.get<IsTriggerArea>().set_validation_fn([]() -> ValidationResult {
-            OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+        entity.get<IsTriggerArea>().set_validation_fn(
+            [](const IsTriggerArea& ita) -> ValidationResult {
+                OptEntity sophie =
+                    EntityHelper::getFirstOfType(EntityType::Sophie);
 
-            // TODO translate these strings .
-            if (!sophie.valid()) return {false, "Internal Error"};
+                // TODO translate these strings .
+                if (!sophie.valid()) return {false, "Internal Error"};
 
-            // Do we have enough money?
-            const IsBank& bank = sophie->get<IsBank>();
-            int balance = bank.balance();
-            int cart = bank.cart();
-            if (balance < cart) return {false, "Not enough coins"};
+                // Do we have enough money?
+                const IsBank& bank = sophie->get<IsBank>();
+                int balance = bank.balance();
+                int cart = bank.cart();
+                if (balance < cart) return {false, "Not enough coins"};
 
-            // Are all the required machines here?
-            OptEntity cart_area =
-                EntityHelper::getFirstMatching([](const Entity& entity) {
-                    if (entity.is_missing<IsFloorMarker>()) return false;
-                    const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-                    return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
-                });
-            if (!cart_area.valid()) return {false, "Internal Error"};
+                // Are all the required machines here?
+                OptEntity cart_area =
+                    EntityHelper::getFirstMatching([](const Entity& entity) {
+                        if (entity.is_missing<IsFloorMarker>()) return false;
+                        const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                        return fm.type ==
+                               IsFloorMarker::Type::Store_PurchaseArea;
+                    });
+                if (!cart_area.valid()) return {false, "Internal Error"};
 
-            // TODO :STORE_CLEANUP: instead we should just keep track of
-            // the store spawned ones
-            float rad = 20;
-            const auto ents = EntityHelper::getAllInRange(
-                {STORE_ORIGIN - rad, -1.f * rad}, {STORE_ORIGIN + rad, rad});
+                // TODO :STORE_CLEANUP: instead we should just keep track of
+                // the store spawned ones
+                float rad = 20;
+                const auto ents = EntityHelper::getAllInRange(
+                    {STORE_ORIGIN - rad, -1.f * rad},
+                    {STORE_ORIGIN + rad, rad});
 
-            // If its free and not marked, then we cant continue
-            for (const Entity& ent : ents) {
-                if (ent.is_missing<IsFreeInStore>()) continue;
-                if (!cart_area->get<IsFloorMarker>().is_marked(ent.id)) {
-                    return {false, "Missing required machine"};
+                // If its free and not marked, then we cant continue
+                for (const Entity& ent : ents) {
+                    if (ent.is_missing<IsFreeInStore>()) continue;
+                    if (!cart_area->get<IsFloorMarker>().is_marked(ent.id)) {
+                        return {false, "Missing required machine"};
+                    }
                 }
-            }
-            return {true, ""};
-        });
+
+                // Only run this one if everyone is on the thing
+                if (ita.has_min_matching_entrants()) {
+                    bool all_empty = true;
+                    for (std::shared_ptr<Entity>& e :
+                         SystemManager::get().oldAll) {
+                        if (!e) continue;
+                        if (e->is_missing<CanHoldFurniture>()) continue;
+                        if (e->get<CanHoldFurniture>().is_holding_furniture()) {
+                            all_empty = false;
+                            break;
+                        }
+                    }
+                    if (!all_empty)
+                        return {false, "Please put that machine back"};
+                }
+
+                return {true, ""};
+            });
     }
     {
         auto& entity = EntityHelper::createEntity();
