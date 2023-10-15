@@ -6,6 +6,7 @@
 #include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
+#include "components/is_bank.h"
 #include "components/is_floor_marker.h"
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
@@ -107,7 +108,7 @@ void register_all_components() {
         DebugName, Transform, HasName,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
-        IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker,
+        IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
@@ -725,6 +726,7 @@ void make_sophie(Entity& sophie, vec3 pos) {
     sophie.addComponent<HasTimer>(HasTimer::Renderer::Round,
                                   round_settings::ROUND_LENGTH_S);
     sophie.addComponent<IsProgressionManager>().init();
+    sophie.addComponent<IsBank>();
 }
 
 void make_vomit(Entity& vomit, const SpawnInfo& info) {

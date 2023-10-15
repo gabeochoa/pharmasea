@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../components/has_timer.h"
+#include "../components/is_bank.h"
 #include "../components/is_spawner.h"
 #include "../entity.h"
 #include "../entity_helper.h"
@@ -105,6 +106,16 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             const IsSpawner& iss = spawner.get<IsSpawner>();
             text(Widget{spawn_count},
                  fmt::format("Customers Coming: {}", iss.get_max_spawned()));
+        }
+        if (GameState::get().is(game::State::InRound) ||
+            GameState::get().is(game::State::Store)) {
+            Rectangle spawn_count(rounded_rect);
+            spawn_count.y += 60;
+
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            IsBank& bank = sophie.get<IsBank>();
+            text(Widget{spawn_count},
+                 fmt::format("Balance: {}", bank.balance()));
         }
     }
 };

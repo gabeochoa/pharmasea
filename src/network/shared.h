@@ -32,6 +32,7 @@
 #include "../components/has_waiting_queue.h"
 #include "../components/has_work.h"
 #include "../components/indexer.h"
+#include "../components/is_bank.h"
 #include "../components/is_drink.h"
 #include "../components/is_item.h"
 #include "../components/is_item_container.h"
@@ -77,6 +78,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,
           HasRopeToItem, HasSubtype, IsItem, IsDrink, AddsIngredient,
           CanOrderDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker,
+          IsBank,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

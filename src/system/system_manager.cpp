@@ -1634,9 +1634,6 @@ void move_purchased_furniture() {
         EntityID id = ifm.marked_ids()[i];
         OptEntity marked_entity = EntityHelper::getEntityForID(id);
         if (!marked_entity) continue;
-        log_info("moving marked entity to planning {} {} ", id,
-                 marked_entity->get<DebugName>().name());
-
         Transform& transform = marked_entity->get<Transform>();
         transform.update(spawn_position);
         transform.update_y(0);
