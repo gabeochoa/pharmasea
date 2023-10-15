@@ -1672,6 +1672,11 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
     oldAll = entities;
 
+    // TODO should we not do any updates for client?
+    // any changes will get overwritten by server every frame
+    // but maybe itll matter
+    // if (!is_server()) return;
+
     // actual update
     {
         // TODO add num entities to debug overlay

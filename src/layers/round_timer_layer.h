@@ -94,11 +94,11 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         div(Widget{rounded_rect}, is_day ? theme::Primary : theme::Background);
         text(Widget{rounded_rect}, get_status_text(ht));
 
+        OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
         {
             Rectangle spawn_count(rounded_rect);
             spawn_count.y += 60;
 
-            OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
             if (sophie.valid()) {
                 const IsBank& bank = sophie->get<IsBank>();
                 text(Widget{spawn_count},

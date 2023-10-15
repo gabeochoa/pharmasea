@@ -42,6 +42,7 @@
 #include "layers/round_timer_layer.h"
 #include "layers/seedmanagerlayer.h"
 #include "layers/settingslayer.h"
+#include "layers/store_layer.h"
 #include "layers/streamersafelayer.h"
 #include "layers/toastlayer.h"
 #include "layers/uitestlayer.h"
@@ -139,6 +140,7 @@ inline void startup() {
         new DebugSettingsLayer(),
         new RecipeBookLayer(),
         new RoundTimerLayer(),
+        new StoreLayer(),
         new RoundEndReasonLayer(),
         new SeedManagerLayer(),
         new GameDebugLayer(),  // putting below seed manager since typing 'o'
