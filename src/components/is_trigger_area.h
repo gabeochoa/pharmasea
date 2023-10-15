@@ -1,7 +1,11 @@
 #pragma once
 
+#include "../engine/is_server.h"
 #include "../engine/log.h"
 #include "base_component.h"
+
+using ValidationResult = std::pair<bool, std::string>;
+using ValidationFn = std::function<ValidationResult()>;
 
 struct IsTriggerArea : public BaseComponent {
     enum Type {
@@ -22,14 +26,7 @@ struct IsTriggerArea : public BaseComponent {
     [[nodiscard]] const std::string& title() const { return _title; }
     [[nodiscard]] const std::string& subtitle() const { return _subtitle; }
     [[nodiscard]] bool should_wave() const {
-        return has_min_matching_entrants()
-               // TODO this doesnt work because we dont serialize
-               // the std::function which means its always returning true
-               // for client
-               // - we could fix this by doing a switch(type){logic()} in system
-               // instead of attaching the function here and storing
-               // last_frame_valid
-               && should_progress();
+        return has_min_matching_entrants() && should_progress();
     }
 
     [[nodiscard]] int max_entrants() const { return wanted_entrants; }
@@ -97,17 +94,24 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
-    void set_validation_fn(const std::function<bool()>& cb) {
-        validation_cb = cb;
-    }
+    void set_validation_fn(const ValidationFn& cb) { validation_cb = cb; }
 
     [[nodiscard]] bool should_progress() const {
-        if (validation_cb) return validation_cb();
-        return true;
+        if (is_server()) {
+            last_validation_result =
+                validation_cb ? validation_cb() : std::pair{true, ""};
+        }
+        // If we are the client, then just use the serialized value
+        // since we cant run the validation cb
+        return last_validation_result.first;
     }
 
    private:
-    std::function<bool()> validation_cb = nullptr;
+    // This is mutable because we cant serialize std::funciton
+    // and we need a way to send the values up.
+    // it doesnt modify anything about the trigger area
+    mutable ValidationResult last_validation_result = std::pair{true, ""};
+    ValidationFn validation_cb = nullptr;
 
     int wanted_entrants = 1;
     int current_entrants = 0;
@@ -122,6 +126,9 @@ struct IsTriggerArea : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        s.value1b(last_validation_result.first);
+        s.text1b(last_validation_result.second, 100);
 
         s.value4b(wanted_entrants);
         s.value4b(current_entrants);

@@ -114,15 +114,17 @@ void LevelInfo::generate_store_map() {
             entity, store_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Store_BackToPlanning);
 
-        entity.get<IsTriggerArea>().set_validation_fn([]() -> bool {
+        entity.get<IsTriggerArea>().set_validation_fn([]() -> ValidationResult {
             OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
-            if (!sophie.valid()) return false;
+
+            // TODO translate these strings .
+            if (!sophie.valid()) return {false, "Internal Error"};
 
             // Do we have enough money?
             const IsBank& bank = sophie->get<IsBank>();
             int balance = bank.balance();
             int cart = bank.cart();
-            if (balance < cart) return false;
+            if (balance < cart) return {false, "Not enough coins"};
 
             // Are all the required machines here?
             OptEntity cart_area =
@@ -131,10 +133,10 @@ void LevelInfo::generate_store_map() {
                     const IsFloorMarker& fm = entity.get<IsFloorMarker>();
                     return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
                 });
-            if (!cart_area.valid()) return false;
+            if (!cart_area.valid()) return {false, "Internal Error"};
 
-            // TODO :STORE_CLEANUP: instead we should just keep track of the
-            // store spawned ones
+            // TODO :STORE_CLEANUP: instead we should just keep track of
+            // the store spawned ones
             float rad = 20;
             const auto ents = EntityHelper::getAllInRange(
                 {STORE_ORIGIN - rad, -1.f * rad}, {STORE_ORIGIN + rad, rad});
@@ -143,10 +145,10 @@ void LevelInfo::generate_store_map() {
             for (const Entity& ent : ents) {
                 if (ent.is_missing<IsFreeInStore>()) continue;
                 if (!cart_area->get<IsFloorMarker>().is_marked(ent.id)) {
-                    return false;
+                    return {false, "Missing required machine"};
                 }
             }
-            return true;
+            return {true, ""};
         });
     }
     {
