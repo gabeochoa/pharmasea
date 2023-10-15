@@ -714,13 +714,9 @@ void update_trigger_area_percent(Entity& entity, float dt) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
 
-    if (ita.should_wave()) {
-        if (ita.should_progress()) {
-            ita.increase_progress(dt);
-        }
-    } else {
-        ita.decrease_progress(dt);
-    }
+    ita.should_wave() ?  //
+        ita.increase_progress(dt)
+                      : ita.decrease_progress(dt);
 }
 
 void __spawn_machines_for_newly_unlocked_drink(Drink option) {
@@ -1611,6 +1607,17 @@ void cart_management(Entity& entity, float) {
     if (sophie.valid()) {
         IsBank& bank = sophie->get<IsBank>();
         bank.update_cart(amount_in_cart);
+    }
+
+    // TODO Hack to force the validation function to run every frame
+    OptEntity purchase_area =
+        EntityHelper::getFirstMatching([](const Entity& entity) {
+            if (entity.is_missing<IsTriggerArea>()) return false;
+            const IsTriggerArea& ita = entity.get<IsTriggerArea>();
+            return ita.type == IsTriggerArea::Type::Store_BackToPlanning;
+        });
+    if (purchase_area.valid()) {
+        bool _ = purchase_area->get<IsTriggerArea>().should_progress();
     }
 }
 

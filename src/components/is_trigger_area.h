@@ -106,6 +106,10 @@ struct IsTriggerArea : public BaseComponent {
         return last_validation_result.first;
     }
 
+    [[nodiscard]] const std::string& validation_msg() const {
+        return last_validation_result.second;
+    }
+
    private:
     // This is mutable because we cant serialize std::funciton
     // and we need a way to send the values up.
