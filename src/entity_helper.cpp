@@ -18,7 +18,7 @@ std::map<vec2, bool> cache_is_walkable;
 OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
     if (!is_server()) {
         // TODO this doesnt yet work on client side
-        log_warn(
+        log_error(
             "This will not work on the client side yet (trying to fetch {})",
             magic_enum::enum_name<NamedEntity>(name));
     }

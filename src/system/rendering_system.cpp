@@ -413,8 +413,8 @@ void render_trigger_area(const Entity& entity, float dt) {
     const auto _render_drink_preview = [&](IsTriggerArea::Type type) {
         if (GameState::get().is_not(game::State::Progression)) return;
 
-        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-        const IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+        OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+        const IsProgressionManager& ipm = sophie->get<IsProgressionManager>();
         Drink drink = type == IsTriggerArea::Progression_Option1 ? ipm.option1
                                                                  : ipm.option2;
 
