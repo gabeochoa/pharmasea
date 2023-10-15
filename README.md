@@ -61,6 +61,42 @@ and then just checkout that hash (sorry im not doing releases / tags atm)
 I am publishing some releases on itch, you can find the url in the code or build the game and click the itch.io icon. 
 if you need the password join the discord and say hi!
 
+### alpha_0.23.10.16
+
+Known Issues
+- (Progression) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (UI) Controls are not remappable in UI 
+- (UI) No reset-to-default state for controls
+- (Game) Roomba guy doesnt like to clean vomit at the customer de-spawn point..
+- (Game) Map generator always makes basically the same map
+- (Game) No way to know if you made the wrong drink 
+- (Game) Can place items where it collides with your body
+- (Game) Trash Area can delete things you likely need for future rounds 
+
+impact 
+- Customers will now pay & tip 
+- You now have a bank balance 
+- Added Store (doesnt cost money yet and always spawns the same two things)
+- In new recipe selection, we now show the ingredients 
+- New Furniture
+    - Ice machine 
+    - Single Alcohol 
+- Added preview for where the furniture will drop 
+- The first customer each day will want the most recently unlocked drink
+
+bug fix:
+- Fixed issue where clients might get stuck when picking up things 
+- Fixed issue where trash overlapped with walls on big map 
+
+better eng:
+- Added mode (key: I) to disable checking ingredients, allows serving an empty cup
+- Made FastFwd and Customers faster while in debug mode
+- Added NamedEntities for faster sophie fetching (server only) 
+- Helper function for get all entities in range
+- Better floor marker code 
+- more flexible transition system in preparation for the store
+
 ### alpha_0.23.10.01
 
 Known Issues

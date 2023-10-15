@@ -5,7 +5,7 @@
 #include "strings.h"
 
 // YY / MM / DD (Monday of week)
-constexpr std::string_view VERSION = "alpha_0.23.10.01";
+constexpr std::string_view VERSION = "alpha_0.23.10.16";
 constexpr size_t HASHED_VERSION = hashString(VERSION);
 
 constexpr std::string_view SETTINGS_FILE_NAME = "settings.bin";
