@@ -90,7 +90,18 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
+    void set_validation_fn(const std::function<bool()>& cb) {
+        validation_cb = cb;
+    }
+
+    [[nodiscard]] bool should_progress() const {
+        if (validation_cb) return validation_cb();
+        return true;
+    }
+
    private:
+    std::function<bool()> validation_cb = nullptr;
+
     int wanted_entrants = 1;
     int current_entrants = 0;
     std::string _title;

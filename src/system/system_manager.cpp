@@ -713,8 +713,11 @@ void count_trigger_area_entrants(Entity& entity, float) {
 void update_trigger_area_percent(Entity& entity, float dt) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
+
     if (ita.should_wave()) {
-        ita.increase_progress(dt);
+        if (ita.should_progress()) {
+            ita.increase_progress(dt);
+        }
     } else {
         ita.decrease_progress(dt);
     }

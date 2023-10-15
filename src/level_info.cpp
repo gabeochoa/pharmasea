@@ -112,6 +112,15 @@ void LevelInfo::generate_store_map() {
         furniture::make_trigger_area(
             entity, store_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Store_BackToPlanning);
+
+        entity.get<IsTriggerArea>().set_validation_fn([]() -> bool {
+            OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+            if (!sophie.valid()) return false;
+            const IsBank& bank = sophie->get<IsBank>();
+            int balance = bank.balance();
+            int cart = bank.cart();
+            return balance >= cart;
+        });
     }
     {
         auto& entity = EntityHelper::createEntity();
