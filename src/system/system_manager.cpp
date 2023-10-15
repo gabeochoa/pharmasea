@@ -66,6 +66,64 @@ extern ui::UITheme UI_THEME;
 
 namespace system_manager {
 
+int get_price_for_entity_type(EntityType type) {
+    switch (type) {
+        case EntityType::Cupboard:
+        case EntityType::Trash:
+        case EntityType::Table:
+        case EntityType::Register:
+            return 10;
+        case EntityType::SodaMachine:
+        case EntityType::SingleAlcohol:
+        case EntityType::Blender:
+        case EntityType::IceMachine:
+        case EntityType::SimpleSyrupHolder:
+        case EntityType::MopHolder:
+            return 20;
+        case EntityType::MedicineCabinet:
+        case EntityType::PillDispenser:
+        case EntityType::Conveyer:
+            return 100;
+        case EntityType::Grabber:
+        case EntityType::MopBuddyHolder:
+            return 200;
+        case EntityType::Squirter:
+        case EntityType::FilteredGrabber:
+        case EntityType::PnumaticPipe:
+            return 500;
+            // Non buyables
+        case EntityType::FastForward:
+        case EntityType::MopBuddy:
+        case EntityType::SodaSpout:
+        case EntityType::Drink:
+        case EntityType::Alcohol:
+        case EntityType::Fruit:
+        case EntityType::FruitJuice:
+        case EntityType::SimpleSyrup:
+        case EntityType::Vomit:
+        case EntityType::Mop:
+        case EntityType::TriggerArea:
+        case EntityType::FloorMarker:
+        case EntityType::CustomerSpawner:
+        case EntityType::Sophie:
+        case EntityType::RemotePlayer:
+        case EntityType::Player:
+        case EntityType::Customer:
+        case EntityType::CharacterSwitcher:
+        case EntityType::MapRandomizer:
+        case EntityType::Wall:
+        case EntityType::Unknown:
+        case EntityType::x:
+        case EntityType::y:
+        case EntityType::z:
+        case EntityType::MAX_ENTITY_TYPE:
+            log_warn("You should probably not need the price for this {}",
+                     magic_enum::enum_name<EntityType>(type));
+            break;
+    }
+    return 0;
+}
+
 void move_player_SERVER_ONLY(Entity& entity, game::State location) {
     if (!is_server()) {
         log_warn(
@@ -1577,6 +1635,32 @@ void reduce_impatient_customers(Entity& entity, float dt) {
 
 namespace store {
 
+void cart_management(Entity& entity, float) {
+    if (!check_type(entity, EntityType::FloorMarker)) return;
+    if (entity.is_missing<IsFloorMarker>()) return;
+    const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
+    if (ifm.type != IsFloorMarker::Store_PurchaseArea) return;
+
+    int amount_in_cart = 0;
+
+    for (int i = 0; i < ifm.num_marked(); i++) {
+        EntityID id = ifm.marked_ids()[i];
+        OptEntity marked_entity = EntityHelper::getEntityForID(id);
+        if (!marked_entity) continue;
+
+        // TODO need to add support for free
+
+        amount_in_cart += get_price_for_entity_type(
+            marked_entity->get<DebugName>().get_type());
+    }
+
+    OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+    if (sophie.valid()) {
+        IsBank& bank = sophie->get<IsBank>();
+        bank.update_cart(amount_in_cart);
+    }
+}
+
 void cleanup_old_store_options() {
     // TODO instead we should just keep track of the store spawned ones and
     // delete them floormarked
@@ -1637,6 +1721,9 @@ void move_purchased_furniture() {
         });
     vec3 spawn_position = spawn_area->get<Transform>().pos();
 
+    // TODO we could probably use the amount in IsBank but i dont trust it
+    int amount_in_cart = 0;
+
     // for every marked, move them over
     for (int i = 0; i < ifm.num_marked(); i++) {
         EntityID id = ifm.marked_ids()[i];
@@ -1645,6 +1732,16 @@ void move_purchased_furniture() {
         Transform& transform = marked_entity->get<Transform>();
         transform.update(spawn_position);
         transform.update_y(0);
+
+        amount_in_cart += get_price_for_entity_type(
+            marked_entity->get<DebugName>().get_type());
+    }
+
+    OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+    if (sophie.valid()) {
+        IsBank& bank = sophie->get<IsBank>();
+        bank.withdraw(amount_in_cart);
+        bank.update_cart(0);
     }
 }
 
@@ -1860,6 +1957,7 @@ void SystemManager::store_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         // If you add something here think should it also go in planning?
         system_manager::update_held_furniture_position(entity, dt);
+        system_manager::store::cart_management(entity, dt);
 
         // game like
         system_manager::process_is_container_and_should_backfill_item(entity,
