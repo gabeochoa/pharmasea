@@ -12,7 +12,8 @@
 #include "components/is_drink.h"
 #include "components/is_progression_manager.h"
 #include "engine/assert.h"
-#include "engine/astar.h"
+#include "engine/bfs.h"
+#include "engine/pathfinder.h"
 #include "entity.h"
 #include "entity_helper.h"
 #include "globals.h"
@@ -167,7 +168,7 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
         vec2 me = entity.get<Transform>().as2();
 
         {
-            auto new_path = astar::find_path(
+            auto new_path = bfs::find_path(
                 me, goal,
                 std::bind(EntityHelper::isWalkable, std::placeholders::_1));
             update_path(new_path);
@@ -181,7 +182,7 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
             log_warn("Forcing {} {} to noclip in order to get valid path",
                      entity.get<DebugName>().name(), entity.id);
             auto new_path =
-                astar::find_path(me, goal, [](auto&&) { return true; });
+                bfs::find_path(me, goal, [](auto&&) { return true; });
             update_path(new_path);
             system_manager::logging_manager::announce(
                 entity, fmt::format("gen path from {} to {} with {} steps", me,
@@ -339,7 +340,7 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
 
         // TODO causing no valid register to be found
         // auto end = r.get<Transform>().tile_infront(rpos);
-        // auto new_path = astar::find_path(
+        // auto new_path = bfs::find_path(
         // entity.get<Transform>().as2(), end,
         // std::bind(EntityHelper::isWalkable, std::placeholders::_1));
         // if (new_path.empty()) continue;

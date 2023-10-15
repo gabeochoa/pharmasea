@@ -49,7 +49,7 @@
 #include "../components/uses_character_model.h"
 ///
 
-#include "../engine/astar.h"
+#include "../engine/pathfinder.h"
 #include "../engine/tracy.h"
 #include "../entity.h"
 #include "../entity_helper.h"
@@ -1263,7 +1263,7 @@ void update_sophie(Entity& entity, float) {
                 bad_spot_reg_location = r.get<Transform>().as2();
             }
 
-            auto new_path = astar::find_path(
+            auto new_path = pathfinder::find_path(
                 customer.get<Transform>().as2(),
                 // TODO need a better way to do this
                 // 0 makes sense but is the position of the entity, when its
@@ -1371,8 +1371,8 @@ void process_has_rope(Entity& entity, float) {
     // Already generated
     if (hrti.was_generated()) return;
 
-    auto new_path = astar::find_path(entity.get<Transform>().as2(), pos,
-                                     [](vec2) { return true; });
+    auto new_path = pathfinder::find_path(entity.get<Transform>().as2(), pos,
+                                          [](vec2) { return true; });
 
     std::vector<vec2> extended_path;
     std::optional<vec2> prev;

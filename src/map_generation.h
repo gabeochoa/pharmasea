@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "engine/astar.h"
 #include "engine/bitset_utils.h"
+#include "engine/pathfinder.h"
 #include "entity_helper.h"
 #include "strings.h"
 #include "wave_collapse.h"
@@ -270,12 +270,12 @@ struct helper {
                     // TODO :INFRA: need a better way to do this
                     // 0 makes sense but is the position of the entity, when
                     // its infront?
-                    auto new_path =
-                        astar::find_path(customer->get<Transform>().as2(),
-                                         e.get<Transform>().tile_infront(1),
-                                         std::bind(EntityHelper::isWalkable,
-                                                   std::placeholders::_1));
-                    return new_path.size() > 0;
+                    auto new_path = pathfinder::find_path(
+                        customer->get<Transform>().as2(),
+                        e.get<Transform>().tile_infront(1),
+                        std::bind(EntityHelper::isWalkable,
+                                  std::placeholders::_1));
+                    return !new_path.empty();
                 });
 
             VALIDATE(
