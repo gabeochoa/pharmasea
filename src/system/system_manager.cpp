@@ -1818,6 +1818,11 @@ void SystemManager::process_state_change(
     };
 
     const auto onStoreLeave = [&]() {
+        // TODO this fixes the stealing crash but allows you to steal
+        for_each(entities, dt, [](Entity& entity, float) {
+            system_manager::handle_autodrop_furniture_when_exiting_planning(
+                entity);
+        });
         system_manager::store::move_purchased_furniture();
         system_manager::store::cleanup_old_store_options();
     };
