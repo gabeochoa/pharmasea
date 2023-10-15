@@ -3,6 +3,7 @@
 
 #include "camera.h"
 #include "components/is_floor_marker.h"
+#include "components/is_free_in_store.h"
 #include "components/is_progression_manager.h"
 #include "components/is_trigger_area.h"
 #include "engine/globals.h"
@@ -116,10 +117,36 @@ void LevelInfo::generate_store_map() {
         entity.get<IsTriggerArea>().set_validation_fn([]() -> bool {
             OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
             if (!sophie.valid()) return false;
+
+            // Do we have enough money?
             const IsBank& bank = sophie->get<IsBank>();
             int balance = bank.balance();
             int cart = bank.cart();
-            return balance >= cart;
+            if (balance < cart) return false;
+
+            // Are all the required machines here?
+            OptEntity cart_area =
+                EntityHelper::getFirstMatching([](const Entity& entity) {
+                    if (entity.is_missing<IsFloorMarker>()) return false;
+                    const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                    return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
+                });
+            if (!cart_area.valid()) return false;
+
+            // TODO :STORE_CLEANUP: instead we should just keep track of the
+            // store spawned ones
+            float rad = 20;
+            const auto ents = EntityHelper::getAllInRange(
+                {STORE_ORIGIN - rad, -1.f * rad}, {STORE_ORIGIN + rad, rad});
+
+            // If its free and not marked, then we cant continue
+            for (const Entity& ent : ents) {
+                if (ent.is_missing<IsFreeInStore>()) continue;
+                if (!cart_area->get<IsFloorMarker>().is_marked(ent.id)) {
+                    return false;
+                }
+            }
+            return true;
         });
     }
     {

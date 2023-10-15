@@ -1615,8 +1615,8 @@ void cart_management(Entity& entity, float) {
 }
 
 void cleanup_old_store_options() {
-    // TODO instead we should just keep track of the store spawned ones and
-    // delete them floormarked
+    // TODO :STORE_CLEANUP: instead we should just keep track of the store
+    // spawned ones and delete them floormarked
     float rad = 20;
     const auto ents = EntityHelper::getAllInRange(
         {STORE_ORIGIN - rad, -1.f * rad}, {STORE_ORIGIN + rad, rad});
