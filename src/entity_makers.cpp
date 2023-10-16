@@ -749,18 +749,28 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
             if (GameState::get().is_not(game::State::InRound)) return;
 
-            // He can mop without holding a mop
-            if (check_type(player, EntityType::MopBuddy)) {
-            } else {
-                const CanHoldItem& playerCHI = player.get<CanHoldItem>();
+            const auto validate =
+                [](const Entity& entity) -> std::pair<bool, float> {
+                // He can mop without holding a mop
+                if (check_type(entity, EntityType::MopBuddy))
+                    return {true, 1.f};
+
+                const CanHoldItem& playerCHI = entity.get<CanHoldItem>();
                 // not holding anything
-                if (playerCHI.empty()) return;
+                if (playerCHI.empty()) return {true, 0.25f};
                 std::shared_ptr<Item> item = playerCHI.const_item();
                 // Has to be holding mop
-                if (!check_type(*item, EntityType::Mop)) return;
-            }
+                if (check_type(*item, EntityType::Mop)) return {true, 2.f};
 
-            const float amt = 1.f;
+                // holding something other than mop
+                return {false, 0.f};
+            };
+
+            const auto [canMop, mopSpeed] = validate(player);
+
+            if (!canMop) return;
+
+            const float amt = 1.f * mopSpeed;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
