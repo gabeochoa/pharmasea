@@ -72,6 +72,7 @@ struct HasTimer : public BaseComponent {
         BarNotClean,
         FurnitureOverlapping,
         ItemInSpawnArea,
+        DeletingNeededItem,
         //
         WaitingReasonLast,
     } waiting_reason = None;
@@ -94,6 +95,8 @@ struct HasTimer : public BaseComponent {
                 return text_lookup(strings::i18n::FURNITURE_OVERLAPPING);
             case ItemInSpawnArea:
                 return text_lookup(strings::i18n::ITEMS_IN_SPAWN_AREA);
+            case DeletingNeededItem:
+                return text_lookup(strings::i18n::DELETING_NEEDED_ITEM);
             default:
                 log_warn("got reason {} but dont have a way to render it", wr);
             case WaitingReasonLast:
