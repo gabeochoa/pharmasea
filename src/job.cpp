@@ -477,7 +477,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     // mark how much we are paying for this drink
     // + how much we will tip
     {
-        int price = 10;  // get_price_for_drink(canOrderDrink.current_order);
+        int price = get_base_price_for_drink(canOrderDrink.current_order);
         canOrderDrink.tab_cost += price;
 
         const HasPatience& hasPatience = entity.get<HasPatience>();

@@ -69,3 +69,16 @@ static const std::string& get_icon_name_for_drink(Drink drink) {
 static const std::string& get_model_name_for_drink(Drink drink) {
     return RecipeLibrary::get().get(get_string_for_drink(drink)).base_name;
 }
+
+static int get_base_price_for_drink(Drink drink) {
+    Recipe recipe = RecipeLibrary::get().get(get_string_for_drink(drink));
+
+    // In the future we could add the price ot the config file, which is why im
+    // putting this code here but for now lets just base it on the num
+    // ingredients return
+    // RecipeLibrary::get().get(get_string_for_drink(drink)).base_price;
+
+    int num_ingredients = (int) recipe.ingredients.count();
+    int num_prereqs = (int) recipe.prereqs.count();
+    return (num_ingredients * 5) + (num_prereqs * 10);
+}
