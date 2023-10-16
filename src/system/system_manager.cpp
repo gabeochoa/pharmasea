@@ -1695,8 +1695,12 @@ void move_purchased_furniture() {
         transform.update(spawn_position);
         transform.update_y(0);
 
-        amount_in_cart += get_price_for_entity_type(
-            marked_entity->get<DebugName>().get_type());
+        // Its free!
+        if (marked_entity->has<IsFreeInStore>()) continue;
+
+        amount_in_cart +=
+            std::max(0, get_price_for_entity_type(
+                            marked_entity->get<DebugName>().get_type()));
     }
 
     OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
