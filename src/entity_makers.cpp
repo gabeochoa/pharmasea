@@ -1032,7 +1032,7 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     make_aiperson(customer, DebugOptions{.type = EntityType::Customer},
                   vec::to3(info.location));
 
-    // TODO set a random character model ?
+    customer.get<UsesCharacterModel>().switch_to_random_model();
     customer.addComponent<HasName>().update(get_random_name());
 
     // TODO for now, eventually move to customer spawner

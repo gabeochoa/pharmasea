@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../engine/random.h"
 #include "../strings.h"
 #include "base_component.h"
 
@@ -9,6 +10,12 @@ struct UsesCharacterModel : public BaseComponent {
     UsesCharacterModel() : index(0), changed(true) {}
 
     virtual ~UsesCharacterModel() {}
+
+    auto& switch_to_random_model() {
+        index = randIn(0, strings::character_models.size() - 1);
+        changed = true;
+        return *this;
+    }
 
     void increment() {
         index = (index + 1) % strings::character_models.size();
