@@ -1712,6 +1712,10 @@ void move_purchased_furniture() {
         transform.update(spawn_position);
         transform.update_y(0);
 
+        // Some items can hold other items, we should move that item too
+        // they arent being caught by the marker since we only mark solid items
+        system_manager::update_held_item_position(marked_entity.asE(), 0.f);
+
         // Its free!
         if (marked_entity->has<IsFreeInStore>()) continue;
 
