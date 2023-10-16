@@ -340,7 +340,6 @@ bool EntityHelper::hasOverlappingSolidEntitiesInRange(vec2 range_min,
 RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
     RefEntities es;
     for (const std::shared_ptr<Entity>& e : get_entities()) {
-        if (!e->has<IsSolid>()) continue;
         const auto pos = e->get<Transform>().as2();
         if (pos.x > range_max.x || pos.x < range_min.x) continue;
         if (pos.y > range_max.y || pos.y < range_min.y) continue;
