@@ -1,8 +1,10 @@
 #pragma once
 
 #include "dataclass/ingredient.h"
+#include "engine/bitset_utils.h"
 #include "engine/library.h"
 #include "engine/singleton.h"
+#include "entity_type.h"
 
 struct Recipe {
     Drink drink;
