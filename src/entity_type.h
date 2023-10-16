@@ -100,7 +100,8 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::Register:
             return 10;
         case EntityType::SodaMachine:
-        case EntityType::SingleAlcohol:
+        // TODO index creation not supported yet
+        // case EntityType::SingleAlcohol:
         case EntityType::Blender:
         case EntityType::IceMachine:
         case EntityType::SimpleSyrupHolder:
@@ -119,6 +120,9 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
             return 500;
             // Non buyables
         case EntityType::FastForward:
+            // TODO see todo above...
+        case EntityType::SingleAlcohol:
+            //
         case EntityType::MopBuddy:
         case EntityType::SodaSpout:
         case EntityType::Drink:

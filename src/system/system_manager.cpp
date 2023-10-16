@@ -1651,16 +1651,27 @@ void generate_store_options() {
             return fm.type == IsFloorMarker::Type::Store_SpawnArea;
         });
 
-    {
-        auto& entity = EntityHelper::createEntity();
-        furniture::make_single_alcohol(entity,
-                                       spawn_area->get<Transform>().as2(), 0);
-    }
+    int num_to_spawn = 5;
 
-    {
-        auto et = EntityType::IceMachine;
+    while (num_to_spawn) {
+        int entity_type_id =
+            randIn(0, magic_enum::enum_count<EntityType>() - 1);
+        EntityType etype = magic_enum::enum_value<EntityType>(entity_type_id);
+        if (get_price_for_entity_type(etype) <= 0) continue;
+
+        log_info("generate_store_options: random: {}",
+                 magic_enum::enum_name<EntityType>(etype));
+
         auto& entity = EntityHelper::createEntity();
-        convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+        bool success =
+            convert_to_type(etype, entity, spawn_area->get<Transform>().as2());
+
+        if (success) {
+            log_info("generate store options success");
+            num_to_spawn--;
+        } else {
+            entity.cleanup = true;
+        }
     }
 }
 

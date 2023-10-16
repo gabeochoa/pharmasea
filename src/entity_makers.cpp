@@ -1099,17 +1099,11 @@ void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
 
 }  // namespace furniture
 
-void convert_to_type(const EntityType& entity_type, Entity& entity,
+bool convert_to_type(const EntityType& entity_type, Entity& entity,
                      vec2 location) {
     // TODO at some point just change all of these to match
     auto pos = vec::to3(location);
     switch (entity_type) {
-        case EntityType::Unknown:
-        case EntityType::x:
-        case EntityType::y:
-        case EntityType::z:
-            make_entity(entity, DebugOptions{.type = entity_type}, pos);
-            return;
         case EntityType::RemotePlayer: {
             make_remote_player(entity, pos);
         } break;
@@ -1143,12 +1137,6 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::PillDispenser: {
             furniture::make_fruit_basket(entity, location);
-        } break;
-        case EntityType::CustomerSpawner: {
-            furniture::make_customer_spawner(entity, pos);
-        } break;
-        case EntityType::Sophie: {
-            furniture::make_sophie(entity, pos);
         } break;
         case EntityType::Blender: {
             furniture::make_blender(entity, location);
@@ -1189,8 +1177,27 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::SimpleSyrup: {
             items::make_simple_syrup(entity, location);
         } break;
+
+        // These return false
+        case EntityType::Unknown:
+        case EntityType::x:
+        case EntityType::y:
+        case EntityType::z:
+            make_entity(entity, DebugOptions{.type = entity_type}, pos);
+            return false;
+        case EntityType::Sophie: {
+            furniture::make_sophie(entity, pos);
+            return false;
+        } break;
+
+        case EntityType::CustomerSpawner: {
+            furniture::make_customer_spawner(entity, pos);
+        } break;
+
+        // TODO is anyone even doing this?
         case EntityType::MopBuddy: {
             make_mop_buddy(entity, location);
+            return false;
         } break;
         case EntityType::SingleAlcohol:
         case EntityType::TriggerArea:
@@ -1205,10 +1212,12 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::Mop:
             log_warn("{} cant be created through 'convert_to_type'",
                      entity_type);
+            return false;
             break;
         case EntityType::MAX_ENTITY_TYPE:
             log_warn("{} should not be tried to create at all tbh",
                      entity_type);
+            return false;
             break;
     }
     if (entity.has<CanHoldItem>()) {
@@ -1219,4 +1228,5 @@ void convert_to_type(const EntityType& entity_type, Entity& entity,
                 entity_type);
         }
     }
+    return true;
 }

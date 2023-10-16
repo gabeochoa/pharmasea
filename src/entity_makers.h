@@ -14,7 +14,7 @@
 
 typedef Entity Furniture;
 
-void convert_to_type(const EntityType& entity_type, Entity& entity,
+bool convert_to_type(const EntityType& entity_type, Entity& entity,
                      vec2 location);
 
 void register_all_components();
