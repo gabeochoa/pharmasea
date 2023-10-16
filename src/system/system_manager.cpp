@@ -1631,6 +1631,10 @@ void cleanup_old_store_options() {
         {STORE_ORIGIN - rad, -1.f * rad}, {STORE_ORIGIN + rad, rad});
 
     for (Entity& entity : ents) {
+        // Skip the permananent ones
+        if (entity.has<IsFloorMarker>()) continue;
+        if (entity.has<IsTriggerArea>()) continue;
+
         entity.cleanup = true;
     }
 }
@@ -1663,11 +1667,13 @@ void generate_store_options() {
                  magic_enum::enum_name<EntityType>(etype));
 
         auto& entity = EntityHelper::createEntity();
-        bool success =
-            convert_to_type(etype, entity, spawn_area->get<Transform>().as2());
-
+        bool success = convert_to_type(
+            etype, entity,
+            spawn_area->get<Transform>().as2() + vec2{
+                                                     1.f * randIn(-3, 3),
+                                                     1.f * randIn(-3, 3),
+                                                 });
         if (success) {
-            log_info("generate store options success");
             num_to_spawn--;
         } else {
             entity.cleanup = true;
