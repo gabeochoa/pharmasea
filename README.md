@@ -61,6 +61,45 @@ and then just checkout that hash (sorry im not doing releases / tags atm)
 I am publishing some releases on itch, you can find the url in the code or build the game and click the itch.io icon. 
 if you need the password join the discord and say hi!
 
+
+### alpha_0.23.10.16b
+
+Known Issues
+- (Store) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (UI) Controls are not remappable in UI 
+- (UI) No reset-to-default state for controls
+- (Game) Map generator always makes basically the same map
+- (Game) No way to know if you made the wrong drink 
+- (Game) Can place items where it collides with your body
+
+impact
+- Store 
+    - You now can see your balance and how much is in your cart 
+    - Added machine names and prices so you know how much things cost and what they do (more work to be done here) 
+    - Move the "free" machines into the store so you know what you are getting for your new recipe
+    - Spawn 5 random machines when entering the store 
+    - Added error messages when you cant leave store for reasons 
+- Drink prices are now based on complexity instead of just being 10 coins
+- You can now mop with your empty hands but its really slow 
+- Customers now use one of the random customer models 
+- Added round validation for when you are throwing out something you probably need 
+
+
+bug fixes
+- Fix crash for non-host player (sophie problems) 
+- Rooma guy no longer should get stuck at customer leave spot
+- Fixed issue where sometimes floor marker would only mark one item 
+- Fix crash when stealing from store
+- Fix issue where sometimes you get charged for free machines 
+- Fix visual glitch when purchased item containers would be missing the item until the first time you grab one
+- Fix issue where deleting a machine holding an item would leave a floating item around
+
+better eng 
+- more reliable pathfinding system (ezpz bfs instead of astar) 
+- more util functions for EntityHelper 
+
+
 ### alpha_0.23.10.16
 
 Known Issues
