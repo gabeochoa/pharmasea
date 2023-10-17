@@ -622,8 +622,6 @@ void delete_trash_when_leaving_planning(Entity& entity) {
         OptEntity marked_entity = EntityHelper::getEntityForID(id);
         if (!marked_entity) continue;
         marked_entity->cleanup = true;
-        // TODO do we always just want to delete the held item when cleanup =
-        // true?
 
         // Also delete the held item
         CanHoldItem& markedCHI = marked_entity->get<CanHoldItem>();
@@ -635,8 +633,6 @@ void delete_trash_when_leaving_planning(Entity& entity) {
 }
 
 void delete_customers_when_leaving_inround(Entity& entity) {
-    // TODO im thinking this might not be enough if we have
-    // robots that can order for people or something
     if (entity.is_missing<CanOrderDrink>()) return;
     if (!check_type(entity, EntityType::Customer)) return;
 
@@ -656,8 +652,6 @@ void delete_floating_items_when_leaving_inround(Entity& entity) {
 }
 
 void delete_held_items_when_leaving_inround(Entity& entity) {
-    // TODO this doesnt seem to work
-    // you keep holding it even after the transition
     if (entity.is_missing<CanHoldItem>()) return;
 
     CanHoldItem& canHold = entity.get<CanHoldItem>();
@@ -830,7 +824,6 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     const auto _choose_option = [](int option_chosen) {
         GameState::get().transition_to_store();
 
-        // TODO we could replace this with get all of type
         SystemManager::get().for_each_old([](Entity& e) {
             if (check_type(e, EntityType::Player)) {
                 move_player_SERVER_ONLY(e, game::State::Store);
@@ -858,8 +851,6 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     ipm.unlock_ingredient(ig);
                 });
 
-            // TODO spawn any new machines / ingredient sources it needs we
-            // dont already have
             __spawn_machines_for_newly_unlocked_drink(option);
         }
     };
@@ -869,9 +860,6 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             break;
 
         case IsTriggerArea::Lobby_PlayGame: {
-            // TODO should be lobby only?
-            // TODO only for host...
-
             GameState::get().transition_to_planning();
             SystemManager::get().for_each_old([](Entity& e) {
                 if (!check_type(e, EntityType::Player)) return;
@@ -1032,40 +1020,6 @@ void run_timer(Entity& entity, float dt) {
 
     // the timer expired, time to switch rounds
     // but first need to check if we can or not
-
-    // TODO do we need to read the other reasons here? oct 8 '23
-
-    const auto _validate_if_round_can_end = [&hastimer = std::as_const(ht)]() {
-        switch (GameState::get().read()) {
-            case game::State::Planning: {
-                // For this one, we need to wait until everyone drops the
-                // things
-                if (hastimer.read_reason(
-                        HasTimer::WaitingReason::HoldingFurniture))
-                    return false;
-                return true;
-            } break;
-            case game::State::InRound: {
-                // For this one, we need to wait until everyone is done
-                // leaving
-                if (hastimer.read_reason(
-                        HasTimer::WaitingReason::CustomersInStore))
-                    return false;
-                return true;
-            } break;
-            default:
-                log_warn(
-                    "validating round switch timer but no state handler {}",
-                    GameState::get().read());
-                return false;
-        }
-        log_warn("validating round switch timer finished switch {}",
-                 GameState::get().read());
-        return false;
-    };
-
-    bool can_round_finish = _validate_if_round_can_end();
-    if (!can_round_finish) return;
 
     // Round is actually over, reset timers
 
