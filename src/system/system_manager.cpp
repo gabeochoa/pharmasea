@@ -752,6 +752,9 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
             return entity;
         };
 
+        // Already has the machine so we good
+        if (has_machines_required_for_ingredient(ig)) return;
+
         switch (ig) {
             case Soda: {
                 // Nothing is needed to do for this since
@@ -764,37 +767,12 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
             case Gin:
             case TripleSec:
             case Bitters: {
-                {
-                    // nothing needed to do since this supports all alcs
-                    if (EntityHelper::doesAnyExistWithType(
-                            EntityType::MedicineCabinet)) {
-                        // TODO right now theres no way to get this, eventually
-                        // allow purchasing this
-                        return;
-                    }
-
-                    int alc_index =
-                        index_of<Ingredient, ingredient::Alcohols.size()>(
-                            ingredient::Alcohols, ig);
-
-                    // Does a single one exist for this alcohol
-                    if (EntityHelper::doesAnyExistMatchingFilter(
-                            [alc_index](const Entity& entity) {
-                                if (!check_type(entity,
-                                                EntityType::SingleAlcohol))
-                                    return false;
-                                if (entity.is_missing<Indexer>()) return false;
-                                return entity.get<Indexer>().value() ==
-                                       alc_index;
-                            })) {
-                        // nothing needed to do
-                        return;
-                    }
-
-                    auto& entity = make_free_machine();
-                    furniture::make_single_alcohol(
-                        entity, spawn_area->get<Transform>().as2(), alc_index);
-                }
+                int alc_index =
+                    index_of<Ingredient, ingredient::Alcohols.size()>(
+                        ingredient::Alcohols, ig);
+                auto& entity = make_free_machine();
+                furniture::make_single_alcohol(
+                    entity, spawn_area->get<Transform>().as2(), alc_index);
             } break;
             case Pineapple:
             case Orange:
@@ -802,12 +780,6 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
             case Cranberries:
             case Lime:
             case Lemon: {
-                if (EntityHelper::doesAnyExistWithType(
-                        EntityType::PillDispenser)) {
-                    // nothing needed to do
-                    return;
-                }
-
                 auto et = EntityType::PillDispenser;
                 auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
@@ -818,32 +790,17 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
             case CranberryJuice:
             case LimeJuice:
             case LemonJuice: {
-                if (EntityHelper::doesAnyExistWithType(EntityType::Blender)) {
-                    // nothing needed to do
-                    return;
-                }
-
                 auto et = EntityType::Blender;
                 auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
             case SimpleSyrup: {
-                if (EntityHelper::doesAnyExistWithType(
-                        EntityType::SimpleSyrupHolder)) {
-                    // nothing needed to do
-                    return;
-                }
                 auto et = EntityType::SimpleSyrupHolder;
                 auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;
             case IceCubes:
             case IceCrushed: {
-                if (EntityHelper::doesAnyExistWithType(
-                        EntityType::IceMachine)) {
-                    // nothing needed to do
-                    return;
-                }
                 auto et = EntityType::IceMachine;
                 auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());

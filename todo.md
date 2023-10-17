@@ -52,6 +52,7 @@ kanban-plugin: basic
 - [ ] why should you clean up the bar? do people not want to come in? <br><br>cant serve until its clean?
 - [ ] Should the roomba only spawn by default for single player games? Should it spawn at the beginning ever?
 - [ ] Add purchasing medicine cab
+- [ ] warn player when they are deleting something that we need
 
 
 ## broke
