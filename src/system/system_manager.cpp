@@ -1147,16 +1147,21 @@ void update_sophie(Entity& entity, float) {
             });
 
         bool has_item_in_spawn_area = false;
+        std::optional<vec2> position;
 
         if (spawn_area) {
             const IsFloorMarker& ifm = spawn_area->get<IsFloorMarker>();
             has_item_in_spawn_area = ifm.has_any_marked();
+            if (has_item_in_spawn_area) {
+                position = EntityHelper::getEntityForID(ifm.marked_ids()[0])
+                               ->get<Transform>()
+                               .as2();
+            }
         }
 
         entity.get<HasTimer>().write_reason(
             HasTimer::WaitingReason::ItemInSpawnArea, has_item_in_spawn_area,
-            // TODO find item in spawn area
-            {});
+            position);
 
         return;
     };
@@ -1237,9 +1242,10 @@ void update_sophie(Entity& entity, float) {
     };
 
     const auto _deleting_item_needed_for_recipe = [&entity]() {
-        const auto result = [&entity](bool on) {
+        const auto result = [&entity](bool on,
+                                      std::optional<vec2> position = {}) {
             entity.get<HasTimer>().write_reason(
-                HasTimer::WaitingReason::DeletingNeededItem, on, {});
+                HasTimer::WaitingReason::DeletingNeededItem, on, position);
             return;
         };
 
@@ -1252,15 +1258,14 @@ void update_sophie(Entity& entity, float) {
 
         if (!trash_area.valid()) return result(false);
 
+        const IsFloorMarker& ifm = trash_area->get<IsFloorMarker>();
+
         // TODO this is not robust but itll work for a while
         float rad = 25;
-        const auto ents = EntityHelper::getAllInRangeFiltered(
-            {-1.f * rad, -1.f * rad}, {rad, rad},
-            [trash_area](const Entity& entity) {
+        const RefEntities ents = EntityHelper::getAllInRangeFiltered(
+            {-1.f * rad, -1.f * rad}, {rad, rad}, [&ifm](const Entity& entity) {
                 // Ignore the ones in the trash
-                const IsFloorMarker& ifm = trash_area->get<IsFloorMarker>();
                 if (ifm.is_marked(entity.id)) return false;
-
                 return true;
             });
 
@@ -1288,11 +1293,18 @@ void update_sophie(Entity& entity, float) {
             //
             // );
         };
-
         bitset_utils::for_each_enabled_bit(unlockedIngredients,
                                            hasMachinesForIngredient);
 
-        return result(!has_req_machines);
+        const auto get_position_for_reason = [&ifm]() -> std::optional<vec2> {
+            const auto trash_ids = ifm.marked_ids();
+            if (trash_ids.empty()) return {};
+            const OptEntity ent = EntityHelper::getEntityForID(trash_ids[0]);
+            if (!ent.valid()) return {};
+            return ent->get<Transform>().as2();
+        };
+
+        return result(!has_req_machines, get_position_for_reason());
     };
 
     // doing it this way so that if we wanna make them return bool itll be
