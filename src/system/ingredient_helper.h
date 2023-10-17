@@ -12,6 +12,7 @@ struct EntityTuple {
     std::vector<EntityType> igs;
 };
 
+// TODO probably should move to the config json
 inline std::vector<EntityTuple> get_machines_for_ingredient(Ingredient ig) {
     std::vector<EntityTuple> settings;
     switch (ig) {

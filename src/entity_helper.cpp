@@ -337,15 +337,23 @@ bool EntityHelper::hasOverlappingSolidEntitiesInRange(vec2 range_min,
     return e.valid();
 }
 
-RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
+RefEntities EntityHelper::getAllInRangeFiltered(
+    vec2 range_min, vec2 range_max,
+    const std::function<bool(Entity&)>& filter) {
     RefEntities es;
     for (const std::shared_ptr<Entity>& e : get_entities()) {
         const auto pos = e->get<Transform>().as2();
         if (pos.x > range_max.x || pos.x < range_min.x) continue;
         if (pos.y > range_max.y || pos.y < range_min.y) continue;
+        if (!filter(*e)) continue;
         es.push_back(*e);
     }
     return es;
+}
+
+RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
+    return EntityHelper::getAllInRangeFiltered(range_min, range_max,
+                                               [](auto&&) { return true; });
 }
 
 OptEntity EntityHelper::getOverlappingSolidEntityInRange(vec2 range_min,
