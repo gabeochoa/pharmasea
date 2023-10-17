@@ -622,6 +622,15 @@ void delete_trash_when_leaving_planning(Entity& entity) {
         OptEntity marked_entity = EntityHelper::getEntityForID(id);
         if (!marked_entity) continue;
         marked_entity->cleanup = true;
+        // TODO do we always just want to delete the held item when cleanup =
+        // true?
+
+        // Also delete the held item
+        CanHoldItem& markedCHI = marked_entity->get<CanHoldItem>();
+        if (!markedCHI.empty()) {
+            markedCHI.item()->cleanup = true;
+            markedCHI.update(nullptr, -1);
+        }
     }
 }
 
