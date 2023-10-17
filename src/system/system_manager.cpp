@@ -1317,16 +1317,72 @@ void update_sophie(Entity& entity, float) {
         return;
     };
 
+    const auto _deleting_item_needed_for_recipe = []() {
+        /*
+        OptEntity trash_area =
+            EntityHelper::getFirstMatching([](const Entity& entity) {
+                if (entity.is_missing<IsFloorMarker>()) return false;
+                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                return fm.type == IsFloorMarker::Type::Planning_TrashArea;
+            });
+
+        const auto result = [&entity](bool on) {
+            entity.get<HasTimer>().write_reason(
+                HasTimer::WaitingReason::DeletingNeededItem, on, {});
+            return;
+        };
+
+        if (!trash_area.valid()) return result(false);
+
+        // TODO this is not robust but itll work for a while
+        float rad = 25;
+        const auto ents = EntityHelper::getAllInRangeFiltered(
+            {rad, -1.f * rad}, {rad, rad}, [trash_area](const Entity& entity) {
+                // Ignore anything without a price
+                int price = get_price_for_entity_type(
+                    entity.get<DebugName>().get_type());
+                if (price == -1) return false;
+
+                // Ignore the ones in the trash
+                const IsFloorMarker& ifm = trash_area->get<IsFloorMarker>();
+                if (ifm.is_marked(entity.id)) return false;
+                return true;
+            });
+
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        const IsProgressionManager& progressionManager =
+            sophie.get<IsProgressionManager>();
+
+        const auto unlockedDrinks = progressionManager.enabled_drinks();
+        bool has_req_machines = true;
+
+        // can we make all the recipies with the remaining ents
+
+        const auto hasMachinesForMakingDrink =
+            [&has_req_machines](int index) -> bool {
+            Drink drink = magic_enum::enum_value<Drink>(index);
+            has_req_machines &= true;
+        };
+
+        bitset_utils::for_each_enabled_bit(unlockedDrinks,
+                                           hasMachinesForMakingDrink);
+
+        return result(has_req_machines);
+        */
+        return;
+    };
+
     // doing it this way so that if we wanna make them return bool itll be
     // easy
     typedef std::function<void()> WaitingFn;
 
     std::vector<WaitingFn> fns{
-        _customers_in_store,        //
-        _player_holding_furniture,  //
-        _bar_not_clean,             //
-        _overlapping_furniture,     //
-        _forgot_item_in_spawn_area,
+        _customers_in_store,               //
+        _player_holding_furniture,         //
+        _bar_not_clean,                    //
+        _overlapping_furniture,            //
+        _forgot_item_in_spawn_area,        //
+        _deleting_item_needed_for_recipe,  //
         _lightweight_map_validation,
     };
 
