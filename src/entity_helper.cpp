@@ -59,6 +59,15 @@ Entities& EntityHelper::get_entities() {
     return client_entities_DO_NOT_USE;
 }
 
+RefEntities EntityHelper::get_ref_entities() {
+    RefEntities matching;
+    for (auto& e : EntityHelper::get_entities()) {
+        if (!e) continue;
+        matching.push_back(*e);
+    }
+    return matching;
+}
+
 struct CreationOptions {
     bool is_permanent;
 };

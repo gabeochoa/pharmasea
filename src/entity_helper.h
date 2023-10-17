@@ -43,6 +43,7 @@ struct EntityHelper {
     };
 
     static Entities& get_entities();
+    static RefEntities get_ref_entities();
 
     static Entity& createEntity();
     static Entity& createPermanentEntity();
