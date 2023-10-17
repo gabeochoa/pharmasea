@@ -7,7 +7,8 @@
 #include "../recipe_library.h"
 
 // TODO probably should move to the config json
-std::vector<EntityTuple> get_machines_for_ingredient(Ingredient ig) {
+std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
+    Ingredient ig) {
     std::vector<EntityTuple> settings;
     switch (ig) {
         case Soda: {
@@ -88,23 +89,37 @@ std::vector<EntityTuple> get_machines_for_ingredient(Ingredient ig) {
     return settings;
 }
 
-std::map<Ingredient, std::vector<EntityTuple>> get_machines_req_for_recipe(
-    Drink drink) {
+std::map<Ingredient, std::vector<EntityTuple>>
+IngredientHelper::get_machines_req_for_recipe(Drink drink) {
     std::map<Ingredient, std::vector<EntityTuple>> needed;
 
     bitset_utils::for_each_enabled_bit(
         get_req_ingredients_for_drink(drink), [&needed](size_t index) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(index);
-            needed[ig] = get_machines_for_ingredient(ig);
+            needed[ig] = IngredientHelper::get_machines_for_ingredient(ig);
         });
 
     return needed;
 }
 
-bool has_machines_required_for_ingredient(Ingredient ig) {
+bool IngredientHelper::has_machines_required_for_ingredient(
+    const std::vector<RefEntity>& ents, Ingredient ig) {
+    const auto doesAnyExist =
+        [&ents](const std::function<bool(const Entity&)>& filter) {
+            for (const Entity& e : ents) {
+                if (filter(e)) return true;
+            }
+            return false;
+        };
+
+    const auto doesAnyExistWithType = [&doesAnyExist](EntityType type) {
+        return doesAnyExist(
+            [type](const Entity& entity) { return check_type(entity, type); });
+    };
+
     switch (ig) {
         case Soda: {
-            return EntityHelper::doesAnyExistWithType(EntityType::SodaMachine);
+            return doesAnyExistWithType(EntityType::SodaMachine);
         } break;
         case Rum:
         case Tequila:
@@ -117,16 +132,14 @@ bool has_machines_required_for_ingredient(Ingredient ig) {
                 ingredient::Alcohols, ig);
             return (
                 // Alcohol Group
-                EntityHelper::doesAnyExistWithType(
-                    EntityType::MedicineCabinet) ||
+                doesAnyExistWithType(EntityType::MedicineCabinet) ||
                 // Does a single one exist for this alcohol
-                EntityHelper::doesAnyExistMatchingFilter(
-                    [alc_index](const Entity& entity) {
-                        if (!check_type(entity, EntityType::SingleAlcohol))
-                            return false;
-                        if (entity.is_missing<Indexer>()) return false;
-                        return entity.get<Indexer>().value() == alc_index;
-                    })
+                doesAnyExist([alc_index](const Entity& entity) {
+                    if (!check_type(entity, EntityType::SingleAlcohol))
+                        return false;
+                    if (entity.is_missing<Indexer>()) return false;
+                    return entity.get<Indexer>().value() == alc_index;
+                })
                 //
             );
         } break;
@@ -136,8 +149,7 @@ bool has_machines_required_for_ingredient(Ingredient ig) {
         case Cranberries:
         case Lime:
         case Lemon: {
-            return EntityHelper::doesAnyExistWithType(
-                EntityType::PillDispenser);
+            return doesAnyExistWithType(EntityType::PillDispenser);
         } break;
         case PinaJuice:
         case OrangeJuice:
@@ -145,18 +157,16 @@ bool has_machines_required_for_ingredient(Ingredient ig) {
         case CranberryJuice:
         case LimeJuice:
         case LemonJuice: {
-            return EntityHelper::doesAnyExistWithType(
-                       EntityType::PillDispenser) &&
-                   EntityHelper::doesAnyExistWithType(EntityType::Blender);
+            return doesAnyExistWithType(EntityType::PillDispenser) &&
+                   doesAnyExistWithType(EntityType::Blender);
             return false;
         } break;
         case SimpleSyrup: {
-            return EntityHelper::doesAnyExistWithType(
-                EntityType::SimpleSyrupHolder);
+            return doesAnyExistWithType(EntityType::SimpleSyrupHolder);
         } break;
         case IceCubes:
         case IceCrushed: {
-            return EntityHelper::doesAnyExistWithType(EntityType::IceMachine);
+            return doesAnyExistWithType(EntityType::IceMachine);
         } break;
         // TODO implement for these once thye have spawners
         case Salt:
@@ -167,4 +177,9 @@ bool has_machines_required_for_ingredient(Ingredient ig) {
     }
 
     return true;
+}
+
+bool IngredientHelper::has_machines_required_for_ingredient(Ingredient ig) {
+    return IngredientHelper::has_machines_required_for_ingredient(
+        EntityHelper::get_ref_entities(), ig);
 }

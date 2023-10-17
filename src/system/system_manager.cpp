@@ -47,15 +47,14 @@
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
-#include "ingredient_helper.h"
 ///
-
 #include "../engine/pathfinder.h"
 #include "../engine/tracy.h"
 #include "../entity.h"
 #include "../entity_helper.h"
 #include "../map.h"
 #include "../network/server.h"
+#include "ingredient_helper.h"
 #include "input_process_manager.h"
 #include "job_system.h"
 #include "magic_enum/magic_enum.hpp"
@@ -753,7 +752,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
         };
 
         // Already has the machine so we good
-        if (has_machines_required_for_ingredient(ig)) return;
+        if (IngredientHelper::has_machines_required_for_ingredient(ig)) return;
 
         switch (ig) {
             case Soda: {
@@ -1274,8 +1273,13 @@ void update_sophie(Entity& entity, float) {
         return;
     };
 
-    const auto _deleting_item_needed_for_recipe = []() {
-        /*
+    const auto _deleting_item_needed_for_recipe = [&entity]() {
+        const auto result = [&entity](bool on) {
+            entity.get<HasTimer>().write_reason(
+                HasTimer::WaitingReason::DeletingNeededItem, on, {});
+            return;
+        };
+
         OptEntity trash_area =
             EntityHelper::getFirstMatching([](const Entity& entity) {
                 if (entity.is_missing<IsFloorMarker>()) return false;
@@ -1283,26 +1287,17 @@ void update_sophie(Entity& entity, float) {
                 return fm.type == IsFloorMarker::Type::Planning_TrashArea;
             });
 
-        const auto result = [&entity](bool on) {
-            entity.get<HasTimer>().write_reason(
-                HasTimer::WaitingReason::DeletingNeededItem, on, {});
-            return;
-        };
-
         if (!trash_area.valid()) return result(false);
 
         // TODO this is not robust but itll work for a while
         float rad = 25;
         const auto ents = EntityHelper::getAllInRangeFiltered(
-            {rad, -1.f * rad}, {rad, rad}, [trash_area](const Entity& entity) {
-                // Ignore anything without a price
-                int price = get_price_for_entity_type(
-                    entity.get<DebugName>().get_type());
-                if (price == -1) return false;
-
+            {-1.f * rad, -1.f * rad}, {rad, rad},
+            [trash_area](const Entity& entity) {
                 // Ignore the ones in the trash
                 const IsFloorMarker& ifm = trash_area->get<IsFloorMarker>();
                 if (ifm.is_marked(entity.id)) return false;
+
                 return true;
             });
 
@@ -1310,23 +1305,31 @@ void update_sophie(Entity& entity, float) {
         const IsProgressionManager& progressionManager =
             sophie.get<IsProgressionManager>();
 
-        const auto unlockedDrinks = progressionManager.enabled_drinks();
+        const auto unlockedIngredients =
+            progressionManager.enabled_ingredients();
+
         bool has_req_machines = true;
 
         // can we make all the recipies with the remaining ents
 
-        const auto hasMachinesForMakingDrink =
-            [&has_req_machines](int index) -> bool {
-            Drink drink = magic_enum::enum_value<Drink>(index);
-            has_req_machines &= true;
+        const auto hasMachinesForIngredient = [&ents,
+                                               &has_req_machines](int index) {
+            Ingredient ig = magic_enum::enum_value<Ingredient>(index);
+            has_req_machines =
+                has_req_machines &&
+                IngredientHelper::has_machines_required_for_ingredient(ents,
+                                                                       ig);
+            // log_info(
+            // "hasMachines {} {}", magic_enum::enum_name<Ingredient>(ig),
+            // IngredientHelper::has_machines_required_for_ingredient(ents, ig)
+            //
+            // );
         };
 
-        bitset_utils::for_each_enabled_bit(unlockedDrinks,
-                                           hasMachinesForMakingDrink);
+        bitset_utils::for_each_enabled_bit(unlockedIngredients,
+                                           hasMachinesForIngredient);
 
-        return result(has_req_machines);
-        */
-        return;
+        return result(!has_req_machines);
     };
 
     // doing it this way so that if we wanna make them return bool itll be
