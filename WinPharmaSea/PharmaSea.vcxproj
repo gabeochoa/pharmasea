@@ -178,6 +178,7 @@
     <ClInclude Include="..\src\spawner.h" />
     <ClInclude Include="..\src\std_include.h" />
     <ClInclude Include="..\src\strings.h" />
+    <ClInclude Include="..\src\system\ingredient_helper.h" />
     <ClInclude Include="..\src\system\input_process_manager.h" />
     <ClInclude Include="..\src\system\job_system.h" />
     <ClInclude Include="..\src\system\logging_system.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="..\src\level_info.cpp" />
     <ClCompile Include="..\src\network\server.cpp" />
     <ClCompile Include="..\src\preload.cpp" />
+    <ClCompile Include="..\src\system\ingredient_helper.cpp" />
     <ClCompile Include="..\src\system\input_process_manager.cpp" />
     <ClCompile Include="..\src\system\rendering_system.cpp" />
     <ClCompile Include="..\src\system\system_manager.cpp" />

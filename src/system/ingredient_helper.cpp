@@ -31,7 +31,10 @@ std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
                         ingredient::Alcohols, ig);
                 std::vector<EntityType> ets;
                 ets.push_back(EntityType::SingleAlcohol);
-                settings.push_back(EntityTuple{.igs = ets, .index = alc_index});
+                settings.push_back(EntityTuple{
+                    .index = alc_index,
+                    .igs = ets,
+                    });
             }
             {
                 std::vector<EntityType> ets;
@@ -62,7 +65,10 @@ std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
                 ets.push_back(EntityType::Blender);
                 ets.push_back(EntityType::PillDispenser);
                 settings.push_back(
-                    EntityTuple{.igs = ets, .type = EntityTuple::type::And});
+                    EntityTuple{
+                        .type = EntityTuple::type::And,
+                        .igs = ets, 
+                    });
             }
         } break;
         case SimpleSyrup: {

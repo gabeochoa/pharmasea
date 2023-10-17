@@ -3,6 +3,7 @@
 
 #include <bitset>
 #include <random>
+#include <functional>
 
 #include "random.h"
 //
