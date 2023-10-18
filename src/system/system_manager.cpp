@@ -1153,9 +1153,12 @@ void update_sophie(Entity& entity, float) {
             const IsFloorMarker& ifm = spawn_area->get<IsFloorMarker>();
             has_item_in_spawn_area = ifm.has_any_marked();
             if (has_item_in_spawn_area) {
-                position = EntityHelper::getEntityForID(ifm.marked_ids()[0])
-                               ->get<Transform>()
-                               .as2();
+                EntityID firstMarkedID = ifm.marked_ids()[0];
+                const OptEntity firstMarked =
+                    EntityHelper::getEntityForID(firstMarkedID);
+                if (firstMarked) {
+                    position = firstMarked->get<Transform>().as2();
+                }
             }
         }
 
