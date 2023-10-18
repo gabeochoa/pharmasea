@@ -1341,7 +1341,6 @@ void reset_empty_work_furniture(Entity& entity, float) {
 
     // TODO if its not empty, we have to see if its an item that can be
     // worked
-    return;
 }
 
 void process_has_rope(Entity& entity, float) {
@@ -1403,8 +1402,6 @@ void process_has_rope(Entity& entity, float) {
 }
 
 void process_squirter(Entity& entity, float) {
-    // TODO this normally would be an IsComponent but for those where theres
-    // only one probably check_type is easier/ cheaper? idk
     if (!check_type(entity, EntityType::Squirter)) return;
 
     CanHoldItem& sqCHI = entity.get<CanHoldItem>();
@@ -1443,8 +1440,6 @@ void process_squirter(Entity& entity, float) {
 
 // TODO not everything can be trashed !
 void process_trash(Entity& entity, float) {
-    // TODO this normally would be an IsComponent but for those where theres
-    // only one probably check_type is easier/ cheaper? idk
     if (!check_type(entity, EntityType::Trash)) return;
 
     CanHoldItem& trashCHI = entity.get<CanHoldItem>();
@@ -1692,7 +1687,10 @@ void move_purchased_furniture() {
         });
     vec3 spawn_position = spawn_area->get<Transform>().pos();
 
-    // TODO we could probably use the amount in IsBank but i dont trust it
+    OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+    VALIDATE(sophie.valid(), "sophie should exist when moving furniture");
+    IsBank& bank = sophie->get<IsBank>();
+
     int amount_in_cart = 0;
 
     // for every marked, move them over
@@ -1716,12 +1714,13 @@ void move_purchased_furniture() {
                             marked_entity->get<DebugName>().get_type()));
     }
 
-    OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
-    if (sophie.valid()) {
-        IsBank& bank = sophie->get<IsBank>();
-        bank.withdraw(amount_in_cart);
-        bank.update_cart(0);
-    }
+    VALIDATE(amount_in_cart == bank.cart(),
+             "Amount we computed for in cart should always match the actual "
+             "amount in our cart")
+
+    // Commit the withdraw
+    bank.withdraw(amount_in_cart);
+    bank.update_cart(0);
 }
 
 }  // namespace store
@@ -1803,7 +1802,6 @@ void SystemManager::process_state_change(
 
     const auto onRoundFinished = [&]() {
         for_each(entities, dt, [](Entity& entity, float dt) {
-            // TODO make a namespace for transition functions
             system_manager::delete_floating_items_when_leaving_inround(entity);
             system_manager::delete_held_items_when_leaving_inround(entity);
             system_manager::delete_customers_when_leaving_inround(entity);
@@ -1817,7 +1815,6 @@ void SystemManager::process_state_change(
             // I think this will only happen when you debug change round while
             // customers are already in line, but doesnt hurt to reset
             system_manager::reset_register_queue_when_leaving_inround(entity);
-            // TODO reset haswork's
         });
     };
 
