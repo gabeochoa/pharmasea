@@ -355,6 +355,12 @@ struct SettingsLayer : public Layer {
                             continue;
                         }
 
+                        // TODO we have more inptus than items in col
+                        // if we go
+                        if (rendering_index >= num_per_col) {
+                            continue;
+                        }
+
                         auto [label, remap_button] =
                             rect::vsplit<2>(rects[rendering_index++], 20);
 
