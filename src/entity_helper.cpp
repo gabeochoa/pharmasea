@@ -388,6 +388,19 @@ OptEntity EntityHelper::getOverlappingSolidEntityInRange(vec2 range_min,
     return {};
 }
 
+OptEntity EntityHelper::getOverlappingSolidEntityIfExists(const Entity& entity,
+                                                          float range) {
+    const vec2 position = entity.get<Transform>().as2();
+    for (const std::shared_ptr<Entity>& e2 : get_entities()) {
+        if (e2->id == entity.id) continue;  // skip us
+        if (!e2->has<IsSolid>()) continue;  // skip non solid
+        const auto pos2 = e2->get<Transform>().as2();
+        float distance = vec::distance(position, pos2);
+        if (distance <= range) return *e2;
+    }
+    return {};
+}
+
 // TODO :INFRA: i think this is slower because we are doing "outside mesh"
 // as outside we should probably have just make some tiles for inside the
 // map
