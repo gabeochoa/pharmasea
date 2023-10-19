@@ -1625,8 +1625,6 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
 
         system_manager::process_trigger_area(entity, dt);
 
-        system_manager::pop_out_when_colliding(entity, dt);
-
         // TODO :SPEED: originally this was running in "process_game_state"
         // and only supposed to run on transitions but
         // when i fixed it to actually run only on transitions
@@ -1692,6 +1690,7 @@ void SystemManager::store_update(const Entities& entity_list, float dt) {
         // If you add something here think should it also go in planning?
         system_manager::update_held_furniture_position(entity, dt);
         system_manager::store::cart_management(entity, dt);
+        system_manager::pop_out_when_colliding(entity, dt);
 
         // game like
         system_manager::process_is_container_and_should_backfill_item(entity,
@@ -1704,6 +1703,7 @@ void SystemManager::planning_update(
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         // If you add something here think should it also go in store?
         system_manager::update_held_furniture_position(entity, dt);
+        system_manager::pop_out_when_colliding(entity, dt);
     });
 }
 
