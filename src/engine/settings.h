@@ -43,7 +43,7 @@ const int MAX_LANG_LENGTH = 25;
 struct Data {
     int engineVersion = 0;
     rez::ResolutionInfo resolution;
-    std::string lang_name;
+    std::string lang_name = "en_us";
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;
     float music_volume = 0.5f;
