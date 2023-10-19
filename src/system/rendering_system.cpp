@@ -624,7 +624,7 @@ void render_price(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
-    vec3 location = transform.raw() + vec3{0, 0.5f * TILESIZE, 0.2f * TILESIZE};
+    vec3 location = transform.raw() + vec3{0, 0.5f * TILESIZE, 0.4f * TILESIZE};
 
     bool is_free = entity.has<IsFreeInStore>();
     if (is_free) price = 0;
@@ -674,14 +674,13 @@ void render_normal(const Entity& entity, float dt) {
         render_floor_marker(entity, dt);
     }
 
+    if (GameState::get().is(game::State::Store)) {
+        render_machine_name(entity, dt);
+        render_price(entity, dt);
+    }
+
     if (entity.has<CanBeHighlighted>() &&
         entity.get<CanBeHighlighted>().is_highlighted()) {
-        // TODO should we only render when highlighted?
-        if (GameState::get().is(game::State::Store)) {
-            render_machine_name(entity, dt);
-            render_price(entity, dt);
-        }
-
         bool used = render_model_highlighted(entity, dt);
         if (!used) {
             render_simple_highlighted(entity, dt);
