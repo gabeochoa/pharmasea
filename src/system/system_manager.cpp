@@ -47,6 +47,7 @@
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
+#include "../engine/util.h"
 ///
 #include "../engine/pathfinder.h"
 #include "../engine/tracy.h"
@@ -589,7 +590,6 @@ void process_is_indexed_container_holding_incorrect_item(Entity& entity,
 
 void handle_autodrop_furniture_when_exiting_planning(Entity& entity) {
     if (entity.is_missing<CanHoldFurniture>()) return;
-
     const CanHoldFurniture& ourCHF = entity.get<CanHoldFurniture>();
     if (ourCHF.empty()) return;
 
@@ -1572,6 +1572,42 @@ void reduce_impatient_customers(Entity& entity, float dt) {
     if (hp.pct() <= 0) hp.reset();
 }
 
+void pop_out_when_colliding(Entity& entity, float) {
+    const auto no_clip_on =
+        GLOBALS.get_or_default<bool>("no_clip_enabled", false);
+    if (no_clip_on) return;
+
+    // Only popping out players right now
+    if (!check_type(entity, EntityType::Player)) return;
+
+    OptEntity match =
+        EntityHelper::getOverlappingSolidEntityIfExists(entity, 0.75f);
+    if (!match) return;
+
+    const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
+    if (chf.is_holding_furniture()) return;
+    if (chf.furniture_id() == match->id) return;
+
+    const Rectangle playerBounds = entity.get<Transform>().rectangular_bounds();
+    const Rectangle matchBounds = match->get<Transform>().rectangular_bounds();
+
+    vec2 new_position = entity.get<Transform>().as2();
+
+    float dx = playerBounds.x + (playerBounds.width / 2) - matchBounds.x -
+               (matchBounds.width / 2);
+    float dy = playerBounds.y + (playerBounds.height / 2) - matchBounds.y -
+               (matchBounds.height / 2);
+
+    if (dx != 0) {
+        new_position.x += util::sgn(dx) * matchBounds.width * 0.75f;
+    }
+    if (dy != 0) {
+        new_position.y += util::sgn(dy) * matchBounds.height * 0.75f;
+    }
+
+    entity.get<Transform>().update(vec::to3(new_position));
+}
+
 namespace store {
 
 void cart_management(Entity& entity, float) {
@@ -1862,8 +1898,8 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::clear_all_floor_markers(entity, dt);
         system_manager::mark_item_in_floor_area(entity, dt);
-
         system_manager::reset_highlighted(entity, dt);
+
         // TODO should be just planning + lobby?
         // maybe a second one for highlighting items?
         system_manager::highlight_facing_furniture(entity, dt);
@@ -1871,6 +1907,8 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
         system_manager::update_held_item_position(entity, dt);
 
         system_manager::process_trigger_area(entity, dt);
+
+        system_manager::pop_out_when_colliding(entity, dt);
 
         // TODO :SPEED: originally this was running in "process_game_state"
         // and only supposed to run on transitions but

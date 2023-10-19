@@ -65,7 +65,7 @@ float constexpr ce_sqrtf(float x) {
                : std::numeric_limits<float>::quiet_NaN();
 }
 
-constexpr float distance(vec2 a, vec2 b) {
+constexpr float distance(const vec2 a, const vec2 b) {
     return ce_sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
