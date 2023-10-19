@@ -77,7 +77,7 @@ profile:
 	xctrace record --output . --template "Time Profiler" --time-limit 10s --attach `ps -ef | grep "\./$(OUTPUT_EXE)" | grep -v "grep"  | cut -d' ' -f4`
 
 count: 
-	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor" | grep -v "resources" | xargs wc -l | sort -rn
+	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor" | grep -v "resources" | grep -v "color.h" | xargs wc -l | sort -rn
 
 countall: 
 	git ls-files | xargs wc -l | sort -rn
