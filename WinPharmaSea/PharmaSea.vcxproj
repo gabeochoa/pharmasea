@@ -217,6 +217,7 @@
     <ClCompile Include="..\src\system\ingredient_helper.cpp" />
     <ClCompile Include="..\src\system\input_process_manager.cpp" />
     <ClCompile Include="..\src\system\rendering_system.cpp" />
+    <ClCompile Include="..\src\system\sophie.cpp" />
     <ClCompile Include="..\src\system\system_manager.cpp" />
     <ClCompile Include="..\src\wave_collapse.cpp" />
   </ItemGroup>
