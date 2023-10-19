@@ -48,11 +48,11 @@ struct Data {
     float master_volume = 0.5f;
     float music_volume = 0.5f;
     float sound_volume = 0.5f;
-    bool show_streamer_safe_box = false;
     std::string username;
-    bool enable_postprocessing = true;
     std::string last_ip_joined;
     std::string ui_theme;
+    bool show_streamer_safe_box = false;
+    bool enable_postprocessing = true;
     bool snapCameraTo90 = false;
 
    private:
@@ -60,17 +60,20 @@ struct Data {
     template<typename S>
     void serialize(S& s) {
         s.value4b(engineVersion);
-        s.object(resolution);
         s.value4b(master_volume);
         s.value4b(music_volume);
         s.value4b(sound_volume);
+
         s.value1b(show_streamer_safe_box);
-        s.text1b(username, network::MAX_NAME_LENGTH);
+        s.value1b(snapCameraTo90);
         s.value1b(enable_postprocessing);
+
+        s.text1b(username, network::MAX_NAME_LENGTH);
         s.text1b(last_ip_joined, 25);
         s.text1b(lang_name, MAX_LANG_LENGTH);
         s.text1b(ui_theme, MAX_LANG_LENGTH);
-        s.value1b(snapCameraTo90);
+
+        s.object(resolution);
     }
     friend std::ostream& operator<<(std::ostream& os, const Data& data) {
         os << "Settings(" << std::endl;
