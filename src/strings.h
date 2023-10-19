@@ -232,6 +232,7 @@ constexpr const char* COPY_IP = "Copy";
 constexpr const char* SAFE_ZONE = "safe zone";
 constexpr const char* SHOW_SAFE_BOX = "Show Streamer Safe Box";
 constexpr const char* ENABLE_PPS = "Enable Post-Processing Shaders";
+constexpr const char* SNAP_CAMERA = "Snap Camera";
 constexpr const char* MASTER_VOLUME = "Master Volume";
 constexpr const char* MUSIC_VOLUME = "Music Volume";
 constexpr const char* SOUND_VOLUME = "SFX Volume";

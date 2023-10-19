@@ -67,6 +67,9 @@ msgstr "xoB efaS remaertS wohS"
 msgid "Enable Post-Processing Shaders"
 msgstr "sredahS gnissecorP-tsoP elbanE"
 
+msgid "Snap Camera"
+msgstr "aremaC panS"
+
 msgid "Master Volume"
 msgstr "emuloV retsaM"
 
@@ -118,6 +121,9 @@ msgstr "gnippalrevo erutinruf evah uoy fi emag trats t'naC"
 msgid "Can't start game if you have furniture still in the spawn area"
 msgstr "aera nwaps eht ni llits erutinruf evah uoy fi emag trats t'naC"
 
+msgid "Can't trash machines you need for recipies..."
+msgstr "...seipicer rof deen uoy senihcam hsart t'naC"
+
 msgid "Loading..."
 msgstr "...gnidaoL"
 
@@ -136,11 +142,17 @@ msgstr "nI gnitratS dnuoR txeN"
 msgid "Character Switcher"
 msgstr "rehctiwS retcarahC"
 
+msgid "Submit and Return"
+msgstr "nruteR dna timbuS"
+
 msgid "Trash"
 msgstr "hsarT"
 
 msgid "New Items"
 msgstr "smetI weN"
+
+msgid "Place to Purchase"
+msgstr "esahcruP ot ecalP"
 
 msgid "ABCDEFGHIJKLMNOPQRSTUVWXYZ "
 msgstr " ZYXWVUTSRQPONMLKJIHGFEDCBA"

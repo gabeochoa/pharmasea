@@ -236,8 +236,7 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(snapCamera, 30);
                 control = rect::rpad(control, 10);
 
-                // TODO Translate
-                text(Widget{label}, "snap camera");
+                text(Widget{label}, text_lookup(strings::i18n::SNAP_CAMERA));
 
                 if (auto result = checkbox(
                         Widget{control},
