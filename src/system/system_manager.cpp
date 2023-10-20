@@ -842,7 +842,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             // Mark the drink unlocked
             ipm.unlock_drink(option);
             // Unlock any igredients it needs
-            auto possibleNewIGs = get_recipe_for_drink(option);
+            auto possibleNewIGs = get_req_ingredients_for_drink(option);
             bitset_utils::for_each_enabled_bit(
                 possibleNewIGs, [&ipm](size_t index) {
                     Ingredient ig = magic_enum::enum_value<Ingredient>(index);
