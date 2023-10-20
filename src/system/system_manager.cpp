@@ -524,15 +524,9 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
             const IsProgressionManager& ipp =
                 sophie.get<IsProgressionManager>();
 
-            size_t i = 0;
-            do {
-                i++;
-                indexer.increment();
-                if (i > (size_t) indexer.max()) break;
-            } while (
-                // TODO we only need the check_type above because we dont have a
-                // way to know which indexer we are operating on
-                ipp.is_ingredient_locked(ingredient::Fruits[indexer.value()]));
+            indexer.increment_until_valid([&](int index) {
+                return !ipp.is_ingredient_locked(ingredient::Fruits[index]);
+            });
         }
 
         backfill_empty_container(iic.type(), entity, pos, indexer.value());

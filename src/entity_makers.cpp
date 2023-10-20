@@ -604,16 +604,10 @@ void make_fruit_basket(Entity& container, vec2 pos) {
             const IsProgressionManager& ipp =
                 sophie.get<IsProgressionManager>();
 
-            size_t i = 0;
-            do {
-                i++;
-                owner.get<Indexer>().increment();
-                // TODO will show lemon even if you dont have it unlocked,
-                // we just need a way to say "hey theres no fruits
-                // unlocked, just skip all of this
-                if (i > ingredient::Fruits.size()) break;
-            } while (ipp.is_ingredient_locked(
-                ingredient::Fruits[owner.get<Indexer>().value()]));
+            Indexer& indexer = owner.get<Indexer>();
+            indexer.increment_until_valid([&](int index) {
+                return !ipp.is_ingredient_locked(ingredient::Fruits[index]);
+            });
 
             hasWork.reset_pct();
         }

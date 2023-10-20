@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../engine/log.h"
 #include "base_component.h"
 
 struct Indexer : public BaseComponent {
@@ -33,6 +34,17 @@ struct Indexer : public BaseComponent {
     auto& set_value(int val) {
         index = val;
         return *this;
+    }
+
+    void increment_until_valid(const std::function<bool(int)>& validationFn) {
+        for (int i = 0; i < max_value; i++) {
+            if (validationFn(index)) return;
+            increment();
+        }
+
+        log_warn(
+            "You are using increment until valid, but your validation function "
+            "likely never returns true");
     }
 
    private:
