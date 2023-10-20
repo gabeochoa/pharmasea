@@ -53,7 +53,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         using namespace ui;
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto content = rect::tpad(window, 30);
+        auto content = rect::tpad(window, 5);
         content = rect::lpad(content, 20);
         content = rect::rpad(content, 75);
         content = rect::bpad(content, 80);
@@ -66,6 +66,11 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         auto reason_spots =
             rect::hsplit<HasTimer::WaitingReason::WaitingReasonLast>(content,
                                                                      10);
+        // Just make it so that only one reason will show at a time
+        // this might be confusing but it avoids the issue where its covering
+        // way too much of the screen
+        const int max_reason_index =
+            0;  // this should never be more than reason_spots.size()
 
         if (ht.block_state_change_reasons.none()) {
             text(Widget{reason_spots[0]},
@@ -88,6 +93,8 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
 
         int i = 0;
         for (auto txt : active_reasons) {
+            if (i > max_reason_index) continue;
+
             text(Widget{reason_spots[i]}, active_reasons[i], theme::Usage::Font,
                  true);
 
