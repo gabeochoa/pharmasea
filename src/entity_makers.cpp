@@ -1068,14 +1068,12 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet
 
-            // if (cod.num_orders_had <= 0) return false;
-            // if (cod.num_alcoholic_drinks_had <= 0) return false;
+            if (cod.num_orders_had <= 0) return false;
+            if (cod.num_alcoholic_drinks_had <= 0) return false;
 
             IsSpawner& vom_spewer = entity.get<IsSpawner>();
             vom_spewer.increase_total(randIn(0, cod.num_alcoholic_drinks_had));
             vom_spewer.set_time_between(2.f);
-
-            vom_spewer.increase_total(randIn(0, 100));
             return true;
         })
         // check if there is already vomit in that spot
