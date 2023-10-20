@@ -71,6 +71,7 @@ struct SettingsLayer : public Layer {
             MenuState::get().go_back();
             return true;
         }
+
         return ui_context->process_keyevent(event);
     }
 
@@ -109,8 +110,8 @@ struct SettingsLayer : public Layer {
 
         {
             auto [master_vol, music_vol, sfx_vol, ui_theme, resolution,
-                  language, streamer, postprocessing, snapCamera] =
-                rect::hsplit<9>(rect::bpad(rows, 85), 20);
+                  language, streamer, postprocessing, snapCamera, fullscreen] =
+                rect::hsplit<10>(rect::bpad(rows, 85), 20);
 
             {
                 auto [label, control] = rect::vsplit(master_vol, 30);
@@ -246,6 +247,22 @@ struct SettingsLayer : public Layer {
                                          Settings::get().data.snapCameraTo90});
                     result) {
                     Settings::get().data.snapCameraTo90 = (result.as<bool>());
+                }
+            }
+
+            {
+                auto [label, control] = rect::vsplit(fullscreen, 30);
+                control = rect::rpad(control, 10);
+
+                text(Widget{label}, "Fullscreen?");
+                // text_lookup(strings::i18n::SNAP_CAMERA));
+
+                if (auto result = checkbox(
+                        Widget{control},
+                        CheckboxData{.selected =
+                                         Settings::get().data.isFullscreen});
+                    result) {
+                    Settings::get().update_fullscreen(result.as<bool>());
                 }
             }
         }

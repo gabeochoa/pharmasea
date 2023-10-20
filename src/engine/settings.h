@@ -54,6 +54,7 @@ struct Data {
     bool show_streamer_safe_box = false;
     bool enable_postprocessing = true;
     bool snapCameraTo90 = false;
+    bool isFullscreen = false;
 
    private:
     friend bitsery::Access;
@@ -67,6 +68,7 @@ struct Data {
         s.value1b(show_streamer_safe_box);
         s.value1b(snapCameraTo90);
         s.value1b(enable_postprocessing);
+        s.value1b(isFullscreen);
 
         s.text1b(username, network::MAX_NAME_LENGTH);
         s.text1b(last_ip_joined, 25);
@@ -80,6 +82,7 @@ struct Data {
         os << "version: " << data.engineVersion << std::endl;
         os << "resolution: " << data.resolution.width << ", "
            << data.resolution.height << std::endl;
+        os << "fullscreen: " << data.isFullscreen << std::endl;
         os << "master vol: " << data.master_volume << std::endl;
         os << "music vol: " << data.music_volume << std::endl;
         os << "sound vol: " << data.sound_volume << std::endl;
@@ -151,6 +154,14 @@ struct Settings {
         delete event;
     }
 
+    void update_fullscreen(bool fs_enabled) {
+        data.isFullscreen = fs_enabled;
+        WindowFullscreenEvent* event = new WindowFullscreenEvent(fs_enabled);
+        App::get().processEvent(*event);
+    }
+
+    void toggle_fullscreen() { update_fullscreen(!data.isFullscreen); }
+
     void update_last_used_ip_address(const std::string& ip) {
         data.last_ip_joined = ip;
     }
@@ -182,7 +193,6 @@ struct Settings {
     void update_post_processing_enabled(bool pp_enabled) {
         data.enable_postprocessing = pp_enabled;
     }
-
     [[nodiscard]] int get_current_resolution_index() const {
         return rez::ResolutionExplorer::get().index(data.resolution);
     }
@@ -329,5 +339,6 @@ struct Settings {
         update_streamer_safe_box(data.show_streamer_safe_box);
         update_language_name(data.lang_name);
         update_ui_theme(data.ui_theme);
+        update_fullscreen(data.isFullscreen);
     }
 };

@@ -8,6 +8,7 @@ enum class EventType {
     None = 0,
     WindowClose,
     WindowResize,
+    WindowFullscreen,
     WindowFocus,
     WindowLostFocus,
     WindowMoved,
@@ -111,6 +112,14 @@ struct WindowResizeEvent : public Event {
     // }
 
     MACRO_EVENT_TYPE(WindowResize)
+    MACRO_EVENT_CATEGORY(EventCategoryApplication)
+};
+
+struct WindowFullscreenEvent : public Event {
+    bool on;
+    explicit WindowFullscreenEvent(bool enable) : on(enable) {}
+
+    MACRO_EVENT_TYPE(WindowFullscreen)
     MACRO_EVENT_CATEGORY(EventCategoryApplication)
 };
 

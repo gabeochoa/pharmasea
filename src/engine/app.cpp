@@ -1,6 +1,8 @@
 
 #include "app.h"
 
+#include "resolution.h"
+
 #define ENABLE_TRACING 1
 #include "tracy.h"
 //
@@ -61,6 +63,9 @@ void App::onEvent(Event& event) {
     EventDispatcher dispatcher(event);
     dispatcher.dispatch<WindowResizeEvent>(
         std::bind(&App::onWindowResize, this, std::placeholders::_1));
+
+    dispatcher.dispatch<WindowFullscreenEvent>(
+        std::bind(&App::onWindowFullscreen, this, std::placeholders::_1));
 }
 
 bool App::onWindowResize(WindowResizeEvent event) {
@@ -75,6 +80,54 @@ bool App::onWindowResize(WindowResizeEvent event) {
     mainRT = raylib::LoadRenderTexture(width, height);
     GLOBALS.set("mainRT", &mainRT);
     return true;
+}
+
+bool App::onWindowFullscreen(WindowFullscreenEvent& event) {
+    log_info("Got Window Fullscreen toggle Event");
+
+    bool isFullscreenOn = raylib::IsWindowFullscreen();
+
+    // We want to turn it on and its already on
+    if (event.on && isFullscreenOn) {
+        return true;
+    }
+
+    // turn off and already off
+    if (!event.on && !isFullscreenOn) {
+        return true;
+    }
+
+    if (event.on && !isFullscreenOn) {
+        prev_width = width;
+        prev_height = height;
+
+        int monitor = raylib::GetCurrentMonitor();
+
+        int mon_width = raylib::GetMonitorWidth(monitor);
+        int mon_height = raylib::GetMonitorHeight(monitor);
+
+        Settings::get().update_window_size(
+            rez::ResolutionInfo{.width = mon_width, .height = mon_height});
+
+        raylib::ToggleFullscreen();
+        return true;
+    }
+
+    if (!event.on && isFullscreenOn) {
+        raylib::ToggleFullscreen();
+
+        if (prev_width == -1) prev_width = width;
+        if (prev_height == -1) prev_height = height;
+
+        Settings::get().update_window_size(
+            rez::ResolutionInfo{.width = prev_width, .height = prev_height});
+
+        return true;
+    }
+
+    log_warn("Trying to process fs event but got to an unhandled state {} {}",
+             event.on, isFullscreenOn);
+    return false;
 }
 
 void App::processEvent(Event& e) {
