@@ -39,17 +39,9 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
         if (!baseShouldRender()) return false;
 
         if (selected_recipe_debounce <= 0 &&
-            KeyMap::get_button(menu::State::UI, InputName::ValueLeft) ==
+            KeyMap::get_button(menu::State::Game, InputName::RecipeNext) ==
                 event.button) {
-            selected_recipe = (int) fmax(0, selected_recipe - 1);
-            selected_recipe_debounce = selected_recipe_debounce_reset;
-            return true;
-        }
-        if (selected_recipe_debounce <= 0 &&
-            KeyMap::get_button(menu::State::UI, InputName::ValueRight) ==
-                event.button) {
-            selected_recipe =
-                (int) fmin(num_recipes() - 1, selected_recipe + 1);
+            selected_recipe = (selected_recipe + 1) % num_recipes();
             selected_recipe_debounce = selected_recipe_debounce_reset;
             return true;
         }
@@ -85,8 +77,10 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
             return true;
         }
         if (selected_recipe_debounce <= 0 &&
-            KeyMap::get_key_code(menu::State::UI, InputName::ValueRight) ==
-                event.keycode) {
+            (KeyMap::get_key_code(menu::State::UI, InputName::ValueRight) ==
+                 event.keycode ||
+             KeyMap::get_key_code(menu::State::Game, InputName::RecipeNext) ==
+                 event.keycode)) {
             selected_recipe =
                 (int) fmin(num_recipes() - 1, selected_recipe + 1);
             selected_recipe_debounce = selected_recipe_debounce_reset;

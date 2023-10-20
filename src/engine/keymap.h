@@ -57,6 +57,7 @@ enum InputName {
     PlayerRotateFurniture,
     PlayerDoWork,
     ShowRecipeBook,
+    RecipeNext,
 
     // TODO dont show any below in the settings page
 
@@ -560,6 +561,11 @@ struct KeyMap {
 
         game_map[InputName::SkipIngredientMatch] = {
             raylib::KEY_I,
+        };
+
+        game_map[InputName::RecipeNext] = {
+            raylib::KEY_RIGHT,
+            raylib::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT,
         };
     }
 
