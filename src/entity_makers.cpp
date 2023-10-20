@@ -548,7 +548,7 @@ void make_single_alcohol(Entity& container, vec2 pos, int alcohol_index) {
 }
 
 void make_medicine_cabinet(Entity& container, vec2 pos) {
-    furniture::make_itemcontainer(container, {EntityType::MedicineCabinet}, pos,
+    furniture::make_itemcontainer(container, {EntityType::AlcoholCabinet}, pos,
                                   EntityType::Alcohol);
     container.get<IsItemContainer>().set_uses_indexer(true);
 
@@ -1144,7 +1144,7 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::Register: {
             furniture::make_register(entity, location);
         } break;
-        case EntityType::MedicineCabinet: {
+        case EntityType::AlcoholCabinet: {
             furniture::make_medicine_cabinet(entity, location);
         } break;
         case EntityType::FruitBasket: {

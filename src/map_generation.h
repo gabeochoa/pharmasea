@@ -125,7 +125,7 @@ struct helper {
                 return EntityType::Table;
             } break;
             case MED_CAB: {
-                return EntityType::MedicineCabinet;
+                return EntityType::AlcoholCabinet;
             } break;
             case FRUIT: {
                 return EntityType::FruitBasket;

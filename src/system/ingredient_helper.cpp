@@ -38,7 +38,7 @@ std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
             }
             {
                 std::vector<EntityType> ets;
-                ets.push_back(EntityType::MedicineCabinet);
+                ets.push_back(EntityType::AlcoholCabinet);
                 settings.push_back(EntityTuple{.igs = ets});
             }
         } break;
@@ -137,7 +137,7 @@ bool IngredientHelper::has_machines_required_for_ingredient(
                 ingredient::Alcohols, ig);
             return (
                 // Alcohol Group
-                doesAnyExistWithType(EntityType::MedicineCabinet) ||
+                doesAnyExistWithType(EntityType::AlcoholCabinet) ||
                 // Does a single one exist for this alcohol
                 doesAnyExist([alc_index](const Entity& entity) {
                     if (!check_type(entity, EntityType::SingleAlcohol))
