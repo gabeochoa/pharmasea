@@ -136,13 +136,15 @@ void mark_item_in_floor_area(Entity& entity, float) {
     for (const auto& e : SystemManager::get().oldAll) {
         if (!e) continue;
         if (e->id == entity.id) continue;
-        if (check_type(entity, EntityType::Player)) continue;
+        if (check_type(*e, EntityType::Player)) continue;
+        if (check_type(*e, EntityType::RemotePlayer)) continue;
         if (e->is_missing<IsSolid>()) continue;
-        // TODO only count things that are solid?
+
         if (CheckCollisionBoxes(
                 e->get<Transform>().bounds(),
                 entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
-            log_trace(" FloorMarker marking {} ", e->get<DebugName>().name());
+            log_trace(" FloorMarker marking {} {}", e->get<DebugName>().name(),
+                      e->get<DebugName>().get_type());
             ifm.mark(e->id);
         }
     }
