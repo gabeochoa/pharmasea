@@ -108,6 +108,16 @@
                 "value": "GAMEPAD_BUTTON_RIGHT_FACE_LEFT"
             }
         ],
+        "RecipeNext": [
+            {
+                "type": 0,
+                "value": 262
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_RIGHT"
+            }
+        ],
         "ShowRecipeBook": [
             {
                 "type": 0,
