@@ -40,6 +40,9 @@ struct SettingsLayer : public Layer {
     bool windowSizeDropdownState = false;
     int windowSizeDropdownIndex = 0;
 
+    float fullscreen_debounce = 0.f;
+    float fullscreen_debounce_reset = 0.100f;
+
     SettingsLayer() : Layer("Settings") {
         ui_context = std::make_shared<ui::UIContext>();
 
@@ -58,6 +61,26 @@ struct SettingsLayer : public Layer {
     }
 
     virtual bool onKeyPressed(KeyPressedEvent& event) override {
+        bool fs_key_pressed = (event.keycode == raylib::KEY_ENTER &&
+                               (raylib::IsKeyDown(raylib::KEY_LEFT_ALT) ||
+                                raylib::IsKeyDown(raylib::KEY_RIGHT_ALT))) ||
+                              //
+                              (event.keycode == raylib::KEY_LEFT_ALT &&
+                               raylib::IsKeyDown(raylib::KEY_ENTER)) ||
+                              //
+                              (event.keycode == raylib::KEY_RIGHT_ALT &&
+                               raylib::IsKeyDown(raylib::KEY_ENTER));
+        if (fs_key_pressed) {
+            if (fullscreen_debounce <= 0) {
+                Settings::get().toggle_fullscreen();
+                fullscreen_debounce = fullscreen_debounce_reset;
+                return true;
+            }
+            // we still want to return true here so that when we debounce it
+            // doesnt hit "enter" for the other layers
+            return true;
+        }
+
         if (MenuState::get().is_not(menu::State::Settings)) return false;
 
         //
@@ -88,7 +111,8 @@ struct SettingsLayer : public Layer {
         return ui_context->process_gamepad_button_event(event);
     }
 
-    virtual void onUpdate(float) override {
+    virtual void onUpdate(float dt) override {
+        if (fullscreen_debounce > 0) fullscreen_debounce -= dt;
         if (MenuState::get().is_not(menu::State::Settings)) return;
         raylib::SetExitKey(raylib::KEY_NULL);
     }
