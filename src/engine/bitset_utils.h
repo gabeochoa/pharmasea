@@ -2,8 +2,8 @@
 #pragma once
 
 #include <bitset>
-#include <random>
 #include <functional>
+#include <random>
 
 #include "random.h"
 //
@@ -71,7 +71,7 @@ int get_first_enabled_bit(const std::bitset<N>& bitset) {
 
 template<size_t N>
 void for_each_enabled_bit(const std::bitset<N>& bitset,
-                          std::function<void(size_t)> cb) {
+                          const std::function<void(size_t)>& cb) {
     for (size_t i = 0; i < bitset.size(); ++i) {
         if (bitset.test(i)) {
             cb(i);

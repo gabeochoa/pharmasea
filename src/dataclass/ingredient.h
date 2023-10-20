@@ -121,8 +121,7 @@ static Ingredient get_ingredient_from_index(int index) {
     return magic_enum::enum_cast<Ingredient>(index).value();
 }
 
-const int MAX_INGREDIENT_TYPES = 32;
-using IngredientBitSet = std::bitset<MAX_INGREDIENT_TYPES>;
+using IngredientBitSet = std::bitset<magic_enum::enum_count<Ingredient>()>;
 
 enum Drink {
     coke,
