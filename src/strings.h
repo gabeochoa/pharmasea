@@ -240,6 +240,9 @@ constexpr const char* RESOLUTION = "Resolution";
 constexpr const char* THEME = "Theme";
 constexpr const char* LANGUAGE = "Language";
 
+constexpr const char* EXIT_AND_SAVE = "Save and Exit";
+constexpr const char* EXIT_NO_SAVE = "Exit without Saving";
+
 constexpr const char* GENERAL = "General";
 constexpr const char* CONTROLS = "Controls";
 constexpr const char* KEYBOARD = "Keyboard";

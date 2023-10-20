@@ -80,7 +80,7 @@ struct SettingsLayer : public Layer {
 
         if (KeyMap::get_button(menu::State::UI, InputName::MenuBack) ==
             event.button) {
-            exit_layer();
+            exit_without_save();
             return true;
         }
 
@@ -92,10 +92,13 @@ struct SettingsLayer : public Layer {
         raylib::SetExitKey(raylib::KEY_NULL);
     }
 
-    void exit_layer() {
+    void save_and_exit() {
         Preload::get().write_keymap();
+        Settings::get().write_save_file();
         MenuState::get().go_back();
     }
+
+    void exit_without_save() { MenuState::get().go_back(); }
 
     void draw_base_screen(float) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
@@ -103,7 +106,6 @@ struct SettingsLayer : public Layer {
         content = rect::lpad(content, 10);
 
         auto [rows, footer] = rect::hsplit(content, 80);
-        footer = rect::bpad(footer, 50);
 
         {
             auto [master_vol, music_vol, sfx_vol, ui_theme, resolution,
@@ -249,12 +251,18 @@ struct SettingsLayer : public Layer {
         }
 
         // Footer
+        footer = rect::bpad(footer, 30);
         {
-            auto [back, controls, _] =
-                rect::vsplit<3>(rect::rpad(footer, 30), 20);
-            if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON),
+            // :FOOTER: this should match the other footer in here
+            auto [force_save, back, controls, _] =
+                rect::vsplit<4>(rect::rpad(footer, 80), 20);
+            if (button(Widget{force_save},
+                       text_lookup(strings::i18n::EXIT_AND_SAVE), true)) {
+                save_and_exit();
+            }
+            if (button(Widget{back}, text_lookup(strings::i18n::EXIT_NO_SAVE),
                        true)) {
-                exit_layer();
+                exit_without_save();
             }
             // TODO add string Edit Controls
             if (button(Widget{controls}, text_lookup(strings::i18n::CONTROLS),
@@ -415,13 +423,18 @@ struct SettingsLayer : public Layer {
         // Footer
         {
             footer = rect::lpad(footer, 10);
-            footer = rect::bpad(footer, 50);
+            footer = rect::bpad(footer, 30);
 
-            auto [back, controls, input_type] =
-                rect::vsplit<3>(rect::rpad(footer, 30), 20);
-            if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON),
+            // :FOOTER: this should match the other footer in here
+            auto [force_save, back, controls, input_type] =
+                rect::vsplit<4>(rect::rpad(footer, 80), 20);
+            if (button(Widget{force_save},
+                       text_lookup(strings::i18n::EXIT_AND_SAVE), true)) {
+                save_and_exit();
+            }
+            if (button(Widget{back}, text_lookup(strings::i18n::EXIT_NO_SAVE),
                        true)) {
-                exit_layer();
+                exit_without_save();
             }
             // TODO add string Edit Controls
             if (button(Widget{controls}, text_lookup(strings::i18n::GENERAL),
