@@ -250,7 +250,7 @@ struct helper {
         validate_exist(EntityType::FastForward);
         validate_exist(EntityType::Cupboard);
         validate_exist(EntityType::SodaMachine);
-        validate_exist(EntityType::MopHolder);
+        validate_exist(EntityType::Trash);
 
         // ensure customers can make it to the register
         {
