@@ -257,7 +257,17 @@ void process_player_movement_input(Entity& entity, float dt,
 
     auto new_position_x = transform.pos();
     auto new_position_z = transform.pos();
-    const float amount = input_amount * hasBaseSpeed.speed() * dt;
+
+    const auto getSpeedMultiplier = [&]() {
+        OptEntity overlap =
+            EntityHelper::getOverlappingEntityIfExists(entity, 0.75f);
+        if (!overlap.has_value()) return 1.f;
+        if (check_type(overlap.asE(), EntityType::Vomit)) return 0.5f;
+        return 1.f;
+    };
+
+    const float amount =
+        input_amount * hasBaseSpeed.speed() * dt * getSpeedMultiplier();
 
     // Implement the logic based on the input_name
     switch (input_name) {
