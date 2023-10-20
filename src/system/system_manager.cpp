@@ -138,6 +138,7 @@ void mark_item_in_floor_area(Entity& entity, float) {
         if (e->id == entity.id) continue;
         if (check_type(*e, EntityType::Player)) continue;
         if (check_type(*e, EntityType::RemotePlayer)) continue;
+        if (check_type(*e, EntityType::SodaSpout)) continue;
         if (e->is_missing<IsSolid>()) continue;
 
         if (CheckCollisionBoxes(

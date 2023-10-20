@@ -79,7 +79,13 @@ void overlapping_furniture(Entity& entity) {
     // Right now the map is starting at 00 and at most is  -50,-50 to 50,50
 
     OptEntity overlapping_entity =
-        EntityHelper::getOverlappingSolidEntityInRange({-50, -50}, {50, 50});
+        EntityHelper::getOverlappingSolidEntityInRange(
+            {-50, -50}, {50, 50}, [](const Entity& entity) {
+                // Skip the soda rope because the rope overlapps with itself
+                // and we are okay with that
+                if (check_type(entity, EntityType::SodaSpout)) return false;
+                return true;
+            });
     bool has_overlapping = overlapping_entity.valid();
     std::optional<vec2> pos = has_overlapping
                                   ? overlapping_entity->get<Transform>().as2()
