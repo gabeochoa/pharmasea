@@ -128,7 +128,7 @@ struct helper {
                 return EntityType::MedicineCabinet;
             } break;
             case FRUIT: {
-                return EntityType::PillDispenser;
+                return EntityType::FruitBasket;
             } break;
             case BLENDER: {
                 return EntityType::Blender;

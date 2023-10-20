@@ -519,7 +519,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
         // TODO For now we are okay doing this because the other indexer
         // (alcohol) always unlocks rum first which is index 0. if that changes
         // we gotta update this
-        if (check_type(entity, EntityType::PillDispenser)) {
+        if (check_type(entity, EntityType::FruitBasket)) {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const IsProgressionManager& ipp =
                 sophie.get<IsProgressionManager>();
@@ -786,7 +786,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
             case Cranberries:
             case Lime:
             case Lemon: {
-                auto et = EntityType::PillDispenser;
+                auto et = EntityType::FruitBasket;
                 auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
             } break;

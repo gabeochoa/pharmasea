@@ -586,7 +586,7 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
 }
 
 void make_fruit_basket(Entity& container, vec2 pos) {
-    furniture::make_itemcontainer(container, {EntityType::PillDispenser}, pos,
+    furniture::make_itemcontainer(container, {EntityType::FruitBasket}, pos,
                                   EntityType::Fruit);
 
     container.addComponent<Indexer>((int) ingredient::Fruits.size());
@@ -1067,13 +1067,15 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         .set_validation_fn([](Entity& entity, const SpawnInfo&) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet
-            if (cod.num_orders_had <= 0) return false;
-            if (cod.num_alcoholic_drinks_had <= 0) return false;
+
+            // if (cod.num_orders_had <= 0) return false;
+            // if (cod.num_alcoholic_drinks_had <= 0) return false;
 
             IsSpawner& vom_spewer = entity.get<IsSpawner>();
             vom_spewer.increase_total(randIn(0, cod.num_alcoholic_drinks_had));
             vom_spewer.set_time_between(2.f);
 
+            vom_spewer.increase_total(randIn(0, 100));
             return true;
         })
         // check if there is already vomit in that spot
@@ -1145,7 +1147,7 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::MedicineCabinet: {
             furniture::make_medicine_cabinet(entity, location);
         } break;
-        case EntityType::PillDispenser: {
+        case EntityType::FruitBasket: {
             furniture::make_fruit_basket(entity, location);
         } break;
         case EntityType::Blender: {

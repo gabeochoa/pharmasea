@@ -24,7 +24,7 @@ enum struct EntityType {
     Register,
     SingleAlcohol,
     MedicineCabinet,
-    PillDispenser,
+    FruitBasket,
     TriggerArea,
     FloorMarker,
     CustomerSpawner,
@@ -108,7 +108,7 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::MopHolder:
             return 20;
         case EntityType::MedicineCabinet:
-        case EntityType::PillDispenser:
+        case EntityType::FruitBasket:
         case EntityType::Conveyer:
             return 100;
         case EntityType::Grabber:

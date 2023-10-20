@@ -50,7 +50,7 @@ std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
         case Lemon: {
             {
                 std::vector<EntityType> ets;
-                ets.push_back(EntityType::PillDispenser);
+                ets.push_back(EntityType::FruitBasket);
                 settings.push_back(EntityTuple{.igs = ets});
             }
         } break;
@@ -63,7 +63,7 @@ std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
             {
                 std::vector<EntityType> ets;
                 ets.push_back(EntityType::Blender);
-                ets.push_back(EntityType::PillDispenser);
+                ets.push_back(EntityType::FruitBasket);
                 settings.push_back(EntityTuple{
                     .type = EntityTuple::type::And,
                     .igs = ets,
@@ -154,7 +154,7 @@ bool IngredientHelper::has_machines_required_for_ingredient(
         case Cranberries:
         case Lime:
         case Lemon: {
-            return doesAnyExistWithType(EntityType::PillDispenser);
+            return doesAnyExistWithType(EntityType::FruitBasket);
         } break;
         case PinaJuice:
         case OrangeJuice:
@@ -162,7 +162,7 @@ bool IngredientHelper::has_machines_required_for_ingredient(
         case CranberryJuice:
         case LimeJuice:
         case LemonJuice: {
-            return doesAnyExistWithType(EntityType::PillDispenser) &&
+            return doesAnyExistWithType(EntityType::FruitBasket) &&
                    doesAnyExistWithType(EntityType::Blender);
             return false;
         } break;
