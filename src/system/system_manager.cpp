@@ -1592,6 +1592,11 @@ void SystemManager::process_state_change(
 
     for (const auto& transition : transitions) {
         const auto [old_state, new_state] = transition;
+        // We just always ignore paused transitions since
+        // the game state didnt actually change in a meaningful way
+        if (old_state == game::State::Paused) continue;
+        if (new_state == game::State::Paused) continue;
+
         if (old_state == game::State::InRound) {
             onRoundFinished();
         }
