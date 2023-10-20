@@ -88,6 +88,15 @@ msgstr "emehT"
 msgid "Language"
 msgstr "egaugnaL"
 
+msgid "Fullscreen?"
+msgstr "?neercslluF"
+
+msgid "Save and Exit"
+msgstr "tixE dna evaS"
+
+msgid "Exit without Saving"
+msgstr "gnivaS tuohtiw tixE"
+
 msgid "General"
 msgstr "lareneG"
 

@@ -239,6 +239,7 @@ constexpr const char* SOUND_VOLUME = "SFX Volume";
 constexpr const char* RESOLUTION = "Resolution";
 constexpr const char* THEME = "Theme";
 constexpr const char* LANGUAGE = "Language";
+constexpr const char* FULLSCREEN = "Fullscreen?";
 
 constexpr const char* EXIT_AND_SAVE = "Save and Exit";
 constexpr const char* EXIT_NO_SAVE = "Exit without Saving";

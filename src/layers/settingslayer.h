@@ -331,8 +331,7 @@ struct SettingsLayer : public Layer {
                 auto [label, control] = rect::vsplit(fullscreen, 30);
                 control = rect::rpad(control, 10);
 
-                text(Widget{label}, "Fullscreen?");
-                // text_lookup(strings::i18n::SNAP_CAMERA));
+                text(Widget{label}, text_lookup(strings::i18n::FULLSCREEN));
 
                 if (auto result = checkbox(
                         Widget{control},
