@@ -4,6 +4,7 @@
 #include <optional>
 //
 
+#include "../engine/type_name.h"
 #include "../entity.h"
 //
 #include "../components/debug_name.h"
@@ -135,13 +136,18 @@ struct EntityFilter {
         if constexpr (std::is_same_v<T, std::string>) {
             if (type & FilterDatumType::Name)
                 return std::string(entity.get<DebugName>().name());
+        } else if constexpr (std::is_same_v<T, EntityType>) {
+            if (type & FilterDatumType::Name) {
+                return entity.get<DebugName>().get_type();
+            }
         } else if constexpr (std::is_same_v<T, int>) {
             if (type & FilterDatumType::Subtype) {
                 if (entity.is_missing<HasSubtype>()) return -1;
                 return entity.get<HasSubtype>().get_type_index();
             }
         }
-        log_warn("EntityFilter:: reading value from entity but no match");
+        log_warn("EntityFilter:: reading value from entity but no match for {}",
+                 type_name<T>());
         throw std::runtime_error("Reading Value from Entity but no match");
     }
 
