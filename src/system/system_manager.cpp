@@ -1073,13 +1073,19 @@ void process_has_rope(Entity& entity, float) {
         return;
     }
 
+    // Find the player who is holding __OUR__ spout
+
     OptEntity player;
     for (const std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
         if (!e) continue;
+        // only route to players
         if (!check_type(*e, EntityType::Player)) continue;
         auto i = e->get<CanHoldItem>().item();
         if (!i) continue;
+        // that are holding spouts
         if (!check_type(*i, EntityType::SodaSpout)) continue;
+        // that match the one we were holding
+        if (i->id != chi.last_id()) continue;
         player = *e;
     }
     if (!player) return;

@@ -36,7 +36,10 @@ struct CanHoldItem : public BaseComponent {
         }
 
         held_item = item;
-        if (held_item) held_item->get<IsItem>().set_held_by(held_by, entity_id);
+        if (held_item) {
+            held_item->get<IsItem>().set_held_by(held_by, entity_id);
+            last_held_id = held_item->id;
+        }
         if (held_item && held_by == EntityType::Unknown) {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
@@ -84,7 +87,10 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] const EntityFilter& get_filter() const { return filter; }
     [[nodiscard]] EntityType hb_type() const { return held_by; }
 
+    [[nodiscard]] EntityID last_id() const { return last_held_id; }
+
    private:
+    EntityID last_held_id = -1;
     std::shared_ptr<Entity> held_item = nullptr;
     EntityType held_by;
     EntityFilter filter;
