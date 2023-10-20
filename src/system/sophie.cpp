@@ -232,6 +232,26 @@ void deleting_item_needed_for_recipe(Entity& entity) {
 
     bool has_req_machines = true;
 
+    const auto _hasAtLeastOneCupboardNotInTrash = [&ifm]() -> bool {
+        const auto trash_ids = ifm.marked_ids();
+        // Theoretically this doesnt suit the contstraint but
+        // right now we only care about trashing them so its
+        // okay
+        if (trash_ids.empty()) return true;
+
+        // TODO if any other cup types are added then check for them here...
+        RefEntities cups = EntityHelper::getAllWithType(EntityType::Cupboard);
+        size_t num_in_trash = 0;
+        for (const auto& cup : cups) {
+            if (util::contains(trash_ids, cup.get().id)) num_in_trash++;
+        }
+
+        // if you are not throwing away all of them then we good
+        return cups.size() > num_in_trash;
+    };
+
+    has_req_machines &= _hasAtLeastOneCupboardNotInTrash();
+
     // can we make all the recipies with the remaining ents
 
     const auto hasMachinesForIngredient = [&ents,
@@ -241,8 +261,10 @@ void deleting_item_needed_for_recipe(Entity& entity) {
             has_req_machines &&
             IngredientHelper::has_machines_required_for_ingredient(ents, ig);
         // log_info(
-        // "hasMachines {} {}", magic_enum::enum_name<Ingredient>(ig),
-        // IngredientHelper::has_machines_required_for_ingredient(ents, ig)
+        // "hasMachines {} {}",
+        // magic_enum::enum_name<Ingredient>(ig),
+        // IngredientHelper::has_machines_required_for_ingredient(ents,
+        // ig)
         //
         // );
     };

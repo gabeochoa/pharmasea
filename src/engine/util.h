@@ -155,6 +155,13 @@ inline V map_get_or_default(Container<K, V, Ts...> map, K key, V def_value) {
     return def_value;
 }
 
+template<typename T>
+[[nodiscard]] constexpr bool contains(std::vector<T> array, const T& key) {
+    const auto itr = std::find_if(std::begin(array), std::end(array),
+                                  [&key](const auto& v) { return v == key; });
+    return itr != std::end(array);
+}
+
 // note: delimiter cannot contain NUL characters
 template<typename Range, typename Value = typename Range::value_type>
 [[nodiscard]] inline std::string join(Range const& elements,
