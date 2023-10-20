@@ -1300,8 +1300,9 @@ void pop_out_when_colliding(Entity& entity, float) {
     // Only popping out players right now
     if (!check_type(entity, EntityType::Player)) return;
 
-    OptEntity match =
-        EntityHelper::getOverlappingSolidEntityIfExists(entity, 0.75f);
+    OptEntity match = EntityHelper::getOverlappingEntityIfExists(
+        entity, 0.75f,
+        [](const Entity& entity) { return entity.has<IsSolid>(); });
     if (!match) return;
 
     const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();

@@ -391,12 +391,13 @@ OptEntity EntityHelper::getOverlappingSolidEntityInRange(
     return {};
 }
 
-OptEntity EntityHelper::getOverlappingSolidEntityIfExists(const Entity& entity,
-                                                          float range) {
+OptEntity EntityHelper::getOverlappingEntityIfExists(
+    const Entity& entity, float range,
+    const std::function<bool(const Entity&)>& filter) {
     const vec2 position = entity.get<Transform>().as2();
     for (const std::shared_ptr<Entity>& e2 : get_entities()) {
-        if (e2->id == entity.id) continue;  // skip us
-        if (!e2->has<IsSolid>()) continue;  // skip non solid
+        if (e2->id == entity.id) continue;     // skip us
+        if (filter && !filter(*e2)) continue;  // skip non solid
         const auto pos2 = e2->get<Transform>().as2();
         float distance = vec::distance(position, pos2);
         if (distance <= range) return *e2;
