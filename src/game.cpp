@@ -21,7 +21,6 @@ int main(int argc, char* argv[]) {
     log_info("Canon Path: {}", fs::canonical(fs::current_path()));
 
     startup();
-    defer(Settings::get().write_save_file());
 
     // wfc::WaveCollapse wc(static_cast<unsigned
     // int>(hashString("WVZ_ORYYVAV"))); wc.run(); wc.get_lines(); return 0;
