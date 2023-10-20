@@ -125,6 +125,59 @@ struct SettingsLayer : public Layer {
 
     void exit_without_save() { MenuState::get().go_back(); }
 
+    void draw_footer(Rectangle footer) {
+        if (activeWindow == ActiveWindow::KeyBindings)
+            footer = rect::lpad(footer, 10);
+        footer = rect::bpad(footer, 30);
+
+        auto [force_save, back, controls, input_type] =
+            rect::vsplit<4>(rect::rpad(footer, 80), 20);
+
+        if (button(Widget{force_save},
+                   text_lookup(strings::i18n::EXIT_AND_SAVE), true)) {
+            save_and_exit();
+        }
+        if (button(Widget{back}, text_lookup(strings::i18n::EXIT_NO_SAVE),
+                   true)) {
+            exit_without_save();
+        }
+
+        const auto controls_text = activeWindow == ActiveWindow::Root
+                                       ? text_lookup(strings::i18n::CONTROLS)
+                                       : text_lookup(strings::i18n::GENERAL);
+
+        if (button(Widget{controls}, controls_text, true)) {
+            switch (activeWindow) {
+                default:
+                case ActiveWindow::Root:
+                    activeWindow = ActiveWindow::KeyBindings;
+                    break;
+                case ActiveWindow::KeyBindings:
+                    activeWindow = ActiveWindow::Root;
+                    break;
+            }
+        }
+
+        if (activeWindow == ActiveWindow::Root) return;
+
+        if (button(Widget{input_type},
+                   text_lookup(selected_input_type == InputType::Gamepad
+                                   ? strings::i18n::GAMEPAD
+                                   : strings::i18n::KEYBOARD),
+                   true)) {
+            switch (selected_input_type) {
+                case Keyboard:
+                    selected_input_type = InputType::Gamepad;
+                    break;
+                case Gamepad:
+                    selected_input_type = InputType::Keyboard;
+                    break;
+                case GamepadWithAxis:
+                    break;
+            }
+        }
+    }
+
     void draw_base_screen(float) {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto content = rect::tpad(window, 20);
@@ -292,25 +345,7 @@ struct SettingsLayer : public Layer {
         }
 
         // Footer
-        footer = rect::bpad(footer, 30);
-        {
-            // :FOOTER: this should match the other footer in here
-            auto [force_save, back, controls, _] =
-                rect::vsplit<4>(rect::rpad(footer, 80), 20);
-            if (button(Widget{force_save},
-                       text_lookup(strings::i18n::EXIT_AND_SAVE), true)) {
-                save_and_exit();
-            }
-            if (button(Widget{back}, text_lookup(strings::i18n::EXIT_NO_SAVE),
-                       true)) {
-                exit_without_save();
-            }
-            // TODO add string Edit Controls
-            if (button(Widget{controls}, text_lookup(strings::i18n::CONTROLS),
-                       true)) {
-                activeWindow = ActiveWindow::KeyBindings;
-            }
-        }
+        draw_footer(footer);
     }
 
     virtual void onDraw(float dt) override {
@@ -462,43 +497,6 @@ struct SettingsLayer : public Layer {
         }
 
         // Footer
-        {
-            footer = rect::lpad(footer, 10);
-            footer = rect::bpad(footer, 30);
-
-            // :FOOTER: this should match the other footer in here
-            auto [force_save, back, controls, input_type] =
-                rect::vsplit<4>(rect::rpad(footer, 80), 20);
-            if (button(Widget{force_save},
-                       text_lookup(strings::i18n::EXIT_AND_SAVE), true)) {
-                save_and_exit();
-            }
-            if (button(Widget{back}, text_lookup(strings::i18n::EXIT_NO_SAVE),
-                       true)) {
-                exit_without_save();
-            }
-            // TODO add string Edit Controls
-            if (button(Widget{controls}, text_lookup(strings::i18n::GENERAL),
-                       true)) {
-                activeWindow = ActiveWindow::Root;
-            }
-
-            if (button(Widget{input_type},
-                       text_lookup(selected_input_type == InputType::Gamepad
-                                       ? strings::i18n::GAMEPAD
-                                       : strings::i18n::KEYBOARD),
-                       true)) {
-                switch (selected_input_type) {
-                    case Keyboard:
-                        selected_input_type = InputType::Gamepad;
-                        break;
-                    case Gamepad:
-                        selected_input_type = InputType::Keyboard;
-                        break;
-                    case GamepadWithAxis:
-                        break;
-                }
-            }
-        }
+        draw_footer(footer);
     }
 };
