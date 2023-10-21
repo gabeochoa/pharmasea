@@ -31,6 +31,8 @@ kanban-plugin: basic
 - [ ] collision for player to change to cylinder
 - [ ] pressing two movement at the same time while moving camera sometimes feels weird
 - [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
+- [ ] rendering oreder for text background is weird
+- [ ] likely dont need to queue network packets since we always send the full state
 
 
 ## no repro
@@ -53,6 +55,17 @@ kanban-plugin: basic
 - [ ] Should the roomba only spawn by default for single player games? Should it spawn at the beginning ever?
 - [ ] Add purchasing medicine cab
 - [ ] warn player when they are deleting something that we need
+- [ ] need to add some ui to saw how many or when more people will spawn as its not clear
+- [ ] should customers be able to look like players?
+- [ ] add reroll to shop
+- [ ] add an are you sure? when switching resolution and languages
+- [ ] settings dropdown doesnt respect selected language
+- [ ] - more likely to vomit if they waited longer for their drink ?
+- [ ] should the day be longer based on number of customers
+- [ ] - waiting reason overlaps with customer count at 1600x900 but not 1080p<br><br>- fixed but need to look into how the sizing works cause it should be proportional
+- [ ] - should alcohols be multi-use and then you throw out the empty bottle
+- [ ] - patience for first round should be double or triple?
+- [ ] - not enough customers to need automation?
 
 
 ## broke
@@ -71,6 +84,10 @@ kanban-plugin: basic
 - [ ] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
 - [ ] Roomba keeps getting stuck at exit
 - [ ] day 3 doesnt work, i think it skips unlock screen and that breaks it
+- [ ] joining twice from a remote computer crashes the host
+- [ ] toilet hitbox is messed up
+- [ ] - you can fill up the cup while its in the cupboard
+- [ ] - vomit hitbox is hard especially without mop
 
 
 ## complete
