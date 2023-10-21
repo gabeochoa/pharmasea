@@ -1,6 +1,11 @@
 
 #pragma once
 
+#include <string>
+#include <variant>
+
+#include "../keymap.h"
+
 namespace ui {
 
 struct ScrollWindowResult {

@@ -1,11 +1,17 @@
 
 #pragma once
 
-#include "../globals_register.h"
-
-// TODO again this is not a real .h file, this file just gets pasted in ui.h
+#include "callback_registry.h"
+#include "focus.h"
+#include "rect.h"
+#include "theme.h"
+#include "ui_context.h"
+#include "widget.h"
 
 namespace ui {
+
+extern UITheme UI_THEME;
+extern CallbackRegistry callback_registry;
 
 namespace internal {
 
@@ -106,5 +112,4 @@ inline void draw_focus_ring(const Widget& widget) {
 }
 
 }  // namespace internal
-
 }  // namespace ui

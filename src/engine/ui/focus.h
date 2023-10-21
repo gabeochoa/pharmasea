@@ -1,25 +1,26 @@
 
 #pragma once
 
-// TODO this is a fake header and is specifically included in a certain order to
-// get includes
 #include <memory>
+#include <set>
+
+#include "ui_context.h"
+#include "widget.h"
 
 namespace ui {
 
-static std::shared_ptr<ui::UIContext> context;
+extern std::shared_ptr<ui::UIContext> context;
 
 namespace focus {
-static const int ROOT_ID = -1;
-static const int FAKE_ID = -2;
-static int focus_id = ROOT_ID;
-static int last_processed = ROOT_ID;
+const int ROOT_ID = -1;
+const int FAKE_ID = -2;
+extern int focus_id;
+extern int last_processed;
+extern int hot_id;
+extern int active_id;
+extern MouseInfo mouse_info;
 
-static int hot_id = ROOT_ID;
-static int active_id = ROOT_ID;
-static MouseInfo mouse_info;
-
-static std::set<int> ids;
+extern std::set<int> ids;
 
 inline bool is_mouse_inside(const Rectangle& rect) {
     auto mouse = mouse_info.pos;
