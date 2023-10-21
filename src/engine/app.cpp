@@ -17,6 +17,8 @@
 #include "settings.h"
 #include "shader_library.h"
 
+std::shared_ptr<App> App_single;
+
 void App::start_remove_invisible() {
     auto discard_alpha_shader = ShaderLibrary::get().get("discard_alpha");
     raylib::BeginShaderMode(discard_alpha_shader);

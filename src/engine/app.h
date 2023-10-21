@@ -14,9 +14,20 @@ struct AppSettings {
     raylib::TraceLogLevel logLevel = raylib::LOG_ERROR;
 };
 
-SINGLETON_FWD(App)
+
+struct App;
+extern std::shared_ptr<App> App_single;
+
+
+//SINGLETON_FWD(App)
 struct App {
-    SINGLETON_PARAM(App, AppSettings)
+//    SINGLETON_PARAM(App, AppSettings)
+
+    static App* create(const AppSettings& pt) {
+		if (!App_single) App_single.reset(new App(pt));
+	    return App_single.get();
+    }
+    [[nodiscard]] static App& get() { return *App_single; }
 
     bool running = false;
     LayerStack layerstack;
