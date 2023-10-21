@@ -1255,7 +1255,7 @@ void reset_customers_that_need_resetting(Entity& entity) {
         // TODO add a map of ingredient to how long it probably takes to make
 
         auto ingredients = get_req_ingredients_for_drink(cod.current_order);
-        entity.get<HasPatience>().update_max(ingredients.count() * 20.f);
+        entity.get<HasPatience>().update_max(ingredients.count() * 30.f);
         entity.get<HasPatience>().reset();
     }
 }
