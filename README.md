@@ -62,6 +62,57 @@ I am publishing some releases on itch, you can find the url in the code or build
 if you need the password join the discord and say hi!
 
 
+### alpha_0.23.10.20
+
+Known Issues
+- (Store) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (UI) Controls are not remappable in UI 
+- (Game) Map generator always makes basically the same map
+- (Game) No way to know if you made the wrong drink 
+- (Game) Can place items where it collides with your body
+
+
+impact / design changes
+- make patience 30s per ingredient (and also count prereqs to add time for conversions)
+    - For example, Margarita went from 60s to 120s
+- increase time between vomits
+- Walking on vomit slows you down 
+- Starting Map
+    - Now only one register 
+    - Start with Trash can 
+    - Remove mop 
+- Settings 
+    - Added reset-to-default button for settings 
+    - Added ability to use alt+enter to toggle fullscreen (or through settings) s/o @Mora
+    - Save and Exit button 
+- Swap selected recipe with B button xbox / o ps3 instead of dpad for controller
+- Always render price in store and move price forward so it conflicts less 
+- Show position of invalid trash item 
+- Default language is now english 
+
+bug fixes
+- move reasons higher and only show one at a time 
+- Fix visual issue when two players both were holding soda spouts
+- Fix crash when dropping empty cup onto filtered conveyer
+- Block player from throwing away trash can or cups
+- Pausing no longer deletes all items in the store 
+- Make sure to unlock fruits when unlocking the juices
+- Fix issue where the soda machine was triggering the "round end error" 
+- No longer count players as "furniture" in spawn area
+- Handle out of bounds crash when viewing Settings Keymap 
+- Change name of "Pill Dispenser" to "Fruit Basket"
+- Change name of "Medicine Cabinet" to "Alcohol Cabinet"
+- Fix issue where picking up lemon would swap to lime and vice versa 
+
+better eng 
+- No longer count colors.h in line count 
+- Lots new entity helper functions 
+- Sophie validation into its own file 
+- Fix overflow with IngredientBitset
+
+
+
 ### alpha_0.23.10.16b
 
 Known Issues
