@@ -62,8 +62,6 @@ enum InputName {
     // TODO dont show any below in the settings page
 
     // Debug Only
-    ToggleToPlanning,
-    ToggleToInRound,
     ToggleDebug,
     ToggleNetworkView,
     ToggleLobby,
@@ -530,16 +528,6 @@ struct KeyMap {
         game_map[InputName::Pause] = {
             raylib::KEY_ESCAPE,
             raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT,
-        };
-
-        game_map[InputName::ToggleToPlanning] = {
-            raylib::KEY_P,
-            raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
-        };
-
-        game_map[InputName::ToggleToInRound] = {
-            raylib::KEY_O,
-            raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
         };
 
         game_map[InputName::ToggleLobby] = {

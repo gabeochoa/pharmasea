@@ -161,26 +161,6 @@
                 "type": 1,
                 "value": "GAMEPAD_BUTTON_MIDDLE_LEFT"
             }
-        ],
-        "ToggleToInRound": [
-            {
-                "type": 0,
-                "value": 79
-            },
-            {
-                "type": 1,
-                "value": "GAMEPAD_BUTTON_MIDDLE_LEFT"
-            }
-        ],
-        "ToggleToPlanning": [
-            {
-                "type": 0,
-                "value": 80
-            },
-            {
-                "type": 1,
-                "value": "GAMEPAD_BUTTON_MIDDLE_LEFT"
-            }
         ]
     },
     "Root": {
