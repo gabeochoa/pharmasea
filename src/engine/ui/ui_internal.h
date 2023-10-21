@@ -3,6 +3,7 @@
 
 #include "callback_registry.h"
 #include "focus.h"
+#include "raylib.h"
 #include "rect.h"
 #include "theme.h"
 #include "ui_context.h"
@@ -99,6 +100,37 @@ inline void draw_image(vec2 pos, raylib::Texture texture, float scale,
         [=]() {
             raylib::DrawTextureEx(texture, pos, 0 /* rotation */, scale,
                                   WHITE /*tint*/);
+        },
+        z_index);
+}
+
+inline void draw_model(Rectangle rect, const raylib::RenderTexture2D& texture,
+                       const raylib::Camera3D& camera,
+                       const ModelInfo& model_info, int z_index) {
+    log_info("drawing model {}", model_info.model_name);
+    raylib::Model model = ModelLibrary::get().get(model_info.model_name);
+    raylib::BeginTextureMode(texture);
+    raylib::BeginMode3D(camera);
+    {
+        raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
+                          DARKGRAY);
+        raylib::DrawModelEx(model,
+                            {
+                                model_info.position_offset.x,
+                                model_info.position_offset.y,
+                                model_info.position_offset.z,
+                            },
+                            vec3{0, 1, 0}, model_info.rotation_angle,
+                            vec3{1.f, 1.f, 1.f} * model_info.size_scale,
+                            WHITE /*this->base_color*/);
+    }
+    raylib::EndMode3D();
+    raylib::EndTextureMode();
+
+    callback_registry.register_call(
+        context,
+        [=]() {
+            raylib::DrawTextureRec(texture.texture, rect, {0, 0}, WHITE);
         },
         z_index);
 }

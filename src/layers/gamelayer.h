@@ -17,14 +17,12 @@ struct GameLayer : public Layer {
     std::shared_ptr<Entity> active_player;
     std::shared_ptr<GameCam> cam;
     raylib::Model bag_model;
-    raylib::RenderTexture2D game_render_texture;
 
     GameLayer() : Layer(strings::menu::GAME), cam(std::make_shared<GameCam>()) {
         GLOBALS.set(strings::globals::GAME_CAM, cam.get());
-        game_render_texture = raylib::LoadRenderTexture(WIN_W(), WIN_H());
     }
 
-    virtual ~GameLayer() { raylib::UnloadRenderTexture(game_render_texture); }
+    virtual ~GameLayer() {}
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent&) override { return false; }
 

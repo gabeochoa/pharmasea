@@ -28,6 +28,8 @@ struct BaseGameRendererLayer : public Layer {
 
     virtual bool shouldSkipRender() = 0;
 
+    virtual void onDraw3D(float) {}
+
     virtual void onDraw(float dt) override {
         if (!baseShouldRender()) return;
         using namespace ui;

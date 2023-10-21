@@ -4,6 +4,7 @@
 #include "color.h"
 #include "element_result.h"
 #include "focus.h"
+#include "raylib.h"
 #include "rect.h"
 #include "theme.h"
 #include "ui_context.h"
@@ -58,5 +59,10 @@ ElementResult control_input_field(const Widget& widget,
                                   const TextfieldData& data = {});
 
 ElementResult textfield(const Widget& widget, const TextfieldData& data);
+
+ElementResult inline_3d_model(const Widget& widget,
+                              const raylib::RenderTexture2D& texture,
+                              const raylib::Camera3D& camera,
+                              const ModelInfo& model_info);
 
 }  // namespace ui
