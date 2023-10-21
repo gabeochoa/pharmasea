@@ -35,6 +35,7 @@ void LevelInfo::update_seed(const std::string& s) {
     was_generated = false;
 }
 
+// Cannot be const since they will be updated in the called function
 void LevelInfo::onUpdate(Entities& players, float dt) {
     TRACY_ZONE_SCOPED;
     SystemManager::get().update_all_entities(players, dt);

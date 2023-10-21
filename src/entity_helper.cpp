@@ -24,15 +24,15 @@ OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
     }
     bool has_in_cache = named_entities_DO_NOT_USE.contains(name);
     if (!has_in_cache) {
-        OptEntity opt_e = {};
+        Entity* e_ptr = nullptr;
         switch (name) {
             case NamedEntity::Sophie:
-                opt_e = getFirstOfType(EntityType::Sophie);
+                OptEntity opt_e = getFirstOfType(EntityType::Sophie);
+                e_ptr = opt_e.has_value() ? opt_e.value() : nullptr;
                 break;
         }
-        if (!opt_e.has_value()) return {};
-        named_entities_DO_NOT_USE.insert(
-            std::make_pair(name, (Entity*) opt_e.value()));
+        if (!e_ptr) return {};
+        named_entities_DO_NOT_USE.insert(std::make_pair(name, e_ptr));
     }
     return *(named_entities_DO_NOT_USE[name]);
 }
@@ -40,11 +40,12 @@ OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
 Entity& EntityHelper::getNamedEntity(const NamedEntity& name) {
     log_trace("Trying to fetch {}", magic_enum::enum_name<NamedEntity>(name));
     OptEntity opt_e = getPossibleNamedEntity(name);
-    if (!opt_e.has_value()) {
+    Entity* e_ptr = opt_e.has_value() ? opt_e.value() : nullptr;
+    if (!e_ptr) {
         log_error("Trying to fetch {} but didnt find it...",
                   magic_enum::enum_name<NamedEntity>(name));
     }
-    return *(opt_e.value());
+    return *(e_ptr);
 }
 
 Entities& EntityHelper::get_entities() {
@@ -61,7 +62,7 @@ Entities& EntityHelper::get_entities() {
 
 RefEntities EntityHelper::get_ref_entities() {
     RefEntities matching;
-    for (auto& e : EntityHelper::get_entities()) {
+    for (const auto& e : EntityHelper::get_entities()) {
         if (!e) continue;
         matching.push_back(*e);
     }

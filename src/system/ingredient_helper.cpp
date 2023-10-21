@@ -164,7 +164,6 @@ bool IngredientHelper::has_machines_required_for_ingredient(
         case LemonJuice: {
             return doesAnyExistWithType(EntityType::FruitBasket) &&
                    doesAnyExistWithType(EntityType::Blender);
-            return false;
         } break;
         case SimpleSyrup: {
             return doesAnyExistWithType(EntityType::SimpleSyrupHolder);
