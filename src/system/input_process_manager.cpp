@@ -25,8 +25,11 @@
 
 namespace system_manager {
 
-void person_update_given_new_pos(int id, Transform& transform, Entity& person,
-                                 float, vec3 new_pos_x, vec3 new_pos_z) {
+void person_update_given_new_pos(
+    int id, Transform& transform,
+    // this could be const but is_collidable has no way to convert
+    // between const entity& and OptEntity
+    Entity& person, float, vec3 new_pos_x, vec3 new_pos_z) {
     // TODO if anything spawns in anything else then it cant move,
     // we need some way to handle popping people back to spawn or something if
     // they get stuck
