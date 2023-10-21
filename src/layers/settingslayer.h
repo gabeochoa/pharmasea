@@ -130,8 +130,13 @@ struct SettingsLayer : public Layer {
             footer = rect::lpad(footer, 10);
         footer = rect::bpad(footer, 30);
 
-        auto [force_save, back, controls, input_type] =
-            rect::vsplit<4>(rect::rpad(footer, 80), 20);
+        auto [reset_to_default, force_save, back, controls, input_type] =
+            rect::vsplit<5>(rect::rpad(footer, 90), 20);
+
+        if (button(Widget{reset_to_default}, text_lookup("reset all settings"),
+                   true)) {
+            Settings::get().reset_to_default();
+        }
 
         if (button(Widget{force_save},
                    text_lookup(strings::i18n::EXIT_AND_SAVE), true)) {
