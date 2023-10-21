@@ -18,6 +18,14 @@
         },
         {
             "folder": "models/kennynl",
+            "filename": "arrow.glb",
+            "library_name": "arrow",
+            "size_scale": 3.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 90.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "bread.obj",
             "library_name": "grabber",
             "size_scale": 3.0,

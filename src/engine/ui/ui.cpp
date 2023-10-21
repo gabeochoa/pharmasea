@@ -589,4 +589,16 @@ ElementResult textfield(const Widget& widget, const TextfieldData& data) {
     return ElementResult{state->buffer.changed_since, state->buffer.asT()};
 }
 
+ElementResult inline_3d_model(const Widget& widget,
+                              const raylib::RenderTexture2D& texture,
+                              const raylib::Camera3D& camera,
+                              const ModelInfo& model_info) {
+    div(widget, color::carnation_pink);
+
+    internal::draw_model(widget.rect, texture, camera, model_info,
+                         widget.z_index);
+
+    return ElementResult(true);
+}
+
 }  // namespace ui

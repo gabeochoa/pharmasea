@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../camera.h"
 #include "../engine.h"
 #include "../engine/app.h"
 #include "../engine/ui/ui.h"
@@ -8,12 +9,14 @@
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
+    raylib::RenderTexture2D tex;
 
     MenuLayer()
         : Layer(strings::menu::MENU),
-          ui_context(std::make_shared<ui::UIContext>()) {}
+          ui_context(std::make_shared<ui::UIContext>()),
+          tex(raylib::LoadRenderTexture(WIN_W(), WIN_H())) {}
 
-    virtual ~MenuLayer() {}
+    virtual ~MenuLayer() { raylib::UnloadRenderTexture(tex); }
 
     bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) override {
         if (MenuState::get().is_not(menu::State::Root)) return false;
@@ -59,6 +62,16 @@ struct MenuLayer : public Layer {
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto [top, rest] = rect::hsplit(window, 33);
         auto [body, footer] = rect::hsplit(rest, 66);
+
+        // TODO
+        {
+            auto cam = GLOBALS.get_ptr<GameCam>("game_cam");
+            if (cam) {
+                inline_3d_model(Widget{window}, tex, cam->camera,
+                                ModelInfoLibrary::get().get("grabber"));
+                // ModelInfoLibrary::get().get("arrow"));
+            }
+        }
 
         // Title
         {

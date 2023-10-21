@@ -58,6 +58,7 @@ struct UIContext : public IUIContextInputManager,
     }
 
     void cleanup() override {
+        unload_all_render_textures();
         globalContext = nullptr;
         IUIContextInputManager::cleanup();
     }

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../camera.h"
 #include "../components/collects_user_input.h"
 #include "../components/has_timer.h"
 #include "../components/transform.h"
@@ -8,11 +9,15 @@
 #include "../entity_helper.h"
 #include "../map.h"
 #include "base_game_renderer.h"
+#include "raylib.h"
 
 struct RoundEndReasonLayer : public BaseGameRendererLayer {
-    RoundEndReasonLayer() : BaseGameRendererLayer("RoundEndReason") {}
+    raylib::RenderTexture2D tex;
+    RoundEndReasonLayer()
+        : BaseGameRendererLayer("RoundEndReason"),
+          tex(raylib::LoadRenderTexture(WIN_W(), WIN_H())) {}
 
-    virtual ~RoundEndReasonLayer() {}
+    virtual ~RoundEndReasonLayer() { raylib::UnloadRenderTexture(tex); }
 
     OptEntity get_timer_entity() {
         return EntityHelper::getFirstWithComponent<HasTimer>();
@@ -116,8 +121,11 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
 
                 reason_spots[i].x += reason_spots[i].width;
                 reason_spots[i].width = 100.f;
-                text(Widget{reason_spots[i]}, location_text, theme::Usage::Font,
-                     true);
+                auto cam = GLOBALS.get_ptr<GameCam>("game_cam");
+                if (cam) {
+                    inline_3d_model(Widget{reason_spots[i]}, tex, cam->camera,
+                                    ModelInfoLibrary::get().get("arrow"));
+                }
             }
 
             i++;
