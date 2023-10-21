@@ -109,6 +109,8 @@ struct ResolutionExplorer {
         return options_str;
     }
 
+    [[nodiscard]] void add(ResolutionInfo info) { options.push_back(info); }
+
     [[nodiscard]] int index(ResolutionInfo info) {
         int i = 0;
         for (const auto res : options) {
