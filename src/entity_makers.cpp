@@ -817,6 +817,15 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
                            float dt) {
     if (GameState::get().is_not(game::State::InRound)) return;
 
+    if (drink.has<IsItem>()) {
+        IsItem& ii = drink.get<IsItem>();
+        if (ii.is_held_by(EntityType::Cupboard)) {
+            // if the cup is still the in the cupboard
+            // dont let us add ingredients
+            return;
+        }
+    }
+
     auto _process_add_ingredient = [&]() {
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         // not holding anything

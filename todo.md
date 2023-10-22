@@ -82,11 +82,9 @@ kanban-plugin: basic
 - [ ] drop preview box sometimes has the wrong color
 - [ ] lime wont go in unless i add lime juice first?
 - [ ] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
-- [ ] Roomba keeps getting stuck at exit
 - [ ] day 3 doesnt work, i think it skips unlock screen and that breaks it
 - [ ] joining twice from a remote computer crashes the host
 - [ ] toilet hitbox is messed up
-- [ ] - you can fill up the cup while its in the cupboard
 - [ ] - vomit hitbox is hard especially without mop
 
 
@@ -97,7 +95,9 @@ kanban-plugin: basic
 - [x] Tell the player how many customers are coming this round
 - [x] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
 - [x] vomit is broken not working
+- [x] Roomba keeps getting stuck at exit
 - [x] Client player cant change settings because menu::State is being overriden by host
+- [x] - you can fill up the cup while its in the cupboard
 - [x] We probably need some way in Progression screen to know what the new drink's recipe is like
 - [x] if you take the drink back from the customer you crash
 - [x] Automatically teleport new players when joining InRound / Planning etc
