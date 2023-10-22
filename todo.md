@@ -43,7 +43,6 @@ kanban-plugin: basic
 ## design decisions
 
 - [ ] Simple Syrup doesnt dissapear after one use and its kinda the only one that does that…
-- [ ] During planning its hard to know what each machine it, not obvious
 - [ ] penalty if you make too much extra? waste too much ingredients
 - [ ] highlight spots on the map where this thing can go
 - [ ] Text doesnt rotate based on the camera
@@ -53,7 +52,6 @@ kanban-plugin: basic
 - [ ] add practice mode to learn recipe
 - [ ] why should you clean up the bar? do people not want to come in? <br><br>cant serve until its clean?
 - [ ] Should the roomba only spawn by default for single player games? Should it spawn at the beginning ever?
-- [ ] Add purchasing medicine cab
 - [ ] warn player when they are deleting something that we need
 - [ ] need to add some ui to saw how many or when more people will spawn as its not clear
 - [ ] should customers be able to look like players?
@@ -70,11 +68,9 @@ kanban-plugin: basic
 
 ## broke
 
-- [ ] default language is reverse which is confusing
 - [ ] PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way
 - [ ] - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
 - [ ] at round 3 the people got stuck in line as if there was an invis person at the front
-- [ ] BUG: Hide pause buttons from non-host since they dont really do anything anyway
 - [ ] mojito model is big square
 - [ ] having pathfinding crashes when rendering the waiting queue (disabled it for now )
 - [ ] lime doesnt want to go into drink when cup is in register
@@ -94,8 +90,12 @@ kanban-plugin: basic
 - [x] need preview for where item will go
 - [x] Tell the player how many customers are coming this round
 - [x] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
+- [x] During planning its hard to know what each machine it, not obvious
+- [x] default language is reverse which is confusing
 - [x] vomit is broken not working
+- [x] Add purchasing medicine cab
 - [x] Roomba keeps getting stuck at exit
+- [x] BUG: Hide pause buttons from non-host since they dont really do anything anyway
 - [x] Client player cant change settings because menu::State is being overriden by host
 - [x] - you can fill up the cup while its in the cupboard
 - [x] We probably need some way in Progression screen to know what the new drink's recipe is like

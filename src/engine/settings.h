@@ -200,11 +200,12 @@ struct Settings {
     }
     [[nodiscard]] int get_current_resolution_index() const {
         int index = rez::ResolutionExplorer::get().index(data.resolution);
-        // If we somehow got a resolution enabled that isnt in our valid resolutions 
-        // its likely because we went into fullscreen and the monitor was different 
+        // If we somehow got a resolution enabled that isnt in our valid
+        // resolutions its likely because we went into fullscreen and the
+        // monitor was different
         // TODO windows
-        // This is most likely on windows since we cant read the possible monitor settings 
-        // yet, once we add that code we should be good 
+        // This is most likely on windows since we cant read the possible
+        // monitor settings yet, once we add that code we should be good
         if (index == -1) {
             rez::ResolutionExplorer::get().add(data.resolution);
             index = rez::ResolutionExplorer::get().index(data.resolution);
