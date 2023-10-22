@@ -212,13 +212,12 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
     };
 
     const auto _move_toward_local_target = [this, dt](Entity& entity) {
-        // TODO forcing get<HasBaseSpeed> to crash here
         float base_speed = entity.get<HasBaseSpeed>().speed();
 
         // TODO Does OrderDrink hold stagger information?
         // or should it live in another component?
         if (entity.has<CanOrderDrink>()) {
-            // const CanOrderDrink& cha = entity.get<CanOrderDrink>();
+            const CanOrderDrink& cha = entity.get<CanOrderDrink>();
             // float speed_multiplier = cha.ailment().speed_multiplier();
             // if (speed_multiplier != 0) base_speed *= speed_multiplier;
 
@@ -229,6 +228,9 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
             //
             // float stagger_multiplier = cha.ailment().stagger(); if
             // (stagger_multiplier != 0) base_speed *= stagger_multiplier;
+
+            int denom = randIn(1, std::max(1, cha.num_alcoholic_drinks_had));
+            base_speed *= 1.f / denom;
 
             base_speed = fmaxf(1.f, base_speed);
             // log_info("multiplier {} {} {}", speed_multiplier,

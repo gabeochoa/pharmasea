@@ -876,8 +876,6 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
            return get_ingredient_from_index(ingredient::Alcohols[0] +
                                             hst.get_type_index());
        })
-        // TODO need a place to put the bottles when they are half used and
-        // track them
         .set_num_uses(1);
 
     alc.addComponent<HasDynamicModelName>().init(
@@ -893,8 +891,6 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
 void make_simple_syrup(Item& simple_syrup, vec2 pos) {
     make_item(simple_syrup, {.type = EntityType::SimpleSyrup}, pos);
 
-    // TODO right now this is the only ingredient that doesnt have a spawner
-    // but also doesnt get destroyed after one use
     simple_syrup
         .addComponent<AddsIngredient>(
             [](Entity&) { return Ingredient::SimpleSyrup; })
@@ -1086,7 +1082,7 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
             if (cod.num_alcoholic_drinks_had <= 0) return false;
 
             IsSpawner& vom_spewer = entity.get<IsSpawner>();
-            vom_spewer.increase_total(randIn(0, cod.num_alcoholic_drinks_had));
+            vom_spewer.set_total(cod.num_alcoholic_drinks_had);
             vom_spewer.set_time_between(5.f);
             return true;
         })

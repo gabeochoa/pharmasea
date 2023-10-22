@@ -77,6 +77,7 @@ struct Data {
 
         s.object(resolution);
     }
+
     friend std::ostream& operator<<(std::ostream& os, const Data& data) {
         os << "Settings(" << std::endl;
         os << "version: " << data.engineVersion << std::endl;
