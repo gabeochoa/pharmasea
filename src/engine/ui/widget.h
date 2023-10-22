@@ -77,8 +77,8 @@ inline bool validation_test(TextfieldValidationDecisionFlag flag,
     return !!(flag & mask);
 }
 
-typedef std::function<TextfieldValidationDecisionFlag(const std::string&)>
-    TextFieldValidationFn;
+using TextFieldValidationFn =
+    std::function<TextfieldValidationDecisionFlag(const std::string&)>;
 
 inline float calculateScale(const vec2& rect_size, const vec2& image_size) {
     float scale_x = rect_size.x / image_size.x;

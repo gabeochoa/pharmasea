@@ -1,6 +1,8 @@
 
 #include "game.h"
 
+#include "engine/assert.h"
+
 namespace network {
 long long total_ping = 0;
 long long there_ping = 0;

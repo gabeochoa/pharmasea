@@ -584,32 +584,33 @@ void handle_drop(Entity& player) {
             player.get<Transform>(), cho.reach(), [&player](const Entity& f) {
                 // This cant hold anything
                 if (f.is_missing<CanHoldItem>()) return false;
+
                 const CanHoldItem& furnCanHold = f.get<CanHoldItem>();
-
                 std::shared_ptr<Item> item = player.get<CanHoldItem>().item();
-
-                const auto item_container_is_matching_item =
-                    [](const Entity& entity,
-                       std::shared_ptr<Item> item = nullptr) {
-                        if (!item) return false;
-                        if (entity.is_missing<IsItemContainer>()) return false;
-                        const IsItemContainer& itemContainer =
-                            entity.get<IsItemContainer>();
-                        return itemContainer.is_matching_item(item);
-                    };
+                if (!item) return false;
 
                 // Handle item containers
-                bool matches_item = item_container_is_matching_item(f, item);
-                if (matches_item) return true;
-
-                // This check has to go after the item containers,
-                // for putting back into supply to work
-                if (!furnCanHold.empty()) return false;
+                if (f.has<IsItemContainer>()) {
+                    const IsItemContainer& itemContainer =
+                        f.get<IsItemContainer>();
+                    // TODO right now item container only validates EntityType
+                    bool matches_item_type =
+                        itemContainer.is_matching_item(item);
+                    if (!matches_item_type) return false;
+                }
+                // if you are not an item container
+                // then you have to be empty for us to place into
+                else {
+                    // This check has to go after the item containers,
+                    // for putting back into supply to work
+                    if (!furnCanHold.empty()) return false;
+                }
 
                 // Can it hold the item we are trying to drop
                 return furnCanHold.can_hold(
                     *item,
                     // dont worry about suggested filters
+                    // because we are a player and force drop
                     RespectFilter::ReqOnly);
             });
 

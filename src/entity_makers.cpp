@@ -621,6 +621,17 @@ void make_cupboard(Entity& cupboard, vec2 pos) {
                                   EntityType::Drink);
     cupboard.addComponent<HasDynamicModelName>().init(
         EntityType::Cupboard, HasDynamicModelName::DynamicType::OpenClosed);
+    cupboard.get<CanHoldItem>().set_filter(
+        EntityFilter()
+            .set_enabled_flags(EntityFilter::FilterDatumType::Name |
+                               EntityFilter::FilterDatumType::Ingredients)
+            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+                                       EntityType::Drink)
+            .set_filter_value_for_type(
+                EntityFilter::FilterDatumType::Ingredients,
+                // Only allow empty drinks
+                IngredientBitSet())
+            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
 void make_soda_machine(Entity& soda_machine, vec2 pos) {

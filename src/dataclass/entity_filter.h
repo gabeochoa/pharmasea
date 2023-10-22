@@ -9,7 +9,9 @@
 //
 #include "../components/debug_name.h"
 #include "../components/has_subtype.h"
+#include "../components/is_drink.h"
 #include "../components/is_item.h"
+#include "ingredient.h"
 
 enum RespectFilter { All, ReqOnly, Ignore };
 
@@ -20,11 +22,13 @@ struct EntityFilter {
         EmptyFilterDatumType = 0,
         Name = 1 << 0,
         Subtype = 1 << 1,
+        Ingredients = 1 << 2,
     } flags;
 
    private:
     std::optional<EntityType> entity_type;
     int subtype_index;
+    std::optional<IngredientBitSet> ingredients;
 
    public:
     [[nodiscard]] size_t type_count() const {
@@ -54,6 +58,10 @@ struct EntityFilter {
                                              : "no entity_type");
             case Subtype:
                 return fmt::format("{}", subtype_index);
+            case Ingredients:
+                return ingredients.has_value()
+                           ? fmt::format("{}", ingredients.value())
+                           : fmt::format("{}", "no ingredient filter");
             case EmptyFilterDatumType:
                 break;
         }
@@ -68,6 +76,9 @@ struct EntityFilter {
                     break;
                 case Subtype:
                     subtype_index = -1;
+                    break;
+                case Ingredients:
+                    ingredients = {};
                     break;
                 case EmptyFilterDatumType:
                     break;
@@ -96,6 +107,8 @@ struct EntityFilter {
                 return entity_type.has_value();
             case Subtype:
                 return subtype_index != -1;
+            case Ingredients:
+                return ingredients.has_value();
             case EmptyFilterDatumType:
                 break;
         }
@@ -126,6 +139,8 @@ struct EntityFilter {
             if (type & FilterDatumType::Name) this->entity_type = (value);
         } else if constexpr (std::is_same_v<T, int>) {
             if (type & FilterDatumType::Subtype) subtype_index = (value);
+        } else if constexpr (std::is_same_v<T, IngredientBitSet>) {
+            if (type & FilterDatumType::Ingredients) ingredients = (value);
         }
         return *this;
     }
@@ -144,6 +159,11 @@ struct EntityFilter {
             if (type & FilterDatumType::Subtype) {
                 if (entity.is_missing<HasSubtype>()) return -1;
                 return entity.get<HasSubtype>().get_type_index();
+            }
+        } else if constexpr (std::is_same_v<T, IngredientBitSet>) {
+            if (type & FilterDatumType::Ingredients) {
+                if (entity.is_missing<IsDrink>()) return {};
+                return entity.get<IsDrink>().ing();
             }
         }
         log_warn("EntityFilter:: reading value from entity but no match for {}",
@@ -164,6 +184,12 @@ struct EntityFilter {
             set_filter_value_for_type<int>(FilterDatumType::Subtype,
                                            read_filter_value_from_entity<int>(
                                                data, FilterDatumType::Subtype));
+
+        if (flags & FilterDatumType::Ingredients)
+            set_filter_value_for_type<IngredientBitSet>(
+                FilterDatumType::Ingredients,
+                read_filter_value_from_entity<IngredientBitSet>(
+                    data, FilterDatumType::Ingredients));
 
         return *this;
     }
@@ -186,6 +212,10 @@ struct EntityFilter {
             case Subtype:
                 return read_filter_value_from_entity<int>(entity, type) ==
                        subtype_index;
+                break;
+            case Ingredients:
+                return read_filter_value_from_entity<IngredientBitSet>(
+                           entity, type) == ingredients.value();
                 break;
             case EmptyFilterDatumType:
                 break;
