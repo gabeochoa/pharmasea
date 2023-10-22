@@ -1092,8 +1092,6 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         // once
         .set_total(1)
         .set_time_between(5.f);
-    // TODO should we by default give the mop? or should you be able to
-    // clean by hand but slowly?
 }
 
 namespace furniture {
