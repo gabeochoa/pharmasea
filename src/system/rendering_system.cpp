@@ -665,6 +665,15 @@ void render_normal(const Entity& entity, float dt) {
         return;
     }
 
+    if (check_type(entity, EntityType::Face)) {
+        auto cam = GLOBALS.get_ptr<GameCam>(strings::globals::GAME_CAM);
+        raylib::DrawBillboard(
+            cam->camera, TextureLibrary::get().get(strings::textures::FACE),
+            entity.get<Transform>().pos(), TILESIZE, WHITE);
+
+        return;
+    }
+
     if (entity.has<IsTriggerArea>()) {
         render_trigger_area(entity, dt);
         return;

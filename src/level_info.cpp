@@ -9,6 +9,7 @@
 #include "engine/globals.h"
 #include "engine/texture_library.h"
 #include "entity_helper.h"
+#include "entity_makers.h"
 #include "map_generation.h"
 #include "network/server.h"
 #include "recipe_library.h"
@@ -42,19 +43,6 @@ void LevelInfo::onUpdate(Entities& players, float dt) {
 }
 
 void LevelInfo::onDraw(float dt) const {
-    auto cam = GLOBALS.get_ptr<GameCam>(strings::globals::GAME_CAM);
-    if (cam) {
-        raylib::DrawBillboard(
-            cam->camera, TextureLibrary::get().get(strings::textures::FACE),
-            {
-                1.f,
-                0.f,
-                1.f,
-            },
-            TILESIZE, WHITE);
-    }
-
-    TRACY_ZONE_SCOPED;
     SystemManager::get().render_entities(entities, dt);
 }
 
@@ -89,6 +77,14 @@ void LevelInfo::generate_lobby_map() {
         furniture::make_trigger_area(
             entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3,
             IsTriggerArea::Lobby_PlayGame);
+    }
+
+    // We explicitly spawn this in the bar because its not actually a lobby item
+    // its just in the lobby so that we dont delete it when we regenerate the
+    // map
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        convert_to_type(EntityType::Face, entity, vec2{0.f, 0.f});
     }
 }
 

@@ -262,6 +262,12 @@ void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
         .set_hb_filter(EntityType::Player);
 }
 
+void make_face(Entity& face, vec3 pos) {
+    make_entity(face, {EntityType::Face}, pos);
+
+    face.addComponent<CanBeHeld>();
+}
+
 // TODO This namespace should probably be "furniture::"
 // or add the ones above into it
 namespace furniture {
@@ -1194,6 +1200,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::SimpleSyrup: {
             items::make_simple_syrup(entity, location);
+        } break;
+        case EntityType::Face: {
+            make_face(entity, pos);
         } break;
 
         // These return false
