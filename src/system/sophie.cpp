@@ -290,6 +290,7 @@ void deleting_item_needed_for_recipe(Entity& entity) {
 
 // TODO this function is 75% of our game update time spent
 void update_sophie(Entity& entity, float) {
+    if (!check_type(entity, EntityType::Sophie)) return;
     if (entity.is_missing<HasTimer>()) return;
 
     const auto debug_mode_on =

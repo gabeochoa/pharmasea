@@ -1062,7 +1062,7 @@ void reset_empty_work_furniture(Entity& entity, float) {
         return;
     }
 
-    // TODO if its not empty, we have to see if its an item that can be
+    // if its not empty, we have to see if its an item that can be
     // worked
 }
 
@@ -1130,6 +1130,9 @@ void process_has_rope(Entity& entity, float) {
     hrti.mark_generated(pos);
 }
 
+// TODO its been a really long time since i tested this
+// i feel like probably the enttity searching might not work the way
+// people expect since the closest code isnt really good
 void process_squirter(Entity& entity, float) {
     if (!check_type(entity, EntityType::Squirter)) return;
 
@@ -1167,7 +1170,6 @@ void process_squirter(Entity& entity, float) {
     }
 }
 
-// TODO not everything can be trashed !
 void process_trash(Entity& entity, float) {
     if (!check_type(entity, EntityType::Trash)) return;
 
@@ -1245,8 +1247,9 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
     {
         // TODO eventually read from game settings
+        // maybe it should only be more than one if you upgrade
+        cod.num_orders_rem = randIn(1, 1);
 
-        cod.num_orders_rem = randIn(0, 1);
         cod.num_orders_had = 0;
         // If we have a forced order use that otherwise grab a random unlocked
         // drink
@@ -1364,7 +1367,7 @@ void cart_management(Entity& entity, float) {
         bank.update_cart(amount_in_cart);
     }
 
-    // TODO Hack to force the validation function to run every frame
+    // Hack to force the validation function to run every frame
     OptEntity purchase_area =
         EntityHelper::getFirstMatching([](const Entity& entity) {
             if (entity.is_missing<IsTriggerArea>()) return false;
@@ -1525,7 +1528,6 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
     {
         // TODO add num entities to debug overlay
         // log_info("num entities {}", entities.size());
-        // TODO do we run game updates during paused?
 
         if (GameState::get().is_lobby_like()) {
             //
@@ -1643,6 +1645,9 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
 
         system_manager::process_trigger_area(entity, dt);
 
+        system_manager::render_manager::update_character_model_from_index(
+            entity, dt);
+
         // TODO :SPEED: originally this was running in "process_game_state"
         // and only supposed to run on transitions but
         // when i fixed it to actually run only on transitions
@@ -1651,12 +1656,6 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
         //
         // For now its okay to stay here its just a perf thing
         system_manager::refetch_dynamic_model_names(entity, dt);
-
-        // TODO this is in the render manager but its not really a
-        // render thing but at the same time it kinda is idk This could
-        // run only in lobby if we wanted to distinguish
-        system_manager::render_manager::update_character_model_from_index(
-            entity, dt);
     });
 }
 
@@ -1668,12 +1667,9 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
         system_manager::process_is_container_and_should_backfill_item(entity,
                                                                       dt);
 
-        // TODO this function handles the map validation code
-        //      rename it
-        // TODO these eventually should move into their own functions but
-        // for now >:)
-        if (check_type(entity, EntityType::Sophie))
-            system_manager::update_sophie(entity, dt);
+        // this function also handles the map validation code
+        // rename it
+        system_manager::update_sophie(entity, dt);
     });
 }
 
