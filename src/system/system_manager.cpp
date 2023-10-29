@@ -720,7 +720,8 @@ void update_trigger_area_percent(Entity& entity, float dt) {
                       : ita.decrease_progress(dt);
 }
 
-void __spawn_machines_for_newly_unlocked_drink(Drink option) {
+void __spawn_machines_for_newly_unlocked_drink(IsProgressionManager& ipm,
+                                               Drink option) {
     // today we dont have a way to statically know which machines
     // provide which ingredients because they are dynamic
     IngredientBitSet possibleNewIGs = get_req_ingredients_for_drink(option);
@@ -742,7 +743,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
         log_error("Could not find spawn area entity");
     }
 
-    bitset_utils::for_each_enabled_bit(possibleNewIGs, [spawn_area](
+    bitset_utils::for_each_enabled_bit(possibleNewIGs, [&ipm, spawn_area](
                                                            size_t index) {
         Ingredient ig = magic_enum::enum_value<Ingredient>(index);
 
@@ -783,6 +784,7 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 auto et = EntityType::FruitBasket;
                 auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+                ipm.unlock_entity(et);
             } break;
             case PinaJuice:
             case OrangeJuice:
@@ -793,17 +795,21 @@ void __spawn_machines_for_newly_unlocked_drink(Drink option) {
                 auto et = EntityType::Blender;
                 auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+
+                ipm.unlock_entity(et);
             } break;
             case SimpleSyrup: {
                 auto et = EntityType::SimpleSyrupHolder;
                 auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+                ipm.unlock_entity(et);
             } break;
             case IceCubes:
             case IceCrushed: {
                 auto et = EntityType::IceMachine;
                 auto& entity = make_free_machine();
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+                ipm.unlock_entity(et);
             } break;
             // TODO implement for these once thye have spawners
             case Salt:
@@ -849,7 +855,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     ipm.unlock_ingredient(ig);
                 });
 
-            __spawn_machines_for_newly_unlocked_drink(option);
+            __spawn_machines_for_newly_unlocked_drink(ipm, option);
         }
     };
 
