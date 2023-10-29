@@ -17,6 +17,17 @@ struct IsProgressionManager : public BaseComponent {
         unlock_drink(Drink::coke);
         unlock_ingredient(Ingredient::Soda);
 
+        // Unlock all the starting store items
+        magic_enum::enum_for_each<EntityType>([&](EntityType val) {
+            StoreEligibilityType set = get_store_eligibility(val);
+            // TODO right now we also unlock time based things
+            // but need to figure out when to do this
+            if (set == StoreEligibilityType::OnStart ||
+                set == StoreEligibilityType::TimeBased) {
+                unlock_entity(val);
+            }
+        });
+
         log_trace("create: {} {}", enabledDrinks, enabledIngredients);
     }
 
@@ -37,9 +48,24 @@ struct IsProgressionManager : public BaseComponent {
         return *this;
     }
 
+    IsProgressionManager& unlock_entity(const EntityType& etype) {
+        if (get_store_eligibility(etype) == StoreEligibilityType::Never) {
+            log_warn("You are unlocking {} but its been marked never unlock",
+                     etype);
+        }
+        log_trace("unlocking entity{}",
+                  magic_enum::enum_name<EntityType>(etype));
+        const auto index = magic_enum::enum_index<EntityType>(etype).value();
+        unlockedEntityTypes.set(index);
+        return *this;
+    }
+
     [[nodiscard]] DrinkSet enabled_drinks() const { return enabledDrinks; }
     [[nodiscard]] IngredientBitSet enabled_ingredients() const {
         return enabledIngredients;
+    }
+    [[nodiscard]] EntityTypeSet enabled_entity_types() const {
+        return unlockedEntityTypes;
     }
 
     Drink get_random_unlocked_drink() const {
@@ -78,15 +104,22 @@ struct IsProgressionManager : public BaseComponent {
 
     [[nodiscard]] Drink get_last_unlocked() const { return lastUnlockedDrink; }
 
+    [[nodiscard]] bool is_entity_unlocked(EntityType etype) const {
+        size_t index = magic_enum::enum_index<EntityType>(etype).value();
+        return unlockedEntityTypes.test(index);
+    }
+
     // TODO make private
     bool isUpgradeRound = true;
     bool collectedOptions = false;
     Drink option1 = coke;
     Drink option2 = coke;
 
+    Drink lastUnlockedDrink = coke;
+
     DrinkSet enabledDrinks;
     IngredientBitSet enabledIngredients;
-    Drink lastUnlockedDrink = coke;
+    EntityTypeSet unlockedEntityTypes;
 
    private:
     friend bitsery::Access;

@@ -1402,11 +1402,14 @@ void generate_store_options() {
             return fm.type == IsFloorMarker::Type::Store_SpawnArea;
         });
 
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsProgressionManager& ipp = sophie.get<IsProgressionManager>();
+    const EntityTypeSet& unlocked = ipp.enabled_entity_types();
+
     int num_to_spawn = 5;
 
     while (num_to_spawn) {
-        int entity_type_id =
-            randIn(0, magic_enum::enum_count<EntityType>() - 1);
+        int entity_type_id = bitset_utils::get_random_enabled_bit(unlocked);
         EntityType etype = magic_enum::enum_value<EntityType>(entity_type_id);
         if (get_price_for_entity_type(etype) <= 0) continue;
 

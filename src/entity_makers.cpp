@@ -1241,11 +1241,6 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
                      entity_type);
             return false;
             break;
-        case EntityType::MAX_ENTITY_TYPE:
-            log_warn("{} should not be tried to create at all tbh",
-                     entity_type);
-            return false;
-            break;
     }
     if (entity.has<CanHoldItem>()) {
         if (entity.get<CanHoldItem>().hb_type() == EntityType::Unknown) {

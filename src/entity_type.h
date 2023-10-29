@@ -61,11 +61,9 @@ enum struct EntityType {
     Trash,
     // Dont add anything below this, we want trash to be either first or second
     // first so its easier to track in non-destructive
-
-    MAX_ENTITY_TYPE
 };
 
-using EntityTypeSet = std::bitset<(int) EntityType::MAX_ENTITY_TYPE>;
+using EntityTypeSet = std::bitset<magic_enum::enum_count<EntityType>()>;
 
 constexpr EntityTypeSet create_non_destructive() {
 #ifdef __APPLE__
@@ -78,7 +76,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b101111111111111111111111111111111111111111;
+    return 0b01111111111111111111111111111111111111111;
 #endif
 }
 
@@ -148,10 +146,68 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::y:
         case EntityType::z:
         case EntityType::Face:
-        case EntityType::MAX_ENTITY_TYPE:
             // log_warn("You should probably not need the price for this {}",
             // magic_enum::enum_name<EntityType>(type));
             return -1;
     }
     return 0;
+}
+
+enum struct StoreEligibilityType {
+    Never,
+    OnStart,
+    TimeBased,
+    IngredientBased,
+};
+
+inline StoreEligibilityType get_store_eligibility(EntityType etype) {
+    switch (etype) {
+        case EntityType::Table:
+        case EntityType::Register:
+        case EntityType::SingleAlcohol:
+        case EntityType::Cupboard:
+        case EntityType::SodaMachine:
+        case EntityType::Trash:
+            return StoreEligibilityType::OnStart;
+        case EntityType::Conveyer:
+        case EntityType::Grabber:
+        case EntityType::AlcoholCabinet:
+        case EntityType::Blender:
+        case EntityType::Squirter:
+        case EntityType::FilteredGrabber:
+        case EntityType::PnumaticPipe:
+        case EntityType::MopHolder:
+        case EntityType::MopBuddyHolder:
+            return StoreEligibilityType::TimeBased;
+        case EntityType::FruitBasket:
+        case EntityType::SimpleSyrupHolder:
+        case EntityType::IceMachine:
+        case EntityType::SimpleSyrup:
+            return StoreEligibilityType::IngredientBased;
+        case EntityType::Unknown:
+        case EntityType::x:
+        case EntityType::y:
+        case EntityType::z:
+        case EntityType::RemotePlayer:
+        case EntityType::Player:
+        case EntityType::Customer:
+        case EntityType::CharacterSwitcher:
+        case EntityType::MapRandomizer:
+        case EntityType::Wall:
+        case EntityType::TriggerArea:
+        case EntityType::FloorMarker:
+        case EntityType::CustomerSpawner:
+        case EntityType::Sophie:
+        case EntityType::Vomit:
+        case EntityType::FastForward:
+        case EntityType::MopBuddy:
+        case EntityType::Mop:
+        case EntityType::Face:
+        case EntityType::Drink:
+        case EntityType::Alcohol:
+        case EntityType::Fruit:
+        case EntityType::FruitJuice:
+        case EntityType::SodaSpout:
+            return StoreEligibilityType::Never;
+    }
 }
