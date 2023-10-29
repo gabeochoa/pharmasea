@@ -55,7 +55,7 @@ struct Server {
 
     std::map<HSteamNetConnection, Client_t> clients;
 
-    Server(int port) {
+    explicit Server(int port) {
         VALIDATE(port > 0 && port < 65535, "invalid port");
         address.Clear();
         address.m_port = (unsigned short) port;
@@ -81,8 +81,8 @@ struct Server {
     }
 
     void send_announcement_to_all(
-        std::string msg, InternalServerAnnouncement type,
-        std::function<bool(Client_t &)> exclude = nullptr) {
+        const std::string &msg, InternalServerAnnouncement type,
+        const std::function<bool(Client_t &)> &exclude = nullptr) {
         if (onSendClientAnnouncement) {
             for (auto &c : clients) {
                 if (exclude && exclude(c.second)) continue;
@@ -93,7 +93,7 @@ struct Server {
 
     void send_message_to_all(
         const char *buffer, uint32 size,
-        std::function<bool(Client_t &)> exclude = nullptr) {
+        const std::function<bool(Client_t &)> &exclude = nullptr) {
         for (auto &c : clients) {
             if (exclude && exclude(c.second)) continue;
             send_message_to_connection(c.first, buffer, size);
@@ -102,8 +102,8 @@ struct Server {
 
     void send_message_to_connection(HSteamNetConnection conn,
                                     const char *buffer, uint32 size) {
-        interface->SendMessageToConnection(conn, buffer, size,
-                                           Channel::RELIABLE, nullptr);
+        interface->SendMessageToConnection(
+            conn, buffer, size, Channel::UNRELIABLE_NO_DELAY, nullptr);
         // TODO why does unreliable make it so unreliable...
         // eventually we want the packet to figure out if it should matter or
         // not
