@@ -21,6 +21,8 @@ void Server::queue_packet(const ClientPacket& p) {
     g_server->incoming_packet_queue.push_back(p);
 }
 void Server::forward_packet(const ClientPacket& p) {
+    if (!g_server) return;
+
     g_server->packet_queue.push_back(p);
 }
 

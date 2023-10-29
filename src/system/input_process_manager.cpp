@@ -775,7 +775,7 @@ void process_input(Entity& entity, const UserInput& input) {
 
         // TODO we would like to disable this so placing preview works
         // however it breaks all pickup/drop on non host client...
-        if (!is_server()) return;
+        // if (!is_server()) return;
         //
         // ^^^ This breaks clientside held furniture, which means the preview
         // wont work with this
