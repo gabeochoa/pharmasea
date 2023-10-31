@@ -62,6 +62,34 @@ I am publishing some releases on itch, you can find the url in the code or build
 if you need the password join the discord and say hi!
 
 
+
+### alpha_0.23.10.30
+
+Known Issues
+- (Store) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (UI) Controls are not remappable in UI 
+- (Game) Map generator always makes basically the same map
+- (Game) No way to know if you made the wrong drink 
+- (Game) Can place items where it collides with your body
+
+
+impact / design
+- Store will now generate items smarter than before (it was just random before)
+- you can now move my face! (lots of people asked for this) 
+
+bug fixes
+- now pick up / drop on client works, fix mutex bug for client 
+- fixes a windows crash that happens when your monitors resolution is not in our supported resolutions 
+- fixes a bug where every day customers would vomit more than the previous day
+- dont allow putting drink with ingredients back in the cupboard 
+- you can no longer put ingredients in cup while its in cupboard 
+
+better eng 
+- switch to unreliable packets maybe itll be better 
+- change from singleton to static pointer for now because when processing the intial resolution update this-> is nullptr and somehow this fixes that 
+
+
 ### alpha_0.23.10.20
 
 Known Issues
