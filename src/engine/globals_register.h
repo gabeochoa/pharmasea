@@ -14,7 +14,7 @@ struct GlobalValueRegister {
         // TODO do we want to catch the exception here?
         try {
             return static_cast<T*>(globals.at(name));
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
             // TODO turn this back on
             // log_warn("Trying to fetch global of name: {} but it doesnt
             // exist", name);

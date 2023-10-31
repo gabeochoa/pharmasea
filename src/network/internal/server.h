@@ -102,12 +102,17 @@ struct Server {
 
     void send_message_to_connection(HSteamNetConnection conn,
                                     const char *buffer, uint32 size) {
-        interface->SendMessageToConnection(
-            conn, buffer, size, Channel::UNRELIABLE_NO_DELAY, nullptr);
+        interface->SendMessageToConnection(conn, buffer, size,
+                                           Channel::RELIABLE, nullptr);
         // TODO why does unreliable make it so unreliable...
         // eventually we want the packet to figure out if it should matter or
         // not
         // packet.channel, nullptr);
+        //
+        // TODO whats going on here is that the player join packet is not making
+        // it and doesnt get resend on unreliable, which causes crashes we
+        // should tell it which ones can be reliable and which we are okay with
+        // not
     }
 
     bool run() {
