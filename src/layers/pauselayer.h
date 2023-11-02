@@ -5,6 +5,7 @@
 #include "../engine/layer.h"
 #include "../engine/ui/ui.h"
 #include "../external_include.h"
+#include "../network/network.h"
 
 using namespace ui;
 
@@ -70,8 +71,8 @@ struct BasePauseLayer : public Layer {
             Preload::get().reload_config();
         }
         if (button(Widget{quit}, text_lookup(strings::i18n::QUIT))) {
-            MenuState::get().reset();
-            GameState::get().reset();
+            network::Info::reset_connections();
+            return;
         }
         end();
     }
