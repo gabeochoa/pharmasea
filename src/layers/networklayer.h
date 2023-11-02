@@ -333,6 +333,10 @@ struct NetworkLayer : public Layer {
                 Settings::get().update_last_used_ip_address(
                     network_info->host_ip_address());
                 network_info->lock_in_ip();
+
+                // TODO so this saves the "last used" but maybe we want to save
+                // the "last successful"
+                Settings::get().write_save_file();
             }
         }
 
