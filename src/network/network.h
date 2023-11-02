@@ -104,7 +104,7 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
 
     TriggerOnDt menu_state_tick_trigger = TriggerOnDt(1.0f);
 
-    Info() { GLOBALS.set("network_info", this); }
+    Info() {}
 
     ~Info() {
         desired_role = Role::s_None;
