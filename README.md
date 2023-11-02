@@ -63,7 +63,7 @@ if you need the password join the discord and say hi!
 
 
 
-### alpha_0.23.10.30
+### alpha_0.23.11.02
 
 Known Issues
 - (Store) New machines spawn on top of each other
@@ -77,6 +77,7 @@ Known Issues
 impact / design
 - Store will now generate items smarter than before (it was just random before)
 - you can now move my face! (lots of people asked for this) 
+- max framerate is now 240fps
 
 bug fixes
 - now pick up / drop on client works, fix mutex bug for client 
@@ -84,10 +85,16 @@ bug fixes
 - fixes a bug where every day customers would vomit more than the previous day
 - dont allow putting drink with ingredients back in the cupboard 
 - you can no longer put ingredients in cup while its in cupboard 
+- last used IP should now save even when a crash happens
+- Drop Preview box should no longer rotate when in non-snap camera mode
+- Drop preview should no longer show red if you overlay on the same spot you picked it up from 
+- Fix bug where you can hand customers drinks directly (you can still hand to the mop) 
+- disable map randomizer since it crashes the game often 
+- Fix crash when disconnecting from a host and reconnecting 
 
 better eng 
-- switch to unreliable packets maybe itll be better 
 - change from singleton to static pointer for now because when processing the intial resolution update this-> is nullptr and somehow this fixes that 
+- lots of network changes to better support leaving and rejoining
 
 
 ### alpha_0.23.10.20
