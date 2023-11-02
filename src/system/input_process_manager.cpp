@@ -357,7 +357,7 @@ void drop_held_furniture(Entity& player) {
         hf->get<CanBeHeld>().set_is_being_held(false);
         hf->get<Transform>().update(drop_location);
 
-        ourCHF.update(-1);
+        ourCHF.update(-1, vec3{});
         log_info("we {} dropped the furniture {} we were holding", player.id,
                  hf->id);
 
@@ -400,25 +400,21 @@ void handle_grab_or_drop(Entity& player) {
         // no match
         if (!closest_furniture) return;
 
-        ourCHF.update(closest_furniture->id);
+        ourCHF.update(closest_furniture->id,
+                      closest_furniture->get<Transform>().pos());
         OptEntity furniture =
             EntityHelper::getEntityForID(ourCHF.furniture_id());
         furniture->get<CanBeHeld>().set_is_being_held(true);
 
+        // TODO we expect thatr since ^ set is held is true,
+        // the previous position this furniture was at before you picked it up
+        // should now be walkable but for some reason the preview
         EntityHelper::invalidatePathCache();
 
         // TODO :PICKUP: i dont like that these are spread everywhere,
         network::Server::play_sound(player.get<Transform>().as2(),
                                     strings::sounds::PICKUP);
 
-        // TODO
-        // NOTE: we want to remove the furniture ONLY from the nav mesh
-        //       when picked up because then AI can walk through,
-        //       this also means we have to add it back when we place it
-        // if (this->held_furniture) {
-        // auto nv = GLOBALS.get_ptr<NavMesh>("navmesh");
-        // nv->removeEntity(this->held_furniture->id);
-        // }
         return;
     }
 }

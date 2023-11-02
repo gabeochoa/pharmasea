@@ -789,6 +789,8 @@ void render_held_furniture_preview(const Entity& entity, float) {
     vec3 drop_location = entity.get<Transform>().drop_location();
     bool walkable = EntityHelper::isWalkable(vec::to2(drop_location));
 
+    walkable = walkable || (drop_location == chf.picked_up_at());
+
     // since the preview is just a box we can just use 0 for angle
     // but if we need in the future, then we can fetch the entity with:
     //
