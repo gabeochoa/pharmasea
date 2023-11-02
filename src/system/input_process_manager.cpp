@@ -581,6 +581,12 @@ void handle_drop(Entity& player) {
                 // This cant hold anything
                 if (f.is_missing<CanHoldItem>()) return false;
 
+                // we dont currently need to be able to hand directly to
+                // customers so for now just disable for them
+                if (check_type(f, EntityType::Customer)) {
+                    return false;
+                }
+
                 const CanHoldItem& furnCanHold = f.get<CanHoldItem>();
                 std::shared_ptr<Item> item = player.get<CanHoldItem>().item();
                 if (!item) return false;
