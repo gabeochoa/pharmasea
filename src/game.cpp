@@ -8,6 +8,7 @@ long long total_ping = 0;
 long long there_ping = 0;
 long long return_ping = 0;
 }  // namespace network
+std::shared_ptr<network::Info> network_info;
 
 int main(int argc, char* argv[]) {
     process_dev_flags(argv);

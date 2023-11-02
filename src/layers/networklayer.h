@@ -13,6 +13,8 @@
 #include "../engine/ui/ui.h"
 #include "../network/network.h"
 
+extern std::shared_ptr<network::Info> network_info;
+
 using namespace ui;
 
 inline bool validate_ip(const std::string& ip) {
@@ -27,22 +29,16 @@ inline bool validate_ip(const std::string& ip) {
 
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
-    std::shared_ptr<network::Info> network_info;
 
     std::string my_ip_address;
     bool should_show_host_ip = false;
 
-    NetworkLayer() : Layer("Network") {
-        ui_context = std::make_shared<ui::UIContext>();
-
-        init();
-    }
-
-    void init() {
-        network_info = std::make_shared<network::Info>();
-
-        if (!Settings::get().data.username.empty()) {
-            network_info->lock_in_username();
+    NetworkLayer()
+        : Layer("Network"), ui_context(std::make_shared<ui::UIContext>()) {
+        if (network_info) {
+            if (!Settings::get().data.username.empty()) {
+                network_info->lock_in_username();
+            }
         }
     }
 
@@ -210,12 +206,14 @@ struct NetworkLayer : public Layer {
                 }
                 if (button(Widget{disconnect},
                            text_lookup(strings::i18n::DISCONNECT))) {
-                    network_info = std::make_shared<network::Info>();
+                    network::Info::reset_connections();
+                    return;
                 }
             } else {
                 if (button(Widget{disconnect},
                            text_lookup(strings::i18n::DISCONNECT))) {
-                    network_info = std::make_shared<network::Info>();
+                    network::Info::reset_connections();
+                    return;
                 }
             }
         }
@@ -374,9 +372,6 @@ struct NetworkLayer : public Layer {
     }
 
     virtual void onDraw(float dt) override {
-        // TODO add an overlay that shows who's currently available
-        // draw_network_overlay();
-
         if (MenuState::get().is_not(menu::State::Network)) return;
 
         ext::clear_background(ui::UI_THEME.background);

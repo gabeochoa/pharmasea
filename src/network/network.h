@@ -15,6 +15,11 @@
 #include "server.h"
 
 namespace network {
+struct Info;
+}
+extern std::shared_ptr<network::Info> network_info;
+
+namespace network {
 
 static SteamNetworkingMicroseconds START_TIME;
 static std::string my_remote_ip_address;
@@ -124,11 +129,19 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
         SteamNetworkingUtils()->SetDebugOutputFunction(
             k_ESteamNetworkingSocketsDebugOutputType_Msg, log_debug);
 
+        reset_connections();
+    }
+
+    static void reset_connections() {
+        network_info = std::make_shared<network::Info>();
         if (network::ENABLE_REMOTE_IP) {
             my_remote_ip_address = get_remote_ip_address().value_or("");
         } else {
             my_remote_ip_address = "(DEV) network disabled";
         }
+
+        MenuState::get().set(menu::State::Root);
+        GameState::get().set(game::State::InMenu);
     }
 
     static void shutdown_connections() {

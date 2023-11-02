@@ -36,7 +36,6 @@ struct SeedManagerLayer : public Layer {
     virtual ~SeedManagerLayer() {}
 
     bool is_user_host() {
-        auto network_info = (GLOBALS.get_ptr<network::Info>("network_info"));
         if (network_info) {
             return network_info->is_host();
         }
@@ -126,16 +125,12 @@ struct SeedManagerLayer : public Layer {
             // TODO translate
             if (button(Widget{randomize, z_index}, "Randomize", true)) {
                 const auto name = get_random_name_rot13();
-                auto network_info =
-                    (GLOBALS.get_ptr<network::Info>("network_info"));
                 network_info->send_updated_seed(name);
                 map_ptr->showSeedInputBox = false;
             }
 
             // TODO translate
             if (button(Widget{select, z_index}, "Save Seed", true)) {
-                auto network_info =
-                    (GLOBALS.get_ptr<network::Info>("network_info"));
                 network_info->send_updated_seed(tempSeed);
                 map_ptr->showSeedInputBox = false;
             }
