@@ -376,6 +376,10 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
 
     map_randomizer.addComponent<HasWork>().init(
         [](Entity& randomizer, HasWork& hasWork, Entity&, float dt) {
+            // TODO disable the map randomizer for now
+            log_warn("Map randomizer has been disabled");
+            return;
+
             if (GameState::get().is_not(game::State::Lobby)) return;
             if (!is_server()) {
                 log_warn(
