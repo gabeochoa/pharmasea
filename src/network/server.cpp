@@ -86,7 +86,7 @@ void Server::run() {
     thread_id = std::this_thread::get_id();
     GLOBALS.set("server_thread_id", &thread_id);
 
-    constexpr float desiredFrameRate = 120.0f;
+    constexpr float desiredFrameRate = 240.0f;
     constexpr std::chrono::duration<float> fixedTimeStep(1.0f /
                                                          desiredFrameRate);
 
@@ -100,6 +100,11 @@ void Server::run() {
             std::chrono::duration_cast<std::chrono::duration<float>>(
                 currentTime - previousTime)
                 .count();
+        // 240fps would be 4ms (well like 4.16ms)
+        // log_info("last server frame took {}ms ",
+        // std::chrono::duration_cast<std::chrono::milliseconds>(
+        // currentTime - previousTime)
+        // .count());
 
         if (duration >= fixedTimeStep.count()) {
             tick(fixedTimeStep.count());

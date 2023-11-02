@@ -65,7 +65,7 @@ inline void startup() {
     // This unlocks GPU access so we can load textures
     App::create(AppSettings{
         //
-        120,  // TODO :INFRA: setting this to any other number seems ot break
+        240,  // TODO :INFRA: setting this to any other number seems ot break
               // the camera
               // entity global?
         //
