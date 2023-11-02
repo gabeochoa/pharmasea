@@ -123,23 +123,6 @@ struct Info {
 #endif
     }
 
-    // TODO should probably move to network/client.
-    // Right now we only have the is_host() check here
-    void send_current_menu_state(float dt) {
-        bool run = menu_state_tick_trigger.test(dt);
-        if (!run) return;
-
-        ClientPacket packet({
-            .client_id = SERVER_CLIENT_ID,
-            .msg_type = ClientPacket::MsgType::GameState,
-            .msg = ClientPacket::GameStateInfo({
-                .host_menu_state = MenuState::get().read(),
-                .host_game_state = GameState::get().read(),
-            }),
-        });
-        Server::forward_packet(packet);
-    }
-
     void send_updated_seed(const std::string& seed) {
         if (!is_host()) return;
 
@@ -157,7 +140,8 @@ struct Info {
         if (has_not_set_ip()) return;
 
         if (is_host()) {
-            send_current_menu_state(dt);
+            bool run = menu_state_tick_trigger.test(dt);
+            if (run) client->send_current_menu_state();
         }
 
         client->tick(dt);
