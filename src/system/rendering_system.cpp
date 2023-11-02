@@ -789,8 +789,14 @@ void render_held_furniture_preview(const Entity& entity, float) {
     vec3 drop_location = entity.get<Transform>().drop_location();
     bool walkable = EntityHelper::isWalkable(vec::to2(drop_location));
 
+    // since the preview is just a box we can just use 0 for angle
+    // but if we need in the future, then we can fetch the entity with:
+    //
+    // OptEntity hf = EntityHelper::getEntityForID(chf.furniture_id());
+    // const Transform& furniture_transform = hf->get<Transform>();
+
     vec3 size = (transform.size() * 1.2f);
-    DrawCubeCustom(drop_location, size.x, size.y, size.z, transform.facing,
+    DrawCubeCustom(drop_location, size.x, size.y, size.z, 0,
                    walkable ? GREEN : RED, walkable ? GREEN : RED);
 }
 
