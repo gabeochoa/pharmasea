@@ -40,6 +40,7 @@ struct Client {
     void send_ping_packet(int my_id, float dt);
     void send_player_input_packet(int my_id);
     void send_current_menu_state();
+    void send_updated_seed(const std::string& seed);
     void client_process_message_string(const std::string& msg);
 };
 

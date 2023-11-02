@@ -125,14 +125,7 @@ struct Info {
 
     void send_updated_seed(const std::string& seed) {
         if (!is_host()) return;
-
-        ClientPacket packet{
-            .client_id = SERVER_CLIENT_ID,
-            .msg_type = ClientPacket::MsgType::MapSeed,
-            .msg = ClientPacket::MapSeedInfo{.seed = seed},
-        };
-
-        Server::queue_packet(packet);
+        client->send_updated_seed(seed);
     }
 
     void tick(float dt) {
