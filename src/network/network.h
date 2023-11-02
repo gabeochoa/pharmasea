@@ -30,12 +30,18 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
     }
 }
 
-struct Info {
+struct RoleInfoMixin {
     enum Role {
         s_None = 1 << 0,
         s_Host = 1 << 1,
         s_Client = 1 << 2,
-    } desired_role = s_None;
+    };
+
+    Role desired_role = Role::s_None;
+    std::shared_ptr<Client> client;
+    std::thread::id client_thread_id;
+    std::thread::id server_thread_id;
+    std::thread server_thread;
 
     [[nodiscard]] bool is_host() { return desired_role & s_Host; }
     [[nodiscard]] bool is_client() { return desired_role & s_Client; }
@@ -43,27 +49,29 @@ struct Info {
     [[nodiscard]] bool missing_role() { return !has_role(); }
 
     void set_role(Role role) {
+        const auto _setup_client = [&]() {
+            client = std::make_shared<Client>();
+            client->update_username(Settings::get().data.username);
+        };
+
         switch (role) {
             case Role::s_Host: {
                 log_info("set user's role to host");
                 desired_role = Role::s_Host;
                 server_thread = Server::start(DEFAULT_PORT);
                 //
-                client = std::make_shared<Client>();
-                client->update_username(Settings::get().data.username);
+                _setup_client();
                 client->lock_in_ip();
 
             } break;
             case Role::s_Client: {
                 log_info("set user's role to client");
                 desired_role = Role::s_Client;
-                client = std::make_shared<Client>();
-                client->update_username(Settings::get().data.username);
+                _setup_client();
             } break;
             default:
                 break;
         }
-
 
         server_thread_id = server_thread.get_id();
         GLOBALS.set("server_thread_id", &server_thread_id);
@@ -71,32 +79,28 @@ struct Info {
         client_thread_id = std::this_thread::get_id();
         GLOBALS.set("client_thread_id", &client_thread_id);
     }
+};
 
-    std::thread::id client_thread_id;
-    std::thread::id server_thread_id;
-    std::shared_ptr<Client> client;
-    std::thread server_thread;
-
+struct UsernameInfoMixin {
     bool username_set = false;
-
     void lock_in_username() { username_set = true; }
     void unlock_username() { username_set = false; }
+    [[nodiscard]] bool has_username() { return username_set; }
+    [[nodiscard]] bool missing_username() { return !has_username(); }
+};
+
+struct Info : public RoleInfoMixin, UsernameInfoMixin {
     std::string& host_ip_address() { return client->conn_info.host_ip_address; }
     void lock_in_ip() { client->lock_in_ip(); }
     [[nodiscard]] bool has_set_ip() { return client->conn_info.ip_set; }
     [[nodiscard]] bool has_not_set_ip() { return !has_set_ip(); }
-    [[nodiscard]] bool has_username() { return username_set; }
-    [[nodiscard]] bool missing_username() { return !has_username(); }
 
     TriggerOnDt menu_state_tick_trigger = TriggerOnDt(1.0f);
 
-    Info() {
-        GLOBALS.set("network_info", this);
-    }
+    Info() { GLOBALS.set("network_info", this); }
 
     ~Info() {
         desired_role = Role::s_None;
-
         // cleanup server
         {
             if (server_thread_id == std::thread::id()) return;
