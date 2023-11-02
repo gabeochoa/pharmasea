@@ -5,7 +5,6 @@
 #include <regex>
 
 #include "../engine.h"
-#include "../engine/network/webrequest.h"
 #include "../external_include.h"
 //
 #include "../globals.h"
@@ -40,13 +39,8 @@ struct NetworkLayer : public Layer {
     }
 
     void init() {
-        network::Info::init_connections();
         network_info = std::make_shared<network::Info>();
-        if (network::ENABLE_REMOTE_IP) {
-            my_ip_address = network::get_remote_ip_address().value_or("");
-        } else {
-            my_ip_address = "(DEV) network disabled";
-        }
+
         if (!Settings::get().data.username.empty()) {
             network_info->lock_in_username();
         }
@@ -253,7 +247,8 @@ struct NetworkLayer : public Layer {
             // TODO not translated
             text(Widget{label}, "Your IP is:");
 
-            auto ip = should_show_host_ip ? my_ip_address : "***.***.***.***";
+            auto ip = should_show_host_ip ? network::my_remote_ip_address
+                                          : "***.***.***.***";
             text(Widget{ip_addr}, ip);
 
             auto [check, copy] = rect::vsplit<2>(control, 5);
@@ -339,8 +334,8 @@ struct NetworkLayer : public Layer {
                     network_info->host_ip_address());
                 network_info->lock_in_ip();
 
-                // TODO so this saves the "last used" but maybe we want to save
-                // the "last successful"
+                // TODO so this saves the "last used" but maybe we want to
+                // save the "last successful"
                 Settings::get().write_save_file();
             }
         }

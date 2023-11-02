@@ -42,14 +42,13 @@ void Client::tick(float dt) {
         send_player_input_packet(id);
     }
 
-    if (true || client_p->is_not_connected()) {
+    if (client_p->is_not_connected()) {
         announcements.push_back({
             .message = "Lost connection to Host",
             .type = AnnouncementType::Error,
         });
         MenuState::get().reset();
         GameState::get().reset();
-        Info::on_lost_connection();
     }
 }
 

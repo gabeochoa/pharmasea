@@ -6,6 +6,7 @@
 //
 #include "../engine/settings.h"
 //
+#include "../engine/network/webrequest.h"
 #include "../engine/statemanager.h"
 #include "../engine/trigger_on_dt.h"
 #include "shared.h"
@@ -16,6 +17,7 @@
 namespace network {
 
 static SteamNetworkingMicroseconds START_TIME;
+static std::string my_remote_ip_address;
 
 static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
                       const char* pszMsg) {
@@ -114,11 +116,19 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
         SteamDatagramErrMsg errMsg;
         if (!GameNetworkingSockets_Init(nullptr, errMsg)) {
             log_warn("GameNetworkingSockets init failed {}", errMsg);
+            // TODO return true / false so we can hide host / join button?
+            // TODO display message to the user?
         }
 #endif
         START_TIME = SteamNetworkingUtils()->GetLocalTimestamp();
         SteamNetworkingUtils()->SetDebugOutputFunction(
             k_ESteamNetworkingSocketsDebugOutputType_Msg, log_debug);
+
+        if (network::ENABLE_REMOTE_IP) {
+            my_remote_ip_address = get_remote_ip_address().value_or("");
+        } else {
+            my_remote_ip_address = "(DEV) network disabled";
+        }
     }
 
     static void shutdown_connections() {

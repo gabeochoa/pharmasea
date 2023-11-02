@@ -112,6 +112,8 @@ inline void startup() {
     // and thats this
     register_all_components();
 
+    network::Info::init_connections();
+
     MenuState::get().reset();
     GameState::get().reset();
 
