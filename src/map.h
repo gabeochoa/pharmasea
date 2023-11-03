@@ -97,11 +97,6 @@ struct Map {
         game_info.onDrawUI(dt);
     }
 
-    [[nodiscard]] bool in_lobby_state() const {
-        return GameState::get().is(game::State::Lobby) ||
-               GameState::get().is_paused_in(game::State::Lobby);
-    }
-
     // These are called before every "send_map_state" when server
     // sends everything over to clients
     void grab_things() { game_info.grab_things(); }

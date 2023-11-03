@@ -149,15 +149,8 @@ struct GameState : public StateManager2<game::State> {
         return is(game::State::Paused) && previous() == s;
     }
 
-    // TODO are there any non updatable states?
-    // why do we need this if basically every one is there
-    // do we just do != ...
     [[nodiscard]] bool is_update_state(game::State s) const {
-        return s == game::State::Lobby ||        //
-               s == game::State::InRound ||      //
-               s == game::State::Progression ||  //
-               s == game::State::Store ||        //
-               s == game::State::Planning;
+        return s != game::State::Paused && s != game::State::InMenu;
     }
 
     [[nodiscard]] bool should_update() const { return is_update_state(read()); }
