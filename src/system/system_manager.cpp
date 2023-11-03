@@ -1694,10 +1694,11 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
 void SystemManager::model_test_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
-        system_manager::process_grabber_items(entity, dt);
-        system_manager::process_conveyer_items(entity, dt);
-        system_manager::process_grabber_filter(entity, dt);
-        system_manager::process_pnumatic_pipe_movement(entity, dt);
+        // system_manager::process_grabber_items(entity, dt);
+        // system_manager::process_conveyer_items(entity, dt);
+        // system_manager::process_grabber_filter(entity, dt);
+        // system_manager::process_pnumatic_pipe_movement(entity, dt);
+
         // should move all the container functions into its own
         // function?
         system_manager::process_is_container_and_should_update_item(entity, dt);
@@ -1710,7 +1711,7 @@ void SystemManager::model_test_update(
         system_manager::process_squirter(entity, dt);
         system_manager::process_trash(entity, dt);
 
-        system_manager::process_pnumatic_pipe_pairing(entity, dt);
+        // system_manager::process_pnumatic_pipe_pairing(entity, dt);
 
         system_manager::process_is_container_and_should_backfill_item(entity,
                                                                       dt);
