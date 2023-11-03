@@ -115,6 +115,7 @@ enum State {
     Paused = 4,
     Progression = 5,
     Store = 6,
+    ModelTest = 7,
 };
 
 inline std::ostream& operator<<(std::ostream& os, const State& state) {
@@ -186,6 +187,7 @@ struct GameState : public StateManager2<game::State> {
         return read();
     }
 
+    void transition_to_model_test() { return set(game::State::ModelTest); }
     void transition_to_planning() { return set(game::State::Planning); }
     void transition_to_store() { return set(game::State::Store); }
     void transition_to_inround() { return set(game::State::InRound); }

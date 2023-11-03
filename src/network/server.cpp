@@ -401,6 +401,8 @@ void Server::process_player_join_packet(
                 return {PROGRESSION_ORIGIN, 0.f, 0.f};
             case game::Store:
                 return {STORE_ORIGIN, 0.f, 0.f};
+            case game::ModelTest:
+                return {MODEL_TEST_ORIGIN, 0.f, 0.f};
         }
 
         return default_pos;

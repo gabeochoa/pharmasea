@@ -13,6 +13,7 @@ struct IsTriggerArea : public BaseComponent {
     enum Type {
         Unset,
         Lobby_PlayGame,
+        Lobby_ModelTest,
         Progression_Option1,
         Progression_Option2,
         Store_BackToPlanning,

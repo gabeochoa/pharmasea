@@ -79,6 +79,13 @@ void LevelInfo::generate_lobby_map() {
             IsTriggerArea::Lobby_PlayGame);
     }
 
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_trigger_area(
+            entity, lobby_origin + vec3{0, TILESIZE / -2.f, 10}, 8, 3,
+            IsTriggerArea::Lobby_ModelTest);
+    }
+
     // We explicitly spawn this in the bar because its not actually a lobby item
     // its just in the lobby so that we dont delete it when we regenerate the
     // map

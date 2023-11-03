@@ -94,6 +94,9 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
         case game::Store: {
             position = {STORE_ORIGIN, 0, 0};
         } break;
+        case game::ModelTest: {
+            position = {MODEL_TEST_ORIGIN, 0, 0};
+        } break;
     }
 
     Transform& transform = entity.get<Transform>();
@@ -862,6 +865,14 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     switch (ita.type) {
         case IsTriggerArea::Unset:
             break;
+        case IsTriggerArea::Lobby_ModelTest: {
+            GameState::get().transition_to_model_test();
+
+            SystemManager::get().for_each_old([](Entity& e) {
+                if (!check_type(e, EntityType::Player)) return;
+                move_player_SERVER_ONLY(e, game::State::ModelTest);
+            });
+        } break;
 
         case IsTriggerArea::Lobby_PlayGame: {
             GameState::get().transition_to_planning();
@@ -898,6 +909,11 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
 
     // These are the ones that should only change on language update
     switch (ita.type) {
+        case IsTriggerArea::Lobby_ModelTest: {
+            ita.update_title("Model Testing");
+            ita.update_subtitle(text_lookup(strings::i18n::LOADING));
+            return;
+        } break;
         case IsTriggerArea::Lobby_PlayGame: {
             ita.update_title(text_lookup(strings::i18n::START_GAME));
             ita.update_subtitle(text_lookup(strings::i18n::LOADING));
@@ -1533,6 +1549,8 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
             //
         } else if (GameState::get().is(game::State::Store)) {
             store_update(entities, dt);
+        } else if (GameState::get().is(game::State::ModelTest)) {
+            model_test_update(entities, dt);
         } else if (GameState::get().is(game::State::Progression)) {
             progression_update(entities, dt);
         } else if (GameState::get().is_game_like()) {
@@ -1670,6 +1688,32 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
         // this function also handles the map validation code
         // rename it
         system_manager::update_sophie(entity, dt);
+    });
+}
+
+void SystemManager::model_test_update(
+    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
+    for_each(entity_list, dt, [](Entity& entity, float dt) {
+        system_manager::process_grabber_items(entity, dt);
+        system_manager::process_conveyer_items(entity, dt);
+        system_manager::process_grabber_filter(entity, dt);
+        system_manager::process_pnumatic_pipe_movement(entity, dt);
+        // should move all the container functions into its own
+        // function?
+        system_manager::process_is_container_and_should_update_item(entity, dt);
+        // This one should be after the other container ones
+        system_manager::process_is_indexed_container_holding_incorrect_item(
+            entity, dt);
+
+        system_manager::process_has_rope(entity, dt);
+        system_manager::process_spawner(entity, dt);
+        system_manager::process_squirter(entity, dt);
+        system_manager::process_trash(entity, dt);
+
+        system_manager::process_pnumatic_pipe_pairing(entity, dt);
+
+        system_manager::process_is_container_and_should_backfill_item(entity,
+                                                                      dt);
     });
 }
 

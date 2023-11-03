@@ -441,6 +441,7 @@ void render_trigger_area(const Entity& entity, float dt) {
     switch (ita.type) {
         case IsTriggerArea::Unset:
         case IsTriggerArea::Lobby_PlayGame:
+        case IsTriggerArea::Lobby_ModelTest:
         case IsTriggerArea::Store_BackToPlanning:
             break;
         case IsTriggerArea::Progression_Option1:

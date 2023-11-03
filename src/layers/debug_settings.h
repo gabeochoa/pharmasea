@@ -13,6 +13,7 @@ constexpr CEMap<int, game::State, CHOOSABLE_STATES> choosable_game_states = {{{
     {3, game::State::Planning},
     {5, game::State::Progression},
     {6, game::State::Store},
+    {7, game::State::ModelTest},
     {1, game::State::Lobby},
 }}};
 
