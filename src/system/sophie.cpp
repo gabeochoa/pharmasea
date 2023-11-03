@@ -215,6 +215,13 @@ void deleting_item_needed_for_recipe(Entity& entity) {
 
     const IsFloorMarker& ifm = trash_area->get<IsFloorMarker>();
 
+    // its possible we dont have all the machines required...
+    // but theres nothing in the trash
+    // in that case lets just say things are okay
+    // (usually happens during development)
+    // see :DEV_MACHINES:
+    if (ifm.num_marked() == 0) return result(false);
+
     // TODO this is not robust but itll work for a while
     float rad = 25;
     const RefEntities ents = EntityHelper::getAllInRangeFiltered(

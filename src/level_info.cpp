@@ -237,6 +237,12 @@ void LevelInfo::generate_in_game_map() {
     if (seed == "default_seed") {
         generate_default_seed();
         add_outside_triggers({0, 0});
+
+        // TODO :DEV_MACHINES: for dev add missing machines
+        // - for dev purposes sometimes we force enable all drinks
+        //   but it causes issues when the machiens dont exist on day one
+        //   so we gotta spawn them
+
         return;
     }
     vec2 mx = generate_in_game_map_wfc(seed);
