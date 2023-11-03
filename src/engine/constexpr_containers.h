@@ -28,6 +28,22 @@ struct CEMap {
 
     [[nodiscard]] constexpr auto begin() const { return data.begin(); }
     [[nodiscard]] constexpr auto end() const { return data.end(); }
+    [[nodiscard]] constexpr auto size() const { return data.size(); }
+
+    [[nodiscard]] constexpr std::pair<Key, Value> for_index(size_t i) const {
+        if (i > Size) {
+            throw std::range_error("index larger than size of map");
+        }
+        return data[i];
+    }
+
+    [[nodiscard]] constexpr Value value_for_index(size_t i) const {
+        return for_index(i).second;
+    }
+
+    [[nodiscard]] constexpr Key key_for_index(size_t i) const {
+        return for_index(i).first;
+    }
 };
 
 template<typename Value, std::size_t Size>
