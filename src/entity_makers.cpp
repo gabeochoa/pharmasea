@@ -595,11 +595,12 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
         ShowsProgressBar::Enabled::InRound);
 }
 
-void make_fruit_basket(Entity& container, vec2 pos) {
+void make_fruit_basket(Entity& container, vec2 pos, int starting_index = 0) {
     furniture::make_itemcontainer(container, {EntityType::FruitBasket}, pos,
                                   EntityType::Fruit);
 
-    container.addComponent<Indexer>((int) ingredient::Fruits.size());
+    container.addComponent<Indexer>((int) ingredient::Fruits.size())
+        .set_value(starting_index);
     container.get<IsItemContainer>().set_uses_indexer(true);
     //
     container.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,

@@ -40,6 +40,7 @@ void make_floor_marker(Entity& floor_marker, vec3 pos, float width,
                        float height, IsFloorMarker::Type type);
 void make_single_alcohol(Entity&, vec2, int);
 void make_vomit(Entity&, const SpawnInfo&);
+void make_fruit_basket(Entity&, vec2, int starting_index);
 
 }  // namespace furniture
 
