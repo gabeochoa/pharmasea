@@ -63,19 +63,19 @@ void LevelInfo::generate_lobby_map() {
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_character_switcher(
-            entity, vec::to2(lobby_origin) + vec2{5.f, 5.f});
+            entity, vec::to2(lobby_origin) + vec2{4.f, -2.f});
     }
 
     {
         auto& entity = EntityHelper::createPermanentEntity();
-        furniture::make_map_randomizer(entity,
-                                       vec::to2(lobby_origin) + vec2{7.f, 7.f});
+        furniture::make_map_randomizer(
+            entity, vec::to2(lobby_origin) + vec2{-4.f, -2.f});
     }
 
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
-            entity, lobby_origin + vec3{5, TILESIZE / -2.f, 10}, 8, 3,
+            entity, lobby_origin + vec3{0, TILESIZE / -2.f, -5}, 8, 3,
             IsTriggerArea::Lobby_PlayGame);
     }
 
