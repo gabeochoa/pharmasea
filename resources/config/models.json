@@ -453,6 +453,15 @@
             "rotation_angle": 0.0
         },
         {
+            // TODO find model for moscow mule, tin can?
+            "folder": "models/kennynl",
+            "filename": "can.obj",
+            "library_name": "moscow_mule",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
             "folder": "models/kennynl",
             "filename": "kitchenBlender.obj",
             "library_name": "blender",

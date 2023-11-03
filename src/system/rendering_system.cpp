@@ -318,7 +318,7 @@ bool render_model_normal(const Entity& entity, float) {
             transform.pos().z + model_info.position_offset.z,
         },
         vec3{0, 1, 0}, model_info.rotation_angle + rotation_angle,
-        transform.size() * model_info.size_scale, WHITE /*this->base_color*/);
+        transform.size() * model_info.size_scale, WHITE /*base_color*/);
 
     return true;
 }
@@ -579,14 +579,29 @@ void render_speech_bubble(const Entity& entity, float) {
 
     const CanOrderDrink& cod = entity.get<CanOrderDrink>();
 
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::Texture texture = TextureLibrary::get().get(cod.icon_name());
-    raylib::DrawBillboard(cam.camera, texture,
-                          vec3{position.x + (TILESIZE * 0.05f),  //
-                               position.y + (TILESIZE * 2.f),    //
-                               position.z},                      //
-                          0.75f * TILESIZE,                      //
-                          raylib::WHITE);
+    const vec3 icon_position = vec3{position.x + (TILESIZE * 0.05f),  //
+                                    position.y + (TILESIZE * 2.f),    //
+                                    position.z};
+
+    // TODO add way to turn on / off these icons
+    if (true) {
+        GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+        raylib::Texture texture = TextureLibrary::get().get(cod.icon_name());
+        raylib::DrawBillboard(cam.camera, texture,
+                              // move it a bit so that it doesnt overlap
+                              icon_position + vec3{0.f, 1.f, 0},
+                              0.75f * TILESIZE, raylib::WHITE);
+    }
+
+    const auto model_name = get_model_name_for_drink(cod.current_order);
+    const auto model = ModelLibrary::get().get(model_name);
+    const ModelInfo& model_info = ModelInfoLibrary::get().get(model_name);
+
+    float rotation_angle = 180.f + transform.facing;
+    raylib::DrawModelEx(
+        model, icon_position + model_info.position_offset, vec3{0, 1, 0},
+        model_info.rotation_angle + rotation_angle,
+        transform.size() * model_info.size_scale, WHITE /*base_color*/);
 }
 
 void render_waiting_queue(const Entity& entity, float) {
