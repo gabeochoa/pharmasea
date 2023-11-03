@@ -6,6 +6,7 @@
 
 #include "components/has_work.h"
 #include "components/is_floor_marker.h"
+#include "components/is_spawner.h"
 #include "components/is_trigger_area.h"
 #include "engine/ui/color.h"
 #include "entity.h"   // for Item, DebugOptions, Entity
@@ -38,6 +39,7 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
 void make_floor_marker(Entity& floor_marker, vec3 pos, float width,
                        float height, IsFloorMarker::Type type);
 void make_single_alcohol(Entity&, vec2, int);
+void make_vomit(Entity&, const SpawnInfo&);
 
 }  // namespace furniture
 
