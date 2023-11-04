@@ -8,6 +8,7 @@
 #include "components/is_floor_marker.h"
 #include "components/is_spawner.h"
 #include "components/is_trigger_area.h"
+#include "dataclass/ingredient.h"
 #include "engine/ui/color.h"
 #include "entity.h"   // for Item, DebugOptions, Entity
 #include "raylib.h"   // for Color, PINK
@@ -41,10 +42,14 @@ void make_floor_marker(Entity& floor_marker, vec3 pos, float width,
 void make_single_alcohol(Entity&, vec2, int);
 void make_vomit(Entity&, const SpawnInfo&);
 void make_fruit_basket(Entity&, vec2, int starting_index);
+void make_table(Entity&, vec2);
 
 }  // namespace furniture
 
 namespace items {
+void make_juice(Item& juice, vec2 pos, Ingredient fruit);
+void make_drink(Item& drink, vec2 pos);
+
 void make_item_type(Item& item, EntityType type_name, vec2 pos, int index = -1);
 
 // Returns true if item was cleaned up

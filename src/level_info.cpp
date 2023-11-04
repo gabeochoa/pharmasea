@@ -6,10 +6,13 @@
 #include "components/is_free_in_store.h"
 #include "components/is_progression_manager.h"
 #include "components/is_trigger_area.h"
+#include "dataclass/ingredient.h"
+#include "engine/bitset_utils.h"
 #include "engine/globals.h"
 #include "engine/texture_library.h"
 #include "entity_helper.h"
 #include "entity_makers.h"
+#include "entity_type.h"
 #include "map_generation.h"
 #include "network/server.h"
 #include "recipe_library.h"
@@ -93,6 +96,210 @@ void LevelInfo::generate_lobby_map() {
         auto& entity = EntityHelper::createPermanentEntity();
         convert_to_type(EntityType::Face, entity, vec2{0.f, 0.f});
     }
+}
+
+struct ModelTestMapInfo {
+    EntityType et;
+
+    enum custom_spawner_type {
+        None,
+        Some,
+        Indexable,
+        Blender,
+        Drink,
+    } spawner_type = None;
+
+    std::optional<int> index;
+    std::optional<Ingredient> fruit_type;
+    std::optional<int> drink;
+};
+
+void LevelInfo::generate_model_test_map() {
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_trigger_area(
+            entity, model_test_origin + vec3{-5, TILESIZE / -2.f, 5}, 8, 3,
+            // TODO make one to go back to lobby
+            // TODO when you leave we MUST delete these items because
+            //      otherwise the pipes will connect to eachother and get messed
+            //      up
+            IsTriggerArea::Lobby_PlayGame);
+    }
+
+    const auto custom_spawner = [](const ModelTestMapInfo& mtmi, Entity& entity,
+                                   vec2 location) {
+        switch (mtmi.et) {
+            case EntityType::Table: {
+                furniture::make_table(entity, location);
+
+                switch (mtmi.spawner_type) {
+                    case ModelTestMapInfo::None:
+                    case ModelTestMapInfo::Some:
+                    case ModelTestMapInfo::Indexable:
+                        break;
+                    case ModelTestMapInfo::Drink: {
+                        CanHoldItem& canHold = entity.get<CanHoldItem>();
+                        // create item
+                        Entity& item = EntityHelper::createEntity();
+                        items::make_drink(item, location);
+
+                        const auto igs =
+                            RecipeLibrary::get()
+                                .get(std::string(magic_enum::enum_name<Drink>(
+                                    static_cast<Drink>(mtmi.drink.value()))))
+                                .ingredients;
+                        bitset_utils::for_each_enabled_bit(
+                            igs, [&item](size_t index) {
+                                Ingredient ig =
+                                    magic_enum::enum_value<Ingredient>(index);
+                                item.get<IsDrink>().add_ingredient(ig);
+                            });
+
+                        canHold.update(EntityHelper::getEntityAsSharedPtr(item),
+                                       entity.id);
+                    }
+
+                    break;
+
+                    case ModelTestMapInfo::Blender: {
+                        CanHoldItem& canHold = entity.get<CanHoldItem>();
+                        // create item
+                        Entity& item = EntityHelper::createEntity();
+                        items::make_juice(item, location,
+                                          mtmi.fruit_type.value());
+                        canHold.update(EntityHelper::getEntityAsSharedPtr(item),
+                                       entity.id);
+                    } break;
+                }
+
+            }
+
+            break;
+            case EntityType::FruitBasket:
+                furniture::make_fruit_basket(entity, location,
+                                             mtmi.index.value());
+                break;
+            case EntityType::SingleAlcohol:
+                furniture::make_single_alcohol(entity, location,
+                                               mtmi.index.value());
+                break;
+            case EntityType::Vomit:
+                furniture::make_vomit(entity, SpawnInfo{location, true});
+                break;
+            default:
+                log_warn(
+                    "you are generating something in model test map, that "
+                    "requires a custom spawn function but you forgot to set it "
+                    "{}",
+                    mtmi.et);
+        }
+        return;
+    };
+
+    vec2 start_location = vec::to2(model_test_origin) + vec2{-10, -5};
+    float x = 0;
+    float y = 0;
+    float xspace = 2.f;
+    float yspace = 2.f;
+    float room_width = 15;
+
+    const auto _process_single_mtmi = [&](const ModelTestMapInfo& mtmi) {
+        Entity& entity = EntityHelper::createEntity();
+        vec2 location = start_location + vec2{x, y};
+
+        if (mtmi.spawner_type != ModelTestMapInfo::None) {
+            custom_spawner(mtmi, entity, location);
+        } else {
+            convert_to_type(mtmi.et, entity, location);
+        }
+
+        x += xspace;
+
+        if (x > room_width) {
+            x = 0;
+            y -= yspace;
+        }
+    };
+
+    std::array<ModelTestMapInfo, 19> static_map_info = {{
+        //
+        {EntityType::Cupboard},
+        {EntityType::Table},
+        {EntityType::Conveyer},
+        {EntityType::Grabber},
+        {EntityType::Register},
+        {EntityType::Blender},
+        {EntityType::SodaMachine},
+        {EntityType::Cupboard},
+        {EntityType::Squirter},
+        {EntityType::FilteredGrabber},
+        {EntityType::PnumaticPipe},
+        {EntityType::MopHolder},
+        {EntityType::MopBuddyHolder},
+        {EntityType::SimpleSyrupHolder},
+        {EntityType::IceMachine},
+        {EntityType::Face},
+        {EntityType::Trash},
+        {EntityType::FastForward},
+        //
+        // {EntityType::AlcoholCabinet},
+        // {EntityType::FruitBasket},
+        {
+            .et = EntityType::Vomit,
+            .spawner_type = ModelTestMapInfo::Some,
+        },
+    }};
+
+    const auto _carraige_return = [&]() {
+        // reset the x and increment height
+        // so that the dynamic ones are separate for now
+        // makes it easier to read the names
+        x = 0;
+        y -= yspace;
+    };
+
+    for (const auto& mtmi : static_map_info) {
+        _process_single_mtmi(mtmi);
+    }
+
+    _carraige_return();
+    _carraige_return();
+    for (size_t i = 0; i < ingredient::Alcohols.size(); i++) {
+        _process_single_mtmi({.et = EntityType::SingleAlcohol,
+                              .spawner_type = ModelTestMapInfo::Indexable,
+                              .index = i});
+    }
+
+    _carraige_return();
+    _carraige_return();
+    for (size_t i = 0; i < ingredient::Fruits.size(); i++) {
+        _process_single_mtmi({.et = EntityType::FruitBasket,
+                              .spawner_type = ModelTestMapInfo::Indexable,
+                              .index = i});
+    }
+
+    // only a single one here
+    _carraige_return();
+    for (size_t i = 0; i < ingredient::BlendConvert.size(); i++) {
+        _process_single_mtmi(
+            {.et = EntityType::Table,
+             .spawner_type = ModelTestMapInfo::Blender,
+             .fruit_type = ingredient::BlendConvert.key_for_index(i)});
+    }
+
+    _carraige_return();
+    _carraige_return();
+
+    for (size_t i = 0; i < magic_enum::enum_count<Drink>(); i++) {
+        _process_single_mtmi(ModelTestMapInfo{
+            .et = EntityType::Table,
+            .spawner_type = ModelTestMapInfo::Drink,
+            .drink = magic_enum::enum_value<Drink>(i),
+        });
+    }
+
+    //
+    // {EntityType::Drink},
 }
 
 void LevelInfo::generate_progression_map() {
@@ -437,4 +644,5 @@ void LevelInfo::ensure_generated_map(const std::string& new_seed) {
     generate_progression_map();
     generate_store_map();
     generate_in_game_map();
+    generate_model_test_map();
 }
