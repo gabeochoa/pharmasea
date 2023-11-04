@@ -865,8 +865,36 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     switch (ita.type) {
         case IsTriggerArea::Unset:
             break;
+        case IsTriggerArea::ModelTest_BackToLobby: {
+            GameState::get().transition_to_lobby();
+            {
+                // TODO add a tagging system so we can delete certain sets of
+                // ents
+                float rad = 30;
+                const auto ents = EntityHelper::getAllInRange(
+                    {MODEL_TEST_ORIGIN - rad, -1.f * rad},
+                    {MODEL_TEST_ORIGIN + rad, rad});
+
+                for (Entity& to_delete : ents) {
+                    // TDOO add a way to skip the permananent ones
+                    if (to_delete.has<IsTriggerArea>()) continue;
+                    to_delete.cleanup = true;
+                }
+            }
+            SystemManager::get().for_each_old([](Entity& e) {
+                if (!check_type(e, EntityType::Player)) return;
+                move_player_SERVER_ONLY(e, game::State::Lobby);
+            });
+        } break;
         case IsTriggerArea::Lobby_ModelTest: {
             GameState::get().transition_to_model_test();
+
+            if (is_server()) {
+                network::Server* server =
+                    GLOBALS.get_ptr<network::Server>("server");
+                server->get_map_SERVER_ONLY()
+                    ->game_info.generate_model_test_map();
+            }
 
             SystemManager::get().for_each_old([](Entity& e) {
                 if (!check_type(e, EntityType::Player)) return;
@@ -909,6 +937,11 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
 
     // These are the ones that should only change on language update
     switch (ita.type) {
+        case IsTriggerArea::ModelTest_BackToLobby: {
+            ita.update_title("Back To Lobby");
+            ita.update_subtitle(text_lookup(strings::i18n::LOADING));
+            return;
+        } break;
         case IsTriggerArea::Lobby_ModelTest: {
             ita.update_title("Model Testing");
             ita.update_subtitle(text_lookup(strings::i18n::LOADING));

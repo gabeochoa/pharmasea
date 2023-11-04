@@ -17,6 +17,7 @@ struct IsTriggerArea : public BaseComponent {
         Progression_Option1,
         Progression_Option2,
         Store_BackToPlanning,
+        ModelTest_BackToLobby,
     } type = Unset;
 
     explicit IsTriggerArea(Type type)

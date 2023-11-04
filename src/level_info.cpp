@@ -119,11 +119,10 @@ void LevelInfo::generate_model_test_map() {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
             entity, model_test_origin + vec3{-5, TILESIZE / -2.f, 5}, 8, 3,
-            // TODO make one to go back to lobby
             // TODO when you leave we MUST delete these items because
             //      otherwise the pipes will connect to eachother and get messed
             //      up
-            IsTriggerArea::Lobby_PlayGame);
+            IsTriggerArea::ModelTest_BackToLobby);
     }
 
     const auto custom_spawner = [](const ModelTestMapInfo& mtmi, Entity& entity,
@@ -241,9 +240,6 @@ void LevelInfo::generate_model_test_map() {
         {EntityType::Face},
         {EntityType::Trash},
         {EntityType::FastForward},
-        //
-        // {EntityType::AlcoholCabinet},
-        // {EntityType::FruitBasket},
         {
             .et = EntityType::Vomit,
             .spawner_type = ModelTestMapInfo::Some,
@@ -644,5 +640,6 @@ void LevelInfo::ensure_generated_map(const std::string& new_seed) {
     generate_progression_map();
     generate_store_map();
     generate_in_game_map();
-    generate_model_test_map();
+    // We dont call this because the trigger area will call it
+    // generate_model_test_map();
 }

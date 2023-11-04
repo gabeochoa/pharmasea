@@ -53,6 +53,9 @@ struct LevelInfo {
     void grab_things();
     void ensure_generated_map(const std::string& new_seed);
 
+    // called by the server sometimes
+    void generate_model_test_map();
+
    private:
     vec3 lobby_origin = {LOBBY_ORIGIN, 0, 0};
     vec3 progression_origin = {PROGRESSION_ORIGIN, 0, 0};
@@ -60,7 +63,6 @@ struct LevelInfo {
     vec3 store_origin = {STORE_ORIGIN, 0, 0};
 
     void generate_lobby_map();
-    void generate_model_test_map();
     void generate_progression_map();
     void generate_store_map();
     void generate_default_seed();

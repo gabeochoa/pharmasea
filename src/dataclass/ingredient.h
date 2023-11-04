@@ -118,7 +118,7 @@ constexpr CEMap<Ingredient, IngredientSoundType,
 }  // namespace ingredient
 
 static Ingredient get_ingredient_from_index(int index) {
-    return magic_enum::enum_cast<Ingredient>(index).value();
+    return magic_enum::enum_value<Ingredient>(index);
 }
 
 using IngredientBitSet = std::bitset<magic_enum::enum_count<Ingredient>()>;
