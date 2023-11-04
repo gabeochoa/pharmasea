@@ -1814,7 +1814,17 @@ void SystemManager::render_entities(const Entities& entities, float dt) const {
     // debug only
     system_manager::render_manager::render_walkable_spots(dt);
 
+    // TODO do measurements on if the game actually runs faster with camera
+    // culling
+    //
+    // GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+
     for_each(entities, dt, [debug_mode_on](const Entity& entity, float dt) {
+        // vec2 e_pos = entity.get<Transform>().as2();
+        // if (vec::distance(e_pos, vec::to2(cam.camera.position)) > 50.f) {
+        // return;
+        // }
+
         system_manager::render_manager::render(entity, dt, debug_mode_on);
     });
 }
