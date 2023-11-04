@@ -37,6 +37,11 @@ struct RecipeLibrary {
 
     void unload_all() { impl.unload_all(); }
 
+    [[nodiscard]] auto begin() { return impl.begin(); }
+    [[nodiscard]] auto end() { return impl.end(); }
+    [[nodiscard]] auto begin() const { return impl.begin(); }
+    [[nodiscard]] auto end() const { return impl.end(); }
+
    private:
     struct RecipeLibraryImpl : Library<Recipe> {
         virtual Recipe convert_filename_to_object(const char*,

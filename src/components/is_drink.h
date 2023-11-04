@@ -21,6 +21,21 @@ struct IsDrink : public BaseComponent {
         log_info("added ingredient {}", magic_enum::enum_name<Ingredient>(i));
         int index = magic_enum::enum_integer<Ingredient>(i);
         ingredients[index] = true;
+
+        // Also run algo to check what drink this makes
+        underlying = calc_underlying();
+    }
+
+    [[nodiscard]] std::optional<Drink> calc_underlying() {
+        const auto recipelibrary = RecipeLibrary::get();
+
+        for (const auto& recipe : recipelibrary) {
+            if (matches_recipe(recipe.second.drink)) {
+                return recipe.second.drink;
+            }
+        }
+
+        return {};
     }
 
     [[nodiscard]] bool matches_recipe(const IngredientBitSet& recipe) const {
@@ -38,6 +53,8 @@ struct IsDrink : public BaseComponent {
 
     [[nodiscard]] const IngredientBitSet ing() const { return ingredients; }
 
+    std::optional<Drink> underlying;
+
    private:
     IngredientBitSet ingredients;
 
@@ -47,5 +64,8 @@ struct IsDrink : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.ext(ingredients, bitsery::ext::StdBitset{});
+
+        s.ext(underlying, bitsery::ext::StdOptional{},
+              [](S& sv, Drink& val) { sv.value4b(val); });
     }
 };
