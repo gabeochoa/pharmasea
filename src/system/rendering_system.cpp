@@ -680,6 +680,22 @@ void render_machine_name(const Entity& entity, float) {
         Preload::get().font, std::string(machine_name).c_str(), 200);
 }
 
+void render_debug_fruit_juice(const Entity& entity, float) {
+    if (!check_type(entity, EntityType::FruitJuice)) return;
+    if (entity.is_missing<ModelRenderer>()) return;
+    if (entity.is_missing<Transform>()) return;
+
+    const Transform& transform = entity.get<Transform>();
+    const ModelRenderer& renderer = entity.get<ModelRenderer>();
+    if (renderer.missing()) return;
+    ModelInfo& model_info = renderer.model_info();
+
+    const auto content = fmt::format("{}", model_info.model_name);
+
+    DrawFloatingText(vec::raise(transform.raw(), 1.f), Preload::get().font,
+                     content.c_str());
+}
+
 // TODO theres two functions called render normal, maybe we should address
 // this
 void render_normal(const Entity& entity, float dt) {
@@ -687,6 +703,7 @@ void render_normal(const Entity& entity, float dt) {
     render_debug_subtype(entity, dt);
     render_debug_drink_info(entity, dt);
     render_debug_filter_info(entity, dt);
+    render_debug_fruit_juice(entity, dt);
 
     render_waiting_queue(entity, dt);
 
