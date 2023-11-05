@@ -682,12 +682,23 @@ void render_machine_name(const Entity& entity, float) {
 
 void render_debug_fruit_juice(const Entity& entity, float) {
     if (!check_type(entity, EntityType::FruitJuice)) return;
-    if (entity.is_missing<ModelRenderer>()) return;
     if (entity.is_missing<Transform>()) return;
 
     const Transform& transform = entity.get<Transform>();
+
+    if (entity.is_missing<ModelRenderer>()) {
+        DrawFloatingText(vec::raise(transform.raw(), 1.f), Preload::get().font,
+                         "Missing model renderer");
+        return;
+    }
+
     const ModelRenderer& renderer = entity.get<ModelRenderer>();
-    if (renderer.missing()) return;
+    if (renderer.missing()) {
+        DrawFloatingText(
+            vec::raise(transform.raw(), 1.f), Preload::get().font,
+            fmt::format("renderer.missing for {}", renderer.name()).c_str());
+        return;
+    }
     ModelInfo& model_info = renderer.model_info();
 
     const auto content = fmt::format("{}", model_info.model_name);
