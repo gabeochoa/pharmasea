@@ -139,6 +139,41 @@ enum Drink {
     moscow_mule,
     long_island,
     mai_tai,
+
+    /*
+
+    beer (different kinds?)
+    wine
+
+    martini
+    manhattan
+    spritz
+    white russian
+    negroni
+    Midori Sour
+    cuba libre (rum&coke w/ lime)
+    sangria (prep early in the day and makes a lot?)
+    paloma (needs grapefruit)
+
+    // popular but i never heard of
+
+    jagerbomb (jager and red bull?)
+    green tea
+    kamikaze
+    dirty shirley, vodka grenadine & sprite
+    malibu+pina
+    grayhound
+    bushwacker
+
+
+    // sounds good
+
+    bay breeze
+
+
+
+
+     */
 };
 
 using DrinkSet = std::bitset<magic_enum::enum_count<Drink>()>;
