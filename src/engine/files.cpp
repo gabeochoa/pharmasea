@@ -1,18 +1,19 @@
 #include "files.h"
 
 #include "globals.h"
-#include "log.h"
 
 #ifdef __APPLE__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 #pragma clang diagnostic ignored "-Wdeprecated-volatile"
 #pragma clang diagnostic ignored "-Wmissing-field-initializers"
-#endif
 
-#ifdef WIN32
+#include "log.h"
+#else 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
+
+#include "log_fakelog.h"
 #endif
 
 #include <sago/platform_folders.h>
@@ -21,9 +22,6 @@
 #pragma clang diagnostic pop
 #else
 #pragma enable_warn
-#endif
-
-#ifdef WIN32
 #pragma GCC diagnostic pop
 #endif
 

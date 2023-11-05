@@ -210,4 +210,5 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::SodaSpout:
             return StoreEligibilityType::Never;
     }
+    return StoreEligibilityType::Never;
 }

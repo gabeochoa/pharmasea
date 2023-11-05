@@ -4,22 +4,10 @@
 
 #include <cassert>
 
-#include "globals.h"  // where LOG_LEVEL is located
-
-enum LogLevel {
-    LOG_ALOG_ = 0,
-    LOG_TRACE = 1,
-    LOG_INFO = 2,
-    LOG_WARN = 3,
-    LOG_ERROR = 4,
-    LOG_IF = 5,
-};
+#include "log_level.h"
 
 // TODO log to file
 
-// TODO right now having some issues with MSVC and not getting any decent error
-// message
-#ifdef __APPLE__
 #include <functional>
 #include <iostream>
 #include <string>
@@ -69,42 +57,4 @@ inline void log_me(LogLevel level, const char* file, int line,
          fmt::make_args_checked<const char*>(format, args));
 }
 
-#else
-#include <iostream>
-
-// TODO implement for windows
-inline void log_me() { std::cout << std::endl; }
-template<typename T, typename... Args>
-inline void log_me(const T& arg, const Args&... args) {
-    std::cout << arg << " ";
-    log_me(args...);
-}
-#endif
-
-#define log_trace(...)                    \
-    if (LogLevel::LOG_TRACE >= LOG_LEVEL) \
-    log_me(LogLevel::LOG_TRACE, __FILE__, __LINE__, __VA_ARGS__)
-
-#define log_info(...)                    \
-    if (LogLevel::LOG_INFO >= LOG_LEVEL) \
-    log_me(LogLevel::LOG_INFO, __FILE__, __LINE__, __VA_ARGS__)
-#define log_warn(...)                    \
-    if (LogLevel::LOG_WARN >= LOG_LEVEL) \
-    log_me(LogLevel::LOG_WARN, __FILE__, __LINE__, __VA_ARGS__)
-#define log_error(...)                                                \
-    if (LogLevel::LOG_ERROR >= LOG_LEVEL)                             \
-        log_me(LogLevel::LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__); \
-    assert(false)
-
-#define log_clean(level, ...) \
-    if (level >= LOG_LEVEL) log_me(level, "", -1, __VA_ARGS__);
-
-#define log_if(x, ...)                                                    \
-    {                                                                     \
-        if (x) log_me(LogLevel::LOG_IF, __FILE__, __LINE__, __VA_ARGS__); \
-    }
-
-#define log_ifx(x, level, ...)                                 \
-    {                                                          \
-        if (x) log_me(level, __FILE__, __LINE__, __VA_ARGS__); \
-    }
+#include "log_macros.h"

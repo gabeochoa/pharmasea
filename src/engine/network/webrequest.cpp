@@ -3,7 +3,11 @@
 
 #include <HTTPRequest.hpp>
 
+#ifdef __APPLE__
 #include "../log.h"
+#else 
+#include "../log_fakelog.h"
+#endif
 
 namespace network {
 tl::expected<std::string, NetworkRequestError> get_remote_ip_address() {
