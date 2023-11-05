@@ -122,6 +122,22 @@
         },
         {
             "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "screwdriver",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "sodaGlass.obj",
+            "library_name": "long_island",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "crate.obj",
             "library_name": "pill_dispenser",
             "size_scale": 2.0,
@@ -147,7 +163,15 @@
         {
             "folder": "models/kennynl",
             "filename": "cocktail.obj",
-            "library_name": "cosmopolitan",
+            "library_name": "mai_tai",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "cocktail.obj",
+            "library_name": "cosmo",
             "size_scale": 2.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
