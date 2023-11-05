@@ -81,6 +81,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
  */
 
 #include <string>
+#include <array>
 
 namespace strings {
 

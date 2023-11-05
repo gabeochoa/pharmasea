@@ -2,6 +2,7 @@
 #pragma once
 
 #include "base_component.h"
+#include "../vendor_include.h"
 
 struct Entity;
 

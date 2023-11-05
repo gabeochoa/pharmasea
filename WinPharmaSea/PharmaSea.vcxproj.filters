@@ -563,6 +563,24 @@
     <ClInclude Include="..\src\system\ingredient_helper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\engine\ui\sound.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\ui\ui_context.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\ui\ui_input_manager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\ui\ui_render_textures.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\bfs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\pathfinder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\game.cpp">
@@ -623,6 +641,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\system\sophie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\ui\ui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

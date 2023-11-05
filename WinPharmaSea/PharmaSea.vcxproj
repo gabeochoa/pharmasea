@@ -83,6 +83,7 @@
     <ClInclude Include="..\src\engine\assert.h" />
     <ClInclude Include="..\src\engine\astar.h" />
     <ClInclude Include="..\src\engine\atomic_queue.h" />
+    <ClInclude Include="..\src\engine\bfs.h" />
     <ClInclude Include="..\src\engine\bitset_utils.h" />
     <ClInclude Include="..\src\engine\constexpr_containers.h" />
     <ClInclude Include="..\src\engine\container_cast.h" />
@@ -107,6 +108,7 @@
     <ClInclude Include="..\src\engine\music_library.h" />
     <ClInclude Include="..\src\engine\navmesh.h" />
     <ClInclude Include="..\src\engine\network\webrequest.h" />
+    <ClInclude Include="..\src\engine\pathfinder.h" />
     <ClInclude Include="..\src\engine\polygon.h" />
     <ClInclude Include="..\src\engine\profile.h" />
     <ClInclude Include="..\src\engine\random.h" />
@@ -131,10 +133,14 @@
     <ClInclude Include="..\src\engine\ui\element_result.h" />
     <ClInclude Include="..\src\engine\ui\focus.h" />
     <ClInclude Include="..\src\engine\ui\rect.h" />
+    <ClInclude Include="..\src\engine\ui\sound.h" />
     <ClInclude Include="..\src\engine\ui\state.h" />
     <ClInclude Include="..\src\engine\ui\theme.h" />
     <ClInclude Include="..\src\engine\ui\ui.h" />
+    <ClInclude Include="..\src\engine\ui\ui_context.h" />
+    <ClInclude Include="..\src\engine\ui\ui_input_manager.h" />
     <ClInclude Include="..\src\engine\ui\ui_internal.h" />
+    <ClInclude Include="..\src\engine\ui\ui_render_textures.h" />
     <ClInclude Include="..\src\engine\ui\widget.h" />
     <ClInclude Include="..\src\engine\util.h" />
     <ClInclude Include="..\src\engine\uuid.h" />
@@ -206,12 +212,14 @@
     <ClCompile Include="..\src\engine\globals_register.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
     <ClCompile Include="..\src\engine\settings.cpp" />
+    <ClCompile Include="..\src\engine\ui\ui.cpp" />
     <ClCompile Include="..\src\entity.cpp" />
     <ClCompile Include="..\src\entity_helper.cpp" />
     <ClCompile Include="..\src\entity_makers.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
     <ClCompile Include="..\src\level_info.cpp" />
+    <ClCompile Include="..\src\network\client.cpp" />
     <ClCompile Include="..\src\network\server.cpp" />
     <ClCompile Include="..\src\preload.cpp" />
     <ClCompile Include="..\src\system\ingredient_helper.cpp" />
