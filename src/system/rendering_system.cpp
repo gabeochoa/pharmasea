@@ -205,6 +205,10 @@ void render_debug_subtype(const Entity& entity, float) {
         if (check_type(entity, EntityType::Alcohol)) {
             content = fmt::format("{}", hs.as_type<Ingredient>());
         }
+        if (check_type(entity, EntityType::Fruit)) {
+            Ingredient ig = ingredient::Fruits[hs.get_type_index()];
+            content = fmt::format("{}", magic_enum::enum_name<Ingredient>(ig));
+        }
     }
 
     if (entity.has<IsPnumaticPipe>()) {
