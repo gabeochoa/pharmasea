@@ -127,6 +127,9 @@ inline std::ostream& operator<<(std::ostream& os,
     return os;
 }
 
+// TODO run into those raylib op overload errors when i tried to split this into
+// a cpp file
+
 SINGLETON_FWD(KeyMap)
 struct KeyMap {
     SINGLETON(KeyMap)
