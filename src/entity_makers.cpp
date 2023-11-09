@@ -729,6 +729,11 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
     trigger_area.addComponent<IsTriggerArea>(type);
 }
 
+void make_draft(Entity& draft, vec2 pos) {
+    furniture::make_furniture(draft, DebugOptions{.type = EntityType::DraftTap},
+                              pos, ui::color::red, ui::color::yellow);
+}
+
 void make_blender(Entity& blender, vec2 pos) {
     furniture::make_furniture(blender,
                               DebugOptions{.type = EntityType::Blender}, pos,
@@ -838,15 +843,36 @@ void make_mop(Item& mop, vec2 pos) {
 void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
                            float dt) {
     if (GameState::get().is_not(game::State::InRound)) return;
+    if (drink.is_missing<IsItem>()) return;
+    if (drink.is_missing<IsDrink>()) return;
 
-    if (drink.has<IsItem>()) {
-        IsItem& ii = drink.get<IsItem>();
-        if (ii.is_held_by(EntityType::Cupboard)) {
-            // if the cup is still the in the cupboard
-            // dont let us add ingredients
-            return;
-        }
+    const IsDrink& isdrink = drink.get<IsDrink>();
+
+    IsItem& ii = drink.get<IsItem>();
+    if (ii.is_held_by(EntityType::Cupboard)) {
+        // if the cup is still the in the cupboard
+        // dont let us add ingredients
+        return;
     }
+
+    const auto _process_if_beer_tap = [&]() {
+        // TODO reset progress when taking out if not done
+        if (!ii.is_held_by(EntityType::DraftTap)) return;
+
+        if (isdrink.has_ingredient(Ingredient::Beer)) return;
+
+        const float amt = 0.75f;
+        hasWork.increase_pct(amt * dt);
+        network::Server::play_sound(drink.get<Transform>().as2(),
+                                    // TODO replace with draft tap sound
+                                    strings::sounds::BLENDER);
+
+        if (hasWork.is_work_complete()) {
+            hasWork.reset_pct();
+            _add_ingredient_to_drink_NO_VALIDATION(drink, Ingredient::Beer);
+        }
+        return;
+    };
 
     auto _process_add_ingredient = [&]() {
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
@@ -871,6 +897,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         }
     };
 
+    _process_if_beer_tap();
     _process_add_ingredient();
 }
 
@@ -1172,6 +1199,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::SodaMachine: {
             furniture::make_soda_machine(entity, location);
+        } break;
+        case EntityType::DraftTap: {
+            furniture::make_draft(entity, location);
         } break;
         case EntityType::Cupboard: {
             furniture::make_cupboard(entity, location);

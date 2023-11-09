@@ -55,7 +55,6 @@ inline void ensure_has_job(Entity& entity, float) {
 
     // TODO handle employee ai
     // TODO handle being angry or something
-    // TODO handle paying for your cart
 
     // IF the store is closed then leave
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);

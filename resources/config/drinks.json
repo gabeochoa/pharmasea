@@ -10,6 +10,14 @@
           ]
       },
       {
+          "name": "beer",
+          "icon_name": "beer",
+          "viewer_name": "Beer",
+          "ingredients": [
+              "Beer"
+          ]
+      },
+      {
           "name": "rum_and_coke",
           "icon_name": "rum_and_coke",
           "viewer_name": "Rum & Coke",

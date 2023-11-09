@@ -764,6 +764,12 @@ void __spawn_machines_for_newly_unlocked_drink(IsProgressionManager& ipm,
                 // Nothing is needed to do for this since
                 // the soda machine is required to play the game
             } break;
+            case Beer: {
+                auto et = EntityType::DraftTap;
+                auto& entity = make_free_machine();
+                convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+                ipm.unlock_entity(et);
+            } break;
             case Rum:
             case Tequila:
             case Vodka:

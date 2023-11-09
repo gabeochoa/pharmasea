@@ -22,6 +22,9 @@ enum Ingredient {
     Salt,
     MintLeaf,
 
+    //
+    Beer,
+
     // Liquor
     Rum,
     Tequila,  // Silver or gold?
@@ -95,6 +98,7 @@ constexpr CEMap<Ingredient, IngredientSoundType,
         {Coconut, Solid},
         //
         {Soda, Liquid},
+        {Beer, Liquid},
         {Rum, Liquid},
         {Tequila, Liquid},
         {Vodka, Liquid},
@@ -125,6 +129,7 @@ using IngredientBitSet = std::bitset<magic_enum::enum_count<Ingredient>()>;
 
 enum Drink {
     coke,
+    beer,
     rum_and_coke,
     margarita,
     daiquiri,

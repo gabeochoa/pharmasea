@@ -18,6 +18,13 @@ std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
                 settings.push_back(EntityTuple{.igs = ets});
             }
         } break;
+        case Beer: {
+            {
+                std::vector<EntityType> ets;
+                ets.push_back(EntityType::DraftTap);
+                settings.push_back(EntityTuple{.igs = ets});
+            }
+        } break;
         case Rum:
         case Tequila:
         case Vodka:
@@ -125,6 +132,9 @@ bool IngredientHelper::has_machines_required_for_ingredient(
     switch (ig) {
         case Soda: {
             return doesAnyExistWithType(EntityType::SodaMachine);
+        } break;
+        case Beer: {
+            return doesAnyExistWithType(EntityType::DraftTap);
         } break;
         case Rum:
         case Tequila:

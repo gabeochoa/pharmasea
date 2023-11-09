@@ -220,7 +220,7 @@ void LevelInfo::generate_model_test_map() {
         }
     };
 
-    std::array<ModelTestMapInfo, 19> static_map_info = {{
+    std::array<ModelTestMapInfo, 21> static_map_info = {{
         //
         {EntityType::Cupboard},
         {EntityType::Table},
@@ -240,6 +240,8 @@ void LevelInfo::generate_model_test_map() {
         {EntityType::Face},
         {EntityType::Trash},
         {EntityType::FastForward},
+        {EntityType::DraftTap},
+        {EntityType::AlcoholCabinet},
         {
             .et = EntityType::Vomit,
             .spawner_type = ModelTestMapInfo::Some,
