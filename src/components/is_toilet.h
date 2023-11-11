@@ -20,6 +20,9 @@ struct IsToilet : public BaseComponent {
         return !occupied();
     }
     [[nodiscard]] bool is_user(int id) const { return user == id; }
+    [[nodiscard]] float pct_empty() const {
+        return (1.f * uses_remaining / total_uses);
+    }
 
     void start_use(int id) {
         user = id;

@@ -6,6 +6,7 @@
 #include "../components/has_waiting_queue.h"
 #include "../components/is_free_in_store.h"
 #include "../components/is_progression_manager.h"
+#include "../components/is_toilet.h"
 #include "../drawing_util.h"
 #include "../engine/texture_library.h"
 #include "../engine/ui/theme.h"
@@ -708,6 +709,41 @@ void render_debug_fruit_juice(const Entity& entity, float) {
                      content.c_str());
 }
 
+void render_smelly_toilet(const Entity& entity, float) {
+    if (entity.is_missing<IsToilet>()) return;
+
+    const IsToilet& istoilet = entity.get<IsToilet>();
+
+    raylib::Texture texture;
+    switch (istoilet.state) {
+        case IsToilet::Available: {
+            float pct_filled = 1.f - istoilet.pct_empty();
+            if (pct_filled > 0.5f) {
+                texture = TextureLibrary::get().get("toilet_half_filled");
+            } else {
+                texture = TextureLibrary::get().get("unoccupied");
+            }
+        } break;
+        case IsToilet::InUse:
+            texture = TextureLibrary::get().get("occupied");
+            break;
+        case IsToilet::State::NeedsCleaning:
+            texture = TextureLibrary::get().get("poo");
+            break;
+    }
+
+    const Transform& transform = entity.get<Transform>();
+    vec3 position = transform.pos();
+
+    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+    raylib::DrawBillboard(cam.camera, texture,
+                          vec3{position.x + (TILESIZE * 0.05f),  //
+                               position.y + (TILESIZE * 2.f),    //
+                               position.z},                      //
+                          0.75f * TILESIZE,                      //
+                          raylib::WHITE);
+}
+
 // TODO theres two functions called render normal, maybe we should address
 // this
 void render_normal(const Entity& entity, float dt) {
@@ -718,6 +754,7 @@ void render_normal(const Entity& entity, float dt) {
     render_debug_fruit_juice(entity, dt);
 
     render_waiting_queue(entity, dt);
+    render_smelly_toilet(entity, dt);
 
     // Ghost player cant render during normal mode
     if (entity.has<CanBeGhostPlayer>() &&
