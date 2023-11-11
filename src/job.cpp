@@ -266,14 +266,17 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
     _move_toward_local_target(entity);
 }
 
-inline void WIQ_wait_and_return(Entity& entity) {
+inline void WIQ_wait_and_return(Entity& entity, std::optional<vec2> target = {},
+                                std::optional<vec2> goal = {}) {
     // note ^ if you are gonna change this to be WIQ specific please update the
     // callers ...
 
     CanPerformJob& cpj = entity.get<CanPerformJob>();
     // Add the current job to the queue,
     // and then add the waiting job
-    cpj.push_and_reset(new WaitJob(cpj.job_start(), cpj.job_start(), 1.f));
+    vec2 start = target.has_value() ? target.value() : cpj.job_start();
+    vec2 end = goal.has_value() ? goal.value() : cpj.job_start();
+    cpj.push_and_reset(new WaitJob(start, end, 1.f));
 }
 
 inline vec2 WIQ_add_to_queue_and_get_position(Entity& reg,
@@ -529,14 +532,14 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     return (Job::State::Completed);
 }
 
-Job::State WaitJob::run_state_working_at_end(Entity& entity, float dt) {
+Job::State WaitJob::run_state_working_at_end(Entity&, float dt) {
     timePassedInCurrentState += dt;
     if (timePassedInCurrentState >= timeToComplete) {
         return (Job::State::Completed);
     }
-    system_manager::logging_manager::announce(
-        entity, fmt::format("waiting a little longer: {} => {} ",
-                            timePassedInCurrentState, timeToComplete));
+    // system_manager::logging_manager::announce(
+    // entity, fmt::format("waiting a little longer: {} => {} ",
+    // timePassedInCurrentState, timeToComplete));
 
     return (Job::State::WorkingAtEnd);
 }
@@ -555,6 +558,9 @@ Job::State LeavingJob::run_state_working_at_end(Entity& entity, float) {
 }
 
 Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
+    // turn off order visible
+    entity.get<HasSpeechBubble>().off();
+
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
     cod.order_state = CanOrderDrink::OrderState::DrinkingNow;
     entity.get<HasSpeechBubble>().on();
@@ -579,9 +585,6 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         chi.item()->cleanup = true;
         chi.update(nullptr, -1);
 
-        // turn off order visible
-        entity.get<HasSpeechBubble>().off();
-
         // mark order complete
         cod.on_order_finished();
     }
@@ -598,7 +601,7 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         // Add the current job to the queue,
         // and then add the bathroom job
         cpj.push_and_reset(
-            new BathroomJob(cpj.job_start(), cpj.job_start(), 1.f));
+            new BathroomJob(cpj.job_start(), cpj.job_start(), 5.f));
 
         // Doing working at end since we still gotta do the below
         return (Job::State::WorkingAtEnd);
@@ -726,7 +729,8 @@ Job::State BathroomJob::run_state_initialize(Entity& entity, float) {
     if (!best_target) {
         system_manager::logging_manager::announce(
             entity, "toilet missing available toilet");
-        WIQ_wait_and_return(entity);
+        // TODO find a better spot to wait?
+        WIQ_wait_and_return(entity, vec2{0, 0}, vec2{0, 0});
         return Job::State::Initialize;
     }
 
@@ -756,10 +760,23 @@ Job::State BathroomJob::run_state_working_at_start(Entity& entity, float dt) {
     Entity& toilet = opt_toilet.asE();
     IsToilet& istoilet = toilet.get<IsToilet>();
 
+    bool we_are_using_it = istoilet.is_user(entity.id);
+    bool occupied = istoilet.occupied() && !we_are_using_it;
+
+    // TODO after a couple loops maybe you just go on the floor :(
+    if (occupied) {
+        system_manager::logging_manager::announce(entity,
+                                                  "someones already in there");
+        WIQ_wait_and_return(entity, toilet.get<Transform>().tile_infront(1),
+                            toilet.get<Transform>().tile_infront(0));
+        return Job::State::WorkingAtStart;
+    }
+
     // we are using it
-    if (istoilet.is_user(entity.id)) {
+    if (we_are_using_it) {
         timePassedInCurrentState += dt;
         if (timePassedInCurrentState >= timeToComplete) {
+            system_manager::logging_manager::announce(entity, "i finished");
             return (Job::State::HeadingToEnd);
         }
         // system_manager::logging_manager::announce(
@@ -768,6 +785,18 @@ Job::State BathroomJob::run_state_working_at_start(Entity& entity, float dt) {
         return Job::State::WorkingAtStart;
     }
 
+    // ?TODO right now we dont mark occupied until the person gets there
+    // obv this is like real life where two people just gotta go
+    // at the same time.
+    //
+    // this means that its possible there is a free toilet on the other side of
+    // the map and people are still using this one because they all grabbed at
+    // the same time
+    //
+    // this might be frustrating as a player since you are like "why are they so
+    // dumb"
+    //
+    // instead of the wait above, maybe do a wait and search?
     istoilet.start_use(entity.id);
     return (Job::State::WorkingAtStart);
 }
@@ -776,9 +805,7 @@ Job::State BathroomJob::run_state_working_at_end(Entity& entity, float) {
 
     OptEntity opt_toilet = EntityHelper::getEntityForID(toilet_id);
     if (!opt_toilet) {
-        log_warn(
-            "toilet in the bathroom job not found, just gonna mark this "
-            "complete");
+        log_error("toilet in the bathroom job not found");
         return (Job::State::Completed);
     }
 

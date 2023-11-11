@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../vendor_include.h"
 #include "base_component.h"
 
 struct IsToilet : public BaseComponent {
@@ -13,7 +14,11 @@ struct IsToilet : public BaseComponent {
     int user = -1;
 
     [[nodiscard]] bool occupied() const { return state != Available; }
-    [[nodiscard]] bool available() const { return !occupied(); }
+    [[nodiscard]] bool available() const {
+        log_info("current state is {}",
+                 magic_enum::enum_name<IsToilet::State>(state));
+        return !occupied();
+    }
     [[nodiscard]] bool is_user(int id) const { return user == id; }
 
     void start_use(int id) {
