@@ -36,7 +36,8 @@ const char ICE_MACHINE = 'I';
 const char CUPBOARD = 'd';
 const char SIMPLE_SYRUP = 'y';
 const char SQUIRTER = 'q';
-const char TRASH = 'T';
+const char TRASH = 'g';
+const char TOILET = 'T';
 const char FILTERED_GRABBER = 'G';
 const char PIPE = 'p';
 const char MOP_HOLDER = 'm';
@@ -165,6 +166,10 @@ struct helper {
             } break;
             case ICE_MACHINE: {
                 return EntityType::IceMachine;
+            } break;
+            case TOILET: {
+                // TODO
+                return EntityType::Trash;
             } break;
             case 32: {
                 // space

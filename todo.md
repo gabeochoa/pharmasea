@@ -38,6 +38,7 @@ kanban-plugin: basic
 ## no repro
 
 - [ ] cosmopolitan model is invisible
+- [ ] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
 
 
 ## design decisions
@@ -69,15 +70,12 @@ kanban-plugin: basic
 
 - [ ] PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way
 - [ ] - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
-- [ ] at round 3 the people got stuck in line as if there was an invis person at the front
 - [ ] mojito model is big square
-- [ ] having pathfinding crashes when rendering the waiting queue (disabled it for now )
-- [ ] lime doesnt want to go into drink when cup is in register
 - [ ] mai tai has no model
+- [ ] having pathfinding crashes when rendering the waiting queue (disabled it for now )
 - [ ] drop preview box sometimes has the wrong color
+- [ ] lime doesnt want to go into drink when cup is in register
 - [ ] lime wont go in unless i add lime juice first?
-- [ ] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
-- [ ] day 3 doesnt work, i think it skips unlock screen and that breaks it
 - [ ] joining twice from a remote computer crashes the host
 - [ ] toilet hitbox is messed up
 - [ ] - vomit hitbox is hard especially without mop
@@ -89,7 +87,9 @@ kanban-plugin: basic
 - [x] need preview for where item will go
 - [x] Tell the player how many customers are coming this round
 - [x] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
+- [x] at round 3 the people got stuck in line as if there was an invis person at the front
 - [x] highlight spots on the map where this thing can go
+- [x] day 3 doesnt work, i think it skips unlock screen and that breaks it
 - [x] During planning its hard to know what each machine it, not obvious
 - [x] default language is reverse which is confusing
 - [x] vomit is broken not working
