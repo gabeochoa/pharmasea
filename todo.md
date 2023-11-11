@@ -64,6 +64,7 @@ kanban-plugin: basic
 - [ ] - should alcohols be multi-use and then you throw out the empty bottle
 - [ ] - patience for first round should be double or triple?
 - [ ] - not enough customers to need automation?
+- [ ] remove job system and switch to just tons of components HasPath, CanWaitInQueue, CanIdle, CanMop, etc
 
 
 ## broke

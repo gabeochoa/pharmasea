@@ -702,14 +702,54 @@ Job::State BathroomJob::run_state_initialize(Entity& entity, float) {
     toilet_id = best_target->id;
 
     start = best_target.asE().get<Transform>().as2();
-    end = entity.get<Transform>().as2();
+    end = start;
 
     return Job::State::HeadingToStart;
 }
 
 Job::State BathroomJob::run_state_working_at_start(Entity& entity, float dt) {
-    return (Job::State::HeadingToEnd);
+    OptEntity opt_toilet = EntityHelper::getEntityForID(toilet_id);
+    if (!opt_toilet) {
+        log_warn(
+            "toilet in the bathroom job not found, just gonna mark this "
+            "complete");
+        return (Job::State::Completed);
+    }
+
+    Entity& toilet = opt_toilet.asE();
+    IsToilet& istoilet = toilet.get<IsToilet>();
+
+    // we are using it
+    if (istoilet.is_user(entity.id)) {
+        timePassedInCurrentState += dt;
+        if (timePassedInCurrentState >= timeToComplete) {
+            return (Job::State::HeadingToEnd);
+        }
+        system_manager::logging_manager::announce(
+            entity, fmt::format("waiting a little longer: {} => {} ",
+                                timePassedInCurrentState, timeToComplete));
+        return Job::State::WorkingAtStart;
+    }
+
+    istoilet.start_use(entity.id);
+    return (Job::State::WorkingAtStart);
 }
-Job::State BathroomJob::run_state_working_at_end(Entity& entity, float dt) {
+Job::State BathroomJob::run_state_working_at_end(Entity& entity, float) {
+    OptEntity opt_toilet = EntityHelper::getEntityForID(toilet_id);
+    if (!opt_toilet) {
+        log_warn(
+            "toilet in the bathroom job not found, just gonna mark this "
+            "complete");
+        return (Job::State::Completed);
+    }
+
+    // TODO empty the boi's bladder
+    (void) entity;
+
+    Entity& toilet = opt_toilet.asE();
+    IsToilet& istoilet = toilet.get<IsToilet>();
+
+    istoilet.end_use();
+
     return (Job::State::Completed);
 }

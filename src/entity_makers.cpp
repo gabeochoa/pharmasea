@@ -520,7 +520,7 @@ void make_toilet(Entity& toilet, vec2 pos) {
 
     toilet.addComponent<HasWork>().init(
         [](Entity& toilet, HasWork& hasWork, Entity& /*player*/, float dt) {
-            // maybe if you have the mop or something it should be faster
+            // TODO maybe if you have the mop or something it should be faster
 
             const float amt = 1.0f;
             hasWork.increase_pct(amt * dt);
