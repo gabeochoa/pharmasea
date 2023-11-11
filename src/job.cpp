@@ -384,14 +384,23 @@ Job::State WaitInQueueJob::run_state_working_at_start(Entity& entity, float) {
     Entity& reg = get_and_validate_entity(reg_id);
 
     // Check the spot in front of us
-    int cur_spot_in_line = WIQ_position_in_line(reg, entity);
 
-    if (cur_spot_in_line == spot_in_line || !WIQ_can_move_up(reg, entity)) {
+    int cur_spot_in_line = WIQ_position_in_line(reg, entity);
+    if (cur_spot_in_line == spot_in_line) {
         // We didnt move so just wait a bit before trying again
         system_manager::logging_manager::announce(
             entity, fmt::format("im just going to wait a bit longer"));
 
-        log_info("wait and return");
+        // Add the current job to the queue,
+        // and then add the waiting job
+        WIQ_wait_and_return(entity);
+        return (Job::State::WorkingAtStart);
+    }
+
+    if (!WIQ_can_move_up(reg, entity)) {
+        // We cant move so just wait a bit before trying again
+        system_manager::logging_manager::announce(
+            entity, fmt::format("im just going to wait a bit longer"));
 
         // Add the current job to the queue,
         // and then add the waiting job
