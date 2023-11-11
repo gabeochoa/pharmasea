@@ -53,16 +53,22 @@ struct CanOrderDrink : public BaseComponent {
     void on_order_finished() {
         num_orders_rem--;
         num_orders_had++;
+        drinks_in_bladder++;
 
         if (current_order_has_alcohol()) {
             num_alcoholic_drinks_had++;
         }
+        order_state = num_orders_rem > 0
+                          ? CanOrderDrink::OrderState::Ordering
+                          : CanOrderDrink::OrderState::DoneDrinking;
     }
 
     auto& set_first_order(Drink d) {
         forced_first_order = d;
         return *this;
     }
+
+    void empty_bladder() { drinks_in_bladder = 0; }
 
     // TODO make private
     int num_orders_rem = -1;
@@ -75,6 +81,7 @@ struct CanOrderDrink : public BaseComponent {
 
     int tab_cost = 0;
     int tip = 0;
+    int drinks_in_bladder = 0;
 
    private:
     friend bitsery::Access;

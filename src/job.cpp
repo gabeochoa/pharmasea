@@ -119,6 +119,10 @@ Job* Job::create_job_of_type(vec2 _start, vec2 _end, JobType job_type) {
         case Mopping:
             job = new MoppingJob();
             break;
+        case Bathroom:
+            job = new BathroomJob();
+            break;
+            // TODO remove this so we get the non-exhausted warning
         default:
             log_warn(
                 "Trying to replace job with type {}({}) but doesnt have it",
@@ -556,66 +560,85 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
     entity.get<HasSpeechBubble>().on();
 
     timePassedInCurrentState += dt;
-    if (timePassedInCurrentState >= timeToComplete) {
-        // Done with my drink, delete it
 
-        CanHoldItem& chi = entity.get<CanHoldItem>();
+    // not enough time has passed, continue "drinking"
+    if (timePassedInCurrentState < timeToComplete) {
+        return (Job::State::WorkingAtEnd);
+    }
+
+    // Done with my drink, delete it
+    CanHoldItem& chi = entity.get<CanHoldItem>();
+    if (chi.item()) {  // We have this check because if we went to the bathroom
+                       // then we would've put down our drink in the previous
+                       // frame
         chi.item()->cleanup = true;
         chi.update(nullptr, -1);
+    }
 
-        entity.get<HasSpeechBubble>().off();
+    // turn off order visible
+    entity.get<HasSpeechBubble>().off();
 
-        cod.on_order_finished();
+    // mark order complete
+    cod.on_order_finished();
 
-        if (cod.num_orders_rem > 0) {
-            cod.order_state = CanOrderDrink::OrderState::Ordering;
+    // TODO right now just go to the bathroom after every drink
+    bool gotta_go = false;  // (cod.drinks_in_bladder >= 1);
 
-            // get next order
-            {
-                Entity& sophie =
-                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
-                const IsProgressionManager& progressionManager =
-                    sophie.get<IsProgressionManager>();
-                cod.current_order =
-                    progressionManager.get_random_unlocked_drink();
-            }
+    // Needs to go to the bathroom?
+    if (gotta_go) {
+        system_manager::logging_manager::announce(entity,
+                                                  "i gotta go to the bathroom");
 
-            vec2 start = entity.get<Transform>().as2();
-            std::shared_ptr<Job> jshared;
-            jshared.reset(
-                create_job_of_type(start, start, JobType::WaitInQueue));
-            entity.get<CanPerformJob>().push_onto_queue(jshared);
-        } else {
-            // Now we are fully done so lets pay.
+        CanPerformJob& cpj = entity.get<CanPerformJob>();
+        // Add the current job to the queue,
+        // and then add the bathroom job
+        cpj.push_and_reset(
+            new BathroomJob(cpj.job_start(), cpj.job_start(), 1.f));
 
-            // TODO add a new job type to go pay, for now just pay when they are
-            // done drinking, they will still go the register but the pay
-            // happens here
-            {
-                Entity& sophie =
-                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
-                IsBank& bank = sophie.get<IsBank>();
-                bank.deposit(cod.tab_cost);
-                bank.deposit(cod.tip);
+        // Doing working at end since we still gotta do the below
+        return (Job::State::WorkingAtEnd);
+    }
 
-                // i dont think we need to do this, but just in case
-                cod.tab_cost = 0;
-                cod.tip = 0;
-            }
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
 
-            cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
-            std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
-                // TODO they go back to the register before leaving becausd
-                // start here..
-                start,
-                // TODO create a global so they all leave to the same spot
-                vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time());
-            entity.get<CanPerformJob>().push_onto_queue(jshared);
+    if (cod.num_orders_rem > 0) {
+        // get next order
+        {
+            const IsProgressionManager& progressionManager =
+                sophie.get<IsProgressionManager>();
+            cod.current_order = progressionManager.get_random_unlocked_drink();
         }
 
-        return (Job::State::Completed);
+        vec2 start = entity.get<Transform>().as2();
+        std::shared_ptr<Job> jshared;
+        jshared.reset(create_job_of_type(start, start, JobType::WaitInQueue));
+        entity.get<CanPerformJob>().push_onto_queue(jshared);
+    } else {
+        // Now we are fully done so lets pay.
+
+        // TODO add a new job type to go pay, for now just pay when they are
+        // done drinking, they will still go the register but the pay
+        // happens here
+        {
+            IsBank& bank = sophie.get<IsBank>();
+            bank.deposit(cod.tab_cost);
+            bank.deposit(cod.tip);
+
+            // i dont think we need to do this, but just in case
+            cod.tab_cost = 0;
+            cod.tip = 0;
+        }
+
+        std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
+            // TODO they go back to the register before leaving becausd
+            // start here..
+            start,
+            // TODO create a global so they all leave to the same spot
+            vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time());
+        entity.get<CanPerformJob>().push_onto_queue(jshared);
     }
-    return (Job::State::WorkingAtEnd);
+
+    return (Job::State::Completed);
 }
 
 Job::State MoppingJob::run_state_initialize(Entity& entity, float) {
@@ -691,7 +714,8 @@ Job::State BathroomJob::run_state_initialize(Entity& entity, float) {
 
     // TODO after a couple loops maybe you just go on the floor :(
     if (!best_target) {
-        log_warn("Could not find an available toilet");
+        system_manager::logging_manager::announce(
+            entity, "toilet missing available toilet");
         WIQ_wait_and_return(entity);
         return Job::State::Initialize;
     }
@@ -703,6 +727,9 @@ Job::State BathroomJob::run_state_initialize(Entity& entity, float) {
 
     start = best_target.asE().get<Transform>().as2();
     end = start;
+
+    system_manager::logging_manager::announce(entity,
+                                              "toilet heading to start");
 
     return Job::State::HeadingToStart;
 }
@@ -743,8 +770,7 @@ Job::State BathroomJob::run_state_working_at_end(Entity& entity, float) {
         return (Job::State::Completed);
     }
 
-    // TODO empty the boi's bladder
-    (void) entity;
+    entity.get<CanOrderDrink>().empty_bladder();
 
     Entity& toilet = opt_toilet.asE();
     IsToilet& istoilet = toilet.get<IsToilet>();
