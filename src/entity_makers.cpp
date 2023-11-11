@@ -11,6 +11,7 @@
 #include "components/is_free_in_store.h"
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
+#include "components/is_toilet.h"
 #include "dataclass/ingredient.h"
 #include "engine/sound_library.h"
 #include "engine/ui/color.h"
@@ -110,7 +111,7 @@ void register_all_components() {
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
-        IsFreeInStore,
+        IsFreeInStore, IsToilet,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
@@ -514,6 +515,23 @@ void make_trash(Entity& trash, vec2 pos) {
 
 void make_toilet(Entity& toilet, vec2 pos) {
     furniture::make_furniture(toilet, {EntityType::Toilet}, pos);
+
+    toilet.addComponent<IsToilet>();
+
+    toilet.addComponent<HasWork>().init(
+        [](Entity& toilet, HasWork& hasWork, Entity& /*player*/, float dt) {
+            // maybe if you have the mop or something it should be faster
+
+            const float amt = 1.0f;
+            hasWork.increase_pct(amt * dt);
+
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+
+                toilet.get<IsToilet>().reset();
+            }
+        });
+    toilet.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 }
 
 void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
