@@ -23,6 +23,7 @@ struct IsToilet : public BaseComponent {
     [[nodiscard]] float pct_empty() const {
         return (1.f * uses_remaining / total_uses);
     }
+    [[nodiscard]] float pct_full() const { return 1.f - pct_empty(); }
 
     void start_use(int id) {
         user = id;

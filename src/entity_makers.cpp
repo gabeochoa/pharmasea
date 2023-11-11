@@ -520,6 +520,15 @@ void make_toilet(Entity& toilet, vec2 pos) {
 
     toilet.addComponent<HasWork>().init(
         [](Entity& toilet, HasWork& hasWork, Entity& /*player*/, float dt) {
+            IsToilet& istoilet = toilet.get<IsToilet>();
+
+            // TODO figure out a better number
+            // recently cleaned
+            if (istoilet.pct_full() <= 0.25f) {
+                hasWork.reset_pct();
+                return;
+            }
+
             // TODO maybe if you have the mop or something it should be faster
 
             const float amt = 1.0f;
@@ -528,7 +537,7 @@ void make_toilet(Entity& toilet, vec2 pos) {
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
 
-                toilet.get<IsToilet>().reset();
+                istoilet.reset();
             }
         });
     toilet.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
