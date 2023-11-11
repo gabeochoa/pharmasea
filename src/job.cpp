@@ -415,6 +415,7 @@ Job::State WaitInQueueJob::run_state_working_at_start(Entity& entity, float) {
     spot_in_line = cur_spot_in_line;
 
     if (spot_in_line == 0) {
+        start = reg.get<Transform>().tile_infront(1);
         return (Job::State::HeadingToEnd);
     }
 
