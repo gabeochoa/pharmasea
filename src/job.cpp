@@ -565,24 +565,29 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
     if (timePassedInCurrentState < timeToComplete) {
         return (Job::State::WorkingAtEnd);
     }
+    CanHoldItem& chi = entity.get<CanHoldItem>();
+
+    // Because we might come back here after going ot the bathroom or something
+    // we need to know if this was the first time we came here or not
+    // the best way is to just see if we have a drink in our hand
+    bool first_time = (chi.item() != nullptr);
 
     // Done with my drink, delete it
-    CanHoldItem& chi = entity.get<CanHoldItem>();
-    if (chi.item()) {  // We have this check because if we went to the bathroom
+    if (first_time) {  // We have this check because if we went to the bathroom
                        // then we would've put down our drink in the previous
                        // frame
         chi.item()->cleanup = true;
         chi.update(nullptr, -1);
+
+        // turn off order visible
+        entity.get<HasSpeechBubble>().off();
+
+        // mark order complete
+        cod.on_order_finished();
     }
 
-    // turn off order visible
-    entity.get<HasSpeechBubble>().off();
-
-    // mark order complete
-    cod.on_order_finished();
-
     // TODO right now just go to the bathroom after every drink
-    bool gotta_go = false;  // (cod.drinks_in_bladder >= 1);
+    bool gotta_go = (cod.drinks_in_bladder >= 1);
 
     // Needs to go to the bathroom?
     if (gotta_go) {
@@ -599,9 +604,14 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         return (Job::State::WorkingAtEnd);
     }
 
+    // dont need to go anymore. do we want another drink?
+
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    std::shared_ptr<Job> jshared;
 
     if (cod.num_orders_rem > 0) {
+        system_manager::logging_manager::announce(entity,
+                                                  "im getting another drink");
         // get next order
         {
             const IsProgressionManager& progressionManager =
@@ -610,11 +620,11 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         }
 
         vec2 start = entity.get<Transform>().as2();
-        std::shared_ptr<Job> jshared;
         jshared.reset(create_job_of_type(start, start, JobType::WaitInQueue));
         entity.get<CanPerformJob>().push_onto_queue(jshared);
     } else {
         // Now we are fully done so lets pay.
+        system_manager::logging_manager::announce(entity, "im done drinking");
 
         // TODO add a new job type to go pay, for now just pay when they are
         // done drinking, they will still go the register but the pay
@@ -629,15 +639,15 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
             cod.tip = 0;
         }
 
-        std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
+        jshared.reset(new WaitJob(
             // TODO they go back to the register before leaving becausd
             // start here..
             start,
             // TODO create a global so they all leave to the same spot
-            vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time());
-        entity.get<CanPerformJob>().push_onto_queue(jshared);
+            vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time()));
     }
 
+    entity.get<CanPerformJob>().push_onto_queue(jshared);
     return (Job::State::Completed);
 }
 
@@ -752,9 +762,9 @@ Job::State BathroomJob::run_state_working_at_start(Entity& entity, float dt) {
         if (timePassedInCurrentState >= timeToComplete) {
             return (Job::State::HeadingToEnd);
         }
-        system_manager::logging_manager::announce(
-            entity, fmt::format("waiting a little longer: {} => {} ",
-                                timePassedInCurrentState, timeToComplete));
+        // system_manager::logging_manager::announce(
+        // entity, fmt::format("waiting a little longer: {} => {} ",
+        // timePassedInCurrentState, timeToComplete));
         return Job::State::WorkingAtStart;
     }
 
@@ -762,6 +772,8 @@ Job::State BathroomJob::run_state_working_at_start(Entity& entity, float dt) {
     return (Job::State::WorkingAtStart);
 }
 Job::State BathroomJob::run_state_working_at_end(Entity& entity, float) {
+    entity.get<CanOrderDrink>().empty_bladder();
+
     OptEntity opt_toilet = EntityHelper::getEntityForID(toilet_id);
     if (!opt_toilet) {
         log_warn(
@@ -770,11 +782,8 @@ Job::State BathroomJob::run_state_working_at_end(Entity& entity, float) {
         return (Job::State::Completed);
     }
 
-    entity.get<CanOrderDrink>().empty_bladder();
-
     Entity& toilet = opt_toilet.asE();
     IsToilet& istoilet = toilet.get<IsToilet>();
-
     istoilet.end_use();
 
     return (Job::State::Completed);
