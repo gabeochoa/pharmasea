@@ -168,8 +168,7 @@ struct helper {
                 return EntityType::IceMachine;
             } break;
             case TOILET: {
-                // TODO
-                return EntityType::Trash;
+                return EntityType::Toilet;
             } break;
             case 32: {
                 // space

@@ -44,6 +44,7 @@ enum struct EntityType {
     IceMachine,
     Face,
     DraftTap,
+    Toilet,
 
     //
     // Items
@@ -77,7 +78,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b011111111111111111111111111111111111111111;
+    return 0b0111111111111111111111111111111111111111111;
 #endif
 }
 
@@ -111,6 +112,7 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::AlcoholCabinet:
         case EntityType::FruitBasket:
         case EntityType::Conveyer:
+        case EntityType::Toilet:
             return 100;
         case EntityType::Grabber:
         case EntityType::MopBuddyHolder:
@@ -170,9 +172,10 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::Cupboard:
         case EntityType::SodaMachine:
         case EntityType::Trash:
-        case EntityType::DraftTap:
+        case EntityType::Toilet:
             return StoreEligibilityType::OnStart;
         case EntityType::Conveyer:
+        case EntityType::DraftTap:
         case EntityType::Grabber:
         case EntityType::AlcoholCabinet:
         case EntityType::Blender:

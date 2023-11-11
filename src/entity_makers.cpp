@@ -512,6 +512,10 @@ void make_trash(Entity& trash, vec2 pos) {
     furniture::make_furniture(trash, {EntityType::Trash}, pos);
 }
 
+void make_toilet(Entity& toilet, vec2 pos) {
+    furniture::make_furniture(toilet, {EntityType::Toilet}, pos);
+}
+
 void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
     furniture::make_conveyer(pnumatic, pos, {EntityType::PnumaticPipe});
 
@@ -1211,6 +1215,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::Trash: {
             furniture::make_trash(entity, location);
+        } break;
+        case EntityType::Toilet: {
+            furniture::make_toilet(entity, location);
         } break;
         case EntityType::FilteredGrabber: {
             furniture::make_filtered_grabber(entity, location);
