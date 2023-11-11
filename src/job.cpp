@@ -11,6 +11,7 @@
 #include "components/is_bank.h"
 #include "components/is_drink.h"
 #include "components/is_progression_manager.h"
+#include "components/is_toilet.h"
 #include "engine/assert.h"
 #include "engine/bfs.h"
 #include "engine/pathfinder.h"
@@ -262,6 +263,9 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
 }
 
 inline void WIQ_wait_and_return(Entity& entity) {
+    // note ^ if you are gonna change this to be WIQ specific please update the
+    // callers ...
+
     CanPerformJob& cpj = entity.get<CanPerformJob>();
     // Add the current job to the queue,
     // and then add the waiting job
@@ -668,4 +672,44 @@ Job::State MoppingJob::run_state_working_at_start(Entity& entity, float dt) {
     system_manager::logging_manager::announce(entity,
                                               fmt::format("im cleaning "));
     return (Job::State::WorkingAtStart);
+}
+
+Job::State BathroomJob::run_state_initialize(Entity& entity, float) {
+    log_warn("starting a new bathroom job");
+
+    std::vector<RefEntity> all_toilets =
+        EntityHelper::getAllWithComponent<IsToilet>();
+
+    // TODO sort by distance?
+    OptEntity best_target = {};
+    for (Entity& r : all_toilets) {
+        const IsToilet& toilet = r.get<IsToilet>();
+        if (toilet.available()) {
+            best_target = r;
+        }
+    }
+
+    // TODO after a couple loops maybe you just go on the floor :(
+    if (!best_target) {
+        log_warn("Could not find an available toilet");
+        WIQ_wait_and_return(entity);
+        return Job::State::Initialize;
+    }
+
+    VALIDATE(best_target, "underlying job should contain a toilet now");
+
+    // Store into our job data
+    toilet_id = best_target->id;
+
+    start = best_target.asE().get<Transform>().as2();
+    end = entity.get<Transform>().as2();
+
+    return Job::State::HeadingToStart;
+}
+
+Job::State BathroomJob::run_state_working_at_start(Entity& entity, float dt) {
+    return (Job::State::HeadingToEnd);
+}
+Job::State BathroomJob::run_state_working_at_end(Entity& entity, float dt) {
+    return (Job::State::Completed);
 }

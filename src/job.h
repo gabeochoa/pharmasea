@@ -21,6 +21,7 @@ enum JobType {
     Leaving,
     Drinking,
     Mopping,
+    Bathroom,
 
     MAX_JOB_TYPE,
 };
@@ -224,6 +225,30 @@ struct DrinkingJob : public Job {
     DrinkingJob(vec2 _start, vec2 _end, float ttc)
         : Job(JobType::Drinking, _start, _end), timeToComplete(ttc) {}
 
+    virtual State run_state_working_at_end(Entity& entity, float dt) override;
+
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(*this, bitsery::ext::BaseClass<Job>{});
+
+        s.value4b(timePassedInCurrentState);
+        s.value4b(timeToComplete);
+    }
+};
+
+struct BathroomJob : public Job {
+    float timePassedInCurrentState = 0.f;
+    float timeToComplete = 1.f;
+    EntityID toilet_id = -1;
+
+    BathroomJob()
+        : Job(JobType::Bathroom, vec2{0, 0}, vec2{0, 0}), timeToComplete(1.f) {}
+    BathroomJob(vec2 _start, vec2 _end, float ttc)
+        : Job(JobType::Bathroom, _start, _end), timeToComplete(ttc) {}
+
+    virtual State run_state_initialize(Entity& entity, float dt) override;
+    virtual State run_state_working_at_start(Entity& entity, float dt) override;
     virtual State run_state_working_at_end(Entity& entity, float dt) override;
 
     friend bitsery::Access;
