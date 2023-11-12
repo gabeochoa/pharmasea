@@ -1,0 +1,158 @@
+{
+  "config": [
+      {
+          "format": "float",
+          "name": "round_length",
+          "initial_value": 100.0
+      },
+      {
+          "format": "int",
+          "name": "max_num_orders",
+          "initial_value": 1
+      },
+      {
+          "format": "bool",
+          "name": "unlocked_toilet",
+          "initial_value": false
+      },
+      {
+          "format": "int",
+          "name": "bladder_size",
+          "initial_value": 1
+      },
+      {
+          "format": "float",
+          "name": "piss_timer",
+          "initial_value": 2.5
+      },
+      {
+          "format": "bool",
+          "name": "has_city_multiplier",
+          "initial_value": false
+      },
+      {
+          "format": "",
+          "name": "customers_to_spawn",
+          "initial_value": 0 
+      }
+  ],
+  "upgrades": [
+      {
+          "name": "Longer Day",
+          "flavor_text": "Find an extra couple hours in the day.",
+          "description": "(Makes the day twice as long)",
+          "variables": [
+              {
+                  "name": "round_length",
+                  "operation": "multiplier",
+                  "value": 2.0
+              }
+          ],
+          "prereqs": [
+              {
+                  "kind": "day_count",
+                  "value": 2
+              }
+          ]
+      },
+      {
+          // Why would I want customers to order twice
+          // more money? 
+          "name": "Gotta go",
+          "flavor_text": "Drinking has its consequences.",
+          "description": "(Customers will order twice, but will need to go to the bathroom)",
+          "variables": [
+              {
+                  "name": "max_num_orders",
+                  "operation": "multiplier",
+                  "value": 2.0
+              },
+              {
+                  "name": "unlocked_toilet",
+                  "operation": "set",
+                  "value": true
+              }
+          ],
+          "prereqs": []
+      },
+      {
+          "name": "Big Bladders",
+          "flavor_text": "I've been training.",
+          "description": "(Customers will got to the bathroom less often but for longer)",
+          "variables": [
+              {
+                  "name": "piss_timer",
+                  "operation": "multiplier",
+                  "value": 2.0
+              },
+              {
+                  "name": "bladder_size",
+                  "operation": "multiplier",
+                  "value": 2.0
+              }
+          ],
+          "prereqs": [
+              {
+                  "name": "unlocked_toilet",
+                  "value": true
+              }
+          ]
+      },
+      {
+          "name": "Big City",
+          "flavor_text": "I'm walking 'ere.",
+          "description": "(Customers pay double but have less patience)",
+          "variables": [
+              {
+                  "name": "patience_multiplier",
+                  "operation": "multiplier",
+                  "value": 0.5
+              },
+              {
+                  "name": "base_cost",
+                  "operation": "multiplier",
+                  "value": 2.0
+              },
+              {
+                  "name": "has_city_multiplier",
+                  "operation": "set",
+                  "value":true 
+              }
+          ],
+          "prereqs": [
+              {
+                  "name": "has_city_multiplier",
+                  "value": false
+              }
+          ]
+      },
+      {
+          "name": "Small Town",
+          "flavor_text": "This town ain't big enough for the two of us.",
+          "description": "(Customers pay half but have double patience)",
+          "variables": [
+              {
+                  "name": "patience_multiplier",
+                  "operation": "multiplier",
+                  "value": 2.0
+              },
+              {
+                  "name": "base_cost",
+                  "operation": "multiplier",
+                  "value": 0.5
+              },
+              {
+                  "name": "has_city_multiplier",
+                  "operation": "set",
+                  "value":true 
+              }
+          ],
+          "prereqs": [
+              {
+                  "name": "has_city_multiplier",
+                  "value": false
+              }
+          ]
+      }
+    ]
+}
