@@ -69,6 +69,7 @@ clean:
 	mkdir -p $(OBJ_DIR)/src/layers/
 	mkdir -p $(OBJ_DIR)/src/engine/
 	mkdir -p $(OBJ_DIR)/src/engine/network/
+	mkdir -p $(OBJ_DIR)/src/components/
 	mkdir -p $(OBJ_DIR)/src/engine/ui/
 	mkdir -p $(OBJ_DIR)/src/system/
 	mkdir -p $(OBJ_DIR)/vendor/tracy/
