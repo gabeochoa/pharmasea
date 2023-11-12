@@ -640,6 +640,14 @@ void delete_customers_when_leaving_inround(Entity& entity) {
     entity.cleanup = true;
 }
 
+void reset_toilet_when_leaving_inround(Entity& entity) {
+    // TODO :DESIGN: do we actually want to do this?
+    if (entity.is_missing<IsToilet>()) return;
+
+    IsToilet& istoilet = entity.get<IsToilet>();
+    istoilet.reset();
+}
+
 void delete_floating_items_when_leaving_inround(Entity& entity) {
     if (entity.is_missing<IsItem>()) return;
 
@@ -1635,6 +1643,7 @@ void SystemManager::process_state_change(
             system_manager::delete_customers_when_leaving_inround(entity);
             system_manager::reset_customer_spawner_when_leaving_inround(entity);
             system_manager::reset_max_gen_when_after_deletion(entity);
+            system_manager::reset_toilet_when_leaving_inround(entity);
             system_manager::increment_day_count(entity, dt);
 
             // Handle updating all the things that rely on progression
