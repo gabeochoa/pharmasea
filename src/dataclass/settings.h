@@ -14,6 +14,8 @@
 #include "../engine/log.h"
 #include "../engine/util.h"
 
+using ConfigValueType = std::variant<int, bool, float>;
+
 enum struct ConfigKey {
     RoundLength,
     MaxNumOrders,
@@ -34,6 +36,11 @@ enum struct ConfigKey {
     VomitFreqMultiplier,
     VomitAmountMultiplier,
     //
+};
+
+struct ConfigValue {
+    ConfigKey key;
+    ConfigValueType value;
 };
 
 enum struct ConfigKeyType { Float, Bool, Int };
@@ -85,12 +92,12 @@ inline Operation to_operation(const std::string& str) {
 struct UpgradeEffect {
     ConfigKey name;
     Operation operation;
-    std::variant<int, float, bool> value;
+    ConfigValueType value;
 };
 
 struct UpgradeRequirement {
     ConfigKey name;
-    std::variant<int, float, bool> value;
+    ConfigValueType value;
 };
 
 struct Upgrade {

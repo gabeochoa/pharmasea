@@ -3,6 +3,7 @@
 
 #include <istream>
 
+#include "config_key_library.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/settings.h"
 #include "engine/font_library.h"
@@ -443,16 +444,42 @@ void Preload::load_map_generation_info() {
 }
 
 void Preload::load_upgrades() {
-    load_json_config_file("round_upgrades.json", [](const nlohmann::json&
-                                                        contents) {
-        const auto& upgrades = contents["upgrades"];
+    const auto load_config_values = [](const nlohmann::json& config_values) {
+        for (auto config : config_values) {
+            const auto name = config["name"].get<std::string>();
+            ConfigKey key = to_configkey(name);
 
+            const auto key_type = get_type(key);
+            ConfigValueType value;
+
+            const auto& efv = config["value"];
+            switch (key_type) {
+                case ConfigKeyType::Float:
+                    value = efv.get<float>();
+                    break;
+                case ConfigKeyType::Bool:
+                    value = efv.get<bool>();
+                    break;
+                case ConfigKeyType::Int:
+                    value = efv.get<int>();
+                    break;
+            }
+
+            ConfigValueLibrary::get().load(
+                {
+                    .key = key,
+                    .value = value,
+                },
+                "INVALID", name.c_str());
+        }
+    };
+    const auto load_upgrades = [](const nlohmann::json& upgrades) {
         const auto parse_effect =
             [](const nlohmann::json& effects) -> UpgradeEffect {
             const auto key = to_configkey(effects["name"].get<std::string>());
             const auto key_type = get_type(key);
 
-            std::variant<int, float, bool> value;
+            ConfigValueType value;
 
             const auto& efv = effects["value"];
             switch (key_type) {
@@ -496,5 +523,11 @@ void Preload::load_upgrades() {
                 },
                 "INVALID", name.c_str());
         }
-    });
+    };
+
+    load_json_config_file("round_upgrades.json",
+                          [&](const nlohmann::json& contents) {
+                              load_config_values(contents["config"]);
+                              load_upgrades(contents["upgrades"]);
+                          });
 }

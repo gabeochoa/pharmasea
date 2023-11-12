@@ -1,4 +1,58 @@
 {
+  "config": [
+      {
+          "name": "round_length",
+          "value": 100.0
+      },
+      {
+          "name": "max_num_orders",
+          "value": 1
+      },
+      {
+          "name": "patience_multiplier",
+          "value": 1.0
+      },
+      {
+          "name": "customer_spawn_multiplier",
+          "value": 1.0
+      },
+      {
+          "name": "num_store_spawns",
+          "value": 5
+      },
+      {
+          "name": "drink_cost_multiplier",
+          "value": 1.0
+      },
+      {
+          "name": "unlocked_toilet",
+          "value": false
+      },
+      {
+          "name": "piss_timer",
+          "value": 2.5
+      },
+      {
+          "name": "bladder_size",
+          "value": 1
+      },
+      {
+          "name": "has_city_multiplier",
+          "value": false
+      },
+      {
+          "name": "cost_multiplier",
+          "value": 1.0
+      },
+      {
+          "name": "vomit_freq_multiplier",
+          "value": 1.0
+      },
+      {
+          "name": "vomit_amount_multiplier",
+          "value": 1.0
+      }
+  ],
   "upgrades": [
       {
           "name": "Longer Day",
