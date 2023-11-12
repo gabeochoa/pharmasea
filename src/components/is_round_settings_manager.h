@@ -1,12 +1,6 @@
 
 #pragma once
 
-// We redefine the max here because the max keyboardkey is in the 300s
-#undef MAGIC_ENUM_RANGE_MAX
-#define MAGIC_ENUM_RANGE_MAX 400
-
-#include <magic_enum/magic_enum.hpp>
-//
 #include <bitsery/ext/std_map.h>
 using StdMap = bitsery::ext::StdMap;
 //
@@ -115,6 +109,9 @@ struct IsRoundSettingsManager : public BaseComponent {
                         break;
                     case ConfigKey::UnlockedToilet:
                         set<bool>(key, false);
+                        break;
+                    case ConfigKey::DrinkCostMultiplier:
+                        set<float>(key, 1.f);
                         break;
                 }
             });

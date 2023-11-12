@@ -4,11 +4,13 @@
 #include <istream>
 
 #include "dataclass/ingredient.h"
+#include "dataclass/settings.h"
 #include "engine/font_library.h"
 #include "engine/keymap.h"
 #include "engine/ui/theme.h"
 #include "map_generation.h"
 #include "recipe_library.h"
+#include "upgrade_library.h"
 
 float DEADZONE = 0.25f;
 int LOG_LEVEL = 2;
@@ -438,4 +440,61 @@ void Preload::load_map_generation_info() {
             log_info("Loaded map generation details containing {} patterns",
                      MAP_GEN_INFO.patterns.size());
         });
+}
+
+void Preload::load_upgrades() {
+    load_json_config_file("round_upgrades.json", [](const nlohmann::json&
+                                                        contents) {
+        const auto& upgrades = contents["upgrades"];
+
+        const auto parse_effect =
+            [](const nlohmann::json& effects) -> UpgradeEffect {
+            const auto key = to_configkey(effects["name"].get<std::string>());
+            const auto key_type = get_type(key);
+
+            std::variant<int, float, bool> value;
+
+            const auto& efv = effects["value"];
+            switch (key_type) {
+                case ConfigKeyType::Float:
+                    value = efv.get<float>();
+                    break;
+                case ConfigKeyType::Bool:
+                    value = efv.get<bool>();
+                    break;
+                case ConfigKeyType::Int:
+                    value = efv.get<int>();
+                    break;
+            }
+
+            return UpgradeEffect{
+                .name = key,
+                .operation =
+                    to_operation(effects["operation"].get<std::string>()),
+                .value = value,
+            };
+        };
+
+        const auto parse_effects =
+            [&](const nlohmann::json& effects) -> std::vector<UpgradeEffect> {
+            std::vector<UpgradeEffect> output;
+            for (const auto& effect : effects) {
+                output.push_back(parse_effect(effect));
+            }
+            return output;
+        };
+
+        for (auto upgrade : upgrades) {
+            auto effects = parse_effects(upgrade["upgrade_effects"]);
+            const auto name = upgrade["name"].get<std::string>();
+            UpgradeLibrary::get().load(
+                {
+                    .name = name,
+                    .flavor_text = upgrade["flavor_text"].get<std::string>(),
+                    .description = upgrade["description"].get<std::string>(),
+                    .effects = effects,
+                },
+                "INVALID", name.c_str());
+        }
+    });
 }

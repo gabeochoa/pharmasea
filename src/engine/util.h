@@ -94,6 +94,18 @@ inline std::vector<std::string> split_re(const std::string& input,
     return std::vector<std::string>{first, last};
 }
 
+inline std::string remove_underscores(const std::string_view& input) {
+    std::string result;
+
+    for (size_t i = 0; i < input.length(); ++i) {
+        char ch = input[i];
+        if (ch == '_') continue;
+        result += ch;
+    }
+
+    return result;
+}
+
 inline std::string snake_case(const std::string_view& input) {
     std::string result;
 

@@ -72,7 +72,7 @@
                   "value": 0.5
               },
               {
-                  "name": "base_cost",
+                  "name": "drink_cost_multiplier",
                   "operation": "multiplier",
                   "value": 2.0
               },
@@ -100,7 +100,7 @@
                   "value": 2.0
               },
               {
-                  "name": "base_cost",
+                  "name": "drink_cost_multiplier",
                   "operation": "multiplier",
                   "value": 0.5
               },
