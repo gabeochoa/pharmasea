@@ -7,37 +7,17 @@
 namespace system_manager {
 namespace progression {
 
-inline void collect_upgrade_options(Entity& entity, float) {
-    if (entity.is_missing<IsProgressionManager>()) return;
-    IsProgressionManager& ipm = entity.get<IsProgressionManager>();
+inline void skip_upgrade_visit() {
+    GameState::get().transition_to_store();
+    SystemManager::get().for_each_old([](Entity& e) {
+        if (check_type(e, EntityType::Player)) {
+            move_player_SERVER_ONLY(e, game::State::Store);
+            return;
+        }
+    });
+}
 
-    if (ipm.collectedOptions) {
-        // we already got the options and cached them...
-        return;
-    }
-
-    const auto transition_to_store = []() {
-        GameState::get().transition_to_store();
-        SystemManager::get().for_each_old([](Entity& e) {
-            if (check_type(e, EntityType::Player)) {
-                move_player_SERVER_ONLY(e, game::State::Store);
-                return;
-            }
-        });
-    };
-
-    // If we arent in an upgrade round just go directly to planning
-    if (!ipm.isUpgradeRound) {
-        // TODO right now just do every other, but itll likely be less often
-        // since theres not that many drinks, maybe every 5th round?
-        log_info("not an upgrade round see ya");
-        ipm.isUpgradeRound = !ipm.isUpgradeRound;
-        transition_to_store();
-        return;
-    }
-
-    ipm.isUpgradeRound = !ipm.isUpgradeRound;
-
+inline void collect_drink_options(IsProgressionManager& ipm) {
     struct DrinkOption {
         Drink d = Drink::coke;
         size_t num_ing_needed = 0;
@@ -94,7 +74,7 @@ inline void collect_upgrade_options(Entity& entity, float) {
     if (options.size() < 2) {
         // No more options so just go direct to the store
         ipm.isUpgradeRound = false;
-        transition_to_store();
+        skip_upgrade_visit();
         return;
     }
 
@@ -109,8 +89,31 @@ inline void collect_upgrade_options(Entity& entity, float) {
 
     log_info("got options for progression {} and {}", ipm.drinkOption1,
              ipm.drinkOption2);
+}
+
+inline void collect_upgrade_options(Entity& entity, float) {
+    if (entity.is_missing<IsProgressionManager>()) return;
+    IsProgressionManager& ipm = entity.get<IsProgressionManager>();
+
+    if (ipm.collectedOptions) {
+        // we already got the options and cached them...
+        return;
+    }
+
+    // If we arent in an upgrade round just go directly to planning
+    if (!ipm.isUpgradeRound) {
+        // TODO right now just do every other, but itll likely be less often
+        // since theres not that many drinks, maybe every 5th round?
+        log_info("not an upgrade round see ya");
+        ipm.isUpgradeRound = !ipm.isUpgradeRound;
+        skip_upgrade_visit();
+        return;
+    }
+
+    collect_drink_options(ipm);
 
     ipm.collectedOptions = true;
+    ipm.isUpgradeRound = !ipm.isUpgradeRound;
 }
 
 }  // namespace progression
