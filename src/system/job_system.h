@@ -91,21 +91,19 @@ inline void ensure_has_job(Entity& entity, float) {
     personal_queue.pop();
 }
 
-inline void run_job_tick(Entity& entity, float dt) {
-    if (entity.is_missing<CanPerformJob>()) return;
-    entity.get<CanPerformJob>().run_tick(entity, dt);
-}
-
-inline void cleanup_completed_job(Entity& entity, float) {
-    // TODO probably can just live in 'in_round_update'?
-    if (entity.is_missing<CanPerformJob>()) return;
-    entity.get<CanPerformJob>().cleanup_if_completed();
-}
-
 inline void in_round_update(Entity& entity, float dt) {
-    cleanup_completed_job(entity, dt);
+    if (entity.is_missing<CanPerformJob>()) return;
+
+    CanPerformJob& cpj = entity.get<CanPerformJob>();
+
+    cpj.cleanup_if_completed();
+
     ensure_has_job(entity, dt);
-    run_job_tick(entity, dt);
+    // TODO do we need this, are we guaranteed to have some kind of job?
+    if (cpj.needs_job()) return;
+
+    std::shared_ptr<Job> current_job = cpj.get_current_job();
+    current_job->run_job_tick(entity, dt);
 }
 
 }  // namespace job_system

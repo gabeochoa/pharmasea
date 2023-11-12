@@ -146,11 +146,10 @@ Job::State Job::run_state_heading_to_(Job::State begin, Entity& entity,
                               : Job::State::WorkingAtEnd;
     vec2 goal = begin == Job::State::HeadingToStart ? start : end;
 
-    CanPathfind& cpf = entity.get<CanPathfind>();
-    bool arrived_at_goal =
-        cpf.travel_toward(goal, get_speed_for_entity(entity) * dt);
-
-    return arrived_at_goal ? complete : begin;
+    return entity.get<CanPathfind>().travel_toward(
+               goal, get_speed_for_entity(entity) * dt)
+               ? complete
+               : begin;
 }
 
 inline void WIQ_wait_and_return(Entity& entity, std::optional<vec2> target = {},
