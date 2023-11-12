@@ -8,9 +8,15 @@ using StdMap = bitsery::ext::StdMap;
 #include <exception>
 #include <map>
 
+#include "../config_key_library.h"
 #include "../dataclass/settings.h"
 #include "../engine/type_name.h"
+#include "../upgrade_library.h"
 #include "base_component.h"
+
+inline std::string_view key_name(ConfigKey key) {
+    return magic_enum::enum_name<ConfigKey>(key);
+}
 
 struct IsRoundSettingsManager : public BaseComponent {
     struct Config {
@@ -27,10 +33,10 @@ struct IsRoundSettingsManager : public BaseComponent {
             } else if constexpr (std::is_same_v<T, bool>) {
                 return bools.contains(key);
             }
-            // log_warn(
-            // "IRSM:: contains value from config no match for {} with type "
-            // "{}",
-            // key, type_name<T>());
+            log_warn(
+                "IRSM:: contains value from config no match for {} with type "
+                "{}",
+                key_name(key), type_name<T>());
             throw std::runtime_error("Fetching key for invalid type");
         }
 
@@ -43,9 +49,9 @@ struct IsRoundSettingsManager : public BaseComponent {
             } else if constexpr (std::is_same_v<T, bool>) {
                 return bools.at(key);
             }
-            // log_warn(
-            // "IRSM:: get value from config no match for {} with type {}",
-            // key, type_name<T>());
+            log_warn(
+                "IRSM:: get value from config no match for {} with type {}",
+                key_name(key), type_name<T>());
             throw std::runtime_error("Setting key for invalid type");
         }
 
@@ -61,60 +67,10 @@ struct IsRoundSettingsManager : public BaseComponent {
                 bools[key] = value;
                 return;
             }
-            // log_warn(
-            // "IRSM:: set value from config no match for {} with type {}",
-            // key, type_name<T>());
+            log_warn(
+                "IRSM:: set value from config no match for {} with type {}",
+                key_name(key), type_name<T>());
             throw std::runtime_error("Setting key for invalid type");
-        }
-
-        void init() {
-            magic_enum::enum_for_each<ConfigKey>([&](ConfigKey key) {
-                switch (key) {
-                        // TODO i dont think this is read more than on init()
-                        // need to find downstream users
-                    case ConfigKey::RoundLength:
-                        set<float>(key, 100.f);
-                        break;
-                    case ConfigKey::MaxNumOrders:
-                        set<int>(key, 1);
-                        break;
-                    case ConfigKey::PatienceMultiplier:
-                        set<float>(key, 1.f);
-                        break;
-                    case ConfigKey::CustomerSpawnMultiplier:
-                        set<float>(key, 1.f);
-                        break;
-                    case ConfigKey::NumStoreSpawns:
-                        set<int>(key, 5);
-                        break;
-                        //
-                    case ConfigKey::PissTimer:
-                        set<float>(key, 2.5f);
-                        break;
-                    case ConfigKey::BladderSize:
-                        set<int>(key, 1);
-                        break;
-                    case ConfigKey::HasCityMultiplier:
-                        set<bool>(key, false);
-                        break;
-                    case ConfigKey::CostMultiplier:
-                        set<float>(key, 1.f);
-                        break;
-                        // TODO get_speed_for_entity
-                    case ConfigKey::VomitFreqMultiplier:
-                        set<float>(key, 1.f);
-                        break;
-                    case ConfigKey::VomitAmountMultiplier:
-                        set<float>(key, 1.f);
-                        break;
-                    case ConfigKey::UnlockedToilet:
-                        set<bool>(key, false);
-                        break;
-                    case ConfigKey::DrinkCostMultiplier:
-                        set<float>(key, 1.f);
-                        break;
-                }
-            });
         }
 
         friend bitsery::Access;
@@ -140,13 +96,28 @@ struct IsRoundSettingsManager : public BaseComponent {
         }
     } config;
 
-    IsRoundSettingsManager() { config.init(); }
+    IsRoundSettingsManager() {
+        for (const auto& pair : ConfigValueLibrary::get()) {
+            const ConfigValue& config_value = pair.second;
+            const auto type = get_type(config_value.key);
+            switch (type) {
+                case ConfigKeyType::Float:
+                    config.set(config_value.key,
+                               std::get<float>(config_value.value));
+                    break;
+                case ConfigKeyType::Bool:
+                    config.set(config_value.key,
+                               std::get<bool>(config_value.value));
+                    break;
+                case ConfigKeyType::Int:
+                    config.set(config_value.key,
+                               std::get<int>(config_value.value));
+                    break;
+            }
+        }
+    }
 
     virtual ~IsRoundSettingsManager() {}
-
-    inline std::string_view key_name(ConfigKey key) const {
-        return magic_enum::enum_name<ConfigKey>(key);
-    }
 
     template<typename T>
     [[nodiscard]] T get_for_init(ConfigKey key) const {
@@ -157,28 +128,28 @@ struct IsRoundSettingsManager : public BaseComponent {
         return config.get<T>(key);
     }
 
+    [[nodiscard]] ConfigValueType get_vt(ConfigKey key) const {
+        const auto ckname = std::string(magic_enum::enum_name<ConfigKey>(key));
+        return ConfigValueLibrary::get().get(ckname).value;
+    }
+
     template<typename T>
     [[nodiscard]] T get_with_default(ConfigKey key, T default_value) const {
-        return config.contains<T>(key) ? config.get<T>(key) : default_value;
+        return contains<T>(key) ? get<T>(key) : default_value;
     }
 
     template<typename T>
     [[nodiscard]] T get(ConfigKey key) const {
-        if (!config.contains<T>(key)) {
+        if (!contains<T>(key)) {
             log_error("get<{}> for {} key doesnt exist", type_name<T>(),
                       key_name(key));
         }
-        return config.get<T>(key);
+        return std::get<T>(get_vt(key));
     }
 
     template<typename T>
-    [[nodiscard]] T contains(ConfigKey key) const {
+    [[nodiscard]] bool contains(ConfigKey key) const {
         return config.contains<T>(key);
-    }
-
-    template<typename T>
-    void set(ConfigKey key, T value) {
-        config.set<T>(key, value);
     }
 
    private:
@@ -186,7 +157,5 @@ struct IsRoundSettingsManager : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(config);
     }
 };

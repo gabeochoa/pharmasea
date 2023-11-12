@@ -16,6 +16,7 @@
 
 using ConfigValueType = std::variant<int, bool, float>;
 
+// TODO get_speed_for_entity
 enum struct ConfigKey {
     RoundLength,
     MaxNumOrders,

@@ -470,7 +470,8 @@ void Preload::load_upgrades() {
                     .key = key,
                     .value = value,
                 },
-                "INVALID", name.c_str());
+                "INVALID",
+                std::string(magic_enum::enum_name<ConfigKey>(key)).c_str());
         }
     };
     const auto load_upgrades = [](const nlohmann::json& upgrades) {
