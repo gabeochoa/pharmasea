@@ -136,60 +136,34 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
         return;
     }
 
-    const auto _move_toward_local_target = [dt](Entity& entity,
-                                                vec2 local_target) {
-        float base_speed = entity.get<HasBaseSpeed>().speed();
+    float base_speed = entity.get<HasBaseSpeed>().speed();
 
-        // TODO Does OrderDrink hold stagger information?
-        // or should it live in another component?
-        if (entity.has<CanOrderDrink>()) {
-            const CanOrderDrink& cha = entity.get<CanOrderDrink>();
-            // float speed_multiplier = cha.ailment().speed_multiplier();
-            // if (speed_multiplier != 0) base_speed *= speed_multiplier;
+    // TODO Does OrderDrink hold stagger information?
+    // or should it live in another component?
+    if (entity.has<CanOrderDrink>()) {
+        const CanOrderDrink& cha = entity.get<CanOrderDrink>();
+        // float speed_multiplier = cha.ailment().speed_multiplier();
+        // if (speed_multiplier != 0) base_speed *= speed_multiplier;
 
-            // TODO Turning off stagger; couple problems
-            // - configuration is hard to reason about and mess with
-            // - i really want it to cause them to move more, maybe we place
-            // this in the path generation or something isntead?
-            //
-            // float stagger_multiplier = cha.ailment().stagger(); if
-            // (stagger_multiplier != 0) base_speed *= stagger_multiplier;
+        // TODO Turning off stagger; couple problems
+        // - configuration is hard to reason about and mess with
+        // - i really want it to cause them to move more, maybe we place
+        // this in the path generation or something isntead?
+        //
+        // float stagger_multiplier = cha.ailment().stagger(); if
+        // (stagger_multiplier != 0) base_speed *= stagger_multiplier;
 
-            int denom = randIn(1, std::max(1, cha.num_alcoholic_drinks_had));
-            base_speed *= 1.f / denom;
+        int denom = randIn(1, std::max(1, cha.num_alcoholic_drinks_had));
+        base_speed *= 1.f / denom;
 
-            base_speed = fmaxf(1.f, base_speed);
-            // log_info("multiplier {} {} {}", speed_multiplier,
-            // stagger_multiplier, base_speed);
-        }
-
-        float speed = base_speed * dt;
-
-        Transform& transform = entity.get<Transform>();
-
-        vec2 new_pos = transform.as2();
-
-        vec2 tar = local_target;
-        if (tar.x > transform.raw().x) new_pos.x += speed;
-        if (tar.x < transform.raw().x) new_pos.x -= speed;
-
-        if (tar.y > transform.raw().z) new_pos.y += speed;
-        if (tar.y < transform.raw().z) new_pos.y -= speed;
-
-        // TODO do we need to unr the whole person_update...() function with
-        // collision?
-
-        transform.update(vec::to3(new_pos));
-    };
-
-    // otherwise its something on the new pathfind system
+        base_speed = fmaxf(1.f, base_speed);
+        // log_info("multiplier {} {} {}", speed_multiplier,
+        // stagger_multiplier, base_speed);
+    }
+    float speed = base_speed * dt;
 
     CanPathfind& cpf = entity.get<CanPathfind>();
-    if (cpf.is_path_empty()) {
-        cpf.path_to(entity.get<Transform>().as2(), goal);
-    }
-    cpf.ensure_active_local_target(entity.get<Transform>().as2());
-    _move_toward_local_target(entity, cpf.get_local_target());
+    cpf.travel_toward(goal, speed);
 }
 
 inline void WIQ_wait_and_return(Entity& entity, std::optional<vec2> target = {},

@@ -11,10 +11,43 @@
 struct CanPathfind : public BaseComponent {
     virtual ~CanPathfind() {}
 
-    [[nodiscard]] bool has_next_target() const { return !path.empty(); }
-    [[nodiscard]] vec2 next_target() { return path[0]; }
     [[nodiscard]] bool is_path_empty() const { return !!path.empty(); }
     [[nodiscard]] vec2 get_local_target() { return local_target.value(); }
+
+    void travel_toward(vec2 end, float speed) {
+        Transform& transform = parent->get<Transform>();
+        vec2 me = transform.as2();
+
+        // TODO always overwrite?
+        global_target = end;
+
+        if (is_path_empty()) {
+            path_to(me, global_target.value());
+        }
+        ensure_active_local_target(me);
+        move_transform_toward_local_target(speed);
+    }
+
+    void move_transform_toward_local_target(float speed) {
+        if (!local_target.has_value()) {
+            log_warn("Tried to ensure local target but still dont have one");
+            return;
+        }
+
+        Transform& transform = parent->get<Transform>();
+        vec2 new_pos = transform.as2();
+        vec2 tar = local_target.value();
+        if (tar.x > transform.raw().x) new_pos.x += speed;
+        if (tar.x < transform.raw().x) new_pos.x -= speed;
+
+        if (tar.y > transform.raw().z) new_pos.y += speed;
+        if (tar.y < transform.raw().z) new_pos.y -= speed;
+
+        // TODO do we need to unr the whole person_update...() function with
+        // collision?
+
+        transform.update(vec::to3(new_pos));
+    }
 
     void path_to(vec2 begin, vec2 end) {
         start = begin;
@@ -60,7 +93,7 @@ struct CanPathfind : public BaseComponent {
             }
         }
 
-        local_target = next_target();
+        local_target = path[0];
         path.pop_front();
     }
 
@@ -75,6 +108,7 @@ struct CanPathfind : public BaseComponent {
 
    private:
     std::optional<vec2> local_target;
+    std::optional<vec2> global_target;
 
     vec2 start;
     vec2 goal;
