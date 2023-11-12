@@ -1,28 +1,9 @@
 #pragma once
 
 #include "components/is_round_settings_manager.h"
+#include "dataclass/settings.h"
 #include "engine/library.h"
 #include "engine/singleton.h"
-
-enum struct Operation { Multiplier, Set };
-
-struct UpgradeEffect {
-    IsRoundSettingsManager::Config::Key name;
-    Operation operation;
-    std::variant<int, float, bool> value;
-};
-
-struct UpgradeRequirement {
-    IsRoundSettingsManager::Config::Key name;
-    std::variant<int, float, bool> value;
-};
-
-struct Upgrade {
-    std::string name;
-    std::string flavor_text;
-    std::string description;
-    std::vector<UpgradeEffect> effects;
-};
 
 SINGLETON_FWD(UpgradeLibrary)
 struct UpgradeLibrary {
