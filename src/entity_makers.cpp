@@ -12,6 +12,7 @@
 #include "components/is_free_in_store.h"
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
+#include "components/is_round_settings_manager.h"
 #include "components/is_toilet.h"
 #include "dataclass/ingredient.h"
 #include "engine/sound_library.h"
@@ -112,7 +113,7 @@ void register_all_components() {
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
-        IsFreeInStore, IsToilet,
+        IsFreeInStore, IsToilet, IsRoundSettingsManager,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
@@ -779,8 +780,11 @@ void make_blender(Entity& blender, vec2 pos) {
 void make_sophie(Entity& sophie, vec3 pos) {
     make_entity(sophie, {EntityType::Sophie}, pos);
 
+    sophie.addComponent<IsRoundSettingsManager>();
+    IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
     sophie.addComponent<HasTimer>(HasTimer::Renderer::Round,
-                                  round_settings::ROUND_LENGTH_S);
+                                  irsm.round_length());
     sophie.addComponent<IsProgressionManager>().init();
     sophie.addComponent<IsBank>();
 }

@@ -41,6 +41,7 @@
 #include "../components/is_pnumatic_pipe.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_rotatable.h"
+#include "../components/is_round_settings_manager.h"
 #include "../components/is_snappable.h"
 #include "../components/is_solid.h"
 #include "../components/is_spawner.h"
@@ -81,7 +82,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,
           HasRopeToItem, HasSubtype, IsItem, IsDrink, AddsIngredient,
           CanOrderDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker,
-          IsBank, IsFreeInStore, IsToilet, CanPathfind,
+          IsBank, IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

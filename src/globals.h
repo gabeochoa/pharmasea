@@ -50,10 +50,3 @@ static bool is_host = false;
 }  // namespace mp_test
 
 }  // namespace network
-
-namespace round_settings {
-
-// TODO :DESIGN: how long is a day?
-constexpr const float ROUND_LENGTH_S = 100.f;
-
-}  // namespace round_settings

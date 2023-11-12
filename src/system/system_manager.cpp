@@ -37,6 +37,7 @@
 #include "../components/is_pnumatic_pipe.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_rotatable.h"
+#include "../components/is_round_settings_manager.h"
 #include "../components/is_snappable.h"
 #include "../components/is_solid.h"
 #include "../components/is_spawner.h"
@@ -1334,7 +1335,9 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
 void update_new_max_customers(Entity& entity, float) {
     if (entity.is_missing<HasProgression>()) return;
+
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
     const HasTimer& hasTimer = sophie.get<HasTimer>();
     const int day_count = hasTimer.dayCount;
@@ -1342,7 +1345,7 @@ void update_new_max_customers(Entity& entity, float) {
     if (check_type(entity, EntityType::CustomerSpawner)) {
         // TODO come up with a function to use here
         const int new_total = (int) fmax(2.f, day_count * 2.f);
-        const float time_between = round_settings::ROUND_LENGTH_S / new_total;
+        const float time_between = irsm.round_length() / new_total;
         log_info("Updating progression, setting new spawn total to {}",
                  new_total);
         entity
