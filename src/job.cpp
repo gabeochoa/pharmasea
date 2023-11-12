@@ -231,13 +231,6 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
         transform.update(vec::to3(new_pos));
     };
 
-    if (entity.is_missing<CanPathfind>()) {
-        _grab_path_to_goal(entity);
-        _grab_local_target(entity);
-        _move_toward_local_target(entity, local.value());
-        return;
-    }
-
     // otherwise its something on the new pathfind system
 
     CanPathfind& cpf = entity.get<CanPathfind>();

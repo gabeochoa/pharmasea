@@ -245,6 +245,7 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     add_person_components(person, options);
 
     person.addComponent<CanPerformJob>().update(Wandering, Wandering);
+    person.addComponent<CanPathfind>();
 }
 
 void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
@@ -262,8 +263,6 @@ void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
         .addComponent<IsItem>()  //
         .clear_hb_filter()
         .set_hb_filter(EntityType::Player);
-
-    mop_buddy.addComponent<CanPathfind>();
 }
 
 void make_face(Entity& face, vec3 pos) {
@@ -1164,8 +1163,6 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         // once
         .set_total(1)
         .set_time_between(5.f);
-
-    customer.addComponent<CanPathfind>();
 }
 
 namespace furniture {
