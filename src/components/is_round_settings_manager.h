@@ -23,6 +23,8 @@ inline std::string_view op_name(Operation key) {
 }
 
 struct IsRoundSettingsManager : public BaseComponent {
+    std::vector<std::string> upgrades_applied;
+
     struct Config {
         std::map<ConfigKey, float> floats;
         std::map<ConfigKey, int> ints;
@@ -198,6 +200,7 @@ struct IsRoundSettingsManager : public BaseComponent {
             log_error("Failed to find upgrade with name: {}", name);
         }
         log_info("Applying upgrade {}", name);
+        upgrades_applied.push_back(name);
 
         Upgrade upgrade = UpgradeLibrary::get().get(name);
         for (const UpgradeEffect& effect : upgrade.effects) {
@@ -210,5 +213,9 @@ struct IsRoundSettingsManager : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        // TODO there wont be more than 10k upgrades right?
+        s.container(upgrades_applied, 10000,
+                    [](S& s2, std::string str) { s2.text1b(str, 64); });
     }
 };
