@@ -60,12 +60,6 @@ struct CanPerformJob : public BaseComponent {
         // magic_enum::enum_name(current_job->type));
     }
 
-    vec2 job_start() const {
-        // TODO probably need to stay at the customer spawner?
-        if (needs_job()) return vec2{0, 0};
-        return job().start;
-    }
-
     std::shared_ptr<Job> get_current_job() { return current_job; }
 
    private:

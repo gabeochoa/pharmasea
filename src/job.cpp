@@ -152,16 +152,13 @@ Job::State Job::run_state_heading_to_(Job::State begin, Entity& entity,
                : begin;
 }
 
-inline void WIQ_wait_and_return(Entity& entity, std::optional<vec2> target = {},
-                                std::optional<vec2> goal = {}) {
+inline void WIQ_wait_and_return(Entity& entity, vec2 start, vec2 end) {
     // note ^ if you are gonna change this to be WIQ specific please update the
     // callers ...
 
     CanPerformJob& cpj = entity.get<CanPerformJob>();
     // Add the current job to the queue,
     // and then add the waiting job
-    vec2 start = target.has_value() ? target.value() : cpj.job_start();
-    vec2 end = goal.has_value() ? goal.value() : cpj.job_start();
     cpj.push_and_reset(new WaitJob(start, end, 1.f));
 }
 
@@ -252,7 +249,8 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
 
     if (!best_target) {
         log_warn("Could not find a valid register");
-        WIQ_wait_and_return(entity);
+        vec2 wait_position = entity.get<Transform>().as2();
+        WIQ_wait_and_return(entity, wait_position, wait_position);
         return Job::State::Initialize;
     }
 
@@ -290,7 +288,8 @@ Job::State WaitInQueueJob::run_state_working_at_start(Entity& entity, float) {
 
         // Add the current job to the queue,
         // and then add the waiting job
-        WIQ_wait_and_return(entity);
+        vec2 wait_position = entity.get<Transform>().as2();
+        WIQ_wait_and_return(entity, wait_position, wait_position);
         return (Job::State::WorkingAtStart);
     }
 
@@ -301,7 +300,8 @@ Job::State WaitInQueueJob::run_state_working_at_start(Entity& entity, float) {
 
         // Add the current job to the queue,
         // and then add the waiting job
-        WIQ_wait_and_return(entity);
+        vec2 wait_position = entity.get<Transform>().as2();
+        WIQ_wait_and_return(entity, wait_position, wait_position);
         return (Job::State::WorkingAtStart);
     }
 
@@ -348,14 +348,16 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     if (regCHI.empty()) {
         system_manager::logging_manager::announce(entity,
                                                   "my drink isnt ready yet");
-        WIQ_wait_and_return(entity);
+        vec2 wait_position = entity.get<Transform>().as2();
+        WIQ_wait_and_return(entity, wait_position, wait_position);
         return (Job::State::WorkingAtEnd);
     }
 
     std::shared_ptr<Item> drink = reg.get<CanHoldItem>().item();
     if (!drink || !check_type(*drink, EntityType::Drink)) {
         system_manager::logging_manager::announce(entity, "this isnt a drink");
-        WIQ_wait_and_return(entity);
+        vec2 wait_position = entity.get<Transform>().as2();
+        WIQ_wait_and_return(entity, wait_position, wait_position);
         return (Job::State::WorkingAtEnd);
     }
 
@@ -375,7 +377,8 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     if (!all_ingredients_match) {
         system_manager::logging_manager::announce(entity,
                                                   "this isnt what i ordered");
-        WIQ_wait_and_return(entity);
+        vec2 wait_position = entity.get<Transform>().as2();
+        WIQ_wait_and_return(entity, wait_position, wait_position);
         return (Job::State::WorkingAtEnd);
     }
 
@@ -486,8 +489,9 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         CanPerformJob& cpj = entity.get<CanPerformJob>();
         // Add the current job to the queue,
         // and then add the bathroom job
-        cpj.push_and_reset(
-            new BathroomJob(cpj.job_start(), cpj.job_start(), 5.f));
+
+        vec2 pos = entity.get<Transform>().as2();
+        cpj.push_and_reset(new BathroomJob(pos, pos, 5.f));
 
         // Doing working at end since we still gotta do the below
         return (Job::State::WorkingAtEnd);
@@ -550,7 +554,8 @@ Job::State MoppingJob::run_state_initialize(Entity& entity, float) {
     if (!closest) {
         log_trace("Could not find any vomit");
         // TODO make this function name more generic / obvious its shared
-        WIQ_wait_and_return(entity);
+        vec2 wait_position = entity.get<Transform>().as2();
+        WIQ_wait_and_return(entity, wait_position, wait_position);
         return Job::State::Initialize;
     }
 
