@@ -14,6 +14,7 @@
 #include "../components/can_hold_furniture.h"
 #include "../components/can_hold_item.h"
 #include "../components/can_order_drink.h"
+#include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
 #include "../components/collects_user_input.h"
 #include "../components/conveys_held_item.h"
@@ -80,7 +81,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,
           HasRopeToItem, HasSubtype, IsItem, IsDrink, AddsIngredient,
           CanOrderDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker,
-          IsBank, IsFreeInStore, IsToilet,
+          IsBank, IsFreeInStore, IsToilet, CanPathfind,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

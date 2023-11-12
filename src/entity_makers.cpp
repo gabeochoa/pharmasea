@@ -3,6 +3,7 @@
 
 #include <ranges>
 
+#include "components/can_pathfind.h"
 #include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
@@ -117,7 +118,7 @@ void register_all_components() {
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
         CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
-        CanOrderDrink,
+        CanOrderDrink, CanPathfind,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
@@ -261,6 +262,8 @@ void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
         .addComponent<IsItem>()  //
         .clear_hb_filter()
         .set_hb_filter(EntityType::Player);
+
+    mop_buddy.addComponent<CanPathfind>();
 }
 
 void make_face(Entity& face, vec3 pos) {

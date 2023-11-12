@@ -2,6 +2,7 @@
 #include "job.h"
 
 #include "components/can_order_drink.h"
+#include "components/can_pathfind.h"
 #include "components/can_perform_job.h"
 #include "components/has_base_speed.h"
 #include "components/has_patience.h"
@@ -184,7 +185,8 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
         VALIDATE(has_local_target(), "job should have a local target");
     };
 
-    const auto _move_toward_local_target = [this, dt](Entity& entity) {
+    const auto _move_toward_local_target = [dt](Entity& entity,
+                                                vec2 local_target) {
         float base_speed = entity.get<HasBaseSpeed>().speed();
 
         // TODO Does OrderDrink hold stagger information?
@@ -216,7 +218,7 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
 
         vec2 new_pos = transform.as2();
 
-        vec2 tar = local.value();
+        vec2 tar = local_target;
         if (tar.x > transform.raw().x) new_pos.x += speed;
         if (tar.x < transform.raw().x) new_pos.x -= speed;
 
@@ -229,9 +231,22 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
         transform.update(vec::to3(new_pos));
     };
 
-    _grab_path_to_goal(entity);
-    _grab_local_target(entity);
-    _move_toward_local_target(entity);
+    if (entity.is_missing<CanPathfind>()) {
+        _grab_path_to_goal(entity);
+        _grab_local_target(entity);
+        _move_toward_local_target(entity, local.value());
+        return;
+    }
+
+    // otherwise its something on the new pathfind system
+
+    CanPathfind& cpf = entity.get<CanPathfind>();
+    if (cpf.is_path_empty()) {
+        cpf.path_to(entity.get<Transform>().as2(), goal);
+    }
+    update_path(cpf.get_path());
+    cpf.ensure_active_local_target(entity.get<Transform>().as2());
+    _move_toward_local_target(entity, cpf.get_local_target());
 }
 
 inline void WIQ_wait_and_return(Entity& entity, std::optional<vec2> target = {},
