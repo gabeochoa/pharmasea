@@ -1305,14 +1305,13 @@ void reset_customers_that_need_resetting(Entity& entity) {
     if (cod.order_state != CanOrderDrink::OrderState::NeedsReset) return;
 
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
     const IsProgressionManager& progressionManager =
         sophie.get<IsProgressionManager>();
 
     {
-        // TODO eventually read from game settings
-        // maybe it should only be more than one if you upgrade
-        cod.num_orders_rem = randIn(1, 1);
+        cod.num_orders_rem = randIn(1, irsm.max_num_orders());
 
         cod.num_orders_had = 0;
         // If we have a forced order use that otherwise grab a random unlocked
@@ -1328,7 +1327,8 @@ void reset_customers_that_need_resetting(Entity& entity) {
         // TODO add a map of ingredient to how long it probably takes to make
 
         auto ingredients = get_req_ingredients_for_drink(cod.current_order);
-        entity.get<HasPatience>().update_max(ingredients.count() * 30.f);
+        entity.get<HasPatience>().update_max(ingredients.count() * 30.f *
+                                             irsm.patience_multiplier());
         entity.get<HasPatience>().reset();
     }
 }
@@ -1344,8 +1344,12 @@ void update_new_max_customers(Entity& entity, float) {
 
     if (check_type(entity, EntityType::CustomerSpawner)) {
         // TODO come up with a function to use here
-        const int new_total = (int) fmax(2.f, day_count * 2.f);
+        const int new_total =
+            (int) fmax(2.f,  // force 2 at the beginning of the game
+                             //
+                       day_count * 2.f * irsm.customer_spawn_multiplier());
         const float time_between = irsm.round_length() / new_total;
+
         log_info("Updating progression, setting new spawn total to {}",
                  new_total);
         entity
@@ -1480,8 +1484,9 @@ void generate_store_options() {
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsProgressionManager& ipp = sophie.get<IsProgressionManager>();
     const EntityTypeSet& unlocked = ipp.enabled_entity_types();
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    int num_to_spawn = 5;
+    int num_to_spawn = irsm.num_store_spawns();
 
     while (num_to_spawn) {
         int entity_type_id = bitset_utils::get_random_enabled_bit(unlocked);

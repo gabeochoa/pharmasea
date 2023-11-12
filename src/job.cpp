@@ -12,6 +12,7 @@
 #include "components/is_bank.h"
 #include "components/is_drink.h"
 #include "components/is_progression_manager.h"
+#include "components/is_round_settings_manager.h"
 #include "components/is_toilet.h"
 #include "engine/assert.h"
 #include "engine/bfs.h"
@@ -20,10 +21,6 @@
 #include "entity_helper.h"
 #include "globals.h"
 #include "system/logging_system.h"
-
-// TODO move to some settings file somewhere?
-// TODO different length based on how mucy you had to drink?
-constexpr float PISS_TIME = 2.5f;
 
 float get_remaining_time_in_round() {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
@@ -390,10 +387,15 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
 
     canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
 
+    const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
     // mark how much we are paying for this drink
     // + how much we will tip
     {
-        int price = get_base_price_for_drink(canOrderDrink.current_order);
+        int price = static_cast<int>(
+            irsm.cost_multiplier() *
+            get_base_price_for_drink(canOrderDrink.current_order));
         canOrderDrink.tab_cost += price;
 
         const HasPatience& hasPatience = entity.get<HasPatience>();
@@ -482,8 +484,11 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         cod.on_order_finished();
     }
 
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
     // TODO right now just go to the bathroom after every drink
-    bool gotta_go = (cod.drinks_in_bladder >= 1);
+    bool gotta_go = (cod.drinks_in_bladder >= irsm.bladder_size());
 
     // Needs to go to the bathroom?
     if (gotta_go) {
@@ -495,7 +500,7 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         // and then add the bathroom job
 
         vec2 pos = entity.get<Transform>().as2();
-        cpj.push_and_reset(new BathroomJob(pos, pos, PISS_TIME));
+        cpj.push_and_reset(new BathroomJob(pos, pos, irsm.piss_timer()));
 
         // Doing working at end since we still gotta do the below
         return (Job::State::WorkingAtEnd);
@@ -503,7 +508,6 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
 
     // dont need to go anymore. do we want another drink?
 
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     std::shared_ptr<Job> jshared;
 
     if (cod.num_orders_rem > 0) {
