@@ -109,9 +109,31 @@ struct IsProgressionManager : public BaseComponent {
         return unlockedEntityTypes.test(index);
     }
 
+    [[nodiscard]] std::string get_option_title(bool is_first) const {
+        if (isDrinkRound) {
+            return fmt::format(
+                "{}", magic_enum::enum_name<Drink>(is_first ? drinkOption1
+                                                            : drinkOption2));
+        }
+        // TODO
+        return fmt::format("{}", is_first ? upgradeOption1 : upgradeOption2);
+    }
+
+    [[nodiscard]] std::string get_option_subtitle(bool is_first) const {
+        if (isDrinkRound) {
+            return fmt::format(
+                "{}", magic_enum::enum_name<Drink>(is_first ? drinkOption1
+                                                            : drinkOption2));
+        }
+        // TODO
+        return fmt::format("subtitle {}",
+                           is_first ? upgradeOption1 : upgradeOption2);
+    }
+
     // TODO make private
     bool isUpgradeRound = true;
     bool collectedOptions = false;
+    bool isDrinkRound = true;
 
     Drink drinkOption1 = coke;
     Drink drinkOption2 = coke;

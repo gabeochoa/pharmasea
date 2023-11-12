@@ -1002,13 +1002,10 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
                 return;
             }
 
-            Drink option = ita.type == IsTriggerArea::Progression_Option1
-                               ? ipm.drinkOption1
-                               : ipm.drinkOption2;
-            ita.update_title(
-                fmt::format("{}", magic_enum::enum_name<Drink>(option)));
-            ita.update_subtitle(
-                fmt::format("{}", magic_enum::enum_name<Drink>(option)));
+            bool isOption1 = ita.type == IsTriggerArea::Progression_Option1;
+
+            ita.update_title(ipm.get_option_title(isOption1));
+            ita.update_subtitle(ipm.get_option_subtitle(isOption1));
             return;
         } break;
         default:
