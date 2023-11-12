@@ -48,9 +48,7 @@ inline void render_job_visual(const Entity& entity, float) {
     });
 }
 
-inline void ensure_has_job(Entity& entity, float) {
-    if (entity.is_missing<CanPerformJob>()) return;
-    CanPerformJob& cpj = entity.get<CanPerformJob>();
+inline void ensure_has_job(Entity& entity, CanPerformJob& cpj, float) {
     if (cpj.has_job()) return;
 
     // TODO handle employee ai
@@ -98,9 +96,7 @@ inline void in_round_update(Entity& entity, float dt) {
 
     cpj.cleanup_if_completed();
 
-    ensure_has_job(entity, dt);
-    // TODO do we need this, are we guaranteed to have some kind of job?
-    if (cpj.needs_job()) return;
+    ensure_has_job(entity, cpj, dt);
 
     std::shared_ptr<Job> current_job = cpj.get_current_job();
     current_job->run_job_tick(entity, dt);

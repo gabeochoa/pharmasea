@@ -21,6 +21,10 @@
 #include "globals.h"
 #include "system/logging_system.h"
 
+// TODO move to some settings file somewhere?
+// TODO different length based on how mucy you had to drink?
+constexpr float PISS_TIME = 2.5f;
+
 float get_remaining_time_in_round() {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const HasTimer& hasTimer = sophie.get<HasTimer>();
@@ -491,7 +495,7 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         // and then add the bathroom job
 
         vec2 pos = entity.get<Transform>().as2();
-        cpj.push_and_reset(new BathroomJob(pos, pos, 5.f));
+        cpj.push_and_reset(new BathroomJob(pos, pos, PISS_TIME));
 
         // Doing working at end since we still gotta do the below
         return (Job::State::WorkingAtEnd);
@@ -658,8 +662,8 @@ Job::State BathroomJob::run_state_working_at_start(Entity& entity, float dt) {
     if (occupied) {
         system_manager::logging_manager::announce(entity,
                                                   "someones already in there");
-        WIQ_wait_and_return(entity, toilet.get<Transform>().tile_infront(1),
-                            toilet.get<Transform>().tile_infront(0));
+        WIQ_wait_and_return(entity, toilet.get<Transform>().tile_infront(2),
+                            toilet.get<Transform>().tile_infront(1));
         return Job::State::WorkingAtStart;
     }
 
