@@ -111,31 +111,7 @@ Entity& Job::get_and_validate_entity(int id) {
     VALIDATE(opt_e, "entity with id did not exist");
     return opt_e.asE();
 }
-
-Job::State Job::run_state_heading_to_start(Entity& entity, float dt) {
-    // log_info("heading to start job {}", magic_enum::enum_name(type));
-    travel_to_position(entity, dt, start);
-    return (is_at_position(entity, start) ? Job::State::WorkingAtStart
-                                          : Job::State::HeadingToStart);
-}
-
-Job::State Job::run_state_heading_to_end(Entity& entity, float dt) {
-    // log_info("heading to end job {}", magic_enum::enum_name(type));
-    travel_to_position(entity, dt, end);
-    return (is_at_position(entity, end) ? Job::State::WorkingAtEnd
-                                        : Job::State::HeadingToEnd);
-}
-
-void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
-    // we just call this again cause its fun, be we could merge the two in
-    // the future
-    if (is_at_position(entity, goal)) {
-        system_manager::logging_manager::announce(
-            entity,
-            fmt::format("no need to travel we are already at the goal {}", 1));
-        return;
-    }
-
+float get_speed_for_entity(Entity& entity) {
     float base_speed = entity.get<HasBaseSpeed>().speed();
 
     // TODO Does OrderDrink hold stagger information?
@@ -160,10 +136,21 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
         // log_info("multiplier {} {} {}", speed_multiplier,
         // stagger_multiplier, base_speed);
     }
-    float speed = base_speed * dt;
+    return base_speed;
+}
+
+Job::State Job::run_state_heading_to_(Job::State begin, Entity& entity,
+                                      float dt) {
+    Job::State complete = begin == Job::State::HeadingToStart
+                              ? Job::State::WorkingAtStart
+                              : Job::State::WorkingAtEnd;
+    vec2 goal = begin == Job::State::HeadingToStart ? start : end;
 
     CanPathfind& cpf = entity.get<CanPathfind>();
-    cpf.travel_toward(goal, speed);
+    bool arrived_at_goal =
+        cpf.travel_toward(goal, get_speed_for_entity(entity) * dt);
+
+    return arrived_at_goal ? complete : begin;
 }
 
 inline void WIQ_wait_and_return(Entity& entity, std::optional<vec2> target = {},

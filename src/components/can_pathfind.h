@@ -14,7 +14,10 @@ struct CanPathfind : public BaseComponent {
     [[nodiscard]] bool is_path_empty() const { return !!path.empty(); }
     [[nodiscard]] vec2 get_local_target() { return local_target.value(); }
 
-    void travel_toward(vec2 end, float speed) {
+    [[nodiscard]] bool travel_toward(vec2 end, float speed) {
+        // Nothing to do we are already at the goal
+        if (is_at_position(end)) return true;
+
         Transform& transform = parent->get<Transform>();
         vec2 me = transform.as2();
 
@@ -24,8 +27,25 @@ struct CanPathfind : public BaseComponent {
         if (is_path_empty()) {
             path_to(me, global_target.value());
         }
-        ensure_active_local_target(me);
+        ensure_active_local_target();
         move_transform_toward_local_target(speed);
+
+        return is_at_position(end);
+    }
+
+    [[nodiscard]] std::deque<vec2> get_path() const { return path; }
+
+    void for_each_path_location(const std::function<void(vec2)>& cb) const {
+        if (is_path_empty()) return;
+        for (auto location : path) {
+            cb(location);
+        }
+    }
+
+   private:
+    [[nodiscard]] bool is_at_position(vec2 position) {
+        return vec::distance(parent->get<Transform>().as2(), position) <
+               (TILESIZE / 2.f);
     }
 
     void move_transform_toward_local_target(float speed) {
@@ -85,28 +105,15 @@ struct CanPathfind : public BaseComponent {
         }
     }
 
-    void ensure_active_local_target(vec2 me) {
+    void ensure_active_local_target() {
         if (local_target.has_value()) {
             // Only return if we have a target and we are still far away
-            if (vec::distance(me, local_target.value()) > (TILESIZE / 2.f)) {
-                return;
-            }
+            if (!is_at_position(local_target.value())) return;
         }
 
         local_target = path[0];
         path.pop_front();
     }
-
-    [[nodiscard]] std::deque<vec2> get_path() const { return path; }
-
-    void for_each_path_location(const std::function<void(vec2)>& cb) const {
-        if (is_path_empty()) return;
-        for (auto location : path) {
-            cb(location);
-        }
-    }
-
-   private:
     std::optional<vec2> local_target;
     std::optional<vec2> global_target;
 

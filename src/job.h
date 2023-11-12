@@ -71,8 +71,7 @@ struct Job {
         return State::HeadingToStart;
     }
 
-    virtual State run_state_heading_to_start(Entity& entity, float dt);
-    virtual State run_state_heading_to_end(Entity& entity, float dt);
+    State run_state_heading_to_(State begin, Entity& entity, float dt);
 
     virtual State run_state_working_at_start(Entity&, float) {
         return State::HeadingToEnd;
@@ -94,14 +93,12 @@ struct Job {
             case Job::State::Initialize: {
                 return run_state_initialize(entity, dt);
             }
-            case Job::State::HeadingToStart: {
-                return run_state_heading_to_start(entity, dt);
+            case Job::State::HeadingToStart:
+            case Job::State::HeadingToEnd: {
+                return run_state_heading_to_(state, entity, dt);
             }
             case Job::State::WorkingAtStart: {
                 return run_state_working_at_start(entity, dt);
-            }
-            case Job::State::HeadingToEnd: {
-                return run_state_heading_to_end(entity, dt);
             }
             case Job::State::WorkingAtEnd: {
                 return run_state_working_at_end(entity, dt);
@@ -117,8 +114,6 @@ struct Job {
 
     [[nodiscard]] inline bool is_at_position(const Entity& entity,
                                              vec2 position);
-
-    inline void travel_to_position(Entity& entity, float dt, vec2 goal);
 };
 
 struct WanderingJob : public Job {
