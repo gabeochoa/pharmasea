@@ -1,6 +1,5 @@
 #pragma once
 
-#include "components/is_round_settings_manager.h"
 #include "dataclass/settings.h"
 #include "engine/library.h"
 #include "engine/singleton.h"
@@ -29,6 +28,9 @@ struct UpgradeLibrary {
 
     void unload_all() { impl.unload_all(); }
 
+    [[nodiscard]] bool contains(const std::string& name) const {
+        return impl.contains(name);
+    }
     [[nodiscard]] auto begin() { return impl.begin(); }
     [[nodiscard]] auto end() { return impl.end(); }
     [[nodiscard]] auto begin() const { return impl.begin(); }
