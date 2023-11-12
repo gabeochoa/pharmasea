@@ -20,7 +20,7 @@
 #include "globals.h"
 #include "system/logging_system.h"
 
-float get_remaining_time() {
+float get_remaining_time_in_round() {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const HasTimer& hasTimer = sophie.get<HasTimer>();
     return hasTimer.totalRoundTime - hasTimer.currentRoundTime;
@@ -519,7 +519,7 @@ Job::State LeavingJob::run_state_working_at_end(Entity& entity, float) {
         std::shared_ptr<Job> jshared = std::make_shared<WaitJob>(
             start,
             // TODO create a global so they all leave to the same spot
-            vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time());
+            vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time_in_round());
         entity.get<CanPerformJob>().push_onto_queue(jshared);
     }
     return (Job::State::Completed);
@@ -615,7 +615,7 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
             // start here..
             start,
             // TODO create a global so they all leave to the same spot
-            vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time()));
+            vec2{GATHER_SPOT, GATHER_SPOT}, get_remaining_time_in_round()));
     }
 
     entity.get<CanPerformJob>().push_onto_queue(jshared);
