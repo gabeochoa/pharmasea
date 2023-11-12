@@ -107,7 +107,7 @@ struct Entity {
 
         log_trace("your set is now {}", componentSet);
 
-        component->onAttach();
+        component->attach_parent(this);
 
         return *component;
     }

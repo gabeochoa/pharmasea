@@ -11,6 +11,7 @@
 
 struct Entity;
 using Entities = std::vector<std::shared_ptr<Entity>>;
+using bitsery::ext::PointerObserver;
 
 struct BaseComponent;
 constexpr int max_num_components = 64;
@@ -35,15 +36,23 @@ inline ComponentID get_type_id() noexcept {
 }  // namespace components
 
 struct BaseComponent {
+    Entity* parent = nullptr;
+
     BaseComponent() {}
     BaseComponent(BaseComponent&&) = default;
 
-    virtual void onAttach() {}
+    void attach_parent(Entity* p) {
+        parent = p;
+        onAttach();
+    }
 
+    virtual void onAttach() {}
     virtual ~BaseComponent() {}
 
    private:
     friend bitsery::Access;
     template<typename S>
-    void serialize(S&) {}
+    void serialize(S& s) {
+        s.ext(parent, PointerObserver{});
+    }
 };
