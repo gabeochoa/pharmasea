@@ -92,10 +92,11 @@ inline void collect_upgrade_options(Entity& entity, float) {
                  d_o.num_ing_needed);
     }
 
-    ipm.option1 = options[0].d;
-    ipm.option2 = options[1].d;
+    ipm.drinkOption1 = options[0].d;
+    ipm.drinkOption2 = options[1].d;
 
-    log_info("got options for progression {} and {}", ipm.option1, ipm.option2);
+    log_info("got options for progression {} and {}", ipm.drinkOption1,
+             ipm.drinkOption2);
 
     ipm.collectedOptions = true;
 }

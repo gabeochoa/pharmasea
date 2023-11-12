@@ -436,8 +436,9 @@ void render_trigger_area(const Entity& entity, float dt) {
 
         OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
         const IsProgressionManager& ipm = sophie->get<IsProgressionManager>();
-        Drink drink = type == IsTriggerArea::Progression_Option1 ? ipm.option1
-                                                                 : ipm.option2;
+        Drink drink = type == IsTriggerArea::Progression_Option1
+                          ? ipm.drinkOption1
+                          : ipm.drinkOption2;
 
         const auto font = Preload::get().font;
         const auto start_position =

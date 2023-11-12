@@ -861,7 +861,8 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             // reset options so it collections new ones next upgrade round
             ipm.collectedOptions = false;
 
-            Drink option = option_chosen == 0 ? ipm.option1 : ipm.option2;
+            Drink option =
+                option_chosen == 0 ? ipm.drinkOption1 : ipm.drinkOption2;
 
             // Mark the drink unlocked
             ipm.unlock_drink(option);
@@ -1002,8 +1003,8 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             }
 
             Drink option = ita.type == IsTriggerArea::Progression_Option1
-                               ? ipm.option1
-                               : ipm.option2;
+                               ? ipm.drinkOption1
+                               : ipm.drinkOption2;
             ita.update_title(
                 fmt::format("{}", magic_enum::enum_name<Drink>(option)));
             ita.update_subtitle(

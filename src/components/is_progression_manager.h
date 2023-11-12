@@ -112,8 +112,12 @@ struct IsProgressionManager : public BaseComponent {
     // TODO make private
     bool isUpgradeRound = true;
     bool collectedOptions = false;
-    Drink option1 = coke;
-    Drink option2 = coke;
+
+    Drink drinkOption1 = coke;
+    Drink drinkOption2 = coke;
+
+    std::string upgradeOption1;
+    std::string upgradeOption2;
 
     Drink lastUnlockedDrink = coke;
 
@@ -130,8 +134,11 @@ struct IsProgressionManager : public BaseComponent {
         s.ext(enabledIngredients, bitsery::ext::StdBitset{});
         s.ext(unlockedEntityTypes, bitsery::ext::StdBitset{});
 
-        s.value4b(option1);
-        s.value4b(option2);
+        s.value4b(drinkOption1);
+        s.value4b(drinkOption2);
+
+        s.text1b(upgradeOption1, 64);
+        s.text1b(upgradeOption2, 64);
 
         s.value1b(isUpgradeRound);
         s.value1b(collectedOptions);
