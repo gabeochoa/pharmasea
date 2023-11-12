@@ -1156,9 +1156,15 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
             if (cod.num_orders_had <= 0) return false;
             if (cod.num_alcoholic_drinks_had <= 0) return false;
 
+            const Entity& sophie =
+                EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const IsRoundSettingsManager& irsm =
+                sophie.get<IsRoundSettingsManager>();
+
             IsSpawner& vom_spewer = entity.get<IsSpawner>();
-            vom_spewer.set_total(cod.num_alcoholic_drinks_had);
-            vom_spewer.set_time_between(5.f);
+            vom_spewer.set_total(static_cast<int>(
+                cod.num_alcoholic_drinks_had * irsm.vomit_amount_multiplier()));
+            vom_spewer.set_time_between(5.f * irsm.vomit_freq_multiplier());
             return true;
         })
         // check if there is already vomit in that spot

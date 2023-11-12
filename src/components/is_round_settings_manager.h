@@ -22,6 +22,10 @@ struct IsRoundSettingsManager : public BaseComponent {
         bool has_city_multiplier = false;
         float cost_multiplier = 1.f;
 
+        //
+        float vomit_freq_multiplier = 1.f;
+        float vomit_amount_multiplier = 1.f;
+
         friend bitsery::Access;
         template<typename S>
         void serialize(S& s) {
@@ -36,6 +40,9 @@ struct IsRoundSettingsManager : public BaseComponent {
 
             s.value1b(has_city_multiplier);
             s.value4b(cost_multiplier);
+
+            s.value4b(vomit_freq_multiplier);
+            s.value4b(vomit_amount_multiplier);
         }
     } config;
 
@@ -60,6 +67,14 @@ struct IsRoundSettingsManager : public BaseComponent {
     }
     [[nodiscard]] float cost_multiplier() const {
         return config.cost_multiplier;
+    }
+
+    [[nodiscard]] float vomit_freq_multiplier() const {
+        return config.vomit_freq_multiplier;
+    }
+
+    [[nodiscard]] float vomit_amount_multiplier() const {
+        return config.vomit_amount_multiplier;
     }
 
    private:
