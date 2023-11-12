@@ -66,6 +66,13 @@ struct CanPathfind : public BaseComponent {
 
     [[nodiscard]] std::deque<vec2> get_path() const { return path; }
 
+    void for_each_path_location(const std::function<void(vec2)>& cb) const {
+        if (is_path_empty()) return;
+        for (auto location : path) {
+            cb(location);
+        }
+    }
+
    private:
     std::optional<vec2> local_target;
 

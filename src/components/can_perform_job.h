@@ -36,14 +36,6 @@ struct CanPerformJob : public BaseComponent {
 
     void push_onto_queue(std::shared_ptr<Job> job) { personal_queue.push(job); }
 
-    // Job stuff
-    [[nodiscard]] bool has_local_target() const {
-        return has_job() && job().local.has_value();
-    }
-    [[nodiscard]] vec2 local_target() const {
-        return current_job->local.value();
-    }
-
     void update_job_state(Job::State new_state) {
         current_job->state = new_state;
     }
@@ -71,14 +63,6 @@ struct CanPerformJob : public BaseComponent {
     void run_tick(Entity& entity, float dt) {
         if (needs_job()) return;
         current_job->run_job_tick(entity, dt);
-    }
-
-    void for_each_path_location(std::function<void(vec2)> cb) const {
-        if (needs_job()) return;
-
-        for (auto location : job().get_path()) {
-            cb(location);
-        }
     }
 
     vec2 job_start() const {

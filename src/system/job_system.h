@@ -6,6 +6,7 @@
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_order_drink.h"
+#include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
 #include "../components/custom_item_position.h"
 #include "../components/has_timer.h"
@@ -40,12 +41,11 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
 */
 
 inline void render_job_visual(const Entity& entity, float) {
-    if (entity.is_missing<CanPerformJob>()) return;
+    if (entity.is_missing<CanPathfind>()) return;
     const float box_size = TILESIZE / 10.f;
-    entity.get<CanPerformJob>().for_each_path_location(
-        [box_size](vec2 location) {
-            DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
-        });
+    entity.get<CanPathfind>().for_each_path_location([box_size](vec2 location) {
+        DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
+    });
 }
 
 inline void ensure_has_job(Entity& entity, float) {

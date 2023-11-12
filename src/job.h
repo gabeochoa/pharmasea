@@ -40,29 +40,8 @@ struct Job {
 
     vec2 start;
     vec2 end;
-    std::optional<vec2> local;
 
    private:
-    int path_size = 0;
-    std::deque<vec2> path;
-
-   public:
-    [[nodiscard]] bool path_empty() const { return path.empty(); }
-    [[nodiscard]] const vec2& path_front() const { return path.front(); }
-    [[nodiscard]] const std::deque<vec2>& get_path() const { return path; }
-    [[nodiscard]] int p_size() const { return (int) path.size(); }
-    [[nodiscard]] vec2 path_index(int index) const { return path[index]; }
-
-    void path_pop_front() {
-        path.pop_front();
-        path_size = (int) path.size();
-    }
-
-    void update_path(const std::deque<vec2>& new_path) {
-        path = new_path;
-        path_size = (int) path.size();
-    }
-
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
@@ -71,13 +50,9 @@ struct Job {
 
         s.object(start);
         s.object(end);
-
-        s.ext(local, bitsery::ext::StdOptional{});
-
-        s.value4b(path_size);
-        s.container(path, path_size, [](S& sv, vec2 pos) { sv.object(pos); });
     }
 
+   public:
     static Job* create_job_of_type(vec2, vec2, JobType type);
 
     void run_job_tick(Entity& entity, float dt) {
@@ -109,8 +84,6 @@ struct Job {
     virtual void on_cleanup() {}
 
     virtual void before_each_job_tick(Entity&, float) {}
-
-    bool has_local_target() const { return local.has_value(); }
 
     Entity& get_and_validate_entity(int id);
 

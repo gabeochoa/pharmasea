@@ -136,55 +136,6 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
         return;
     }
 
-    const auto _grab_path_to_goal = [this, goal](const Entity& entity) {
-        if (!path_empty()) return;
-
-        vec2 me = entity.get<Transform>().as2();
-
-        {
-            auto new_path = bfs::find_path(
-                me, goal,
-                std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-            update_path(new_path);
-            system_manager::logging_manager::announce(
-                entity, fmt::format("gen path from {} to {} with {} steps", me,
-                                    goal, p_size()));
-        }
-
-        // TODO For now we are just going to let the customer noclip
-        if (path_empty()) {
-            log_warn("Forcing {} {} to noclip in order to get valid path",
-                     entity.get<DebugName>().name(), entity.id);
-            auto new_path =
-                bfs::find_path(me, goal, [](auto&&) { return true; });
-            update_path(new_path);
-            system_manager::logging_manager::announce(
-                entity, fmt::format("gen path from {} to {} with {} steps", me,
-                                    goal, p_size()));
-        }
-        // what happens if we get here and the path is still empty?
-        if (path_empty()) {
-            log_warn("no pathing even after noclip... {} {} {}=>{}",
-                     entity.get<DebugName>().name(), entity.id, me, goal);
-        }
-    };
-
-    const auto _grab_local_target = [this](const Entity& entity) {
-        // Either we dont yet have a local target
-        // or we already reached the one we had
-
-        if (has_local_target()) {
-            if (!is_at_position(entity, local.value())) {
-                return;
-            }
-        }
-
-        local = path_front();
-        path_pop_front();
-
-        VALIDATE(has_local_target(), "job should have a local target");
-    };
-
     const auto _move_toward_local_target = [dt](Entity& entity,
                                                 vec2 local_target) {
         float base_speed = entity.get<HasBaseSpeed>().speed();
@@ -237,7 +188,6 @@ void Job::travel_to_position(Entity& entity, float dt, vec2 goal) {
     if (cpf.is_path_empty()) {
         cpf.path_to(entity.get<Transform>().as2(), goal);
     }
-    update_path(cpf.get_path());
     cpf.ensure_active_local_target(entity.get<Transform>().as2());
     _move_toward_local_target(entity, cpf.get_local_target());
 }
