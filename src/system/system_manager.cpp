@@ -1694,26 +1694,6 @@ void SystemManager::process_state_change(
         if (old_state == game::State::Paused) continue;
         if (new_state == game::State::Paused) continue;
 
-        if (new_state == game::State::ModelTest) {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-            float val = irsm.get<float>(ConfigKey::RoundLength);
-            log_info("irsm current round length {}", val);
-
-            irsm.apply_upgrade("test_round_length");
-
-            float val2 = irsm.get<float>(ConfigKey::RoundLength);
-            log_info("irsm round length after upgrade {}", val2);
-
-            irsm.config.set<float>(ConfigKey::RoundLength, 300.f);
-
-            float val3 = irsm.get<float>(ConfigKey::RoundLength);
-            log_info("irsm round length after upgrade2 {}", val3);
-
-            float val4 = irsm.config.floats[ConfigKey::RoundLength];
-            log_info("irsm round length after upgrade3 {}", val4);
-        }
-
         if (old_state == game::State::InRound) {
             onRoundFinished();
         }
