@@ -1311,7 +1311,9 @@ void reset_customers_that_need_resetting(Entity& entity) {
         sophie.get<IsProgressionManager>();
 
     {
-        cod.num_orders_rem = randIn(1, irsm.max_num_orders());
+        int max_num_orders =
+            irsm.get<int>(IsRoundSettingsManager::Config::Key::MaxNumOrders);
+        cod.num_orders_rem = randIn(1, max_num_orders);
 
         cod.num_orders_had = 0;
         // If we have a forced order use that otherwise grab a random unlocked
@@ -1327,8 +1329,10 @@ void reset_customers_that_need_resetting(Entity& entity) {
         // TODO add a map of ingredient to how long it probably takes to make
 
         auto ingredients = get_req_ingredients_for_drink(cod.current_order);
+        float patience_multiplier = irsm.get<float>(
+            IsRoundSettingsManager::Config::Key::PatienceMultiplier);
         entity.get<HasPatience>().update_max(ingredients.count() * 30.f *
-                                             irsm.patience_multiplier());
+                                             patience_multiplier);
         entity.get<HasPatience>().reset();
     }
 }
@@ -1343,12 +1347,16 @@ void update_new_max_customers(Entity& entity, float) {
     const int day_count = hasTimer.dayCount;
 
     if (check_type(entity, EntityType::CustomerSpawner)) {
+        float customer_spawn_multiplier = irsm.get<float>(
+            IsRoundSettingsManager::Config::Key::CustomerSpawnMultiplier);
+        float round_length =
+            irsm.get<float>(IsRoundSettingsManager::Config::Key::RoundLength);
         // TODO come up with a function to use here
         const int new_total =
             (int) fmax(2.f,  // force 2 at the beginning of the game
                              //
-                       day_count * 2.f * irsm.customer_spawn_multiplier());
-        const float time_between = irsm.round_length() / new_total;
+                       day_count * 2.f * customer_spawn_multiplier);
+        const float time_between = round_length / new_total;
 
         log_info("Updating progression, setting new spawn total to {}",
                  new_total);
@@ -1486,7 +1494,8 @@ void generate_store_options() {
     const EntityTypeSet& unlocked = ipp.enabled_entity_types();
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    int num_to_spawn = irsm.num_store_spawns();
+    int num_to_spawn =
+        irsm.get<int>(IsRoundSettingsManager::Config::Key::NumStoreSpawns);
 
     while (num_to_spawn) {
         int entity_type_id = bitset_utils::get_random_enabled_bit(unlocked);

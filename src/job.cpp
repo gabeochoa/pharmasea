@@ -393,8 +393,10 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     // mark how much we are paying for this drink
     // + how much we will tip
     {
+        float cost_multiplier = irsm.get<float>(
+            IsRoundSettingsManager::Config::Key::CostMultiplier);
         int price = static_cast<int>(
-            irsm.cost_multiplier() *
+            cost_multiplier *
             get_base_price_for_drink(canOrderDrink.current_order));
         canOrderDrink.tab_cost += price;
 
@@ -488,7 +490,9 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
     // TODO right now just go to the bathroom after every drink
-    bool gotta_go = (cod.drinks_in_bladder >= irsm.bladder_size());
+    int bladder_size =
+        irsm.get<int>(IsRoundSettingsManager::Config::Key::BladderSize);
+    bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
 
     // Needs to go to the bathroom?
     if (gotta_go) {
@@ -500,7 +504,9 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         // and then add the bathroom job
 
         vec2 pos = entity.get<Transform>().as2();
-        cpj.push_and_reset(new BathroomJob(pos, pos, irsm.piss_timer()));
+        float piss_timer =
+            irsm.get<float>(IsRoundSettingsManager::Config::Key::PissTimer);
+        cpj.push_and_reset(new BathroomJob(pos, pos, piss_timer));
 
         // Doing working at end since we still gotta do the below
         return (Job::State::WorkingAtEnd);

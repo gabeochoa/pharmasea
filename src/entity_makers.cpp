@@ -783,8 +783,10 @@ void make_sophie(Entity& sophie, vec3 pos) {
     sophie.addComponent<IsRoundSettingsManager>();
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    sophie.addComponent<HasTimer>(HasTimer::Renderer::Round,
-                                  irsm.round_length());
+    sophie.addComponent<HasTimer>(
+        HasTimer::Renderer::Round,
+        irsm.get_for_init<float>(
+            IsRoundSettingsManager::Config::Key::RoundLength));
     sophie.addComponent<IsProgressionManager>().init();
     sophie.addComponent<IsBank>();
 }
@@ -1160,11 +1162,15 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
                 EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const IsRoundSettingsManager& irsm =
                 sophie.get<IsRoundSettingsManager>();
+            float vomit_amount_multiplier = irsm.get<float>(
+                IsRoundSettingsManager::Config::Key::VomitAmountMultiplier);
+            float vomit_freq_multiplier = irsm.get<float>(
+                IsRoundSettingsManager::Config::Key::VomitFreqMultiplier);
 
             IsSpawner& vom_spewer = entity.get<IsSpawner>();
-            vom_spewer.set_total(static_cast<int>(
-                cod.num_alcoholic_drinks_had * irsm.vomit_amount_multiplier()));
-            vom_spewer.set_time_between(5.f * irsm.vomit_freq_multiplier());
+            vom_spewer.set_total(static_cast<int>(cod.num_alcoholic_drinks_had *
+                                                  vomit_amount_multiplier));
+            vom_spewer.set_time_between(5.f * vomit_freq_multiplier);
             return true;
         })
         // check if there is already vomit in that spot
