@@ -16,15 +16,27 @@ inline void collect_upgrade_options(Entity& entity, float) {
         return;
     }
 
+    const auto transition_to_store = []() {
+        GameState::get().transition_to_store();
+        SystemManager::get().for_each_old([](Entity& e) {
+            if (check_type(e, EntityType::Player)) {
+                move_player_SERVER_ONLY(e, game::State::Store);
+                return;
+            }
+        });
+    };
+
     // If we arent in an upgrade round just go directly to planning
     if (!ipm.isUpgradeRound) {
         // TODO right now just do every other, but itll likely be less often
         // since theres not that many drinks, maybe every 5th round?
-        ipm.isUpgradeRound = !ipm.isUpgradeRound;
-        GameState::get().transition_to_store();
         log_info("not an upgrade round see ya");
+        ipm.isUpgradeRound = !ipm.isUpgradeRound;
+        transition_to_store();
         return;
     }
+
+    ipm.isUpgradeRound = !ipm.isUpgradeRound;
 
     struct DrinkOption {
         Drink d = Drink::coke;
@@ -82,7 +94,7 @@ inline void collect_upgrade_options(Entity& entity, float) {
     if (options.size() < 2) {
         // No more options so just go direct to the store
         ipm.isUpgradeRound = false;
-        GameState::get().transition_to_store();
+        transition_to_store();
         return;
     }
 

@@ -4,6 +4,10 @@
 #include "../engine/singleton.h"
 #include "../entity.h"
 
+namespace system_manager {
+void move_player_SERVER_ONLY(Entity& entity, game::State location);
+}
+
 SINGLETON_FWD(SystemManager)
 struct SystemManager {
     SINGLETON(SystemManager)
