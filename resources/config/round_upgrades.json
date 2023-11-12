@@ -55,6 +55,20 @@
   ],
   "upgrades": [
       {
+          "name": "test_round_length",
+          "flavor_text": ".",
+          "description": "()",
+          "upgrade_effects": [
+              {
+                  "name": "round_length",
+                  "operation": "multiplier",
+                  "value": 2.0
+              }
+          ],
+          "prereqs": [
+          ]
+      },
+      {
           "name": "Longer Day",
           "flavor_text": "Find an extra couple hours in the day.",
           "description": "(Makes the day twice as long)",

@@ -132,11 +132,6 @@ struct IsRoundSettingsManager : public BaseComponent {
         return config.get<T>(key);
     }
 
-    [[nodiscard]] ConfigValueType get_vt(ConfigKey key) const {
-        const auto ckname = std::string(magic_enum::enum_name<ConfigKey>(key));
-        return ConfigValueLibrary::get().get(ckname).value;
-    }
-
     template<typename T>
     [[nodiscard]] T get_with_default(ConfigKey key, T default_value) const {
         return contains<T>(key) ? get<T>(key) : default_value;
@@ -148,12 +143,66 @@ struct IsRoundSettingsManager : public BaseComponent {
             log_error("get<{}> for {} key doesnt exist", type_name<T>(),
                       key_name(key));
         }
-        return std::get<T>(get_vt(key));
+        return config.get<T>(key);
     }
 
     template<typename T>
     [[nodiscard]] bool contains(ConfigKey key) const {
         return config.contains<T>(key);
+    }
+
+    template<typename T>
+    T apply_operation(const Operation& op, T before, T value) {
+        switch (op) {
+            case Operation::Multiplier:
+                return before * value;
+            case Operation::Set:
+                return value;
+        }
+        return value;
+    }
+
+    template<typename T>
+    void fetch_and_apply(const ConfigKey& key, const Operation& op,
+                         const ConfigValueType& value) {
+        T before = get<T>(key);
+        T nv = apply_operation<T>(op, before, std::get<T>(value));
+        config.set<T>(key, nv);
+
+        log_info("apply effect key: {} op {} before: {} after {}",
+                 key_name(key), op_name(op), before, nv);
+    }
+
+    void apply_effect(const UpgradeEffect& effect) {
+        ConfigKeyType ckt = get_type(effect.name);
+
+        switch (ckt) {
+            case ConfigKeyType::Float: {
+                fetch_and_apply<float>(effect.name, effect.operation,
+                                       effect.value);
+            } break;
+            case ConfigKeyType::Bool: {
+                fetch_and_apply<bool>(effect.name, effect.operation,
+                                      effect.value);
+            } break;
+            case ConfigKeyType::Int: {
+                fetch_and_apply<int>(effect.name, effect.operation,
+                                     effect.value);
+            } break;
+        }
+    }
+
+    void apply_upgrade(const std::string& name) {
+        if (!UpgradeLibrary::get().contains(name)) {
+            // TODO for now just error out but eventually just warn
+            log_error("Failed to find upgrade with name: {}", name);
+        }
+        log_info("Applying upgrade {}", name);
+
+        Upgrade upgrade = UpgradeLibrary::get().get(name);
+        for (const UpgradeEffect& effect : upgrade.effects) {
+            apply_effect(effect);
+        }
     }
 
    private:
