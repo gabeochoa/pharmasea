@@ -1164,6 +1164,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         // once
         .set_total(1)
         .set_time_between(5.f);
+
+    customer.addComponent<CanPathfind>();
 }
 
 namespace furniture {
