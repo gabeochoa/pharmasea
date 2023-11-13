@@ -98,6 +98,8 @@ inline bool collect_upgrade_options(Entity& entity) {
 
     std::vector<Upgrade> possible_upgrades;
 
+    log_info("num upgrades without filters : {}", UpgradeLibrary::get().size());
+
     for (const auto& kv : UpgradeLibrary::get()) {
         const Upgrade& upgrade = kv.second;
 
@@ -121,7 +123,7 @@ inline bool collect_upgrade_options(Entity& entity) {
     ipm.upgradeOption1 = possible_upgrades[0].name;
     ipm.upgradeOption2 = possible_upgrades[1].name;
 
-    return false;
+    return true;
 }
 
 inline void collect_progression_options(Entity& entity, float) {

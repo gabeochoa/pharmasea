@@ -856,25 +856,38 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+            IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
             // choose given option
+
+            switch (ipm.upgrade_type()) {
+                case IsProgressionManager::UpgradeType::None: {
+                } break;
+                case IsProgressionManager::UpgradeType::Upgrade: {
+                    irsm.apply_upgrade(option_chosen == 0 ? ipm.upgradeOption1
+                                                          : ipm.upgradeOption2);
+                    break;
+                }
+                case IsProgressionManager::UpgradeType::Drink: {
+                    Drink option = option_chosen == 0 ? ipm.drinkOption1
+                                                      : ipm.drinkOption2;
+
+                    // Mark the drink unlocked
+                    ipm.unlock_drink(option);
+                    // Unlock any igredients it needs
+                    auto possibleNewIGs = get_req_ingredients_for_drink(option);
+                    bitset_utils::for_each_enabled_bit(
+                        possibleNewIGs, [&ipm](size_t index) {
+                            Ingredient ig =
+                                magic_enum::enum_value<Ingredient>(index);
+                            ipm.unlock_ingredient(ig);
+                        });
+
+                    __spawn_machines_for_newly_unlocked_drink(ipm, option);
+                } break;
+            }
 
             // reset options so it collections new ones next upgrade round
             ipm.next_round();
-
-            Drink option =
-                option_chosen == 0 ? ipm.drinkOption1 : ipm.drinkOption2;
-
-            // Mark the drink unlocked
-            ipm.unlock_drink(option);
-            // Unlock any igredients it needs
-            auto possibleNewIGs = get_req_ingredients_for_drink(option);
-            bitset_utils::for_each_enabled_bit(
-                possibleNewIGs, [&ipm](size_t index) {
-                    Ingredient ig = magic_enum::enum_value<Ingredient>(index);
-                    ipm.unlock_ingredient(ig);
-                });
-
-            __spawn_machines_for_newly_unlocked_drink(ipm, option);
         }
     };
 

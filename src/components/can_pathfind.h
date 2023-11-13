@@ -80,8 +80,8 @@ struct CanPathfind : public BaseComponent {
 
             update_path(new_path);
 
-            log_info("gen path from {} to {} with {} steps", start, goal,
-                     path.size());
+            log_trace("gen path from {} to {} with {} steps", start, goal,
+                      path.size());
         }
 
         // TODO For now we are just going to let the customer noclip
