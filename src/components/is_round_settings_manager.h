@@ -211,6 +211,12 @@ struct IsRoundSettingsManager : public BaseComponent {
     // TODO implement
     bool meets_prereqs_for_upgrade(const std::string& name) { return true; }
 
+    [[nodiscard]] bool already_applied_upgrade(const std::string& name) {
+        // Why doesnt vector have .contains
+        return std::find(upgrades_applied.begin(), upgrades_applied.end(),
+                         name) != upgrades_applied.end();
+    }
+
    private:
     friend bitsery::Access;
     template<typename S>
