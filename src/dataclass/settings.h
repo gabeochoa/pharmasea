@@ -55,11 +55,11 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::CostMultiplier:
         case ConfigKey::VomitFreqMultiplier:
         case ConfigKey::DrinkCostMultiplier:
+        case ConfigKey::VomitAmountMultiplier:
             return ConfigKeyType::Float;
         case ConfigKey::MaxNumOrders:
         case ConfigKey::NumStoreSpawns:
         case ConfigKey::BladderSize:
-        case ConfigKey::VomitAmountMultiplier:
             return ConfigKeyType::Int;
         case ConfigKey::UnlockedToilet:
         case ConfigKey::HasCityMultiplier:
