@@ -5,6 +5,7 @@
 #include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/is_progression_manager.h"
+#include "../components/is_round_settings_manager.h"
 #include "../components/transform.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/assert.h"
@@ -262,6 +263,11 @@ void deleting_item_needed_for_recipe(Entity& entity) {
     // TODO this one isnt "needed for recipies" but like 90% of the code is the
     // same so using it for now
     has_req_machines &= _hasAtLeastOneNotInTrash(EntityType::Trash);
+
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+    for (const EntityType& et : irsm.required_entities) {
+        has_req_machines &= _hasAtLeastOneNotInTrash(et);
+    }
 
     // can we make all the recipies with the remaining ents
 

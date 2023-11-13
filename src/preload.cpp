@@ -548,10 +548,41 @@ void Preload::load_upgrades() {
             return output;
         };
 
+        const auto parse_required_machines =
+            [&](const std::string& name,
+                const nlohmann::json& machines) -> std::vector<EntityType> {
+            std::vector<EntityType> output;
+            // log_info("machine {}", machines.size());
+
+            for (const auto& machine : machines) {
+                const std::string& etstr = machine.get<std::string>();
+                // log_info("got {}", etstr);
+
+                const auto et = magic_enum::enum_cast<EntityType>(
+                    util::remove_underscores(etstr),
+                    magic_enum::case_insensitive);
+
+                if (!et.has_value()) {
+                    log_warn(
+                        "{} has required machine {} but we could'nt find a "
+                        "matching entity type {}",
+                        name, machine);
+                    continue;
+                }
+
+                output.push_back(et.value());
+            }
+            return output;
+        };
+
         for (auto upgrade : upgrades) {
+            const auto name = upgrade["name"].get<std::string>();
+            // log_info("started loading {}", name);
             auto effects = parse_effects(upgrade["upgrade_effects"]);
             auto prereqs = parse_prereqs(upgrade["prereqs"]);
-            const auto name = upgrade["name"].get<std::string>();
+
+            const auto& rem = upgrade["required_machines"];
+            auto required_machines = parse_required_machines(name, rem);
             UpgradeLibrary::get().load(
                 {
                     .name = name,
@@ -559,6 +590,7 @@ void Preload::load_upgrades() {
                     .description = upgrade["description"].get<std::string>(),
                     .effects = effects,
                     .prereqs = prereqs,
+                    .required_machines = required_machines,
                 },
                 "INVALID", name.c_str());
         }

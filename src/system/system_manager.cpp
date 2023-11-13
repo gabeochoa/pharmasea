@@ -732,8 +732,8 @@ void update_trigger_area_percent(Entity& entity, float dt) {
                       : ita.decrease_progress(dt);
 }
 
-void __spawn_machines_for_newly_unlocked_drink(IsProgressionManager& ipm,
-                                               Drink option) {
+void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
+    IsProgressionManager& ipm, Drink option) {
     // today we dont have a way to statically know which machines
     // provide which ingredients because they are dynamic
     IngredientBitSet possibleNewIGs = get_req_ingredients_for_drink(option);
@@ -838,6 +838,36 @@ void __spawn_machines_for_newly_unlocked_drink(IsProgressionManager& ipm,
     });
 }
 
+inline void spawn_machines_for_new_unlock_DONOTCALL(
+    IsRoundSettingsManager& irsm) {
+    OptEntity spawn_area =
+        EntityHelper::getFirstMatching([](const Entity& entity) {
+            if (entity.is_missing<IsFloorMarker>()) return false;
+            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+            // Note we spawn free items in the purchase area so its more obvious
+            // that they are free
+            return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
+        });
+
+    if (!spawn_area) {
+        // TODO need to guarantee this exists long before we get here
+        log_error("Could not find spawn area entity");
+    }
+
+    const auto make_free_machine = []() -> Entity& {
+        auto& entity = EntityHelper::createEntity();
+        entity.addComponent<IsFreeInStore>();
+        return entity;
+    };
+
+    for (const EntityType& et : irsm.entities_to_spawn) {
+        auto& entity = make_free_machine();
+        convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+    }
+
+    irsm.entities_to_spawn.clear();
+}
+
 void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     const IsTriggerArea& ita = entity.get<IsTriggerArea>();
@@ -863,8 +893,16 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 case IsProgressionManager::UpgradeType::None: {
                 } break;
                 case IsProgressionManager::UpgradeType::Upgrade: {
-                    irsm.apply_upgrade(option_chosen == 0 ? ipm.upgradeOption1
-                                                          : ipm.upgradeOption2);
+                    const std::string& option =
+                        (option_chosen == 0 ? ipm.upgradeOption1
+                                            : ipm.upgradeOption2);
+                    irsm.apply_upgrade(option);
+
+                    // If an upgrade also unlocked machines, we probably have to
+                    // handle it
+
+                    spawn_machines_for_new_unlock_DONOTCALL(irsm);
+
                     break;
                 }
                 case IsProgressionManager::UpgradeType::Drink: {
@@ -882,7 +920,8 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                             ipm.unlock_ingredient(ig);
                         });
 
-                    __spawn_machines_for_newly_unlocked_drink(ipm, option);
+                    spawn_machines_for_newly_unlocked_drink_DONOTCALL(ipm,
+                                                                      option);
                 } break;
             }
 

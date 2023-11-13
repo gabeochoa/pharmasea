@@ -11,6 +11,7 @@ using StdMap = bitsery::ext::StdMap;
 #include "../config_key_library.h"
 #include "../dataclass/settings.h"
 #include "../engine/type_name.h"
+#include "../entity_type.h"
 #include "../upgrade_library.h"
 #include "base_component.h"
 
@@ -23,6 +24,8 @@ inline std::string_view op_name(Operation key) {
 }
 
 struct IsRoundSettingsManager : public BaseComponent {
+    std::vector<EntityType> required_entities;
+    std::vector<EntityType> entities_to_spawn;
     std::vector<std::string> upgrades_applied;
 
     struct Config {
@@ -205,6 +208,11 @@ struct IsRoundSettingsManager : public BaseComponent {
         Upgrade upgrade = UpgradeLibrary::get().get(name);
         for (const UpgradeEffect& effect : upgrade.effects) {
             apply_effect(effect);
+        }
+
+        for (const EntityType& et : upgrade.required_machines) {
+            required_entities.push_back(et);
+            entities_to_spawn.push_back(et);
         }
     }
 

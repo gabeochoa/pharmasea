@@ -13,6 +13,7 @@
 //
 #include "../engine/log.h"
 #include "../engine/util.h"
+#include "../entity_type.h"
 
 using ConfigValueType = std::variant<int, bool, float>;
 
@@ -109,4 +110,5 @@ struct Upgrade {
     std::string description;
     std::vector<UpgradeEffect> effects;
     std::vector<UpgradeRequirement> prereqs;
+    std::vector<EntityType> required_machines;
 };

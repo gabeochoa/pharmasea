@@ -94,7 +94,15 @@
                   "value": true
               }
           ],
-          "prereqs": []
+          "required_machines": [
+              "toilet"
+          ],
+          "prereqs": [
+              {
+                  "name": "unlocked_toilet",
+                  "value": false 
+              }
+          ]
       },
       {
           "name": "Big Bladders",
