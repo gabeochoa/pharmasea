@@ -512,8 +512,44 @@ void Preload::load_upgrades() {
             return output;
         };
 
+        const auto parse_prereq =
+            [](const nlohmann::json& req) -> UpgradeRequirement {
+            const auto key = to_configkey(req["name"].get<std::string>());
+            const auto key_type = get_type(key);
+
+            ConfigValueType value;
+
+            const auto& efv = req["value"];
+            switch (key_type) {
+                case ConfigKeyType::Float:
+                    value = efv.get<float>();
+                    break;
+                case ConfigKeyType::Bool:
+                    value = efv.get<bool>();
+                    break;
+                case ConfigKeyType::Int:
+                    value = efv.get<int>();
+                    break;
+            }
+
+            return UpgradeRequirement{
+                .name = key,
+                .value = value,
+            };
+        };
+
+        const auto parse_prereqs =
+            [&](const nlohmann::json& reqs) -> std::vector<UpgradeRequirement> {
+            std::vector<UpgradeRequirement> output;
+            for (const auto& req : reqs) {
+                output.push_back(parse_prereq(req));
+            }
+            return output;
+        };
+
         for (auto upgrade : upgrades) {
             auto effects = parse_effects(upgrade["upgrade_effects"]);
+            auto prereqs = parse_prereqs(upgrade["prereqs"]);
             const auto name = upgrade["name"].get<std::string>();
             UpgradeLibrary::get().load(
                 {
@@ -521,6 +557,7 @@ void Preload::load_upgrades() {
                     .flavor_text = upgrade["flavor_text"].get<std::string>(),
                     .description = upgrade["description"].get<std::string>(),
                     .effects = effects,
+                    .prereqs = prereqs,
                 },
                 "INVALID", name.c_str());
         }

@@ -220,7 +220,14 @@ struct IsRoundSettingsManager : public BaseComponent {
         if constexpr (std::is_same_v<T, bool>) {
             return get<T>(key) == value;
         }
-        return get<T>(key) > value;
+
+        T current_value = get<T>(key);
+        bool meets = current_value > value;
+
+        log_info("check_value kv {} {} > {}?", key_name(key), current_value,
+                 value);
+
+        return meets;
     }
 
     [[nodiscard]] bool meets_prereq(const UpgradeRequirement& req) {

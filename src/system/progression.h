@@ -111,6 +111,8 @@ inline bool collect_upgrade_options(Entity& entity) {
         possible_upgrades.push_back(upgrade);
     }
 
+    log_info("num upgrades with filters : {}", possible_upgrades.size());
+
     // Choose the simpler upgrades first
     std::sort(possible_upgrades.begin(), possible_upgrades.end(),
               [&](auto it, auto it2) {
