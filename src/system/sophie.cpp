@@ -264,6 +264,8 @@ void deleting_item_needed_for_recipe(Entity& entity) {
     // same so using it for now
     has_req_machines &= _hasAtLeastOneNotInTrash(EntityType::Trash);
 
+    // TODO this one isnt "needed for recipies" but like 90% of the code is the
+    // same so using it for now
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     for (const EntityType& et : irsm.required_entities) {
         has_req_machines &= _hasAtLeastOneNotInTrash(et);
