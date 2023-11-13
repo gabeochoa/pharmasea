@@ -488,25 +488,27 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    // TODO right now just go to the bathroom after every drink
-    int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
-    bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
+    bool bathroom_unlocked = irsm.get<bool>(ConfigKey::UnlockedToilet);
+    if (bathroom_unlocked) {
+        int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
+        bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
 
-    // Needs to go to the bathroom?
-    if (gotta_go) {
-        system_manager::logging_manager::announce(entity,
-                                                  "i gotta go to the bathroom");
+        // Needs to go to the bathroom?
+        if (gotta_go) {
+            system_manager::logging_manager::announce(
+                entity, "i gotta go to the bathroom");
 
-        CanPerformJob& cpj = entity.get<CanPerformJob>();
-        // Add the current job to the queue,
-        // and then add the bathroom job
+            CanPerformJob& cpj = entity.get<CanPerformJob>();
+            // Add the current job to the queue,
+            // and then add the bathroom job
 
-        vec2 pos = entity.get<Transform>().as2();
-        float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
-        cpj.push_and_reset(new BathroomJob(pos, pos, piss_timer));
+            vec2 pos = entity.get<Transform>().as2();
+            float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
+            cpj.push_and_reset(new BathroomJob(pos, pos, piss_timer));
 
-        // Doing working at end since we still gotta do the below
-        return (Job::State::WorkingAtEnd);
+            // Doing working at end since we still gotta do the below
+            return (Job::State::WorkingAtEnd);
+        }
     }
 
     // dont need to go anymore. do we want another drink?

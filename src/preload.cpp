@@ -9,6 +9,7 @@
 #include "engine/font_library.h"
 #include "engine/keymap.h"
 #include "engine/ui/theme.h"
+#include "magic_enum/magic_enum.hpp"
 #include "map_generation.h"
 #include "recipe_library.h"
 #include "upgrade_library.h"
