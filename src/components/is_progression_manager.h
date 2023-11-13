@@ -118,10 +118,12 @@ struct IsProgressionManager : public BaseComponent {
     int upgrade_index = 0;
 
     std::array<UpgradeType, 4> upgrade_rounds = {{
-        UpgradeType::Drink,
-        UpgradeType::Drink,
+        UpgradeType::Upgrade, UpgradeType::Upgrade, UpgradeType::Upgrade,
         UpgradeType::Upgrade,
-        UpgradeType::None,
+        // UpgradeType::Drink,
+        // UpgradeType::Drink,
+        // UpgradeType::Upgrade,
+        // UpgradeType::None,
     }};
 
     [[nodiscard]] UpgradeType upgrade_type() const {

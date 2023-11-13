@@ -123,6 +123,8 @@ inline bool collect_upgrade_options(Entity& entity) {
     ipm.upgradeOption1 = possible_upgrades[0].name;
     ipm.upgradeOption2 = possible_upgrades[1].name;
 
+    log_info(" The two options we got are {} and {}", ipm.upgradeOption1,
+             ipm.upgradeOption2);
     return true;
 }
 

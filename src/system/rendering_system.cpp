@@ -431,15 +431,7 @@ void render_trigger_area(const Entity& entity, float dt) {
 
     render_simple_normal(entity, dt);
 
-    const auto _render_drink_preview = [&](IsTriggerArea::Type type) {
-        if (GameState::get().is_not(game::State::Progression)) return;
-
-        OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
-        const IsProgressionManager& ipm = sophie->get<IsProgressionManager>();
-        Drink drink = type == IsTriggerArea::Progression_Option1
-                          ? ipm.drinkOption1
-                          : ipm.drinkOption2;
-
+    const auto _render_drink_preview = [&](Drink drink) {
         const auto font = Preload::get().font;
         const auto start_position =
             transform.raw() + vec3{0, 1.0f * TILESIZE, -2.f * TILESIZE};
@@ -459,6 +451,46 @@ void render_trigger_area(const Entity& entity, float dt) {
         });
     };
 
+    const auto _render_upgrade_preview = [&](const std::string& upgrade_name) {
+        if (upgrade_name.empty()) return;
+
+        const Upgrade& upgrade = UpgradeLibrary::get().get(upgrade_name);
+
+        const auto font = Preload::get().font;
+        const auto start_position =
+            transform.raw() + vec3{0, 1.0f * TILESIZE, -2.f * TILESIZE};
+
+        raylib::DrawFloatingText(start_position, font, upgrade.name.c_str());
+        int i = 0;
+
+        raylib::DrawFloatingText(start_position - vec3{0, 0.3f * (i++ + 1), 0},
+                                 font, upgrade.flavor_text.c_str());
+
+        raylib::DrawFloatingText(start_position - vec3{0, 0.3f * (i++ + 1), 0},
+                                 font, upgrade.description.c_str());
+    };
+
+    const auto _render_progression_option = [&](IsTriggerArea::Type type) {
+        if (GameState::get().is_not(game::State::Progression)) return;
+        OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+        const IsProgressionManager& ipm = sophie->get<IsProgressionManager>();
+
+        bool isOption1 = type == IsTriggerArea::Progression_Option1;
+
+        switch (ipm.upgrade_type()) {
+            case IsProgressionManager::UpgradeType::None:
+                break;
+            case IsProgressionManager::UpgradeType::Upgrade: {
+                _render_upgrade_preview(isOption1 ? ipm.upgradeOption1
+                                                  : ipm.upgradeOption2);
+            } break;
+            case IsProgressionManager::UpgradeType::Drink: {
+                _render_drink_preview(isOption1 ? ipm.drinkOption1
+                                                : ipm.drinkOption2);
+            } break;
+        }
+    };
+
     switch (ita.type) {
         case IsTriggerArea::Unset:
         case IsTriggerArea::Lobby_PlayGame:
@@ -468,7 +500,7 @@ void render_trigger_area(const Entity& entity, float dt) {
             break;
         case IsTriggerArea::Progression_Option1:
         case IsTriggerArea::Progression_Option2:
-            _render_drink_preview(ita.type);
+            _render_progression_option(ita.type);
             break;
     }
 }
