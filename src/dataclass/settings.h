@@ -37,6 +37,7 @@ enum struct ConfigKey {
     VomitFreqMultiplier,
     VomitAmountMultiplier,
     //
+    DayCount,
 };
 
 struct ConfigValue {
@@ -60,6 +61,7 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::MaxNumOrders:
         case ConfigKey::NumStoreSpawns:
         case ConfigKey::BladderSize:
+        case ConfigKey::DayCount:
             return ConfigKeyType::Int;
         case ConfigKey::UnlockedToilet:
         case ConfigKey::HasCityMultiplier:
@@ -106,4 +108,5 @@ struct Upgrade {
     std::string flavor_text;
     std::string description;
     std::vector<UpgradeEffect> effects;
+    std::vector<UpgradeRequirement> prereqs;
 };

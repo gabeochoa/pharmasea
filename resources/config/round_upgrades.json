@@ -51,6 +51,10 @@
       {
           "name": "vomit_amount_multiplier",
           "value": 1.0
+      },
+      {
+          "name": "day_count",
+          "value": 1
       }
   ],
   "upgrades": [
@@ -67,7 +71,7 @@
           ],
           "prereqs": [
               {
-                  "kind": "day_count",
+                  "name": "day_count",
                   "value": 2
               }
           ]

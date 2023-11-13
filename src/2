@@ -208,35 +208,10 @@ struct IsRoundSettingsManager : public BaseComponent {
         }
     }
 
-    template<typename T>
-    [[nodiscard]] bool check_value(const ConfigKey& key, T value) {
-        // TODO Right now we only support bool and greater than
-        // eventually we probably need to say what direction we need the current
-        // value to be relative to the new one
-        //
-        // ie this upgrade only applies if you dont have more than 3 drinks
-        // unlocked
-
-        if constexpr (std::is_same_v<T, bool>) {
-            return get<T>(key) == value;
-        }
-        return get<T>(key) > value;
-    }
-
     [[nodiscard]] bool meets_prereq(const UpgradeRequirement& req) {
         ConfigKeyType ckt = get_type(req.name);
         switch (ckt) {
-            case ConfigKeyType::Float: {
-                return check_value<float>(req.name, std::get<float>(req.value));
-            } break;
-            case ConfigKeyType::Bool: {
-                return check_value<bool>(req.name, std::get<bool>(req.value));
-            } break;
-            case ConfigKeyType::Int: {
-                return check_value<int>(req.name, std::get<int>(req.value));
-            } break;
         }
-        return false;
     }
 
     [[nodiscard]] bool meets_prereqs_for_upgrade(const std::string& name) {
