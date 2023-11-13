@@ -61,6 +61,47 @@ and then just checkout that hash (sorry im not doing releases / tags atm)
 I am publishing some releases on itch, you can find the url in the code or build the game and click the itch.io icon. 
 if you need the password join the discord and say hi!
 
+### alpha_0.23.11.14
+
+Known Issues
+- (Store) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (UI) Controls are not remappable in UI 
+- (Game) Map generator always makes basically the same map
+- (Game) No way to know if you made the wrong drink 
+- (Game) Can place items where it collides with your body
+
+
+impact / design changes 
+- Add Beer!
+    - Place the cup in the barrel and press the work button to fill
+- Added Bathroom!
+    - Customers will now use the toilet sometimes
+    - Toilets will need to be cleaned after being used three times 
+    - They are auto cleaned overnight
+- Added non drink upgrades
+    - These will either unlock new machines, types of customers, or change backend numbers
+    - Check config/round_upgrades for more info or ideas.md for some in progress ones 
+    - They will show up in the progression menu every once in a while 
+- Changed trashcan model to be a trashcan now that toilet is being used as a toilet
+- Lobby rearragement so you can see everything on spawn 
+- We now try to predict the drink so its easier to know if you got the recipe right 
+- Display fruit name above fruit 
+- Display the drink model along side the icon for customer speech bubble
+
+bug fixes
+- Fixed issue where sometimes trash would incorrectly think an item was in there
+- All existing drinks should have models now
+- Customers should stand in a better spot when waiting for their order
+
+better eng 
+- Add a room for placing one of every model in the game
+- Better constexpr contrainers
+- More h to cpp splitting 
+- Logs should be more readable on windows now (we actually use fmt sometimes) 
+- Start cleaning up Job.cpp file and moving things to system as we can
+- Components can now reach their parent entity if needed
+- Write upgrade function and move all parameters into round_settings on sophie
 
 
 ### alpha_0.23.11.02
