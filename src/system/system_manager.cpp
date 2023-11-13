@@ -859,7 +859,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             // choose given option
 
             // reset options so it collections new ones next upgrade round
-            ipm.collectedOptions = false;
+            ipm.next_round();
 
             Drink option =
                 option_chosen == 0 ? ipm.drinkOption1 : ipm.drinkOption2;
@@ -1823,7 +1823,7 @@ void SystemManager::progression_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         // TODO this runs every progression frame when it probably just needs to
         // run on transition
-        system_manager::progression::collect_upgrade_options(entity, dt);
+        system_manager::progression::collect_progression_options(entity, dt);
     });
 }
 

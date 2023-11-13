@@ -208,6 +208,9 @@ struct IsRoundSettingsManager : public BaseComponent {
         }
     }
 
+    // TODO implement
+    bool meets_prereqs_for_upgrade(const std::string& name) { return true; }
+
    private:
     friend bitsery::Access;
     template<typename S>

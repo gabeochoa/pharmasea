@@ -1,7 +1,9 @@
 
+#include <algorithm>
 #include <random>
 
 #include "../components/is_progression_manager.h"
+#include "../components/is_round_settings_manager.h"
 #include "system_manager.h"
 
 namespace system_manager {
@@ -17,7 +19,7 @@ inline void skip_upgrade_visit() {
     });
 }
 
-inline void collect_drink_options(IsProgressionManager& ipm) {
+inline bool collect_drink_options(IsProgressionManager& ipm) {
     struct DrinkOption {
         Drink d = Drink::coke;
         size_t num_ing_needed = 0;
@@ -73,9 +75,7 @@ inline void collect_drink_options(IsProgressionManager& ipm) {
 
     if (options.size() < 2) {
         // No more options so just go direct to the store
-        ipm.isUpgradeRound = false;
-        skip_upgrade_visit();
-        return;
+        return false;
     }
 
     log_info("possible options");
@@ -89,31 +89,77 @@ inline void collect_drink_options(IsProgressionManager& ipm) {
 
     log_info("got options for progression {} and {}", ipm.drinkOption1,
              ipm.drinkOption2);
+    return true;
 }
 
-inline void collect_upgrade_options(Entity& entity, float) {
+inline bool collect_upgrade_options(Entity& entity) {
+    IsProgressionManager& ipm = entity.get<IsProgressionManager>();
+    IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
+
+    std::vector<Upgrade> possible_upgrades;
+
+    for (const auto& kv : UpgradeLibrary::get()) {
+        const Upgrade& upgrade = kv.second;
+
+        bool meets_preq = irsm.meets_prereqs_for_upgrade(upgrade.name);
+        if (!meets_preq) continue;
+
+        possible_upgrades.push_back(upgrade);
+    }
+
+    // Choose the simpler upgrades first
+    std::sort(possible_upgrades.begin(), possible_upgrades.end(),
+              [&](auto it, auto it2) {
+                  return it.effects.size() < it2.effects.size();
+              });
+
+    if (possible_upgrades.size() < 2) {
+        // No more options so just go direct to the store
+        return false;
+    }
+
+    ipm.upgradeOption1 = possible_upgrades[0].name;
+    ipm.upgradeOption2 = possible_upgrades[1].name;
+
+    return false;
+}
+
+inline void collect_progression_options(Entity& entity, float) {
     if (entity.is_missing<IsProgressionManager>()) return;
     IsProgressionManager& ipm = entity.get<IsProgressionManager>();
 
-    if (ipm.collectedOptions) {
-        // we already got the options and cached them...
-        return;
-    }
+    // we already got the options and cached them...
+    if (ipm.collectedOptions) return;
 
-    // If we arent in an upgrade round just go directly to planning
-    if (!ipm.isUpgradeRound) {
-        // TODO right now just do every other, but itll likely be less often
-        // since theres not that many drinks, maybe every 5th round?
-        log_info("not an upgrade round see ya");
-        ipm.isUpgradeRound = !ipm.isUpgradeRound;
-        skip_upgrade_visit();
-        return;
+    switch (ipm.upgrade_type()) {
+        case IsProgressionManager::UpgradeType::None: {
+            // If we arent in an upgrade round just go directly to planning
+            log_info("not an upgrade round see ya next time");
+            ipm.next_round();
+            skip_upgrade_visit();
+            return;
+        } break;
+        case IsProgressionManager::UpgradeType::Drink: {
+            bool got_drink_options = collect_drink_options(ipm);
+            if (!got_drink_options) {
+                log_info("could'nt get enough drink options");
+                skip_upgrade_visit();
+                // ipm.isUpgradeRound = false;
+                return;
+            }
+        } break;
+        case IsProgressionManager::UpgradeType::Upgrade: {
+            bool got_upgrade_options = collect_upgrade_options(entity);
+            if (!got_upgrade_options) {
+                skip_upgrade_visit();
+                log_info("could'nt get enough upgrade options");
+                // ipm.isUpgradeRound = false;
+                return;
+            }
+        } break;
     }
-
-    collect_drink_options(ipm);
 
     ipm.collectedOptions = true;
-    ipm.isUpgradeRound = !ipm.isUpgradeRound;
 }
 
 }  // namespace progression

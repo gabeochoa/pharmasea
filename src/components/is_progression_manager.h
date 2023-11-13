@@ -109,31 +109,64 @@ struct IsProgressionManager : public BaseComponent {
         return unlockedEntityTypes.test(index);
     }
 
+    enum struct UpgradeType {
+        None,
+        Upgrade,
+        Drink,
+    };
+
+    int upgrade_index = 0;
+
+    std::array<UpgradeType, 4> upgrade_rounds = {{
+        UpgradeType::Drink,
+        UpgradeType::Drink,
+        UpgradeType::Upgrade,
+        UpgradeType::None,
+    }};
+
+    [[nodiscard]] UpgradeType upgrade_type() const {
+        return upgrade_rounds[upgrade_index];
+    }
+
     [[nodiscard]] std::string get_option_title(bool is_first) const {
-        if (isDrinkRound) {
-            return fmt::format(
-                "{}", magic_enum::enum_name<Drink>(is_first ? drinkOption1
-                                                            : drinkOption2));
+        switch (upgrade_type()) {
+            case UpgradeType::None:
+                return "(invalid)";
+
+            case UpgradeType::Drink:
+                return fmt::format("{}",
+                                   magic_enum::enum_name<Drink>(
+                                       is_first ? drinkOption1 : drinkOption2));
+            case UpgradeType::Upgrade:
+                // TODO
+                return fmt::format("{}",
+                                   is_first ? upgradeOption1 : upgradeOption2);
         }
-        // TODO
-        return fmt::format("{}", is_first ? upgradeOption1 : upgradeOption2);
     }
 
     [[nodiscard]] std::string get_option_subtitle(bool is_first) const {
-        if (isDrinkRound) {
-            return fmt::format(
-                "{}", magic_enum::enum_name<Drink>(is_first ? drinkOption1
-                                                            : drinkOption2));
+        switch (upgrade_type()) {
+            case UpgradeType::None:
+                return "(invalid)";
+            case UpgradeType::Drink:
+                return fmt::format("{}",
+                                   magic_enum::enum_name<Drink>(
+                                       is_first ? drinkOption1 : drinkOption2));
+            case UpgradeType::Upgrade:
+                // TODO
+                return fmt::format("{}",
+                                   is_first ? upgradeOption1 : upgradeOption2);
         }
-        // TODO
-        return fmt::format("subtitle {}",
-                           is_first ? upgradeOption1 : upgradeOption2);
+    }
+
+    void next_round() {
+        // Increment to the next upgrade type (drink -> upgrade etc)
+        upgrade_index = (upgrade_index + 1) % upgrade_rounds.size();
+        collectedOptions = false;
     }
 
     // TODO make private
-    bool isUpgradeRound = true;
     bool collectedOptions = false;
-    bool isDrinkRound = true;
 
     Drink drinkOption1 = coke;
     Drink drinkOption2 = coke;
@@ -162,7 +195,7 @@ struct IsProgressionManager : public BaseComponent {
         s.text1b(upgradeOption1, 64);
         s.text1b(upgradeOption2, 64);
 
-        s.value1b(isUpgradeRound);
+        s.value4b(upgrade_index);
         s.value1b(collectedOptions);
     }
 };
