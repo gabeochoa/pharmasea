@@ -149,8 +149,11 @@ enum Drink {
 
     beer (different kinds?)
     wine
+    coffee
+    tea
 
     martini
+    espresso martini
     manhattan
     spritz
     white russian
@@ -170,12 +173,29 @@ enum Drink {
     grayhound
     bushwacker
 
+    Pisco Sour
+    Vesper
+    Caipirinha
+    Hanky-Panky
+    Gimlet
+    Sex on the Beach
+    Mimosa
+    Bellini
+    Sidecar
+    Irish Coffee
+
 
     // sounds good
-
     bay breeze
 
 
+    spicy drinks - add jalapeno
+
+    // Themed ones
+
+    Winter Holiday
+    Eggnog?
+    Butter Beer
 
 
      */

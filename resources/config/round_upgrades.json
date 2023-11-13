@@ -59,6 +59,9 @@
   ],
   "upgrades": [
       {
+          // TODO this doesnt work because once we init the round length, 
+          // we dont read it again ever. Need to have HasTimer<> reread 
+          // on update or something 
           "name": "Longer Day",
           "flavor_text": "Find an extra couple hours in the day.",
           "description": "(Makes the day twice as long)",
