@@ -393,7 +393,7 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     // mark how much we are paying for this drink
     // + how much we will tip
     {
-        float cost_multiplier = irsm.get<float>(ConfigKey::CostMultiplier);
+        float cost_multiplier = irsm.get<float>(ConfigKey::DrinkCostMultiplier);
         int price = static_cast<int>(
             cost_multiplier *
             get_base_price_for_drink(canOrderDrink.current_order));

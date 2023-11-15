@@ -26,14 +26,12 @@ enum struct ConfigKey {
     //
     NumStoreSpawns,
     //
-    DrinkCostMultiplier,
-    //
     UnlockedToilet,
     PissTimer,
     BladderSize,
     //
     HasCityMultiplier,
-    CostMultiplier,
+    DrinkCostMultiplier,
     //
     VomitFreqMultiplier,
     VomitAmountMultiplier,
@@ -54,7 +52,6 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::PatienceMultiplier:
         case ConfigKey::CustomerSpawnMultiplier:
         case ConfigKey::PissTimer:
-        case ConfigKey::CostMultiplier:
         case ConfigKey::VomitFreqMultiplier:
         case ConfigKey::DrinkCostMultiplier:
         case ConfigKey::VomitAmountMultiplier:
