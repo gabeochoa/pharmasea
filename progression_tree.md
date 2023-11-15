@@ -41,29 +41,42 @@ General Upgrades
 
 Break the Seal 
 (after the first piss, customer bladder size is halfed)
+__enabled / disabled, need to track num pisses__
+__requires bathroom upgrade__
 
 Happy Hour
 - more people in the middle of the day
 - but less money during that time (like 3/4 price but double orders) 
+__need some way of applying only during a certain time?__
+__customer spawn multiplier 2x__
+__drink cost multiplier 0.75__
+
 
 Luxury Lavatories
 oooooh shiny
 (customers will order even more but need to wash their hands)
-(requires toilet) 
+__requires toilet upgrade__
 (should this be one of the theme upgrades?, requires a fancy theme to be enabled) 
+
 
 $10k beer
 yea but this one has gold flake
 (customers come 3/4 less often but pay double)
+__customer spawn 0.5__
+__drink cost 2x__
 (fancy theme)
 
 Happy Birthday
 shots for the lucky girl
 (some customers will order more drinks at once)
+__needs ability to order more than one drink at a time__
+__needs way to serve multiple drinks at the same time?__
 
 Dynamic Prices
 Supply and Demand, my man
 (the longer the lines the more drinks will sell for)
+__enable dynamic pricing__
+__need way to check how many people are behind you in line__
 
 Tablet Ordering
 but now a robot does that
@@ -82,16 +95,21 @@ Order for AJ Mobile
 PubMaps
 finally a use for my smart phone 
 (customers can use the bathroom without ordering alcohol)
+__need way to influence customer orders somehow__
 
 Other types of cups
 I can't see without my glasses
-(adds another type of cup)
+(adds new types of cup)
 (more tip if you match the cup with the drink) 
+__need some way to track how close you are and tip accordingly__
 
 Red Carpet 
 woah who is that 
 (adds a red carpet area that must have its own register, 
 spawns a customer that always orders your most complicated drink) 
+__needs to add some way of separating VIP from normal__
+__add some way of placing a multiblock__
+__visual difference? custom model for them? hat?__
 
 
 Going Green 
@@ -99,34 +117,42 @@ reduce reuse and recycle, cha
 (customers will return their empty cups for reuse)
 (you get more profit, hard to understand for player thou)
 bottle deposit
-i hear they give double in california
+i hear they give double in maine 
 (customers will return their cup with some money)
+__where do they return it?__
+__drink_cost_multiplier 1.1 or higher if drop anywhere__ 
+__have to deal with the cup__
 
 Head on a swivel
 just shout your order
 (customers will order any table connected to your register)
 (maybe patience is slower when you are at the front of the line) 
+__currently patience doesnt move at all when in line__ 
+
 
 Speakeasy
 'ere you go boss
 (the more travel it takes customers to order the higher the tip)
 (also harder to clean up the vomit)
+__track time spent in each job? does it need to be that complicated__ 
 
 Tourist
 im visiting from michigan
 (adds customers that will accept any valid recipe)
 (but they pay the cost for the drink)
+__how to communicate that to the player__
 
 Cash Only
 you got change for a hunnit? 
 (customers now pay in cash and you have to deposit)
+__this should be pretty easy__
 
 Regulars
 the place where everyone knows your name
 (remember who ordered what)
-
-
-
+__less customers, more orders, more of the same order__
+__force the player to remember somehow?__
+__one customer for each drink you have in the recipe book__
 
 
 **New Drink Options**
@@ -135,34 +161,49 @@ Pitcher
 me and the boys, actually a carafe 
 (customers will come in groups but only one will order)
 (adds a pitcher where you can add up to 10 of the same drink in)
+__need to be able to store how many of a drink is in a pitcher__
 
 Craft Beer 
 - (lots of beer option + flights)
+__need more beer options__
+__similar to pitcher but holds 4 unique liquids__
 
 Crafting beer  / wine 
 - ( you make the alcohol :) )
+__how long does it take__ 
+__patience doesnt currently take this into account__
+__maybe we dont spawn customers for the first 1/4 of the day__ 
 
 Bismuth Drink
 some kinda pink liquid
 (unlocks pepto which will reduce amount of vomit)
 (does the customer request it?)
 
+some kinda pink liquid
+(unlocks pepto which will reduce amount of vomit)
+
 Prohibition
 peaky blinders
 (people switch to non alcoholic drinks only)
+__need a way to hide from the recipe section__
 
 Champagne
 wheres the nearest sword?
 (adds a sword which you need to open the champagne bottle)
 (quicktime event? fishing game, bigger tip for perfect)
+__how do you hold a sword and bottle at the same time?__
 
 Tea
 oolong or ?
 (adds tea pot as an option)
+__fill pot with water__
+__graduated progress bar__
 
 Coffee
-oolong or ?
+arabica or ?
 (adds coffee pot as an option)
+__fill pot with water__
+__graduated progress bar__
 
 Boba
 _fake machine gun sounds_
@@ -174,7 +215,7 @@ actually gelato isnt from here
 
 Ice Cream Float
 root beer or diet coke
-(adds the ability to add soda to ice cream)
+(adds the ability for customers to order soda float)
 
 Wine Tasting
 remember to spit
@@ -306,7 +347,6 @@ bouncer
 party's full boys, take it home
 (bouncer will turn away half the customers)
 (club theme)
-
 
 
 
