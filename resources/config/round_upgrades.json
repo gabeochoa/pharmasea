@@ -51,6 +51,7 @@
       {
           "name": "day_count",
           "value": 1
+          // TODO have some way of marking this const
       }
   ],
   "upgrades": [

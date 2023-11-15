@@ -39,6 +39,9 @@ Multiple Floors
 
 General Upgrades 
 
+Break the Seal 
+(after the first piss, customer bladder size is halfed)
+
 Happy Hour
 - more people in the middle of the day
 - but less money during that time (like 3/4 price but double orders) 
@@ -275,8 +278,6 @@ Membership card
 ...
 (gives money up front and raises the minimum number of customers) 
 (time limited?)
-
-
 
 
 **Pub Themes**

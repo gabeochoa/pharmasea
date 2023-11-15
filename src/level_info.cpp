@@ -220,7 +220,9 @@ void LevelInfo::generate_model_test_map() {
         }
     };
 
-    std::array<ModelTestMapInfo, 21> static_map_info = {{
+    // TODO base the count hereVVVV on the actual number of entity types
+    // so that we know we should consider adding it
+    std::array<ModelTestMapInfo, 23> static_map_info = {{
         //
         {EntityType::Cupboard},
         {EntityType::Table},
@@ -242,6 +244,9 @@ void LevelInfo::generate_model_test_map() {
         {EntityType::FastForward},
         {EntityType::DraftTap},
         {EntityType::AlcoholCabinet},
+        // Add another section for upgrade guys
+        {EntityType::Toilet},
+        {EntityType::Guitar},
         {
             .et = EntityType::Vomit,
             .spawner_type = ModelTestMapInfo::Some,

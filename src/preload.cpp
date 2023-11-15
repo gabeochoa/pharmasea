@@ -563,9 +563,9 @@ void Preload::load_upgrades() {
                     magic_enum::case_insensitive);
 
                 if (!et.has_value()) {
-                    log_warn(
+                    log_error(
                         "{} has required machine {} but we could'nt find a "
-                        "matching entity type {}",
+                        "matching entity type ",
                         name, machine);
                     continue;
                 }
@@ -581,8 +581,9 @@ void Preload::load_upgrades() {
             auto effects = parse_effects(upgrade["upgrade_effects"]);
             auto prereqs = parse_prereqs(upgrade["prereqs"]);
 
-            const auto& rem = upgrade["required_machines"];
-            auto required_machines = parse_required_machines(name, rem);
+            auto required_machines =
+                parse_required_machines(name, upgrade["required_machines"]);
+
             UpgradeLibrary::get().load(
                 {
                     .name = name,
@@ -591,6 +592,7 @@ void Preload::load_upgrades() {
                     .effects = effects,
                     .prereqs = prereqs,
                     .required_machines = required_machines,
+                    .duration = upgrade.value("duration", -1),
                 },
                 "INVALID", name.c_str());
         }

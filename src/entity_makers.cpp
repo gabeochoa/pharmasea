@@ -516,6 +516,10 @@ void make_trash(Entity& trash, vec2 pos) {
     furniture::make_furniture(trash, {EntityType::Trash}, pos);
 }
 
+void make_guitar(Entity& guitar, vec2 pos) {
+    furniture::make_furniture(guitar, {EntityType::Guitar}, pos);
+}
+
 void make_toilet(Entity& toilet, vec2 pos) {
     furniture::make_furniture(toilet, {EntityType::Toilet}, pos);
 
@@ -1262,6 +1266,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::Toilet: {
             furniture::make_toilet(entity, location);
+        } break;
+        case EntityType::Guitar: {
+            furniture::make_guitar(entity, location);
         } break;
         case EntityType::FilteredGrabber: {
             furniture::make_filtered_grabber(entity, location);

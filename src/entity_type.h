@@ -45,6 +45,7 @@ enum struct EntityType {
     Face,
     DraftTap,
     Toilet,
+    Guitar,
 
     //
     // Items
@@ -78,7 +79,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b0111111111111111111111111111111111111111111;
+    return 0b01111111111111111111111111111111111111111111;
 #endif
 }
 
@@ -95,6 +96,11 @@ inline std::ostream& operator<<(std::ostream& os, const EntityType& type) {
 
 inline constexpr int get_price_for_entity_type(EntityType type) {
     switch (type) {
+        // TODO this one should be based on average customer spend
+        // customer count * avg unlocked drink price * 0.5
+        case EntityType::Guitar:
+            // TODO add support for dynamic prices
+            return 1;
         case EntityType::Cupboard:
         case EntityType::Trash:
         case EntityType::Table:
@@ -162,17 +168,21 @@ enum struct StoreEligibilityType {
     OnStart,
     TimeBased,
     IngredientBased,
+    OnUpgrade,
 };
 
 inline StoreEligibilityType get_store_eligibility(EntityType etype) {
     switch (etype) {
+        case EntityType::Guitar:
+        case EntityType::Toilet:
+            // TODO fall through for now until we support onUpgrade
+            // return StoreEligibilityType::OnUpgrade;
         case EntityType::Table:
         case EntityType::Register:
         case EntityType::SingleAlcohol:
         case EntityType::Cupboard:
         case EntityType::SodaMachine:
         case EntityType::Trash:
-        case EntityType::Toilet:
             return StoreEligibilityType::OnStart;
         case EntityType::Conveyer:
         case EntityType::DraftTap:
