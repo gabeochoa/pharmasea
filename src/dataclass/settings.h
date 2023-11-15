@@ -108,4 +108,5 @@ struct Upgrade {
     std::vector<UpgradeEffect> effects;
     std::vector<UpgradeRequirement> prereqs;
     std::vector<EntityType> required_machines;
+    int duration = -1;
 };

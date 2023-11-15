@@ -13,6 +13,7 @@ using StdMap = bitsery::ext::StdMap;
 #include "../engine/type_name.h"
 #include "../entity_type.h"
 #include "../upgrade_library.h"
+#include "../vec_util.h"
 #include "base_component.h"
 
 inline std::string_view key_name(ConfigKey key) {
@@ -23,10 +24,15 @@ inline std::string_view op_name(Operation key) {
     return magic_enum::enum_name<Operation>(key);
 }
 
+using UpgradeInstance = Upgrade;
+
 struct IsRoundSettingsManager : public BaseComponent {
     std::vector<EntityType> required_entities;
     std::vector<EntityType> entities_to_spawn;
+
+    // TODO combine these two
     std::vector<std::string> upgrades_applied;
+    std::map<std::string, UpgradeInstance> temp_upgrades_applied;
 
     struct Config {
         std::map<ConfigKey, float> floats;
@@ -205,7 +211,18 @@ struct IsRoundSettingsManager : public BaseComponent {
         log_info("Applying upgrade {}", name);
         upgrades_applied.push_back(name);
 
+        // TODO this forces a copy
+        // we are okay with this in the duration case, but otherwise we probably
+        // want this to be const
         Upgrade upgrade = UpgradeLibrary::get().get(name);
+
+        // if the upgrade has a duration we need to also add a copy into the map
+        // TODO the map only supports one of each at the moment
+
+        if (upgrade.duration > 0) {
+            temp_upgrades_applied[name] = UpgradeInstance(upgrade);
+        }
+
         for (const UpgradeEffect& effect : upgrade.effects) {
             apply_effect(effect);
         }
@@ -213,6 +230,74 @@ struct IsRoundSettingsManager : public BaseComponent {
         for (const EntityType& et : upgrade.required_machines) {
             required_entities.push_back(et);
             entities_to_spawn.push_back(et);
+        }
+    }
+
+    template<typename T>
+    T unapply_operation(const Operation& op, T before, T value) {
+        switch (op) {
+            case Operation::Multiplier:
+                return before / value;
+            case Operation::Set:
+                log_error("Unsetting isnt supported");
+        }
+        return value;
+    }
+
+    template<typename T>
+    void fetch_and_unapply(const ConfigKey& key, const Operation& op,
+                           const ConfigValueType& value) {
+        T before = get<T>(key);
+        T nv = unapply_operation<T>(op, before, std::get<T>(value));
+        config.set<T>(key, nv);
+
+        log_info("unapply effect key: {} op {} before: {} after {}",
+                 key_name(key), op_name(op), before, nv);
+    }
+
+    void unapply_effect(const UpgradeEffect& effect) {
+        ConfigKeyType ckt = get_type(effect.name);
+
+        switch (ckt) {
+            case ConfigKeyType::Float: {
+                fetch_and_unapply<float>(effect.name, effect.operation,
+                                         effect.value);
+            } break;
+            case ConfigKeyType::Bool: {
+                fetch_and_unapply<bool>(effect.name, effect.operation,
+                                        effect.value);
+            } break;
+            case ConfigKeyType::Int: {
+                fetch_and_unapply<int>(effect.name, effect.operation,
+                                       effect.value);
+            } break;
+        }
+    }
+
+    void unapply_upgrade(const std::string& name) {
+        if (!UpgradeLibrary::get().contains(name)) {
+            // TODO for now just error out but eventually just warn
+            log_error("Failed to find upgrade with name: {}", name);
+        }
+        log_info("Unapplying upgrade {}", name);
+
+        if (!remove_if_matching(upgrades_applied, name)) {
+            log_error(
+                "trying to remove, failed to find upgrade in applied upgrades");
+        }
+
+        Upgrade upgrade = UpgradeLibrary::get().get(name);
+        for (const UpgradeEffect& effect : upgrade.effects) {
+            unapply_effect(effect);
+        }
+
+        for (const EntityType& et : upgrade.required_machines) {
+            // TODO if two upgrades have the same entity added,
+            // we dont have a way to know
+            // // maybe store the duration in there too
+            remove_if_matching(required_entities, et);
+
+            // TODO delete the free entity off the map
         }
     }
 

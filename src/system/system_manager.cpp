@@ -1335,6 +1335,24 @@ void process_pnumatic_pipe_movement(Entity& entity, float) {
 void increment_day_count(Entity& entity, float) {
     if (entity.is_missing<HasTimer>()) return;
     entity.get<HasTimer>().dayCount++;
+
+    // TODO this should be in its own function
+
+    // for all temp reduce duration and unapply any that are 0
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+    for (auto& temp_upgrade_kv : irsm.temp_upgrades_applied) {
+        auto& temp_upgrade = temp_upgrade_kv.second;
+        if (temp_upgrade.duration < 0) continue;
+
+        temp_upgrade.duration--;
+        if (temp_upgrade.duration == 0) {
+            irsm.unapply_upgrade(temp_upgrade_kv.first);
+            // TODO remove from the map...
+            temp_upgrade.duration = -2;
+        }
+    }
 }
 
 void reset_customer_spawner_when_leaving_inround(Entity& entity) {

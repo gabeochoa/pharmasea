@@ -182,6 +182,26 @@
                   "value": false
               }
           ]
-      }
+
+      },
+      {
+          "name": "Live Band",
+          "flavor_text": ".",
+          "description": "(More customers for one day!)",
+          "duration": 1,
+          // TODO this always applies on upgrade selection 
+          // not on when you buy the guitar
+          "required_machines": [
+              "guitar"
+          ],
+          "upgrade_effects": [
+              {
+                  "name": "customer_spawn_multiplier",
+                  "operation": "multiplier",
+                  "value": 2.0
+              }
+          ],
+          "prereqs": []
+        }
     ]
 }
