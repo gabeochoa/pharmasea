@@ -337,6 +337,9 @@ Job::State WaitInQueueJob::run_state_working_at_end(Entity& entity, float) {
     CanOrderDrink& canOrderDrink = entity.get<CanOrderDrink>();
 
     if (canOrderDrink.order_state == CanOrderDrink::OrderState::NeedsReset) {
+        // TODO this will be an infinite loop if we dont do
+        // cod.current_order = progressionManager.get_random_unlocked_drink();
+        // cod.order_state = CanOrderDrink::OrderState::Ordering;
         system_manager::logging_manager::announce(
             entity, "I havent decided what i want yet");
         return (Job::State::WorkingAtEnd);
@@ -459,6 +462,7 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
 
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
     cod.order_state = CanOrderDrink::OrderState::DrinkingNow;
+    // TODO should this be here
     entity.get<HasSpeechBubble>().on();
 
     timePassedInCurrentState += dt;
@@ -522,7 +526,10 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
         {
             const IsProgressionManager& progressionManager =
                 sophie.get<IsProgressionManager>();
+
+            // TODO make a function set_order()
             cod.current_order = progressionManager.get_random_unlocked_drink();
+            cod.order_state = CanOrderDrink::OrderState::Ordering;
         }
 
         vec2 start = entity.get<Transform>().as2();

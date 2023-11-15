@@ -12,10 +12,10 @@
 
 struct CanOrderDrink : public BaseComponent {
     enum OrderState {
-        NeedsReset,
-        Ordering,
-        DrinkingNow,
-        DoneDrinking,
+        NeedsReset,    // i dont know what i want
+        Ordering,      // i should go wait in line
+        DrinkingNow,   // im drinking
+        DoneDrinking,  // I dont want any more drinks im going home
     } order_state;
 
     CanOrderDrink()
