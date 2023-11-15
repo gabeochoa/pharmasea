@@ -41,6 +41,7 @@
           "value": false
       },
       {
+          // Is this the same as drink cost multiplier?
           "name": "cost_multiplier",
           "value": 1.0
       },
