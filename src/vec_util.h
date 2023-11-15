@@ -7,6 +7,16 @@
 #define EPSILON 0.000001f
 #endif
 
+template<typename T>
+bool remove_if_matching(std::vector<T>& vec, const T& value) {
+    auto it = std::find(vec.begin(), vec.end(), value);
+    if (it == vec.end()) {
+        return false;
+    }
+    vec.erase(it);
+    return true;
+}
+
 inline float comp_max(const vec2& a) { return fmax(a.x, a.y); }
 
 constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
