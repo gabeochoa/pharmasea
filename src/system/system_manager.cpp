@@ -896,7 +896,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     const std::string& option =
                         (option_chosen == 0 ? ipm.upgradeOption1
                                             : ipm.upgradeOption2);
-                    irsm.apply_upgrade(option);
+                    irsm.apply_upgrade_by_name(option);
 
                     // If an upgrade also unlocked machines, we probably have to
                     // handle it
@@ -1343,12 +1343,12 @@ void increment_day_count(Entity& entity, float) {
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
     for (auto& temp_upgrade_kv : irsm.temp_upgrades_applied) {
-        auto& temp_upgrade = temp_upgrade_kv.second;
+        auto& temp_upgrade = temp_upgrade_kv.second.parent_copy;
         if (temp_upgrade.duration < 0) continue;
 
         temp_upgrade.duration--;
         if (temp_upgrade.duration == 0) {
-            irsm.unapply_upgrade(temp_upgrade_kv.first);
+            irsm.unapply_upgrade_by_name(temp_upgrade.name);
             // TODO remove from the map...
             temp_upgrade.duration = -2;
         }

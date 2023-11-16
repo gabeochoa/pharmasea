@@ -12,10 +12,11 @@
 
 #include "component.h"
 #include "lerp_test.h"
+#include "rect_split_tests.h"
 #include "size_ents.h"
 #include "test_pathing.h"
 #include "test_ui_widget.h"
-#include "rect_split_tests.h"
+#include "upgrade_tests.h"
 
 namespace tests {
 
@@ -28,6 +29,8 @@ void run_all() {
 
     size_test();
     test_rect_split();
+
+    upgrade_tests();
 }
 
 }  // namespace tests

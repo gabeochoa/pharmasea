@@ -24,15 +24,13 @@ inline std::string_view op_name(Operation key) {
     return magic_enum::enum_name<Operation>(key);
 }
 
-using UpgradeInstance = Upgrade;
-
 struct IsRoundSettingsManager : public BaseComponent {
     std::vector<EntityType> required_entities;
     std::vector<EntityType> entities_to_spawn;
 
     // TODO combine these two
     std::vector<std::string> upgrades_applied;
-    std::map<std::string, UpgradeInstance> temp_upgrades_applied;
+    std::map<int, UpgradeInstance> temp_upgrades_applied;
 
     struct Config {
         std::map<ConfigKey, float> floats;
@@ -203,24 +201,17 @@ struct IsRoundSettingsManager : public BaseComponent {
         }
     }
 
-    void apply_upgrade(const std::string& name) {
-        if (!UpgradeLibrary::get().contains(name)) {
-            // TODO for now just error out but eventually just warn
-            log_error("Failed to find upgrade with name: {}", name);
-        }
-        log_info("Applying upgrade {}", name);
-        upgrades_applied.push_back(name);
+    [[nodiscard]] bool is_temporary_upgrade(const Upgrade& upgrade) const {
+        return upgrade.duration > 0;
+    }
 
-        // TODO this forces a copy
-        // we are okay with this in the duration case, but otherwise we probably
-        // want this to be const
-        Upgrade upgrade = UpgradeLibrary::get().get(name);
+    void apply_upgrade(const Upgrade& upgrade) {
+        log_info("Applying upgrade {}", upgrade.name);
+        upgrades_applied.push_back(upgrade.name);
 
-        // if the upgrade has a duration we need to also add a copy into the map
-        // TODO the map only supports one of each at the moment
-
-        if (upgrade.duration > 0) {
-            temp_upgrades_applied[name] = UpgradeInstance(upgrade);
+        if (is_temporary_upgrade(upgrade)) {
+            UpgradeInstance instance = UpgradeInstance(upgrade);
+            temp_upgrades_applied[instance.id] = instance;
         }
 
         for (const UpgradeEffect& effect : upgrade.effects) {
@@ -231,6 +222,14 @@ struct IsRoundSettingsManager : public BaseComponent {
             required_entities.push_back(et);
             entities_to_spawn.push_back(et);
         }
+    }
+
+    void apply_upgrade_by_name(const std::string& name) {
+        if (!UpgradeLibrary::get().contains(name)) {
+            // TODO for now just error out but eventually just warn
+            log_error("Failed to find upgrade with name: {}", name);
+        }
+        apply_upgrade(UpgradeLibrary::get().get(name));
     }
 
     template<typename T>
@@ -274,19 +273,13 @@ struct IsRoundSettingsManager : public BaseComponent {
         }
     }
 
-    void unapply_upgrade(const std::string& name) {
-        if (!UpgradeLibrary::get().contains(name)) {
-            // TODO for now just error out but eventually just warn
-            log_error("Failed to find upgrade with name: {}", name);
-        }
-        log_info("Unapplying upgrade {}", name);
-
-        if (!remove_if_matching(upgrades_applied, name)) {
+    void unapply_upgrade(const Upgrade& upgrade) {
+        log_info("Unapplying upgrade {}", upgrade.name);
+        if (!remove_if_matching(upgrades_applied, upgrade.name)) {
             log_error(
                 "trying to remove, failed to find upgrade in applied upgrades");
         }
 
-        Upgrade upgrade = UpgradeLibrary::get().get(name);
         for (const UpgradeEffect& effect : upgrade.effects) {
             unapply_effect(effect);
         }
@@ -299,6 +292,15 @@ struct IsRoundSettingsManager : public BaseComponent {
 
             // TODO delete the free entity off the map
         }
+    }
+
+    void unapply_upgrade_by_name(const std::string& name) {
+        if (!UpgradeLibrary::get().contains(name)) {
+            // TODO for now just error out but eventually just warn
+            log_error("Failed to find upgrade with name: {}", name);
+        }
+        const Upgrade& upgrade = UpgradeLibrary::get().get(name);
+        unapply_upgrade(upgrade);
     }
 
     template<typename T>

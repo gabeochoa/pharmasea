@@ -19,6 +19,9 @@ using ConfigValueType = std::variant<int, bool, float>;
 
 // TODO get_speed_for_entity
 enum struct ConfigKey {
+    Test,
+    //
+
     RoundLength,
     MaxNumOrders,
     PatienceMultiplier,
@@ -55,6 +58,7 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::VomitFreqMultiplier:
         case ConfigKey::DrinkCostMultiplier:
         case ConfigKey::VomitAmountMultiplier:
+        case ConfigKey::Test:
             return ConfigKeyType::Float;
         case ConfigKey::MaxNumOrders:
         case ConfigKey::NumStoreSpawns:
@@ -109,4 +113,14 @@ struct Upgrade {
     std::vector<UpgradeRequirement> prereqs;
     std::vector<EntityType> required_machines;
     int duration = -1;
+};
+
+static std::atomic_int UPGRADE_INSTANCE_ID_GEN = 0;
+struct UpgradeInstance {
+    int id;
+    Upgrade parent_copy;
+
+    UpgradeInstance() : id(UPGRADE_INSTANCE_ID_GEN++) {}
+    explicit UpgradeInstance(const Upgrade& copy)
+        : id(UPGRADE_INSTANCE_ID_GEN++), parent_copy(copy) {}
 };
