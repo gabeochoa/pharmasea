@@ -14,15 +14,16 @@ struct IsDrink : public BaseComponent {
     IsDrink() : supports_multiple(false) {}
     virtual ~IsDrink() {}
 
-    auto& turn_on_support_multiple() {
+    auto& turn_on_support_multiple(int max) {
         supports_multiple = true;
+        max_count = max;
         return *this;
     }
 
     [[nodiscard]] bool can_add(Ingredient i) const {
         int count = count_of_ingredient(i);
         if (count == 0) return true;
-        if (count >= 1 && supports_multiple) return true;
+        if (count >= 1 && supports_multiple && count <= max_count) return true;
         return false;
     }
 
@@ -110,6 +111,7 @@ struct IsDrink : public BaseComponent {
         return {};
     }
 
+    int max_count = 1;
     int num_completed = 0;
     std::map<Ingredient, int> ingredients;
     IngredientBitSet unique_igs;

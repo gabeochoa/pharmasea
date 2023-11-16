@@ -1126,7 +1126,7 @@ void make_drink(Item& drink, vec2 pos) {
 void make_pitcher(Item& pitcher, vec2 pos) {
     make_item(pitcher, {.type = EntityType::Pitcher}, pos);
 
-    pitcher.addComponent<IsDrink>().turn_on_support_multiple();
+    pitcher.addComponent<IsDrink>().turn_on_support_multiple(10);
     pitcher
         .addComponent<AddsIngredient>(
             [](const Entity& pitcher, Entity&) -> IngredientBitSet {
