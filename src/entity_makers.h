@@ -43,6 +43,7 @@ void make_single_alcohol(Entity&, vec2, int);
 void make_vomit(Entity&, const SpawnInfo&);
 void make_fruit_basket(Entity&, vec2, int starting_index);
 void make_table(Entity&, vec2);
+void make_cupboard(Entity&, vec2, int index = 0);
 
 }  // namespace furniture
 

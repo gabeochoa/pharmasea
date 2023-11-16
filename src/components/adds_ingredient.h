@@ -9,27 +9,51 @@
 #include "../entity.h"
 #include "base_component.h"
 
-using IngredientFetcherFn = std::function<Ingredient(Entity&)>;
-
 struct AddsIngredient : public BaseComponent {
+    using IngredientFetcherFn =
+        std::function<IngredientBitSet(Entity&, Entity&)>;
+    using ValidationFn = std::function<bool(const Entity&, const Entity&)>;
+    using OnDecrementFn = std::function<void(Entity&)>;
+
     AddsIngredient() {}
     explicit AddsIngredient(const IngredientFetcherFn& ig) : fetcher(ig) {}
 
     virtual ~AddsIngredient() {}
 
-    [[nodiscard]] Ingredient get(Entity& entity) const {
+    [[nodiscard]] IngredientBitSet get(Entity& entity) const {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");
         }
-        return fetcher(entity);
+        return fetcher(*parent, entity);
     }
-    void set(IngredientFetcherFn fn) { fetcher = fn; }
-    void set_num_uses(int nu) { num_uses = nu; }
-    void decrement_uses() { num_uses--; }
+    void set(const IngredientFetcherFn& fn) { fetcher = fn; }
+    auto& set_validator(const ValidationFn& fn) {
+        validation = fn;
+        return *this;
+    }
+    auto& set_on_decrement(const OnDecrementFn& fn) {
+        on_decrement = fn;
+        return *this;
+    }
+    auto& set_num_uses(int nu) {
+        num_uses = nu;
+        return *this;
+    }
+    void decrement_uses() {
+        num_uses--;
+        if (on_decrement) on_decrement(*parent);
+    }
     [[nodiscard]] int uses_left() const { return num_uses; }
 
+    [[nodiscard]] bool validate(Entity& entity) const {
+        if (!validation) return true;
+        return validation(*parent, entity);
+    }
+
    private:
-    IngredientFetcherFn fetcher;
+    IngredientFetcherFn fetcher = nullptr;
+    ValidationFn validation = nullptr;
+    OnDecrementFn on_decrement = nullptr;
     int num_uses = -1;
 
     friend bitsery::Access;

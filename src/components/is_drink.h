@@ -59,13 +59,29 @@ struct IsDrink : public BaseComponent {
 
     [[nodiscard]] IngredientBitSet ing() const { return unique_igs; }
 
-    std::optional<Drink> underlying;
-
     [[nodiscard]] int count_of_ingredient(Ingredient ig) const {
         return ingredients.contains(ig) ? ingredients.at(ig) : 0;
     }
 
     [[nodiscard]] int get_num_complete() const { return num_completed; }
+    [[nodiscard]] bool has_anything() const { return unique_igs.any(); }
+
+    void remove_one_completed() {
+        if (!underlying.has_value()) return;
+        IngredientBitSet recipe = get_recipe_for_drink(underlying.value());
+        bitset_utils::for_each_enabled_bit(recipe, [&](size_t bit) {
+            Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
+            ingredients[ig]--;
+        });
+
+        underlying = calc_underlying();
+        num_completed = calc_completed();
+        if (num_completed == 0) {
+            unique_igs.reset();
+        }
+    }
+
+    std::optional<Drink> underlying;
 
    private:
     [[nodiscard]] int calc_completed() {

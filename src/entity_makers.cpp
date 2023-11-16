@@ -15,6 +15,7 @@
 #include "components/is_round_settings_manager.h"
 #include "components/is_toilet.h"
 #include "dataclass/ingredient.h"
+#include "engine/bitset_utils.h"
 #include "engine/sound_library.h"
 #include "engine/ui/color.h"
 #include "engine/util.h"
@@ -92,9 +93,12 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient ing) {
 
 bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
     AddsIngredient& addsIG = toadd.get<AddsIngredient>();
-    Ingredient ing = addsIG.get(toadd);
+    IngredientBitSet ingredients = addsIG.get(toadd);
 
-    _add_ingredient_to_drink_NO_VALIDATION(drink, ing);
+    bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
+        Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
+        _add_ingredient_to_drink_NO_VALIDATION(drink, ig);
+    });
 
     addsIG.decrement_uses();
     // We do == 0 because infinite is -1
@@ -666,7 +670,7 @@ void make_fruit_basket(Entity& container, vec2 pos, int starting_index = 0) {
         ShowsProgressBar::Enabled::InRound);
 }
 
-void make_cupboard(Entity& cupboard, vec2 pos, int index = 0) {
+void make_cupboard(Entity& cupboard, vec2 pos, int index) {
     EntityType held_type = EntityType::Drink;
     CupType ct = magic_enum::enum_value<CupType>(index);
     switch (ct) {
@@ -885,7 +889,9 @@ void make_soda_spout(Item& soda_spout, vec2 pos) {
     // doesnt really work because we dont know what the player is trying to make
     // and so its easier if everything is soda
     soda_spout.addComponent<AddsIngredient>(
-        [](Entity&) { return Ingredient::Soda; });
+        [](const Entity&, Entity&) -> IngredientBitSet {
+            return IngredientBitSet().reset().set(Ingredient::Soda);
+        });
 }
 
 void make_mop(Item& mop, vec2 pos) {
@@ -938,11 +944,19 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         // not holding item that adds ingredients
         if (item->is_missing<AddsIngredient>()) return;
         const AddsIngredient& addsIG = item->get<AddsIngredient>();
-        Ingredient ing = addsIG.get(*item);
 
+        bool valid = addsIG.validate(drink);
+        if (!valid) return;
+
+        IngredientBitSet ingredients = addsIG.get(drink);
         const IsDrink& isdrink = drink.get<IsDrink>();
 
-        if (!isdrink.can_add(ing)) return;
+        bool any = false;
+        bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
+            Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
+            any |= isdrink.can_add(ig);
+        });
+        if (!any) return;
 
         const float amt = 1.f;
         hasWork.increase_pct(amt * dt);
@@ -965,11 +979,12 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
         (int) ingredient::Alcohols[0],
         (int) ingredient::Alcohols[0] + (int) ingredient::Alcohols.size(),
         index);
-    alc.addComponent<AddsIngredient>([](const Entity& alcohol) {
-           const HasSubtype& hst = alcohol.get<HasSubtype>();
-           return get_ingredient_from_index(ingredient::Alcohols[0] +
-                                            hst.get_type_index());
-       })
+    alc.addComponent<AddsIngredient>(
+           [](const Entity&, const Entity& alcohol) -> IngredientBitSet {
+               const HasSubtype& hst = alcohol.get<HasSubtype>();
+               return {get_ingredient_from_index(ingredient::Alcohols[0] +
+                                                 hst.get_type_index())};
+           })
         .set_num_uses(1);
 
     alc.addComponent<HasDynamicModelName>().init(
@@ -987,7 +1002,9 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
 
     simple_syrup
         .addComponent<AddsIngredient>(
-            [](Entity&) { return Ingredient::SimpleSyrup; })
+            [](const Entity&, Entity&) -> IngredientBitSet {
+                return {Ingredient::SimpleSyrup};
+            })
         .set_num_uses(-1);
 
     // Since theres only one of these and its inf uses, dont let it get deleted
@@ -1002,9 +1019,10 @@ void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
     make_item(juice, {.type = EntityType::FruitJuice}, pos);
 
     juice
-        .addComponent<AddsIngredient>([fruit](const Entity&) {
-            return ingredient::BlendConvert.at(fruit);
-        })
+        .addComponent<AddsIngredient>(
+            [fruit](const Entity&, const Entity&) -> IngredientBitSet {
+                return {ingredient::BlendConvert.at(fruit)};
+            })
         .set_num_uses(1);
 
     juice.addComponent<HasDynamicModelName>().init(
@@ -1021,10 +1039,12 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
     fruit.addComponent<HasSubtype>(0, (int) ingredient::Fruits.size(), index);
 
     fruit
-        .addComponent<AddsIngredient>([](const Entity& fruit) {
-            const HasSubtype& hst = fruit.get<HasSubtype>();
-            return ingredient::Fruits[0 + hst.get_type_index()];
-        })
+        .addComponent<AddsIngredient>(
+            [](const Entity&, const Entity& fruit) -> IngredientBitSet {
+                const HasSubtype& hst = fruit.get<HasSubtype>();
+                return IngredientBitSet().reset().set(
+                    ingredient::Fruits[0 + hst.get_type_index()]);
+            })
         .set_num_uses(1);
 
     fruit.addComponent<HasDynamicModelName>().init(
@@ -1107,6 +1127,27 @@ void make_pitcher(Item& pitcher, vec2 pos) {
     make_item(pitcher, {.type = EntityType::Pitcher}, pos);
 
     pitcher.addComponent<IsDrink>().turn_on_support_multiple();
+    pitcher
+        .addComponent<AddsIngredient>(
+            [](const Entity& pitcher, Entity&) -> IngredientBitSet {
+                return pitcher.get<IsDrink>().ing();
+            })
+        .set_validator([](const Entity& pitcher, const Entity& drink) -> bool {
+            if (drink.is_missing<IsDrink>()) return false;
+            const IsDrink& into_isdrink = drink.get<IsDrink>();
+            // Only add if its empty
+            if (into_isdrink.has_anything()) return false;
+
+            if (pitcher.is_missing<IsDrink>()) return false;
+            const IsDrink& isdrink = pitcher.get<IsDrink>();
+            return isdrink.get_num_complete() > 0;
+        })
+        .set_on_decrement([](Entity& pitcher) {
+            pitcher.get<IsDrink>().remove_one_completed();
+        })
+        // we dont want to have the cup deleted
+        .set_num_uses(-1);
+
     pitcher.addComponent<HasWork>().init(std::bind(
         process_drink_working, std::placeholders::_1, std::placeholders::_2,
         std::placeholders::_3, std::placeholders::_4));
