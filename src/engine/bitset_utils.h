@@ -10,6 +10,22 @@
 #include "log.h"
 
 namespace bitset_utils {
+
+template<typename T, typename E>
+void set(T& bitset, E enum_value) {
+    bitset.set(static_cast<int>(enum_value));
+}
+
+template<typename T, typename E>
+void reset(T& bitset, E enum_value) {
+    bitset.reset(static_cast<int>(enum_value));
+}
+
+template<typename T, typename E>
+bool test(const T& bitset, E enum_value) {
+    return bitset.test(static_cast<int>(enum_value));
+}
+
 template<typename T>
 int index_of_nth_set_bit(const T& bitset, int n) {
     int count = 0;

@@ -96,6 +96,9 @@ inline void test_fetch_and_apply_operation(Operation type) {
     float two_x = 2.f;
 
     switch (type) {
+        case Operation::Unlock: {
+            // TODO not testing this one right now
+        } break;
         case Operation::Multiplier: {
             float before = irsm->get<float>(ConfigKey::Test);
 

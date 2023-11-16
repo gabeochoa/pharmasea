@@ -10,6 +10,7 @@ using StdMap = bitsery::ext::StdMap;
 
 #include "../config_key_library.h"
 #include "../dataclass/settings.h"
+#include "../engine/bitset_utils.h"
 #include "../engine/type_name.h"
 #include "../entity_type.h"
 #include "../upgrade_library.h"
@@ -25,6 +26,7 @@ inline std::string_view op_name(Operation key) {
 }
 
 struct IsRoundSettingsManager : public BaseComponent {
+    EntityTypeSet unlocked_entities;
     std::vector<EntityType> required_entities;
     std::vector<EntityType> entities_to_spawn;
 
@@ -45,6 +47,8 @@ struct IsRoundSettingsManager : public BaseComponent {
                 return ints.contains(key);
             } else if constexpr (std::is_same_v<T, bool>) {
                 return bools.contains(key);
+            } else if constexpr (std::is_same_v<T, EntityType>) {
+                return true;
             }
             log_warn(
                 "IRSM:: contains value from config no match for {} with type "
@@ -61,6 +65,8 @@ struct IsRoundSettingsManager : public BaseComponent {
                 return ints.at(key);
             } else if constexpr (std::is_same_v<T, bool>) {
                 return bools.at(key);
+            } else if constexpr (std::is_same_v<T, EntityType>) {
+                return EntityType::Unknown;
             }
             log_warn(
                 "IRSM:: get value from config no match for {} with type {}",
@@ -78,6 +84,8 @@ struct IsRoundSettingsManager : public BaseComponent {
                 return;
             } else if constexpr (std::is_same_v<T, bool>) {
                 bools[key] = value;
+                return;
+            } else if constexpr (std::is_same_v<T, EntityType>) {
                 return;
             }
             log_warn(
@@ -114,6 +122,10 @@ struct IsRoundSettingsManager : public BaseComponent {
             const ConfigValue& config_value = pair.second;
             const auto type = get_type(config_value.key);
             switch (type) {
+                case ConfigKeyType::Entity:
+                    config.set(config_value.key,
+                               std::get<EntityType>(config_value.value));
+                    break;
                 case ConfigKeyType::Float:
                     config.set(config_value.key,
                                std::get<float>(config_value.value));
@@ -167,10 +179,31 @@ struct IsRoundSettingsManager : public BaseComponent {
                 return before * value;
             case Operation::Set:
                 return value;
+            case Operation::Unlock:
+                log_error("Unlock isnt supported on {}", type_name<T>());
         }
         return value;
     }
 
+    template<>
+    EntityType apply_operation(const Operation& op, EntityType,
+                               EntityType value) {
+        switch (op) {
+            case Operation::Multiplier:
+                log_error("Multiplier isnt supported on EntityType");
+                break;
+            case Operation::Set:
+                log_error("Set isnt supported on EntityType");
+                break;
+            case Operation::Unlock:
+                bitset_utils::set(unlocked_entities, value);
+                // TODO this puts it in the store
+                //      but messes with some 'missing required'
+                // entities_to_spawn.push_back(value);
+                break;
+        }
+        return value;
+    }
     template<typename T>
     void fetch_and_apply(const ConfigKey& key, const Operation& op,
                          const ConfigValueType& value) {
@@ -186,6 +219,10 @@ struct IsRoundSettingsManager : public BaseComponent {
         ConfigKeyType ckt = get_type(effect.name);
 
         switch (ckt) {
+            case ConfigKeyType::Entity: {
+                fetch_and_apply<EntityType>(effect.name, effect.operation,
+                                            effect.value);
+            } break;
             case ConfigKeyType::Float: {
                 fetch_and_apply<float>(effect.name, effect.operation,
                                        effect.value);
@@ -238,7 +275,24 @@ struct IsRoundSettingsManager : public BaseComponent {
             case Operation::Multiplier:
                 return before / value;
             case Operation::Set:
+                log_error("Unsetting isnt supported on {}", type_name<T>());
+            case Operation::Unlock:
+                log_error("Unlock isnt supported on {}", type_name<T>());
+        }
+        return value;
+    }
+
+    template<>
+    EntityType unapply_operation(const Operation& op, EntityType,
+                                 EntityType value) {
+        switch (op) {
+            case Operation::Multiplier:
+                log_error("Multiplier isnt supported");
+            case Operation::Set:
                 log_error("Unsetting isnt supported");
+            case Operation::Unlock:
+                bitset_utils::reset(unlocked_entities, value);
+                break;
         }
         return value;
     }
@@ -258,6 +312,10 @@ struct IsRoundSettingsManager : public BaseComponent {
         ConfigKeyType ckt = get_type(effect.name);
 
         switch (ckt) {
+            case ConfigKeyType::Entity: {
+                fetch_and_unapply<EntityType>(effect.name, effect.operation,
+                                              effect.value);
+            } break;
             case ConfigKeyType::Float: {
                 fetch_and_unapply<float>(effect.name, effect.operation,
                                          effect.value);
@@ -316,6 +374,10 @@ struct IsRoundSettingsManager : public BaseComponent {
             return get<T>(key) == value;
         }
 
+        if constexpr (std::is_same_v<T, EntityType>) {
+            return bitset_utils::test(unlocked_entities, value);
+        }
+
         T current_value = get<T>(key);
         bool meets = current_value > value;
 
@@ -328,6 +390,10 @@ struct IsRoundSettingsManager : public BaseComponent {
     [[nodiscard]] bool meets_prereq(const UpgradeRequirement& req) {
         ConfigKeyType ckt = get_type(req.name);
         switch (ckt) {
+            case ConfigKeyType::Entity: {
+                return check_value<EntityType>(req.name,
+                                               std::get<EntityType>(req.value));
+            } break;
             case ConfigKeyType::Float: {
                 return check_value<float>(req.name, std::get<float>(req.value));
             } break;

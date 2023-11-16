@@ -52,6 +52,10 @@
           "name": "day_count",
           "value": 1
           // TODO have some way of marking this const
+      },
+      {
+          "name": "entity",
+          "value": "invalid"
       }
   ],
   "upgrades": [
@@ -183,6 +187,19 @@
               }
           ]
 
+      },
+      {
+          "name": "me and the boys",
+          "flavor_text": "its actually a carafe.",
+          "description": "(Unlocks a pitcher which can store up to 10 drinks)",
+          "upgrade_effects": [
+              {
+                  "name": "entity",
+                  "operation": "unlock",
+                  "value": "pitcher_cupboard"
+              }
+          ],
+          "prereqs": []
       },
       {
           "name": "Live Band",

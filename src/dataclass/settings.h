@@ -15,7 +15,7 @@
 #include "../engine/util.h"
 #include "../entity_type.h"
 
-using ConfigValueType = std::variant<int, bool, float>;
+using ConfigValueType = std::variant<int, bool, float, EntityType>;
 
 // TODO get_speed_for_entity
 enum struct ConfigKey {
@@ -40,6 +40,7 @@ enum struct ConfigKey {
     VomitAmountMultiplier,
     //
     DayCount,
+    Entity,
 };
 
 struct ConfigValue {
@@ -47,7 +48,7 @@ struct ConfigValue {
     ConfigValueType value;
 };
 
-enum struct ConfigKeyType { Float, Bool, Int };
+enum struct ConfigKeyType { Entity, Float, Bool, Int };
 
 inline ConfigKeyType get_type(ConfigKey key) {
     switch (key) {
@@ -68,6 +69,8 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::UnlockedToilet:
         case ConfigKey::HasCityMultiplier:
             return ConfigKeyType::Bool;
+        case ConfigKey::Entity:
+            return ConfigKeyType::Entity;
     }
     return ConfigKeyType::Float;
 }
@@ -82,7 +85,7 @@ inline ConfigKey to_configkey(const std::string& str) {
     return op.value();
 }
 
-enum struct Operation { Multiplier, Set };
+enum struct Operation { Multiplier, Set, Unlock };
 
 inline Operation to_operation(const std::string& str) {
     const auto converted_str = util::remove_underscores(str);
