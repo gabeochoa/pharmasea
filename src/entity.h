@@ -230,3 +230,4 @@ void serialize(S& s, OptEntity opt) {
 }  // namespace bitsery
 
 bool check_type(const Entity& entity, EntityType type);
+bool check_if_drink(const Entity& entity);

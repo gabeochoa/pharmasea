@@ -567,7 +567,7 @@ void make_ice_machine(Entity& machine, vec2 pos) {
             CanHoldItem& chi = player.get<CanHoldItem>();
             if (chi.empty()) return;
             std::shared_ptr<Item> item = chi.item();
-            if (!check_type(*item, EntityType::Drink)) return;
+            if (!check_if_drink(*item)) return;
 
             Ingredient ing = Ingredient::IceCubes;
 
@@ -665,9 +665,23 @@ void make_fruit_basket(Entity& container, vec2 pos, int starting_index = 0) {
         ShowsProgressBar::Enabled::InRound);
 }
 
-void make_cupboard(Entity& cupboard, vec2 pos) {
+void make_cupboard(Entity& cupboard, vec2 pos, int index = 0) {
+    EntityType held_type = EntityType::Drink;
+    CupType ct = magic_enum::enum_value<CupType>(index);
+    switch (ct) {
+        case Normal:
+            held_type = EntityType::Drink;
+            break;
+        case MultiCup:
+            held_type = EntityType::Pitcher;
+            break;
+    }
+
     furniture::make_itemcontainer(cupboard, {EntityType::Cupboard}, pos,
-                                  EntityType::Drink);
+                                  held_type);
+    cupboard.addComponent<HasSubtype>(
+        0, (int) magic_enum::enum_count<CupType>(), index);
+
     cupboard.addComponent<HasDynamicModelName>().init(
         EntityType::Cupboard, HasDynamicModelName::DynamicType::OpenClosed);
     cupboard.get<CanHoldItem>().set_filter(
@@ -675,7 +689,7 @@ void make_cupboard(Entity& cupboard, vec2 pos) {
             .set_enabled_flags(EntityFilter::FilterDatumType::Name |
                                EntityFilter::FilterDatumType::Ingredients)
             .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                       EntityType::Drink)
+                                       held_type)
             .set_filter_value_for_type(
                 EntityFilter::FilterDatumType::Ingredients,
                 // Only allow empty drinks
@@ -1089,6 +1103,32 @@ void make_drink(Item& drink, vec2 pos) {
         });
 }
 
+void make_pitcher(Item& pitcher, vec2 pos) {
+    make_item(pitcher, {.type = EntityType::Pitcher}, pos);
+
+    // TODO add support for multidrink
+    // pitcher.addComponent<IsMultiDrink>();
+    pitcher.addComponent<IsDrink>();
+    pitcher.addComponent<HasWork>().init(std::bind(
+        process_drink_working, std::placeholders::_1, std::placeholders::_2,
+        std::placeholders::_3, std::placeholders::_4));
+    // TODO should this just be part of has work?
+    pitcher.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
+
+    pitcher.addComponent<HasDynamicModelName>().init(
+        EntityType::Drink, HasDynamicModelName::DynamicType::Ingredients,
+        [](const Item& owner, const std::string&) -> std::string {
+            const IsDrink& isdrink = owner.get<IsDrink>();
+            constexpr auto drinks = magic_enum::enum_values<Drink>();
+            for (Drink d : drinks) {
+                if (isdrink.matches_recipe(d))
+                    return get_model_name_for_drink(d);
+            }
+            // TODO uhhhhhh add a new cup type for this eventually
+            return util::convertToSnakeCase<EntityType>(EntityType::DraftTap);
+        });
+}
+
 void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
     // log_info("generating new item {} of type {} at {} subtype{}", item.id,
     // type_name, pos, index);
@@ -1101,6 +1141,8 @@ void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
             return make_fruit(item, pos, index);
         case EntityType::Drink:
             return make_drink(item, pos);
+        case EntityType::Pitcher:
+            return make_pitcher(item, pos);
         case EntityType::Mop:
             return make_mop(item, pos);
         case EntityType::MopBuddy:
@@ -1330,6 +1372,7 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::Fruit:
         case EntityType::FruitJuice:
         case EntityType::Mop:
+        case EntityType::Pitcher:
             log_warn("{} cant be created through 'convert_to_type'",
                      entity_type);
             return false;

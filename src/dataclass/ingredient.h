@@ -7,6 +7,11 @@
 #include "../engine/constexpr_containers.h"
 #include "../engine/random.h"
 
+enum CupType {
+    Normal,
+    MultiCup,
+};
+
 enum Ingredient {
     Invalid,
 
