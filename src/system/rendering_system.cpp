@@ -233,18 +233,20 @@ void render_debug_drink_info(const Entity& entity, float) {
     float y = 0.25f;
 
     if (isdrink.underlying.has_value()) {
+        auto content = fmt::format("{}({})",
+                                   std::string(magic_enum::enum_name<Drink>(
+                                       isdrink.underlying.value())),
+                                   isdrink.get_num_complete());
         DrawFloatingText(vec::raise(transform.raw(), y), Preload::get().font,
-                         std::string(magic_enum::enum_name<Drink>(
-                                         isdrink.underlying.value()))
-                             .c_str(),
-                         100);
+                         std::string(content).c_str(), 100);
     }
 
     y += 0.25f;
     for (size_t i = 0; i < magic_enum::enum_count<Ingredient>(); i++) {
         Ingredient ingredient = magic_enum::enum_value<Ingredient>(i);
         if (!(isdrink.has_ingredient(ingredient))) continue;
-        auto content = magic_enum::enum_name(ingredient);
+        auto content = fmt::format("{} ({})", magic_enum::enum_name(ingredient),
+                                   isdrink.count_of_ingredient(ingredient));
         DrawFloatingText(vec::raise(transform.raw(), y), Preload::get().font,
                          std::string(content).c_str(), 50);
         y += 0.25f;

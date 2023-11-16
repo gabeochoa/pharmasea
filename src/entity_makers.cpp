@@ -104,6 +104,7 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
     }
     return false;
 }
+
 }  // namespace items
 
 void register_all_components() {
@@ -895,7 +896,6 @@ void make_mop(Item& mop, vec2 pos) {
         .set_hb_filter(EntityType::MopHolder)
         .set_hb_filter(EntityType::Player);
 }
-
 void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
                            float dt) {
     if (GameState::get().is_not(game::State::InRound)) return;
@@ -941,8 +941,8 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         Ingredient ing = addsIG.get(*item);
 
         const IsDrink& isdrink = drink.get<IsDrink>();
-        // Already has the ingredient
-        if (isdrink.has_ingredient(ing)) return;
+
+        if (!isdrink.can_add(ing)) return;
 
         const float amt = 1.f;
         hasWork.increase_pct(amt * dt);
@@ -1106,9 +1106,7 @@ void make_drink(Item& drink, vec2 pos) {
 void make_pitcher(Item& pitcher, vec2 pos) {
     make_item(pitcher, {.type = EntityType::Pitcher}, pos);
 
-    // TODO add support for multidrink
-    // pitcher.addComponent<IsMultiDrink>();
-    pitcher.addComponent<IsDrink>();
+    pitcher.addComponent<IsDrink>().turn_on_support_multiple();
     pitcher.addComponent<HasWork>().init(std::bind(
         process_drink_working, std::placeholders::_1, std::placeholders::_2,
         std::placeholders::_3, std::placeholders::_4));
@@ -1116,7 +1114,7 @@ void make_pitcher(Item& pitcher, vec2 pos) {
     pitcher.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 
     pitcher.addComponent<HasDynamicModelName>().init(
-        EntityType::Drink, HasDynamicModelName::DynamicType::Ingredients,
+        EntityType::Pitcher, HasDynamicModelName::DynamicType::Ingredients,
         [](const Item& owner, const std::string&) -> std::string {
             const IsDrink& isdrink = owner.get<IsDrink>();
             constexpr auto drinks = magic_enum::enum_values<Drink>();
