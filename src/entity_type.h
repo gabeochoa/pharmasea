@@ -32,6 +32,7 @@ enum struct EntityType {
     Blender,
     SodaMachine,
     Cupboard,
+    PitcherCupboard,
     Squirter,
     FilteredGrabber,
     PnumaticPipe,
@@ -82,7 +83,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b011111111111111111111111111111111111111111111;
+    return 0b0111111111111111111111111111111111111111111111;
 #endif
 }
 
@@ -104,6 +105,7 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::Guitar:
             // TODO add support for dynamic prices
             return 1;
+        case EntityType::PitcherCupboard:
         case EntityType::Cupboard:
         case EntityType::Trash:
         case EntityType::Table:
@@ -177,6 +179,7 @@ enum struct StoreEligibilityType {
 
 inline StoreEligibilityType get_store_eligibility(EntityType etype) {
     switch (etype) {
+        case EntityType::PitcherCupboard:
         case EntityType::Guitar:
         case EntityType::Toilet:
             // TODO fall through for now until we support onUpgrade

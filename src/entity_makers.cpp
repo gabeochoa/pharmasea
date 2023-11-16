@@ -1339,6 +1339,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::Cupboard: {
             furniture::make_cupboard(entity, location);
         } break;
+        case EntityType::PitcherCupboard: {
+            furniture::make_cupboard(entity, location, 1);
+        } break;
         case EntityType::Squirter: {
             furniture::make_squirter(entity, location);
         } break;

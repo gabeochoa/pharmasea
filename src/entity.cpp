@@ -73,6 +73,7 @@ bool check_if_drink(const Entity& entity) {
         case EntityType::SimpleSyrup:
         case EntityType::Mop:
         case EntityType::Trash:
+        case EntityType::PitcherCupboard:
             return false;
         case EntityType::Pitcher:
         case EntityType::Drink:
