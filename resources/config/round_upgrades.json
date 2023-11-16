@@ -201,7 +201,14 @@
                   "value": 2.0
               }
           ],
-          "prereqs": []
+          "prereqs": [
+              // TODO this pre req exists just because this upgrade does not work yet due to temporaries 
+              // not working, instead of deleting the upgrade, im just gonna hide it 
+              {
+                  "name": "day_count",
+                  "value": 9999
+              }
+          ]
         }
     ]
 }
