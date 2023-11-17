@@ -854,24 +854,14 @@ inline void spawn_machines_for_new_unlock_DONOTCALL(
         log_error("Could not find spawn area entity");
     }
 
-    const auto make_free_machine = []() -> Entity& {
+    for (const auto& entity_to_spawn : irsm.entities_to_spawn) {
         auto& entity = EntityHelper::createEntity();
-        entity.addComponent<IsFreeInStore>();
-        return entity;
-    };
-
-    for (const EntityType& et : irsm.entities_to_spawn) {
-        auto& entity = EntityHelper::createEntity();
-        convert_to_type(et, entity, spawn_area->get<Transform>().as2());
-    }
-
-    for (const EntityType& et : irsm.free_entities_to_spawn) {
-        auto& entity = make_free_machine();
-        convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+        if (entity_to_spawn.free) entity.addComponent<IsFreeInStore>();
+        convert_to_type(entity_to_spawn.type, entity,
+                        spawn_area->get<Transform>().as2());
     }
 
     irsm.entities_to_spawn.clear();
-    irsm.free_entities_to_spawn.clear();
 }
 
 void trigger_cb_on_full_progress(Entity& entity, float) {

@@ -27,14 +27,17 @@ inline std::string_view op_name(Operation key) {
 }
 
 struct IsRoundSettingsManager : public BaseComponent {
+    struct EntityToSpawn {
+        EntityType type;
+        bool free = false;
+    };
+
     EntityTypeSet unlocked_entities;
     DrinkSet unlocked_drinks;
 
     std::vector<EntityType> required_entities;
 
-    // TODO combine these two
-    std::vector<EntityType> free_entities_to_spawn;
-    std::vector<EntityType> entities_to_spawn;
+    std::vector<EntityToSpawn> entities_to_spawn;
 
     // TODO combine these two
     std::vector<std::string> upgrades_applied;
@@ -215,7 +218,7 @@ struct IsRoundSettingsManager : public BaseComponent {
                 break;
             case Operation::Unlock:
                 bitset_utils::set(unlocked_entities, value);
-                entities_to_spawn.push_back(value);
+                entities_to_spawn.push_back(EntityToSpawn{value});
                 break;
         }
         return value;
@@ -295,7 +298,7 @@ struct IsRoundSettingsManager : public BaseComponent {
 
         for (const EntityType& et : upgrade.required_machines) {
             required_entities.push_back(et);
-            free_entities_to_spawn.push_back(et);
+            entities_to_spawn.push_back(EntityToSpawn{et, true});
         }
     }
 
