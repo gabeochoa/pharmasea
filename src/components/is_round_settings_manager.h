@@ -9,6 +9,7 @@ using StdMap = bitsery::ext::StdMap;
 #include <map>
 
 #include "../config_key_library.h"
+#include "../dataclass/ingredient.h"
 #include "../dataclass/settings.h"
 #include "../engine/bitset_utils.h"
 #include "../engine/type_name.h"
@@ -27,6 +28,8 @@ inline std::string_view op_name(Operation key) {
 
 struct IsRoundSettingsManager : public BaseComponent {
     EntityTypeSet unlocked_entities;
+    DrinkSet unlocked_drinks;
+
     std::vector<EntityType> required_entities;
 
     // TODO combine these two
@@ -51,6 +54,10 @@ struct IsRoundSettingsManager : public BaseComponent {
             } else if constexpr (std::is_same_v<T, bool>) {
                 return bools.contains(key);
             } else if constexpr (std::is_same_v<T, EntityType>) {
+                // TODO i think we need this for prereqs
+                return true;
+            } else if constexpr (std::is_same_v<T, Drink>) {
+                // TODO i think we need this for prereqs
                 return true;
             }
             log_warn(
@@ -70,6 +77,8 @@ struct IsRoundSettingsManager : public BaseComponent {
                 return bools.at(key);
             } else if constexpr (std::is_same_v<T, EntityType>) {
                 return EntityType::Unknown;
+            } else if constexpr (std::is_same_v<T, Drink>) {
+                return Drink::coke;
             }
             log_warn(
                 "IRSM:: get value from config no match for {} with type {}",
@@ -89,6 +98,8 @@ struct IsRoundSettingsManager : public BaseComponent {
                 bools[key] = value;
                 return;
             } else if constexpr (std::is_same_v<T, EntityType>) {
+                return;
+            } else if constexpr (std::is_same_v<T, Drink>) {
                 return;
             }
             log_warn(
@@ -128,6 +139,10 @@ struct IsRoundSettingsManager : public BaseComponent {
                 case ConfigKeyType::Entity:
                     config.set(config_value.key,
                                std::get<EntityType>(config_value.value));
+                    break;
+                case ConfigKeyType::Drink:
+                    config.set(config_value.key,
+                               std::get<Drink>(config_value.value));
                     break;
                 case ConfigKeyType::Float:
                     config.set(config_value.key,
@@ -200,13 +215,29 @@ struct IsRoundSettingsManager : public BaseComponent {
                 break;
             case Operation::Unlock:
                 bitset_utils::set(unlocked_entities, value);
-                // TODO this puts it in the store
-                //      but messes with some 'missing required'
                 entities_to_spawn.push_back(value);
                 break;
         }
         return value;
     }
+
+    template<>
+    Drink apply_operation(const Operation& op, Drink, Drink value) {
+        switch (op) {
+            case Operation::Multiplier:
+                log_error("Multiplier isnt supported on EntityType");
+                break;
+            case Operation::Set:
+                log_error("Set isnt supported on EntityType");
+                break;
+            case Operation::Unlock:
+                bitset_utils::set(unlocked_drinks, value);
+                // TODO set the one in is_progression_manager
+                break;
+        }
+        return value;
+    }
+
     template<typename T>
     void fetch_and_apply(const ConfigKey& key, const Operation& op,
                          const ConfigValueType& value) {
@@ -225,6 +256,10 @@ struct IsRoundSettingsManager : public BaseComponent {
             case ConfigKeyType::Entity: {
                 fetch_and_apply<EntityType>(effect.name, effect.operation,
                                             effect.value);
+            } break;
+            case ConfigKeyType::Drink: {
+                fetch_and_apply<Drink>(effect.name, effect.operation,
+                                       effect.value);
             } break;
             case ConfigKeyType::Float: {
                 fetch_and_apply<float>(effect.name, effect.operation,
@@ -300,6 +335,20 @@ struct IsRoundSettingsManager : public BaseComponent {
         return value;
     }
 
+    template<>
+    Drink unapply_operation(const Operation& op, Drink, Drink value) {
+        switch (op) {
+            case Operation::Multiplier:
+                log_error("Multiplier isnt supported");
+            case Operation::Set:
+                log_error("Unsetting isnt supported");
+            case Operation::Unlock:
+                bitset_utils::reset(unlocked_drinks, value);
+                break;
+        }
+        return value;
+    }
+
     template<typename T>
     void fetch_and_unapply(const ConfigKey& key, const Operation& op,
                            const ConfigValueType& value) {
@@ -318,6 +367,10 @@ struct IsRoundSettingsManager : public BaseComponent {
             case ConfigKeyType::Entity: {
                 fetch_and_unapply<EntityType>(effect.name, effect.operation,
                                               effect.value);
+            } break;
+            case ConfigKeyType::Drink: {
+                fetch_and_unapply<Drink>(effect.name, effect.operation,
+                                         effect.value);
             } break;
             case ConfigKeyType::Float: {
                 fetch_and_unapply<float>(effect.name, effect.operation,
@@ -381,6 +434,10 @@ struct IsRoundSettingsManager : public BaseComponent {
             return bitset_utils::test(unlocked_entities, value);
         }
 
+        if constexpr (std::is_same_v<T, Drink>) {
+            return bitset_utils::test(unlocked_drinks, value);
+        }
+
         T current_value = get<T>(key);
         bool meets = current_value > value;
 
@@ -396,6 +453,9 @@ struct IsRoundSettingsManager : public BaseComponent {
             case ConfigKeyType::Entity: {
                 return check_value<EntityType>(req.name,
                                                std::get<EntityType>(req.value));
+            } break;
+            case ConfigKeyType::Drink: {
+                return check_value<Drink>(req.name, std::get<Drink>(req.value));
             } break;
             case ConfigKeyType::Float: {
                 return check_value<float>(req.name, std::get<float>(req.value));

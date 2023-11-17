@@ -457,40 +457,55 @@ void Preload::load_upgrades() {
         return EntityType::Unknown;
     };
 
-    const auto load_config_values =
-        [str_to_entity_type](const nlohmann::json& config_values) {
-            for (auto config : config_values) {
-                const auto name = config["name"].get<std::string>();
-                ConfigKey key = to_configkey(name);
+    const auto str_to_drink = [](const std::string& str) {
+        try {
+            return magic_enum::enum_cast<Drink>(str,
+                                                magic_enum::case_insensitive)
+                .value();
+        } catch (std::exception e) {
+            std::cout << ("exception converting drink type: {}", e.what())
+                      << std::endl;
+        }
+        return Drink::coke;
+    };
 
-                const auto key_type = get_type(key);
-                ConfigValueType value;
+    const auto load_config_values = [str_to_entity_type, str_to_drink](
+                                        const nlohmann::json& config_values) {
+        for (auto config : config_values) {
+            const auto name = config["name"].get<std::string>();
+            ConfigKey key = to_configkey(name);
 
-                const auto& efv = config["value"];
-                switch (key_type) {
-                    case ConfigKeyType::Entity: {
-                        value = str_to_entity_type(efv.get<std::string>());
-                    } break;
-                    case ConfigKeyType::Float:
-                        value = efv.get<float>();
-                        break;
-                    case ConfigKeyType::Bool:
-                        value = efv.get<bool>();
-                        break;
-                    case ConfigKeyType::Int:
-                        value = efv.get<int>();
-                        break;
-                }
+            const auto key_type = get_type(key);
+            ConfigValueType value;
 
-                ConfigValueLibrary::get().load(
-                    {
-                        .key = key,
-                        .value = value,
-                    },
-                    "INVALID",
-                    std::string(magic_enum::enum_name<ConfigKey>(key)).c_str());
+            const auto& efv = config["value"];
+            switch (key_type) {
+                case ConfigKeyType::Entity: {
+                    value = str_to_entity_type(efv.get<std::string>());
+                } break;
+                case ConfigKeyType::Drink: {
+                    value = str_to_drink(efv.get<std::string>());
+                } break;
+                case ConfigKeyType::Float:
+                    value = efv.get<float>();
+                    break;
+                case ConfigKeyType::Bool:
+                    value = efv.get<bool>();
+                    break;
+                case ConfigKeyType::Int:
+                    value = efv.get<int>();
+                    break;
             }
-        };
+
+            ConfigValueLibrary::get().load(
+                {
+                    .key = key,
+                    .value = value,
+                },
+                "INVALID",
+                std::string(magic_enum::enum_name<ConfigKey>(key)).c_str());
+        }
+    };
     const auto load_upgrades = [&](const nlohmann::json& upgrades) {
         const auto parse_effect =
             [&](const nlohmann::json& effects) -> UpgradeEffect {
@@ -503,6 +518,9 @@ void Preload::load_upgrades() {
             switch (key_type) {
                 case ConfigKeyType::Entity: {
                     value = str_to_entity_type(efv.get<std::string>());
+                } break;
+                case ConfigKeyType::Drink: {
+                    value = str_to_drink(efv.get<std::string>());
                 } break;
                 case ConfigKeyType::Float:
                     value = efv.get<float>();
@@ -543,6 +561,9 @@ void Preload::load_upgrades() {
             switch (key_type) {
                 case ConfigKeyType::Entity: {
                     value = str_to_entity_type(efv.get<std::string>());
+                } break;
+                case ConfigKeyType::Drink: {
+                    value = str_to_drink(efv.get<std::string>());
                 } break;
                 case ConfigKeyType::Float:
                     value = efv.get<float>();

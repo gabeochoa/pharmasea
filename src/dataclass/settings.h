@@ -14,8 +14,9 @@
 #include "../engine/log.h"
 #include "../engine/util.h"
 #include "../entity_type.h"
+#include "ingredient.h"
 
-using ConfigValueType = std::variant<int, bool, float, EntityType>;
+using ConfigValueType = std::variant<int, bool, float, EntityType, Drink>;
 
 // TODO get_speed_for_entity
 enum struct ConfigKey {
@@ -41,6 +42,7 @@ enum struct ConfigKey {
     //
     DayCount,
     Entity,
+    Drink,
 };
 
 struct ConfigValue {
@@ -48,7 +50,7 @@ struct ConfigValue {
     ConfigValueType value;
 };
 
-enum struct ConfigKeyType { Entity, Float, Bool, Int };
+enum struct ConfigKeyType { Drink, Entity, Float, Bool, Int };
 
 inline ConfigKeyType get_type(ConfigKey key) {
     switch (key) {
@@ -71,6 +73,8 @@ inline ConfigKeyType get_type(ConfigKey key) {
             return ConfigKeyType::Bool;
         case ConfigKey::Entity:
             return ConfigKeyType::Entity;
+        case ConfigKey::Drink:
+            return ConfigKeyType::Drink;
     }
     return ConfigKeyType::Float;
 }

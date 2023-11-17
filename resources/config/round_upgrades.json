@@ -189,7 +189,7 @@
 
       },
       {
-          "name": "me and the boys",
+          "name": "Pitcher",
           "flavor_text": "its actually a carafe.",
           "description": "(Unlocks a pitcher which can store up to 10 drinks)",
           "upgrade_effects": [
@@ -200,6 +200,23 @@
               }
           ],
           "prereqs": []
+      },
+      {
+          "name": "me and the boys",
+          "flavor_text": "crackin open a cold one or two... or ten .",
+          "description": "(Customers will now order a pitcher of beer)",
+          "upgrade_effects": [
+          ],
+          "prereqs": [
+              {
+                  "name": "entity",
+                  "value": "pitcher_cupboard"
+              },
+              {
+                  "name": "drink",
+                  "value": "beer"
+              }
+          ]
       },
       {
           "name": "Live Band",
