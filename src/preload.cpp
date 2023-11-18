@@ -620,6 +620,13 @@ void Preload::load_upgrades() {
 
         for (auto upgrade : upgrades) {
             const auto name = upgrade["name"].get<std::string>();
+            const auto disabled = upgrade.value("disabled", "");
+            if (!disabled.empty()) {
+                log_warn("Skipping disabled upgrade {} because {}", name,
+                         disabled);
+                continue;
+            }
+
             // log_info("started loading {}", name);
             auto effects = parse_effects(upgrade["upgrade_effects"]);
             auto prereqs = parse_prereqs(upgrade["prereqs"]);

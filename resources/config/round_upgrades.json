@@ -56,13 +56,21 @@
       {
           "name": "entity",
           "value": "invalid"
+      },
+      {
+          "name": "drink",
+          "value": "invalid"
       }
   ],
   "upgrades": [
       {
-          // TODO this doesnt work because once we init the round length, 
-          // we dont read it again ever. Need to have HasTimer<> reread 
-          // on update or something 
+          "name": "Fake Upgrade",
+          "flavor_text": "flavor text flavor text flavor text.",
+          "description": "(description description description description description description description description)",
+          "upgrade_effects": [],
+          "prereqs": []
+      },
+      {
           "name": "Longer Day",
           "flavor_text": "Find an extra couple hours in the day.",
           "description": "(Makes the day twice as long)",
@@ -83,6 +91,7 @@
       {
           // Why would I want customers to order twice
           // more money? 
+          "disabled": "Working as expected",
           "name": "Gotta go",
           "flavor_text": "Drinking has its consequences.",
           "description": "(Customers will order twice, but will need to go to the bathroom)",
@@ -109,6 +118,7 @@
           ]
       },
       {
+          "disabled": "Working as expected",
           "name": "Big Bladders",
           "flavor_text": "I've been training.",
           "description": "(Customers will got to the bathroom less often but for longer)",
@@ -132,6 +142,7 @@
           ]
       },
       {
+          "disabled": "Working as expected",
           "name": "Big City",
           "flavor_text": "I'm walking 'ere.",
           "description": "(Customers pay double but have less patience)",
@@ -160,6 +171,7 @@
           ]
       },
       {
+          "disabled": "Working as expected",
           "name": "Small Town",
           "flavor_text": "This town ain't big enough for the two of us.",
           "description": "(Customers pay half but have double patience)",
@@ -189,6 +201,7 @@
 
       },
       {
+          "disabled": "Working as expected",
           "name": "Pitcher",
           "flavor_text": "its actually a carafe.",
           "description": "(Unlocks a pitcher which can store up to 10 drinks)",
@@ -202,6 +215,7 @@
           "prereqs": []
       },
       {
+          "disabled": "Working as expected",
           "name": "me and the boys",
           "flavor_text": "crackin open a cold one or two... or ten .",
           "description": "(Customers will now order a pitcher of beer)",
@@ -219,6 +233,7 @@
           ]
       },
       {
+          "disabled": "Temporaries are not supported yet",
           "name": "Live Band",
           "flavor_text": ".",
           "description": "(More customers for one day!)",
@@ -236,12 +251,6 @@
               }
           ],
           "prereqs": [
-              // TODO this pre req exists just because this upgrade does not work yet due to temporaries 
-              // not working, instead of deleting the upgrade, im just gonna hide it 
-              {
-                  "name": "day_count",
-                  "value": 9999
-              }
           ]
         }
     ]

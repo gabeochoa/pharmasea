@@ -119,7 +119,8 @@ struct IsProgressionManager : public BaseComponent {
 
     // TODO move to a config
     std::array<UpgradeType, 4> upgrade_rounds = {{
-        UpgradeType::Drink,
+        // UpgradeType::Drink,
+        UpgradeType::Upgrade,
         UpgradeType::Drink,
         UpgradeType::Upgrade,
         UpgradeType::None,
