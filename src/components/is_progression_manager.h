@@ -36,6 +36,25 @@ struct IsProgressionManager : public BaseComponent {
         enabledDrinks.set(drink);
         log_trace("unlock drink: {} {}", enabledDrinks, enabledIngredients);
         lastUnlockedDrink = drink;
+
+        // Sometimes we might unlock something (through upgrade probably)
+        // where we didnt unlock the ingredients for yet
+        // this is probably an oversight so we will do it but complain
+        if (!can_create_drink(drink)) {
+            IngredientBitSet ings = get_recipe_for_drink(drink);
+            IngredientBitSet overlap = ings & enabledIngredients;
+            bitset_utils::for_each_enabled_bit(overlap, [&](size_t index) {
+                Ingredient ig = magic_enum::enum_value<Ingredient>(index);
+
+                log_warn(
+                    "You are unlocking drink {} but were missing unlocking {}",
+                    magic_enum::enum_name<Drink>(drink),
+                    magic_enum::enum_name<Ingredient>(ig));
+
+                unlock_ingredient(ig);
+            });
+        }
+
         return *this;
     }
 

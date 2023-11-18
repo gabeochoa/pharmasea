@@ -89,8 +89,25 @@
           ]
       },
       {
-          // Why would I want customers to order twice
-          // more money? 
+          "disabled": "Working as expected",
+          "name": "Longer Day",
+          "flavor_text": "Find an extra couple hours in the day.",
+          "description": "(Makes the day twice as long)",
+          "upgrade_effects": [
+              {
+                  "name": "round_length",
+                  "operation": "multiplier",
+                  "value": 2.0
+              }
+          ],
+          "prereqs": [
+              {
+                  "name": "day_count",
+                  "value": 2
+              }
+          ]
+      },
+      {
           "disabled": "Working as expected",
           "name": "Gotta go",
           "flavor_text": "Drinking has its consequences.",

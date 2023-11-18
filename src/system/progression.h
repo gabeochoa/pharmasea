@@ -174,20 +174,26 @@ inline void collect_progression_options(Entity& entity, float) {
 }
 
 inline void update_upgrade_variables() {
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+    IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+
     magic_enum::enum_for_each<ConfigKey>([&](auto val) {
         constexpr ConfigKey key = val;
 
         switch (key) {
             case ConfigKey::RoundLength: {
-                Entity& sophie =
-                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
-                const IsRoundSettingsManager& irsm =
-                    sophie.get<IsRoundSettingsManager>();
                 HasTimer& hasTimer = sophie.get<HasTimer>();
-
                 hasTimer.set_total_round_time(
                     irsm.get<float>(ConfigKey::RoundLength));
 
+            } break;
+            case ConfigKey::Drink: {
+                bitset_utils::for_each_enabled_bit(
+                    irsm.unlocked_drinks, [&](size_t index) {
+                        Drink drink = magic_enum::enum_value<Drink>(index);
+                        ipm.unlock_drink(drink);
+                    });
             } break;
             case ConfigKey::Test:
             case ConfigKey::MaxNumOrders:
@@ -203,7 +209,6 @@ inline void update_upgrade_variables() {
             case ConfigKey::VomitAmountMultiplier:
             case ConfigKey::DayCount:
             case ConfigKey::Entity:
-            case ConfigKey::Drink:
                 break;
         }
     });
