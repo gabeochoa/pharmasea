@@ -25,7 +25,7 @@
 float get_remaining_time_in_round() {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const HasTimer& hasTimer = sophie.get<HasTimer>();
-    return hasTimer.totalRoundTime - hasTimer.currentRoundTime;
+    return hasTimer.remaining_time_in_round();
 }
 
 inline Job* create_wandering_job(vec2 _start) {

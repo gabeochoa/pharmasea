@@ -1770,6 +1770,10 @@ void SystemManager::process_state_change(
         if (old_state == game::State::Store) {
             onStoreLeave();
         }
+
+        if (old_state == game::State::Progression) {
+            system_manager::progression::update_upgrade_variables();
+        }
     }
 
     transitions.clear();

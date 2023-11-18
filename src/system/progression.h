@@ -2,8 +2,11 @@
 #include <algorithm>
 #include <random>
 
+#include "../components/has_timer.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
+#include "../entity_helper.h"
+#include "magic_enum/magic_enum.hpp"
 #include "system_manager.h"
 
 namespace system_manager {
@@ -168,6 +171,42 @@ inline void collect_progression_options(Entity& entity, float) {
     }
 
     ipm.collectedOptions = true;
+}
+
+inline void update_upgrade_variables() {
+    magic_enum::enum_for_each<ConfigKey>([&](auto val) {
+        constexpr ConfigKey key = val;
+
+        switch (key) {
+            case ConfigKey::RoundLength: {
+                Entity& sophie =
+                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
+                const IsRoundSettingsManager& irsm =
+                    sophie.get<IsRoundSettingsManager>();
+                HasTimer& hasTimer = sophie.get<HasTimer>();
+
+                hasTimer.set_total_round_time(
+                    irsm.get<float>(ConfigKey::RoundLength));
+
+            } break;
+            case ConfigKey::Test:
+            case ConfigKey::MaxNumOrders:
+            case ConfigKey::PatienceMultiplier:
+            case ConfigKey::CustomerSpawnMultiplier:
+            case ConfigKey::NumStoreSpawns:
+            case ConfigKey::UnlockedToilet:
+            case ConfigKey::PissTimer:
+            case ConfigKey::BladderSize:
+            case ConfigKey::HasCityMultiplier:
+            case ConfigKey::DrinkCostMultiplier:
+            case ConfigKey::VomitFreqMultiplier:
+            case ConfigKey::VomitAmountMultiplier:
+            case ConfigKey::DayCount:
+            case ConfigKey::Entity:
+            case ConfigKey::Drink:
+                break;
+        }
+    });
 }
 
 }  // namespace progression

@@ -314,7 +314,7 @@ void update_sophie(Entity& entity, float) {
 
     // TODO i dont like that this is copy paste from layers/round_end
     if (GameState::get().is_not(game::State::Planning) &&
-        ht.currentRoundTime > 0 && !debug_mode_on)
+        ht.get_current_round_time() > 0 && !debug_mode_on)
         return;
 
     // doing it this way so that if we wanna make them return bool itll be

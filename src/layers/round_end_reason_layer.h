@@ -40,7 +40,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
         if (debug_mode_on) return true;
 
-        if (ht.currentRoundTime <= 0) return true;
+        if (ht.get_current_round_time() <= 0) return true;
 
         if (GameState::get().is(game::State::Planning) &&
             ht.block_state_change_reasons.any()) {

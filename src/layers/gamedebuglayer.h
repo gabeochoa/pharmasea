@@ -108,8 +108,8 @@ struct GameDebugLayer : public Layer {
 
                 text(Widget{round_time_div},
                      fmt::format("Round Length: {:.0f}/{}",
-                                 hasTimer.currentRoundTime,
-                                 hasTimer.totalRoundTime));
+                                 hasTimer.get_current_round_time(),
+                                 hasTimer.get_total_round_time()));
 
                 {
                     auto [num_spawned, countdown] =

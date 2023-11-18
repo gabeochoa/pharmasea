@@ -36,11 +36,24 @@ struct HasTimer : public BaseComponent {
         return *this;
     }
 
-    // TODO make these private
+    [[nodiscard]] float remaining_time_in_round() const {
+        return totalRoundTime - currentRoundTime;
+    }
+
+    [[nodiscard]] float get_current_round_time() const {
+        return currentRoundTime;
+    }
+    [[nodiscard]] float get_total_round_time() const { return totalRoundTime; }
+
+    void set_total_round_time(float trt) {
+        totalRoundTime = trt;
+        currentRoundTime = totalRoundTime;
+    }
+
+   private:
     float currentRoundTime;
     float totalRoundTime;
 
-   private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
