@@ -83,7 +83,8 @@ struct EntityHelper {
     static void forEachEntity(std::function<ForEachFlow(Entity&)> cb);
 
     static std::vector<RefEntity> getFilteredEntitiesInRange(
-        vec2 pos, float range, std::function<bool(RefEntity)> filter);
+        vec2 pos, float range,
+        const std::function<bool(const Entity&)>& filter);
 
     static std::vector<RefEntity> getEntitiesInRange(vec2 pos, float range);
 

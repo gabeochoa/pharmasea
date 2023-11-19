@@ -243,20 +243,12 @@ bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
 }
 
 std::vector<RefEntity> EntityHelper::getFilteredEntitiesInRange(
-    vec2 pos, float range, std::function<bool(RefEntity)> filter) {
-    std::vector<RefEntity> matching;
-    for (auto& e : get_entities()) {
-        if (!e) continue;
-        if (!filter(*e)) continue;
-        if (vec::distance(pos, e->get<Transform>().as2()) < range) {
-            matching.push_back(*e);
-        }
-    }
-    return matching;
+    vec2 pos, float range, const std::function<bool(const Entity&)>& filter) {
+    return EntityQuery().whereLambda(filter).whereInRange(pos, range).gen();
 }
 
 std::vector<RefEntity> EntityHelper::getEntitiesInRange(vec2 pos, float range) {
-    return getFilteredEntitiesInRange(pos, range, [](auto&&) { return true; });
+    return EntityQuery().whereInRange(pos, range).gen();
 }
 
 OptEntity EntityHelper::getMatchingEntityInFront(

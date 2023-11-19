@@ -54,6 +54,20 @@ struct EntityQuery {
         return add_mod(new WhereLambda(fn));
     }
 
+    struct WhereInRange : Modification {
+        vec2 position;
+        float range;
+
+        explicit WhereInRange(vec2 pos, float r) : position(pos), range(r) {}
+        virtual bool operator()(const Entity& entity) const override {
+            return vec::distance(position, entity.get<Transform>().as2()) <
+                   range;
+        }
+    };
+    auto& whereInRange(vec2 position, float range) {
+        return add_mod(new WhereInRange(position, range));
+    }
+
     /////////
 
     [[nodiscard]] bool has_values() const { return !run_query(true).empty(); }
