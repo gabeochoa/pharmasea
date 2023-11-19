@@ -75,7 +75,36 @@
           "flavor_text": "flavor text flavor text flavor text.",
           "description": "(description description description description description description description description)",
           "upgrade_effects": [],
-          "prereqs": []
+          "prereqs": [
+              {
+                  "name": "day_count",
+                  "value": 2
+              }
+          ]
+      },
+      {
+          "name": "Fake Upgrade",
+          "flavor_text": "flavor text flavor text flavor text.",
+          "description": "(description description description description description description description description)",
+          "upgrade_effects": [],
+          "prereqs": [
+              {
+                  "name": "day_count",
+                  "value": 2
+              }
+          ]
+      },
+      {
+          "name": "Fake Upgrade",
+          "flavor_text": "flavor text flavor text flavor text.",
+          "description": "(description description description description description description description description)",
+          "upgrade_effects": [],
+          "prereqs": [
+              {
+                  "name": "day_count",
+                  "value": 2
+              }
+          ]
       },
       {
           "name": "Longer Day",
@@ -225,7 +254,7 @@
 
       },
       {
-          "disabled": "Working as expected",
+          //"disabled": "Working as expected",
           "name": "Pitcher",
           "flavor_text": "its actually a carafe.",
           "description": "(Unlocks a pitcher which can store up to 10 drinks)",
@@ -239,7 +268,7 @@
           "prereqs": []
       },
       {
-          "disabled": "Working as expected",
+          //"disabled": "Working as expected",
           "name": "me and the boys",
           "flavor_text": "crackin open a cold one or two... or ten .",
           "description": "(Customers will now order a pitcher of beer)",
