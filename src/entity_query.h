@@ -42,7 +42,21 @@ struct EntityQuery {
     };
     auto& whereType(const EntityType& t) { return add_mod(new WhereType(t)); }
 
-    [[nodiscard]] bool has_values() const { return !gen().empty(); }
+    struct WhereLambda : Modification {
+        std::function<bool(const Entity&)> filter;
+        explicit WhereLambda(const std::function<bool(const Entity&)>& cb)
+            : filter(cb) {}
+        virtual bool operator()(const Entity& entity) const override {
+            return filter(entity);
+        }
+    };
+    auto& whereLambda(const std::function<bool(const Entity&)>& fn) {
+        return add_mod(new WhereLambda(fn));
+    }
+
+    /////////
+
+    [[nodiscard]] bool has_values() const { return !run_query(true).empty(); }
 
     [[nodiscard]] RefEntities values_ignore_cache() const {
         ents = run_query();
@@ -69,7 +83,7 @@ struct EntityQuery {
         return *this;
     }
 
-    [[nodiscard]] RefEntities run_query() const {
+    [[nodiscard]] RefEntities run_query(bool stop_on_first = false) const {
         RefEntities out;
         for (const auto& e_ptr : EntityHelper::get_entities()) {
             if (!e_ptr) continue;
@@ -82,6 +96,7 @@ struct EntityQuery {
                 });
 
             if (passed_all_mods) out.push_back(e);
+            if (stop_on_first && !out.empty()) return out;
         }
         // ran_query = true;
         return out;
