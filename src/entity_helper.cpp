@@ -261,10 +261,10 @@ std::vector<RefEntity> EntityHelper::getEntitiesInRange(vec2 pos, float range) {
 }
 
 OptEntity EntityHelper::getMatchingEntityInFront(
-    vec2 pos,                                 //
-    float range,                              //
-    Transform::FrontFaceDirection direction,  //
-    std::function<bool(RefEntity)> filter     //
+    vec2 pos,                                         //
+    float range,                                      //
+    Transform::FrontFaceDirection direction,          //
+    const std::function<bool(const Entity&)>& filter  //
 ) {
     TRACY_ZONE_SCOPED;
     VALIDATE(range > 0,

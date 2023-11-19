@@ -118,10 +118,10 @@ struct EntityHelper {
     static bool doesAnyExistWithType(const EntityType& type);
 
     static OptEntity getMatchingEntityInFront(
-        vec2 pos,                                 //
-        float range,                              //
-        Transform::FrontFaceDirection direction,  //
-        std::function<bool(RefEntity)> filter     //
+        vec2 pos,                                         //
+        float range,                                      //
+        Transform::FrontFaceDirection direction,          //
+        const std::function<bool(const Entity&)>& filter  //
     );
 
     static OptEntity getClosestMatchingEntity(
