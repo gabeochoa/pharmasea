@@ -74,4 +74,18 @@ static const UITheme GRAYSCALE =
             // TODO is there a better error color?
             color::off_white);
 
+[[nodiscard]] inline Color get_progress_bar_colors(float value,  //
+                                                   float pct_warning = -1,
+                                                   float pct_error = -1) {
+    if (pct_warning != -1 && value < pct_error)
+        return UI_THEME.from_usage(theme::Usage::Error);
+    if (pct_error != -1 && value < pct_warning)
+        return UI_THEME.from_usage(theme::Usage::Accent);
+    return UI_THEME.from_usage(theme::Usage::Primary);
+}
+
+[[nodiscard]] inline Color get_default_progress_bar_color(float value) {
+    return get_progress_bar_colors(value, 0.05f, 0.2f);
+}
+
 }  // namespace ui

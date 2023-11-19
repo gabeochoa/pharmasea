@@ -29,20 +29,10 @@ struct ProgressBarConfig {
     float pct_full = 1.f;
     float y_offset = -1;
     float x_offset = -1;
-    float pct_warning = -1.f;
-    float pct_error = -1.f;
 };
 
 void DrawProgressBar(const ProgressBarConfig& config) {
-    // TODO :WARNING_COLORS: Eventually merge this with the one in
-    // ui_rendering_system
-    Color primary = ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
-    if (config.pct_warning != -1.f && config.pct_full < config.pct_warning) {
-        primary = ui::UI_THEME.from_usage(ui::theme::Usage::Accent);
-    }
-    if (config.pct_error != -1.f && config.pct_full < config.pct_error) {
-        primary = ui::UI_THEME.from_usage(ui::theme::Usage::Error);
-    }
+    Color primary = ui::get_default_progress_bar_color(config.pct_full);
     Color background = ui::UI_THEME.from_usage(ui::theme::Usage::Background);
 
     float y_offset =
@@ -138,6 +128,33 @@ void draw_valid_colored_box(const Transform& transform,
 
     DrawCubeCustom(transform.raw(), transform.sizex(), transform.sizey(),
                    transform.sizez(), transform.facing, f, b);
+}
+
+bool draw_internal_model(const Entity& entity, Color color) {
+    if (entity.is_missing<ModelRenderer>()) return false;
+    if (entity.is_missing<CanBeHighlighted>()) return false;
+    if (entity.is_missing<Transform>()) return false;
+
+    const Transform& transform = entity.get<Transform>();
+    const ModelRenderer& renderer = entity.get<ModelRenderer>();
+    if (renderer.missing()) return false;
+    ModelInfo& model_info = renderer.model_info();
+
+    // TODO this is the exact same code as render_model_normal
+    // should be able to fix it
+
+    float rotation_angle = 180.f + transform.facing;
+
+    DrawModelEx(renderer.model(),
+                {
+                    transform.pos().x + model_info.position_offset.x,
+                    transform.pos().y + model_info.position_offset.y,
+                    transform.pos().z + model_info.position_offset.z,
+                },
+                vec3{0.f, 1.f, 0.f}, model_info.rotation_angle + rotation_angle,
+                transform.size() * model_info.size_scale, color);
+
+    return true;
 }
 
 void update_character_model_from_index(Entity& entity, float) {
@@ -293,63 +310,16 @@ bool render_debug(const Entity& entity, float dt) {
 }
 
 bool render_model_highlighted(const Entity& entity, float) {
-    if (entity.is_missing<ModelRenderer>()) return false;
-    if (entity.is_missing<CanBeHighlighted>()) return false;
-    if (entity.is_missing<Transform>()) return false;
-
-    const Transform& transform = entity.get<Transform>();
-    const ModelRenderer& renderer = entity.get<ModelRenderer>();
-    if (renderer.missing()) return false;
-    ModelInfo& model_info = renderer.model_info();
-
-    // TODO this is the exact same code as render_model_normal
-    // should be able to fix it
-
-    float rotation_angle = 180.f + transform.facing;
-
-    DrawModelEx(renderer.model(),
-                {
-                    transform.pos().x + model_info.position_offset.x,
-                    transform.pos().y + model_info.position_offset.y,
-                    transform.pos().z + model_info.position_offset.z,
-                },
-                vec3{0.f, 1.f, 0.f}, model_info.rotation_angle + rotation_angle,
-                transform.size() * model_info.size_scale, GRAY);
-
-    return true;
+    return draw_internal_model(entity, GRAY);
 }
 
 bool render_model_normal(const Entity& entity, float) {
     if (!ENABLE_MODELS) return false;
-    if (entity.is_missing<ModelRenderer>()) return false;
-    if (entity.is_missing<Transform>()) return false;
-    const Transform& transform = entity.get<Transform>();
-
-    const ModelRenderer& renderer = entity.get<ModelRenderer>();
-    if (renderer.missing()) return false;
-
-    const ModelInfo& model_info = renderer.model_info();
-
-    float rotation_angle = 180.f + transform.facing;
-
-    raylib::DrawModelEx(
-        renderer.model(),
-        {
-            transform.pos().x + model_info.position_offset.x,
-            transform.pos().y + model_info.position_offset.y,
-            transform.pos().z + model_info.position_offset.z,
-        },
-        vec3{0, 1, 0}, model_info.rotation_angle + rotation_angle,
-        transform.size() * model_info.size_scale, WHITE /*base_color*/);
-
-    return true;
+    return draw_internal_model(entity, WHITE);
 }
 
 void render_trigger_area(const Entity& entity, float dt) {
     if (entity.is_missing<IsTriggerArea>()) return;
-
-    // TODO add highlight when you walk in
-    // TODO add progress bar when all players are inside
 
     const IsTriggerArea& ita = entity.get<IsTriggerArea>();
     const Transform& transform = entity.get<Transform>();
@@ -611,17 +581,14 @@ void render_patience(const Entity& entity, float) {
     const HasPatience& hp = entity.get<HasPatience>();
     if (hp.pct() >= 1.f) return;
 
-    DrawProgressBar(
-        ProgressBarConfig{.type = ProgressBarConfig::Vertical,
-                          .position = transform.pos(),
-                          .scale = {0.75f, 0.75f, 0.75f},
-                          .pct_full = hp.pct(),
-                          .y_offset = 2.f * TILESIZE,
-                          .x_offset = -0.45f * TILESIZE,
-                          // dont change this numbers without updating
-                          // the ones in ui_rendering_system
-                          .pct_warning = 0.2f,
-                          .pct_error = 0.05f});
+    DrawProgressBar(ProgressBarConfig{
+        .type = ProgressBarConfig::Vertical,
+        .position = transform.pos(),
+        .scale = {0.75f, 0.75f, 0.75f},
+        .pct_full = hp.pct(),
+        .y_offset = 2.f * TILESIZE,
+        .x_offset = -0.45f * TILESIZE,
+    });
 }
 
 void render_speech_bubble(const Entity& entity, float) {
