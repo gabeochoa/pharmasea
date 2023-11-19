@@ -29,6 +29,8 @@ struct CanOrderDrink : public BaseComponent {
         return get_recipe_for_drink(current_order);
     }
 
+    [[nodiscard]] Drink order() const { return current_order; }
+
     [[nodiscard]] bool current_order_has_alcohol() const {
         bool yes = false;
         bitset_utils::for_each_enabled_bit(recipe(), [&](size_t index) {

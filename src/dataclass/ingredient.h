@@ -135,6 +135,7 @@ using IngredientBitSet = std::bitset<magic_enum::enum_count<Ingredient>()>;
 enum Drink {
     coke,
     beer,
+    beer_pitcher,
     rum_and_coke,
     margarita,
     daiquiri,

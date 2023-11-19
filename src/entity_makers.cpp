@@ -1116,7 +1116,7 @@ void make_drink(Item& drink, vec2 pos) {
             const IsDrink& isdrink = owner.get<IsDrink>();
             constexpr auto drinks = magic_enum::enum_values<Drink>();
             for (Drink d : drinks) {
-                if (isdrink.matches_recipe(d))
+                if (isdrink.matches_drink(d))
                     return get_model_name_for_drink(d);
             }
             return util::convertToSnakeCase<EntityType>(EntityType::Drink);
@@ -1160,7 +1160,7 @@ void make_pitcher(Item& pitcher, vec2 pos) {
             const IsDrink& isdrink = owner.get<IsDrink>();
             constexpr auto drinks = magic_enum::enum_values<Drink>();
             for (Drink d : drinks) {
-                if (isdrink.matches_recipe(d))
+                if (isdrink.matches_drink(d))
                     return get_model_name_for_drink(d);
             }
             // TODO uhhhhhh add a new cup type for this eventually

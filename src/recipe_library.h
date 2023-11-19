@@ -13,6 +13,9 @@ struct Recipe {
     std::string icon_name;
     IngredientBitSet ingredients;
     IngredientBitSet prereqs;
+    int num_drinks;
+    // If we need more replace with a bitset "tags"
+    bool requires_upgrade;
 };
 
 SINGLETON_FWD(RecipeLibrary)
@@ -88,4 +91,10 @@ static int get_base_price_for_drink(Drink drink) {
     int num_ingredients = (int) recipe.ingredients.count();
     int num_prereqs = (int) recipe.prereqs.count();
     return (num_ingredients * 5) + (num_prereqs * 10);
+}
+
+static bool needs_upgrade(Drink drink) {
+    return RecipeLibrary::get()
+        .get(get_string_for_drink(drink))
+        .requires_upgrade;
 }

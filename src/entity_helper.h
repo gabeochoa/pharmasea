@@ -198,7 +198,6 @@ struct EntityHelper {
     // return true;
     // }
 
-    // TODO :PBUG: need to invalidate any current valid paths
     static void invalidatePathCacheLocation(vec2 pos);
     static void invalidatePathCache();
     static bool isWalkable(vec2 pos);

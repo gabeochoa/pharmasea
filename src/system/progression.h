@@ -43,6 +43,10 @@ inline bool collect_drink_options(IsProgressionManager& ipm) {
                 continue;
             }
 
+            // This drink gets unlocked through upgrades instead
+            // so dont show them in here
+            if (needs_upgrade(drink)) continue;
+
             // We use get_req here because we want to also count any
             // prereqs that we need since those will spawn new machines/items as
             // well
@@ -175,7 +179,7 @@ inline void collect_progression_options(Entity& entity, float) {
 
 inline void update_upgrade_variables() {
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+    IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
 
     magic_enum::enum_for_each<ConfigKey>([&](auto val) {
@@ -194,6 +198,7 @@ inline void update_upgrade_variables() {
                         Drink drink = magic_enum::enum_value<Drink>(index);
                         ipm.unlock_drink(drink);
                     });
+                irsm.unlocked_drinks.reset();
             } break;
             case ConfigKey::Test:
             case ConfigKey::MaxNumOrders:

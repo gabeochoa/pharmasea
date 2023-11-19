@@ -40,22 +40,29 @@ struct IsDrink : public BaseComponent {
 
         num_completed = calc_completed();
 
-        log_info("added ingredient {} ({}) to multi. matching {} {} times",
+        log_info("added ingredient {} ({}) to cup. matching {} {} times",
                  magic_enum::enum_name<Ingredient>(i), count_of_ingredient(i),
                  underlying.has_value(), num_completed);
     }
 
-    [[nodiscard]] bool matches_recipe(const IngredientBitSet& recipe) const {
-        bool has_req = (recipe & unique_igs) == recipe;
-        bool has_extra = (recipe ^ unique_igs).any();
+    [[nodiscard]] bool matches_recipe(const Recipe& recipe,
+                                      const IngredientBitSet& igs,
+                                      bool ignore_num_drinks = false) const {
+        // if this recipe needs multiple (ie pitcher)
+        // then wait until its the matching one
+        if ((!ignore_num_drinks) && recipe.num_drinks != num_completed)
+            return false;
+
+        bool has_req = (igs & unique_igs) == igs;
+        bool has_extra = (igs ^ unique_igs).any();
         return has_req && !has_extra;
     }
 
-    [[nodiscard]] bool matches_recipe(const Drink& drink_name) const {
-        return matches_recipe(
-            RecipeLibrary::get()
-                .get(std::string(magic_enum::enum_name(drink_name)))
-                .ingredients);
+    [[nodiscard]] bool matches_drink(const Drink& drink_name,
+                                     bool ignore_num_drinks = false) const {
+        Recipe recipe = RecipeLibrary::get().get(
+            std::string(magic_enum::enum_name(drink_name)));
+        return matches_recipe(recipe, recipe.ingredients, ignore_num_drinks);
     }
 
     [[nodiscard]] IngredientBitSet ing() const { return unique_igs; }
@@ -103,7 +110,7 @@ struct IsDrink : public BaseComponent {
         const auto recipelibrary = RecipeLibrary::get();
 
         for (const auto& recipe : recipelibrary) {
-            if (matches_recipe(recipe.second.drink)) {
+            if (matches_drink(recipe.second.drink, true)) {
                 return recipe.second.drink;
             }
         }

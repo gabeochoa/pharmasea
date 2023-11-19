@@ -339,14 +339,14 @@ void Preload::load_drink_recipes() {
             }
 
             RecipeLibrary::get().load(
-                {
-                    .drink = drink,
-                    .base_name = base_name,
-                    .viewer_name = object["viewer_name"].get<std::string>(),
-                    .icon_name = object["icon_name"].get<std::string>(),
-                    .ingredients = ingredients,
-                    .prereqs = prereqs,
-                },
+                {.drink = drink,
+                 .base_name = base_name,
+                 .viewer_name = object["viewer_name"].get<std::string>(),
+                 .icon_name = object["icon_name"].get<std::string>(),
+                 .ingredients = ingredients,
+                 .prereqs = prereqs,
+                 .num_drinks = object.value("num_drinks", 1),
+                 .requires_upgrade = object.value("requires_upgrade", false)},
                 "INVALID", base_name.c_str());
 
             log_trace("loaded recipe {} ", base_name);

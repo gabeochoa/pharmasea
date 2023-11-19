@@ -18,6 +18,17 @@
           ]
       },
       {
+          "name": "beer_pitcher",
+          // TODO replace with its own icon
+          "icon_name": "beer",
+          "viewer_name": "Beer Pitcher",
+          "ingredients": [
+              "Beer"
+          ],
+          "num_drinks": 10,
+          "requires_upgrade": true
+      },
+      {
           "name": "rum_and_coke",
           "icon_name": "rum_and_coke",
           "viewer_name": "Rum & Coke",

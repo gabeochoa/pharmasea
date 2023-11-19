@@ -235,7 +235,6 @@ struct IsRoundSettingsManager : public BaseComponent {
                 break;
             case Operation::Unlock:
                 bitset_utils::set(unlocked_drinks, value);
-                // TODO set the one in is_progression_manager
                 break;
         }
         return value;
@@ -422,7 +421,7 @@ struct IsRoundSettingsManager : public BaseComponent {
 
     template<typename T>
     [[nodiscard]] bool check_value(const ConfigKey& key, T value) {
-        // TODO Right now we only support bool and greater than
+        // Right now we only support bool and greater than
         // eventually we probably need to say what direction we need the current
         // value to be relative to the new one
         //
@@ -499,7 +498,10 @@ struct IsRoundSettingsManager : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        // TODO there wont be more than 10k upgrades right?
+        // there wont be more than 10k upgrades right?
+        if (upgrades_applied.size() > 9000)
+            log_warn("Getting dangerously close to our upgrades_applied cap ");
+
         s.container(upgrades_applied, 10000,
                     [](S& s2, std::string str) { s2.text1b(str, 64); });
     }
