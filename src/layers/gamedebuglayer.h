@@ -19,6 +19,7 @@
 #include "../engine/layer.h"
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 #include "raylib.h"
 
 struct GameDebugLayer : public Layer {
@@ -115,10 +116,13 @@ struct GameDebugLayer : public Layer {
                     auto [num_spawned, countdown] =
                         rect::hsplit<2>(round_spawn_div);
 
-                    auto spawners = EntityHelper::getAllWithType(
-                        EntityType::CustomerSpawner);
+                    OptEntity opt_spawner =
+                        EntityQuery()
+                            .whereType(EntityType::CustomerSpawner)
+                            .gen_first();
 
-                    Entity& spawner = spawners[0];
+                    Entity& spawner = opt_spawner.asE();
+
                     const IsSpawner& iss = spawner.get<IsSpawner>();
                     text(Widget{num_spawned},
                          fmt::format("Num Spawned: {} / {}",

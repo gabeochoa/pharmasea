@@ -269,6 +269,15 @@ OptEntity EntityHelper::getMatchingEntityInFront(
     TRACY_ZONE_SCOPED;
     VALIDATE(range > 0,
              fmt::format("range has to be positive but was {}", range));
+    /**
+        auto& eq = EntityQuery()
+                   .whereLambda(filter)
+                   .whereInFront(tile)
+                   .whereSnappedPositionMatches(vec::snap(tile));
+        if (eq.has_values()) {
+            return eq.gen_first();
+        }
+     */
 
     int cur_step = 0;
     int irange = static_cast<int>(range);

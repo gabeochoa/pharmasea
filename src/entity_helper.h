@@ -113,7 +113,6 @@ struct EntityHelper {
                                       float range = 100.f);
 
     // TODO :BE: change other debugname filter guys to this
-    static std::vector<RefEntity> getAllWithType(const EntityType& type);
 
     static bool doesAnyExistWithType(const EntityType& type);
 
@@ -207,4 +206,6 @@ struct EntityHelper {
     // each target get and path find runs through all entities
     // so this will just get slower and slower over time
     static bool isWalkableRawEntities(const vec2& pos);
+
+    static std::vector<RefEntity> getAllWithType(const EntityType& type);
 };

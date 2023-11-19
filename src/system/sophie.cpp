@@ -239,14 +239,19 @@ void deleting_item_needed_for_recipe(Entity& entity) {
         // okay
         if (trash_ids.empty()) return true;
 
-        RefEntities cups = EntityHelper::getAllWithType(type);
-        size_t num_in_trash = 0;
-        for (const auto& cup : cups) {
-            if (util::contains(trash_ids, cup.get().id)) num_in_trash++;
-        }
+        // TODO i really want to be able to clone just the query piece
+        // but cant because of the unique ptr
+        size_t num_total = EntityQuery().whereType(type).gen_count();
 
+        size_t num_in_trash =
+            EntityQuery()
+                .whereType(type)
+                .whereLambda([trash_ids](const Entity& et) -> bool {
+                    return util::contains(trash_ids, et.id);
+                })
+                .gen_count();
         // if you are not throwing away all of them then we good
-        return cups.size() > num_in_trash;
+        return num_total > num_in_trash;
     };
 
     has_req_machines &= _hasAtLeastOneNotInTrash(EntityType::Cupboard);
