@@ -30,10 +30,13 @@ struct ProgressBarConfig {
     float pct_full = 1.f;
     float y_offset = -1;
     float x_offset = -1;
+    bool use_color = false;
 };
 
 void DrawProgressBar(const ProgressBarConfig& config) {
-    Color primary = ui::get_default_progress_bar_color(config.pct_full);
+    Color primary = config.use_color
+                        ? ui::get_default_progress_bar_color(config.pct_full)
+                        : ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
     Color background = ui::UI_THEME.from_usage(ui::theme::Usage::Background);
 
     float y_offset =
@@ -587,6 +590,7 @@ void render_patience(const Entity& entity, float) {
         .pct_full = hp.pct(),
         .y_offset = 2.f * TILESIZE,
         .x_offset = -0.45f * TILESIZE,
+        .use_color = true,
     });
 }
 
