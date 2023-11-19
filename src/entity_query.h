@@ -84,19 +84,50 @@ struct EntityQuery {
     struct WhereInRange : Modification {
         vec2 position;
         float range;
+        bool should_snap;
 
-        explicit WhereInRange(vec2 pos, float r) : position(pos), range(r) {}
+        // TODO mess around with the right epsilon here
+        explicit WhereInRange(vec2 pos, float r = 0.01f, bool snap = false)
+            : position(pos), range(r), should_snap(snap) {}
         virtual bool operator()(const Entity& entity) const override {
-            return vec::distance(position, entity.get<Transform>().as2()) <
-                   range;
+            vec2 pos = entity.get<Transform>().as2();
+            if (should_snap) pos = vec::snap(pos);
+            return vec::distance(position, pos) < range;
         }
     };
     auto& whereInRange(vec2 position, float range) {
         return add_mod(new WhereInRange(position, range));
     }
     auto& wherePositionMatches(const Entity& entity) {
+        return whereInRange(entity.get<Transform>().as2(), 0.01f);
+    }
+    auto& whereSnappedPositionMatches(vec2 position) {
         // TODO mess around with the right epsilon here
-        return add_mod(new WhereInRange(entity.get<Transform>().as2(), 0.01f));
+        return add_mod(new WhereInRange(position, 0.01f, true));
+    }
+    auto& whereSnappedPositionMatches(const Entity& entity) {
+        return whereSnappedPositionMatches(entity.get<Transform>().as2());
+    }
+
+    struct WhereInFront : Modification {
+        vec2 position;
+        float range;
+
+        explicit WhereInFront(vec2 pos, float r) : position(pos), range(r) {}
+        virtual bool operator()(const Entity& entity) const override {
+            float dist = vec::distance(entity.get<Transform>().as2(), position);
+            if (abs(dist) > range) return false;
+            if (dist < 0) return false;
+            return true;
+        }
+    };
+
+    auto& whereInFront(vec2 pos, float range = 1.f) {
+        return add_mod(new WhereInFront(pos, range));
+    }
+
+    auto& whereInFront(const Entity& entity, float range = 1.f) {
+        return whereInFront(entity.get<Transform>().as2(), range);
     }
 
     struct WhereInside : Modification {
