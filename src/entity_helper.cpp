@@ -1,5 +1,6 @@
 #include "entity_helper.h"
 
+#include "entity_query.h"
 #include "system/input_process_manager.h"
 
 Entities client_entities_DO_NOT_USE;
@@ -234,20 +235,11 @@ OptEntity EntityHelper::getClosestOfType(const Entity& entity,
 
 // TODO :BE: change other debugname filter guys to this
 std::vector<RefEntity> EntityHelper::getAllWithType(const EntityType& type) {
-    std::vector<RefEntity> matching;
-    for (const std::shared_ptr<Entity>& e : get_entities()) {
-        if (!e) continue;
-        if (check_type(*e, type)) matching.push_back(*e);
-    }
-    return matching;
+    return EntityQuery().whereType(type).gen();
 }
 
 bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
-    for (std::shared_ptr<Entity> e : get_entities()) {
-        if (!e) continue;
-        if (check_type(*e, type)) return true;
-    }
-    return false;
+    return EntityQuery().whereType(type).has_values();
 }
 
 bool EntityHelper::doesAnyExistMatchingFilter(
