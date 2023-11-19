@@ -11,6 +11,17 @@ struct EntityQuery {
         virtual bool operator()(const Entity&) const = 0;
     };
 
+    // TODO add predicates
+    struct Not : Modification {
+        std::unique_ptr<Modification> mod;
+
+        explicit Not(Modification* m) : mod(m) {}
+
+        virtual bool operator()(const Entity& entity) const override {
+            return !((*mod)(entity));
+        }
+    };
+
     struct Limit : Modification {
         int amount;
         mutable int amount_taken;
@@ -33,16 +44,7 @@ struct EntityQuery {
         }
     };
     auto& whereID(int id) { return add_mod(new WhereID(id)); }
-
-    // TODO add predicates
-    struct WhereNotID : Modification {
-        int id;
-        explicit WhereNotID(int id) : id(id) {}
-        virtual bool operator()(const Entity& entity) const override {
-            return entity.id != id;
-        }
-    };
-    auto& whereNotID(int id) { return add_mod(new WhereNotID(id)); }
+    auto& whereNotID(int id) { return add_mod(new Not(new WhereID(id))); }
 
     struct WhereType : Modification {
         EntityType type;
@@ -97,6 +99,9 @@ struct EntityQuery {
     };
     auto& whereInRange(vec2 position, float range) {
         return add_mod(new WhereInRange(position, range));
+    }
+    auto& whereNotInRange(vec2 position, float range) {
+        return add_mod(new Not(new WhereInRange(position, range)));
     }
     auto& wherePositionMatches(const Entity& entity) {
         return whereInRange(entity.get<Transform>().as2(), 0.01f);
