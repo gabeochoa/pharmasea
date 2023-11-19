@@ -61,15 +61,10 @@ void player_holding_furniture(Entity& entity) {
 }
 
 void bar_not_clean(Entity& entity) {
-    const auto vomits = EntityHelper::getAllWithType(EntityType::Vomit);
-    bool has_vomit = !(vomits.empty());
-
-    std::optional<vec2> vom_position =
-        has_vomit ? (vomits[0].get().get<Transform>().as2())
-                  : std::optional<vec2>{};
-
+    OptEntity any = EntityQuery().whereType(EntityType::Vomit).gen_first();
+    vec2 pos = any.has_value() ? any->get<Transform>().as2() : vec2{0, 0};
     entity.get<HasTimer>().write_reason(HasTimer::WaitingReason::BarNotClean,
-                                        has_vomit, vom_position);
+                                        any.has_value(), pos);
 }
 
 void overlapping_furniture(Entity& entity) {

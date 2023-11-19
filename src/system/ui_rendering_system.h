@@ -8,6 +8,7 @@
 #include "../engine/ui/ui.h"
 #include "../entity.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 
 namespace system_manager {
 namespace ui {
@@ -26,7 +27,7 @@ inline void render_current_register_queue(float dt) {
         refresh_time = 2.f;
 
         const std::vector<RefEntity> registers =
-            EntityHelper::getAllWithType(EntityType::Register);
+            EntityQuery().whereType(EntityType::Register).gen();
 
         orders_to_render.clear();
 

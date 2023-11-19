@@ -207,5 +207,6 @@ struct EntityHelper {
     // so this will just get slower and slower over time
     static bool isWalkableRawEntities(const vec2& pos);
 
+   private:
     static std::vector<RefEntity> getAllWithType(const EntityType& type);
 };

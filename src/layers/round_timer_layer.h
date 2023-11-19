@@ -6,6 +6,7 @@
 #include "../components/is_spawner.h"
 #include "../entity.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 #include "base_game_renderer.h"
 
 struct RoundTimerLayer : public BaseGameRendererLayer {
@@ -111,10 +112,10 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             Rectangle spawn_count(rounded_rect);
             spawn_count.y += 120;
 
-            auto spawners =
-                EntityHelper::getAllWithType(EntityType::CustomerSpawner);
-
-            Entity& spawner = spawners[0];
+            Entity& spawner = (EntityQuery()
+                                   .whereType(EntityType::CustomerSpawner)
+                                   .gen_first())
+                                  .asE();
             const IsSpawner& iss = spawner.get<IsSpawner>();
             text(Widget{spawn_count},
                  fmt::format("Customers Coming: {}", iss.get_max_spawned()));
