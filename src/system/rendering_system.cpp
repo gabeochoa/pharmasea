@@ -132,7 +132,6 @@ void draw_valid_colored_box(const Transform& transform,
 
 bool draw_internal_model(const Entity& entity, Color color) {
     if (entity.is_missing<ModelRenderer>()) return false;
-    if (entity.is_missing<CanBeHighlighted>()) return false;
     if (entity.is_missing<Transform>()) return false;
 
     const Transform& transform = entity.get<Transform>();
@@ -307,6 +306,7 @@ bool render_debug(const Entity& entity, float dt) {
 }
 
 bool render_model_highlighted(const Entity& entity, float) {
+    if (entity.is_missing<CanBeHighlighted>()) return false;
     return draw_internal_model(entity, GRAY);
 }
 
