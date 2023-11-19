@@ -25,17 +25,15 @@ void customers_in_store(Entity& entity) {
     // spawner?
     const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
-    bool all_gone = true;
-    std::optional<vec2> pos = {};
-    for (const Entity& e : EntityHelper::getAllWithType(EntityType::Customer)) {
-        if (vec::distance(e.get<Transform>().as2(), endpos) > TILESIZE * 2.f) {
-            all_gone = false;
-            pos = e.get<Transform>().as2();
-            break;
-        }
-    }
+    OptEntity any = EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .whereNotInRange(endpos, TILESIZE * 2.f)
+                        .gen_first();
+
+    vec2 pos = any.has_value() ? any->get<Transform>().as2() : vec2{0, 0};
+
     entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::CustomersInStore, !all_gone, pos);
+        HasTimer::WaitingReason::CustomersInStore, any.has_value(), pos);
 }
 
 // Handle some player is holding furniture
