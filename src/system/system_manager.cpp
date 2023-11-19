@@ -886,9 +886,9 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             // choose given option
 
             switch (ipm.upgrade_type()) {
-                case IsProgressionManager::UpgradeType::None: {
+                case UpgradeType::None: {
                 } break;
-                case IsProgressionManager::UpgradeType::Upgrade: {
+                case UpgradeType::Upgrade: {
                     const std::string& option =
                         (option_chosen == 0 ? ipm.upgradeOption1
                                             : ipm.upgradeOption2);
@@ -901,7 +901,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
                     break;
                 }
-                case IsProgressionManager::UpgradeType::Drink: {
+                case UpgradeType::Drink: {
                     Drink option = option_chosen == 0 ? ipm.drinkOption1
                                                       : ipm.drinkOption2;
 

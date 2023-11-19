@@ -122,6 +122,14 @@ struct Upgrade {
     int duration = -1;
 };
 
+enum struct UpgradeType {
+    None,
+    Upgrade,
+    Drink,
+};
+// inside preload.cpp
+extern std::vector<UpgradeType> upgrade_rounds;
+
 static std::atomic_int UPGRADE_INSTANCE_ID_GEN = 0;
 struct UpgradeInstance {
     int id;

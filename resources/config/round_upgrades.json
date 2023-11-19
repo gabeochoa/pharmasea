@@ -1,4 +1,11 @@
 {
+  "rounds": [
+      "drink",
+      "drink",
+      "drink",
+      "upgrade",
+      "none"
+  ],
   "config": [
       {
           "name": "round_length",

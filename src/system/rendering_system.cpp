@@ -480,13 +480,13 @@ void render_trigger_area(const Entity& entity, float dt) {
         bool isOption1 = type == IsTriggerArea::Progression_Option1;
 
         switch (ipm.upgrade_type()) {
-            case IsProgressionManager::UpgradeType::None:
+            case UpgradeType::None:
                 break;
-            case IsProgressionManager::UpgradeType::Upgrade: {
+            case UpgradeType::Upgrade: {
                 _render_upgrade_preview(isOption1 ? ipm.upgradeOption1
                                                   : ipm.upgradeOption2);
             } break;
-            case IsProgressionManager::UpgradeType::Drink: {
+            case UpgradeType::Drink: {
                 _render_drink_preview(isOption1 ? ipm.drinkOption1
                                                 : ipm.drinkOption2);
             } break;

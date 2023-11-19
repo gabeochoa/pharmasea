@@ -5,6 +5,7 @@
 #include "../engine/bitset_utils.h"
 //
 #include "../dataclass/ingredient.h"
+#include "../dataclass/settings.h"
 #include "../recipe_library.h"
 #include "base_component.h"
 
@@ -128,22 +129,7 @@ struct IsProgressionManager : public BaseComponent {
         return unlockedEntityTypes.test(index);
     }
 
-    enum struct UpgradeType {
-        None,
-        Upgrade,
-        Drink,
-    };
-
     int upgrade_index = 0;
-
-    // TODO move to a config
-    std::array<UpgradeType, 4> upgrade_rounds = {{
-        // UpgradeType::Drink,
-        UpgradeType::Upgrade,
-        UpgradeType::Drink,
-        UpgradeType::Upgrade,
-        UpgradeType::None,
-    }};
 
     [[nodiscard]] UpgradeType upgrade_type() const {
         return upgrade_rounds[upgrade_index];

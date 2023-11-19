@@ -147,14 +147,14 @@ inline void collect_progression_options(Entity& entity, float) {
     if (ipm.collectedOptions) return;
 
     switch (ipm.upgrade_type()) {
-        case IsProgressionManager::UpgradeType::None: {
+        case UpgradeType::None: {
             // If we arent in an upgrade round just go directly to planning
             log_info("not an upgrade round see ya next time");
             ipm.next_round();
             skip_upgrade_visit();
             return;
         } break;
-        case IsProgressionManager::UpgradeType::Drink: {
+        case UpgradeType::Drink: {
             bool got_drink_options = collect_drink_options(ipm);
             if (!got_drink_options) {
                 log_info("could'nt get enough drink options");
@@ -163,7 +163,7 @@ inline void collect_progression_options(Entity& entity, float) {
                 return;
             }
         } break;
-        case IsProgressionManager::UpgradeType::Upgrade: {
+        case UpgradeType::Upgrade: {
             bool got_upgrade_options = collect_upgrade_options(entity);
             if (!got_upgrade_options) {
                 skip_upgrade_visit();

@@ -14,6 +14,9 @@
 #include "recipe_library.h"
 #include "upgrade_library.h"
 
+// dataclass/settings.h
+std::vector<UpgradeType> upgrade_rounds;
+
 float DEADZONE = 0.25f;
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;
@@ -648,8 +651,23 @@ void Preload::load_upgrades() {
         }
     };
 
+    const auto load_upgrade_rounds = [](const nlohmann::json& config_values) {
+        for (const auto& value : config_values) {
+            const auto name = value.get<std::string>();
+            try {
+                upgrade_rounds.push_back(magic_enum::enum_cast<UpgradeType>(
+                                             name, magic_enum::case_insensitive)
+                                             .value());
+            } catch (std::exception e) {
+                std::cout << ("exception converting upgrade type: {}", e.what())
+                          << std::endl;
+            }
+        }
+    };
+
     load_json_config_file("round_upgrades.json",
                           [&](const nlohmann::json& contents) {
+                              load_upgrade_rounds(contents["rounds"]);
                               load_config_values(contents["config"]);
                               load_upgrades(contents["upgrades"]);
                           });
