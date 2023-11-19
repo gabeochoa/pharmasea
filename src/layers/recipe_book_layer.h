@@ -4,6 +4,7 @@
 #include "../dataclass/ingredient.h"
 #include "../engine/bitset_utils.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 #include "../recipe_library.h"
 #include "base_game_renderer.h"
 
@@ -100,7 +101,9 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
     }
 
     OptEntity get_ipm_entity() {
-        return EntityHelper::getFirstWithComponent<IsProgressionManager>();
+        return EntityQuery()
+            .whereHasComponent<IsProgressionManager>()
+            .gen_first();
     }
 
     Drink get_drink_for_selected_id() {

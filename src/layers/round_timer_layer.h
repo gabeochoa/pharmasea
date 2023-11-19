@@ -30,7 +30,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
     */
 
     OptEntity get_timer_entity() {
-        return EntityHelper::getFirstWithComponent<HasTimer>();
+        return EntityQuery().whereHasComponent<HasTimer>().gen_first();
     }
 
     std::string get_status_text(const HasTimer& ht) {

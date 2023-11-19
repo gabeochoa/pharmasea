@@ -6,6 +6,7 @@
 #include "../components/transform.h"
 #include "../entity.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 #include "../map.h"
 #include "base_game_renderer.h"
 
@@ -15,7 +16,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
     virtual ~RoundEndReasonLayer() {}
 
     OptEntity get_timer_entity() {
-        return EntityHelper::getFirstWithComponent<HasTimer>();
+        return EntityQuery().whereHasComponent<HasTimer>().gen_first();
     }
 
     OptEntity get_player_entity() {
