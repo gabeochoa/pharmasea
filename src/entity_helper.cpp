@@ -344,41 +344,33 @@ RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
 OptEntity EntityHelper::getOverlappingSolidEntityInRange(
     vec2 range_min, vec2 range_max,
     const std::function<bool(const Entity&)>& filter) {
-    for (const std::shared_ptr<Entity>& e : get_entities()) {
-        if (!e->has<IsSolid>()) continue;
-        if (filter && !filter(*e)) continue;
-
-        const auto pos = e->get<Transform>().as2();
-        if (pos.x > range_max.x || pos.x < range_min.x) continue;
-        if (pos.y > range_max.y || pos.y < range_min.y) continue;
-
-        for (const std::shared_ptr<Entity>& e2 : get_entities()) {
-            if (e2->id == e->id) continue;
-            if (!e2->has<IsSolid>()) continue;
-            const auto pos2 = e2->get<Transform>().as2();
-            if (pos2.x > range_max.x || pos2.x < range_min.x) continue;
-            if (pos2.y > range_max.y || pos2.y < range_min.y) continue;
-
-            if (pos.x == pos2.x && pos.y == pos2.y) {
-                return *e;
-            }
-        }
-    }
-    return {};
+    return EntityQuery()                    //
+        .whereHasComponent<IsSolid>()       //
+        .whereLambdaExistsAndTrue(filter)   //
+        .whereInside(range_min, range_max)  //
+        .whereLambda([&](const Entity& entity) -> bool {
+            return EntityQuery()                    //
+                .whereNotID(entity.id)              //
+                .whereHasComponent<IsSolid>()       //
+                .whereInside(range_min, range_max)  //
+                .wherePositionMatches(entity)       //
+                .first()                            //
+                .has_values();
+        })
+        .gen_first();
 }
 
 OptEntity EntityHelper::getOverlappingEntityIfExists(
     const Entity& entity, float range,
     const std::function<bool(const Entity&)>& filter) {
     const vec2 position = entity.get<Transform>().as2();
-    for (const std::shared_ptr<Entity>& e2 : get_entities()) {
-        if (e2->id == entity.id) continue;     // skip us
-        if (filter && !filter(*e2)) continue;  // skip non solid
-        const auto pos2 = e2->get<Transform>().as2();
-        float distance = vec::distance(position, pos2);
-        if (distance <= range) return *e2;
-    }
-    return {};
+    return EntityQuery()                   //
+        .whereNotID(entity.id)             //
+        .whereLambdaExistsAndTrue(filter)  //
+        .whereHasComponent<IsSolid>()      //
+        .whereInRange(position, range)     //
+        .wherePositionMatches(entity)      //
+        .gen_first();
 }
 
 // TODO :INFRA: i think this is slower because we are doing "outside mesh"
