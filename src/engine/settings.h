@@ -174,7 +174,7 @@ struct Settings {
 
     void update_master_volume(float nv) {
         data.master_volume = util::clamp(nv, 0.f, 1.f);
-        log_info("master volume changed to {}", data.master_volume);
+        log_trace("master volume changed to {}", data.master_volume);
 
         MusicLibrary::get().update_volume(data.music_volume);
         SoundLibrary::get().update_volume(data.sound_volume);
@@ -277,7 +277,7 @@ struct Settings {
             [&](const std::string& name, const std::string& filename,
                 const std::string& extension) {
                 if (extension != ".mo") return;
-                log_info("adding {} {} {}", name, filename, extension);
+                log_trace("adding {} {} {}", name, filename, extension);
 
                 lang_options.push_back(
                     settings::LanguageInfo{.name = name, .filename = filename});

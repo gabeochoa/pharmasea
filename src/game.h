@@ -75,7 +75,7 @@ inline void startup() {
         //
         strings::GAME_NAME,
         //
-        raylib::LOG_WARNING,
+        raylib::LOG_ERROR,
     });
 
     // -------- Its unlikely anything should go above this line ----- //

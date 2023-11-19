@@ -140,9 +140,6 @@ bool draw_internal_model(const Entity& entity, Color color) {
     if (renderer.missing()) return false;
     ModelInfo& model_info = renderer.model_info();
 
-    // TODO this is the exact same code as render_model_normal
-    // should be able to fix it
-
     float rotation_angle = 180.f + transform.facing;
 
     DrawModelEx(renderer.model(),

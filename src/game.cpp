@@ -13,7 +13,11 @@ std::shared_ptr<network::Info> network_info;
 int main(int argc, char* argv[]) {
     process_dev_flags(argv);
 
+    // log nothing during the test
+    LOG_LEVEL = 6;
     tests::run_all();
+    // back to default , preload will set it right
+    LOG_LEVEL = 2;
 
     if (TESTS_ONLY) {
         log_info("All tests ran ");
@@ -42,7 +46,7 @@ int main(int argc, char* argv[]) {
     try {
         App::get().run();
     } catch (const std::exception& e) {
-        std::cout << e.what() << std::endl;
+        std::cout << "App run exception: " << e.what() << std::endl;
     }
     return 0;
 }

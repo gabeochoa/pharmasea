@@ -71,7 +71,7 @@ void App::onEvent(Event& event) {
 }
 
 bool App::onWindowResize(WindowResizeEvent event) {
-    log_info("Got Window Resize Event: {}, {}", event.width, event.height);
+    log_trace("Got Window Resize Event: {}, {}", event.width, event.height);
 
     width = event.width;
     height = event.height;
@@ -85,7 +85,7 @@ bool App::onWindowResize(WindowResizeEvent event) {
 }
 
 bool App::onWindowFullscreen(WindowFullscreenEvent& event) {
-    log_info("Got Window Fullscreen toggle Event");
+    log_trace("Got Window Fullscreen toggle Event");
 
     bool isFullscreenOn = raylib::IsWindowFullscreen();
 

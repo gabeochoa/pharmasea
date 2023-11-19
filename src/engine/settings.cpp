@@ -16,9 +16,10 @@ void Settings::update_language_from_index(int index) {
 }
 
 void Settings::update_ui_theme(const std::string& s) {
-    log_info("updating UI theme to {}", s);
-    Preload::get().update_ui_theme(s);
+    // Only log if its not loading the default theme
+    if (!s.empty()) log_info("updating UI theme to {}", s);
 
+    Preload::get().update_ui_theme(s);
     data.ui_theme = s;
 }
 

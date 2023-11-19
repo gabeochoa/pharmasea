@@ -34,6 +34,7 @@ SINGLETON_FWD(Preload)
 struct Preload {
     SINGLETON(Preload)
 
+    bool completed_preload_once = false;
     raylib::Font font;
 
     Preload() {
@@ -52,7 +53,7 @@ struct Preload {
             load_sounds();
             load_music();
         }
-        load_upgrades();
+        completed_preload_once = true;
     }
 
     ~Preload() {

@@ -9,7 +9,7 @@
 #pragma clang diagnostic ignored "-Wmissing-field-initializers"
 
 #include "log.h"
-#else 
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
 
@@ -56,7 +56,9 @@ fs::path Files::settings_filepath() const {
     return full_path;
 }
 
-fs::path Files::resource_folder() const { return fs::current_path() /  fs::path("resources"); }
+fs::path Files::resource_folder() const {
+    return fs::current_path() / fs::path("resources");
+}
 
 fs::path Files::game_controller_db() const {
     return (resource_folder() / fs::path("gamecontrollerdb.txt")).string();
@@ -79,7 +81,8 @@ void Files::for_resources_in_group(
                dir_entry.path().extension().string());
         }
     } catch (const std::exception& e) {
-        std::cout << e.what() << std::endl;
+        std::cout << "Exception while iterating over group resources " << group
+                  << " " << e.what() << std::endl;
         return;
     }
 }

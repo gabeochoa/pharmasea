@@ -1,5 +1,5 @@
 
-#pragma once 
+#pragma once
 
 #include "globals.h"  // where LOG_LEVEL is located
 
@@ -10,4 +10,5 @@ enum LogLevel {
     LOG_WARN = 3,
     LOG_ERROR = 4,
     LOG_IF = 5,
+    LOG_NOTHING = 6,
 };

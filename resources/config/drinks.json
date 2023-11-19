@@ -200,39 +200,13 @@
               "Rum", // white rum 
               // "Curacao", 
               "LimeJuice", 
-              "SimpleSurup", // "Sugar", 
+              "SimpleSyrup", // "Sugar", 
               // "Mint",
               "Lime"
           ],
           "prereqs": [
               "Lime"
           ]
-      },
-      // Not enabled in game due to lack of ingredients
-      {
-          "name": "aperol_spritz",
-          "icon_name": "aperol_spritz",
-          "viewer_name": "Aperol Spritz",
-          "ingredients": [
-              "Vodka", // "Aperol",
-              "Vodka", // "Prosecco",
-              "Soda",  // Club Soda
-              "Orange"
-          ]
-      },
-      {
-          "name": "bloody_mary",
-          "icon_name": "bloody_mary",
-          "viewer_name": "Bloody Mary",
-          "ingredients": [
-              "Vodka"
-              // Tomato Juice 
-              // Worcestershire Sauce
-              // Hot Pepper Sauce
-              // Salt and Pepper 
-              // Garnishes (celery / olive)
-          ]
       }
-      // These dont yet have icons 
   ]
 }

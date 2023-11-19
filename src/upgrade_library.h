@@ -23,7 +23,7 @@ struct UpgradeLibrary {
         Upgrade& recipe = impl.get(name);
         recipe = r;
 
-        log_info("Loaded upgrade named {}", recipe.name);
+        log_trace("Loaded upgrade named {}", recipe.name);
     }
 
     void unload_all() { impl.unload_all(); }

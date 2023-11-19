@@ -24,8 +24,8 @@ struct ConfigValueLibrary {
         ConfigValue& recipe = impl.get(name);
         recipe = r;
 
-        log_info("Loaded config value named {}",
-                 magic_enum::enum_name<ConfigKey>(recipe.key));
+        log_trace("Loaded config value named {}",
+                  magic_enum::enum_name<ConfigKey>(recipe.key));
     }
 
     void unload_all() { impl.unload_all(); }

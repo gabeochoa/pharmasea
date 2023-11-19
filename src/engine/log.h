@@ -15,6 +15,7 @@
 #include "../external_include.h"
 #include "globals.h"
 #include "tracy.h"
+
 // TODO add an is_server flag so we can easier distinguish between
 
 inline const std::string_view level_to_string(LogLevel level) {

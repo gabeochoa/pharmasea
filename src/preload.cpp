@@ -137,7 +137,9 @@ void Preload::on_language_change(const char* lang_name, const char* fn) {
     //
     // So skip loading the font since itll load later
     if (!FontLibrary::get().contains("en_us")) {
-        log_warn("if you see this not during starting something is wrong");
+        if (completed_preload_once) {
+            log_warn("Failed to find english font in the font library");
+        }
         return;
     }
 
@@ -223,14 +225,14 @@ void Preload::load_config() {
 
     load_json_config_file("settings.json", [&](const nlohmann::json& contents) {
         LOG_LEVEL = contents.value("LOG_LEVEL", 2);
-        log_info("LOG_LEVEL read from file: {}", LOG_LEVEL);
+        log_trace("LOG_LEVEL read from file: {}", LOG_LEVEL);
 
         DEADZONE = contents.value("DEADZONE", 0.25f);
 
         EXAMPLE_MAP = contents["DEFAULT_MAP"];
-        log_info("DEFAULT_MAP read from file: {}", EXAMPLE_MAP.size());
+        log_trace("DEFAULT_MAP read from file: {}", EXAMPLE_MAP.size());
 
-        const auto& theme_name = contents["theme"];
+        const auto& theme_name = contents.value("theme", "default");
         const auto& j_themes = contents["themes"];
 
         for (const auto& theme_obj : j_themes.get<nlohmann::json::object_t>()) {
@@ -625,7 +627,7 @@ void Preload::load_upgrades() {
             const auto name = upgrade["name"].get<std::string>();
             const auto disabled = upgrade.value("disabled", "");
             if (!disabled.empty()) {
-                log_warn("Skipping disabled upgrade {} because {}", name,
+                log_warn("Skipping disabled upgrade '{}' because: '{}' ", name,
                          disabled);
                 continue;
             }
