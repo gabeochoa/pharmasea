@@ -5,6 +5,7 @@
 #include "../components/is_spawner.h"
 #include "../entity.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 #include "base_game_renderer.h"
 
 struct StoreLayer : public BaseGameRendererLayer {
@@ -21,7 +22,8 @@ struct StoreLayer : public BaseGameRendererLayer {
 
     void render_balances(Rectangle left_col) {
         using namespace ui;
-        OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+        OptEntity sophie =
+            EntityQuery().whereType(EntityType::Sophie).gen_first();
         if (!sophie.valid()) return;
 
         const IsBank& bank = sophie->get<IsBank>();

@@ -1495,7 +1495,7 @@ void cart_management(Entity& entity, float) {
                             marked_entity->get<DebugName>().get_type()));
     }
 
-    OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+    OptEntity sophie = EntityQuery().whereType(EntityType::Sophie).gen_first();
     if (sophie.valid()) {
         IsBank& bank = sophie->get<IsBank>();
         bank.update_cart(amount_in_cart);
@@ -1578,7 +1578,7 @@ void move_purchased_furniture() {
         IsFloorMarker::Type::Planning_SpawnArea);
     vec3 spawn_position = spawn_area->get<Transform>().pos();
 
-    OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+    OptEntity sophie = EntityQuery().whereType(EntityType::Sophie).gen_first();
     VALIDATE(sophie.valid(), "sophie should exist when moving furniture");
     IsBank& bank = sophie->get<IsBank>();
 

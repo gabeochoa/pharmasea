@@ -12,6 +12,7 @@
 #include "engine/texture_library.h"
 #include "entity_helper.h"
 #include "entity_makers.h"
+#include "entity_query.h"
 #include "entity_type.h"
 #include "map_generation.h"
 #include "network/server.h"
@@ -330,7 +331,7 @@ void LevelInfo::generate_store_map() {
         entity.get<IsTriggerArea>().set_validation_fn(
             [](const IsTriggerArea& ita) -> ValidationResult {
                 OptEntity sophie =
-                    EntityHelper::getFirstOfType(EntityType::Sophie);
+                    EntityQuery().whereType(EntityType::Sophie).gen_first();
 
                 // TODO translate these strings .
                 if (!sophie.valid()) return {false, "Internal Error"};

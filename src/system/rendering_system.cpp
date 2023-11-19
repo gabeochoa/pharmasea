@@ -14,6 +14,7 @@
 #include "../engine/texture_library.h"
 #include "../engine/ui/theme.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 #include "../preload.h"
 #include "system_manager.h"
 
@@ -441,7 +442,8 @@ void render_trigger_area(const Entity& entity, float dt) {
 
     const auto _render_progression_option = [&](IsTriggerArea::Type type) {
         if (GameState::get().is_not(game::State::Progression)) return;
-        OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+        OptEntity sophie =
+            EntityQuery().whereType(EntityType::Sophie).gen_first();
         const IsProgressionManager& ipm = sophie->get<IsProgressionManager>();
 
         bool isOption1 = type == IsTriggerArea::Progression_Option1;

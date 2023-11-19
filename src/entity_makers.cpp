@@ -61,6 +61,7 @@
 #include "components/transform.h"
 #include "components/uses_character_model.h"
 #include "dataclass/names.h"
+#include "entity_query.h"
 #include "recipe_library.h"
 #include "strings.h"
 
@@ -438,9 +439,10 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
 
         // TODO i dont think the spawner is working correctly
         {
-            OptEntity customer_spawner =
-                EntityHelper::getFirstOfType(EntityType::CustomerSpawner);
-            IsSpawner& isp = customer_spawner->get<IsSpawner>();
+            IsSpawner& isp = EntityQuery()
+                                 .whereType(EntityType::CustomerSpawner)
+                                 .gen_first()
+                                 ->get<IsSpawner>();
             isp.pass_time(amt * dt);
         }
 

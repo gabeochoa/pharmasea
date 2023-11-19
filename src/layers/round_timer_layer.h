@@ -95,7 +95,8 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         div(Widget{rounded_rect}, is_day ? theme::Primary : theme::Background);
         text(Widget{rounded_rect}, get_status_text(ht));
 
-        OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);
+        OptEntity sophie =
+            EntityQuery().whereType(EntityType::Sophie).gen_first();
         {
             Rectangle spawn_count(rounded_rect);
             spawn_count.y += 60;

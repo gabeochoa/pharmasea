@@ -155,14 +155,6 @@ struct EntityHelper {
         return {};
     }
 
-    static OptEntity getFirstOfType(EntityType type) {
-        for (const auto& e : get_entities()) {
-            if (!e) continue;
-            if (check_type(*e, type)) return *e;
-        }
-        return {};
-    }
-
     static RefEntities getAllInRange(vec2 range_min, vec2 range_max);
     static RefEntities getAllInRangeFiltered(
         vec2 range_min, vec2 range_max,
@@ -209,4 +201,12 @@ struct EntityHelper {
 
    private:
     static std::vector<RefEntity> getAllWithType(const EntityType& type);
+
+    static OptEntity getFirstOfType(EntityType type) {
+        for (const auto& e : get_entities()) {
+            if (!e) continue;
+            if (check_type(*e, type)) return *e;
+        }
+        return {};
+    }
 };

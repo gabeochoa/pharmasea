@@ -100,9 +100,10 @@ struct GameDebugLayer : public Layer {
         // Round Info
         if (GameState::get().is(game::State::InRound)) {
             if (map_ptr) {
-                OptEntity sophie =
-                    EntityHelper::getFirstOfType(EntityType::Sophie);
-                const HasTimer& hasTimer = sophie->get<HasTimer>();
+                const HasTimer& hasTimer = EntityQuery()
+                                               .whereType(EntityType::Sophie)
+                                               .gen_first()
+                                               ->get<HasTimer>();
 
                 auto [round_time_div, round_spawn_div, drinks_div,
                       ingredients_div] = rect::hsplit<4>(round_info, 10);
