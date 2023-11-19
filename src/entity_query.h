@@ -177,6 +177,11 @@ struct EntityQuery {
         return {};
     }
 
+    [[nodiscard]] size_t gen_count() const {
+        if (!ran_query) return values_ignore_cache({}).size();
+        return ents.size();
+    }
+
    private:
     std::vector<std::unique_ptr<Modification>> mods;
     mutable RefEntities ents;
