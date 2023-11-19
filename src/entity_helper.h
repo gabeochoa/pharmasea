@@ -136,16 +136,6 @@ struct EntityHelper {
             [](const Entity& entity) { return entity.has<T>(); });
     }
 
-    template<typename T>
-    static std::vector<RefEntity> getAllWithComponent() {
-        std::vector<RefEntity> matching;
-        for (const auto& e : get_entities()) {
-            if (!e) continue;
-            if (e->has<T>()) matching.push_back(*e);
-        }
-        return matching;
-    }
-
     static RefEntities getAllInRange(vec2 range_min, vec2 range_max);
     static RefEntities getAllInRangeFiltered(
         vec2 range_min, vec2 range_max,
@@ -191,6 +181,16 @@ struct EntityHelper {
     static bool isWalkableRawEntities(const vec2& pos);
 
    private:
+    template<typename T>
+    static std::vector<RefEntity> getAllWithComponent() {
+        std::vector<RefEntity> matching;
+        for (const auto& e : get_entities()) {
+            if (!e) continue;
+            if (e->has<T>()) matching.push_back(*e);
+        }
+        return matching;
+    }
+
     template<typename T>
     static OptEntity getFirstWithComponent() {
         for (const auto& e : get_entities()) {

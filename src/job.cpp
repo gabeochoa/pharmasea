@@ -19,6 +19,7 @@
 #include "engine/pathfinder.h"
 #include "entity.h"
 #include "entity_helper.h"
+#include "entity_query.h"
 #include "globals.h"
 #include "system/logging_system.h"
 
@@ -223,7 +224,7 @@ Job::State WaitInQueueJob::run_state_initialize(Entity& entity, float) {
     // Figure out which register to go to...
 
     std::vector<RefEntity> all_registers =
-        EntityHelper::getAllWithComponent<HasWaitingQueue>();
+        EntityQuery().whereHasComponent<HasWaitingQueue>().gen();
 
     // Find the register with the least people on it
     OptEntity best_target = {};
@@ -626,7 +627,7 @@ Job::State BathroomJob::run_state_initialize(Entity& entity, float) {
     log_warn("starting a new bathroom job");
 
     std::vector<RefEntity> all_toilets =
-        EntityHelper::getAllWithComponent<IsToilet>();
+        EntityQuery().whereHasComponent<IsToilet>().gen();
 
     // TODO sort by distance?
     OptEntity best_target = {};

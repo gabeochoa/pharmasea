@@ -130,7 +130,7 @@ void lightweight_map_validation(Entity& entity) {
     int reg_with_no_pathing = 0;
     int reg_with_bad_spots = 0;
     std::vector<RefEntity> all_registers =
-        EntityHelper::getAllWithComponent<HasWaitingQueue>();
+        EntityQuery().whereHasComponent<HasWaitingQueue>().gen();
 
     const auto _has_blocked_spot = [](const Entity& r) {
         for (int i = 0; i < (int) HasWaitingQueue::max_queue_size; i++) {

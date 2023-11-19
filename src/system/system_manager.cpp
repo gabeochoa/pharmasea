@@ -1293,7 +1293,8 @@ void process_pnumatic_pipe_pairing(Entity& entity, float) {
 
     if (ipp.has_pair()) return;
 
-    for (Entity& other : EntityHelper::getAllWithComponent<IsPnumaticPipe>()) {
+    for (Entity& other :
+         EntityQuery().whereHasComponent<IsPnumaticPipe>().gen()) {
         if (other.cleanup) continue;
         if (other.id == entity.id) continue;
         IsPnumaticPipe& otherpp = other.get<IsPnumaticPipe>();
