@@ -6,6 +6,7 @@
 #include "assert.h"
 #include "components/can_hold_item.h"
 #include "components/debug_name.h"
+#include "components/is_floor_marker.h"
 #include "components/transform.h"
 #include "external_include.h"
 //
@@ -88,8 +89,6 @@ struct EntityHelper {
 
     static std::vector<RefEntity> getEntitiesInRange(vec2 pos, float range);
 
-    static OptEntity getFirstMatching(std::function<bool(RefEntity)> filter);
-
     static std::vector<RefEntity> getEntitiesInPosition(vec2 pos) {
         return getEntitiesInRange(pos, TILESIZE);
     }
@@ -105,7 +104,7 @@ struct EntityHelper {
 
     static OptEntity getClosestMatchingFurniture(
         const Transform& transform, float range,
-        std::function<bool(RefEntity)>&& filter);
+        const std::function<bool(const Entity&)>& filter);
 
     static OptEntity getEntityForID(EntityID id);
 
@@ -126,7 +125,8 @@ struct EntityHelper {
     );
 
     static OptEntity getClosestMatchingEntity(
-        vec2 pos, float range, std::function<bool(RefEntity)> filter);
+        vec2 pos, float range,
+        const std::function<bool(const Entity&)>& filter);
 
     template<typename T>
     static OptEntity getClosestWithComponent(const Entity& entity,
@@ -167,7 +167,7 @@ struct EntityHelper {
     static RefEntities getAllInRange(vec2 range_min, vec2 range_max);
     static RefEntities getAllInRangeFiltered(
         vec2 range_min, vec2 range_max,
-        const std::function<bool(Entity&)>& filter);
+        const std::function<bool(const Entity&)>& filter);
 
     static OptEntity getOverlappingSolidEntityInRange(
         vec2 range_min, vec2 range_max,
@@ -179,6 +179,9 @@ struct EntityHelper {
     static OptEntity getOverlappingEntityIfExists(
         const Entity& entity, float range,
         const std::function<bool(const Entity&)>& filter = {});
+
+    static OptEntity getMatchingFloorMarker(IsFloorMarker::Type type);
+    static OptEntity getMatchingTriggerArea(IsTriggerArea::Type type);
 
     // TODO :INFRA: i think this is slower because we are doing "outside
     // mesh" as outside we should probably have just make some tiles for

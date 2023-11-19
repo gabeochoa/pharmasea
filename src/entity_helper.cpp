@@ -1,5 +1,6 @@
 #include "entity_helper.h"
 
+#include "components/is_trigger_area.h"
 #include "entity_query.h"
 #include "system/input_process_manager.h"
 
@@ -195,21 +196,9 @@ void EntityHelper::forEachEntity(std::function<ForEachFlow(Entity&)> cb) {
     }
 }
 
-OptEntity EntityHelper::getFirstMatching(
-    std::function<bool(RefEntity)> filter  //
-) {
-    for (const auto& e_ptr : get_entities()) {
-        if (!e_ptr) continue;
-        Entity& s = *e_ptr;
-        if (!filter(s)) continue;
-        return s;
-    }
-    return {};
-}
-
 OptEntity EntityHelper::getClosestMatchingFurniture(
     const Transform& transform, float range,
-    std::function<bool(RefEntity)>&& filter) {
+    const std::function<bool(const Entity&)>& filter) {
     // TODO :BE: should this really be using this?
     return EntityHelper::getMatchingEntityInFront(
         transform.as2(), range, transform.face_direction(), filter);
@@ -230,7 +219,27 @@ OptEntity EntityHelper::getClosestOfType(const Entity& entity,
     const Transform& transform = entity.get<Transform>();
     return EntityHelper::getClosestMatchingEntity(
         transform.as2(), range,
-        [type](const RefEntity entity) { return check_type(entity, type); });
+        [type](const Entity& entity) { return check_type(entity, type); });
+}
+
+OptEntity EntityHelper::getMatchingFloorMarker(IsFloorMarker::Type type) {
+    return EntityQuery()
+        .whereHasComponent<IsFloorMarker>()
+        .whereLambda([type](const Entity& entity) {
+            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+            return fm.type == type;
+        })
+        .gen_first();
+}
+
+OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
+    return EntityQuery()
+        .whereHasComponent<IsTriggerArea>()
+        .whereLambda([type](const Entity& entity) {
+            const IsTriggerArea& ta = entity.get<IsTriggerArea>();
+            return ta.type == type;
+        })
+        .gen_first();
 }
 
 // TODO :BE: change other debugname filter guys to this
@@ -299,7 +308,18 @@ OptEntity EntityHelper::getMatchingEntityInFront(
 }
 
 OptEntity EntityHelper::getClosestMatchingEntity(
-    vec2 pos, float range, std::function<bool(RefEntity)> filter) {
+    vec2 pos, float range, const std::function<bool(const Entity&)>& filter) {
+    // TODO We dont currently support order by
+    //      and even if we did it would be two full loops
+    /*
+    EntityQuery()
+    .whereLambda(filter)
+    .whereInRange(pos, range)
+    .orderBy(Distance)
+    .gen_first()
+    ;
+    */
+
     float best_distance = range;
     OptEntity best_so_far = {};
     for (auto& e : get_entities()) {
@@ -324,21 +344,15 @@ bool EntityHelper::hasOverlappingSolidEntitiesInRange(vec2 range_min,
 
 RefEntities EntityHelper::getAllInRangeFiltered(
     vec2 range_min, vec2 range_max,
-    const std::function<bool(Entity&)>& filter) {
-    RefEntities es;
-    for (const std::shared_ptr<Entity>& e : get_entities()) {
-        const auto pos = e->get<Transform>().as2();
-        if (pos.x > range_max.x || pos.x < range_min.x) continue;
-        if (pos.y > range_max.y || pos.y < range_min.y) continue;
-        if (!filter(*e)) continue;
-        es.push_back(*e);
-    }
-    return es;
+    const std::function<bool(const Entity&)>& filter) {
+    return EntityQuery()
+        .whereInside(range_min, range_max)
+        .whereLambda(filter)
+        .gen();
 }
 
 RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
-    return EntityHelper::getAllInRangeFiltered(range_min, range_max,
-                                               [](auto&&) { return true; });
+    return EntityQuery().whereInside(range_min, range_max).gen();
 }
 
 OptEntity EntityHelper::getOverlappingSolidEntityInRange(

@@ -12,6 +12,7 @@
 #include "../engine/bitset_utils.h"
 #include "../engine/pathfinder.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 #include "ingredient_helper.h"
 #include "system_manager.h"
 
@@ -97,12 +98,8 @@ void overlapping_furniture(Entity& entity) {
 }
 
 void forgot_item_in_spawn_area(Entity& entity) {
-    OptEntity spawn_area =
-        EntityHelper::getFirstMatching([](const Entity& entity) {
-            if (entity.is_missing<IsFloorMarker>()) return false;
-            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            return fm.type == IsFloorMarker::Type::Planning_SpawnArea;
-        });
+    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
+        IsFloorMarker::Type::Planning_SpawnArea);
 
     bool has_item_in_spawn_area = false;
     std::optional<vec2> position;
@@ -130,9 +127,7 @@ void lightweight_map_validation(Entity& entity) {
     // Run lightweight map validation
     // find customer
     auto customer_opt =
-        EntityHelper::getFirstMatching([](const Entity& e) -> bool {
-            return check_type(e, EntityType::CustomerSpawner);
-        });
+        EntityQuery().whereType(EntityType::CustomerSpawner).gen_first();
     // TODO we are validating this now, but we shouldnt have to worry
     // about this in the future
     VALIDATE(customer_opt,
@@ -205,12 +200,8 @@ void deleting_item_needed_for_recipe(Entity& entity) {
         return;
     };
 
-    OptEntity trash_area =
-        EntityHelper::getFirstMatching([](const Entity& entity) {
-            if (entity.is_missing<IsFloorMarker>()) return false;
-            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            return fm.type == IsFloorMarker::Type::Planning_TrashArea;
-        });
+    OptEntity trash_area = EntityHelper::getMatchingFloorMarker(
+        IsFloorMarker::Type::Planning_TrashArea);
 
     if (!trash_area.valid()) return result(false);
 

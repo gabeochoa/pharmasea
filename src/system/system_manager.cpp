@@ -293,7 +293,7 @@ void highlight_facing_furniture(Entity& entity, float) {
 
     OptEntity match = EntityHelper::getClosestMatchingFurniture(
         transform, cho.reach(),
-        [](Entity& e) { return e.template has<CanBeHighlighted>(); });
+        [](const Entity& e) { return e.template has<CanBeHighlighted>(); });
     if (!match) return;
 
     match->get<CanBeHighlighted>().update(entity, true);
@@ -335,7 +335,8 @@ void process_conveyer_items(Entity& entity, float dt) {
 
     bool is_ipp = entity.has<IsPnumaticPipe>();
 
-    const auto _conveyer_filter = [&entity, &canHold](Entity& furn) -> bool {
+    const auto _conveyer_filter = [&entity,
+                                   &canHold](const Entity& furn) -> bool {
         // cant be us
         if (entity.id == furn.id) return false;
         // needs to be able to hold something
@@ -351,7 +352,8 @@ void process_conveyer_items(Entity& entity, float dt) {
         return can_hold;
     };
 
-    const auto _ipp_filter = [&entity, _conveyer_filter](Entity& furn) -> bool {
+    const auto _ipp_filter = [&entity,
+                              _conveyer_filter](const Entity& furn) -> bool {
         // if we are a pnumatic pipe, filter only down to our guy
         if (furn.is_missing<IsPnumaticPipe>()) return false;
         const IsPnumaticPipe& mypp = entity.get<IsPnumaticPipe>();
@@ -741,14 +743,10 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
     // Because prereqs are handled, we dont need do check for them and can
     // assume that those bits will handle checking for it
 
-    OptEntity spawn_area =
-        EntityHelper::getFirstMatching([](const Entity& entity) {
-            if (entity.is_missing<IsFloorMarker>()) return false;
-            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            // Note we spawn free items in the purchase area so its more obvious
-            // that they are free
-            return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
-        });
+    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
+        // Note we spawn free items in the purchase area so its more obvious
+        // that they are free
+        IsFloorMarker::Type::Store_PurchaseArea);
 
     if (!spawn_area) {
         // TODO need to guarantee this exists long before we get here
@@ -840,14 +838,10 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
 
 inline void spawn_machines_for_new_unlock_DONOTCALL(
     IsRoundSettingsManager& irsm) {
-    OptEntity spawn_area =
-        EntityHelper::getFirstMatching([](const Entity& entity) {
-            if (entity.is_missing<IsFloorMarker>()) return false;
-            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            // Note we spawn free items in the purchase area so its more obvious
-            // that they are free
-            return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
-        });
+    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
+        // Note we spawn free items in the purchase area so its more obvious
+        // that they are free
+        IsFloorMarker::Type::Store_PurchaseArea);
 
     if (!spawn_area) {
         // TODO need to guarantee this exists long before we get here
@@ -1508,12 +1502,8 @@ void cart_management(Entity& entity, float) {
     }
 
     // Hack to force the validation function to run every frame
-    OptEntity purchase_area =
-        EntityHelper::getFirstMatching([](const Entity& entity) {
-            if (entity.is_missing<IsTriggerArea>()) return false;
-            const IsTriggerArea& ita = entity.get<IsTriggerArea>();
-            return ita.type == IsTriggerArea::Type::Store_BackToPlanning;
-        });
+    OptEntity purchase_area = EntityHelper::getMatchingTriggerArea(
+        IsTriggerArea::Type::Store_BackToPlanning);
     if (purchase_area.valid()) {
         (void) purchase_area->get<IsTriggerArea>().should_progress();
     }
@@ -1544,12 +1534,8 @@ void generate_store_options() {
     // spawn them
     // - use the place machine thing
 
-    OptEntity spawn_area =
-        EntityHelper::getFirstMatching([](const Entity& entity) {
-            if (entity.is_missing<IsFloorMarker>()) return false;
-            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            return fm.type == IsFloorMarker::Type::Store_SpawnArea;
-        });
+    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
+        IsFloorMarker::Type::Store_SpawnArea);
 
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsProgressionManager& ipp = sophie.get<IsProgressionManager>();
@@ -1583,21 +1569,13 @@ void generate_store_options() {
 
 void move_purchased_furniture() {
     // Grab the overlap area so we can see what it marked
-    OptEntity purchase_area =
-        EntityHelper::getFirstMatching([](const Entity& entity) {
-            if (entity.is_missing<IsFloorMarker>()) return false;
-            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
-        });
+    OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
+        IsFloorMarker::Type::Store_PurchaseArea);
     const IsFloorMarker& ifm = purchase_area->get<IsFloorMarker>();
 
     // Grab the plannig spawn area so we can place in the right spot
-    OptEntity spawn_area =
-        EntityHelper::getFirstMatching([](const Entity& entity) {
-            if (entity.is_missing<IsFloorMarker>()) return false;
-            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            return fm.type == IsFloorMarker::Type::Planning_SpawnArea;
-        });
+    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
+        IsFloorMarker::Type::Planning_SpawnArea);
     vec3 spawn_position = spawn_area->get<Transform>().pos();
 
     OptEntity sophie = EntityHelper::getFirstOfType(EntityType::Sophie);

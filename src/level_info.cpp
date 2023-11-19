@@ -343,12 +343,17 @@ void LevelInfo::generate_store_map() {
 
                 // Are all the required machines here?
                 OptEntity cart_area =
-                    EntityHelper::getFirstMatching([](const Entity& entity) {
-                        if (entity.is_missing<IsFloorMarker>()) return false;
-                        const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-                        return fm.type ==
-                               IsFloorMarker::Type::Store_PurchaseArea;
-                    });
+                    EntityQuery()
+                        .whereHasComponent<IsFloorMarker>()
+                        .whereLambda([](const Entity& entity) {
+                            if (entity.is_missing<IsFloorMarker>())
+                                return false;
+                            const IsFloorMarker& fm =
+                                entity.get<IsFloorMarker>();
+                            return fm.type ==
+                                   IsFloorMarker::Type::Store_PurchaseArea;
+                        })
+                        .gen_first();
                 if (!cart_area.valid()) return {false, "Internal Error"};
 
                 // TODO :STORE_CLEANUP: instead we should just keep track of

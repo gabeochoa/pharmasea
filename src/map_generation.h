@@ -8,6 +8,7 @@
 #include "engine/bitset_utils.h"
 #include "engine/pathfinder.h"
 #include "entity_helper.h"
+#include "entity_query.h"
 #include "strings.h"
 #include "wave_collapse.h"
 
@@ -242,10 +243,12 @@ struct helper {
     }
 
     void validate() {
-        const auto validate_exist = [](EntityType et) {
-            auto item = EntityHelper::getFirstMatching(
-                [et](const Entity& e) { return check_type(e, et); });
-            VALIDATE(item, fmt::format("{} needs to be there ", et));
+        const auto get_first_matching = [](EntityType et) -> OptEntity {
+            return EntityQuery().whereType(et).first().gen_first();
+        };
+        const auto validate_exist = [get_first_matching](EntityType et) {
+            VALIDATE(get_first_matching(et),
+                     fmt::format("{} needs to be there ", et));
         };
 
         validate_exist(EntityType::Sophie);
@@ -260,27 +263,26 @@ struct helper {
         {
             // find customer
             OptEntity customer =
-                EntityHelper::getFirstMatching([](const Entity& e) -> bool {
-                    return check_type(e, EntityType::CustomerSpawner);
-                });
+                get_first_matching(EntityType::CustomerSpawner);
             // TODO :DESIGN: we are validating this now, but we shouldnt have to
             // worry about this in the future
             VALIDATE(customer,
                      "map needs to have at least one customer spawn point");
 
-            OptEntity reg =
-                EntityHelper::getFirstMatching([&customer](const Entity& e) {
-                    if (!check_type(e, EntityType::Register)) return false;
-                    // TODO :INFRA: need a better way to do this
-                    // 0 makes sense but is the position of the entity, when
-                    // its infront?
-                    auto new_path = pathfinder::find_path(
-                        customer->get<Transform>().as2(),
-                        e.get<Transform>().tile_infront(1),
-                        std::bind(EntityHelper::isWalkable,
-                                  std::placeholders::_1));
-                    return !new_path.empty();
-                });
+            OptEntity reg = EntityQuery()
+                                .whereType(EntityType::Register)
+                                .whereLambda([&customer](const Entity& e) {
+                                    // TODO :INFRA: need a better way to do this
+                                    // 0 makes sense but is the position of the
+                                    // entity, when its infront?
+                                    auto new_path = pathfinder::find_path(
+                                        customer->get<Transform>().as2(),
+                                        e.get<Transform>().tile_infront(1),
+                                        std::bind(EntityHelper::isWalkable,
+                                                  std::placeholders::_1));
+                                    return !new_path.empty();
+                                })
+                                .gen_first();
 
             VALIDATE(
                 reg,

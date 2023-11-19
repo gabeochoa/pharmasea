@@ -47,12 +47,8 @@ struct StoreLayer : public BaseGameRendererLayer {
 
     void render_validation(Rectangle content) {
         using namespace ui;
-        OptEntity purchase_area =
-            EntityHelper::getFirstMatching([](const Entity& entity) {
-                if (entity.is_missing<IsTriggerArea>()) return false;
-                const IsTriggerArea& ita = entity.get<IsTriggerArea>();
-                return ita.type == IsTriggerArea::Type::Store_BackToPlanning;
-            });
+        OptEntity purchase_area = EntityHelper::getMatchingTriggerArea(
+            IsTriggerArea::Type::Store_BackToPlanning);
 
         if (!purchase_area.valid()) return;
 
