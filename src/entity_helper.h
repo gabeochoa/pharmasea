@@ -116,8 +116,6 @@ struct EntityHelper {
     static std::vector<RefEntity> getAllWithType(const EntityType& type);
 
     static bool doesAnyExistWithType(const EntityType& type);
-    static bool doesAnyExistMatchingFilter(
-        const std::function<bool(RefEntity)>&);
 
     static OptEntity getMatchingEntityInFront(
         vec2 pos,                                 //
