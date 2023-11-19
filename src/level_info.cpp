@@ -220,38 +220,37 @@ void LevelInfo::generate_model_test_map() {
         }
     };
 
-    // TODO base the count hereVVVV on the actual number of entity types
-    // so that we know we should consider adding it
-    std::array<ModelTestMapInfo, 23> static_map_info = {{
-        //
-        {EntityType::Cupboard},
-        {EntityType::Table},
-        {EntityType::Conveyer},
-        {EntityType::Grabber},
-        {EntityType::Register},
-        {EntityType::Blender},
-        {EntityType::SodaMachine},
-        {EntityType::Cupboard},
-        {EntityType::Squirter},
-        {EntityType::FilteredGrabber},
-        {EntityType::PnumaticPipe},
-        {EntityType::MopHolder},
-        {EntityType::MopBuddyHolder},
-        {EntityType::SimpleSyrupHolder},
-        {EntityType::IceMachine},
-        {EntityType::Face},
-        {EntityType::Trash},
-        {EntityType::FastForward},
-        {EntityType::DraftTap},
-        {EntityType::AlcoholCabinet},
-        // Add another section for upgrade guys
-        {EntityType::Toilet},
-        {EntityType::Guitar},
-        {
-            .et = EntityType::Vomit,
-            .spawner_type = ModelTestMapInfo::Some,
-        },
-    }};
+    std::array<ModelTestMapInfo, magic_enum::enum_count<EntityType>() - 25>
+        static_map_info = {{
+            //
+            {EntityType::Cupboard},
+            {EntityType::Table},
+            {EntityType::Conveyer},
+            {EntityType::Grabber},
+            {EntityType::Register},
+            {EntityType::Blender},
+            {EntityType::SodaMachine},
+            {EntityType::Cupboard},
+            {EntityType::Squirter},
+            {EntityType::FilteredGrabber},
+            {EntityType::PnumaticPipe},
+            {EntityType::MopHolder},
+            {EntityType::MopBuddyHolder},
+            {EntityType::SimpleSyrupHolder},
+            {EntityType::IceMachine},
+            {EntityType::Face},
+            {EntityType::Trash},
+            {EntityType::FastForward},
+            {EntityType::DraftTap},
+            {EntityType::AlcoholCabinet},
+            // Add another section for upgrade guys
+            {EntityType::Toilet},
+            {EntityType::Guitar},
+            {
+                .et = EntityType::Vomit,
+                .spawner_type = ModelTestMapInfo::Some,
+            },
+        }};
 
     const auto _carraige_return = [&]() {
         // reset the x and increment height
