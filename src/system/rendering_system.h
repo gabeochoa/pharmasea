@@ -18,7 +18,6 @@
 #include "../components/uses_character_model.h"
 #include "../engine/log.h"
 #include "../engine/time.h"
-#include "job_system.h"
 
 namespace system_manager {
 namespace render_manager {

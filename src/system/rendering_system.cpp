@@ -2,6 +2,7 @@
 #include "rendering_system.h"
 
 #include "../components/can_hold_furniture.h"
+#include "../components/can_pathfind.h"
 #include "../components/has_client_id.h"
 #include "../components/has_patience.h"
 #include "../components/has_subtype.h"
@@ -21,6 +22,16 @@
 extern ui::UITheme UI_THEME;
 
 namespace system_manager {
+namespace job_system {
+
+void render_job_visual(const Entity& entity, float) {
+    if (entity.is_missing<CanPathfind>()) return;
+    const float box_size = TILESIZE / 10.f;
+    entity.get<CanPathfind>().for_each_path_location([box_size](vec2 location) {
+        DrawCube(vec::to3(location), box_size, box_size, box_size, BLUE);
+    });
+}
+}  // namespace job_system
 namespace render_manager {
 
 struct ProgressBarConfig {

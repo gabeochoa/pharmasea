@@ -95,11 +95,6 @@ struct PolymorphicBaseClass<BaseComponent>
 // register_all_components in entity.h
 
 template<>
-struct PolymorphicBaseClass<Job>
-    : PolymorphicDerivedClasses<WaitJob, WanderingJob, WaitInQueueJob,
-                                LeavingJob> {};
-
-template<>
 struct PolymorphicBaseClass<AIComponent>
     : PolymorphicDerivedClasses<AICleanVomit, AIUseBathroom, AIDrinking,
                                 AIWaitInQueue> {};

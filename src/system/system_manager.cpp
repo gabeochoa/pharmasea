@@ -60,7 +60,6 @@
 #include "ai_system.h"
 #include "ingredient_helper.h"
 #include "input_process_manager.h"
-#include "job_system.h"
 #include "magic_enum/magic_enum.hpp"
 #include "progression.h"
 #include "rendering_system.h"
@@ -1826,7 +1825,6 @@ void SystemManager::in_round_update(
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::reset_customers_that_need_resetting(entity);
         //
-        system_manager::job_system::in_round_update(entity, dt);
         system_manager::ai::process_(entity, dt);
         system_manager::process_grabber_items(entity, dt);
         system_manager::process_conveyer_items(entity, dt);
