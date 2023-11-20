@@ -55,10 +55,6 @@ struct Job {
    public:
     static Job* create_job_of_type(vec2, vec2, JobType type);
 
-    void run_job_tick(Entity& entity, float dt) {
-        state = _run_job_tick(entity, dt);
-    }
-
     Job() {}
 
     Job(JobType _type, vec2 _start, vec2 _end)
@@ -66,12 +62,11 @@ struct Job {
 
     virtual ~Job() {}
 
-   protected:
+    virtual void before_each_job_tick(Entity&, float) {}
+
     virtual State run_state_initialize(Entity&, float) {
         return State::HeadingToStart;
     }
-
-    State run_state_heading_to_(State begin, Entity& entity, float dt);
 
     virtual State run_state_working_at_start(Entity&, float) {
         return State::HeadingToEnd;
@@ -82,36 +77,9 @@ struct Job {
 
     virtual void on_cleanup() {}
 
-    virtual void before_each_job_tick(Entity&, float) {}
-
     Entity& get_and_validate_entity(int id);
 
    private:
-    State _run_job_tick(Entity& entity, float dt) {
-        before_each_job_tick(entity, dt);
-        switch (state) {
-            case Job::State::Initialize: {
-                return run_state_initialize(entity, dt);
-            }
-            case Job::State::HeadingToStart:
-            case Job::State::HeadingToEnd: {
-                return run_state_heading_to_(state, entity, dt);
-            }
-            case Job::State::WorkingAtStart: {
-                return run_state_working_at_start(entity, dt);
-            }
-            case Job::State::WorkingAtEnd: {
-                return run_state_working_at_end(entity, dt);
-            }
-            case Job::State::Completed: {
-                // We dont run anything because completed is only used for
-                // marking cleanup
-                return state;
-            }
-        }
-        return state;
-    }
-
     [[nodiscard]] inline bool is_at_position(const Entity& entity,
                                              vec2 position);
 };
