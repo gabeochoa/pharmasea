@@ -57,6 +57,7 @@
 #include "../entity_helper.h"
 #include "../map.h"
 #include "../network/server.h"
+#include "ai_system.h"
 #include "ingredient_helper.h"
 #include "input_process_manager.h"
 #include "job_system.h"
@@ -1826,6 +1827,7 @@ void SystemManager::in_round_update(
         system_manager::reset_customers_that_need_resetting(entity);
         //
         system_manager::job_system::in_round_update(entity, dt);
+        system_manager::ai::process_(entity, dt);
         system_manager::process_grabber_items(entity, dt);
         system_manager::process_conveyer_items(entity, dt);
         system_manager::process_grabber_filter(entity, dt);

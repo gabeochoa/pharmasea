@@ -526,165 +526,22 @@ Job::State DrinkingJob::run_state_working_at_end(Entity& entity, float dt) {
     return (Job::State::Completed);
 }
 
-Job::State MoppingJob::run_state_initialize(Entity& entity, float) {
+Job::State MoppingJob::run_state_initialize(Entity&, float) {
     log_trace("starting a new mop job");
-
-    // Find the closest vomit
-    OptEntity closest =
-        EntityHelper::getClosestOfType(entity, EntityType::Vomit);
-
-    if (!closest) {
-        log_trace("Could not find any vomit");
-        // TODO make this function name more generic / obvious its shared
-        vec2 wait_position = entity.get<Transform>().as2();
-        WIQ_wait_and_return(entity, wait_position, wait_position);
-        return Job::State::Initialize;
-    }
-
-    vom_id = closest->id;
-    OptEntity vom = EntityHelper::getEntityForID(vom_id);
-    VALIDATE(vom, "underlying job should contain vomit now");
-
-    start = vom->get<Transform>().as2();
-    end = start;
-
-    system_manager::logging_manager::announce(
-        entity, fmt::format("heading to vomit {}", start));
-
-    return Job::State::HeadingToStart;
+    return Job::State::Initialize;
 }
 
-Job::State MoppingJob::run_state_working_at_start(Entity& entity, float dt) {
-    VALIDATE(vom_id != -1, "underlying job should contain vomit now");
-
-    OptEntity vom = EntityHelper::getEntityForID(vom_id);
-    if (!vom) {
-        system_manager::logging_manager::announce(
-            entity, fmt::format("seems like someone beat me to it"));
-        return (Job::State::HeadingToEnd);
-    }
-    HasWork& vomWork = vom->get<HasWork>();
-
-    // do some work
-    vomWork.call(vom.asE(), entity, dt);
-
-    // check if we did it
-    bool cleaned_up = vom->cleanup;
-
-    if (cleaned_up) {
-        system_manager::logging_manager::announce(
-            entity, fmt::format("i cleaned it up, see ya"));
-        return (Job::State::HeadingToEnd);
-    }
-
-    // otherwise keep working
-    system_manager::logging_manager::announce(entity,
-                                              fmt::format("im cleaning "));
-    return (Job::State::WorkingAtStart);
+Job::State MoppingJob::run_state_working_at_start(Entity&, float) {
+    return (Job::State::Completed);
 }
 
 Job::State BathroomJob::run_state_initialize(Entity& entity, float) {
-    log_warn("starting a new bathroom job");
-
-    std::vector<RefEntity> all_toilets =
-        EntityQuery().whereHasComponent<IsToilet>().gen();
-
-    // TODO sort by distance?
-    OptEntity best_target = {};
-    for (Entity& r : all_toilets) {
-        const IsToilet& toilet = r.get<IsToilet>();
-        if (toilet.available()) {
-            best_target = r;
-        }
-    }
-
-    // TODO after a couple loops maybe you just go on the floor :(
-    if (!best_target) {
-        system_manager::logging_manager::announce(
-            entity, "toilet missing available toilet");
-        // TODO find a better spot to wait?
-        WIQ_wait_and_return(entity, vec2{0, 0}, vec2{0, 0});
-        return Job::State::Initialize;
-    }
-
-    VALIDATE(best_target, "underlying job should contain a toilet now");
-
-    // Store into our job data
-    toilet_id = best_target->id;
-
-    start = best_target.asE().get<Transform>().as2();
-    end = start;
-
-    system_manager::logging_manager::announce(entity,
-                                              "toilet heading to start");
-
-    return Job::State::HeadingToStart;
+    return (Job::State::Completed);
 }
 
 Job::State BathroomJob::run_state_working_at_start(Entity& entity, float dt) {
-    OptEntity opt_toilet = EntityHelper::getEntityForID(toilet_id);
-    if (!opt_toilet) {
-        log_warn(
-            "toilet in the bathroom job not found, just gonna mark this "
-            "complete");
-        return (Job::State::Completed);
-    }
-
-    Entity& toilet = opt_toilet.asE();
-    IsToilet& istoilet = toilet.get<IsToilet>();
-
-    bool we_are_using_it = istoilet.is_user(entity.id);
-    bool occupied = istoilet.occupied() && !we_are_using_it;
-
-    // TODO after a couple loops maybe you just go on the floor :(
-    if (occupied) {
-        system_manager::logging_manager::announce(entity,
-                                                  "someones already in there");
-        WIQ_wait_and_return(entity, toilet.get<Transform>().tile_infront(2),
-                            toilet.get<Transform>().tile_infront(1));
-        return Job::State::WorkingAtStart;
-    }
-
-    // we are using it
-    if (we_are_using_it) {
-        timePassedInCurrentState += dt;
-        if (timePassedInCurrentState >= timeToComplete) {
-            system_manager::logging_manager::announce(entity, "i finished");
-            return (Job::State::HeadingToEnd);
-        }
-        // system_manager::logging_manager::announce(
-        // entity, fmt::format("waiting a little longer: {} => {} ",
-        // timePassedInCurrentState, timeToComplete));
-        return Job::State::WorkingAtStart;
-    }
-
-    // ?TODO right now we dont mark occupied until the person gets there
-    // obv this is like real life where two people just gotta go
-    // at the same time.
-    //
-    // this means that its possible there is a free toilet on the other side of
-    // the map and people are still using this one because they all grabbed at
-    // the same time
-    //
-    // this might be frustrating as a player since you are like "why are they so
-    // dumb"
-    //
-    // instead of the wait above, maybe do a wait and search?
-    istoilet.start_use(entity.id);
-    return (Job::State::WorkingAtStart);
+    return (Job::State::Initialize);
 }
 Job::State BathroomJob::run_state_working_at_end(Entity& entity, float) {
-    entity.get<CanOrderDrink>().empty_bladder();
-
-    OptEntity opt_toilet = EntityHelper::getEntityForID(toilet_id);
-    if (!opt_toilet) {
-        log_error("toilet in the bathroom job not found");
-        return (Job::State::Completed);
-    }
-
-    Entity& toilet = opt_toilet.asE();
-    IsToilet& istoilet = toilet.get<IsToilet>();
-    istoilet.end_use();
-
     return (Job::State::Completed);
 }

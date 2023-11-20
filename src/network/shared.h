@@ -3,6 +3,8 @@
 #include "../external_include.h"
 //
 #include "../components/adds_ingredient.h"
+#include "../components/ai_clean_vomit.h"
+#include "../components/ai_use_bathroom.h"
 #include "../components/base_component.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_be_held.h"
@@ -83,6 +85,7 @@ struct PolymorphicBaseClass<BaseComponent>
           HasRopeToItem, HasSubtype, IsItem, IsDrink, AddsIngredient,
           CanOrderDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker,
           IsBank, IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
+          AIComponent,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};
@@ -94,11 +97,15 @@ struct PolymorphicBaseClass<Job>
     : PolymorphicDerivedClasses<WaitJob, WanderingJob, WaitInQueueJob,
                                 LeavingJob> {};
 
+template<>
+struct PolymorphicBaseClass<AIComponent>
+    : PolymorphicDerivedClasses<AICleanVomit, AIUseBathroom> {};
+
 }  // namespace ext
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<BaseComponent, Job>;
+    bitsery::ext::PolymorphicClassesList<BaseComponent, AIComponent, Job>;
 
 namespace network {
 

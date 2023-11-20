@@ -3,6 +3,8 @@
 
 #include <ranges>
 
+#include "components/ai_clean_vomit.h"
+#include "components/ai_use_bathroom.h"
 #include "components/can_pathfind.h"
 #include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
@@ -116,6 +118,8 @@ void register_all_components() {
     Entity* entity = new Entity();
     entity->addAll<  //
         DebugName, Transform, HasName,
+        //
+        AICleanVomit, AIUseBathroom,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
@@ -266,6 +270,8 @@ void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
     mop_buddy.get<CanPerformJob>().update(Mopping, Mopping);
+    mop_buddy.addComponent<AICleanVomit>();
+
     mop_buddy
         .addComponent<IsItem>()  //
         .clear_hb_filter()
@@ -1208,18 +1214,25 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     customer.get<UsesCharacterModel>().switch_to_random_model();
     customer.addComponent<HasName>().update(get_random_name());
 
+    const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
     // TODO for now, eventually move to customer spawner
     if (has_order) {
         CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();
         // If we are the first guy spawned this round, force the drink to be the
         // most recently unlocked one
         if (info.is_first_this_round) {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const IsProgressionManager& ipp =
                 sophie.get<IsProgressionManager>();
 
             cod.set_first_order(ipp.get_last_unlocked());
         }
+    }
+
+    bool bathroom_unlocked = irsm.get<bool>(ConfigKey::UnlockedToilet);
+    if (bathroom_unlocked) {
+        customer.addComponent<AIUseBathroom>();
     }
 
     customer.addComponent<HasPatience>().update_max(20.f);
