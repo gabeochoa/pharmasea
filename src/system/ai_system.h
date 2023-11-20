@@ -42,12 +42,12 @@ inline float get_speed_for_entity(Entity& entity) {
     return base_speed;
 }
 
-inline void process_ai_clean_vomit(Entity& entity, float dt) {
-    if (entity.is_missing<AICleanVomit>()) return;
+inline bool process_ai_clean_vomit(Entity& entity, float dt) {
+    if (entity.is_missing<AICleanVomit>()) return false;
     AICleanVomit& aiclean = entity.get<AICleanVomit>();
 
     aiclean.pass_time(dt);
-    if (!aiclean.ready()) return;
+    if (!aiclean.ready()) return false;
 
     if (!aiclean.has_available_target()) {
         OptEntity closest =
@@ -56,37 +56,40 @@ inline void process_ai_clean_vomit(Entity& entity, float dt) {
         // We couldnt find anything, for now just wait a second
         if (!closest) {
             aiclean.reset();
-            return;
+            return false;
         }
         aiclean.set_target(closest->id);
     }
 
     // We have a target
     OptEntity vomit = EntityHelper::getEntityForID(aiclean.id());
+
     if (!vomit) {
         aiclean.unset_target();
-        return;
+        return false;
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
         vomit->get<Transform>().as2(), get_speed_for_entity(entity) * dt);
 
-    if (!reached) return;
+    if (!reached) return true;
 
     HasWork& vomWork = vomit->get<HasWork>();
     vomWork.call(vomit.asE(), entity, dt);
     // check if we did it
     if (vomit->cleanup) {
         aiclean.unset_target();
+        return true;
     }
+    return true;
 }
 
-inline void process_ai_use_bathroom(Entity& entity, float dt) {
-    if (entity.is_missing<AIUseBathroom>()) return;
+inline bool process_ai_use_bathroom(Entity& entity, float dt) {
+    if (entity.is_missing<AIUseBathroom>()) return false;
     AIUseBathroom& aibathroom = entity.get<AIUseBathroom>();
 
     aibathroom.pass_time(dt);
-    if (!aibathroom.ready()) return;
+    if (!aibathroom.ready()) return false;
 
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
@@ -94,7 +97,7 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
 
     int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
     bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
-    if (!gotta_go) return;
+    if (!gotta_go) return false;
 
     if (!aibathroom.has_available_target()) {
         std::vector<RefEntity> all_toilets =
@@ -111,7 +114,7 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
         // We couldnt find anything, for now just wait a second
         if (!best_target) {
             aibathroom.reset();
-            return;
+            return false;
         }
         aibathroom.set_target(best_target->id);
     }
@@ -122,7 +125,7 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
 
     bool reached = entity.get<CanPathfind>().travel_toward(
         toilet.get<Transform>().as2(), get_speed_for_entity(entity) * dt);
-    if (!reached) return;
+    if (!reached) return true;
 
     IsToilet& istoilet = toilet.get<IsToilet>();
     bool we_are_using_it = istoilet.is_user(entity.id);
@@ -131,7 +134,7 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     if (istoilet.occupied() && !we_are_using_it) {
         // TODO after a couple loops maybe you just go on the floor :(
         aibathroom.reset();
-        return;
+        return false;
     }
 
     // we are using it
@@ -159,15 +162,25 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
         aibathroom.unset_target();
         entity.get<CanOrderDrink>().empty_bladder();
         istoilet.end_use();
-        return;
+        return true;
     }
+    return true;
 }
+
+using AIFunc = std::function<bool(Entity&, float)>;
 
 inline void process_(Entity& entity, float dt) {
     if (entity.is_missing<CanPathfind>()) return;
 
-    process_ai_clean_vomit(entity, dt);
-    process_ai_use_bathroom(entity, dt);
+    std::array<AIFunc, 2> funcs = {{
+        process_ai_clean_vomit,
+        process_ai_use_bathroom,
+    }};
+
+    for (const auto& fn : funcs) {
+        bool focused = fn(entity, dt);
+        if (focused) break;
+    }
 }
 
 }  // namespace ai
