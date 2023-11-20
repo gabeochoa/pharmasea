@@ -2,30 +2,22 @@
 #pragma once
 
 #include "../engine/log.h"
-#include "../job.h"
 #include "ai_component.h"
 #include "base_component.h"
 
-struct AIUseBathroom : public AIComponent {
-    virtual ~AIUseBathroom() {}
+struct AIWaitInQueue : public AIComponent {
+    virtual ~AIWaitInQueue() {}
 
     [[nodiscard]] bool has_available_target() const {
         return target_id.has_value();
     }
-
     void unset_target() { target_id = {}; }
     void set_target(int id) { target_id = id; }
     [[nodiscard]] int id() const { return target_id.value(); }
 
     std::optional<int> target_id;
-    JobType next_job;
 
-    float pissTime;
-    void set_piss_time(float pt) { pissTime = pt; }
-    [[nodiscard]] bool piss(float dt) {
-        pissTime -= dt;
-        return pissTime <= 0.f;
-    }
+    vec2 position;
 
    private:
     friend bitsery::Access;

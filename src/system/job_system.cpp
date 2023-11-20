@@ -112,6 +112,9 @@ void run_job_tick(Entity& entity, CanPerformJob& cpj, float dt) {
 void in_round_update(Entity& entity, float dt) {
     if (entity.is_missing<CanPerformJob>()) return;
 
+    // TODO
+    return;
+
     CanPerformJob& cpj = entity.get<CanPerformJob>();
     cpj.cleanup_if_completed();
 

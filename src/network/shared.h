@@ -6,6 +6,7 @@
 #include "../components/ai_clean_vomit.h"
 #include "../components/ai_drinking.h"
 #include "../components/ai_use_bathroom.h"
+#include "../components/ai_wait_in_queue.h"
 #include "../components/base_component.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_be_held.h"
@@ -100,7 +101,8 @@ struct PolymorphicBaseClass<Job>
 
 template<>
 struct PolymorphicBaseClass<AIComponent>
-    : PolymorphicDerivedClasses<AICleanVomit, AIUseBathroom, AIDrinking> {};
+    : PolymorphicDerivedClasses<AICleanVomit, AIUseBathroom, AIDrinking,
+                                AIWaitInQueue> {};
 
 }  // namespace ext
 }  // namespace bitsery

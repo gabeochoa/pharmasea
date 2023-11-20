@@ -6,6 +6,7 @@
 #include "components/ai_clean_vomit.h"
 #include "components/ai_drinking.h"
 #include "components/ai_use_bathroom.h"
+#include "components/ai_wait_in_queue.h"
 #include "components/can_pathfind.h"
 #include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
@@ -120,7 +121,7 @@ void register_all_components() {
     entity->addAll<  //
         DebugName, Transform, HasName,
         //
-        AICleanVomit, AIUseBathroom, AIDrinking,
+        AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
@@ -1224,6 +1225,7 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     // TODO for now, eventually move to customer spawner
     if (has_order) {
         customer.addComponent<AIDrinking>();
+        customer.addComponent<AIWaitInQueue>();
         CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();
         // If we are the first guy spawned this round, force the drink to be the
         // most recently unlocked one

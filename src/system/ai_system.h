@@ -4,12 +4,15 @@
 #include "../components/ai_clean_vomit.h"
 #include "../components/ai_drinking.h"
 #include "../components/ai_use_bathroom.h"
+#include "../components/ai_wait_in_queue.h"
 #include "../components/can_order_drink.h"
 #include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
 #include "../components/has_base_speed.h"
+#include "../components/has_patience.h"
 #include "../components/has_speech_bubble.h"
 #include "../components/has_timer.h"
+#include "../components/has_waiting_queue.h"
 #include "../components/is_bank.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
@@ -20,6 +23,52 @@
 
 namespace system_manager {
 namespace ai {
+
+inline bool WIQ_can_move_up(const Entity& reg, const Entity& customer) {
+    VALIDATE(reg.has<HasWaitingQueue>(),
+             "Trying to can-move-up for entity which doesnt "
+             "have a waiting queue ");
+    return reg.get<HasWaitingQueue>().matching_id(customer.id, 0);
+}
+
+inline int WIQ_position_in_line(const Entity& reg, const Entity& customer) {
+    // VALIDATE(customer, "entity passed to position-in-line should not be
+    // null"); VALIDATE(reg, "entity passed to position-in-line should not be
+    // null");
+    VALIDATE(
+        reg.has<HasWaitingQueue>(),
+        "Trying to pos-in-line for entity which doesnt have a waiting queue ");
+    const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
+    return hwq.has_matching_person(customer.id);
+}
+
+inline vec2 WIQ_add_to_queue_and_get_position(Entity& reg,
+                                              const Entity& customer) {
+    VALIDATE(reg.has<HasWaitingQueue>(),
+             "Trying to get-next-queue-pos for entity which doesnt have a "
+             "waiting queue ");
+    // VALIDATE(customer, "entity passed to register queue should not be null");
+
+    int next_position = reg.get<HasWaitingQueue>()
+                            .add_customer(customer)  //
+                            .get_next_pos();
+
+    // the place the customers stand is 1 tile infront of the register
+    return reg.get<Transform>().tile_infront((next_position + 1));
+}
+
+inline void WIQ_leave_line(Entity& reg, const Entity& customer) {
+    // VALIDATE(customer, "entity passed to leave-line should not be null");
+    // VALIDATE(reg, "register passed to leave-line should not be null");
+    VALIDATE(
+        reg.has<HasWaitingQueue>(),
+        "Trying to leave-line for entity which doesnt have a waiting queue ");
+
+    int pos = WIQ_position_in_line(reg, customer);
+    if (pos == -1) return;
+
+    reg.get<HasWaitingQueue>().erase(pos);
+}
 
 inline float get_speed_for_entity(Entity& entity) {
     float base_speed = entity.get<HasBaseSpeed>().speed();
@@ -50,16 +99,192 @@ inline float get_speed_for_entity(Entity& entity) {
 }
 
 inline void next_job(Entity& entity, JobType suggestion) {
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-    const CanOrderDrink& cod = entity.get<CanOrderDrink>();
+    if (entity.has<AIUseBathroom>()) {
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        const IsRoundSettingsManager& irsm =
+            sophie.get<IsRoundSettingsManager>();
+        const CanOrderDrink& cod = entity.get<CanOrderDrink>();
 
-    int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
-    bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
-    if (gotta_go) {
-        entity.get<CanPerformJob>().current = JobType::Bathroom;
+        int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
+        bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
+        if (gotta_go) {
+            entity.get<CanPerformJob>().current = JobType::Bathroom;
+            entity.get<AIUseBathroom>().next_job = suggestion;
+            return;
+        }
     }
     entity.get<CanPerformJob>().current = suggestion;
+}
+
+inline void process_ai_waitinqueue(Entity& entity, float dt) {
+    if (entity.is_missing<AIWaitInQueue>()) return;
+    if (entity.is_missing<CanOrderDrink>()) return;
+
+    // TODO add to system on tick or somethign
+    // OptEntity reg = EntityHelper::getEntityForID(reg_id);
+    // entity.get<Transform>().turn_to_face_pos(reg->get<Transform>().as2());
+
+    AIWaitInQueue& aiwait = entity.get<AIWaitInQueue>();
+
+    if (!aiwait.has_available_target()) {
+        std::vector<RefEntity> all_registers =
+            EntityQuery().whereHasComponent<HasWaitingQueue>().gen();
+
+        // Find the register with the least people on it
+        OptEntity best_target = {};
+        int best_pos = -1;
+        for (Entity& r : all_registers) {
+            const HasWaitingQueue& hwq = r.get<HasWaitingQueue>();
+            if (hwq.is_full()) continue;
+            int rpos = hwq.get_next_pos();
+
+            // Check to see if we can path to that spot
+
+            // TODO causing no valid register to be found
+            // auto end = r.get<Transform>().tile_infront(rpos);
+            // auto new_path = bfs::find_path(
+            // entity.get<Transform>().as2(), end,
+            // std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+            // if (new_path.empty()) continue;
+
+            if (best_pos == -1 || rpos < best_pos) {
+                best_target = r;
+                best_pos = rpos;
+            }
+        }
+        if (!best_target) {
+            aiwait.reset();
+            return;
+        }
+
+        aiwait.set_target(best_target->id);
+        aiwait.position =
+            WIQ_add_to_queue_and_get_position(best_target.asE(), entity);
+        return;
+    }
+
+    bool reached = entity.get<CanPathfind>().travel_toward(
+        aiwait.position, get_speed_for_entity(entity) * dt);
+    if (!reached) return;
+
+    aiwait.pass_time(dt);
+    if (!aiwait.ready()) return;
+
+    OptEntity opt_reg = EntityHelper::getEntityForID(aiwait.id());
+    if (!opt_reg) {
+        log_warn("got an invalid register");
+        return;
+    }
+    Entity& reg = opt_reg.asE();
+
+    int spot_in_line = WIQ_position_in_line(reg, entity);
+    if (spot_in_line != 0) {
+        // Waiting in line :)
+
+        // TODO We didnt move so just wait a bit before trying again
+
+        if (!WIQ_can_move_up(reg, entity)) {
+            // We cant move so just wait a bit before trying again
+            log_info("im just going to wait a bit longer");
+
+            // Add the current job to the queue,
+            // and then add the waiting job
+
+            aiwait.reset();
+            return;
+        }
+        // otherwise walk up one spot
+        aiwait.position = reg.get<Transform>().tile_infront(spot_in_line);
+        return;
+    } else {
+        aiwait.position = reg.get<Transform>().tile_infront(1);
+    }
+
+    // Now we should be at the front of the line
+
+    // we are at the front so turn it on
+    {
+        // TODO this logic likely should move to system
+        // TODO safer way to do it?
+        entity.get<HasSpeechBubble>().on();
+        entity.get<HasPatience>().enable();
+    }
+
+    CanOrderDrink& canOrderDrink = entity.get<CanOrderDrink>();
+    VALIDATE(canOrderDrink.has_order(), "I should have an order");
+
+    CanHoldItem& regCHI = reg.get<CanHoldItem>();
+
+    if (regCHI.empty()) {
+        log_info("my drink isnt ready yet");
+        aiwait.reset();
+        return;
+    }
+
+    std::shared_ptr<Item> drink = reg.get<CanHoldItem>().item();
+    if (!drink || !check_if_drink(*drink)) {
+        log_info("this isnt a drink");
+        aiwait.reset();
+        return;
+    }
+
+    log_info("i got **A** drink ");
+    // TODO how many ingredients have to be correct?
+    // as people get more drunk they should care less and less
+    //
+    Drink orderdDrink = canOrderDrink.order();
+    bool all_ingredients_match =
+        drink->get<IsDrink>().matches_drink(orderdDrink);
+
+    // For debug, if we have this set, just assume it was correct
+    bool skip_ing_match =
+        GLOBALS.get_or_default<bool>("skip_ingredient_match", false);
+    if (skip_ing_match) all_ingredients_match = true;
+
+    if (!all_ingredients_match) {
+        log_info("this isnt what i ordered");
+        aiwait.reset();
+        return;
+    }
+
+    // I'm relatively happy with my drink
+
+    const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+    // mark how much we are paying for this drink
+    // + how much we will tip
+    {
+        float cost_multiplier = irsm.get<float>(ConfigKey::DrinkCostMultiplier);
+        int price = static_cast<int>(
+            cost_multiplier *
+            get_base_price_for_drink(canOrderDrink.current_order));
+        canOrderDrink.tab_cost += price;
+
+        const HasPatience& hasPatience = entity.get<HasPatience>();
+        int tip = (int) fmax(0, ceil(price * 0.8f * hasPatience.pct()));
+        canOrderDrink.tip += tip;
+    }
+
+    CanHoldItem& ourCHI = entity.get<CanHoldItem>();
+    ourCHI.update(regCHI.item(), entity.id);
+    regCHI.update(nullptr, -1);
+
+    log_info("got it");
+    WIQ_leave_line(reg, entity);
+
+    // TODO Should move to system
+    {
+        canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
+        entity.get<HasSpeechBubble>().off();
+        entity.get<HasPatience>().disable();
+        entity.get<HasPatience>().reset();
+    }
+    // Now that we are done and got our item, time to leave the store
+    log_info("leaving line");
+
+    entity.get<AIWaitInQueue>().unset_target();
+    entity.get<CanPerformJob>().current = JobType::Drinking;
 }
 
 inline void process_ai_drinking(Entity& entity, float dt) {
@@ -123,20 +348,8 @@ inline void process_ai_drinking(Entity& entity, float dt) {
             cod.tab_cost = 0;
             cod.tip = 0;
         }
-
-        const HasTimer& hasTimer = sophie.get<HasTimer>();
-
-        std::shared_ptr<Job> jshared;
-        jshared.reset(new WaitJob(
-            // TODO they go back to the register before leaving becausd
-            // start here..
-            vec2{0, 0},
-            // TODO create a global so they all leave to the same spot
-            vec2{GATHER_SPOT, GATHER_SPOT},
-            hasTimer.remaining_time_in_round()));
-        entity.get<CanPerformJob>().push_onto_queue(jshared);
+        next_job(entity, JobType::Leaving);
         cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
-        next_job(entity, JobType::Wait);
         return;
     }
 
@@ -146,11 +359,7 @@ inline void process_ai_drinking(Entity& entity, float dt) {
 
     // TODO make a function set_order()
     cod.current_order = progressionManager.get_random_unlocked_drink();
-    cod.order_state = CanOrderDrink::OrderState::Ordering;
 
-    std::shared_ptr<Job> jshared;
-    jshared.reset(new WaitInQueueJob());
-    entity.get<CanPerformJob>().push_onto_queue(jshared);
     next_job(entity, JobType::WaitInQueue);
 }
 
@@ -277,8 +486,15 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
         // TODO move away from it for a second
         (void) entity.get<CanPathfind>().travel_toward(
             vec2{0, 0}, get_speed_for_entity(entity) * dt);
+
+        entity.get<CanPerformJob>().current = aibathroom.next_job;
         return;
     }
+}
+
+inline void process_ai_leaving(Entity& entity, float dt) {
+    (void) entity.get<CanPathfind>().travel_toward(
+        vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
 }
 
 inline void process_(Entity& entity, float dt) {
@@ -291,8 +507,14 @@ inline void process_(Entity& entity, float dt) {
         case Drinking:
             process_ai_drinking(entity, dt);
             break;
-        case WaitInQueue:
+        case Bathroom:
             process_ai_use_bathroom(entity, dt);
+            break;
+        case WaitInQueue:
+            process_ai_waitinqueue(entity, dt);
+            break;
+        case Leaving:
+            process_ai_leaving(entity, dt);
             break;
         case NoJob:
         case Wait:
@@ -300,8 +522,6 @@ inline void process_(Entity& entity, float dt) {
         case EnterStore:
         case WaitInQueueForPickup:
         case Paying:
-        case Leaving:
-        case Bathroom:
         case MAX_JOB_TYPE:
             break;
     }
