@@ -2,14 +2,21 @@
 #pragma once
 
 #include "../components/ai_clean_vomit.h"
+#include "../components/ai_drinking.h"
 #include "../components/ai_use_bathroom.h"
 #include "../components/can_order_drink.h"
 #include "../components/can_pathfind.h"
+#include "../components/can_perform_job.h"
 #include "../components/has_base_speed.h"
+#include "../components/has_speech_bubble.h"
+#include "../components/has_timer.h"
+#include "../components/is_bank.h"
+#include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
 #include "../components/is_toilet.h"
 #include "../entity.h"
 #include "../entity_query.h"
+#include "../job.h"
 
 namespace system_manager {
 namespace ai {
@@ -42,12 +49,117 @@ inline float get_speed_for_entity(Entity& entity) {
     return base_speed;
 }
 
-inline bool process_ai_clean_vomit(Entity& entity, float dt) {
-    if (entity.is_missing<AICleanVomit>()) return false;
+inline void next_job(Entity& entity, JobType suggestion) {
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+    const CanOrderDrink& cod = entity.get<CanOrderDrink>();
+
+    int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
+    bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
+    if (gotta_go) {
+        entity.get<CanPerformJob>().current = JobType::Bathroom;
+    }
+    entity.get<CanPerformJob>().current = suggestion;
+}
+
+inline void process_ai_drinking(Entity& entity, float dt) {
+    if (entity.is_missing<AIDrinking>()) return;
+    if (entity.is_missing<CanOrderDrink>()) return;
+
+    AIDrinking& aidrinking = entity.get<AIDrinking>();
+    aidrinking.pass_time(dt);
+    if (!aidrinking.ready()) return;
+
+    CanOrderDrink& cod = entity.get<CanOrderDrink>();
+    if (cod.order_state != CanOrderDrink::OrderState::DrinkingNow) {
+        return;
+    }
+
+    if (!aidrinking.has_available_target()) {
+        // TODO choose a better place
+        aidrinking.set_target(vec2{0, 0});
+        // TODO add a variable for how long people drink
+        aidrinking.set_drink_time(1.f);  // randfIn(1.f, 5.f));
+    }
+
+    bool reached = entity.get<CanPathfind>().travel_toward(
+        aidrinking.pos(), get_speed_for_entity(entity) * dt);
+    if (!reached) return;
+
+    bool completed = aidrinking.drink(dt);
+    if (!completed) {
+        return;
+    }
+
+    // Done with my drink, delete it
+    CanHoldItem& chi = entity.get<CanHoldItem>();
+    chi.item()->cleanup = true;
+    chi.update(nullptr, -1);
+
+    // Mark our current order finished
+    cod.on_order_finished();
+    aidrinking.unset_target();
+
+    //
+    // Do we want another drink?
+    //
+
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    bool want_another = cod.num_orders_rem > 0;
+
+    // done drinking
+    if (!want_another) {
+        // Now we are fully done so lets pay.
+
+        // TODO add a new job type to go pay, for now just pay when they are
+        // done drinking, they will still go the register but the pay
+        // happens here
+        {
+            IsBank& bank = sophie.get<IsBank>();
+            bank.deposit(cod.tab_cost);
+            bank.deposit(cod.tip);
+
+            // i dont think we need to do this, but just in case
+            cod.tab_cost = 0;
+            cod.tip = 0;
+        }
+
+        const HasTimer& hasTimer = sophie.get<HasTimer>();
+
+        std::shared_ptr<Job> jshared;
+        jshared.reset(new WaitJob(
+            // TODO they go back to the register before leaving becausd
+            // start here..
+            vec2{0, 0},
+            // TODO create a global so they all leave to the same spot
+            vec2{GATHER_SPOT, GATHER_SPOT},
+            hasTimer.remaining_time_in_round()));
+        entity.get<CanPerformJob>().push_onto_queue(jshared);
+        cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
+        next_job(entity, JobType::Wait);
+        return;
+    }
+
+    // get next order
+    const IsProgressionManager& progressionManager =
+        sophie.get<IsProgressionManager>();
+
+    // TODO make a function set_order()
+    cod.current_order = progressionManager.get_random_unlocked_drink();
+    cod.order_state = CanOrderDrink::OrderState::Ordering;
+
+    std::shared_ptr<Job> jshared;
+    jshared.reset(new WaitInQueueJob());
+    entity.get<CanPerformJob>().push_onto_queue(jshared);
+    next_job(entity, JobType::WaitInQueue);
+}
+
+inline void process_ai_clean_vomit(Entity& entity, float dt) {
+    if (entity.is_missing<AICleanVomit>()) return;
     AICleanVomit& aiclean = entity.get<AICleanVomit>();
 
     aiclean.pass_time(dt);
-    if (!aiclean.ready()) return false;
+    if (!aiclean.ready()) return;
 
     if (!aiclean.has_available_target()) {
         OptEntity closest =
@@ -56,7 +168,7 @@ inline bool process_ai_clean_vomit(Entity& entity, float dt) {
         // We couldnt find anything, for now just wait a second
         if (!closest) {
             aiclean.reset();
-            return false;
+            return;
         }
         aiclean.set_target(closest->id);
     }
@@ -66,38 +178,37 @@ inline bool process_ai_clean_vomit(Entity& entity, float dt) {
 
     if (!vomit) {
         aiclean.unset_target();
-        return false;
+        return;
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
         vomit->get<Transform>().as2(), get_speed_for_entity(entity) * dt);
 
-    if (!reached) return true;
+    if (!reached) return;
 
     HasWork& vomWork = vomit->get<HasWork>();
     vomWork.call(vomit.asE(), entity, dt);
     // check if we did it
     if (vomit->cleanup) {
         aiclean.unset_target();
-        return true;
+        return;
     }
-    return true;
 }
 
-inline bool process_ai_use_bathroom(Entity& entity, float dt) {
-    if (entity.is_missing<AIUseBathroom>()) return false;
+inline void process_ai_use_bathroom(Entity& entity, float dt) {
+    if (entity.is_missing<AIUseBathroom>()) return;
     AIUseBathroom& aibathroom = entity.get<AIUseBathroom>();
-
-    aibathroom.pass_time(dt);
-    if (!aibathroom.ready()) return false;
 
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     const CanOrderDrink& cod = entity.get<CanOrderDrink>();
 
+    aibathroom.pass_time(dt);
+    if (!aibathroom.ready()) return;
+
     int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
     bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
-    if (!gotta_go) return false;
+    if (!gotta_go) return;
 
     if (!aibathroom.has_available_target()) {
         std::vector<RefEntity> all_toilets =
@@ -114,7 +225,7 @@ inline bool process_ai_use_bathroom(Entity& entity, float dt) {
         // We couldnt find anything, for now just wait a second
         if (!best_target) {
             aibathroom.reset();
-            return false;
+            return;
         }
         aibathroom.set_target(best_target->id);
     }
@@ -125,7 +236,7 @@ inline bool process_ai_use_bathroom(Entity& entity, float dt) {
 
     bool reached = entity.get<CanPathfind>().travel_toward(
         toilet.get<Transform>().as2(), get_speed_for_entity(entity) * dt);
-    if (!reached) return true;
+    if (!reached) return;
 
     IsToilet& istoilet = toilet.get<IsToilet>();
     bool we_are_using_it = istoilet.is_user(entity.id);
@@ -134,7 +245,7 @@ inline bool process_ai_use_bathroom(Entity& entity, float dt) {
     if (istoilet.occupied() && !we_are_using_it) {
         // TODO after a couple loops maybe you just go on the floor :(
         aibathroom.reset();
-        return false;
+        return;
     }
 
     // we are using it
@@ -162,24 +273,37 @@ inline bool process_ai_use_bathroom(Entity& entity, float dt) {
         aibathroom.unset_target();
         entity.get<CanOrderDrink>().empty_bladder();
         istoilet.end_use();
-        return true;
-    }
-    return true;
-}
 
-using AIFunc = std::function<bool(Entity&, float)>;
+        // TODO move away from it for a second
+        (void) entity.get<CanPathfind>().travel_toward(
+            vec2{0, 0}, get_speed_for_entity(entity) * dt);
+        return;
+    }
+}
 
 inline void process_(Entity& entity, float dt) {
     if (entity.is_missing<CanPathfind>()) return;
 
-    std::array<AIFunc, 2> funcs = {{
-        process_ai_clean_vomit,
-        process_ai_use_bathroom,
-    }};
-
-    for (const auto& fn : funcs) {
-        bool focused = fn(entity, dt);
-        if (focused) break;
+    switch (entity.get<CanPerformJob>().current) {
+        case Mopping:
+            process_ai_clean_vomit(entity, dt);
+            break;
+        case Drinking:
+            process_ai_drinking(entity, dt);
+            break;
+        case WaitInQueue:
+            process_ai_use_bathroom(entity, dt);
+            break;
+        case NoJob:
+        case Wait:
+        case Wandering:
+        case EnterStore:
+        case WaitInQueueForPickup:
+        case Paying:
+        case Leaving:
+        case Bathroom:
+        case MAX_JOB_TYPE:
+            break;
     }
 }
 

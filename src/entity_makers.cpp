@@ -4,6 +4,7 @@
 #include <ranges>
 
 #include "components/ai_clean_vomit.h"
+#include "components/ai_drinking.h"
 #include "components/ai_use_bathroom.h"
 #include "components/can_pathfind.h"
 #include "components/has_progression.h"
@@ -119,7 +120,7 @@ void register_all_components() {
     entity->addAll<  //
         DebugName, Transform, HasName,
         //
-        AICleanVomit, AIUseBathroom,
+        AICleanVomit, AIUseBathroom, AIDrinking,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
@@ -1217,8 +1218,12 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
+    customer.get<CanPerformJob>().update(WaitInQueue, Wait);
+
+    customer.get<CanPerformJob>().current = JobType::WaitInQueue;
     // TODO for now, eventually move to customer spawner
     if (has_order) {
+        customer.addComponent<AIDrinking>();
         CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();
         // If we are the first guy spawned this round, force the drink to be the
         // most recently unlocked one
@@ -1242,7 +1247,6 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     const auto debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
     customer.get<HasBaseSpeed>().update(debug_mode_on ? 20.f : 5.f);
-    customer.get<CanPerformJob>().update(WaitInQueue, Wandering);
 
     // TODO if we do dirty-cups, we should have people leave them on any flat
     // surface but if they are too drunk... just smash on the ground

@@ -4,6 +4,7 @@
 //
 #include "../components/adds_ingredient.h"
 #include "../components/ai_clean_vomit.h"
+#include "../components/ai_drinking.h"
 #include "../components/ai_use_bathroom.h"
 #include "../components/base_component.h"
 #include "../components/can_be_ghost_player.h"
@@ -99,7 +100,7 @@ struct PolymorphicBaseClass<Job>
 
 template<>
 struct PolymorphicBaseClass<AIComponent>
-    : PolymorphicDerivedClasses<AICleanVomit, AIUseBathroom> {};
+    : PolymorphicDerivedClasses<AICleanVomit, AIUseBathroom, AIDrinking> {};
 
 }  // namespace ext
 }  // namespace bitsery

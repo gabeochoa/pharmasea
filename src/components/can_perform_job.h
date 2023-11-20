@@ -62,6 +62,8 @@ struct CanPerformJob : public BaseComponent {
 
     std::shared_ptr<Job> get_current_job() { return current_job; }
 
+    JobType current = JobType::NoJob;
+
    private:
     [[nodiscard]] const Job& job() const { return *current_job; }
 
