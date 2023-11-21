@@ -842,8 +842,7 @@ void render_floating_name(const Entity& entity, float) {
 void render_progress_bar(const Entity& entity, float) {
     if (entity.is_missing<HasWork>()) return;
     const HasWork& hasWork = entity.get<HasWork>();
-    // TODO spelling
-    if (hasWork.dont_show_progres_bar()) return;
+    if (hasWork.dont_show_progress_bar()) return;
 
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();

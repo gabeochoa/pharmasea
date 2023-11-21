@@ -21,7 +21,7 @@ struct HasWork : public BaseComponent {
     [[nodiscard]] bool can_show_progress_bar() const {
         return has_work() && pct_work_complete >= 0.01f;
     }
-    [[nodiscard]] bool dont_show_progres_bar() const {
+    [[nodiscard]] bool dont_show_progress_bar() const {
         return !can_show_progress_bar();
     }
 
