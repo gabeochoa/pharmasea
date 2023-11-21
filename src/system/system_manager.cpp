@@ -785,8 +785,8 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
             case TripleSec:
             case Bitters: {
                 int alc_index =
-                    index_of<Ingredient, ingredient::Alcohols.size()>(
-                        ingredient::Alcohols, ig);
+                    index_of<Ingredient, ingredient::AlcoholsInCycle.size()>(
+                        ingredient::AlcoholsInCycle, ig);
                 auto& entity = make_free_machine();
                 furniture::make_single_alcohol(
                     entity, spawn_area->get<Transform>().as2(), alc_index);

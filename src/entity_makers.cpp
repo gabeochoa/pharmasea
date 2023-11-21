@@ -606,7 +606,7 @@ void make_single_alcohol(Entity& container, vec2 pos, int alcohol_index) {
                                   EntityType::Alcohol);
 
     container.get<IsItemContainer>().set_uses_indexer(true);
-    container.addComponent<Indexer>((int) ingredient::Alcohols.size())
+    container.addComponent<Indexer>((int) ingredient::AlcoholsInCycle.size())
         .set_value(alcohol_index);
 }
 
@@ -615,7 +615,7 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
                                   EntityType::Alcohol);
     container.get<IsItemContainer>().set_uses_indexer(true);
 
-    container.addComponent<Indexer>((int) ingredient::Alcohols.size());
+    container.addComponent<Indexer>((int) ingredient::AlcoholsInCycle.size());
     container.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                               Entity&, float dt) {
         if (GameState::get().is_not(game::State::InRound)) return;
@@ -636,10 +636,10 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
                 // TODO will show something even if you dont have it
                 // unlocked, we just need a way to say "hey theres no
                 // alcohol unlocked, just skip all of this
-                if (i > ingredient::Alcohols.size()) break;
+                if (i > ingredient::AlcoholsInCycle.size()) break;
 
             } while (ipp.is_ingredient_locked(
-                ingredient::Alcohols[owner.get<Indexer>().value()]));
+                ingredient::AlcoholsInCycle[owner.get<Indexer>().value()]));
 
             hasWork.reset_pct();
         }
@@ -985,15 +985,15 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
     make_item(alc, {.type = EntityType::Alcohol}, pos);
 
     // TODO have to change this to just be 0>size
-    alc.addComponent<HasSubtype>(
-        (int) ingredient::Alcohols[0],
-        (int) ingredient::Alcohols[0] + (int) ingredient::Alcohols.size(),
-        index);
+    alc.addComponent<HasSubtype>((int) ingredient::AlcoholsInCycle[0],
+                                 (int) ingredient::AlcoholsInCycle[0] +
+                                     (int) ingredient::AlcoholsInCycle.size(),
+                                 index);
     alc.addComponent<AddsIngredient>(
            [](const Entity&, const Entity& alcohol) -> IngredientBitSet {
                const HasSubtype& hst = alcohol.get<HasSubtype>();
-               return {get_ingredient_from_index(ingredient::Alcohols[0] +
-                                                 hst.get_type_index())};
+               return {get_ingredient_from_index(
+                   ingredient::AlcoholsInCycle[0] + hst.get_type_index())};
            })
         .set_num_uses(1);
 
@@ -1002,7 +1002,7 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
         [](const Item& owner, const std::string&) -> std::string {
             const HasSubtype& hst = owner.get<HasSubtype>();
             Ingredient bottle = get_ingredient_from_index(
-                ingredient::Alcohols[0] + hst.get_type_index());
+                ingredient::AlcoholsInCycle[0] + hst.get_type_index());
             return util::toLowerCase(magic_enum::enum_name<Ingredient>(bottle));
         });
 }

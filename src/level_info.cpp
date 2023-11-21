@@ -267,7 +267,7 @@ void LevelInfo::generate_model_test_map() {
 
     _carraige_return();
     _carraige_return();
-    for (size_t i = 0; i < ingredient::Alcohols.size(); i++) {
+    for (size_t i = 0; i < ingredient::AlcoholsInCycle.size(); i++) {
         _process_single_mtmi({.et = EntityType::SingleAlcohol,
                               .spawner_type = ModelTestMapInfo::Indexable,
                               .index = i});

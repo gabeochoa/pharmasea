@@ -37,7 +37,7 @@ struct CanOrderDrink : public BaseComponent {
             // TODO add support for flow control
             if (yes) return;
             Ingredient ig = magic_enum::enum_value<Ingredient>(index);
-            yes |= array_contains(ingredient::Alcohols, ig);
+            yes |= ingredient::is_alcohol(ig);
         });
         return yes;
     }

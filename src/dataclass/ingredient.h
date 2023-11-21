@@ -64,7 +64,7 @@ enum IngredientSoundType {
 };
 
 namespace ingredient {
-constexpr std::array<Ingredient, 7> Alcohols = {{
+constexpr std::array<Ingredient, 7> AlcoholsInCycle = {{
     Rum,
     Tequila,
     Vodka,
@@ -73,6 +73,41 @@ constexpr std::array<Ingredient, 7> Alcohols = {{
     TripleSec,
     Bitters,
 }};
+
+[[nodiscard]] inline bool is_alcohol(Ingredient ig) {
+    switch (ig) {
+        case Invalid:
+        case IceCubes:
+        case IceCrushed:
+        case Soda:
+        case Salt:
+        case MintLeaf:
+        case Lemon:
+        case LemonJuice:
+        case Lime:
+        case LimeJuice:
+        case Orange:
+        case OrangeJuice:
+        case Cranberries:
+        case CranberryJuice:
+        case Coconut:
+        case CoconutCream:
+        case Pineapple:
+        case PinaJuice:
+        case SimpleSyrup:
+            return false;
+        case Beer:
+        case Rum:
+        case Tequila:
+        case Vodka:
+        case Whiskey:
+        case Gin:
+        case TripleSec:
+        case Bitters:
+            return true;
+    }
+    return false;
+}
 
 constexpr std::array<Ingredient, 6> Fruits = {
     {Lemon, Lime, Cranberries, Coconut, Orange, Pineapple}};

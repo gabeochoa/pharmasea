@@ -34,8 +34,8 @@ std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
         case Bitters: {
             {
                 int alc_index =
-                    index_of<Ingredient, ingredient::Alcohols.size()>(
-                        ingredient::Alcohols, ig);
+                    index_of<Ingredient, ingredient::AlcoholsInCycle.size()>(
+                        ingredient::AlcoholsInCycle, ig);
                 std::vector<EntityType> ets;
                 ets.push_back(EntityType::SingleAlcohol);
                 settings.push_back(EntityTuple{
@@ -143,8 +143,9 @@ bool IngredientHelper::has_machines_required_for_ingredient(
         case Gin:
         case TripleSec:
         case Bitters: {
-            int alc_index = index_of<Ingredient, ingredient::Alcohols.size()>(
-                ingredient::Alcohols, ig);
+            int alc_index =
+                index_of<Ingredient, ingredient::AlcoholsInCycle.size()>(
+                    ingredient::AlcoholsInCycle, ig);
             return (
                 // Alcohol Group
                 doesAnyExistWithType(EntityType::AlcoholCabinet) ||
