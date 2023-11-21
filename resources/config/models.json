@@ -50,6 +50,14 @@
         },
         {
             "folder": "models/kennynl",
+            "filename": "grapes.obj",
+            "library_name": "champagne",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "sodaBottle.obj",
             "library_name": "beer",
             "size_scale": 2.0,

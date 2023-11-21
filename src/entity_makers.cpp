@@ -961,6 +961,15 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
     _process_add_ingredient();
 }
 
+void make_champagne(Item& alc, vec2 pos) {
+    make_item(alc, {.type = EntityType::Champagne}, pos);
+
+    alc.addComponent<AddsIngredient>(
+        [](const Entity&, const Entity&) -> IngredientBitSet {
+            return IngredientBitSet().reset().set(Ingredient::Champagne);
+        });
+}
+
 void make_alcohol(Item& alc, vec2 pos, int index) {
     make_item(alc, {.type = EntityType::Alcohol}, pos);
 
@@ -972,6 +981,7 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
     alc.addComponent<AddsIngredient>(
            [](const Entity&, const Entity& alcohol) -> IngredientBitSet {
                const HasSubtype& hst = alcohol.get<HasSubtype>();
+               // TODO i dont think this works
                return {get_ingredient_from_index(
                    ingredient::AlcoholsInCycle[0] + hst.get_type_index())};
            })
@@ -1156,9 +1166,13 @@ void make_pitcher(Item& pitcher, vec2 pos) {
 void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
     // log_info("generating new item {} of type {} at {} subtype{}", item.id,
     // type_name, pos, index);
+
+    // TODO make exhaustive
     switch (type) {
         case EntityType::SodaSpout:
             return make_soda_spout(item, pos);
+        case EntityType::Champagne:
+            return make_champagne(item, pos);
         case EntityType::Alcohol:
             return make_alcohol(item, pos, index);
         case EntityType::Fruit:
@@ -1282,6 +1296,11 @@ void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     customer_spawner.addComponent<HasProgression>();
 }
 
+void make_champagne_holder(Entity& container, vec2 pos) {
+    furniture::make_itemcontainer(container, {EntityType::ChampagneHolder}, pos,
+                                  EntityType::Champagne);
+}
+
 }  // namespace furniture
 
 bool convert_to_type(const EntityType& entity_type, Entity& entity,
@@ -1316,6 +1335,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::Register: {
             furniture::make_register(entity, location);
+        } break;
+        case EntityType::ChampagneHolder: {
+            furniture::make_champagne_holder(entity, location);
         } break;
         case EntityType::AlcoholCabinet: {
             furniture::make_medicine_cabinet(entity, location);
@@ -1411,6 +1433,7 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::FruitJuice:
         case EntityType::Mop:
         case EntityType::Pitcher:
+        case EntityType::Champagne:
             log_warn("{} cant be created through 'convert_to_type'",
                      entity_type);
             return false;
@@ -1424,5 +1447,13 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
                 entity_type);
         }
     }
+
+    if (entity.is_missing<DebugName>()) {
+        log_error(
+            "Created an entity but somehow didnt get DebugName component {}"
+            "type",
+            entity_type);
+    }
+
     return true;
 }

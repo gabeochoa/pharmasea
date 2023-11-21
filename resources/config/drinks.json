@@ -18,6 +18,15 @@
           ]
       },
       {
+          "name": "champagne",
+          "icon_name": "champagne",
+          "viewer_name": "Champagne",
+          "ingredients": [
+              "Champagne"
+          ],
+          "requires_upgrade": true
+      },
+      {
           "name": "beer_pitcher",
           // TODO replace with its own icon
           "icon_name": "beer",

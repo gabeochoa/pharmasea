@@ -97,6 +97,13 @@ std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
         case MintLeaf:
         case Invalid:
             break;
+        case Champagne: {
+            {
+                std::vector<EntityType> ets;
+                ets.push_back(EntityType::ChampagneHolder);
+                settings.push_back(EntityTuple{.igs = ets});
+            }
+        } break;
     }
     return settings;
 }
@@ -135,6 +142,9 @@ bool IngredientHelper::has_machines_required_for_ingredient(
         } break;
         case Beer: {
             return doesAnyExistWithType(EntityType::DraftTap);
+        } break;
+        case Champagne: {
+            return doesAnyExistWithType(EntityType::ChampagneHolder);
         } break;
         case Rum:
         case Tequila:

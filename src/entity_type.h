@@ -47,6 +47,8 @@ enum struct EntityType {
     DraftTap,
     Toilet,
     Guitar,
+    ChampagneHolder,  // TODO i wish there was an easier way to have this be
+                      // alcohol without adding it to the cycler
 
     //
     // Items
@@ -57,6 +59,7 @@ enum struct EntityType {
     // ease, lets start with separate ents
     Pitcher,
     Drink,
+    Champagne,
     Alcohol,
     Fruit,
     FruitJuice,
@@ -111,6 +114,7 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::Table:
         case EntityType::Register:
             return 10;
+        case EntityType::ChampagneHolder:
         case EntityType::DraftTap:
         case EntityType::SodaMachine:
         // TODO index creation not supported yet
@@ -162,6 +166,7 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::z:
         case EntityType::Face:
         case EntityType::Pitcher:
+        case EntityType::Champagne:
             // log_warn("You should probably not need the price for this {}",
             // magic_enum::enum_name<EntityType>(type));
             return -1;
@@ -179,6 +184,7 @@ enum struct StoreEligibilityType {
 
 inline StoreEligibilityType get_store_eligibility(EntityType etype) {
     switch (etype) {
+        case EntityType::ChampagneHolder:
         case EntityType::PitcherCupboard:
         case EntityType::Guitar:
         case EntityType::Toilet:
@@ -232,6 +238,7 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::FruitJuice:
         case EntityType::SodaSpout:
         case EntityType::Pitcher:
+        case EntityType::Champagne:
             return StoreEligibilityType::Never;
     }
     return StoreEligibilityType::Never;

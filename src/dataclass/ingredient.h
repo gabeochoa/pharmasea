@@ -29,6 +29,7 @@ enum Ingredient {
 
     //
     Beer,
+    Champagne,
 
     // Liquor
     Rum,
@@ -104,6 +105,7 @@ constexpr std::array<Ingredient, 7> AlcoholsInCycle = {{
         case Gin:
         case TripleSec:
         case Bitters:
+        case Champagne:
             return true;
     }
     return false;
@@ -139,6 +141,7 @@ constexpr CEMap<Ingredient, IngredientSoundType,
         //
         {Soda, Liquid},
         {Beer, Liquid},
+        {Champagne, Liquid},
         {Rum, Liquid},
         {Tequila, Liquid},
         {Vodka, Liquid},
@@ -169,8 +172,11 @@ using IngredientBitSet = std::bitset<magic_enum::enum_count<Ingredient>()>;
 
 enum Drink {
     coke,
+    //
     beer,
     beer_pitcher,
+    champagne,
+    //
     rum_and_coke,
     margarita,
     daiquiri,

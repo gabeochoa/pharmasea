@@ -244,6 +244,7 @@ void LevelInfo::generate_model_test_map() {
             {EntityType::FastForward},
             {EntityType::DraftTap},
             {EntityType::AlcoholCabinet},
+            {EntityType::ChampagneHolder},
             // Add another section for upgrade guys
             {EntityType::Toilet},
             {EntityType::Guitar},
@@ -330,6 +331,9 @@ void LevelInfo::generate_store_map() {
 
         entity.get<IsTriggerArea>().set_validation_fn(
             [](const IsTriggerArea& ita) -> ValidationResult {
+                // TODO should we only run the below when there is at least one
+                // person standing on it?
+
                 OptEntity sophie =
                     EntityQuery().whereType(EntityType::Sophie).gen_first();
 

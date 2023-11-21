@@ -254,6 +254,28 @@
       },
       {
           //"disabled": "Working as expected",
+          "name": "Champagne",
+          "flavor_text": "someone get the bandaids.",
+          "description": "(Unlocks Champagne which needs to be saber'd before pouring)",
+          "required_machines": [
+              "champagne_holder"
+          ],
+          "upgrade_effects": [
+              {
+                  "name": "drink",
+                  "operation": "unlock",
+                  "value": "champagne"
+              },
+              {
+                  "name": "entity",
+                  "operation": "unlock",
+                  "value": "champagne_holder"
+              }
+          ],
+          "prereqs": []
+      },
+      {
+          //"disabled": "Working as expected",
           "name": "Pitcher",
           "flavor_text": "its actually a carafe.",
           "description": "(Unlocks a pitcher which can store up to 10 drinks)",
@@ -272,6 +294,9 @@
           "flavor_text": "crackin open a cold one or two... or ten .",
           "description": "(Customers will now order a pitcher of beer)",
           "upgrade_effects": [
+          ],
+          "required_machines": [
+              "pitcher_cupboard"
           ],
           "prereqs": [
               {
