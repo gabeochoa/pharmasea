@@ -964,14 +964,16 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
 void make_champagne(Item& alc, vec2 pos) {
     make_item(alc, {.type = EntityType::Champagne}, pos);
 
-    alc.addComponent<HasWork>().init(
-        [](Entity&, HasWork& hasWork, Entity&, float dt) {
+    alc.addComponent<HasWork>()
+        .init([](Entity&, HasWork& hasWork, Entity&, float dt) {
             if (!GameState::get().in_round()) return;
             if (!hasWork.is_work_complete()) {
                 const float amt = 1.5f;
                 hasWork.increase_pct(amt * dt);
+                return;
             }
-        });
+        })
+        .set_hide_on_full(true);
 
     alc.addComponent<AddsIngredient>(
            [](const Entity&, const Entity&) -> IngredientBitSet {
