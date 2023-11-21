@@ -1441,6 +1441,12 @@ void reduce_impatient_customers(Entity& entity, float dt) {
     if (hp.pct() <= 0) hp.reset();
 }
 
+void pass_time_for_active_fishing_games(Entity& entity, float dt) {
+    if (entity.is_missing<HasFishingGame>()) return;
+    HasFishingGame& fishing = entity.get<HasFishingGame>();
+    fishing.pass_time(dt);
+}
+
 void pop_out_when_colliding(Entity& entity, float) {
     const auto no_clip_on =
         GLOBALS.get_or_default<bool>("no_clip_enabled", false);
@@ -1848,6 +1854,8 @@ void SystemManager::in_round_update(
         system_manager::process_trash(entity, dt);
         system_manager::reset_empty_work_furniture(entity, dt);
         system_manager::reduce_impatient_customers(entity, dt);
+
+        system_manager::pass_time_for_active_fishing_games(entity, dt);
     });
 }
 

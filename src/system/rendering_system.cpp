@@ -4,6 +4,7 @@
 #include "../components/can_hold_furniture.h"
 #include "../components/can_pathfind.h"
 #include "../components/has_client_id.h"
+#include "../components/has_fishing_game.h"
 #include "../components/has_patience.h"
 #include "../components/has_subtype.h"
 #include "../components/has_waiting_queue.h"
@@ -41,13 +42,17 @@ struct ProgressBarConfig {
     float pct_full = 1.f;
     float y_offset = -1;
     float x_offset = -1;
+    // TODO rename this to use_default_colors
     bool use_color = false;
+    std::optional<Color> color_override;
 };
 
 void DrawProgressBar(const ProgressBarConfig& config) {
     Color primary = config.use_color
                         ? ui::get_default_progress_bar_color(config.pct_full)
                         : ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
+    if (config.color_override) primary = config.color_override.value();
+
     Color background = ui::UI_THEME.from_usage(ui::theme::Usage::Background);
 
     float y_offset =
@@ -853,6 +858,21 @@ void render_progress_bar(const Entity& entity, float) {
     });
 }
 
+void render_fishing_game(const Entity& entity, float) {
+    if (entity.is_missing<HasFishingGame>()) return;
+    const HasFishingGame& fishing = entity.get<HasFishingGame>();
+    if (!fishing.show_progress_bar()) return;
+
+    if (entity.is_missing<Transform>()) return;
+    const Transform& transform = entity.get<Transform>();
+
+    DrawProgressBar(ProgressBarConfig{
+        .position = transform.pos(),
+        .pct_full = fishing.pct(),
+        .color_override = fishing.has_score() ? BLUE : std::optional<Color>(),
+    });
+}
+
 void render_walkable_spots(float) {
     // TODO For some reason this also triggers the walkable.contains
     // segfault
@@ -965,6 +985,7 @@ void render(const Entity& entity, float dt, bool is_debug) {
     render_held_furniture_preview(entity, dt);
     render_floating_name(entity, dt);
     render_progress_bar(entity, dt);
+    render_fishing_game(entity, dt);
 }
 
 }  // namespace render_manager

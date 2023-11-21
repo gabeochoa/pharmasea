@@ -27,6 +27,7 @@
 #include "../components/has_base_speed.h"
 #include "../components/has_client_id.h"
 #include "../components/has_dynamic_model_name.h"
+#include "../components/has_fishing_game.h"
 #include "../components/has_name.h"
 #include "../components/has_patience.h"
 #include "../components/has_progression.h"
@@ -86,7 +87,7 @@ struct PolymorphicBaseClass<BaseComponent>
           HasSubtype, IsItem, IsDrink, AddsIngredient, CanOrderDrink,
           IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
           IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
-          AIComponent,
+          AIComponent, HasFishingGame,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

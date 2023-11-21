@@ -318,6 +318,23 @@ void work_furniture(Entity& player, float frame_dt) {
     match->get<HasWork>().call(match.asE(), player, frame_dt);
 }
 
+void fishing_game(Entity& player, float frame_dt) {
+    // TODO need to figure out if this should be separate from highlighting
+    const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
+
+    OptEntity match = EntityHelper::getClosestMatchingFurniture(
+        player.get<Transform>(), cho.reach(), [](const Entity& furniture) {
+            if (furniture.template is_missing<HasFishingGame>()) return false;
+            const HasFishingGame& fishing =
+                furniture.template get<HasFishingGame>();
+            return !fishing.has_score();
+        });
+
+    if (!match) return;
+
+    match->get<HasFishingGame>().go(frame_dt);
+}
+
 namespace planning {
 void rotate_furniture(const Entity& player) {
     // Cant rotate outside planning mode
@@ -801,8 +818,10 @@ void process_input(Entity& entity, const UserInput& input) {
                     }
                 }
                 break;
-            case InputName::PlayerDoWork:
+            case InputName::PlayerDoWork: {
                 work_furniture(entity, frame_dt);
+                fishing_game(entity, frame_dt);
+            } break;
             default:
                 break;
         }

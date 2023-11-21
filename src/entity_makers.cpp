@@ -8,6 +8,7 @@
 #include "components/ai_use_bathroom.h"
 #include "components/ai_wait_in_queue.h"
 #include "components/can_pathfind.h"
+#include "components/has_fishing_game.h"
 #include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
@@ -134,6 +135,7 @@ void register_all_components() {
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
+        HasFishingGame,
         // render
         ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
         //
@@ -963,6 +965,8 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
 
 void make_champagne(Item& alc, vec2 pos) {
     make_item(alc, {.type = EntityType::Champagne}, pos);
+
+    alc.addComponent<HasFishingGame>();
 
     alc.addComponent<HasWork>()
         .init([](Entity&, HasWork& hasWork, Entity&, float dt) {
