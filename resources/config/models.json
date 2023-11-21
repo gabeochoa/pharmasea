@@ -50,9 +50,17 @@
         },
         {
             "folder": "models/kennynl",
-            "filename": "grapes.obj",
+            "filename": "mussel.obj",
             "library_name": "champagne",
-            "size_scale": 2.0,
+            "size_scale": 5.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "musselOpen.obj",
+            "library_name": "champagne_open",
+            "size_scale": 5.0,
             "position_offset": [0,0,0],
             "rotation_angle": 0.0
         },

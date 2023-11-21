@@ -982,6 +982,13 @@ void make_champagne(Item& alc, vec2 pos) {
             return bottle.get<HasWork>().is_work_complete();
         })
         .set_num_uses(3);
+
+    alc.addComponent<HasDynamicModelName>().init(
+        EntityType::Champagne, HasDynamicModelName::DynamicType::Ingredients,
+        [](const Item& owner, const std::string&) -> std::string {
+            return owner.get<HasWork>().is_work_complete() ? "champagne_open"
+                                                           : "champagne";
+        });
 }
 
 void make_alcohol(Item& alc, vec2 pos, int index) {

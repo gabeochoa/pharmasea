@@ -776,6 +776,12 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
                 ipm.unlock_entity(et);
             } break;
+            case Champagne: {
+                auto et = EntityType::ChampagneHolder;
+                auto& entity = make_free_machine();
+                convert_to_type(et, entity, spawn_area->get<Transform>().as2());
+                ipm.unlock_entity(et);
+            } break;
             case Rum:
             case Tequila:
             case Vodka:
