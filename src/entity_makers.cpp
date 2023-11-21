@@ -964,10 +964,24 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
 void make_champagne(Item& alc, vec2 pos) {
     make_item(alc, {.type = EntityType::Champagne}, pos);
 
-    alc.addComponent<AddsIngredient>(
-        [](const Entity&, const Entity&) -> IngredientBitSet {
-            return IngredientBitSet().reset().set(Ingredient::Champagne);
+    alc.addComponent<HasWork>().init(
+        [](Entity&, HasWork& hasWork, Entity&, float dt) {
+            if (!GameState::get().in_round()) return;
+            if (!hasWork.is_work_complete()) {
+                const float amt = 1.5f;
+                hasWork.increase_pct(amt * dt);
+            }
         });
+
+    alc.addComponent<AddsIngredient>(
+           [](const Entity&, const Entity&) -> IngredientBitSet {
+               return IngredientBitSet().reset().set(Ingredient::Champagne);
+           })
+        .set_validator([](const Entity& bottle, const Entity& drink) -> bool {
+            // Only allow adding the ingredient if you opened the bottle
+            return bottle.get<HasWork>().is_work_complete();
+        })
+        .set_num_uses(3);
 }
 
 void make_alcohol(Item& alc, vec2 pos, int index) {
