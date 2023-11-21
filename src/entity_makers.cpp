@@ -255,7 +255,7 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     make_entity(person, options, p);
     add_person_components(person, options);
 
-    person.addComponent<CanPerformJob>().update(Wandering, Wandering);
+    person.addComponent<CanPerformJob>();
     person.addComponent<CanPathfind>();
 }
 
@@ -269,7 +269,7 @@ void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
         util::convertToSnakeCase(EntityType::MopBuddy));
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
-    mop_buddy.get<CanPerformJob>().update(Mopping, Mopping);
+    mop_buddy.get<CanPerformJob>().current = JobType::Mopping;
     mop_buddy.addComponent<AICleanVomit>();
 
     mop_buddy
@@ -979,7 +979,7 @@ void make_champagne(Item& alc, vec2 pos) {
            [](const Entity&, const Entity&) -> IngredientBitSet {
                return IngredientBitSet().reset().set(Ingredient::Champagne);
            })
-        .set_validator([](const Entity& bottle, const Entity& drink) -> bool {
+        .set_validator([](const Entity& bottle, const Entity&) -> bool {
             // Only allow adding the ingredient if you opened the bottle
             return bottle.get<HasWork>().is_work_complete();
         })
@@ -1230,8 +1230,6 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
 
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-
-    customer.get<CanPerformJob>().update(WaitInQueue, Wait);
 
     customer.get<CanPerformJob>().current = JobType::WaitInQueue;
     // TODO for now, eventually move to customer spawner
