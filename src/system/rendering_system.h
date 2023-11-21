@@ -12,7 +12,6 @@
 #include "../components/is_pnumatic_pipe.h"
 #include "../components/is_trigger_area.h"
 #include "../components/model_renderer.h"
-#include "../components/shows_progress_bar.h"
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"

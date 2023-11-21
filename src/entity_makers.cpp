@@ -60,7 +60,6 @@
 #include "components/is_trigger_area.h"
 #include "components/model_renderer.h"
 #include "components/responds_to_user_input.h"
-#include "components/shows_progress_bar.h"
 #include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "components/uses_character_model.h"
@@ -136,8 +135,7 @@ void register_all_components() {
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
         // render
-        ShowsProgressBar, ModelRenderer, HasDynamicModelName,
-        SimpleColoredBoxRenderer
+        ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
         //
         >();
 
@@ -343,7 +341,6 @@ void make_table(Entity& table, vec2 pos) {
     table.addComponent<HasWork>().init(std::bind(
         process_table_working, std::placeholders::_1, std::placeholders::_2,
         std::placeholders::_3, std::placeholders::_4));
-    table.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 }
 
 void make_character_switcher(Entity& character_switcher, vec2 pos) {
@@ -369,8 +366,6 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
                 usesCharacterModel.increment();
             }
         });
-    character_switcher.addComponent<ShowsProgressBar>(
-        ShowsProgressBar::Enabled::Always);
 }
 
 void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
@@ -418,9 +413,6 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
             HasName& hasName = randomizer.get<HasName>();
             hasName.update(server->get_map_SERVER_ONLY()->seed);
         });
-
-    map_randomizer.addComponent<ShowsProgressBar>(
-        ShowsProgressBar::Enabled::Always);
 }
 
 void make_fast_forward(Entity& fast_forward, vec2 pos) {
@@ -458,9 +450,6 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
             hasWork.reset_pct();
         }
     });
-
-    fast_forward.addComponent<ShowsProgressBar>(
-        ShowsProgressBar::Enabled::InRound);
 }
 
 void make_wall(Entity& wall, vec2 pos, Color c) {
@@ -562,7 +551,6 @@ void make_toilet(Entity& toilet, vec2 pos) {
                 istoilet.reset();
             }
         });
-    toilet.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 }
 
 void make_pnumatic_pipe(Entity& pnumatic, vec2 pos) {
@@ -598,7 +586,6 @@ void make_ice_machine(Entity& machine, vec2 pos) {
                 items::_add_ingredient_to_drink_NO_VALIDATION(*item, ing);
             }
         });
-    machine.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 }
 
 void make_single_alcohol(Entity& container, vec2 pos, int alcohol_index) {
@@ -644,8 +631,6 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
             hasWork.reset_pct();
         }
     });
-    container.addComponent<ShowsProgressBar>(
-        ShowsProgressBar::Enabled::InRound);
 }
 
 void make_fruit_basket(Entity& container, vec2 pos, int starting_index = 0) {
@@ -676,8 +661,6 @@ void make_fruit_basket(Entity& container, vec2 pos, int starting_index = 0) {
             hasWork.reset_pct();
         }
     });
-    container.addComponent<ShowsProgressBar>(
-        ShowsProgressBar::Enabled::InRound);
 }
 
 void make_cupboard(Entity& cupboard, vec2 pos, int index) {
@@ -833,9 +816,6 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
     }
 
     vomit.addComponent<CanBeHighlighted>();
-
-    // TODO please just add this to has work or something cmon
-    vomit.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 
     vomit.addComponent<HasWork>().init(
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
@@ -1107,7 +1087,6 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
                               blender->id);
         }
     });
-    fruit.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 }
 
 void make_drink(Item& drink, vec2 pos) {
@@ -1117,8 +1096,6 @@ void make_drink(Item& drink, vec2 pos) {
     drink.addComponent<HasWork>().init(std::bind(
         process_drink_working, std::placeholders::_1, std::placeholders::_2,
         std::placeholders::_3, std::placeholders::_4));
-    // TODO should this just be part of has work?
-    drink.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 
     drink.addComponent<HasDynamicModelName>().init(
         EntityType::Drink, HasDynamicModelName::DynamicType::Ingredients,
@@ -1161,8 +1138,6 @@ void make_pitcher(Item& pitcher, vec2 pos) {
     pitcher.addComponent<HasWork>().init(std::bind(
         process_drink_working, std::placeholders::_1, std::placeholders::_2,
         std::placeholders::_3, std::placeholders::_4));
-    // TODO should this just be part of has work?
-    pitcher.addComponent<ShowsProgressBar>(ShowsProgressBar::Enabled::InRound);
 
     pitcher.addComponent<HasDynamicModelName>().init(
         EntityType::Pitcher, HasDynamicModelName::DynamicType::Ingredients,

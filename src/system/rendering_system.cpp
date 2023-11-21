@@ -840,31 +840,13 @@ void render_floating_name(const Entity& entity, float) {
 }
 
 void render_progress_bar(const Entity& entity, float) {
-    if (entity.is_missing<ShowsProgressBar>()) return;
-
-    const auto spr_type = entity.get<ShowsProgressBar>().type;
-    game::State state = GameState::get().read();
-
-    const auto _should_render = [&]() {
-        if (spr_type == ShowsProgressBar::Enabled::Always) return true;
-        if (state == game::State::InRound &&
-            spr_type == ShowsProgressBar::Enabled::InRound)
-            return true;
-        if (state == game::State::Planning &&
-            spr_type == ShowsProgressBar::Enabled::Planning)
-            return true;
-        return false;
-    };
-
-    if (!_should_render()) return;
+    if (entity.is_missing<HasWork>()) return;
+    const HasWork& hasWork = entity.get<HasWork>();
+    // TODO spelling
+    if (hasWork.dont_show_progres_bar()) return;
 
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
-
-    if (entity.is_missing<HasWork>()) return;
-
-    const HasWork& hasWork = entity.get<HasWork>();
-    if (hasWork.dont_show_progres_bar()) return;
 
     DrawProgressBar(ProgressBarConfig{
         .position = transform.pos(),

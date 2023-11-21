@@ -61,8 +61,7 @@ inline std::vector<SizeInfo> size_all_components_sorted() {
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem,
         // render
-        ShowsProgressBar, ModelRenderer, HasDynamicModelName,
-        SimpleColoredBoxRenderer
+        ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
         //
         //
         >(results);
@@ -84,8 +83,7 @@ inline std::vector<SizeInfo> size_all_components_sorted() {
             HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
             HasBaseSpeed, HasRopeToItem,
             // render
-            ShowsProgressBar, ModelRenderer, HasDynamicModelName,
-            SimpleColoredBoxRenderer
+            ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
             //
             //
             >();

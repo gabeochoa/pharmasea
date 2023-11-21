@@ -53,7 +53,6 @@
 #include "../components/is_trigger_area.h"
 #include "../components/model_renderer.h"
 #include "../components/responds_to_user_input.h"
-#include "../components/shows_progress_bar.h"
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
@@ -82,11 +81,11 @@ struct PolymorphicBaseClass<BaseComponent>
           CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid, CanBeHeld,
           HasPatience, HasProgression, IsRotatable, CanGrabFromOtherFurniture,
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
-          UsesCharacterModel, ShowsProgressBar, DebugName, HasDynamicModelName,
-          IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasTimer,
-          HasRopeToItem, HasSubtype, IsItem, IsDrink, AddsIngredient,
-          CanOrderDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker,
-          IsBank, IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
+          UsesCharacterModel, DebugName, HasDynamicModelName, IsTriggerArea,
+          HasSpeechBubble, Indexer, IsSpawner, HasTimer, HasRopeToItem,
+          HasSubtype, IsItem, IsDrink, AddsIngredient, CanOrderDrink,
+          IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
+          IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
           AIComponent,
 
           // This one i didnt find before cause its not serialzed generally
