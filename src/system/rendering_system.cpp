@@ -1,6 +1,7 @@
 
 #include "rendering_system.h"
 
+#include "../components/adds_ingredient.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_pathfind.h"
 #include "../components/has_client_id.h"
@@ -352,6 +353,20 @@ void render_debug_drink_info(const Entity& entity, float) {
                          std::string(content).c_str(), 50);
         y += 0.25f;
     }
+}
+
+void render_debug_num_uses_left(const Entity& entity, float) {
+    if (entity.is_missing<AddsIngredient>()) return;
+    const AddsIngredient& addsig = entity.get<AddsIngredient>();
+    int uses = addsig.uses_left();
+    if (uses <= 1)  // include 0 and -1
+        return;
+
+    const Transform& transform = entity.get<Transform>();
+
+    const auto content = fmt::format("Uses Remaining: {}", uses);
+    DrawFloatingText(vec::raise(transform.raw(), 0.5f), Preload::get().font,
+                     std::string(content).c_str(), 50);
 }
 
 void render_debug_filter_info(const Entity& entity, float) {
@@ -845,6 +860,7 @@ void render_normal(const Entity& entity, float dt) {
     render_debug_drink_info(entity, dt);
     render_debug_filter_info(entity, dt);
     render_debug_fruit_juice(entity, dt);
+    render_debug_num_uses_left(entity, dt);
 
     render_waiting_queue(entity, dt);
     render_smelly_toilet(entity, dt);
