@@ -141,6 +141,10 @@ void register_all_components() {
         ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
         //
         >();
+    // TODO now that we have removeComponent we could remove some instead
+    // for example AddsIngredient could be removed when it runs out
+    // there might be some logic that relies on this not being removed though
+    // so be aware
 
     // TODO test remove_all_components at some point
     // VALIDATE(entity->has<ModelRenderer>(), "entity should have all
