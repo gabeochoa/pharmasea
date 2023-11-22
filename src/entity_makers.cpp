@@ -18,6 +18,7 @@
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
 #include "components/is_round_settings_manager.h"
+#include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
 #include "dataclass/ingredient.h"
 #include "engine/bitset_utils.h"
@@ -125,7 +126,7 @@ void register_all_components() {
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
-        IsFreeInStore, IsToilet, IsRoundSettingsManager,
+        IsFreeInStore, IsToilet, IsRoundSettingsManager, IsStoreSpawned,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,

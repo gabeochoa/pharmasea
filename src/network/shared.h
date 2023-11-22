@@ -50,6 +50,7 @@
 #include "../components/is_snappable.h"
 #include "../components/is_solid.h"
 #include "../components/is_spawner.h"
+#include "../components/is_store_spawned.h"
 #include "../components/is_toilet.h"
 #include "../components/is_trigger_area.h"
 #include "../components/model_renderer.h"
@@ -87,7 +88,7 @@ struct PolymorphicBaseClass<BaseComponent>
           HasSubtype, IsItem, IsDrink, AddsIngredient, CanOrderDrink,
           IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
           IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
-          AIComponent, HasFishingGame,
+          AIComponent, HasFishingGame, IsStoreSpawned,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

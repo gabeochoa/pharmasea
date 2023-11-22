@@ -1521,16 +1521,17 @@ void cart_management(Entity& entity, float) {
 void cleanup_old_store_options() {
     // TODO :STORE_CLEANUP: instead we should just keep track of the store
     // spawned ones and delete them floormarked
-    float rad = 20;
-    const auto ents = EntityHelper::getAllInRange(
-        {STORE_ORIGIN - rad, -1.f * rad}, {STORE_ORIGIN + rad, rad});
 
-    for (Entity& entity : ents) {
-        // Skip the permananent ones
-        if (entity.has<IsFloorMarker>()) continue;
-        if (entity.has<IsTriggerArea>()) continue;
-
+    for (Entity& entity :
+         EntityQuery().whereHasComponent<IsStoreSpawned>().gen()) {
         entity.cleanup = true;
+
+        // Also cleanup the item its holding if it has one
+        if (entity.is_missing<CanHoldItem>()) continue;
+        CanHoldItem& chi = entity.get<CanHoldItem>();
+        if (!chi.is_holding_item()) continue;
+        if (!chi.item()) continue;
+        chi.item()->cleanup = true;
     }
 }
 
@@ -1562,6 +1563,7 @@ void generate_store_options() {
                  magic_enum::enum_name<EntityType>(etype));
 
         auto& entity = EntityHelper::createEntity();
+        entity.addComponent<IsStoreSpawned>();
         bool success = convert_to_type(
             etype, entity,
             spawn_area->get<Transform>().as2() + vec2{
@@ -1598,20 +1600,27 @@ void move_purchased_furniture() {
         EntityID id = ifm.marked_ids()[i];
         OptEntity marked_entity = EntityHelper::getEntityForID(id);
         if (!marked_entity) continue;
+
+        // Move it to the new spot
         Transform& transform = marked_entity->get<Transform>();
         transform.update(spawn_position);
         transform.update_y(0);
+
+        // Remove the 'store_cleanup' marker
+        if (marked_entity->has<IsStoreSpawned>()) {
+            marked_entity->removeComponent<IsStoreSpawned>();
+        }
 
         // Some items can hold other items, we should move that item too
         // they arent being caught by the marker since we only mark solid items
         system_manager::update_held_item_position(marked_entity.asE(), 0.f);
 
-        // Its free!
-        if (marked_entity->has<IsFreeInStore>()) continue;
-
-        amount_in_cart +=
-            std::max(0, get_price_for_entity_type(
-                            marked_entity->get<DebugName>().get_type()));
+        // Its not free!
+        if (marked_entity->is_missing<IsFreeInStore>()) {
+            amount_in_cart +=
+                std::max(0, get_price_for_entity_type(
+                                marked_entity->get<DebugName>().get_type()));
+        }
     }
 
     VALIDATE(amount_in_cart == bank.cart(),

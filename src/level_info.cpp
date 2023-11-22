@@ -361,12 +361,8 @@ void LevelInfo::generate_store_map() {
                         .gen_first();
                 if (!cart_area.valid()) return {false, "Internal Error"};
 
-                // TODO :STORE_CLEANUP: instead we should just keep track of
-                // the store spawned ones
-                float rad = 20;
-                const auto ents = EntityHelper::getAllInRange(
-                    {STORE_ORIGIN - rad, -1.f * rad},
-                    {STORE_ORIGIN + rad, rad});
+                const auto ents =
+                    EntityQuery().whereHasComponent<IsStoreSpawned>().gen();
 
                 // If its free and not marked, then we cant continue
                 for (const Entity& ent : ents) {
