@@ -356,11 +356,10 @@ void drop_held_furniture(Entity& player) {
 
     vec3 drop_location = player.get<Transform>().drop_location();
 
-    // TODO right now this doesnt work
-    bool can_place = EntityHelper::isWalkable(vec::to2(drop_location));
-    // you cant place items back where they spawned originally when the map
-    // generated
-    can_place = true;
+    // We have to use the non cached version because the pickup location
+    // is in the cache
+    bool can_place =
+        EntityHelper::isWalkableRawEntities(vec::to2(drop_location));
 
     if (can_place) {
         hf->get<CanBeHeld>().set_is_being_held(false);
