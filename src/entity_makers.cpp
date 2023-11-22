@@ -968,31 +968,20 @@ void make_champagne(Item& alc, vec2 pos) {
 
     alc.addComponent<HasFishingGame>();
 
-    alc.addComponent<HasWork>()
-        .init([](Entity&, HasWork& hasWork, Entity&, float dt) {
-            if (!GameState::get().in_round()) return;
-            if (!hasWork.is_work_complete()) {
-                const float amt = 1.5f;
-                hasWork.increase_pct(amt * dt);
-                return;
-            }
-        })
-        .set_hide_on_full(true);
-
     alc.addComponent<AddsIngredient>(
            [](const Entity&, const Entity&) -> IngredientBitSet {
                return IngredientBitSet().reset().set(Ingredient::Champagne);
            })
         .set_validator([](const Entity& bottle, const Entity&) -> bool {
             // Only allow adding the ingredient if you opened the bottle
-            return bottle.get<HasWork>().is_work_complete();
+            return bottle.get<HasFishingGame>().has_score();
         })
         .set_num_uses(3);
 
     alc.addComponent<HasDynamicModelName>().init(
         EntityType::Champagne, HasDynamicModelName::DynamicType::Ingredients,
         [](const Item& owner, const std::string&) -> std::string {
-            return owner.get<HasWork>().is_work_complete() ? "champagne_open"
+            return owner.get<HasFishingGame>().has_score() ? "champagne_open"
                                                            : "champagne";
         });
 }

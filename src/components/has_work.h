@@ -62,6 +62,11 @@ struct HasWork : public BaseComponent {
         return *this;
     }
 
+    auto& set_hide_always(bool hof) {
+        hide_progress_bar = hof;
+        return *this;
+    }
+
    private:
     WorkFn do_work;
 
@@ -69,6 +74,7 @@ struct HasWork : public BaseComponent {
     bool more_to_do;
     bool reset_on_empty;
     bool hide_progress_bar_on_full;
+    bool hide_progress_bar;
 
     friend bitsery::Access;
     template<typename S>

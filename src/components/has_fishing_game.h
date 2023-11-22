@@ -11,15 +11,15 @@ struct HasFishingGame : public BaseComponent {
     [[nodiscard]] bool show_progress_bar() const { return started; }
     [[nodiscard]] float get_score() const { return score; }
     [[nodiscard]] float pct() const { return progress; }
+    [[nodiscard]] float best() const { return best_location; }
 
     void pass_time(float dt) {
         if (!started || has_score()) return;
         countdown -= dt;
 
-        log_info("countdown {:2f}", countdown);
         if (countdown <= 0.f) {
             // TODO figure out scoring
-            score = abs(progress - 0.5f);
+            score = abs(progress - best_location);
         }
     }
 
@@ -29,7 +29,6 @@ struct HasFishingGame : public BaseComponent {
         if (!started) started = true;
         countdown = countdownReset;
         bounce(dt);
-        log_info("dt {:2f} dir {} progress: {:2f}", dt, direction, progress);
     }
 
    private:
@@ -43,8 +42,9 @@ struct HasFishingGame : public BaseComponent {
         increment(dt);
     }
     void turn_around() { direction *= -1; }
-    void increment(float dt) { progress += direction * dt; }
+    void increment(float dt) { progress += direction * dt * 2.f; }
 
+    float best_location = 0.5f;
     float score = -1;
     float progress = 0;
     int direction = 1;
@@ -65,6 +65,7 @@ struct HasFishingGame : public BaseComponent {
 
         s.value4b(direction);
 
+        s.value4b(best_location);
         s.value4b(score);
         s.value4b(progress);
         s.value4b(countdown);

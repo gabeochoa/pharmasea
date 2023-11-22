@@ -15,9 +15,11 @@
 #include "../drawing_util.h"
 #include "../engine/texture_library.h"
 #include "../engine/ui/theme.h"
+#include "../engine/util.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../preload.h"
+#include "raylib.h"
 #include "system_manager.h"
 
 extern ui::UITheme UI_THEME;
@@ -45,7 +47,67 @@ struct ProgressBarConfig {
     // TODO rename this to use_default_colors
     bool use_color = false;
     std::optional<Color> color_override;
+    float marker_pct = -1.f;
 };
+
+void DrawFishingGame(const ProgressBarConfig& config) {
+    Color primary = config.use_color
+                        ? ui::get_default_progress_bar_color(config.pct_full)
+                        : ui::UI_THEME.from_usage(ui::theme::Usage::Primary);
+    if (config.color_override) primary = config.color_override.value();
+
+    Color background = ui::UI_THEME.from_usage(ui::theme::Usage::Background);
+
+    float y_offset =
+        config.y_offset != -1 ? config.y_offset : 1.75f * config.scale.x;
+    float x_offset = config.x_offset != -1 ? config.x_offset : 0;
+    const vec3 pos = config.position;
+
+    raylib::rlPushMatrix();
+    {
+        raylib::rlTranslatef(pos.x, pos.y, pos.z);
+
+        vec3 size = {
+            config.scale.x,
+            config.scale.y / 3.f,
+            config.scale.z / 10.f,
+        };
+
+        if (config.marker_pct > 0.f) {
+            vec3 marker_pos = {
+                x_offset + (config.scale.x / 4.f),
+                y_offset + (config.scale.y / 5.f),  //
+                -config.scale.z / 10.f,             //
+            };
+            int num_pieces = 20;
+            int best_slice = ((int) (config.marker_pct * num_pieces));
+            int current_slice = ((int) (config.pct_full * num_pieces));
+            float piece_size = 1.f / num_pieces;
+
+            const auto slice_color = [&](float pct_dist) {
+                if (pct_dist < 0.05f) return GREEN;
+                if (pct_dist < 0.20f) return BLUE;
+                return background;
+            };
+
+            for (int i = 0; i < num_pieces; i += 1) {
+                int dist_to_best = std::abs(i - best_slice);
+                float pct_dist = (1.f * dist_to_best) / num_pieces;
+
+                Color c = slice_color(pct_dist);
+                if (i == current_slice) c = primary;
+                const float sizey =
+                    fmax(0.000001f, util::lerp(size.y, 0, pct_dist));
+
+                DrawCubeCustom(
+                    marker_pos +
+                        vec3{((float) i * piece_size) - (size.x / 2.f), 0, 0},
+                    piece_size, sizey, size.z / 10.f, 0, c, c);
+            }
+        }
+    }
+    raylib::rlPopMatrix();
+}
 
 void DrawProgressBar(const ProgressBarConfig& config) {
     Color primary = config.use_color
@@ -371,8 +433,8 @@ void render_trigger_area(const Entity& entity, float dt) {
         raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, 1},
                                              .waveSpeed = {0.0f, 0.0f, 0.01f},
                                              .waveOffset = {0.f, 0.f, 0.2f}};
-        // TODO we probably should have all of this kind of thing in the config
-        // for the components
+        // TODO we probably should have all of this kind of thing in the
+        // config for the components
         //
         raylib::DrawTextWave3D(
             font,
@@ -517,8 +579,8 @@ void render_floor_marker(const Entity& entity, float) {
         switch (entity.get<IsFloorMarker>().type) {
             case IsFloorMarker::Unset:
                 return "";
-            // TODO for not use the other one but eventually probably just make
-            // it invisible
+            // TODO for not use the other one but eventually probably just
+            // make it invisible
             case IsFloorMarker::Store_SpawnArea:
             case IsFloorMarker::Planning_SpawnArea:
                 return text_lookup(strings::i18n::FLOORMARKER_NEW_ITEMS);
@@ -866,10 +928,11 @@ void render_fishing_game(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
-    DrawProgressBar(ProgressBarConfig{
+    DrawFishingGame(ProgressBarConfig{
         .position = transform.pos(),
         .pct_full = fishing.pct(),
-        .color_override = fishing.has_score() ? BLUE : std::optional<Color>(),
+        .color_override = fishing.has_score() ? WHITE : std::optional<Color>(),
+        .marker_pct = fishing.best(),
     });
 }
 
