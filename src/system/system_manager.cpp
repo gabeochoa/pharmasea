@@ -416,9 +416,6 @@ void process_conveyer_items(Entity& entity, float dt) {
     //    -->-> |     in this we want to place at 0.f instead of -0.5
 }
 
-// TODO This function is 33% of our run time
-// getMatchingEntity is a pretty large chunk of that
-// processconveyer is 10x faster ...
 void process_grabber_items(Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
 
@@ -831,9 +828,10 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
                 convert_to_type(et, entity, spawn_area->get<Transform>().as2());
                 ipm.unlock_entity(et);
             } break;
-            // TODO implement for these once thye have spawners
             case Salt:
             case MintLeaf:
+                // TODO implement for these once thye have spawners
+                break;
             case Invalid:
                 break;
         }

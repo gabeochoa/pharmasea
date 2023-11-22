@@ -80,6 +80,22 @@ struct Entity {
         return is_missing<A>() || is_missing_any<B, Rest...>();
     }
 
+    template<typename T>
+    void removeComponent() {
+        log_info("removing component_id:{} {} to entity_id: {}",
+                 components::get_type_id<T>(), type_name<T>(), id);
+        if (!this->has<T>()) {
+            log_error(
+                "trying to remove but this entity {} {} doesnt have the "
+                "component attached {} {}",
+                name(), id, components::get_type_id<T>(), type_name<T>());
+        }
+        componentSet[components::get_type_id<T>()] = false;
+        BaseComponent* ptr = componentArray[components::get_type_id<T>()];
+        componentArray.erase(components::get_type_id<T>());
+        if (ptr) delete ptr;
+    }
+
     template<typename T, typename... TArgs>
     T& addComponent(TArgs&&... args) {
         log_trace("adding component_id:{} {} to entity_id: {}",

@@ -141,6 +141,12 @@ void register_all_components() {
         //
         >();
 
+    // TODO test remove_all_components at some point
+    // VALIDATE(entity->has<ModelRenderer>(), "entity should have all
+    // components"); entity->removeComponent<ModelRenderer>();
+    // VALIDATE(entity->is_missing<ModelRenderer>(),
+    // "entity should not have all components");
+
     // Now that they are all registered we can delete them
     //
     // since we dont have a destructor today TODO because we are copying
