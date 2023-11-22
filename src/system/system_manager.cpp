@@ -154,7 +154,6 @@ void mark_item_in_floor_area(Entity& entity, float) {
     }
 }
 
-// TODO if cannot be placed in this spot make it obvious to the user
 void update_held_furniture_position(Entity& entity, float) {
     if (entity.is_missing_any<Transform, CanHoldFurniture>()) return;
 
@@ -1519,9 +1518,6 @@ void cart_management(Entity& entity, float) {
 }
 
 void cleanup_old_store_options() {
-    // TODO :STORE_CLEANUP: instead we should just keep track of the store
-    // spawned ones and delete them floormarked
-
     for (Entity& entity :
          EntityQuery().whereHasComponent<IsStoreSpawned>().gen()) {
         entity.cleanup = true;
@@ -1656,9 +1652,10 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
     oldAll = entities;
 
-    // TODO should we not do any updates for client?
+    // should we not do any updates for client?
     // any changes will get overwritten by server every frame
     // but maybe itll matter
+    //
     // if (!is_server()) return;
 
     // actual update
