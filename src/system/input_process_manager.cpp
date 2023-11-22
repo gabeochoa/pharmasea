@@ -197,7 +197,6 @@ void collect_user_input(Entity& entity, float dt) {
     const menu::State state = menu::State::Game;
 
     // TODO right now when you press two at the same time you move faster
-    // TODO right now player can only move in 8 directions
     float left, right, up, down;
 
     float key_left = KeyMap::is_event(state, InputName::PlayerLeft);
@@ -332,8 +331,6 @@ void rotate_furniture(const Entity& player) {
     // Cant rotate outside planning mode
     if (GameState::get().is_not(game::State::Planning)) return;
 
-    // TODO need to figure out if reach should be separate from
-    // highlighting
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
     OptEntity match = EntityHelper::getClosestMatchingFurniture(
@@ -376,18 +373,11 @@ void drop_held_furniture(Entity& player) {
                                     strings::sounds::PLACE);
     }
 
-    // TODO need to make sure it doesnt place ontop of another
-    // one
-    log_info("you cant place that here...");
+    // need to make sure it doesnt place ontop of another one
+    // log_info("you cant place that here...");
 }
 
-// TODO grabbing reach needs to be better, you should be able to grab in
-// the 8 spots around you and just prioritize the one you are facing
-//
-
 void handle_grab_or_drop(Entity& player) {
-    // TODO need to figure out if this should be separate from
-    // highlighting
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
     CanHoldFurniture& ourCHF = player.get<CanHoldFurniture>();
 
@@ -400,7 +390,7 @@ void handle_grab_or_drop(Entity& player) {
 
         OptEntity closest_furniture = EntityHelper::getClosestMatchingFurniture(
             player.get<Transform>(), cho.reach(), [](const Entity& f) {
-                // TODO right now walls inherit this from furniture
+                // right now walls inherit this from furniture
                 // but eventually that should not be the case
                 if (f.is_missing<CanBeHeld>()) return false;
                 return f.get<CanBeHeld>().is_not_held();
@@ -414,9 +404,10 @@ void handle_grab_or_drop(Entity& player) {
             EntityHelper::getEntityForID(ourCHF.furniture_id());
         furniture->get<CanBeHeld>().set_is_being_held(true);
 
-        // TODO we expect thatr since ^ set is held is true,
+        // Note: we expect thatr since ^ set is held is true,
         // the previous position this furniture was at before you picked it up
-        // should now be walkable but for some reason the preview
+        // should now be walkable but for some reason the preview doesnt turn
+        // red
         EntityHelper::invalidatePathCache();
 
         // TODO :PICKUP: i dont like that these are spread everywhere,
@@ -603,7 +594,7 @@ void handle_drop(Entity& player) {
                 if (f.has<IsItemContainer>()) {
                     const IsItemContainer& itemContainer =
                         f.get<IsItemContainer>();
-                    // TODO right now item container only validates EntityType
+                    // note: right now item container only validates EntityType
                     bool matches_item_type =
                         itemContainer.is_matching_item(item);
                     if (!matches_item_type) return false;
@@ -752,8 +743,6 @@ void handle_grab(Entity& player) {
 }
 
 void handle_grab_or_drop(Entity& player) {
-    // TODO Need to auto drop any held furniture
-
     // Do we already have something in our hands?
     // We must be trying to drop it
     player.get<CanHoldItem>().empty() ? handle_grab(player)
@@ -804,8 +793,7 @@ void process_input(Entity& entity, const UserInput& input) {
                     } else if (GameState::get().is(game::State::Store)) {
                         planning::handle_grab_or_drop(entity);
                     } else {
-                        // TODO we probably want to handle messing
-                        // around in the lobby
+                        // probably want to handle messing around in the lobby?
                     }
                 }
                 break;

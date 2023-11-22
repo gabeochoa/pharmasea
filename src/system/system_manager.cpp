@@ -287,7 +287,6 @@ void reset_highlighted(Entity& entity, float) {
 void highlight_facing_furniture(Entity& entity, float) {
     if (entity.is_missing<CanHighlightOthers>()) return;
     const Transform& transform = entity.get<Transform>();
-    // TODO add a player reach component
     const CanHighlightOthers& cho = entity.get<CanHighlightOthers>();
 
     OptEntity match = EntityHelper::getClosestMatchingFurniture(
