@@ -343,8 +343,11 @@ void render_debug_drink_info(const Entity& entity, float) {
     for (size_t i = 0; i < magic_enum::enum_count<Ingredient>(); i++) {
         Ingredient ingredient = magic_enum::enum_value<Ingredient>(i);
         if (!(isdrink.has_ingredient(ingredient))) continue;
-        auto content = fmt::format("{} ({})", magic_enum::enum_name(ingredient),
-                                   isdrink.count_of_ingredient(ingredient));
+        const auto num_igs =
+            fmt::format("({})", isdrink.count_of_ingredient(ingredient));
+        auto content = fmt::format(
+            "{} {}", magic_enum::enum_name(ingredient),
+            isdrink.count_of_ingredient(ingredient) > 1 ? num_igs : "");
         DrawFloatingText(vec::raise(transform.raw(), y), Preload::get().font,
                          std::string(content).c_str(), 50);
         y += 0.25f;
