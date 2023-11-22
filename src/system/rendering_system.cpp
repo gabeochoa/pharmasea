@@ -328,10 +328,13 @@ void render_debug_drink_info(const Entity& entity, float) {
     float y = 0.25f;
 
     if (isdrink.underlying.has_value()) {
-        auto content = fmt::format("{}({})",
-                                   std::string(magic_enum::enum_name<Drink>(
-                                       isdrink.underlying.value())),
-                                   isdrink.get_num_complete());
+        const auto num_complete =
+            fmt::format("({})", isdrink.get_num_complete());
+        auto content = fmt::format(
+            "{}{}",
+            std::string(
+                magic_enum::enum_name<Drink>(isdrink.underlying.value())),
+            isdrink.get_num_complete() > 1 ? num_complete : "");
         DrawFloatingText(vec::raise(transform.raw(), y), Preload::get().font,
                          std::string(content).c_str(), 100);
     }
