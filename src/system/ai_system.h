@@ -595,8 +595,7 @@ inline void process_ai_paying(Entity& entity, float dt) {
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
     {
         IsBank& bank = sophie.get<IsBank>();
-        bank.deposit(cod.tab_cost);
-        bank.deposit(cod.tip);
+        bank.deposit_with_tip(cod.tab_cost, cod.tip);
 
         // i dont think we need to do this, but just in case
         cod.tab_cost = 0;

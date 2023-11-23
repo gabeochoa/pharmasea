@@ -5,11 +5,14 @@
 
 struct IsBank : public BaseComponent {
     struct Transaction {
-        Transaction(int amt) : amount(amt), remainingTimeTotal(0.5f) {
+        Transaction(int amt, int xtra)
+            : amount(amt), extra(xtra), remainingTimeTotal(0.75f) {
             remainingTime = remainingTimeTotal;
         }
+        explicit Transaction(int amt) : Transaction(amt, 0) {}
 
         int amount;
+        int extra;
 
         // TODO is there a way for the render to use the pointer as a unique
         // key? then we can do this without storing all this stuff on us?
@@ -23,11 +26,12 @@ struct IsBank : public BaseComponent {
         }
 
         // This exists for serialization
-        Transaction() : amount(0), remainingTime(0.f) {}
+        Transaction() : amount(0), extra(0), remainingTime(0.f) {}
         friend bitsery::Access;
         template<typename S>
         void serialize(S& s) {
             s.value4b(amount);
+            s.value4b(extra);
 
             // animation stuff
             s.value4b(remainingTime);
@@ -53,9 +57,13 @@ struct IsBank : public BaseComponent {
         return transactions.front();
     }
 
-    // TODO right now each drink payment is two transactions
-    // one for the drink and one for the tip
-    // so we render one after another instead of next to each other
+    void deposit_with_tip(int amount, int tip) {
+        coins += amount;
+        coins += tip;
+        transactions.push_back(Transaction(amount, tip));
+        num_transactions++;
+    }
+
     void deposit(int amt) {
         coins += amt;
         transactions.push_back(Transaction(amt));

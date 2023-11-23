@@ -48,7 +48,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         return std::string(fmt::format("{} {}", status_text, day_text));
     }
 
-    virtual void onDrawUI(float dt) override {
+    virtual void onDrawUI(float) override {
         using namespace ui;
         // not putting these in shouldSkip since we expect this to exist like
         // 99% of the time
@@ -117,14 +117,19 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
                     bool positive = transaction.amount > 0;
                     unsigned char alpha =
                         static_cast<unsigned char>(255 * transaction.pct());
-                    //
-                    colored_text(Widget{spawn_count},
-                                 fmt::format("{}{}{}",
-                                             "         ",           // "Balance"
-                                             positive ? "+" : "-",  //
-                                             transaction.amount),
-                                 positive ? Color{0, 255, 0, alpha}
-                                          : Color{255, 0, 0, alpha}  //
+
+                    const auto tip_string =
+                        fmt::format(" ({} tip)", transaction.extra);
+
+                    colored_text(
+                        Widget{spawn_count},
+                        fmt::format("{}{}{}{}",
+                                    "         ",           // "Balance"
+                                    positive ? "+" : "-",  //
+                                    transaction.amount,
+                                    transaction.extra ? tip_string : ""),
+                        positive ? Color{0, 255, 0, alpha}
+                                 : Color{255, 0, 0, alpha}  //
                     );
                 }
             }
