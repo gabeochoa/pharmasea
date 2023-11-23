@@ -4,6 +4,7 @@
 //
 #include "../components/adds_ingredient.h"
 #include "../components/ai_clean_vomit.h"
+#include "../components/ai_close_tab.h"
 #include "../components/ai_drinking.h"
 #include "../components/ai_use_bathroom.h"
 #include "../components/ai_wait_in_queue.h"
@@ -88,7 +89,7 @@ struct PolymorphicBaseClass<BaseComponent>
           HasSubtype, IsItem, IsDrink, AddsIngredient, CanOrderDrink,
           IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
           IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
-          AIComponent, HasFishingGame, IsStoreSpawned,
+          AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

@@ -1434,6 +1434,7 @@ void reduce_impatient_customers(Entity& entity, float dt) {
 
     hp.pass_time(dt);
 
+    // TODO actually do something when they get mad
     if (hp.pct() <= 0) hp.reset();
 }
 

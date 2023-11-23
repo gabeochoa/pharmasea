@@ -13,15 +13,17 @@ enum JobType {
     NoJob = 0,
     Wait = 1,
 
-    Wandering,
-    EnterStore,
     WaitInQueue,
-    WaitInQueueForPickup,
     Paying,
-    Leaving,
     Drinking,
     Mopping,
     Bathroom,
+
+    // Not used yet
+    Wandering,
+    EnterStore,
+    WaitInQueueForPickup,
+    Leaving,
 
     MAX_JOB_TYPE,
 };

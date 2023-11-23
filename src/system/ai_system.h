@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../components/ai_clean_vomit.h"
+#include "../components/ai_close_tab.h"
 #include "../components/ai_drinking.h"
 #include "../components/ai_use_bathroom.h"
 #include "../components/ai_wait_in_queue.h"
@@ -339,20 +340,7 @@ inline void process_ai_drinking(Entity& entity, float dt) {
     // done drinking
     if (!want_another) {
         // Now we are fully done so lets pay.
-
-        // TODO add a new job type to go pay, for now just pay when they are
-        // done drinking, they will still go the register but the pay
-        // happens here
-        {
-            IsBank& bank = sophie.get<IsBank>();
-            bank.deposit(cod.tab_cost);
-            bank.deposit(cod.tip);
-
-            // i dont think we need to do this, but just in case
-            cod.tab_cost = 0;
-            cod.tip = 0;
-        }
-        next_job(entity, JobType::Leaving);
+        next_job(entity, JobType::Paying);
         cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
         return;
     }
@@ -501,6 +489,109 @@ inline void process_ai_leaving(Entity& entity, float dt) {
         vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
 }
 
+inline void process_ai_paying(Entity& entity, float dt) {
+    if (entity.is_missing<AICloseTab>()) return;
+    if (entity.is_missing<CanOrderDrink>()) return;
+
+    AICloseTab& aiclosetab = entity.get<AICloseTab>();
+
+    if (!aiclosetab.has_available_target()) {
+        std::vector<RefEntity> all_registers =
+            EntityQuery().whereHasComponent<HasWaitingQueue>().gen();
+
+        // Find the register with the least people on it
+        OptEntity best_target = {};
+        int best_pos = -1;
+        for (Entity& r : all_registers) {
+            const HasWaitingQueue& hwq = r.get<HasWaitingQueue>();
+            if (hwq.is_full()) continue;
+            int rpos = hwq.get_next_pos();
+
+            // Check to see if we can path to that spot
+
+            // TODO causing no valid register to be found
+            // auto end = r.get<Transform>().tile_infront(rpos);
+            // auto new_path = bfs::find_path(
+            // entity.get<Transform>().as2(), end,
+            // std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+            // if (new_path.empty()) continue;
+
+            if (best_pos == -1 || rpos < best_pos) {
+                best_target = r;
+                best_pos = rpos;
+            }
+        }
+        if (!best_target) {
+            aiclosetab.reset();
+            return;
+        }
+
+        aiclosetab.set_target(best_target->id);
+        aiclosetab.position =
+            WIQ_add_to_queue_and_get_position(best_target.asE(), entity);
+
+        return;
+    }
+
+    bool reached = entity.get<CanPathfind>().travel_toward(
+        aiclosetab.position, get_speed_for_entity(entity) * dt);
+    if (!reached) return;
+
+    aiclosetab.pass_time(dt);
+    if (!aiclosetab.ready()) return;
+
+    OptEntity opt_reg = EntityHelper::getEntityForID(aiclosetab.id());
+    if (!opt_reg) {
+        log_warn("got an invalid register");
+        aiclosetab.unset_target();
+        return;
+    }
+    Entity& reg = opt_reg.asE();
+    entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
+
+    int spot_in_line = WIQ_position_in_line(reg, entity);
+    if (spot_in_line != 0) {
+        // Waiting in line :)
+
+        // TODO We didnt move so just wait a bit before trying again
+
+        if (!WIQ_can_move_up(reg, entity)) {
+            // We cant move so just wait a bit before trying again
+            log_trace("im just going to wait a bit longer");
+
+            // Add the current job to the queue,
+            // and then add the waiting job
+
+            aiclosetab.reset();
+            return;
+        }
+        // otherwise walk up one spot
+        aiclosetab.position = reg.get<Transform>().tile_infront(spot_in_line);
+        return;
+    } else {
+        aiclosetab.position = reg.get<Transform>().tile_infront(1);
+    }
+
+    // Now we should be at the front of the line
+
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    CanOrderDrink& cod = entity.get<CanOrderDrink>();
+    {
+        IsBank& bank = sophie.get<IsBank>();
+        bank.deposit(cod.tab_cost);
+        bank.deposit(cod.tip);
+
+        // i dont think we need to do this, but just in case
+        cod.tab_cost = 0;
+        cod.tip = 0;
+    }
+
+    WIQ_leave_line(reg, entity);
+
+    next_job(entity, JobType::Leaving);
+    entity.get<AICloseTab>().unset_target();
+}
+
 inline void process_(Entity& entity, float dt) {
     if (entity.is_missing<CanPathfind>()) return;
 
@@ -520,12 +611,14 @@ inline void process_(Entity& entity, float dt) {
         case Leaving:
             process_ai_leaving(entity, dt);
             break;
+        case Paying:
+            process_ai_paying(entity, dt);
+            break;
         case NoJob:
         case Wait:
         case Wandering:
         case EnterStore:
         case WaitInQueueForPickup:
-        case Paying:
         case MAX_JOB_TYPE:
             break;
     }

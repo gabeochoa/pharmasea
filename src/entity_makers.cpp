@@ -4,6 +4,7 @@
 #include <ranges>
 
 #include "components/ai_clean_vomit.h"
+#include "components/ai_close_tab.h"
 #include "components/ai_drinking.h"
 #include "components/ai_use_bathroom.h"
 #include "components/ai_wait_in_queue.h"
@@ -129,7 +130,7 @@ void register_all_components() {
     entity->addAll<  //
         DebugName, Transform, HasName,
         //
-        AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue,
+        AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AICloseTab,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
@@ -1016,10 +1017,8 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
     alc.addComponent<AddsIngredient>(
            [](const Entity&, const Entity& alcohol) -> IngredientBitSet {
                const HasSubtype& hst = alcohol.get<HasSubtype>();
-                return IngredientBitSet().reset().set(
-				   get_ingredient_from_index(
-					   ingredient::AlcoholsInCycle[0] + hst.get_type_index())
-                );
+               return IngredientBitSet().reset().set(get_ingredient_from_index(
+                   ingredient::AlcoholsInCycle[0] + hst.get_type_index()));
            })
         .set_num_uses(1);
 
@@ -1057,9 +1056,8 @@ void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
     juice
         .addComponent<AddsIngredient>(
             [fruit](const Entity&, const Entity&) -> IngredientBitSet {
-				return IngredientBitSet().reset().set(
-					    ingredient::BlendConvert.at(fruit)
-					);
+                return IngredientBitSet().reset().set(
+                    ingredient::BlendConvert.at(fruit));
             })
         .set_num_uses(1);
 
@@ -1251,6 +1249,7 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     if (has_order) {
         customer.addComponent<AIDrinking>();
         customer.addComponent<AIWaitInQueue>();
+        customer.addComponent<AICloseTab>();
         CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();
         // If we are the first guy spawned this round, force the drink to be the
         // most recently unlocked one
