@@ -91,6 +91,10 @@ struct IsDrink : public BaseComponent {
 
     std::optional<Drink> underlying;
 
+    [[nodiscard]] float get_tip_multiplier() const { return tip_multiplier; }
+
+    void fold_tip_multiplier(float amt) { tip_multiplier *= amt; }
+
    private:
     [[nodiscard]] int calc_completed() {
         // If theres no matching drink then nothing in here yet
@@ -123,6 +127,8 @@ struct IsDrink : public BaseComponent {
     std::map<Ingredient, int> ingredients;
     IngredientBitSet unique_igs;
     bool supports_multiple = false;
+
+    float tip_multiplier = 1.f;
 
     friend bitsery::Access;
     template<typename S>

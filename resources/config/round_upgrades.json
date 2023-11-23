@@ -289,7 +289,8 @@
           "prereqs": []
       },
       {
-          //"disabled": "Working as expected",
+          // TODO 
+          "disabled": "Not Working Key",
           "name": "me and the boys",
           "flavor_text": "crackin open a cold one or two... or ten .",
           "description": "(Customers will now order a pitcher of beer)",

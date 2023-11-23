@@ -98,6 +98,13 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient ing) {
 }
 
 bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
+    if (toadd.has<HasFishingGame>()) {
+        const HasFishingGame& hfg = toadd.get<HasFishingGame>();
+        if (hfg.has_score()) {
+            drink.get<IsDrink>().fold_tip_multiplier(hfg.get_score());
+        }
+    }
+
     AddsIngredient& addsIG = toadd.get<AddsIngredient>();
     IngredientBitSet ingredients = addsIG.get(toadd);
 
@@ -965,6 +972,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         hasWork.increase_pct(amt * dt);
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
+
             bool cleaned_up = _add_item_to_drink_NO_VALIDATION(drink, *item);
             if (cleaned_up) playerCHI.update(nullptr, -1);
         }

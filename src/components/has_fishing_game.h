@@ -19,7 +19,17 @@ struct HasFishingGame : public BaseComponent {
 
         if (countdown <= 0.f) {
             // TODO figure out scoring
-            score = abs(progress - best_location);
+            float amount = abs(progress - best_location);
+            if (amount < 0.05f) {
+                score = 2.f;
+            } else if (amount < 0.15f) {
+                score = 1.2f;
+            } else if (amount < 0.25f) {
+                score = 1.f;
+            } else {
+                score = 0.9f;
+            }
+            log_info("game ended got {}", score);
         }
     }
 

@@ -262,6 +262,10 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
         const HasPatience& hasPatience = entity.get<HasPatience>();
         int tip = (int) fmax(0, ceil(price * 0.8f * hasPatience.pct()));
         canOrderDrink.tip += tip;
+
+        // If the drink has any "fancy" ingredients or other multipliers
+        canOrderDrink.tip = static_cast<int>(floor(
+            canOrderDrink.tip * drink->get<IsDrink>().get_tip_multiplier()));
     }
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
