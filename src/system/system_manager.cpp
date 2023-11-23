@@ -637,8 +637,8 @@ void delete_customers_when_leaving_inround(Entity& entity) {
     entity.cleanup = true;
 }
 
+// TODO :DESIGN: do we actually want to do this?
 void reset_toilet_when_leaving_inround(Entity& entity) {
-    // TODO :DESIGN: do we actually want to do this?
     if (entity.is_missing<IsToilet>()) return;
 
     IsToilet& istoilet = entity.get<IsToilet>();

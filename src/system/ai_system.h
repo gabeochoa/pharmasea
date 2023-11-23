@@ -120,10 +120,6 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     if (entity.is_missing<AIWaitInQueue>()) return;
     if (entity.is_missing<CanOrderDrink>()) return;
 
-    // TODO add to system on tick or somethign
-    // OptEntity reg = EntityHelper::getEntityForID(reg_id);
-    // entity.get<Transform>().turn_to_face_pos(reg->get<Transform>().as2());
-
     AIWaitInQueue& aiwait = entity.get<AIWaitInQueue>();
 
     if (!aiwait.has_available_target()) {
@@ -160,6 +156,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
         aiwait.set_target(best_target->id);
         aiwait.position =
             WIQ_add_to_queue_and_get_position(best_target.asE(), entity);
+
         return;
     }
 
@@ -176,6 +173,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
         return;
     }
     Entity& reg = opt_reg.asE();
+    entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
 
     int spot_in_line = WIQ_position_in_line(reg, entity);
     if (spot_in_line != 0) {

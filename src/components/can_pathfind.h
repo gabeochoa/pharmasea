@@ -30,6 +30,9 @@ struct CanPathfind : public BaseComponent {
         ensure_active_local_target();
         move_transform_toward_local_target(speed);
 
+        if (local_target.has_value())
+            transform.turn_to_face_pos(local_target.value());
+
         return is_at_position(end);
     }
 
