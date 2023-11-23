@@ -44,7 +44,8 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
                                  : text_lookup(strings::i18n::CLOSED));
         // TODO figure out how to translate strings that have numbers in
         // them...
-        auto day_text = fmt::format("{} {}", "Day", dayCount);
+        auto day_text = fmt::format(
+            "{} {}", text_lookup(strings::i18n::ROUND_DAY), dayCount);
         return std::string(fmt::format("{} {}", status_text, day_text));
     }
 
@@ -104,7 +105,9 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             if (sophie.valid()) {
                 const IsBank& bank = sophie->get<IsBank>();
                 text(Widget{spawn_count},
-                     fmt::format("Balance: {}", bank.balance()));
+                     fmt::format("{}: {}",
+                                 text_lookup(strings::i18n::STORE_BALANCE),
+                                 bank.balance()));
 
                 const std::vector<IsBank::Transaction>& transactions =
                     bank.get_transactions();
@@ -114,17 +117,17 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
 
                     spawn_count.y += static_cast<int>(60 * transaction.pct());
 
-                    bool positive = transaction.amount > 0;
+                    bool positive = transaction.amount >= 0;
                     unsigned char alpha =
                         static_cast<unsigned char>(255 * transaction.pct());
 
                     const auto tip_string =
-                        fmt::format(" ({} tip)", transaction.extra);
+                        fmt::format("{} {}", transaction.extra,
+                                    text_lookup(strings::i18n::STORE_TIP));
 
                     colored_text(
                         Widget{spawn_count},
-                        fmt::format("{}{}{}{}",
-                                    "         ",           // "Balance"
+                        fmt::format("          {}{} {}",
                                     positive ? "+" : "-",  //
                                     transaction.amount,
                                     transaction.extra ? tip_string : ""),
@@ -146,7 +149,10 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
                                   .asE();
             const IsSpawner& iss = spawner.get<IsSpawner>();
             text(Widget{spawn_count},
-                 fmt::format("Customers Coming: {}", iss.get_max_spawned()));
+                 fmt::format(
+                     "{}: {}",
+                     text_lookup(strings::i18n::PLANNING_CUSTOMERS_COMING),
+                     iss.get_max_spawned()));
         }
     }
 };

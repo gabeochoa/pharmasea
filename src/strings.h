@@ -80,8 +80,8 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
 
  */
 
-#include <string>
 #include <array>
+#include <string>
 
 namespace strings {
 
@@ -272,6 +272,16 @@ constexpr const char* CLOSING = "CLOSING";
 constexpr const char* CLOSED = "CLOSED";
 constexpr const char* NEXT_ROUND_COUNTDOWN = "Next Round Starting In";
 constexpr const char* CHARACTER_SWITCHER = "Character Switcher";
+
+constexpr const char* PLANNING_CUSTOMERS_COMING = "Customers Coming";
+constexpr const char* ROUND_DAY = "Day";
+
+// Store
+constexpr const char* STORE_NOT_ENOUGH_COINS = "Not enough coins";
+constexpr const char* STORE_MISSING_REQUIRED = "Missing required coins";
+constexpr const char* STORE_STEALING_MACHINE = "Please put that machine back";
+constexpr const char* STORE_BALANCE = "Balance";
+constexpr const char* STORE_TIP = "tip";
 
 constexpr const char* TRIGGERAREA_PURCHASE_FINISH = "Submit and Return";
 

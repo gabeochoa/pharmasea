@@ -1455,7 +1455,7 @@ void pass_time_for_transaction_animation(Entity& entity, float dt) {
     // Remove any old ones
     remove_all_matching<IsBank::Transaction>(
         transactions, [](const IsBank::Transaction& transaction) {
-            return transaction.remainingTime <= 0.f;
+            return transaction.remainingTime <= 0.f || transaction.amount == 0;
         });
 
     if (transactions.empty()) return;

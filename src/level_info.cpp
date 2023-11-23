@@ -17,6 +17,7 @@
 #include "map_generation.h"
 #include "network/server.h"
 #include "recipe_library.h"
+#include "strings.h"
 #include "system/system_manager.h"
 #include "vec_util.h"
 #include "wave_collapse.h"
@@ -344,7 +345,9 @@ void LevelInfo::generate_store_map() {
                 const IsBank& bank = sophie->get<IsBank>();
                 int balance = bank.balance();
                 int cart = bank.cart();
-                if (balance < cart) return {false, "Not enough coins"};
+                if (balance < cart)
+                    return {false,
+                            text_lookup(strings::i18n::STORE_NOT_ENOUGH_COINS)};
 
                 // Are all the required machines here?
                 OptEntity cart_area =
@@ -368,7 +371,9 @@ void LevelInfo::generate_store_map() {
                 for (const Entity& ent : ents) {
                     if (ent.is_missing<IsFreeInStore>()) continue;
                     if (!cart_area->get<IsFloorMarker>().is_marked(ent.id)) {
-                        return {false, "Missing required machine"};
+                        return {
+                            false,
+                            text_lookup(strings::i18n::STORE_MISSING_REQUIRED)};
                     }
                 }
 
@@ -385,7 +390,9 @@ void LevelInfo::generate_store_map() {
                         }
                     }
                     if (!all_empty)
-                        return {false, "Please put that machine back"};
+                        return {
+                            false,
+                            text_lookup(strings::i18n::STORE_STEALING_MACHINE)};
                 }
 
                 return {true, ""};

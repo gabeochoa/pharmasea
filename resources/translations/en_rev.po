@@ -151,6 +151,27 @@ msgstr "nI gnitratS dnuoR txeN"
 msgid "Character Switcher"
 msgstr "rehctiwS retcarahC"
 
+msgid "Customers Coming"
+msgstr "gnimoC sremotsuC"
+
+msgid "Day"
+msgstr "yaD"
+
+msgid "Not enough coins"
+msgstr "snioc hguone toN"
+
+msgid "Missing required coins"
+msgstr "snioc deriuqer gnissiM"
+
+msgid "Please put that machine back"
+msgstr "kcab enihcam taht tup esaelP"
+
+msgid "Balance"
+msgstr "ecnalaB"
+
+msgid "tip"
+msgstr "pit"
+
 msgid "Submit and Return"
 msgstr "nruteR dna timbuS"
 
