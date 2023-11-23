@@ -111,6 +111,9 @@
     <ClInclude Include="..\src\engine\layer.h" />
     <ClInclude Include="..\src\engine\library.h" />
     <ClInclude Include="..\src\engine\log.h" />
+    <ClInclude Include="..\src\engine\log_fakelog.h" />
+    <ClInclude Include="..\src\engine\log_level.h" />
+    <ClInclude Include="..\src\engine\log_macros.h" />
     <ClInclude Include="..\src\engine\model_library.h" />
     <ClInclude Include="..\src\engine\mouse_map.h" />
     <ClInclude Include="..\src\engine\music_library.h" />
@@ -155,6 +158,7 @@
     <ClInclude Include="..\src\entity.h" />
     <ClInclude Include="..\src\entity_helper.h" />
     <ClInclude Include="..\src\entity_makers.h" />
+    <ClInclude Include="..\src\entity_query.h" />
     <ClInclude Include="..\src\entity_type.h" />
     <ClInclude Include="..\src\external_include.h" />
     <ClInclude Include="..\src\game.h" />
@@ -195,6 +199,7 @@
     <ClInclude Include="..\src\spawner.h" />
     <ClInclude Include="..\src\std_include.h" />
     <ClInclude Include="..\src\strings.h" />
+    <ClInclude Include="..\src\system\ai_system.h" />
     <ClInclude Include="..\src\system\ingredient_helper.h" />
     <ClInclude Include="..\src\system\input_process_manager.h" />
     <ClInclude Include="..\src\system\job_system.h" />
@@ -239,7 +244,6 @@
     <ClCompile Include="..\src\preload.cpp" />
     <ClCompile Include="..\src\system\ingredient_helper.cpp" />
     <ClCompile Include="..\src\system\input_process_manager.cpp" />
-    <ClCompile Include="..\src\system\job_system.cpp" />
     <ClCompile Include="..\src\system\rendering_system.cpp" />
     <ClCompile Include="..\src\system\sophie.cpp" />
     <ClCompile Include="..\src\system\system_manager.cpp" />

@@ -1008,9 +1008,10 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
     alc.addComponent<AddsIngredient>(
            [](const Entity&, const Entity& alcohol) -> IngredientBitSet {
                const HasSubtype& hst = alcohol.get<HasSubtype>();
-               // TODO i dont think this works
-               return {get_ingredient_from_index(
-                   ingredient::AlcoholsInCycle[0] + hst.get_type_index())};
+                return IngredientBitSet().reset().set(
+				   get_ingredient_from_index(
+					   ingredient::AlcoholsInCycle[0] + hst.get_type_index())
+                );
            })
         .set_num_uses(1);
 
@@ -1048,7 +1049,9 @@ void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
     juice
         .addComponent<AddsIngredient>(
             [fruit](const Entity&, const Entity&) -> IngredientBitSet {
-                return {ingredient::BlendConvert.at(fruit)};
+				return IngredientBitSet().reset().set(
+					    ingredient::BlendConvert.at(fruit)
+					);
             })
         .set_num_uses(1);
 
