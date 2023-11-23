@@ -6,6 +6,8 @@
 #include "base_component.h"
 
 struct AIWaitInQueue : public AIComponent {
+    AIWaitInQueue() { set_cooldown(0.1f); }
+
     virtual ~AIWaitInQueue() {}
 
     [[nodiscard]] bool has_available_target() const {

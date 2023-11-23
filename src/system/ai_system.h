@@ -183,7 +183,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
 
         if (!WIQ_can_move_up(reg, entity)) {
             // We cant move so just wait a bit before trying again
-            log_info("im just going to wait a bit longer");
+            log_trace("im just going to wait a bit longer");
 
             // Add the current job to the queue,
             // and then add the waiting job
@@ -214,7 +214,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     CanHoldItem& regCHI = reg.get<CanHoldItem>();
 
     if (regCHI.empty()) {
-        log_info("my drink isnt ready yet");
+        log_trace("my drink isnt ready yet");
         aiwait.reset();
         return;
     }

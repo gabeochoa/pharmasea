@@ -16,6 +16,7 @@ struct AIComponent : BaseComponent {
     }
     [[nodiscard]] bool ready() const { return cooldown <= 0; }
     void reset() { cooldown = cooldownReset; }
+    void set_cooldown(float d) { cooldownReset = d; }
 
    private:
     friend bitsery::Access;
