@@ -17,6 +17,17 @@ bool remove_if_matching(std::vector<T>& vec, const T& value) {
     return true;
 }
 
+template<typename T>
+bool remove_all_matching(std::vector<T>& vec,
+                         const std::function<bool(const T&)>& pred) {
+    auto it = std::remove_if(std::begin(vec), std::end(vec), pred);
+    if (it == vec.end()) {
+        return false;
+    }
+    vec.erase(it);
+    return true;
+}
+
 inline float comp_max(const vec2& a) { return fmax(a.x, a.y); }
 
 constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
@@ -33,7 +44,6 @@ constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
 }
 
 namespace vec {
-
 // Order is NW, W, SW, N, S, NE, E, SE
 static constexpr int neigh_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 static constexpr int neigh_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};

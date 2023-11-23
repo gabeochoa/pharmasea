@@ -1444,6 +1444,26 @@ void pass_time_for_active_fishing_games(Entity& entity, float dt) {
     fishing.pass_time(dt);
 }
 
+// TODO this sucks, but we dont have a way to have local clientside
+// animtions for data thats on the backend yet
+void pass_time_for_transaction_animation(Entity& entity, float dt) {
+    if (entity.is_missing<IsBank>()) return;
+    IsBank& bank = entity.get<IsBank>();
+
+    std::vector<IsBank::Transaction>& transactions = bank.get_transactions();
+
+    // Remove any old ones
+    remove_all_matching<IsBank::Transaction>(
+        transactions, [](const IsBank::Transaction& transaction) {
+            return transaction.remainingTime <= 0.f;
+        });
+
+    if (transactions.empty()) return;
+
+    IsBank::Transaction& transaction = bank.get_next_transaction();
+    transaction.remainingTime -= dt;
+}
+
 void pop_out_when_colliding(Entity& entity, float) {
     const auto no_clip_on =
         GLOBALS.get_or_default<bool>("no_clip_enabled", false);
@@ -1860,6 +1880,7 @@ void SystemManager::in_round_update(
         system_manager::reduce_impatient_customers(entity, dt);
 
         system_manager::pass_time_for_active_fishing_games(entity, dt);
+        system_manager::pass_time_for_transaction_animation(entity, dt);
     });
 }
 
