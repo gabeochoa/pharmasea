@@ -99,6 +99,12 @@ inline float get_speed_for_entity(Entity& entity) {
     return base_speed;
 }
 
+template<typename T>
+inline void reset_job_component(Entity& entity) {
+    entity.removeComponent<T>();
+    entity.addComponent<T>();
+}
+
 inline void next_job(Entity& entity, JobType suggestion) {
     if (entity.has<AIUseBathroom>()) {
         Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
@@ -288,8 +294,11 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     // Now that we are done and got our item, time to leave the store
     log_info("leaving line");
 
-    entity.get<AIWaitInQueue>().unset_target();
+    // Not using next_job because you shouldnt go to the bathroom with your
+    // drink in your hand0
     entity.get<CanPerformJob>().current = JobType::Drinking;
+
+    reset_job_component<AIWaitInQueue>(entity);
 }
 
 inline void process_ai_drinking(Entity& entity, float dt) {
@@ -352,6 +361,7 @@ inline void process_ai_drinking(Entity& entity, float dt) {
     // TODO make a function set_order()
     cod.current_order = progressionManager.get_random_unlocked_drink();
 
+    reset_job_component<AIDrinking>(entity);
     next_job(entity, JobType::WaitInQueue);
 }
 
@@ -479,7 +489,11 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
         (void) entity.get<CanPathfind>().travel_toward(
             vec2{0, 0}, get_speed_for_entity(entity) * dt);
 
+        // We specificaly dont use next_job() here because
+        // we dont want to infinite loop
         entity.get<CanPerformJob>().current = aibathroom.next_job;
+
+        reset_job_component<AIUseBathroom>(entity);
         return;
     }
 }
@@ -589,7 +603,8 @@ inline void process_ai_paying(Entity& entity, float dt) {
     WIQ_leave_line(reg, entity);
 
     next_job(entity, JobType::Leaving);
-    entity.get<AICloseTab>().unset_target();
+
+    reset_job_component<AICloseTab>(entity);
 }
 
 inline void process_(Entity& entity, float dt) {
