@@ -82,6 +82,21 @@
         },
         {
             "folder": "images",
+            "filename": "star_empty.png",
+            "library_name": "star_empty"
+        },
+        {
+            "folder": "images",
+            "filename": "star_filled.png",
+            "library_name": "star_filled"
+        },
+        {
+            "folder": "images",
+            "filename": "star_sad.png",
+            "library_name": "star_sad"
+        },
+        {
+            "folder": "images",
             "filename": "poo.png",
             "library_name": "poo"
         }

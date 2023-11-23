@@ -2,6 +2,7 @@
 #pragma once
 
 #include <array>
+#include <functional>
 #include <stdexcept>
 #include <utility>  // for pair
 
@@ -69,6 +70,21 @@ template<typename T, std::size_t Size>
 [[nodiscard]] constexpr int index_of(const std::array<T, Size> &array,
                                      const T &key) {
     const auto itr = std::find(std::begin(array), std::end(array), key);
+    if (itr != std::end(array)) {
+        // Calculate the index by subtracting the beginning iterator
+        // from the found iterator
+        return static_cast<int>(std::distance(std::begin(array), itr));
+    } else {
+        // Item not found
+        return -1;
+    }
+}
+
+template<typename T, std::size_t Size>
+[[nodiscard]] constexpr int first_matching(
+    const std::array<T, Size> &array,
+    const std::function<bool(const T &)> &pred) {
+    const auto itr = std::find_if(std::begin(array), std::end(array), pred);
     if (itr != std::end(array)) {
         // Calculate the index by subtracting the beginning iterator
         // from the found iterator

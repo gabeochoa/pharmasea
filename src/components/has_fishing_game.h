@@ -1,10 +1,45 @@
 
 #pragma once
 
+#include "../engine/constexpr_containers.h"
 #include "../engine/log.h"
 #include "base_component.h"
 
 struct HasFishingGame : public BaseComponent {
+    struct Band {
+        float score_percentile;
+        float multiplier;
+        int num_stars;
+        std::string icon;
+    };
+
+    std::array<Band, 4> score_band = {{
+        {
+            .score_percentile = 0.05f,
+            .multiplier = 2.f,
+            .num_stars = 3,
+            .icon = "star_filled",
+        },
+        {
+            .score_percentile = 0.15f,
+            .multiplier = 1.2f,
+            .num_stars = 2,
+            .icon = "star_filled",
+        },
+        {
+            .score_percentile = 0.25f,
+            .multiplier = 1.f,
+            .num_stars = 1,
+            .icon = "star_empty",
+        },
+        {
+            .score_percentile = 1.f,
+            .multiplier = 0.9f,
+            .num_stars = 1,
+            .icon = "star_sad",
+        },
+    }};
+
     HasFishingGame() {}
 
     [[nodiscard]] bool has_score() const { return score != -1; }
@@ -20,15 +55,21 @@ struct HasFishingGame : public BaseComponent {
         if (countdown <= 0.f) {
             // TODO figure out scoring
             float amount = abs(progress - best_location);
-            if (amount < 0.05f) {
-                score = 2.f;
-            } else if (amount < 0.15f) {
-                score = 1.2f;
-            } else if (amount < 0.25f) {
+
+            int index = first_matching<Band, 4>(
+                score_band, [amount](const Band& band) -> bool {
+                    return amount < band.score_percentile;
+                });
+            if (index == -1) {
+                log_warn("could not find matching score");
                 score = 1.f;
-            } else {
-                score = 0.9f;
+                return;
             }
+
+            const Band& band = score_band[index];
+            score = band.multiplier;
+            num_stars = band.num_stars;
+
             // TOOD add a UI element showing a x2 or whatever
             log_info("game ended got {}", score);
         }
@@ -41,6 +82,9 @@ struct HasFishingGame : public BaseComponent {
         countdown = countdownReset;
         bounce(dt);
     }
+
+    // TODO
+    int num_stars = 0;
 
    private:
     [[nodiscard]] bool hit_end() const {
@@ -75,6 +119,7 @@ struct HasFishingGame : public BaseComponent {
         s.value1b(started);
 
         s.value4b(direction);
+        s.value4b(num_stars);
 
         s.value4b(best_location);
         s.value4b(score);

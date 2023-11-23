@@ -949,13 +949,35 @@ void render_fishing_game(const Entity& entity, float) {
 
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
+    vec3 position = transform.pos();
 
-    DrawFishingGame(ProgressBarConfig{
-        .position = transform.pos(),
-        .pct_full = fishing.pct(),
-        .color_override = fishing.has_score() ? WHITE : std::optional<Color>(),
-        .marker_pct = fishing.best(),
-    });
+    // TODO show the game for a second before switching over
+    if (!fishing.has_score()) {
+        DrawFishingGame(ProgressBarConfig{
+            .position = position,
+            .pct_full = fishing.pct(),
+            .color_override =
+                fishing.has_score() ? WHITE : std::optional<Color>(),
+            .marker_pct = fishing.best(),
+        });
+        return;
+    }
+
+    float spacing = (TILESIZE * 0.40f);
+    float x_offset = 0;
+
+    for (int i = 0; i < fishing.num_stars; i++) {
+        // TODO read icon from score sheet
+        raylib::Texture texture = TextureLibrary::get().get("star_filled");
+        GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+        raylib::DrawBillboard(cam.camera, texture,
+                              vec3{position.x + x_offset,          //
+                                   position.y + (TILESIZE * 2.f),  //
+                                   position.z},                    //
+                              0.3f * TILESIZE,                     //
+                              raylib::WHITE);
+        x_offset += spacing;
+    }
 }
 
 void render_walkable_spots(float) {
