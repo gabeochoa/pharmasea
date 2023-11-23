@@ -61,6 +61,40 @@ and then just checkout that hash (sorry im not doing releases / tags atm)
 I am publishing some releases on itch, you can find the url in the code or build the game and click the itch.io icon. 
 if you need the password join the discord and say hi!
 
+
+### alpha_0.23.11.22
+
+Known Issues
+- (Store) New machines spawn on top of each other
+- (UI) some screens are gonna be ugly for a while
+- (UI) Controls are not remappable in UI 
+- (Game) Map generator always makes basically the same map
+- (Game) No way to know if you made the wrong drink 
+- (Game) Can place items where it collides with your body
+
+
+impact / design changes 
+- Upgrade - Pitcher: make more than one serving of a drink at the same time
+- New Drink - Champagne: serves three people but bottle has minigame to open 
+
+bug fixes
+- Customer finished peeing should no longer crash
+- Whenever you unlock a new machine through an upgrade it should now spawn in the next store 
+- Upgrades that lengthen the day now actually work (they did nothing before) 
+- Customers should now correctly order drinks unlocked through upgrades 
+- Progress bar should no longer show red when pouring a drink
+- Beer now correctly counts as alcohol (ie contributes to vomit amount) 
+- Roomba now only leaves his house if theres some vomit (before he'd just sit at 0,0)
+- Customers should now face where they are walking
+
+better eng
+- unittests for apply and remove upgrades
+- add drinks as possible pre-reqs for upgrades
+- add a way to disable upgrades in config 
+- new Entity Query utils which should be more readable than entityhelper
+- Rewrite of AI system 
+
+
 ### alpha_0.23.11.14
 
 Known Issues

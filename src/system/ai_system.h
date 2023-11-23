@@ -266,6 +266,8 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
         // If the drink has any "fancy" ingredients or other multipliers
         canOrderDrink.tip = static_cast<int>(floor(
             canOrderDrink.tip * drink->get<IsDrink>().get_tip_multiplier()));
+
+        // TODO add some visual for how much you got paid for the drink
     }
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();

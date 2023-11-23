@@ -29,6 +29,7 @@ struct HasFishingGame : public BaseComponent {
             } else {
                 score = 0.9f;
             }
+            // TOOD add a UI element showing a x2 or whatever
             log_info("game ended got {}", score);
         }
     }
