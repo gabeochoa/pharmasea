@@ -73,14 +73,39 @@ void overlapping_furniture(Entity& entity) {
 
     // Right now the map is starting at 00 and at most is  -50,-50 to 50,50
 
-    OptEntity overlapping_entity =
-        EntityHelper::getOverlappingSolidEntityInRange(
-            {-50, -50}, {50, 50}, [](const Entity& entity) {
+    // TODO :EQ_CPP: We could use this if we fix the cpp include issue
+    /*
+        OptEntity overlapping_entity =
+            EntityHelper::getOverlappingSolidEntityInRangeQuery(
+                {-50, -50}, {50, 50}, [](const Entity&) { return true; })
                 // Skip the soda rope because the rope overlapps with itself
                 // and we are okay with that
-                if (check_type(entity, EntityType::SodaSpout)) return false;
-                return true;
-            });
+                .whereNotType(EntityType::SodaSpout)
+                .gen_first();
+                */
+
+    vec2 range_min = {-50, -50};
+    vec2 range_max = {50, 50};
+
+    OptEntity overlapping_entity =
+        EntityQuery()                      //
+            .whereHasComponent<IsSolid>()  //
+                                           // Skip the soda rope because the
+                                           // rope overlapps with itself and we
+                                           // are okay with that
+            .whereNotType(EntityType::SodaSpout)  //
+            .whereInside(range_min, range_max)    //
+            .whereLambda([&](const Entity& entity) -> bool {
+                return EntityQuery()                    //
+                    .whereNotID(entity.id)              //
+                    .whereHasComponent<IsSolid>()       //
+                    .whereInside(range_min, range_max)  //
+                    .wherePositionMatches(entity)       //
+                    .first()                            //
+                    .has_values();
+            })
+            .gen_first();
+
     bool has_overlapping = overlapping_entity.valid();
     std::optional<vec2> pos = has_overlapping
                                   ? overlapping_entity->get<Transform>().as2()

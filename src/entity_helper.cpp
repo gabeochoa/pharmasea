@@ -364,13 +364,16 @@ RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
     return EntityQuery().whereInside(range_min, range_max).gen();
 }
 
-OptEntity EntityHelper::getOverlappingSolidEntityInRange(
+// TODO :EQ_CPP: We cant expose this function direction because
+// EntityQuery cant be including in entity helper du eot circular
+// need to move into a cpp
+EntityQuery& getOverlappingSolidEntityInRangeQuery(
     vec2 range_min, vec2 range_max,
     const std::function<bool(const Entity&)>& filter) {
     return EntityQuery()                    //
         .whereHasComponent<IsSolid>()       //
-        .whereLambdaExistsAndTrue(filter)   //
         .whereInside(range_min, range_max)  //
+        .whereLambdaExistsAndTrue(filter)   //
         .whereLambda([&](const Entity& entity) -> bool {
             return EntityQuery()                    //
                 .whereNotID(entity.id)              //
@@ -379,7 +382,13 @@ OptEntity EntityHelper::getOverlappingSolidEntityInRange(
                 .wherePositionMatches(entity)       //
                 .first()                            //
                 .has_values();
-        })
+        });
+}
+
+OptEntity EntityHelper::getOverlappingSolidEntityInRange(
+    vec2 range_min, vec2 range_max,
+    const std::function<bool(const Entity&)>& filter) {
+    return getOverlappingSolidEntityInRangeQuery(range_min, range_max, filter)
         .gen_first();
 }
 
