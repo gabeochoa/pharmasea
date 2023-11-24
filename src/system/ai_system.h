@@ -499,6 +499,11 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
 }
 
 inline void process_ai_leaving(Entity& entity, float dt) {
+    // TODO check the return value here and if true, stop running the
+    // pathfinding
+    //
+    // I noticed this during profiling :)
+    //
     (void) entity.get<CanPathfind>().travel_toward(
         vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
 }

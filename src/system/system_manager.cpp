@@ -134,7 +134,6 @@ void mark_item_in_floor_area(Entity& entity, float) {
     if (!check_type(entity, EntityType::FloorMarker)) return;
     if (entity.is_missing<IsFloorMarker>()) return;
     IsFloorMarker& ifm = entity.get<IsFloorMarker>();
-    ifm.clear();
 
     std::vector<int> ids =
         EntityQuery(SystemManager::get().oldAll)
@@ -309,9 +308,10 @@ void move_entity_based_on_push_force(Entity& entity, float, vec3& new_pos_x,
 }
 
 void process_conveyer_items(Entity& entity, float dt) {
-    const Transform& transform = entity.get<Transform>();
     if (entity.is_missing_any<CanHoldItem, ConveysHeldItem, CanBeTakenFrom>())
         return;
+
+    const Transform& transform = entity.get<Transform>();
 
     CanHoldItem& canHold = entity.get<CanHoldItem>();
     CanBeTakenFrom& canBeTakenFrom = entity.get<CanBeTakenFrom>();
@@ -683,8 +683,8 @@ void reset_max_gen_when_after_deletion(Entity& entity) {
 }
 
 void refetch_dynamic_model_names(Entity& entity, float) {
-    if (entity.is_missing<ModelRenderer>()) return;
     if (entity.is_missing<HasDynamicModelName>()) return;
+    if (entity.is_missing<ModelRenderer>()) return;
 
     const HasDynamicModelName& hDMN = entity.get<HasDynamicModelName>();
     ModelRenderer& renderer = entity.get<ModelRenderer>();
@@ -694,38 +694,32 @@ void refetch_dynamic_model_names(Entity& entity, float) {
 void count_max_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
-    int count = 0;
-    for (const auto& e : SystemManager::get().oldAll) {
-        if (!e) continue;
-        if (!check_type(*e, EntityType::Player)) continue;
-        count++;
-    }
-    entity.get<IsTriggerArea>().update_max_entrants(count);
+    size_t count = EntityQuery(SystemManager::get().oldAll)
+                       .whereType(EntityType::Player)
+                       .gen_count();
+
+    entity.get<IsTriggerArea>().update_max_entrants(static_cast<int>(count));
 }
 
 void count_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
-    int count = 0;
-    for (const auto& e : SystemManager::get().oldAll) {
-        if (!e) continue;
-        if (!check_type(*e, EntityType::Player)) continue;
-        if (CheckCollisionBoxes(
-                e->get<Transform>().bounds(),
-                entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
-            count++;
-        }
-    }
-    entity.get<IsTriggerArea>().update_entrants(count);
+    size_t count = EntityQuery(SystemManager::get().oldAll)
+                       .whereType(EntityType::Player)
+                       .whereCollides(entity.get<Transform>().expanded_bounds(
+                           {0, TILESIZE, 0}))
+                       .gen_count();
+
+    entity.get<IsTriggerArea>().update_entrants(static_cast<int>(count));
 }
 
 void update_trigger_area_percent(Entity& entity, float dt) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
 
-    ita.should_wave() ?  //
-        ita.increase_progress(dt)
-                      : ita.decrease_progress(dt);
+    ita.should_wave()  //
+        ? ita.increase_progress(dt)
+        : ita.decrease_progress(dt);
 }
 
 void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
