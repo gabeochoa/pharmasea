@@ -285,6 +285,7 @@ struct IsRoundSettingsManager : public BaseComponent {
     void apply_upgrade(const Upgrade& upgrade) {
         log_info("Applying upgrade {}", upgrade.name);
         upgrades_applied.push_back(upgrade.name);
+        num_applied++;
 
         if (is_temporary_upgrade(upgrade)) {
             UpgradeInstance instance = UpgradeInstance(upgrade);
@@ -395,6 +396,7 @@ struct IsRoundSettingsManager : public BaseComponent {
             log_error(
                 "trying to remove, failed to find upgrade in applied upgrades");
         }
+        num_applied--;
 
         for (const UpgradeEffect& effect : upgrade.effects) {
             unapply_effect(effect);
@@ -493,16 +495,15 @@ struct IsRoundSettingsManager : public BaseComponent {
     }
 
    private:
+    int num_applied = 0;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        // there wont be more than 10k upgrades right?
-        if (upgrades_applied.size() > 9000)
-            log_warn("Getting dangerously close to our upgrades_applied cap ");
-
-        s.container(upgrades_applied, 10000,
-                    [](S& s2, std::string str) { s2.text1b(str, 64); });
+        s.value4b(num_applied);
+        s.container(upgrades_applied, num_applied,
+                    [](S& s2, std::string& str) { s2.text1b(str, 64); });
     }
 };
