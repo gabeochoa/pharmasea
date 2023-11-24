@@ -34,6 +34,8 @@ struct IsFloorMarker : public BaseComponent {
         marked_entities.push_back(entity_id);
     }
 
+    void mark_all(std::vector<int>&& ids) { marked_entities = ids; }
+
     void clear() { marked_entities.clear(); }
 
     [[nodiscard]] size_t num_marked() const { return marked_entities.size(); }

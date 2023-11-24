@@ -136,22 +136,22 @@ void mark_item_in_floor_area(Entity& entity, float) {
     IsFloorMarker& ifm = entity.get<IsFloorMarker>();
     ifm.clear();
 
-    for (const auto& e : SystemManager::get().oldAll) {
-        if (!e) continue;
-        if (e->id == entity.id) continue;
-        if (check_type(*e, EntityType::Player)) continue;
-        if (check_type(*e, EntityType::RemotePlayer)) continue;
-        if (check_type(*e, EntityType::SodaSpout)) continue;
-        if (e->is_missing<IsSolid>()) continue;
+    std::vector<int> ids =
+        EntityQuery(SystemManager::get().oldAll)
+            .whereNotID(entity.id)  // not us
+            .whereNotType(EntityType::Player)
+            .whereNotType(EntityType::RemotePlayer)
+            .whereNotType(EntityType::SodaSpout)
+            .whereHasComponent<IsSolid>()
+            .whereCollides(
+                entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))
+            .gen_ids();
 
-        if (CheckCollisionBoxes(
-                e->get<Transform>().bounds(),
-                entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))) {
-            log_trace(" FloorMarker marking {} {}", e->get<DebugName>().name(),
-                      e->get<DebugName>().get_type());
-            ifm.mark(e->id);
-        }
-    }
+    // This got lost when we converted to the query
+    // log_info(" FloorMarker marking {} {}", e.get<DebugName>().name(),
+    // e.get<DebugName>().get_type());
+
+    ifm.mark_all(std::move(ids));
 }
 
 void update_held_furniture_position(Entity& entity, float) {
