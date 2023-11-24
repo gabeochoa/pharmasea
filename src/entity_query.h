@@ -208,7 +208,23 @@ struct EntityQuery {
         return ents.size();
     }
 
+    [[nodiscard]] std::vector<int> gen_ids() const {
+        const auto results = ran_query ? ents : values_ignore_cache({});
+        std::vector<int> ids;
+        for (const Entity& ent : results) {
+            ids.push_back(ent.id);
+        }
+        return ids;
+    }
+
+    EntityQuery() : entities(EntityHelper::get_entities()) {}
+    explicit EntityQuery(const Entities& ents) : entities(ents) {
+        entities = ents;
+    }
+
    private:
+    Entities entities;
+
     std::vector<std::unique_ptr<Modification>> mods;
     mutable RefEntities ents;
     mutable bool ran_query = false;
@@ -220,7 +236,7 @@ struct EntityQuery {
 
     [[nodiscard]] RefEntities run_query(UnderlyingOptions options) const {
         RefEntities out;
-        for (const auto& e_ptr : EntityHelper::get_entities()) {
+        for (const auto& e_ptr : entities) {
             if (!e_ptr) continue;
             Entity& e = *e_ptr;
 
