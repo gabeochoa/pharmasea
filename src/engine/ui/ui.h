@@ -26,6 +26,9 @@ inline void begin(std::shared_ptr<ui::UIContext> ui_context, float dt) {
 }
 
 void end();
+
+ElementResult hoverable(const Widget& widget);
+
 // TODO add rounded corners
 ElementResult div(const Widget& widget, Color c);
 ElementResult div(const Widget& widget, theme::Usage theme);

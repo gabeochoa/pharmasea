@@ -45,7 +45,7 @@ struct BasePauseLayer : public Layer {
 
     virtual void onUpdate(float) override {}
 
-    void draw_upgrades(Rectangle rect) {
+    void draw_upgrades(Rectangle window, Rectangle rect) {
         OptEntity sophie = EntityQuery()
                                .whereHasComponent<IsRoundSettingsManager>()
                                .gen_first();
@@ -55,22 +55,50 @@ struct BasePauseLayer : public Layer {
             sophie->get<IsRoundSettingsManager>();
         if (irsm.upgrades_applied.empty()) return;
 
+        if (irsm.upgrades_applied.size() > 100) {
+            log_warn("More upgrades than we can display");
+        }
+
+        auto upgrades = rect::bpad(window, 90);
+
         std::vector<Rectangle> rects;
-        auto cols = rect::vsplit<5>(rect::lpad(rect, 10));
-        for (auto c : cols) {
-            auto rows = rect::hsplit<5>(c);
-            for (auto r : rows) {
-                rects.push_back(r);
+        upgrades = rect::lpad(upgrades, 10);
+        auto rows = rect::hsplit<10>(upgrades, 10);
+        for (auto r : rows) {
+            auto cols = rect::vsplit<10>(r, 10);
+            for (auto c : cols) {
+                rects.push_back(c);
             }
         }
 
         int i = 0;
 
+        std::optional<Upgrade> hovered_upgrade = {};
+
         for (const auto& name : irsm.upgrades_applied) {
             if (i > (int) rects.size()) break;
             const Upgrade& upgrade = UpgradeLibrary::get().get(name);
-            image(Widget{rects[i]}, upgrade.icon_name);
+            Widget icon = Widget{rects[i]};
+            image(icon, upgrade.icon_name);
+            if (hoverable(icon)) {
+                hovered_upgrade = upgrade;
+            }
             i++;
+        }
+
+        if (hovered_upgrade) {
+            div(rect, ui::theme::Usage::Background);
+
+            const auto [header, rest] = rect::hsplit<2>(rect);
+
+            const auto icon = rect::rpad(header, 80);
+            const auto name = rect::lpad(header, 10);
+            image(icon, hovered_upgrade->icon_name);
+            text(name, hovered_upgrade->name);
+
+            const auto [flavor, desc] = rect::hsplit<2>(rest);
+            text(flavor, hovered_upgrade->flavor_text);
+            text(desc, hovered_upgrade->description);
         }
     }
 
@@ -87,16 +115,18 @@ struct BasePauseLayer : public Layer {
         begin(ui_context, dt);
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+
         auto content = rect::tpad(window, 33);
+        content = rect::bpad(content, 66);
         content = rect::lpad(content, 5);
         content = rect::rpad(content, 80);
-        content = rect::bpad(content, 66);
 
-        auto [body, upgrades, _a] = rect::vsplit<3>(content, 10);
+        auto body = rect::rpad(content, 30);
+        auto upgrades = rect::lpad(content, 20);
 
-        draw_upgrades(upgrades);
+        draw_upgrades(window, upgrades);
 
-        body = rect::rpad(body, 90);
+        body = rect::rpad(body, 60);
         auto [continue_button, settings, config, quit] =
             rect::hsplit<4>(body, 20);
 

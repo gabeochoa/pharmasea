@@ -56,6 +56,15 @@ void end() {
     context->cleanup();
 }
 
+ElementResult hoverable(const Widget& widget) {
+    focus::active_if_mouse_inside(widget);
+
+    if (focus::is_hot(widget.id)) {
+        return true;
+    }
+    return false;
+}
+
 ElementResult div(const Widget& widget, Color c) {
     Rectangle rect = widget.get_rect();
     internal::draw_rect_color(rect, widget.z_index, c);
