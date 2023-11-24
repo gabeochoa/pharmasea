@@ -68,6 +68,10 @@ struct EntityQuery {
     auto& whereHasComponent() {
         return add_mod(new WhereHasComponent<T>());
     }
+    template<typename T>
+    auto& whereMissingComponent() {
+        return add_mod(new Not(new WhereHasComponent<T>()));
+    }
 
     struct WhereLambda : Modification {
         std::function<bool(const Entity&)> filter;
@@ -153,6 +157,20 @@ struct EntityQuery {
     };
     auto& whereInside(vec2 range_min, vec2 range_max) {
         return add_mod(new WhereInside(range_min, range_max));
+    }
+
+    struct WhereCollides : Modification {
+        BoundingBox bounds;
+
+        explicit WhereCollides(BoundingBox box) : bounds(box) {}
+
+        virtual bool operator()(const Entity& entity) const override {
+            return CheckCollisionBoxes(entity.get<Transform>().bounds(),
+                                       bounds);
+        }
+    };
+    auto& whereCollides(BoundingBox box) {
+        return add_mod(new WhereCollides(box));
     }
     /////////
     struct UnderlyingOptions {
