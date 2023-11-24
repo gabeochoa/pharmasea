@@ -7,7 +7,6 @@
 #include "../engine/type_name.h"
 #include "../entity.h"
 //
-#include "../components/debug_name.h"
 #include "../components/has_subtype.h"
 #include "../components/is_drink.h"
 #include "../components/is_item.h"
@@ -149,11 +148,10 @@ struct EntityFilter {
     T read_filter_value_from_entity(const Entity& entity,
                                     FilterDatumType type) const {
         if constexpr (std::is_same_v<T, std::string>) {
-            if (type & FilterDatumType::Name)
-                return std::string(entity.get<DebugName>().name());
+            if (type & FilterDatumType::Name) return std::string(entity.name());
         } else if constexpr (std::is_same_v<T, EntityType>) {
             if (type & FilterDatumType::Name) {
-                return entity.get<DebugName>().get_type();
+                return entity.type;
             }
         } else if constexpr (std::is_same_v<T, int>) {
             if (type & FilterDatumType::Subtype) {

@@ -702,7 +702,7 @@ void handle_grab(Entity& player) {
         std::shared_ptr<Item> item = furnCanHold.item();
 
         // log_info("Found {} to pick up from {}",
-        // item->get<DebugName>(), closest_furniture->get<DebugName>());
+        // item->name(), closest_furniture->name());
 
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         playerCHI.update(item, player.id);

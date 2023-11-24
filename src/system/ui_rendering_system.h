@@ -46,7 +46,7 @@ inline void render_current_register_queue(float dt) {
                 if (entity.is_missing<CanOrderDrink>()) {
                     log_warn(
                         "register {} has people who cant order in line: {}", i,
-                        entity.get<DebugName>());
+                        entity.name());
                     continue;
                 }
 

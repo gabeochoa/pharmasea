@@ -38,6 +38,8 @@ struct Entity {
     // TODO :INFRA: go around and audit id uses
     EntityID id;
 
+    EntityType type = EntityType::Unknown;
+
     ComponentBitSet componentSet;
     ComponentArray componentArray;
 
@@ -139,8 +141,6 @@ struct Entity {
         addAll<B, Rest...>();
     }
 
-    void errorIfMissingDebugName() const;
-
     const std::string_view name() const;
 
     template<typename T>
@@ -155,7 +155,6 @@ struct Entity {
 
     template<typename T>
     [[nodiscard]] T& get() {
-        errorIfMissingDebugName();
         warnIfMissingComponent<T>();
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
         return *static_cast<T*>(comp);
@@ -163,7 +162,6 @@ struct Entity {
 
     template<typename T>
     [[nodiscard]] const T& get() const {
-        errorIfMissingDebugName();
         warnIfMissingComponent<T>();
         BaseComponent* comp = componentArray.at(components::get_type_id<T>());
         return *static_cast<T*>(comp);
@@ -174,6 +172,8 @@ struct Entity {
     template<typename S>
     void serialize(S& s) {
         s.value4b(id);
+        s.value4b(type);
+
         s.ext(componentSet, bitsery::ext::StdBitset{});
         s.value1b(cleanup);
 

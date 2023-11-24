@@ -8,7 +8,6 @@
 #include "base_component.h"
 //
 #include "../dataclass/entity_filter.h"
-#include "debug_name.h"
 #include "has_subtype.h"
 #include "is_item.h"
 
@@ -44,7 +43,7 @@ struct CanHoldItem : public BaseComponent {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
                 "UNKNOWN",
-                item->id, item->get<DebugName>().name());
+                item->id, item->name());
         }
         return *this;
     }
@@ -70,7 +69,7 @@ struct CanHoldItem : public BaseComponent {
         if (item.has<IsItem>()) {
             bool cbhb = item.get<IsItem>().can_be_held_by(held_by);
             // log_info("trying to pick up {} with {} and {} ",
-            // item.get<DebugName>(), held_by, cbhb);
+            // item.name(), held_by, cbhb);
             if (!cbhb) return false;
         }
         if (!filter.matches(item, respect_filter)) return false;

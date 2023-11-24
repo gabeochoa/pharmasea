@@ -128,7 +128,7 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 void register_all_components() {
     Entity* entity = new Entity();
     entity->addAll<  //
-        DebugName, Transform, HasName,
+        Transform, HasName,
         //
         AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AICloseTab,
         // Is
@@ -211,7 +211,8 @@ void add_person_components(Entity& person, DebugOptions options = {}) {
 
 void make_entity(Entity& entity, const DebugOptions& options,
                  vec3 p = {-2, 0, -2}) {
-    entity.addComponent<DebugName>().update(options.type);
+    entity.type = options.type;
+
     add_entity_components(entity);
     entity.get<Transform>().update(p);
 }
@@ -1483,9 +1484,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         }
     }
 
-    if (entity.is_missing<DebugName>()) {
+    if (entity.type == EntityType::Unknown) {
         log_error(
-            "Created an entity but somehow didnt get DebugName component {}"
+            "Created an entity but somehow didnt get a type {}"
             "type",
             entity_type);
     }

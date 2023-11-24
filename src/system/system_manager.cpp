@@ -19,7 +19,6 @@
 #include "../components/collects_user_input.h"
 #include "../components/conveys_held_item.h"
 #include "../components/custom_item_position.h"
-#include "../components/debug_name.h"
 #include "../components/has_base_speed.h"
 #include "../components/has_client_id.h"
 #include "../components/has_dynamic_model_name.h"
@@ -145,10 +144,6 @@ void mark_item_in_floor_area(Entity& entity, float) {
             .whereCollides(
                 entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))
             .gen_ids();
-
-    // This got lost when we converted to the query
-    // log_info(" FloorMarker marking {} {}", e.get<DebugName>().name(),
-    // e.get<DebugName>().get_type());
 
     ifm.mark_all(std::move(ids));
 }
@@ -287,6 +282,7 @@ void highlight_facing_furniture(Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
     const CanHighlightOthers& cho = entity.get<CanHighlightOthers>();
 
+    // TODO convert to query?
     OptEntity match = EntityHelper::getClosestMatchingFurniture(
         transform, cho.reach(),
         [](const Entity& e) { return e.template has<CanBeHighlighted>(); });
@@ -1514,8 +1510,7 @@ void cart_management(Entity& entity, float) {
         if (marked_entity->has<IsFreeInStore>()) continue;
 
         amount_in_cart +=
-            std::max(0, get_price_for_entity_type(
-                            marked_entity->get<DebugName>().get_type()));
+            std::max(0, get_price_for_entity_type(marked_entity->type));
     }
 
     OptEntity sophie = EntityQuery().whereType(EntityType::Sophie).gen_first();
@@ -1629,8 +1624,7 @@ void move_purchased_furniture() {
         // Its not free!
         if (marked_entity->is_missing<IsFreeInStore>()) {
             amount_in_cart +=
-                std::max(0, get_price_for_entity_type(
-                                marked_entity->get<DebugName>().get_type()));
+                std::max(0, get_price_for_entity_type(marked_entity->type));
         }
     }
 

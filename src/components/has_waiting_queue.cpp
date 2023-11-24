@@ -3,11 +3,10 @@
 
 #include "../engine/log.h"
 #include "../entity.h"
-#include "debug_name.h"
 
 HasWaitingQueue& HasWaitingQueue::add_customer(const Entity& customer) {
     log_info("we are adding {} {} to the line in position {}", customer.id,
-             customer.get<DebugName>().name(), next_line_position);
+             customer.name(), next_line_position);
     ppl_in_line[next_line_position] = customer.id;
     next_line_position++;
 

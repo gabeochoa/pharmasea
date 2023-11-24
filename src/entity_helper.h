@@ -5,7 +5,6 @@
 
 #include "assert.h"
 #include "components/can_hold_item.h"
-#include "components/debug_name.h"
 #include "components/is_floor_marker.h"
 #include "components/transform.h"
 #include "external_include.h"
@@ -57,7 +56,7 @@ struct EntityHelper {
     template<typename... TArgs>
     static RefEntity createItem(TArgs... args) {
         items::make_item_type(createEntity(), std::forward<TArgs>(args)...);
-        // log_info("created a new item {} {} ", e.id, e.get<DebugName>());
+        // log_info("created a new item {} {} ", e.id, e.name());
         return *(get_entities().back());
     }
 
@@ -65,7 +64,7 @@ struct EntityHelper {
     static RefEntity createPermanentItem(TArgs... args) {
         items::make_item_type(createPermanentEntity(),
                               std::forward<TArgs>(args)...);
-        // log_info("created a new item {} {} ", e.id, e.get<DebugName>());
+        // log_info("created a new item {} {} ", e.id, e.name());
         return *(get_entities().back());
     }
 

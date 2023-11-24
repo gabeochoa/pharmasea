@@ -1,8 +1,6 @@
 
 #include "entity.h"
 
-#include "components/debug_name.h"
-
 Entity::~Entity() {
     for (auto itr = componentArray.begin(); itr != componentArray.end();
          itr++) {
@@ -11,23 +9,16 @@ Entity::~Entity() {
     componentArray.clear();
 }
 
-void Entity::errorIfMissingDebugName() const {
-    if (this->is_missing<DebugName>()) {
-        log_error(
-            "This entity is missing debugname which will cause issues for "
-            "if the get<> is missing");
-    }
-}
-
 const std::string_view Entity::name() const {
-    return this->get<DebugName>().name();
+    return magic_enum::enum_name<EntityType>(type);
 }
 
 bool check_type(const Entity& entity, EntityType type) {
-    return entity.get<DebugName>().is_type(type);
+    return type == entity.type;
 }
+
 bool check_if_drink(const Entity& entity) {
-    switch (entity.get<DebugName>().get_type()) {
+    switch (entity.type) {
         case EntityType::Unknown:
         case EntityType::x:
         case EntityType::y:

@@ -77,18 +77,13 @@ struct GameDebugLayer : public Layer {
                          fmt::format("{}", (player->get<Transform>().pos())));
                     text(Widget{holding_div},
                          fmt::format("holding furniture?: {}",
-                                     furniture
-                                         ? furniture->get<DebugName>().name()
-                                         : "Empty"));
-                    text(
-                        Widget{item_div},
-                        fmt::format("holding item?: {}",
-                                    player->get<CanHoldItem>().is_holding_item()
-                                        ? player->get<CanHoldItem>()
-                                              .item()
-                                              ->get<DebugName>()
-                                              .name()
-                                        : "Empty"));
+                                     furniture ? furniture->name() : "Empty"));
+                    text(Widget{item_div},
+                         fmt::format(
+                             "holding item?: {}",
+                             player->get<CanHoldItem>().is_holding_item()
+                                 ? player->get<CanHoldItem>().item()->name()
+                                 : "Empty"));
                 } else {
                     text(Widget{player_info}, "No matching player found");
                 }

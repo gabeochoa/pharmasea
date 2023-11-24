@@ -24,7 +24,6 @@
 #include "../components/collects_user_input.h"
 #include "../components/conveys_held_item.h"
 #include "../components/custom_item_position.h"
-#include "../components/debug_name.h"
 #include "../components/has_base_speed.h"
 #include "../components/has_client_id.h"
 #include "../components/has_dynamic_model_name.h"
@@ -84,7 +83,7 @@ struct PolymorphicBaseClass<BaseComponent>
           CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid, CanBeHeld,
           HasPatience, HasProgression, IsRotatable, CanGrabFromOtherFurniture,
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
-          UsesCharacterModel, DebugName, HasDynamicModelName, IsTriggerArea,
+          UsesCharacterModel, HasDynamicModelName, IsTriggerArea,
           HasSpeechBubble, Indexer, IsSpawner, HasTimer, HasRopeToItem,
           HasSubtype, IsItem, IsDrink, AddsIngredient, CanOrderDrink,
           IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,

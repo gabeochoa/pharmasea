@@ -759,7 +759,7 @@ void render_waiting_queue(const Entity& entity, float) {
 }
 
 void render_price(const Entity& entity, float) {
-    int price = get_price_for_entity_type(entity.get<DebugName>().get_type());
+    int price = get_price_for_entity_type(entity.type);
     if (price == -1) return;
 
     if (entity.is_missing<Transform>()) return;
@@ -781,13 +781,10 @@ void render_machine_name(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
-    const auto machine_name =
-        magic_enum::enum_name<EntityType>(entity.get<DebugName>().get_type());
-
     // TODO rotate the name with the camera?
     raylib::DrawFloatingText(
         transform.raw() + vec3{0, 1.0f * TILESIZE, 0.2f * TILESIZE},
-        Preload::get().font, std::string(machine_name).c_str(), 200);
+        Preload::get().font, std::string(entity.name()).c_str(), 200);
 }
 
 void render_debug_fruit_juice(const Entity& entity, float) {
@@ -1057,7 +1054,7 @@ void render_networked_players(const Entities& entities, float dt) {
         if (entity.is_missing<ModelRenderer>()) {
             log_warn(
                 "render_little_model_guy, entity {} is missing model renderer",
-                entity.get<DebugName>().name());
+                entity.name());
             return;
         }
         auto model_name = entity.get<ModelRenderer>().name();

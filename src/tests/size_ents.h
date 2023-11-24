@@ -47,7 +47,7 @@ inline std::vector<SizeInfo> size_components(auto& results) {
 inline std::vector<SizeInfo> size_all_components_sorted() {
     std::vector<SizeInfo> results;
     size_components<  //
-        DebugName, Transform, HasName,
+        Transform, HasName,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe,
@@ -69,7 +69,7 @@ inline std::vector<SizeInfo> size_all_components_sorted() {
     {
         Entity* e = new Entity();
         e->addAll<  //
-            DebugName, Transform, HasName,
+            Transform, HasName,
             // Is
             IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid,
             IsItemContainer, IsDrink, IsPnumaticPipe,

@@ -93,7 +93,7 @@ struct CanPathfind : public BaseComponent {
             log_warn("Forcing {} {} to noclip in order to get valid path",
                      "some entity with canpathfind", "idk");
             // log_warn("Forcing {} {} to noclip in order to get valid path",
-            // entity.get<DebugName>().name(), entity.id);
+            // entity.name(), entity.id);
             auto new_path =
                 bfs::find_path(start, goal, [](auto&&) { return true; });
             update_path(new_path);
