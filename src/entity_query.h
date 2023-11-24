@@ -54,6 +54,9 @@ struct EntityQuery {
         }
     };
     auto& whereType(const EntityType& t) { return add_mod(new WhereType(t)); }
+    auto& whereNotType(const EntityType& t) {
+        return add_mod(new Not(new WhereType(t)));
+    }
 
     template<typename T>
     struct WhereHasComponent : Modification {
