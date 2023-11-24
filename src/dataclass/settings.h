@@ -114,6 +114,7 @@ struct UpgradeRequirement {
 
 struct Upgrade {
     std::string name;
+    std::string icon_name;
     std::string flavor_text;
     std::string description;
     std::vector<UpgradeEffect> effects;

@@ -375,6 +375,12 @@ void Preload::load_textures() {
             TextureLibrary::get().load(filename.c_str(), name.c_str());
         });
 
+    Files::get().for_resources_in_folder(
+        strings::settings::IMAGES, "upgrade",
+        [](const std::string& name, const std::string& filename) {
+            TextureLibrary::get().load(filename.c_str(), name.c_str());
+        });
+
     // Now load the one off ones
 
     load_json_config_file("textures.json", [](const nlohmann::json& contents) {
@@ -642,6 +648,7 @@ void Preload::load_upgrades() {
             UpgradeLibrary::get().load(
                 {
                     .name = name,
+                    .icon_name = upgrade.value("icon_name", "upgrade_default"),
                     .flavor_text = upgrade["flavor_text"].get<std::string>(),
                     .description = upgrade["description"].get<std::string>(),
                     .effects = effects,
