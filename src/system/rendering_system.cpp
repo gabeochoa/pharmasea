@@ -966,7 +966,7 @@ void render_fishing_game(const Entity& entity, float) {
     float spacing = (TILESIZE * 0.40f);
     float x_offset = 0;
 
-    for (int i = 0; i < fishing.num_stars; i++) {
+    for (int i = 0; i < fishing.num_stars(); i++) {
         // TODO read icon from score sheet
         raylib::Texture texture = TextureLibrary::get().get("star_filled");
         GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);

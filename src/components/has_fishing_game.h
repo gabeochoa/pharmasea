@@ -47,6 +47,7 @@ struct HasFishingGame : public BaseComponent {
     [[nodiscard]] float get_score() const { return score; }
     [[nodiscard]] float pct() const { return progress; }
     [[nodiscard]] float best() const { return best_location; }
+    [[nodiscard]] int num_stars() const { return m_num_stars; }
 
     void pass_time(float dt) {
         if (!started || has_score()) return;
@@ -68,7 +69,7 @@ struct HasFishingGame : public BaseComponent {
 
             const Band& band = score_band[index];
             score = band.multiplier;
-            num_stars = band.num_stars;
+            m_num_stars = band.num_stars;
 
             // TOOD add a UI element showing a x2 or whatever
             log_info("game ended got {}", score);
@@ -82,9 +83,6 @@ struct HasFishingGame : public BaseComponent {
         countdown = countdownReset;
         bounce(dt);
     }
-
-    // TODO
-    int num_stars = 0;
 
    private:
     [[nodiscard]] bool hit_end() const {
@@ -111,6 +109,8 @@ struct HasFishingGame : public BaseComponent {
     float countdown = 0.100f;
     float countdownReset = 0.100f;
 
+    int m_num_stars = 0;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
@@ -119,7 +119,7 @@ struct HasFishingGame : public BaseComponent {
         s.value1b(started);
 
         s.value4b(direction);
-        s.value4b(num_stars);
+        s.value4b(m_num_stars);
 
         s.value4b(best_location);
         s.value4b(score);
