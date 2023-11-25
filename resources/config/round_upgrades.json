@@ -1,7 +1,7 @@
 {
   "rounds": [
       "upgrade",
-      "drink",
+      "upgrade",
       "drink",
       "drink",
       "none"
@@ -67,6 +67,10 @@
       {
           "name": "drink",
           "value": "invalid"
+      },
+      {
+          "name": "customer_spawn",
+          "value": "invalid"
       }
   ],
   "upgrades": [
@@ -118,14 +122,9 @@
               }
           ],
           "prereqs": [
-              {
-                  "name": "day_count",
-                  "value": 2
-              }
           ]
       },
       {
-          "disabled": "Working as expected",
           "name": "Longer Day",
           "flavor_text": "Find an extra couple hours in the day.",
           "description": "(Makes the day twice as long)",
@@ -148,13 +147,13 @@
           "flavor_text": "all the buzz at half the price",
           "description": "(More people at the beginning of the day but cheaper drinks)",
           "active_hours": [
-              "10-30"
+              "10-15"
           ],
           "upgrade_effects": [
               {
-                  "name": "customer_spawn_multiplier",
-                  "operation": "multiplier",
-                  "value": 2.0
+                  "name": "customer_spawn",
+                  "operation": "custom",
+                  "value": "custom"
               },
               {
                   "name": "drink_cost_multiplier",
@@ -276,7 +275,7 @@
 
       },
       {
-          //"disabled": "Working as expected",
+          "disabled": "Working as expected",
           "name": "Champagne",
           "icon_name": "upgrade_champagne",
           "flavor_text": "someone get the bandaids.",

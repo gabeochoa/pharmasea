@@ -26,6 +26,7 @@ void update_player_remotely(Entity& entity, float* location,
 void update_player_rare_remotely(Entity& entity, int model_index,
                                  long long last_ping);
 void make_player(Entity& player, vec3 p);
+void make_customer(Entity& customer, const SpawnInfo& info, bool has_order);
 
 namespace furniture {
 

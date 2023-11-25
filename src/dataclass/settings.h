@@ -39,10 +39,12 @@ enum struct ConfigKey {
     //
     VomitFreqMultiplier,
     VomitAmountMultiplier,
+
     //
     DayCount,
     Entity,
     Drink,
+    CustomerSpawn,
 };
 
 struct ConfigValue {
@@ -50,7 +52,7 @@ struct ConfigValue {
     ConfigValueType value;
 };
 
-enum struct ConfigKeyType { Drink, Entity, Float, Bool, Int };
+enum struct ConfigKeyType { Activity, Drink, Entity, Float, Bool, Int };
 
 inline ConfigKeyType get_type(ConfigKey key) {
     switch (key) {
@@ -75,6 +77,8 @@ inline ConfigKeyType get_type(ConfigKey key) {
             return ConfigKeyType::Entity;
         case ConfigKey::Drink:
             return ConfigKeyType::Drink;
+        case ConfigKey::CustomerSpawn:
+            return ConfigKeyType::Activity;
     }
     return ConfigKeyType::Float;
 }
@@ -89,7 +93,7 @@ inline ConfigKey to_configkey(const std::string& str) {
     return op.value();
 }
 
-enum struct Operation { Multiplier, Set, Unlock };
+enum struct Operation { Multiplier, Set, Unlock, Custom };
 
 inline Operation to_operation(const std::string& str) {
     const auto converted_str = util::remove_underscores(str);

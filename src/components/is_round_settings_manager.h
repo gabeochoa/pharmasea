@@ -136,31 +136,50 @@ struct IsRoundSettingsManager : public BaseComponent {
 
      ============ ============ ============ ============
 
+     User unlocks upgrades
+     User can buy upgrades that last for one day (require each one have a
+     machine)
+     There are upgrades that have active hours
+
      Start of Day
+        apply effects from all all-day upgrades
+        apply effects from upgrade machines
 
-
-
-     Mid Day
-        apply temporary hour effects
-
+     Middle of the day
+        apply effects that are active during this hour
+        unapply effects that are no longer active during this hour
 
      End of Day
-        reduce_duration
-        unapply_expired_upgrades
-        remove_from_active
+        unapply effects from all all-day upgrades
+        unapply effects from upgrade machines
+        delete upgrade machines
 
      */
 
+    int ran_for_hour = -1;
+
     EntityTypeSet unlocked_entities;
     DrinkSet unlocked_drinks;
-
-    std::vector<EntityType> required_entities;
-
     std::vector<EntityToSpawn> entities_to_spawn;
-
     // TODO combine these two
-    std::vector<std::string> upgrades_applied;
     std::map<int, UpgradeInstance> temp_upgrades_applied;
+
+    // New Set
+    std::set<std::string> unlocked_upgrades;
+    std::map<std::string, UpgradeInstance> daily_upgrades;
+    std::vector<std::string> applied_upgrades;
+    std::vector<ConfigKey> activities;
+
+    [[nodiscard]] EntityTypeSet required_entities() const {
+        EntityTypeSet ents;
+        for (const auto& kv : daily_upgrades) {
+            auto instance = kv.second;
+            for (auto et : instance.parent_copy.required_machines) {
+                ents.set(static_cast<int>(et));
+            }
+        }
+        return ents;
+    }
 
     IsRoundSettingsManager() {
         for (const auto& pair : ConfigValueLibrary::get()) {
@@ -186,6 +205,8 @@ struct IsRoundSettingsManager : public BaseComponent {
                 case ConfigKeyType::Int:
                     config.set(config_value.key,
                                std::get<int>(config_value.value));
+                    break;
+                case ConfigKeyType::Activity:
                     break;
             }
         }
@@ -221,6 +242,71 @@ struct IsRoundSettingsManager : public BaseComponent {
         return config.contains<T>(key);
     }
 
+    void unlock_upgrade_by_name(const std::string& upgrade_name) {
+        unlocked_upgrades.insert(upgrade_name);
+
+        auto upgrade = fetch_upgrade(upgrade_name);
+        if (!upgrade) {
+            log_error("Failed trying to unlock: {}", upgrade_name);
+        }
+
+        for (const EntityType& et : upgrade->required_machines) {
+            entities_to_spawn.push_back(EntityToSpawn{et, true});
+        }
+    }
+
+    [[nodiscard]] bool has_upgrade_unlocked(const std::string& name) const {
+        return unlocked_upgrades.contains(name);
+    }
+
+    [[nodiscard]] bool meets_prereqs_for_upgrade(
+        const std::string& name) const {
+        auto upgrade = fetch_upgrade(name);
+        if (!upgrade) return false;
+
+        for (const UpgradeRequirement& req : upgrade->prereqs) {
+            if (!meets_prereq(req)) return false;
+        }
+
+        return true;
+    }
+
+    void unapply_upgrade_by_name(const std::string& name) {
+        if (!UpgradeLibrary::get().contains(name)) {
+            // TODO for now just error out but eventually just warn
+            log_error("Failed to find upgrade with name: {}", name);
+        }
+        unapply_upgrade(UpgradeLibrary::get().get(name));
+    }
+
+    void apply_upgrade_by_name(const std::string& name) {
+        if (!UpgradeLibrary::get().contains(name)) {
+            // TODO for now just error out but eventually just warn
+            log_error("Failed to find upgrade with name: {}", name);
+        }
+        apply_upgrade(UpgradeLibrary::get().get(name));
+    }
+
+   private:
+    void apply_upgrade(const Upgrade& upgrade) {
+        log_info("Applying upgrade {}", upgrade.name);
+
+        applied_upgrades.push_back(upgrade.name);
+        num_applied++;
+
+        for (const UpgradeEffect& effect : upgrade.effects) {
+            apply_effect(effect);
+        }
+    }
+    [[nodiscard]] std::optional<Upgrade> fetch_upgrade(
+        const std::string& name) const {
+        if (!UpgradeLibrary::get().contains(name)) {
+            log_warn("Failed to find upgrade with name: {}", name);
+            return {};
+        }
+        return UpgradeLibrary::get().get(name);
+    }
+
     template<typename T>
     T apply_operation(const Operation& op, T before, T value) {
         switch (op) {
@@ -229,7 +315,10 @@ struct IsRoundSettingsManager : public BaseComponent {
             case Operation::Set:
                 return value;
             case Operation::Unlock:
-                log_error("Unlock isnt supported on {}", type_name<T>());
+            case Operation::Custom:
+                log_error("{} isnt supported on {}",
+                          magic_enum::enum_name<Operation>(op), type_name<T>());
+                break;
         }
         return value;
     }
@@ -248,6 +337,11 @@ struct IsRoundSettingsManager : public BaseComponent {
                 bitset_utils::set(unlocked_entities, value);
                 entities_to_spawn.push_back(EntityToSpawn{value});
                 break;
+            case Operation::Custom:
+                log_error("{} isnt supported on {}",
+                          magic_enum::enum_name<Operation>(op),
+                          type_name<EntityType>());
+                break;
         }
         return value;
     }
@@ -256,13 +350,18 @@ struct IsRoundSettingsManager : public BaseComponent {
     Drink apply_operation(const Operation& op, Drink, Drink value) {
         switch (op) {
             case Operation::Multiplier:
-                log_error("Multiplier isnt supported on EntityType");
+                log_error("Multiplier isnt supported on Drink");
                 break;
             case Operation::Set:
-                log_error("Set isnt supported on EntityType");
+                log_error("Set isnt supported on Drink");
                 break;
             case Operation::Unlock:
                 bitset_utils::set(unlocked_drinks, value);
+                break;
+            case Operation::Custom:
+                log_error("{} isnt supported on {}",
+                          magic_enum::enum_name<Operation>(op),
+                          type_name<Drink>());
                 break;
         }
         return value;
@@ -303,39 +402,14 @@ struct IsRoundSettingsManager : public BaseComponent {
                 fetch_and_apply<int>(effect.name, effect.operation,
                                      effect.value);
             } break;
+            case ConfigKeyType::Activity: {
+                activities.push_back(effect.name);
+            } break;
         }
     }
 
     [[nodiscard]] bool is_temporary_upgrade(const Upgrade& upgrade) const {
         return upgrade.duration > 0;
-    }
-
-    void apply_upgrade(const Upgrade& upgrade) {
-        log_info("Applying upgrade {}", upgrade.name);
-        upgrades_applied.push_back(upgrade.name);
-        num_applied++;
-
-        if (is_temporary_upgrade(upgrade)) {
-            UpgradeInstance instance = UpgradeInstance(upgrade);
-            temp_upgrades_applied[instance.id] = instance;
-        }
-
-        for (const UpgradeEffect& effect : upgrade.effects) {
-            apply_effect(effect);
-        }
-
-        for (const EntityType& et : upgrade.required_machines) {
-            required_entities.push_back(et);
-            entities_to_spawn.push_back(EntityToSpawn{et, true});
-        }
-    }
-
-    void apply_upgrade_by_name(const std::string& name) {
-        if (!UpgradeLibrary::get().contains(name)) {
-            // TODO for now just error out but eventually just warn
-            log_error("Failed to find upgrade with name: {}", name);
-        }
-        apply_upgrade(UpgradeLibrary::get().get(name));
     }
 
     template<typename T>
@@ -345,8 +419,13 @@ struct IsRoundSettingsManager : public BaseComponent {
                 return before / value;
             case Operation::Set:
                 log_error("Unsetting isnt supported on {}", type_name<T>());
+                break;
             case Operation::Unlock:
                 log_error("Unlock isnt supported on {}", type_name<T>());
+                break;
+            case Operation::Custom:
+                // ignore
+                break;
         }
         return value;
     }
@@ -362,6 +441,9 @@ struct IsRoundSettingsManager : public BaseComponent {
             case Operation::Unlock:
                 bitset_utils::reset(unlocked_entities, value);
                 break;
+            case Operation::Custom:
+                log_error("Custom isnt supported");
+                break;
         }
         return value;
     }
@@ -375,6 +457,9 @@ struct IsRoundSettingsManager : public BaseComponent {
                 log_error("Unsetting isnt supported");
             case Operation::Unlock:
                 bitset_utils::reset(unlocked_drinks, value);
+                break;
+            case Operation::Custom:
+                log_error("Custom isnt supported");
                 break;
         }
         return value;
@@ -415,12 +500,15 @@ struct IsRoundSettingsManager : public BaseComponent {
                 fetch_and_unapply<int>(effect.name, effect.operation,
                                        effect.value);
             } break;
+            case ConfigKeyType::Activity: {
+                // cant undo these
+            } break;
         }
     }
 
     void unapply_upgrade(const Upgrade& upgrade) {
         log_info("Unapplying upgrade {}", upgrade.name);
-        if (!remove_if_matching(upgrades_applied, upgrade.name)) {
+        if (!remove_if_matching(applied_upgrades, upgrade.name)) {
             log_error(
                 "trying to remove, failed to find upgrade in applied upgrades");
         }
@@ -429,28 +517,10 @@ struct IsRoundSettingsManager : public BaseComponent {
         for (const UpgradeEffect& effect : upgrade.effects) {
             unapply_effect(effect);
         }
-
-        for (const EntityType& et : upgrade.required_machines) {
-            // TODO if two upgrades have the same entity added,
-            // we dont have a way to know
-            // // maybe store the duration in there too
-            remove_if_matching(required_entities, et);
-
-            // TODO delete the free entity off the map
-        }
-    }
-
-    void unapply_upgrade_by_name(const std::string& name) {
-        if (!UpgradeLibrary::get().contains(name)) {
-            // TODO for now just error out but eventually just warn
-            log_error("Failed to find upgrade with name: {}", name);
-        }
-        const Upgrade& upgrade = UpgradeLibrary::get().get(name);
-        unapply_upgrade(upgrade);
     }
 
     template<typename T>
-    [[nodiscard]] bool check_value(const ConfigKey& key, T value) {
+    [[nodiscard]] bool check_value(const ConfigKey& key, T value) const {
         // Right now we only support bool and greater than
         // eventually we probably need to say what direction we need the current
         // value to be relative to the new one
@@ -479,7 +549,7 @@ struct IsRoundSettingsManager : public BaseComponent {
         return meets;
     }
 
-    [[nodiscard]] bool meets_prereq(const UpgradeRequirement& req) {
+    [[nodiscard]] bool meets_prereq(const UpgradeRequirement& req) const {
         ConfigKeyType ckt = get_type(req.name);
         switch (ckt) {
             case ConfigKeyType::Entity: {
@@ -498,31 +568,13 @@ struct IsRoundSettingsManager : public BaseComponent {
             case ConfigKeyType::Int: {
                 return check_value<int>(req.name, std::get<int>(req.value));
             } break;
+            case ConfigKeyType::Activity: {
+                return false;
+            } break;
         }
         return false;
     }
 
-    [[nodiscard]] bool meets_prereqs_for_upgrade(const std::string& name) {
-        if (!UpgradeLibrary::get().contains(name)) {
-            log_warn("Failed to find upgrade with name: {}", name);
-            return false;
-        }
-        Upgrade upgrade = UpgradeLibrary::get().get(name);
-
-        for (const UpgradeRequirement& req : upgrade.prereqs) {
-            if (!meets_prereq(req)) return false;
-        }
-
-        return true;
-    }
-
-    [[nodiscard]] bool already_applied_upgrade(const std::string& name) {
-        // Why doesnt vector have .contains
-        return std::find(upgrades_applied.begin(), upgrades_applied.end(),
-                         name) != upgrades_applied.end();
-    }
-
-   private:
     int num_applied = 0;
 
     friend bitsery::Access;
@@ -531,7 +583,7 @@ struct IsRoundSettingsManager : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.value4b(num_applied);
-        s.container(upgrades_applied, num_applied,
+        s.container(applied_upgrades, num_applied,
                     [](S& s2, std::string& str) { s2.text1b(str, 64); });
     }
 };
