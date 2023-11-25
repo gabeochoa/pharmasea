@@ -8,6 +8,7 @@
 #include "../entity_helper.h"
 #include "magic_enum/magic_enum.hpp"
 #include "system_manager.h"
+#include "upgrade_system.h"
 
 namespace system_manager {
 namespace progression {
@@ -120,11 +121,13 @@ inline bool collect_upgrade_options(Entity& entity) {
 
     log_info("num upgrades with filters : {}", possible_upgrades.size());
 
+    /* TODO
     // Choose the simpler upgrades first
     std::sort(possible_upgrades.begin(), possible_upgrades.end(),
               [&](auto it, auto it2) {
                   return it.effects.size() < it2.effects.size();
               });
+              */
 
     if (possible_upgrades.size() < 2) {
         // No more options so just go direct to the store
@@ -182,6 +185,10 @@ inline void update_upgrade_variables() {
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
 
+    // Apply activity outcomes,
+    upgrade::execute_activites(irsm, upgrade::UpgradeTimeOfDay::Unlock,
+                               irsm.activities);
+
     magic_enum::enum_for_each<ConfigKey>([&](auto val) {
         constexpr ConfigKey key = val;
 
@@ -193,12 +200,12 @@ inline void update_upgrade_variables() {
 
             } break;
             case ConfigKey::Drink: {
-                bitset_utils::for_each_enabled_bit(
-                    irsm.unlocked_drinks, [&](size_t index) {
-                        Drink drink = magic_enum::enum_value<Drink>(index);
-                        ipm.unlock_drink(drink);
-                    });
-                irsm.unlocked_drinks.reset();
+                // bitset_utils::for_each_enabled_bit(
+                // irsm.unlocked_drinks, [&](size_t index) {
+                // Drink drink = magic_enum::enum_value<Drink>(index);
+                // ipm.unlock_drink(drink);
+                // });
+                // irsm.unlocked_drinks.reset();
             } break;
             case ConfigKey::Test:
             case ConfigKey::MaxNumOrders:

@@ -39,10 +39,17 @@ bool remove_all_matching(std::map<K, V>& vec,
     return true;
 }
 
+namespace vector {
 template<typename T>
 [[nodiscard]] bool contains(const std::vector<T>& vec, const T& value) {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
 }
+
+template<typename T>
+[[nodiscard]] bool contains(const std::vector<T>& vec, T& value) {
+    return std::find(vec.begin(), vec.end(), value) != vec.end();
+}
+}  // namespace vector
 
 inline float comp_max(const vec2& a) { return fmax(a.x, a.y); }
 

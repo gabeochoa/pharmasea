@@ -53,7 +53,9 @@ struct BasePauseLayer : public Layer {
 
         const IsRoundSettingsManager& irsm =
             sophie->get<IsRoundSettingsManager>();
-        const std::vector<std::string> applied_upgrades = irsm.applied_upgrades;
+        // TODO right now we show all unlocked upgrades is that fine?
+        // how to distiguish the ones that are active
+        const auto applied_upgrades = irsm.unlocked_upgrades;
 
         if (applied_upgrades.empty()) return;
 

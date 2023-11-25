@@ -461,60 +461,38 @@ void Preload::load_map_generation_info() {
 }
 
 void Preload::load_upgrades() {
-    const auto str_to_entity_type = [](const std::string& str) {
-        try {
-            return magic_enum::enum_cast<EntityType>(
-                       str, magic_enum::case_insensitive)
-                .value();
-        } catch (std::exception e) {
-            std::cout << ("exception converting entity type: {}", e.what())
-                      << std::endl;
+    const auto parse_value = [](ConfigKeyType key_type,
+                                const nlohmann::json& efv) {
+        ConfigValueType value;
+        switch (key_type) {
+            case ConfigKeyType::Entity: {
+                value = str_to_entity_type(efv.get<std::string>());
+            } break;
+            case ConfigKeyType::Drink: {
+                value = str_to_drink(efv.get<std::string>());
+            } break;
+            case ConfigKeyType::Float:
+                value = efv.get<float>();
+                break;
+            case ConfigKeyType::Bool:
+                value = efv.get<bool>();
+                break;
+            case ConfigKeyType::Int:
+                value = efv.get<int>();
+                break;
+            case ConfigKeyType::Activity:
+                value = true;
+                break;
         }
-        return EntityType::Unknown;
+        return value;
     };
 
-    const auto str_to_drink = [](const std::string& str) {
-        try {
-            return magic_enum::enum_cast<Drink>(str,
-                                                magic_enum::case_insensitive)
-                .value();
-        } catch (std::exception e) {
-            std::cout << ("exception converting drink type: {}", e.what())
-                      << std::endl;
-        }
-        return Drink::coke;
-    };
-
-    const auto load_config_values = [str_to_entity_type, str_to_drink](
+    const auto load_config_values = [parse_value](
                                         const nlohmann::json& config_values) {
         for (auto config : config_values) {
             const auto name = config["name"].get<std::string>();
             ConfigKey key = to_configkey(name);
-
-            const auto key_type = get_type(key);
-            ConfigValueType value;
-
-            const auto& efv = config["value"];
-            switch (key_type) {
-                case ConfigKeyType::Entity: {
-                    value = str_to_entity_type(efv.get<std::string>());
-                } break;
-                case ConfigKeyType::Drink: {
-                    value = str_to_drink(efv.get<std::string>());
-                } break;
-                case ConfigKeyType::Float:
-                    value = efv.get<float>();
-                    break;
-                case ConfigKeyType::Bool:
-                    value = efv.get<bool>();
-                    break;
-                case ConfigKeyType::Int:
-                    value = efv.get<int>();
-                    break;
-                case ConfigKeyType::Activity:
-                    value = true;
-                    break;
-            }
+            ConfigValueType value = parse_value(get_type(key), config["value"]);
 
             ConfigValueLibrary::get().load(
                 {
@@ -529,37 +507,12 @@ void Preload::load_upgrades() {
         const auto parse_effect =
             [&](const nlohmann::json& effects) -> UpgradeEffect {
             const auto key = to_configkey(effects["name"].get<std::string>());
-            const auto key_type = get_type(key);
-
-            ConfigValueType value;
-
-            const auto& efv = effects["value"];
-            switch (key_type) {
-                case ConfigKeyType::Entity: {
-                    value = str_to_entity_type(efv.get<std::string>());
-                } break;
-                case ConfigKeyType::Drink: {
-                    value = str_to_drink(efv.get<std::string>());
-                } break;
-                case ConfigKeyType::Float:
-                    value = efv.get<float>();
-                    break;
-                case ConfigKeyType::Bool:
-                    value = efv.get<bool>();
-                    break;
-                case ConfigKeyType::Int:
-                    value = efv.get<int>();
-                    break;
-                case ConfigKeyType::Activity:
-                    value = true;
-                    break;
-            }
 
             return UpgradeEffect{
                 .name = key,
                 .operation =
                     to_operation(effects["operation"].get<std::string>()),
-                .value = value,
+                .value = parse_value(get_type(key), effects["value"]),
             };
         };
 
@@ -575,35 +528,9 @@ void Preload::load_upgrades() {
         const auto parse_prereq =
             [&](const nlohmann::json& req) -> UpgradeRequirement {
             const auto key = to_configkey(req["name"].get<std::string>());
-            const auto key_type = get_type(key);
-
-            ConfigValueType value;
-
-            const auto& efv = req["value"];
-            switch (key_type) {
-                case ConfigKeyType::Entity: {
-                    value = str_to_entity_type(efv.get<std::string>());
-                } break;
-                case ConfigKeyType::Drink: {
-                    value = str_to_drink(efv.get<std::string>());
-                } break;
-                case ConfigKeyType::Float:
-                    value = efv.get<float>();
-                    break;
-                case ConfigKeyType::Bool:
-                    value = efv.get<bool>();
-                    break;
-                case ConfigKeyType::Int:
-                    value = efv.get<int>();
-                    break;
-                case ConfigKeyType::Activity:
-                    value = true;
-                    break;
-            }
-
             return UpgradeRequirement{
                 .name = key,
-                .value = value,
+                .value = parse_value(get_type(key), req["value"]),
             };
         };
 
@@ -643,104 +570,52 @@ void Preload::load_upgrades() {
             return output;
         };
 
-        const auto parse_active_hours =
-            [&](const nlohmann::json& upgrade) -> UpgradeActiveHours {
+        const auto parse_hour_range =
+            [](const std::string& str) -> UpgradeActiveHours {
             auto all_day = UpgradeActiveHours().set();
-
             auto active_hours = UpgradeActiveHours().reset();
-
-            for (auto& dur_str :
-                 upgrade.value("active_hours", std::vector<std::string>())) {
-                size_t dash_pos = dur_str.find('-');
-                if (dash_pos == std::string::npos) {
-                    log_warn("Failed to parse active_hours {}", dur_str);
-                    continue;
-                }
-
-                int start = std::stoi(dur_str.substr(0, dash_pos));
-                int end = std::stoi(dur_str.substr(dash_pos + 1));
-
-                for (int i = start; i <= end; i++) {
-                    active_hours.set(i);
-                }
-                // log_info("parsed active horu {} {} {} {}", dur_str,
-                // active_hours.any() ? active_hours : all_day,
-                // active_hours.test(11), active_hours.test(32));
+            size_t dash_pos = str.find('-');
+            if (dash_pos == std::string::npos) {
+                log_warn("Failed to parse active_hours {}", str);
+                return active_hours;
             }
 
+            int start = std::stoi(str.substr(0, dash_pos));
+            int end = std::stoi(str.substr(dash_pos + 1));
+
+            for (int i = start; i <= end; i++) {
+                active_hours.set(i);
+            }
             return active_hours.any() ? active_hours : all_day;
+        };
+
+        const auto parse_unlock_effects =
+            [&](const nlohmann::json& upgrade) -> std::vector<UpgradeEffect> {
+            const auto& on_unlock = upgrade["on_unlock"];
+            return parse_effects(on_unlock);
+        };
+
+        const auto parse_hourly_effects =
+            [&](const nlohmann::json& upgrade) -> UpgradeHourlyEffects {
+            UpgradeHourlyEffects effects;
+
+            const auto& on_hour =
+                upgrade["on_hour"].get<nlohmann::json::object_t>();
+            for (const auto& kv : on_hour) {
+                UpgradeActiveHours hours = parse_hour_range(kv.first);
+                UpgradeEffects effect = parse_effects(kv.second);
+                UpgradeHourlyEffect he = std::make_pair(hours, effect);
+                effects.push_back(he);
+            }
+            return effects;
         };
 
         const auto validate = [](const Upgrade& upgrade) -> void {
             for (auto& prereq : upgrade.prereqs) {
-                switch (prereq.name) {
-                    case ConfigKey::Test:
-                    case ConfigKey::RoundLength:
-                    case ConfigKey::MaxNumOrders:
-                    case ConfigKey::NumStoreSpawns:
-                    case ConfigKey::UnlockedToilet:
-                    case ConfigKey::PissTimer:
-                    case ConfigKey::BladderSize:
-                    case ConfigKey::HasCityMultiplier:
-                    case ConfigKey::DayCount:
-                    case ConfigKey::Entity:
-                    case ConfigKey::Drink:
-                        break;
-                    case ConfigKey::PatienceMultiplier:
-                    case ConfigKey::CustomerSpawnMultiplier:
-                    case ConfigKey::DrinkCostMultiplier:
-                    case ConfigKey::VomitFreqMultiplier:
-                    case ConfigKey::VomitAmountMultiplier:
-                    case ConfigKey::CustomerSpawn:
-                        log_error("You cant have {} as a prereq. Upgrade {}",
-                                  magic_enum::enum_name<ConfigKey>(prereq.name),
-                                  upgrade.name);
-                        break;
-                }
-            }
-
-            if (
-                // only applies for one day
-                upgrade.duration != -1 ||
-                // has no active hours?
-                upgrade.active_hours.none() ||
-                // has something set but isnt all day
-                (upgrade.active_hours.any() && !upgrade.active_hours.all())) {
-                for (auto& effect : upgrade.effects) {
-                    switch (effect.name) {
-                        case ConfigKey::NumStoreSpawns:
-                        case ConfigKey::DayCount:
-                        case ConfigKey::Entity:
-                        case ConfigKey::Drink:
-                        case ConfigKey::HasCityMultiplier:
-                        case ConfigKey::UnlockedToilet:
-                            log_error(
-                                "You cant have a temporary upgrade ({}) that "
-                                "uses {}",
-                                upgrade.name,
-                                magic_enum::enum_name<ConfigKey>(effect.name));
-                            break;
-                        case ConfigKey::CustomerSpawnMultiplier:
-                            // Customer spawn only applies at the end of day so
-                            // it wont work for temporary ones
-                            log_error(
-                                "You cant have a temporary upgrade ({}) that "
-                                "uses {}",
-                                upgrade.name,
-                                magic_enum::enum_name<ConfigKey>(effect.name));
-                            break;
-                        case ConfigKey::Test:
-                        case ConfigKey::RoundLength:
-                        case ConfigKey::MaxNumOrders:
-                        case ConfigKey::PatienceMultiplier:
-                        case ConfigKey::PissTimer:
-                        case ConfigKey::BladderSize:
-                        case ConfigKey::DrinkCostMultiplier:
-                        case ConfigKey::VomitFreqMultiplier:
-                        case ConfigKey::VomitAmountMultiplier:
-                        case ConfigKey::CustomerSpawn:
-                            break;
-                    }
+                if (!can_have_key_as_prereq(prereq.name)) {
+                    log_error("You cant have {} as a prereq. Upgrade {}",
+                              magic_enum::enum_name<ConfigKey>(prereq.name),
+                              upgrade.name);
                 }
             }
         };
@@ -755,24 +630,19 @@ void Preload::load_upgrades() {
             }
 
             // log_info("started loading {}", name);
-            auto effects = parse_effects(upgrade["upgrade_effects"]);
-            auto prereqs = parse_prereqs(upgrade["prereqs"]);
-
-            auto active_hours = parse_active_hours(upgrade);
-
-            auto required_machines =
-                parse_required_machines(name, upgrade["required_machines"]);
 
             Upgrade to_save = Upgrade{
                 .name = name,
                 .icon_name = upgrade.value("icon_name", "upgrade_default"),
                 .flavor_text = upgrade["flavor_text"].get<std::string>(),
                 .description = upgrade["description"].get<std::string>(),
-                .effects = effects,
-                .prereqs = prereqs,
-                .required_machines = required_machines,
+                .on_unlock = parse_unlock_effects(upgrade["upgrade_effects"]),
+                .hourly_effects =
+                    parse_hourly_effects(upgrade["upgrade_effects"]),
+                .prereqs = parse_prereqs(upgrade["prereqs"]),
+                .required_machines =
+                    parse_required_machines(name, upgrade["required_machines"]),
                 .duration = upgrade.value("duration", -1),
-                .active_hours = active_hours,
             };
 
             validate(to_save);
@@ -789,7 +659,9 @@ void Preload::load_upgrades() {
                                              name, magic_enum::case_insensitive)
                                              .value());
             } catch (std::exception e) {
-                std::cout << ("exception converting upgrade type: {}", e.what())
+                std::cout << fmt::format(
+                                 "exception converting upgrade type: {}",
+                                 e.what())
                           << std::endl;
             }
         }

@@ -75,112 +75,72 @@
   ],
   "upgrades": [
       {
-          "name": "Fake Upgrade",
-          "flavor_text": "flavor text flavor text flavor text.",
-          "description": "(description description description description description description description description)",
-          "upgrade_effects": [],
-          "prereqs": [
-              {
-                  "name": "day_count",
-                  "value": 2
-              }
-          ]
-      },
-      {
-          "name": "Fake Upgrade",
-          "flavor_text": "flavor text flavor text flavor text.",
-          "description": "(description description description description description description description description)",
-          "upgrade_effects": [],
-          "prereqs": [
-              {
-                  "name": "day_count",
-                  "value": 2
-              }
-          ]
-      },
-      {
-          "name": "Fake Upgrade",
-          "flavor_text": "flavor text flavor text flavor text.",
-          "description": "(description description description description description description description description)",
-          "upgrade_effects": [],
-          "prereqs": [
-              {
-                  "name": "day_count",
-                  "value": 2
-              }
-          ]
-      },
-      {
           "name": "Longer Day",
           "flavor_text": "Find an extra couple hours in the day.",
           "description": "(Makes the day twice as long)",
-          "upgrade_effects": [
-              {
-                  "name": "round_length",
-                  "operation": "multiplier",
-                  "value": 2.0
-              }
-          ],
-          "prereqs": [
-          ]
-      },
-      {
-          "name": "Longer Day",
-          "flavor_text": "Find an extra couple hours in the day.",
-          "description": "(Makes the day twice as long)",
-          "upgrade_effects": [
-              {
-                  "name": "round_length",
-                  "operation": "multiplier",
-                  "value": 2.0
-              }
-          ],
-          "prereqs": [
-              {
-                  "name": "day_count",
-                  "value": 2
-              }
-          ]
-      },
-      {
-          "name": "Happy Hour",
-          "flavor_text": "all the buzz at half the price",
-          "description": "(More people at the beginning of the day but cheaper drinks)",
-          "active_hours": [
-              "10-15"
-          ],
-          "upgrade_effects": [
-              {
-                  "name": "customer_spawn",
-                  "operation": "custom",
-                  "value": "custom"
-              },
-              {
-                  "name": "drink_cost_multiplier",
-                  "operation": "multiplier",
-                  "value": 0.75
-              }
-          ],
+          "upgrade_effects": {
+              "on_unlock": [
+                  {
+                      "name": "round_length",
+                      "operation": "multiplier",
+                      "value": 2.0
+                  }
+              ],
+              "on_hour": {}
+          },
           "prereqs": [
           ]
       },
       {
           "disabled": "Working as expected",
+          "name": "Happy Hour",
+          "flavor_text": "all the buzz at half the price",
+          "description": "(More people at the beginning of the day but cheaper drinks)",
+          "upgrade_effects": {
+              "on_unlock": [],
+              "on_hour": {
+                  "10-15": [
+                      {
+                          "name": "drink_cost_multiplier",
+                          "operation": "multiplier",
+                          "value": 0.75
+                      },
+                      {
+                          "name": "customer_spawn",
+                          "operation": "custom",
+                          "value": "custom"
+                      }
+                  ]
+              }
+          },
+          "prereqs": [
+          ]
+      },
+       {
+          "disabled": "Working as expected",
           "name": "Gotta go",
           "flavor_text": "Drinking has its consequences.",
           "description": "(Customers will order twice, but will need to go to the bathroom)",
-          "upgrade_effects": [
-              {
-                  "name": "max_num_orders",
-                  "operation": "multiplier",
-                  "value": 2.0
-              },
-              {
-                  "name": "unlocked_toilet",
-                  "operation": "set",
-                  "value": true
-              }
-          ],
+          "upgrade_effects": {
+              "on_unlock": [
+                  {
+                      "name": "max_num_orders",
+                      "operation": "multiplier",
+                      "value": 2.0
+                  },
+                  {
+                      "name": "unlocked_toilet",
+                      "operation": "set",
+                      "value": true
+                  },
+                  {
+                      "name": "entity",
+                      "operation": "custom",
+                      "value": "toilet"
+                  }
+              ],
+              "on_hour": {}
+          },
           "required_machines": [
               "toilet"
           ],
@@ -196,18 +156,21 @@
           "name": "Big Bladders",
           "flavor_text": "I've been training.",
           "description": "(Customers will got to the bathroom less often but for longer)",
-          "upgrade_effects": [
-              {
-                  "name": "piss_timer",
-                  "operation": "multiplier",
-                  "value": 2.0
-              },
-              {
-                  "name": "bladder_size",
-                  "operation": "multiplier",
-                  "value": 2.0
-              }
-          ],
+          "upgrade_effects": {
+              "on_unlock": [
+                  {
+                      "name": "piss_timer",
+                      "operation": "multiplier",
+                      "value": 2.0
+                  },
+                  {
+                      "name": "bladder_size",
+                      "operation": "multiplier",
+                      "value": 2.0
+                  }
+              ],
+              "on_hour": {}
+          },
           "prereqs": [
               {
                   "name": "unlocked_toilet",
@@ -220,23 +183,26 @@
           "name": "Big City",
           "flavor_text": "I'm walking 'ere.",
           "description": "(Customers pay double but have less patience)",
-          "upgrade_effects": [
-              {
-                  "name": "patience_multiplier",
-                  "operation": "multiplier",
-                  "value": 0.5
-              },
-              {
-                  "name": "drink_cost_multiplier",
-                  "operation": "multiplier",
-                  "value": 2.0
-              },
-              {
-                  "name": "has_city_multiplier",
-                  "operation": "set",
-                  "value":true 
-              }
-          ],
+          "upgrade_effects": {
+              "on_unlock": [
+                  {
+                      "name": "patience_multiplier",
+                      "operation": "multiplier",
+                      "value": 0.5
+                  },
+                  {
+                      "name": "drink_cost_multiplier",
+                      "operation": "multiplier",
+                      "value": 2.0
+                  },
+                  {
+                      "name": "has_city_multiplier",
+                      "operation": "set",
+                      "value":true 
+                  }
+              ],
+              "on_hour": {}
+          },
           "prereqs": [
               {
                   "name": "has_city_multiplier",
@@ -249,23 +215,26 @@
           "name": "Small Town",
           "flavor_text": "This town ain't big enough for the two of us.",
           "description": "(Customers pay half but have double patience)",
-          "upgrade_effects": [
-              {
-                  "name": "patience_multiplier",
-                  "operation": "multiplier",
-                  "value": 2.0
-              },
-              {
-                  "name": "drink_cost_multiplier",
-                  "operation": "multiplier",
-                  "value": 0.5
-              },
-              {
-                  "name": "has_city_multiplier",
-                  "operation": "set",
-                  "value":true 
-              }
-          ],
+          "upgrade_effects": {
+              "on_unlock": [
+                  {
+                      "name": "patience_multiplier",
+                      "operation": "multiplier",
+                      "value": 2.0
+                  },
+                  {
+                      "name": "drink_cost_multiplier",
+                      "operation": "multiplier",
+                      "value": 0.5
+                  },
+                  {
+                      "name": "has_city_multiplier",
+                      "operation": "set",
+                      "value":true 
+                  }
+              ],
+              "on_hour": {}
+          },
           "prereqs": [
               {
                   "name": "has_city_multiplier",
@@ -275,40 +244,22 @@
 
       },
       {
-          "disabled": "Working as expected",
-          "name": "Champagne",
-          "icon_name": "upgrade_champagne",
-          "flavor_text": "someone get the bandaids.",
-          "description": "(Unlocks Champagne which needs to be saber'd before pouring)",
-          "required_machines": [
-              "champagne_holder"
-          ],
-          "upgrade_effects": [
-              {
-                  "name": "drink",
-                  "operation": "unlock",
-                  "value": "champagne"
-              },
-              {
-                  "name": "entity",
-                  "operation": "unlock",
-                  "value": "champagne_holder"
-              }
-          ],
-          "prereqs": []
-      },
-      {
           //"disabled": "Working as expected",
           "name": "Pitcher",
           "flavor_text": "its actually a carafe.",
           "description": "(Unlocks a pitcher which can store up to 10 drinks)",
-          "upgrade_effects": [
-              {
-                  "name": "entity",
-                  "operation": "unlock",
-                  "value": "pitcher_cupboard"
-              }
-          ],
+          "upgrade_effects": {
+              "on_unlock": [
+                  {
+                      // This isnt marked required, so we dont spawn it, 
+                      // but should we spawn a free one? 
+                      "name": "entity",
+                      "operation": "custom",
+                      "value": "pitcher_cupboard"
+                  }
+              ],
+              "on_hour": {}
+          },
           "prereqs": []
       },
       {
@@ -317,8 +268,12 @@
           "name": "me and the boys",
           "flavor_text": "crackin open a cold one or two... or ten .",
           "description": "(Customers will now order a pitcher of beer)",
-          "upgrade_effects": [
-          ],
+          "upgrade_effects": {
+              "on_unlock": [
+                  // Need some way to have that be a recipe? 
+              ],
+              "on_hour": {}
+          },
           "required_machines": [
               "pitcher_cupboard"
           ],
@@ -338,21 +293,40 @@
           "name": "Live Band",
           "flavor_text": ".",
           "description": "(More customers for one day!)",
+          // I dont actually think we need to do this because ... 
+          // as long as we are okay with the guitar not doing anything else 
+          // we can just have it do all the logic 
+          // this would mean that we cant control it through config but thats future me's problem
           "duration": 1,
-          // TODO this always applies on upgrade selection 
-          // not on when you buy the guitar
+          "upgrade_effects": {
+              "on_unlock": [
+                  {
+                      "name": "entity",
+                      "operation": "custom",
+                      "value": "toilet"
+                  }
+              ],
+              "on_hour": {}
+          },
           "required_machines": [
-              "guitar"
+              // "guitar"
           ],
-          "upgrade_effects": [
-              {
-                  "name": "customer_spawn_multiplier",
-                  "operation": "multiplier",
-                  "value": 2.0
-              }
-          ],
+          "prereqs": []
+        },
+      {
+          "name": "Fake Upgrade",
+          "flavor_text": "flavor text flavor text flavor text.",
+          "description": "(description description description description description description description description)",
+          "upgrade_effects": {
+              "on_unlock": [],
+              "on_hour": {}
+          },
           "prereqs": [
+              {
+                  "name": "day_count",
+                  "value": 2
+              }
           ]
-        }
-    ]
+    }
+  ]
 }

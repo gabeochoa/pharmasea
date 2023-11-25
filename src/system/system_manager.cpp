@@ -840,6 +840,7 @@ inline void spawn_machines_for_new_unlock_DONOTCALL(
         log_error("Could not find spawn area entity");
     }
 
+    /* TODO
     for (const auto& entity_to_spawn : irsm.entities_to_spawn) {
         auto& entity = EntityHelper::createEntity();
         if (entity_to_spawn.free) entity.addComponent<IsFreeInStore>();
@@ -848,6 +849,7 @@ inline void spawn_machines_for_new_unlock_DONOTCALL(
     }
 
     irsm.entities_to_spawn.clear();
+    */
 }
 
 void trigger_cb_on_full_progress(Entity& entity, float) {
@@ -878,7 +880,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     const std::string& option =
                         (option_chosen == 0 ? ipm.upgradeOption1
                                             : ipm.upgradeOption2);
-                    irsm.unlock_upgrade_by_name(option);
+                    irsm.unlock_upgrade(option);
 
                     // If an upgrade also unlocked machines, we probably have to
                     // handle it
@@ -1716,7 +1718,7 @@ void SystemManager::process_state_change(
             // customers are already in line, but doesnt hurt to reset
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
-            system_manager::upgrade::end_of_day(entity, dt);
+            system_manager::upgrade::on_round_finished(entity, dt);
         });
     };
 
@@ -1727,7 +1729,7 @@ void SystemManager::process_state_change(
             system_manager::release_mop_buddy_at_start_of_day(entity);
             system_manager::delete_trash_when_leaving_planning(entity);
 
-            system_manager::upgrade::start_of_day(entity, dt);
+            system_manager::upgrade::on_round_started(entity, dt);
         });
     };
 
