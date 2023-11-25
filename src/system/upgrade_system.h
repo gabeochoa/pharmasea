@@ -11,7 +11,7 @@
 namespace system_manager {
 namespace upgrade {
 
-inline void start_of_day(Entity& entity, float dt) {
+inline void start_of_day(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
 
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
@@ -25,12 +25,12 @@ inline void start_of_day(Entity& entity, float dt) {
     }
 }
 
-inline void in_round_update(Entity& entity, float dt) {
+inline void in_round_update(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
 
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
-    //  TODO when you ffwd it skips some of the hours
+    //  TODO when you ffwd in debug mode it skips some of the hours
     //  should we instead run X times at least for acitvities?
     HasTimer& hasTimer = entity.get<HasTimer>();
     int hour = 100 - static_cast<int>(hasTimer.pct() * 100.f);
@@ -117,7 +117,7 @@ inline void in_round_update(Entity& entity, float dt) {
     irsm.activities.clear();
 }
 
-inline void end_of_day(Entity& entity, float dt) {
+inline void end_of_day(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
     // for all temp reduce duration and unapply any that are 0
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
