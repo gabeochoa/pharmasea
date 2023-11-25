@@ -128,6 +128,14 @@ struct Upgrade {
     std::vector<EntityType> required_machines;
     UpgradeActiveHours active_hours;
     int duration;
+
+    [[nodiscard]] bool applied_at_beginning_of_day() const {
+        return active_hours.all();
+    }
+
+    [[nodiscard]] bool applied_at_this_hour(int hour) const {
+        return active_hours.test(hour);
+    }
 };
 
 enum struct UpgradeType {
@@ -142,6 +150,8 @@ static std::atomic_int UPGRADE_INSTANCE_ID_GEN = 0;
 struct UpgradeInstance {
     int id;
     Upgrade parent_copy;
+
+    bool applied_daily = false;
 
     UpgradeInstance() : id(UPGRADE_INSTANCE_ID_GEN++) {}
     explicit UpgradeInstance(const Upgrade& copy)

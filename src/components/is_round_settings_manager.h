@@ -167,6 +167,7 @@ struct IsRoundSettingsManager : public BaseComponent {
     // New Set
     std::set<std::string> unlocked_upgrades;
     std::map<std::string, UpgradeInstance> daily_upgrades;
+
     std::vector<std::string> applied_upgrades;
     std::vector<ConfigKey> activities;
 

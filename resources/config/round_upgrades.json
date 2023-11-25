@@ -334,7 +334,6 @@
           ]
       },
       {
-          "disabled": "Temporaries are not supported yet",
           "name": "Live Band",
           "flavor_text": ".",
           "description": "(More customers for one day!)",

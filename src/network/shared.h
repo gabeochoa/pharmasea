@@ -53,6 +53,7 @@
 #include "../components/is_store_spawned.h"
 #include "../components/is_toilet.h"
 #include "../components/is_trigger_area.h"
+#include "../components/is_upgrade_spawned.h"
 #include "../components/model_renderer.h"
 #include "../components/responds_to_user_input.h"
 #include "../components/simple_colored_box_renderer.h"
@@ -89,6 +90,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
           IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
           AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
+          IsUpgradeSpawned,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

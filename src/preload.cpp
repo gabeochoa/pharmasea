@@ -700,10 +700,8 @@ void Preload::load_upgrades() {
             }
 
             if (
-                // only applies for one day
-                upgrade.duration != -1 ||
-                // has no active hours?
-                upgrade.active_hours.none() ||
+                // Not something applied at the daily level
+                !upgrade.applied_at_beginning_of_day() &&
                 // has something set but isnt all day
                 (upgrade.active_hours.any() && !upgrade.active_hours.all())) {
                 for (auto& effect : upgrade.effects) {

@@ -21,6 +21,7 @@
 #include "components/is_round_settings_manager.h"
 #include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
+#include "components/is_upgrade_spawned.h"
 #include "dataclass/ingredient.h"
 #include "engine/bitset_utils.h"
 #include "engine/sound_library.h"
@@ -135,6 +136,7 @@ void register_all_components() {
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
         IsFreeInStore, IsToilet, IsRoundSettingsManager, IsStoreSpawned,
+        IsUpgradeSpawned,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
@@ -544,6 +546,9 @@ void make_trash(Entity& trash, vec2 pos) {
 
 void make_guitar(Entity& guitar, vec2 pos) {
     furniture::make_furniture(guitar, {EntityType::Guitar}, pos);
+    // TODO is where we could add this safely, since its also randomly in the
+    // store after tis unlocked
+    guitar.addComponent<IsUpgradeSpawned>();
 }
 
 void make_toilet(Entity& toilet, vec2 pos) {

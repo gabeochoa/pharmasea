@@ -1707,27 +1707,29 @@ void SystemManager::process_state_change(
             system_manager::reset_customer_spawner_when_leaving_inround(entity);
             system_manager::reset_max_gen_when_after_deletion(entity);
             system_manager::reset_toilet_when_leaving_inround(entity);
-            system_manager::increment_day_count(entity, dt);
 
-            // Handle updating all the things that rely on progression
-            system_manager::update_new_max_customers(entity, dt);
+            system_manager::increment_day_count(entity, dt);
 
             // I think this will only happen when you debug change round while
             // customers are already in line, but doesnt hurt to reset
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
+            // Anything above wont be affected by the new upgrades
             system_manager::upgrade::end_of_day(entity, dt);
         });
     };
 
     const auto onRoundStarted = [&]() {
         for_each(entities, dt, [](Entity& entity, float dt) {
+            system_manager::upgrade::start_of_day(entity, dt);
+
+            //
+            system_manager::update_new_max_customers(entity, dt);
+
             system_manager::handle_autodrop_furniture_when_exiting_planning(
                 entity);
             system_manager::release_mop_buddy_at_start_of_day(entity);
             system_manager::delete_trash_when_leaving_planning(entity);
-
-            system_manager::upgrade::start_of_day(entity, dt);
         });
     };
 
