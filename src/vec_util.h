@@ -39,6 +39,11 @@ bool remove_all_matching(std::map<K, V>& vec,
     return true;
 }
 
+template<typename T>
+[[nodiscard]] bool contains(const std::vector<T>& vec, const T& value) {
+    return std::find(vec.begin(), vec.end(), value) != vec.end();
+}
+
 inline float comp_max(const vec2& a) { return fmax(a.x, a.y); }
 
 constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
