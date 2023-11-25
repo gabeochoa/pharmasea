@@ -363,6 +363,11 @@ void Preload::load_drink_recipes() {
 }
 
 void Preload::load_textures() {
+    // TODO add a warning for when you are loading two images with the same name
+    // because we dont distinguish between folders this is more likely than youd
+    // think
+    // TODO add support for prepending the folder name to the texture name
+
     Files::get().for_resources_in_folder(
         strings::settings::IMAGES, "drinks",
         [](const std::string& name, const std::string& filename) {

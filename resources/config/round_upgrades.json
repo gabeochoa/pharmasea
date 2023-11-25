@@ -255,6 +255,7 @@
       {
           //"disabled": "Working as expected",
           "name": "Champagne",
+          "icon_name": "upgrade_champagne",
           "flavor_text": "someone get the bandaids.",
           "description": "(Unlocks Champagne which needs to be saber'd before pouring)",
           "required_machines": [
