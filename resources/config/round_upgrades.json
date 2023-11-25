@@ -1,7 +1,7 @@
 {
   "rounds": [
       "upgrade",
-      "drink",
+      "upgrade",
       "drink",
       "drink",
       "none"
@@ -118,14 +118,9 @@
               }
           ],
           "prereqs": [
-              {
-                  "name": "day_count",
-                  "value": 2
-              }
           ]
       },
       {
-          "disabled": "Working as expected",
           "name": "Longer Day",
           "flavor_text": "Find an extra couple hours in the day.",
           "description": "(Makes the day twice as long)",
@@ -276,7 +271,7 @@
 
       },
       {
-          //"disabled": "Working as expected",
+          "disabled": "Working as expected",
           "name": "Champagne",
           "icon_name": "upgrade_champagne",
           "flavor_text": "someone get the bandaids.",

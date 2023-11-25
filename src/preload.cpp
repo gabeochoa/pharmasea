@@ -654,9 +654,50 @@ void Preload::load_upgrades() {
                 for (int i = start; i <= end; i++) {
                     active_hours.set(i);
                 }
+                // log_info("parsed active horu {} {} {} {}", dur_str,
+                // active_hours.any() ? active_hours : all_day,
+                // active_hours.test(11), active_hours.test(32));
             }
 
             return active_hours.any() ? active_hours : all_day;
+        };
+
+        const auto validate = [](const Upgrade& upgrade) -> void {
+            if (
+                // only applies for one day
+                upgrade.duration != -1 ||
+                // has no active hours?
+                upgrade.active_hours.none() ||
+                // has something set but isnt all day
+                (upgrade.active_hours.any() && !upgrade.active_hours.all())) {
+                for (auto& effect : upgrade.effects) {
+                    switch (effect.name) {
+                        case ConfigKey::NumStoreSpawns:
+                        case ConfigKey::DayCount:
+                        case ConfigKey::Entity:
+                        case ConfigKey::Drink:
+                        case ConfigKey::HasCityMultiplier:
+                        case ConfigKey::UnlockedToilet:
+                            log_error(
+                                "You cant have a temporary upgrade ({}) that "
+                                "uses {}",
+                                upgrade.name,
+                                magic_enum::enum_name<ConfigKey>(effect.name));
+                            break;
+                        case ConfigKey::Test:
+                        case ConfigKey::RoundLength:
+                        case ConfigKey::MaxNumOrders:
+                        case ConfigKey::PatienceMultiplier:
+                        case ConfigKey::CustomerSpawnMultiplier:
+                        case ConfigKey::PissTimer:
+                        case ConfigKey::BladderSize:
+                        case ConfigKey::DrinkCostMultiplier:
+                        case ConfigKey::VomitFreqMultiplier:
+                        case ConfigKey::VomitAmountMultiplier:
+                            break;
+                    }
+                }
+            }
         };
 
         for (auto upgrade : upgrades) {
@@ -677,19 +718,21 @@ void Preload::load_upgrades() {
             auto required_machines =
                 parse_required_machines(name, upgrade["required_machines"]);
 
-            UpgradeLibrary::get().load(
-                {
-                    .name = name,
-                    .icon_name = upgrade.value("icon_name", "upgrade_default"),
-                    .flavor_text = upgrade["flavor_text"].get<std::string>(),
-                    .description = upgrade["description"].get<std::string>(),
-                    .effects = effects,
-                    .prereqs = prereqs,
-                    .required_machines = required_machines,
-                    .duration = upgrade.value("duration", -1),
-                    .active_hours = active_hours,
-                },
-                "INVALID", name.c_str());
+            Upgrade to_save = Upgrade{
+                .name = name,
+                .icon_name = upgrade.value("icon_name", "upgrade_default"),
+                .flavor_text = upgrade["flavor_text"].get<std::string>(),
+                .description = upgrade["description"].get<std::string>(),
+                .effects = effects,
+                .prereqs = prereqs,
+                .required_machines = required_machines,
+                .duration = upgrade.value("duration", -1),
+                .active_hours = active_hours,
+            };
+
+            validate(to_save);
+
+            UpgradeLibrary::get().load(to_save, "INVALID", name.c_str());
         }
     };
 

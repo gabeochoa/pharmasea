@@ -53,9 +53,11 @@ struct BasePauseLayer : public Layer {
 
         const IsRoundSettingsManager& irsm =
             sophie->get<IsRoundSettingsManager>();
-        if (irsm.upgrades_applied.empty()) return;
+        const std::vector<std::string> applied_upgrades = irsm.applied_upgrades;
 
-        if (irsm.upgrades_applied.size() > 100) {
+        if (applied_upgrades.empty()) return;
+
+        if (applied_upgrades.size() > 100) {
             log_warn("More upgrades than we can display");
         }
 
@@ -75,7 +77,7 @@ struct BasePauseLayer : public Layer {
 
         std::optional<Upgrade> hovered_upgrade = {};
 
-        for (const auto& name : irsm.upgrades_applied) {
+        for (const auto& name : applied_upgrades) {
             if (i > (int) rects.size()) break;
             const Upgrade& upgrade = UpgradeLibrary::get().get(name);
             Widget icon = Widget{rects[i]};

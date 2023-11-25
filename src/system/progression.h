@@ -110,7 +110,7 @@ inline bool collect_upgrade_options(Entity& entity) {
     for (const auto& kv : UpgradeLibrary::get()) {
         const Upgrade& upgrade = kv.second;
 
-        if (irsm.already_applied_upgrade(upgrade.name)) continue;
+        if (irsm.has_upgrade_unlocked(upgrade.name)) continue;
 
         bool meets_preq = irsm.meets_prereqs_for_upgrade(upgrade.name);
         if (!meets_preq) continue;
