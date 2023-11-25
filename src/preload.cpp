@@ -511,9 +511,6 @@ void Preload::load_upgrades() {
                 case ConfigKeyType::Int:
                     value = efv.get<int>();
                     break;
-                case ConfigKeyType::Activity:
-                    value = true;
-                    break;
             }
 
             ConfigValueLibrary::get().load(
@@ -549,9 +546,6 @@ void Preload::load_upgrades() {
                     break;
                 case ConfigKeyType::Int:
                     value = efv.get<int>();
-                    break;
-                case ConfigKeyType::Activity:
-                    value = true;
                     break;
             }
 
@@ -595,9 +589,6 @@ void Preload::load_upgrades() {
                     break;
                 case ConfigKeyType::Int:
                     value = efv.get<int>();
-                    break;
-                case ConfigKeyType::Activity:
-                    value = true;
                     break;
             }
 
@@ -672,36 +663,11 @@ void Preload::load_upgrades() {
         };
 
         const auto validate = [](const Upgrade& upgrade) -> void {
-            for (auto& prereq : upgrade.prereqs) {
-                switch (prereq.name) {
-                    case ConfigKey::Test:
-                    case ConfigKey::RoundLength:
-                    case ConfigKey::MaxNumOrders:
-                    case ConfigKey::NumStoreSpawns:
-                    case ConfigKey::UnlockedToilet:
-                    case ConfigKey::PissTimer:
-                    case ConfigKey::BladderSize:
-                    case ConfigKey::HasCityMultiplier:
-                    case ConfigKey::DayCount:
-                    case ConfigKey::Entity:
-                    case ConfigKey::Drink:
-                        break;
-                    case ConfigKey::PatienceMultiplier:
-                    case ConfigKey::CustomerSpawnMultiplier:
-                    case ConfigKey::DrinkCostMultiplier:
-                    case ConfigKey::VomitFreqMultiplier:
-                    case ConfigKey::VomitAmountMultiplier:
-                    case ConfigKey::CustomerSpawn:
-                        log_error("You cant have {} as a prereq. Upgrade {}",
-                                  magic_enum::enum_name<ConfigKey>(prereq.name),
-                                  upgrade.name);
-                        break;
-                }
-            }
-
             if (
-                // Not something applied at the daily level
-                !upgrade.applied_at_beginning_of_day() &&
+                // only applies for one day
+                upgrade.duration != -1 ||
+                // has no active hours?
+                upgrade.active_hours.none() ||
                 // has something set but isnt all day
                 (upgrade.active_hours.any() && !upgrade.active_hours.all())) {
                 for (auto& effect : upgrade.effects) {
@@ -718,25 +684,16 @@ void Preload::load_upgrades() {
                                 upgrade.name,
                                 magic_enum::enum_name<ConfigKey>(effect.name));
                             break;
-                        case ConfigKey::CustomerSpawnMultiplier:
-                            // Customer spawn only applies at the end of day so
-                            // it wont work for temporary ones
-                            log_error(
-                                "You cant have a temporary upgrade ({}) that "
-                                "uses {}",
-                                upgrade.name,
-                                magic_enum::enum_name<ConfigKey>(effect.name));
-                            break;
                         case ConfigKey::Test:
                         case ConfigKey::RoundLength:
                         case ConfigKey::MaxNumOrders:
                         case ConfigKey::PatienceMultiplier:
+                        case ConfigKey::CustomerSpawnMultiplier:
                         case ConfigKey::PissTimer:
                         case ConfigKey::BladderSize:
                         case ConfigKey::DrinkCostMultiplier:
                         case ConfigKey::VomitFreqMultiplier:
                         case ConfigKey::VomitAmountMultiplier:
-                        case ConfigKey::CustomerSpawn:
                             break;
                     }
                 }

@@ -156,8 +156,6 @@ struct IsRoundSettingsManager : public BaseComponent {
 
      */
 
-    int ran_for_hour = -1;
-
     EntityTypeSet unlocked_entities;
     DrinkSet unlocked_drinks;
     std::vector<EntityToSpawn> entities_to_spawn;
@@ -167,9 +165,7 @@ struct IsRoundSettingsManager : public BaseComponent {
     // New Set
     std::set<std::string> unlocked_upgrades;
     std::map<std::string, UpgradeInstance> daily_upgrades;
-
     std::vector<std::string> applied_upgrades;
-    std::vector<ConfigKey> activities;
 
     [[nodiscard]] EntityTypeSet required_entities() const {
         EntityTypeSet ents;
@@ -206,8 +202,6 @@ struct IsRoundSettingsManager : public BaseComponent {
                 case ConfigKeyType::Int:
                     config.set(config_value.key,
                                std::get<int>(config_value.value));
-                    break;
-                case ConfigKeyType::Activity:
                     break;
             }
         }
@@ -316,10 +310,7 @@ struct IsRoundSettingsManager : public BaseComponent {
             case Operation::Set:
                 return value;
             case Operation::Unlock:
-            case Operation::Custom:
-                log_error("{} isnt supported on {}",
-                          magic_enum::enum_name<Operation>(op), type_name<T>());
-                break;
+                log_error("Unlock isnt supported on {}", type_name<T>());
         }
         return value;
     }
@@ -338,11 +329,6 @@ struct IsRoundSettingsManager : public BaseComponent {
                 bitset_utils::set(unlocked_entities, value);
                 entities_to_spawn.push_back(EntityToSpawn{value});
                 break;
-            case Operation::Custom:
-                log_error("{} isnt supported on {}",
-                          magic_enum::enum_name<Operation>(op),
-                          type_name<EntityType>());
-                break;
         }
         return value;
     }
@@ -351,18 +337,13 @@ struct IsRoundSettingsManager : public BaseComponent {
     Drink apply_operation(const Operation& op, Drink, Drink value) {
         switch (op) {
             case Operation::Multiplier:
-                log_error("Multiplier isnt supported on Drink");
+                log_error("Multiplier isnt supported on EntityType");
                 break;
             case Operation::Set:
-                log_error("Set isnt supported on Drink");
+                log_error("Set isnt supported on EntityType");
                 break;
             case Operation::Unlock:
                 bitset_utils::set(unlocked_drinks, value);
-                break;
-            case Operation::Custom:
-                log_error("{} isnt supported on {}",
-                          magic_enum::enum_name<Operation>(op),
-                          type_name<Drink>());
                 break;
         }
         return value;
@@ -403,9 +384,6 @@ struct IsRoundSettingsManager : public BaseComponent {
                 fetch_and_apply<int>(effect.name, effect.operation,
                                      effect.value);
             } break;
-            case ConfigKeyType::Activity: {
-                activities.push_back(effect.name);
-            } break;
         }
     }
 
@@ -420,13 +398,8 @@ struct IsRoundSettingsManager : public BaseComponent {
                 return before / value;
             case Operation::Set:
                 log_error("Unsetting isnt supported on {}", type_name<T>());
-                break;
             case Operation::Unlock:
                 log_error("Unlock isnt supported on {}", type_name<T>());
-                break;
-            case Operation::Custom:
-                // ignore
-                break;
         }
         return value;
     }
@@ -442,9 +415,6 @@ struct IsRoundSettingsManager : public BaseComponent {
             case Operation::Unlock:
                 bitset_utils::reset(unlocked_entities, value);
                 break;
-            case Operation::Custom:
-                log_error("Custom isnt supported");
-                break;
         }
         return value;
     }
@@ -458,9 +428,6 @@ struct IsRoundSettingsManager : public BaseComponent {
                 log_error("Unsetting isnt supported");
             case Operation::Unlock:
                 bitset_utils::reset(unlocked_drinks, value);
-                break;
-            case Operation::Custom:
-                log_error("Custom isnt supported");
                 break;
         }
         return value;
@@ -500,9 +467,6 @@ struct IsRoundSettingsManager : public BaseComponent {
             case ConfigKeyType::Int: {
                 fetch_and_unapply<int>(effect.name, effect.operation,
                                        effect.value);
-            } break;
-            case ConfigKeyType::Activity: {
-                // cant undo these
             } break;
         }
     }
@@ -568,9 +532,6 @@ struct IsRoundSettingsManager : public BaseComponent {
             } break;
             case ConfigKeyType::Int: {
                 return check_value<int>(req.name, std::get<int>(req.value));
-            } break;
-            case ConfigKeyType::Activity: {
-                return false;
             } break;
         }
         return false;
