@@ -126,6 +126,31 @@ struct IsRoundSettingsManager : public BaseComponent {
 
     round_settings::Config config;
 
+    /*
+     Loaded => this upgrade is in the library
+     Unlocked => you chose this upgrade at some point
+     Enabled => its active at some point today
+     Active => the effects are currently going
+     Invactive => no longer changing anything
+     Deleted / Disabled
+
+     ============ ============ ============ ============
+
+     Start of Day
+
+
+
+     Mid Day
+        apply temporary hour effects
+
+
+     End of Day
+        reduce_duration
+        unapply_expired_upgrades
+        remove_from_active
+
+     */
+
     EntityTypeSet unlocked_entities;
     DrinkSet unlocked_drinks;
 
