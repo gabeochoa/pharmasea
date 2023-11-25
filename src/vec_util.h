@@ -28,6 +28,17 @@ bool remove_all_matching(std::vector<T>& vec,
     return true;
 }
 
+template<typename K, typename V>
+bool remove_all_matching(std::map<K, V>& vec,
+                         const std::function<bool(const K&, const V&)>& pred) {
+    auto it = std::remove_if(std::begin(vec), std::end(vec), pred);
+    if (it == vec.end()) {
+        return false;
+    }
+    vec.erase(it);
+    return true;
+}
+
 inline float comp_max(const vec2& a) { return fmax(a.x, a.y); }
 
 constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
