@@ -144,6 +144,29 @@
           ]
       },
       {
+          "name": "Happy Hour",
+          "flavor_text": "all the buzz at half the price",
+          "description": "(More people at the beginning of the day but cheaper drinks)",
+          "active_hours": [
+              "10-30"
+          ],
+          "upgrade_effects": [
+              {
+                  "name": "customer_spawn_multiplier",
+                  "operation": "multiplier",
+                  "value": 2.0
+              },
+              {
+                  "name": "drink_cost_multiplier",
+                  "operation": "multiplier",
+                  "value": 0.75
+              }
+          ],
+          "prereqs": [
+          ]
+      },
+      {
+          "disabled": "Working as expected",
           "name": "Gotta go",
           "flavor_text": "Drinking has its consequences.",
           "description": "(Customers will order twice, but will need to go to the bathroom)",

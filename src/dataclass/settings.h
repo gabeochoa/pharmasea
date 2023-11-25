@@ -112,6 +112,8 @@ struct UpgradeRequirement {
     ConfigValueType value;
 };
 
+using UpgradeActiveHours = std::bitset<100>;
+
 struct Upgrade {
     std::string name;
     std::string icon_name;
@@ -120,7 +122,8 @@ struct Upgrade {
     std::vector<UpgradeEffect> effects;
     std::vector<UpgradeRequirement> prereqs;
     std::vector<EntityType> required_machines;
-    int duration = -1;
+    UpgradeActiveHours active_hours;
+    int duration;
 };
 
 enum struct UpgradeType {

@@ -634,6 +634,31 @@ void Preload::load_upgrades() {
             return output;
         };
 
+        const auto parse_active_hours =
+            [&](const nlohmann::json& upgrade) -> UpgradeActiveHours {
+            auto all_day = UpgradeActiveHours().set();
+
+            auto active_hours = UpgradeActiveHours().reset();
+
+            for (auto& dur_str :
+                 upgrade.value("active_hours", std::vector<std::string>())) {
+                size_t dash_pos = dur_str.find('-');
+                if (dash_pos == std::string::npos) {
+                    log_warn("Failed to parse active_hours {}", dur_str);
+                    continue;
+                }
+
+                int start = std::stoi(dur_str.substr(0, dash_pos));
+                int end = std::stoi(dur_str.substr(dash_pos + 1));
+
+                for (int i = start; i <= end; i++) {
+                    active_hours.set(i);
+                }
+            }
+
+            return active_hours.any() ? active_hours : all_day;
+        };
+
         for (auto upgrade : upgrades) {
             const auto name = upgrade["name"].get<std::string>();
             const auto disabled = upgrade.value("disabled", "");
@@ -646,6 +671,8 @@ void Preload::load_upgrades() {
             // log_info("started loading {}", name);
             auto effects = parse_effects(upgrade["upgrade_effects"]);
             auto prereqs = parse_prereqs(upgrade["prereqs"]);
+
+            auto active_hours = parse_active_hours(upgrade);
 
             auto required_machines =
                 parse_required_machines(name, upgrade["required_machines"]);
@@ -660,6 +687,7 @@ void Preload::load_upgrades() {
                     .prereqs = prereqs,
                     .required_machines = required_machines,
                     .duration = upgrade.value("duration", -1),
+                    .active_hours = active_hours,
                 },
                 "INVALID", name.c_str());
         }

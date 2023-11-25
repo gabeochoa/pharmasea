@@ -39,11 +39,12 @@ Multiple Floors
 
 General Upgrades 
 
-// What is the value to the player for this?
 Break the Seal 
 (after the first piss, customer bladder size is halfed)
 __enabled / disabled, need to track num pisses__
 __requires bathroom upgrade__
+// What is the value to the player for this?
+// player can see how much piss the person has in them? 
 
 Happy Hour
 - more people in the middle of the day
