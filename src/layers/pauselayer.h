@@ -67,9 +67,10 @@ struct BasePauseLayer : public Layer {
 
         std::vector<Rectangle> rects;
         upgrades = rect::lpad(upgrades, 10);
-        auto rows = rect::hsplit<10>(upgrades, 10);
+        upgrades = rect::rpad(upgrades, 90);
+        auto rows = rect::hsplit<10>(upgrades, 20);
         for (auto r : rows) {
-            auto cols = rect::vsplit<10>(r, 10);
+            auto cols = rect::vsplit<10>(r, 20);
             for (auto c : cols) {
                 rects.push_back(c);
             }

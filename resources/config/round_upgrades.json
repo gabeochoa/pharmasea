@@ -76,6 +76,7 @@
   "upgrades": [
       {
           "name": "Longer Day",
+          "icon_name": "longer_day",
           "flavor_text": "Find an extra couple hours in the day.",
           "description": "(Makes the day twice as long)",
           "upgrade_effects": {
@@ -92,8 +93,8 @@
           ]
       },
       {
-          "disabled": "Working as expected",
           "name": "Happy Hour",
+          "icon_name": "happy_hour",
           "flavor_text": "all the buzz at half the price",
           "description": "(More people at the beginning of the day but cheaper drinks)",
           "upgrade_effects": {
@@ -116,9 +117,9 @@
           "prereqs": [
           ]
       },
-       {
-          "disabled": "Working as expected",
+      {
           "name": "Gotta go",
+          "icon_name": "gotta_go",
           "flavor_text": "Drinking has its consequences.",
           "description": "(Customers will order twice, but will need to go to the bathroom)",
           "upgrade_effects": {
@@ -312,7 +313,7 @@
               // "guitar"
           ],
           "prereqs": []
-        },
+      },
       {
           "name": "Fake Upgrade",
           "flavor_text": "flavor text flavor text flavor text.",
@@ -327,6 +328,31 @@
                   "value": 2
               }
           ]
-    }
+    },
+     {
+          "name": "Champagne",
+          "icon_name": "upgrade_champagne",
+          "flavor_text": "someone get the bandaids.",
+          "description": "(Unlocks Champagne which needs to be saber'd before pouring)",
+          "required_machines": [
+              "champagne_holder"
+          ],
+          "upgrade_effects": {
+              "on_unlock": [
+                  {
+                      "name": "drink",
+                      "operation": "custom",
+                      "value": "champagne"
+                  },
+                  {
+                      "name": "entity",
+                      "operation": "custom",
+                      "value": "champagne_holder"
+                  }
+              ],
+              "on_hour": {}
+          },
+          "prereqs": []
+      }
   ]
 }
