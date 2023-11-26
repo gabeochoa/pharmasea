@@ -7,6 +7,12 @@
 #include "base_component.h"
 
 struct IsRoundSettingsManager : public BaseComponent {
+    enum UpgradeTimeOfDay {
+        Unlock,
+        Daily,
+        Hour,
+    };
+
     Config config;
 
     int ran_for_hour = -1;
@@ -40,6 +46,20 @@ struct IsRoundSettingsManager : public BaseComponent {
         return vector::contains(unlocked_upgrades, name);
     }
 
+    void apply_effects(const std::string& name, UpgradeEffects& effects) {
+        set_active_upgrade(name);
+        for (const UpgradeEffect& effect : effects) {
+            apply_effect(effect);
+        }
+    }
+
+    void unapply_effects(const std::string& name, UpgradeEffects& effects) {
+        unset_active_upgrade(name);
+        for (const UpgradeEffect& effect : effects) {
+            unapply_effect(effect);
+        }
+    }
+
     void unlock_upgrade(const std::string& name) {
         if (has_upgrade_unlocked(name)) {
             log_error("upgrade unlock failed since its already unlocked {}",
@@ -48,12 +68,10 @@ struct IsRoundSettingsManager : public BaseComponent {
         }
         unlocked_upgrades.push_back(name);
         num_unlocked++;
-        auto upgrade = fetch_upgrade(name);
 
-        for (const UpgradeEffect& effect : upgrade.on_unlock) {
-            set_active_upgrade(name);
-            apply_effect(effect);
-        }
+        // TODO i still would like this as a single function but its not bad
+        auto upgrade = fetch_upgrade(name);
+        apply_effects(name, upgrade.on_unlock);
     }
 
     template<typename T>
@@ -302,5 +320,22 @@ struct IsRoundSettingsManager : public BaseComponent {
 
         s.container(active_upgrades, num_unlocked,
                     [](S& s2, std::string& str) { s2.text1b(str, 64); });
+    }
+
+   public:
+    template<typename T>
+    void fetch_and_apply_TEST_ONLY(const ConfigKey& key, const Operation& op,
+                                   const ConfigValueType& value) {
+        return fetch_and_apply<T>(key, op, value);
+    }
+
+    template<typename T>
+    T unapply_operation_TEST_ONLY(const Operation& op, T before, T value) {
+        return unapply_operation<T>(op, before, value);
+    }
+
+    template<typename T>
+    T apply_operation_TEST_ONLY(const Operation& op, T before, T value) {
+        return apply_operation<T>(op, before, value);
     }
 };

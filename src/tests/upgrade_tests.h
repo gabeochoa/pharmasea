@@ -5,7 +5,6 @@
 //
 #include "../engine/assert.h"
 //
-/*
 
 #include "../components/is_round_settings_manager.h"
 
@@ -71,8 +70,8 @@ inline void test_apply_operations() {
     {
         float two_x = 2.f;
         float before = 1.f;
-        float after =
-            irsm->apply_operation(Operation::Multiplier, before, two_x);
+        float after = irsm->apply_operation_TEST_ONLY(Operation::Multiplier,
+                                                      before, two_x);
         M_TEST_NEQ(before, after, "should have changed");
         M_TEST_EQ(before * two_x, after, "should be 2x");
     }
@@ -80,7 +79,8 @@ inline void test_apply_operations() {
     {
         float two_x = 2.f;
         float before = 0.f;
-        float after = irsm->apply_operation(Operation::Set, before, two_x);
+        float after =
+            irsm->apply_operation_TEST_ONLY(Operation::Set, before, two_x);
         M_TEST_NEQ(before, after, "should have changed");
         M_TEST_NEQ(before * two_x, after, "should not be 2x");
         M_TEST_EQ(two_x, after, "should be 2x");
@@ -97,13 +97,11 @@ inline void test_fetch_and_apply_operation(Operation type) {
     float two_x = 2.f;
 
     switch (type) {
-        case Operation::Unlock: {
-            // TODO not testing this one right now
-        } break;
         case Operation::Multiplier: {
             float before = irsm->get<float>(ConfigKey::Test);
 
-            irsm->fetch_and_apply<float>(ConfigKey::Test, type, two_x);
+            irsm->fetch_and_apply_TEST_ONLY<float>(ConfigKey::Test, type,
+                                                   two_x);
 
             float after = irsm->get<float>(ConfigKey::Test);
             M_TEST_NEQ(before, after, "should have changed");
@@ -112,11 +110,15 @@ inline void test_fetch_and_apply_operation(Operation type) {
         case Operation::Set: {
             float before = irsm->get<float>(ConfigKey::Test);
 
-            irsm->fetch_and_apply<float>(ConfigKey::Test, type, two_x);
+            irsm->fetch_and_apply_TEST_ONLY<float>(ConfigKey::Test, type,
+                                                   two_x);
 
             float after = irsm->get<float>(ConfigKey::Test);
             M_TEST_NEQ(before, after, "should have changed");
             M_TEST_EQ(two_x, after, "should be 2x");
+        } break;
+        case Operation::Custom: {
+            // not testing this one
         } break;
     }
 
@@ -131,6 +133,8 @@ inline void test_fetch_and_apply_operations() {
     });
 }
 
+/*
+ * TODO need to add this back once we have temp
 inline void test_is_temporary() {
     setup_config_key();
 
@@ -155,6 +159,7 @@ inline void test_is_temporary() {
 
     teardown_config_key();
 }
+*/
 
 inline void test_apply_simple_upgrade() {
     // apply nothing
@@ -168,7 +173,7 @@ inline void test_apply_simple_upgrade() {
             };
 
             float before = irsm->get<float>(ConfigKey::Test);
-            irsm->apply_upgrade(upgrade);
+            irsm->apply_effects(upgrade.name, upgrade.on_unlock);
 
             float after = irsm->get<float>(ConfigKey::Test);
 
@@ -194,12 +199,12 @@ inline void test_apply_simple_upgrade() {
 
             Upgrade upgrade{
                 .name = "test",
-                .effects = test_effects,
+                .on_unlock = test_effects,
             };
 
             float before = irsm->get<float>(ConfigKey::Test);
 
-            irsm->apply_upgrade(upgrade);
+            irsm->apply_effects(upgrade.name, upgrade.on_unlock);
 
             float after = irsm->get<float>(ConfigKey::Test);
 
@@ -226,7 +231,7 @@ inline void test_unapply_simple_upgrade() {
         };
         {
             float before = irsm->get<float>(ConfigKey::Test);
-            irsm->apply_upgrade(upgrade);
+            irsm->apply_effects(upgrade.name, upgrade.on_unlock);
 
             float after = irsm->get<float>(ConfigKey::Test);
 
@@ -237,7 +242,7 @@ inline void test_unapply_simple_upgrade() {
 
         {
             float before = irsm->get<float>(ConfigKey::Test);
-            irsm->unapply_upgrade(upgrade);
+            irsm->unapply_effects(upgrade.name, upgrade.on_unlock);
             float after = irsm->get<float>(ConfigKey::Test);
 
             M_TEST_EQ(before, after,
@@ -261,13 +266,13 @@ inline void test_unapply_simple_upgrade() {
 
         Upgrade upgrade{
             .name = "test",
-            .effects = test_effects,
+            .on_unlock = test_effects,
         };
 
         {
             float before = irsm->get<float>(ConfigKey::Test);
-            irsm->apply_upgrade(upgrade);
-            irsm->unapply_upgrade(upgrade);
+            irsm->apply_effects(upgrade.name, upgrade.on_unlock);
+            irsm->unapply_effects(upgrade.name, upgrade.on_unlock);
             float after_unapply = irsm->get<float>(ConfigKey::Test);
 
             M_TEST_EQ(before, starting_value, "before should match starting");
@@ -287,13 +292,9 @@ inline void upgrade_tests() {
     test_fetch_and_apply_operations();
     //
 
-    test_is_temporary();
+    // test_is_temporary();
     test_apply_simple_upgrade();
     test_unapply_simple_upgrade();
 }
 
-}  // namespace tests
-   */
-namespace tests {
-inline void upgrade_tests() {}
 }  // namespace tests
