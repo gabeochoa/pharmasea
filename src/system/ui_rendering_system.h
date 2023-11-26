@@ -140,9 +140,8 @@ inline void render_normal(const Entities& entities, float dt) {
             const Entity& entity = *entity_ptr;
             render_timer(entity, dt);
         }
+        render_current_register_queue(dt);
     }
-    // TODO move into render timer check
-    render_current_register_queue(dt);
 
     // always
     render_networked_players(entities, dt);
