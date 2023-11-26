@@ -105,6 +105,7 @@ inline void on_round_started(Entity& entity, float) {
     for (const auto& upgrade_name : irsm.unlocked_upgrades) {
         Upgrade upgrade = UpgradeLibrary::get().get(upgrade_name);
         for (auto& effect : upgrade.on_start_of_day) {
+            irsm.set_active_upgrade(upgrade_name);
             irsm.apply_effect(effect);
         }
     }
@@ -121,6 +122,7 @@ inline void on_round_finished(Entity& entity, float) {
     for (const auto& upgrade_name : irsm.unlocked_upgrades) {
         Upgrade upgrade = UpgradeLibrary::get().get(upgrade_name);
         for (auto& effect : upgrade.on_start_of_day) {
+            irsm.unset_active_upgrade(upgrade_name);
             irsm.unapply_effect(effect);
         }
     }
@@ -133,6 +135,7 @@ inline void on_round_finished(Entity& entity, float) {
             if (!active_last_hour) continue;
 
             for (auto& effect : hourly_effect_pair.second) {
+                irsm.unset_active_upgrade(upgrade_name);
                 irsm.unapply_effect(effect);
             }
         }
@@ -162,6 +165,7 @@ inline void in_round_update(Entity& entity, float dt) {
                 (hour != 0) && hourly_effect_pair.first.test(hour - 1);
             if (active_last_hour) {
                 for (auto& effect : hourly_effect_pair.second) {
+                    irsm.unset_active_upgrade(upgrade_name);
                     irsm.unapply_effect(effect);
                 }
             }
@@ -174,6 +178,7 @@ inline void in_round_update(Entity& entity, float dt) {
 
             // Apply the effects for this hour
             for (auto& effect : hourly_effect_pair.second) {
+                irsm.set_active_upgrade(upgrade_name);
                 irsm.apply_effect(effect);
             }
 

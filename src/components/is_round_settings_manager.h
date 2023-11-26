@@ -15,9 +15,22 @@ struct IsRoundSettingsManager : public BaseComponent {
     std::vector<std::string> unlocked_upgrades;
     std::vector<ActivityOutcome> activities;
 
+    std::vector<std::string> active_upgrades;
+
     EntityTypeSet on_unlock_entities;
     EntityTypeSet on_daily_entities;
     EntityTypeSet on_hour_entities;
+
+    void set_active_upgrade(const std::string& name) {
+        if (is_upgrade_active(name)) return;
+        active_upgrades.push_back(name);
+    }
+    void unset_active_upgrade(const std::string& name) {
+        remove_if_matching(active_upgrades, name);
+    }
+    bool is_upgrade_active(const std::string& name) const {
+        return vector::contains(active_upgrades, name);
+    }
 
     [[nodiscard]] EntityTypeSet required_entities() const {
         return on_unlock_entities | on_daily_entities | on_hour_entities;
@@ -38,6 +51,7 @@ struct IsRoundSettingsManager : public BaseComponent {
         auto upgrade = fetch_upgrade(name);
 
         for (const UpgradeEffect& effect : upgrade.on_unlock) {
+            set_active_upgrade(name);
             apply_effect(effect);
         }
     }
@@ -284,6 +298,9 @@ struct IsRoundSettingsManager : public BaseComponent {
 
         s.value4b(num_unlocked);
         s.container(unlocked_upgrades, num_unlocked,
+                    [](S& s2, std::string& str) { s2.text1b(str, 64); });
+
+        s.container(active_upgrades, num_unlocked,
                     [](S& s2, std::string& str) { s2.text1b(str, 64); });
     }
 };

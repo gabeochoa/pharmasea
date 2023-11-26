@@ -55,11 +55,11 @@ struct BasePauseLayer : public Layer {
             sophie->get<IsRoundSettingsManager>();
         // TODO right now we show all unlocked upgrades is that fine?
         // how to distiguish the ones that are active
-        const auto applied_upgrades = irsm.unlocked_upgrades;
+        const auto unlocked_upgrades = irsm.unlocked_upgrades;
 
-        if (applied_upgrades.empty()) return;
+        if (unlocked_upgrades.empty()) return;
 
-        if (applied_upgrades.size() > 100) {
+        if (unlocked_upgrades.size() > 100) {
             log_warn("More upgrades than we can display");
         }
 
@@ -79,10 +79,16 @@ struct BasePauseLayer : public Layer {
 
         std::optional<Upgrade> hovered_upgrade = {};
 
-        for (const auto& name : applied_upgrades) {
+        for (const auto& name : unlocked_upgrades) {
             if (i > (int) rects.size()) break;
             const Upgrade& upgrade = UpgradeLibrary::get().get(name);
+
             Widget icon = Widget{rects[i]};
+
+            if (irsm.is_upgrade_active(name)) {
+                div(icon, ui::theme::Usage::Primary);
+            }
+
             image(icon, upgrade.icon_name);
             if (hoverable(icon)) {
                 hovered_upgrade = upgrade;
