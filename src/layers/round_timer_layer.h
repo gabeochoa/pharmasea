@@ -49,6 +49,29 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         return std::string(fmt::format("{} {}", status_text, day_text));
     }
 
+    void animate_new_transaction(const IsBank::Transaction& transaction,
+                                 Rectangle spawn_count) {
+        if (transaction.amount == 0 && transaction.extra == 0) return;
+
+        spawn_count.y += static_cast<int>(60 * transaction.pct());
+
+        bool positive = transaction.amount >= 0;
+        unsigned char alpha =
+            static_cast<unsigned char>(255 * transaction.pct());
+
+        const auto tip_string = fmt::format(
+            "{} {}", transaction.extra, text_lookup(strings::i18n::STORE_TIP));
+
+        colored_text(
+            ui::Widget{spawn_count},
+            fmt::format("          {}{} {}",
+                        positive ? "+" : "-",  //
+                        transaction.amount,
+                        transaction.extra ? tip_string : ""),
+            positive ? Color{0, 255, 0, alpha} : Color{255, 0, 0, alpha}  //
+        );
+    }
+
     virtual void onDrawUI(float) override {
         using namespace ui;
         // not putting these in shouldSkip since we expect this to exist like
@@ -112,28 +135,9 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
                 const std::vector<IsBank::Transaction>& transactions =
                     bank.get_transactions();
                 if (!transactions.empty()) {
-                    const IsBank ::Transaction& transaction =
+                    const IsBank::Transaction& transaction =
                         transactions.front();
-
-                    spawn_count.y += static_cast<int>(60 * transaction.pct());
-
-                    bool positive = transaction.amount >= 0;
-                    unsigned char alpha =
-                        static_cast<unsigned char>(255 * transaction.pct());
-
-                    const auto tip_string =
-                        fmt::format("{} {}", transaction.extra,
-                                    text_lookup(strings::i18n::STORE_TIP));
-
-                    colored_text(
-                        Widget{spawn_count},
-                        fmt::format("          {}{} {}",
-                                    positive ? "+" : "-",  //
-                                    transaction.amount,
-                                    transaction.extra ? tip_string : ""),
-                        positive ? Color{0, 255, 0, alpha}
-                                 : Color{255, 0, 0, alpha}  //
-                    );
+                    animate_new_transaction(transaction, spawn_count);
                 }
             }
         }
