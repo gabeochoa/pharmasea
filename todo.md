@@ -39,6 +39,7 @@ kanban-plugin: basic
 
 - [ ] cosmopolitan model is invisible
 - [ ] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
+- [ ] PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way
 
 
 ## design decisions
@@ -69,7 +70,6 @@ kanban-plugin: basic
 
 ## broke
 
-- [ ] PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way
 - [ ] - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
 - [ ] mojito model is big square
 - [ ] mai tai has no model
