@@ -163,8 +163,8 @@ inline EntityType str_to_entity_type(const std::string& str) {
                                                  magic_enum::case_insensitive)
             .value();
     } catch (std::exception e) {
-        std::cout << ("exception converting entity type: {}", e.what())
-                  << std::endl;
+        log_error("exception converting entity type input:{} {}", str,
+                  e.what());
     }
     return EntityType::Unknown;
 }
@@ -174,8 +174,7 @@ inline Drink str_to_drink(const std::string& str) {
         return magic_enum::enum_cast<Drink>(str, magic_enum::case_insensitive)
             .value();
     } catch (std::exception e) {
-        std::cout << ("exception converting drink type: {}", e.what())
-                  << std::endl;
+        log_error("exception converting drink input:{} {}", str, e.what());
     }
     return Drink::coke;
 }
