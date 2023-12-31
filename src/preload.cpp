@@ -466,10 +466,12 @@ void Preload::load_upgrades() {
         ConfigValueType value;
         switch (key_type) {
             case ConfigKeyType::Entity: {
-                value = str_to_entity_type(efv.get<std::string>());
+                value = str_to_entity_type(
+                    util::remove_underscores(efv.get<std::string>()));
             } break;
             case ConfigKeyType::Drink: {
-                value = str_to_drink(efv.get<std::string>());
+                value = str_to_drink(
+                    util::remove_underscores(efv.get<std::string>()));
             } break;
             case ConfigKeyType::Float:
                 value = efv.get<float>();
@@ -487,22 +489,35 @@ void Preload::load_upgrades() {
         return value;
     };
 
-    const auto load_config_values = [parse_value](
-                                        const nlohmann::json& config_values) {
-        for (auto config : config_values) {
-            const auto name = config["name"].get<std::string>();
-            ConfigKey key = to_configkey(name);
-            ConfigValueType value = parse_value(get_type(key), config["value"]);
+    const auto load_config_values =
+        [parse_value](const nlohmann::json& config_values) {
+            for (auto config : config_values) {
+                const auto name = config["name"].get<std::string>();
+                ConfigKey key = to_configkey(name);
+                auto str_value = config["value"];
 
-            ConfigValueLibrary::get().load(
-                {
-                    .key = key,
-                    .value = value,
-                },
-                "INVALID",
-                std::string(magic_enum::enum_name<ConfigKey>(key)).c_str());
-        }
-    };
+                if (str_value == "invalid") {
+                    // Some of these are okay to be invalid, just need to
+                    // convert so the log_error doesnt trigger
+                    if (key == ConfigKey::Entity) {
+                        str_value = "unknown";
+                    }
+                    if (key == ConfigKey::Drink) {
+                        str_value = "coke";
+                    }
+                }
+
+                ConfigValueType value = parse_value(get_type(key), str_value);
+
+                ConfigValueLibrary::get().load(
+                    {
+                        .key = key,
+                        .value = value,
+                    },
+                    "INVALID",
+                    std::string(magic_enum::enum_name<ConfigKey>(key)).c_str());
+            }
+        };
     const auto load_upgrades = [&](const nlohmann::json& upgrades) {
         const auto parse_effect =
             [&](const nlohmann::json& effects) -> UpgradeEffect {
