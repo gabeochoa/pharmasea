@@ -574,13 +574,12 @@ struct KeyMap {
         ui_map[InputName::WidgetMod] = {raylib::KEY_LEFT_SHIFT};
         ui_map[InputName::WidgetBackspace] = {raylib::KEY_BACKSPACE};
 
-#ifdef __APPLE__
+        ui_map[InputName::WidgetCtrl] = {
         // For mac, paste is ⌘+v
-        ui_map[InputName::WidgetCtrl] = {raylib::KEY_LEFT_SUPER};
-#else
+            raylib::KEY_LEFT_SUPER,
         // for windows ctrl+v
-        ui_map[InputName::WidgetCtrl] = {raylib::KEY_LEFT_CONTROL};
-#endif
+        raylib::KEY_LEFT_CONTROL
+        };
 
         ui_map[InputName::WidgetPaste] = {raylib::KEY_V};
 

@@ -651,13 +651,13 @@ void Preload::load_upgrades() {
                 .icon_name = upgrade.value("icon_name", "upgrade_default"),
                 .flavor_text = upgrade["flavor_text"].get<std::string>(),
                 .description = upgrade["description"].get<std::string>(),
-                .on_unlock = parse_unlock_effects(upgrade["upgrade_effects"]),
-                .hourly_effects =
-                    parse_hourly_effects(upgrade["upgrade_effects"]),
                 .prereqs = parse_prereqs(upgrade["prereqs"]),
                 .required_machines =
                     parse_required_machines(name, upgrade["required_machines"]),
                 .duration = upgrade.value("duration", -1),
+                .on_unlock = parse_unlock_effects(upgrade["upgrade_effects"]),
+                .hourly_effects =
+                    parse_hourly_effects(upgrade["upgrade_effects"]),
             };
 
             validate(to_save);

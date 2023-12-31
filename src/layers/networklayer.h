@@ -55,6 +55,7 @@ struct NetworkLayer : public Layer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) override {
+        log_info("key pressed {}", event.keycode);
         if (MenuState::get().is_not(menu::State::Network)) return false;
         return ui_context->process_keyevent(event);
     }

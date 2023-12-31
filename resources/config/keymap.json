@@ -246,6 +246,10 @@
             {
                 "type": 0,
                 "value": 343
+            },
+            {
+                "type": 0,
+                "value": 341
             }
         ],
         "WidgetMod": [
@@ -364,6 +368,10 @@
             {
                 "type": 0,
                 "value": 343
+            },
+            {
+                "type": 0,
+                "value": 341
             }
         ],
         "WidgetMod": [

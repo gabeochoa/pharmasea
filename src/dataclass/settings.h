@@ -111,6 +111,7 @@ struct UpgradeEffect {
     ConfigValueType value;
 };
 
+
 struct ConfigKeyValue {
     ConfigKey name;
     ConfigValueType value;
