@@ -142,7 +142,7 @@ inline void on_round_finished(Entity& entity, float) {
     }
 }
 
-inline void in_round_update(Entity& entity, float dt) {
+inline void in_round_update(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
@@ -177,7 +177,7 @@ inline void in_round_update(Entity& entity, float dt) {
             }
 
             // Apply the effects for this hour
-            for (auto& effect : hourly_effect_pair.second) {
+            for (const auto& effect : hourly_effect_pair.second) {
                 irsm.set_active_upgrade(upgrade_name);
                 irsm.apply_effect(effect);
             }

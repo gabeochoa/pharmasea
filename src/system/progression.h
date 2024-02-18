@@ -183,7 +183,7 @@ inline void collect_progression_options(Entity& entity, float) {
 inline void update_upgrade_variables() {
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-    IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+    // IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
 
     // Apply activity outcomes,
     upgrade::execute_activites(irsm, upgrade::UpgradeTimeOfDay::Unlock,

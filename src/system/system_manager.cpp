@@ -828,8 +828,7 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
     });
 }
 
-inline void spawn_machines_for_new_unlock_DONOTCALL(
-    IsRoundSettingsManager& irsm) {
+inline void spawn_machines_for_new_unlock_DONOTCALL(IsRoundSettingsManager&) {
     OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
         // Note we spawn free items in the purchase area so its more obvious
         // that they are free
