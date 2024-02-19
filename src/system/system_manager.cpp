@@ -829,6 +829,9 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
 }
 
 inline void spawn_machines_for_new_unlock_DONOTCALL(IsRoundSettingsManager&) {
+    // We already spawn these in upgrade_system.h
+    //
+    /*
     OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
         // Note we spawn free items in the purchase area so its more obvious
         // that they are free
@@ -839,7 +842,6 @@ inline void spawn_machines_for_new_unlock_DONOTCALL(IsRoundSettingsManager&) {
         log_error("Could not find spawn area entity");
     }
 
-    /* TODO
     for (const auto& entity_to_spawn : irsm.entities_to_spawn) {
         auto& entity = EntityHelper::createEntity();
         if (entity_to_spawn.free) entity.addComponent<IsFreeInStore>();
@@ -881,10 +883,11 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                                             : ipm.upgradeOption2);
                     irsm.unlock_upgrade(option);
 
-                    // If an upgrade also unlocked machines, we probably have to
-                    // handle it
+                    // They will be spawned in upgrade_system at Unlock time
 
-                    spawn_machines_for_new_unlock_DONOTCALL(irsm);
+                    // TODO If an upgrade also unlocked machines, we probably
+                    // have to handle it
+                    // spawn_machines_for_new_unlock_DONOTCALL(irsm);
 
                     break;
                 }

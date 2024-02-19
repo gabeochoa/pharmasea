@@ -26,6 +26,11 @@ inline void execute_activites(IsRoundSettingsManager& irsm,
                 EntityType et = std::get<EntityType>(activity.value);
                 switch (timeofday) {
                     case Unlock: {
+                        // if we already unlocked it then
+                        // skip
+                        if (bitset_utils::test(irsm.on_unlock_entities, et)) {
+                            break;
+                        }
                         bitset_utils::set(irsm.on_unlock_entities, et);
 
                         OptEntity spawn_area =
