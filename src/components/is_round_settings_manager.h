@@ -3,40 +3,37 @@
 
 #include <variant>
 
+#include "../dataclass/configdata.h"
+#include "../dataclass/upgrades.h"
 #include "../upgrade_library.h"
 #include "../vec_util.h"
 #include "base_component.h"
 
 struct IsRoundSettingsManager : public BaseComponent {
-    struct ConfigData {
-        using ConfigValueType = std::variant<int, bool, float>;
-        std::map<ConfigKey, ConfigValueType> data;
+    ConfigData config;
 
-        template<typename T>
-        [[nodiscard]] bool contains(const ConfigKey& key) const {
-            if (!data.contains(key)) return false;
-            auto vt = data.at(key);
-            return std::holds_alternative<T>(vt);
+    IsRoundSettingsManager() {
+        // init config
+        {
+            config.set<int>(ConfigKey::DayCount, 1);
+
+            config.set<int>(ConfigKey::MaxNumOrders, 1);
+            config.set<int>(ConfigKey::NumStoreSpawns, 5);
+            config.set<int>(ConfigKey::BladderSize, 1);
+
+            config.set<float>(ConfigKey::RoundLength, 100.f);
+            config.set<float>(ConfigKey::PatienceMultiplier, 1.f);
+            config.set<float>(ConfigKey::CustomerSpawnMultiplier, 1.f);
+            config.set<float>(ConfigKey::DrinkCostMultiplier, 1.f);
+            config.set<float>(ConfigKey::PissTimer, 2.5f);
+            config.set<float>(ConfigKey::VomitFreqMultiplier, 1.0f);
+            config.set<float>(ConfigKey::VomitAmountMultiplier, 1.0f);
+
+            config.set<bool>(ConfigKey::UnlockedToilet, false);
+            config.set<bool>(ConfigKey::HasCityMultiplier, false);
         }
-
-        template<typename T>
-        [[nodiscard]] T get(const ConfigKey& key) const {
-            auto vt = data.at(key);
-            return std::get<T>(vt);
-        }
-
-        template<typename T>
-        [[nodiscard]] T get(const ConfigKey& key) {
-            auto vt = data.at(key);
-            return std::get<T>(vt);
-        }
-
-        template<typename T>
-        void set(const ConfigKey& key, T value) {
-            data[key] = value;
-        }
-
-    } config;
+        {}
+    }
 
     template<typename T>
     [[nodiscard]] T get_for_init(ConfigKey key) const {
@@ -64,27 +61,6 @@ struct IsRoundSettingsManager : public BaseComponent {
                       key_name(key));
         }
         return config.get<T>(key);
-    }
-
-    IsRoundSettingsManager() {
-        // init config
-
-        config.set<int>(ConfigKey::DayCount, 1);
-
-        config.set<int>(ConfigKey::MaxNumOrders, 1);
-        config.set<int>(ConfigKey::NumStoreSpawns, 5);
-        config.set<int>(ConfigKey::BladderSize, 1);
-
-        config.set<float>(ConfigKey::RoundLength, 100.f);
-        config.set<float>(ConfigKey::PatienceMultiplier, 1.f);
-        config.set<float>(ConfigKey::CustomerSpawnMultiplier, 1.f);
-        config.set<float>(ConfigKey::DrinkCostMultiplier, 1.f);
-        config.set<float>(ConfigKey::PissTimer, 2.5f);
-        config.set<float>(ConfigKey::VomitFreqMultiplier, 1.0f);
-        config.set<float>(ConfigKey::VomitAmountMultiplier, 1.0f);
-
-        config.set<bool>(ConfigKey::UnlockedToilet, false);
-        config.set<bool>(ConfigKey::HasCityMultiplier, false);
     }
 
    private:
