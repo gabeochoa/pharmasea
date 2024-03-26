@@ -55,12 +55,10 @@ static std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                             int val = config.get<int>(ConfigKey::MaxNumOrders);
                             config.set<int>(ConfigKey::MaxNumOrders, val * 2);
                         }
-                        { config.set<bool>(ConfigKey::UnlockedToilet, true); }
-                        {
-                            // TODO add toilet to store spawn
-                        } {
-                            // TODO add toilet to required machines
-                        }
+                        config.set<bool>(ConfigKey::UnlockedToilet, true);
+
+                        config.store_to_spawn.push_back(EntityType::Toilet);
+                        config.forever_required.push_back(EntityType::Toilet);
                     },
                 .meetsPrereqs = [](const ConfigData& config) -> bool {
                     return config.get<bool>(ConfigKey::UnlockedToilet) == false;
@@ -72,5 +70,6 @@ static std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         log_error("Tried to fetch upgrade of type {} but didnt find anything",
                   magic_enum::enum_name<UpgradeClass>(uc));
     }
+
     return std::shared_ptr<UpgradeImpl>(ptr);
 }

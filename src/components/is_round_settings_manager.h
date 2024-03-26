@@ -11,6 +11,8 @@
 struct IsRoundSettingsManager : public BaseComponent {
     ConfigData config;
 
+    std::vector<std::shared_ptr<UpgradeImpl>> selected_upgrades;
+
     IsRoundSettingsManager() {
         // init config
         {
@@ -31,7 +33,6 @@ struct IsRoundSettingsManager : public BaseComponent {
             config.set<bool>(ConfigKey::UnlockedToilet, false);
             config.set<bool>(ConfigKey::HasCityMultiplier, false);
         }
-        {}
     }
 
     template<typename T>

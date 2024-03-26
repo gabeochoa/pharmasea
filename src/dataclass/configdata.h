@@ -7,6 +7,9 @@
 #include "settings.h"
 
 struct ConfigData {
+    std::vector<EntityType> forever_required;
+    std::vector<EntityType> store_to_spawn;
+
     using ConfigValueType = std::variant<int, bool, float>;
     std::map<ConfigKey, ConfigValueType> data;
 

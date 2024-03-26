@@ -877,19 +877,19 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 case UpgradeType::None: {
                 } break;
                 case UpgradeType::Upgrade: {
-                    /*
-                     * TODO
-const std::string& option =
-(option_chosen == 0 ? ipm.upgradeOption1
-                 : ipm.upgradeOption2);
-irsm.unlock_upgrade(option);
+                    const UpgradeClass& option =
+                        (option_chosen == 0 ? ipm.upgradeOption1
+                                            : ipm.upgradeOption2);
+                    auto optionImpl = make_upgrade(option);
+                    optionImpl->onUnlock(irsm.config);
 
-// They will be spawned in upgrade_system at Unlock time
+                    irsm.selected_upgrades.push_back(optionImpl);
 
-// TODO If an upgrade also unlocked machines, we probably
-// have to handle it
-// spawn_machines_for_new_unlock_DONOTCALL(irsm);
-// */
+                    // They will be spawned in upgrade_system at Unlock time
+
+                    // TODO If an upgrade also unlocked machines, we probably
+                    // have to handle it
+                    // spawn_machines_for_new_unlock_DONOTCALL(irsm);
 
                     break;
                 }
@@ -1545,7 +1545,7 @@ void generate_store_options() {
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsProgressionManager& ipp = sophie.get<IsProgressionManager>();
     const EntityTypeSet& unlocked = ipp.enabled_entity_types();
-    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+    IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
     int num_to_spawn = irsm.get<int>(ConfigKey::NumStoreSpawns);
 
@@ -1571,6 +1571,28 @@ void generate_store_options() {
             entity.cleanup = true;
         }
     }
+
+    // Add any that came from upgrades
+
+    // Note we spawn free items in the purchase area so its more obvious
+    // that they are free
+    OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
+        IsFloorMarker::Type::Store_PurchaseArea);
+
+    for (EntityType et : irsm.config.store_to_spawn) {
+        auto& entity = EntityHelper::createEntity();
+        entity.addComponent<IsStoreSpawned>();
+        entity.addComponent<IsFreeInStore>();
+
+        bool success =
+            convert_to_type(et, entity, purchase_area->get<Transform>().as2());
+
+        if (!success) {
+            entity.cleanup = true;
+            log_error("Store spawn of newly unlocked item failed to generate");
+        }
+    }
+    irsm.config.store_to_spawn.clear();
 }
 
 void move_purchased_furniture() {

@@ -278,7 +278,7 @@ constexpr const char* ROUND_DAY = "Day";
 
 // Store
 constexpr const char* STORE_NOT_ENOUGH_COINS = "Not enough coins";
-constexpr const char* STORE_MISSING_REQUIRED = "Missing required coins";
+constexpr const char* STORE_MISSING_REQUIRED = "Missing required machine";
 constexpr const char* STORE_STEALING_MACHINE = "Please put that machine back";
 constexpr const char* STORE_BALANCE = "Balance";
 constexpr const char* STORE_TIP = "tip";
