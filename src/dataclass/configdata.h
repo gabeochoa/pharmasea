@@ -5,10 +5,13 @@
 #include <variant>
 
 #include "settings.h"
+#include "upgrade_class.h"
 
 struct ConfigData {
     std::vector<EntityType> forever_required;
     std::vector<EntityType> store_to_spawn;
+
+    UpgradeClassBitSet unlocked_upgrades = UpgradeClassBitSet().reset();
 
     using ConfigValueType = std::variant<int, bool, float>;
     std::map<ConfigKey, ConfigValueType> data;

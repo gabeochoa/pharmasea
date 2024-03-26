@@ -1,5 +1,9 @@
 #pragma once
 
+#include <bitset>
+
+#include "../vendor_include.h"
+
 enum struct UpgradeClass {
     LongerDay,
     UnlockToilet,
@@ -8,3 +12,5 @@ enum struct UpgradeClass {
     SmallTown,
     Champagne
 };
+
+using UpgradeClassBitSet = std::bitset<magic_enum::enum_count<UpgradeClass>()>;

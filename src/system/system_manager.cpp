@@ -884,6 +884,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     auto optionImpl = make_upgrade(option);
                     optionImpl->onUnlock(irsm.config, ipm);
 
+                    // TODO why does this not show up in the pause menu?
                     irsm.selected_upgrades.push_back(optionImpl);
 
                     // They will be spawned in upgrade_system at Unlock time

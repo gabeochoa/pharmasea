@@ -35,6 +35,11 @@ struct IsRoundSettingsManager : public BaseComponent {
         }
     }
 
+    [[nodiscard]] bool is_upgrade_active(const UpgradeClass&) const {
+        // TODO add support
+        return true;
+    }
+
     template<typename T>
     [[nodiscard]] T get_for_init(ConfigKey key) const {
         if (!config.contains<T>(key)) {

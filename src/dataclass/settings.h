@@ -30,7 +30,6 @@ enum struct ConfigKey {
     //
     NumStoreSpawns,
     //
-    UnlockedToilet,
     PissTimer,
     BladderSize,
     //
@@ -45,6 +44,10 @@ enum struct ConfigKey {
     // Entity,
     // Drink,
     // CustomerSpawn,
+
+    // TODO need some way to track already upgraded
+    UnlockedToilet,
+    UnlockedLongerDay,
 };
 
 struct ConfigValue {
@@ -72,6 +75,7 @@ inline ConfigKeyType get_type(ConfigKey key) {
             return ConfigKeyType::Int;
         case ConfigKey::UnlockedToilet:
         case ConfigKey::HasCityMultiplier:
+        case ConfigKey::UnlockedLongerDay:
             return ConfigKeyType::Bool;
     }
     return ConfigKeyType::Float;
@@ -171,49 +175,6 @@ inline Drink str_to_drink(const std::string& str) {
         log_error("exception converting drink input:{} {}", str, e.what());
     }
     return Drink::coke;
-}
-
-inline bool can_have_key_as_prereq(ConfigKey key) {
-    switch (key) {
-        case ConfigKey::Test:
-        case ConfigKey::RoundLength:
-        case ConfigKey::MaxNumOrders:
-        case ConfigKey::NumStoreSpawns:
-        case ConfigKey::UnlockedToilet:
-        case ConfigKey::PissTimer:
-        case ConfigKey::BladderSize:
-        case ConfigKey::HasCityMultiplier:
-        case ConfigKey::DayCount:
-            return true;
-        case ConfigKey::PatienceMultiplier:
-        case ConfigKey::CustomerSpawnMultiplier:
-        case ConfigKey::DrinkCostMultiplier:
-        case ConfigKey::VomitFreqMultiplier:
-        case ConfigKey::VomitAmountMultiplier:
-            return false;
-    }
-    return false;
-}
-
-inline bool can_have_key_as_every_hour(ConfigKey key) {
-    switch (key) {
-        case ConfigKey::NumStoreSpawns:
-        case ConfigKey::DayCount:
-        case ConfigKey::HasCityMultiplier:
-        case ConfigKey::UnlockedToilet:
-        case ConfigKey::CustomerSpawnMultiplier:
-        case ConfigKey::RoundLength:
-        case ConfigKey::MaxNumOrders:
-        case ConfigKey::Test:
-        case ConfigKey::PatienceMultiplier:
-        case ConfigKey::PissTimer:
-        case ConfigKey::BladderSize:
-        case ConfigKey::DrinkCostMultiplier:
-        case ConfigKey::VomitFreqMultiplier:
-        case ConfigKey::VomitAmountMultiplier:
-            return false;
-    }
-    return false;
 }
 
 inline std::string_view key_name(ConfigKey key) {

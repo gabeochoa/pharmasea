@@ -50,17 +50,13 @@ struct BasePauseLayer : public Layer {
                                .whereHasComponent<IsRoundSettingsManager>()
                                .gen_first();
         if (!sophie) return;
-        /*
 
         const IsRoundSettingsManager& irsm =
             sophie->get<IsRoundSettingsManager>();
-        // TODO right now we show all unlocked upgrades is that fine?
-        // how to distiguish the ones that are active
-        const auto unlocked_upgrades = irsm.unlocked_upgrades;
 
-        if (unlocked_upgrades.empty()) return;
+        if (irsm.selected_upgrades.empty()) return;
 
-        if (unlocked_upgrades.size() > 100) {
+        if (irsm.selected_upgrades.size() > 100) {
             log_warn("More upgrades than we can display");
         }
 
@@ -79,21 +75,20 @@ struct BasePauseLayer : public Layer {
 
         int i = 0;
 
-        std::optional<Upgrade> hovered_upgrade = {};
+        std::shared_ptr<UpgradeImpl> hovered_upgrade = nullptr;
 
-        for (const auto& name : unlocked_upgrades) {
+        for (const auto& upgradeImpl : irsm.selected_upgrades) {
             if (i > (int) rects.size()) break;
-            const Upgrade& upgrade = UpgradeLibrary::get().get(name);
 
             Widget icon = Widget{rects[i]};
 
-            if (irsm.is_upgrade_active(name)) {
+            if (irsm.is_upgrade_active(upgradeImpl->type)) {
                 div(icon, ui::theme::Usage::Primary);
             }
 
-            image(icon, upgrade.icon_name);
+            image(icon, upgradeImpl->icon_name);
             if (hoverable(icon)) {
-                hovered_upgrade = upgrade;
+                hovered_upgrade = upgradeImpl;
             }
             i++;
         }
@@ -112,7 +107,6 @@ struct BasePauseLayer : public Layer {
             text(flavor, hovered_upgrade->flavor_text);
             text(desc, hovered_upgrade->description);
         }
-        */
     }
 
     virtual void onDraw(float dt) override {

@@ -228,6 +228,7 @@ inline void update_upgrade_variables() {
             case ConfigKey::VomitFreqMultiplier:
             case ConfigKey::VomitAmountMultiplier:
             case ConfigKey::DayCount:
+            case ConfigKey::UnlockedLongerDay:
                 break;
         }
     });

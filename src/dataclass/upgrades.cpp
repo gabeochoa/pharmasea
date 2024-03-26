@@ -1,6 +1,7 @@
 
 #include "upgrades.h"
 
+#include "../engine/bitset_utils.h"
 #include "ingredient.h"
 #include "settings.h"
 
@@ -22,11 +23,13 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                                 config.get<float>(ConfigKey::RoundLength);
                             config.set<float>(ConfigKey::RoundLength, val * 2);
                         }
+                        bitset_utils::set(config.unlocked_upgrades,
+                                          UpgradeClass::LongerDay);
                     },
-                .meetsPrereqs = [](const ConfigData&,
+                .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
-                    // TODO store somewhere that we are unlocking this
-                    return true;
+                    return bitset_utils::test(config.unlocked_upgrades,
+                                              UpgradeClass::LongerDay);
                 }};
             break;
         case UpgradeClass::UnlockToilet:
@@ -61,7 +64,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "Big Bladders",
-                .icon_name = "big_bladders",
+                // TODO icon
+                .icon_name = "upgrade_default",
                 .flavor_text = "I've been training..",
                 .description =
                     "(Customers will go too the bathroom less often but for "
@@ -86,7 +90,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "Big City",
-                .icon_name = "big_city",
+                // TODO icon
+                .icon_name = "upgrade_default",
                 .flavor_text = "I'm walking 'ere.",
                 .description = "(Customers pay double but have less patience)",
                 .onUnlock =
@@ -115,7 +120,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "SmallTown",
-                .icon_name = "small_town",
+                // TODO icon
+                .icon_name = "upgrade_default",
                 .flavor_text = "This town ain't big enough for the two of us.",
                 .description = "(Customers pay half but have double patience)",
                 .onUnlock =
