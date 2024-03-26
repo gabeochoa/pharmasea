@@ -13,6 +13,7 @@
 #include "../components/is_progression_manager.h"
 #include "../components/is_toilet.h"
 #include "../components/transform.h"
+#include "../dataclass/upgrades.h"
 #include "../drawing_util.h"
 #include "../engine/texture_library.h"
 #include "../engine/ui/theme.h"

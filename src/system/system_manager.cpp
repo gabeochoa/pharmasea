@@ -46,6 +46,7 @@
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
+#include "../dataclass/upgrades.h"
 #include "../engine/util.h"
 #include "sophie.h"
 ///
@@ -881,7 +882,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                         (option_chosen == 0 ? ipm.upgradeOption1
                                             : ipm.upgradeOption2);
                     auto optionImpl = make_upgrade(option);
-                    optionImpl->onUnlock(irsm.config);
+                    optionImpl->onUnlock(irsm.config, ipm);
 
                     irsm.selected_upgrades.push_back(optionImpl);
 

@@ -22,12 +22,24 @@ struct ConfigData {
 
     template<typename T>
     [[nodiscard]] T get(const ConfigKey& key) const {
+        // TODO :SPEED:  dont _need_ to do this in prod
+        if (!contains<T>(key)) {
+            log_error("get<>'ing key that does not exist for type {}",
+                      key_name(key), type_name<T>());
+        }
+
         auto vt = data.at(key);
         return std::get<T>(vt);
     }
 
     template<typename T>
     [[nodiscard]] T get(const ConfigKey& key) {
+        // TODO :SPEED:  dont _need_ to do this in prod
+        if (!contains<T>(key)) {
+            log_error("get<>'ing key that does not exist for type {}",
+                      key_name(key), type_name<T>());
+        }
+
         auto vt = data.at(key);
         return std::get<T>(vt);
     }

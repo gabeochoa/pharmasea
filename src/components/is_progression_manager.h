@@ -6,7 +6,7 @@
 //
 #include "../dataclass/ingredient.h"
 #include "../dataclass/settings.h"
-#include "../dataclass/upgrades.h"
+#include "../dataclass/upgrade_class.h"
 #include "../recipe_library.h"
 #include "base_component.h"
 

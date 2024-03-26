@@ -5,6 +5,7 @@
 #include "../components/has_timer.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
+#include "../dataclass/upgrades.h"
 #include "../entity_helper.h"
 #include "magic_enum/magic_enum.hpp"
 #include "system_manager.h"
@@ -114,7 +115,7 @@ inline bool collect_upgrade_options(Entity& entity) {
         // TODO check if already unlocked?
 
         auto impl = make_upgrade(upgrade);
-        bool meets = impl->meetsPrereqs(irsm.config);
+        bool meets = impl->meetsPrereqs(irsm.config, ipm);
         if (meets) {
             possible_upgrades.push_back(impl);
         }
