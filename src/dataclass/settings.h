@@ -42,9 +42,9 @@ enum struct ConfigKey {
 
     //
     DayCount,
-    Entity,
-    Drink,
-    CustomerSpawn,
+    // Entity,
+    // Drink,
+    // CustomerSpawn,
 };
 
 struct ConfigValue {
@@ -52,7 +52,7 @@ struct ConfigValue {
     ConfigValueType value;
 };
 
-enum struct ConfigKeyType { Activity, Drink, Entity, Float, Bool, Int };
+enum struct ConfigKeyType { Float, Bool, Int };
 
 inline ConfigKeyType get_type(ConfigKey key) {
     switch (key) {
@@ -73,12 +73,6 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::UnlockedToilet:
         case ConfigKey::HasCityMultiplier:
             return ConfigKeyType::Bool;
-        case ConfigKey::Entity:
-            return ConfigKeyType::Entity;
-        case ConfigKey::Drink:
-            return ConfigKeyType::Drink;
-        case ConfigKey::CustomerSpawn:
-            return ConfigKeyType::Activity;
     }
     return ConfigKeyType::Float;
 }
@@ -110,7 +104,6 @@ struct UpgradeEffect {
     Operation operation;
     ConfigValueType value;
 };
-
 
 struct ConfigKeyValue {
     ConfigKey name;
@@ -191,15 +184,12 @@ inline bool can_have_key_as_prereq(ConfigKey key) {
         case ConfigKey::BladderSize:
         case ConfigKey::HasCityMultiplier:
         case ConfigKey::DayCount:
-        case ConfigKey::Entity:
-        case ConfigKey::Drink:
             return true;
         case ConfigKey::PatienceMultiplier:
         case ConfigKey::CustomerSpawnMultiplier:
         case ConfigKey::DrinkCostMultiplier:
         case ConfigKey::VomitFreqMultiplier:
         case ConfigKey::VomitAmountMultiplier:
-        case ConfigKey::CustomerSpawn:
             return false;
     }
     return false;
@@ -209,8 +199,6 @@ inline bool can_have_key_as_every_hour(ConfigKey key) {
     switch (key) {
         case ConfigKey::NumStoreSpawns:
         case ConfigKey::DayCount:
-        case ConfigKey::Entity:
-        case ConfigKey::Drink:
         case ConfigKey::HasCityMultiplier:
         case ConfigKey::UnlockedToilet:
         case ConfigKey::CustomerSpawnMultiplier:
@@ -224,8 +212,6 @@ inline bool can_have_key_as_every_hour(ConfigKey key) {
         case ConfigKey::VomitFreqMultiplier:
         case ConfigKey::VomitAmountMultiplier:
             return false;
-        case ConfigKey::CustomerSpawn:
-            return true;
     }
     return false;
 }

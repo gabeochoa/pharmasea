@@ -22,6 +22,7 @@ inline void execute_activites(IsRoundSettingsManager& irsm,
                               std::vector<ActivityOutcome> activities) {
     for (auto& activity : activities) {
         switch (activity.name) {
+            /*
             case ConfigKey::Entity: {
                 EntityType et = std::get<EntityType>(activity.value);
                 switch (timeofday) {
@@ -62,26 +63,6 @@ inline void execute_activites(IsRoundSettingsManager& irsm,
                         break;
                 }
             } break;
-            case ConfigKey::Test:
-            case ConfigKey::RoundLength:
-            case ConfigKey::MaxNumOrders:
-            case ConfigKey::PatienceMultiplier:
-            case ConfigKey::CustomerSpawnMultiplier:
-            case ConfigKey::NumStoreSpawns:
-            case ConfigKey::UnlockedToilet:
-            case ConfigKey::PissTimer:
-            case ConfigKey::BladderSize:
-            case ConfigKey::HasCityMultiplier:
-            case ConfigKey::DrinkCostMultiplier:
-            case ConfigKey::VomitFreqMultiplier:
-            case ConfigKey::VomitAmountMultiplier:
-            case ConfigKey::DayCount:
-            case ConfigKey::Drink:
-                log_warn(
-                    "you have an activity with key {}, not sure how to handle "
-                    "that",
-                    magic_enum::enum_name<ConfigKey>(activity.name));
-                break;
             case ConfigKey::CustomerSpawn: {
                 auto spawner = EntityQuery()
                                    .whereType(EntityType::CustomerSpawner)
@@ -97,6 +78,32 @@ inline void execute_activites(IsRoundSettingsManager& irsm,
                               .is_first_this_round = false},
                     true);
             } break;
+            case ConfigKey::Drink:
+                log_warn(
+                    "you have an activity with key {}, not sure how to handle "
+                    "that",
+                    magic_enum::enum_name<ConfigKey>(activity.name));
+                break;
+            */
+            case ConfigKey::Test:
+            case ConfigKey::RoundLength:
+            case ConfigKey::MaxNumOrders:
+            case ConfigKey::PatienceMultiplier:
+            case ConfigKey::CustomerSpawnMultiplier:
+            case ConfigKey::NumStoreSpawns:
+            case ConfigKey::UnlockedToilet:
+            case ConfigKey::PissTimer:
+            case ConfigKey::BladderSize:
+            case ConfigKey::HasCityMultiplier:
+            case ConfigKey::DrinkCostMultiplier:
+            case ConfigKey::VomitFreqMultiplier:
+            case ConfigKey::VomitAmountMultiplier:
+            case ConfigKey::DayCount:
+                log_warn(
+                    "you have an activity with key {}, not sure how to handle "
+                    "that",
+                    magic_enum::enum_name<ConfigKey>(activity.name));
+                break;
         }
     }
 }

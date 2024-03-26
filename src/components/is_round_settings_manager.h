@@ -1,7 +1,8 @@
 
 #pragma once
 
-#include "../dataclass/config.h"
+#include <variant>
+
 #include "../upgrade_library.h"
 #include "../vec_util.h"
 #include "base_component.h"
@@ -13,7 +14,35 @@ struct IsRoundSettingsManager : public BaseComponent {
         Hour,
     };
 
-    Config config;
+    struct ConfigData {
+        using ConfigValueType = std::variant<int, bool, float>;
+        std::map<ConfigKey, ConfigValueType> data;
+
+        template<typename T>
+        [[nodiscard]] bool contains(const ConfigKey& key) const {
+            if (!data.contains(key)) return false;
+            auto vt = data.at(key);
+            return std::holds_alternative<T>(vt);
+        }
+
+        template<typename T>
+        [[nodiscard]] T get(const ConfigKey& key) const {
+            auto vt = data.at(key);
+            return std::get<T>(vt);
+        }
+
+        template<typename T>
+        [[nodiscard]] T get(const ConfigKey& key) {
+            auto vt = data.at(key);
+            return std::get<T>(vt);
+        }
+
+        template<typename T>
+        void set(const ConfigKey& key, T value) {
+            data[key] = value;
+        }
+
+    } config;
 
     int ran_for_hour = -1;
 
@@ -111,6 +140,26 @@ struct IsRoundSettingsManager : public BaseComponent {
         return true;
     }
     IsRoundSettingsManager() {
+        // init config
+
+        config.set<int>(ConfigKey::DayCount, 1);
+
+        config.set<int>(ConfigKey::MaxNumOrders, 1);
+        config.set<int>(ConfigKey::NumStoreSpawns, 5);
+        config.set<int>(ConfigKey::BladderSize, 1);
+
+        config.set<float>(ConfigKey::RoundLength, 100.f);
+        config.set<float>(ConfigKey::PatienceMultiplier, 1.f);
+        config.set<float>(ConfigKey::CustomerSpawnMultiplier, 1.f);
+        config.set<float>(ConfigKey::DrinkCostMultiplier, 1.f);
+        config.set<float>(ConfigKey::PissTimer, 2.5f);
+        config.set<float>(ConfigKey::VomitFreqMultiplier, 1.0f);
+        config.set<float>(ConfigKey::VomitAmountMultiplier, 1.0f);
+
+        config.set<bool>(ConfigKey::UnlockedToilet, false);
+        config.set<bool>(ConfigKey::HasCityMultiplier, false);
+
+        /* TODO no more configs
         for (const auto& pair : ConfigValueLibrary::get()) {
             const ConfigValue& config_value = pair.second;
             const auto type = get_type(config_value.key);
@@ -139,6 +188,7 @@ struct IsRoundSettingsManager : public BaseComponent {
                     break;
             }
         }
+        */
     }
 
     void apply_effect(const UpgradeEffect& effect) {
@@ -156,11 +206,6 @@ struct IsRoundSettingsManager : public BaseComponent {
             case ConfigKeyType::Int: {
                 fetch_and_apply<int>(effect.name, effect.operation,
                                      effect.value);
-            } break;
-            case ConfigKeyType::Entity:
-            case ConfigKeyType::Drink:
-            case ConfigKeyType::Activity: {
-                activities.push_back({effect.name, effect.value});
             } break;
         }
     }
@@ -180,12 +225,6 @@ struct IsRoundSettingsManager : public BaseComponent {
             case ConfigKeyType::Int: {
                 fetch_and_unapply<int>(effect.name, effect.operation,
                                        effect.value);
-            } break;
-            case ConfigKeyType::Entity:
-            case ConfigKeyType::Drink:
-            case ConfigKeyType::Activity: {
-                // cant undo these
-                // TODO add verification on upgrade preload to stop this
             } break;
         }
     }
@@ -253,13 +292,6 @@ struct IsRoundSettingsManager : public BaseComponent {
     [[nodiscard]] bool meets_prereq(const UpgradeRequirement& req) const {
         ConfigKeyType ckt = get_type(req.name);
         switch (ckt) {
-            case ConfigKeyType::Entity: {
-                return check_value<EntityType>(req.name,
-                                               std::get<EntityType>(req.value));
-            } break;
-            case ConfigKeyType::Drink: {
-                return check_value<Drink>(req.name, std::get<Drink>(req.value));
-            } break;
             case ConfigKeyType::Float: {
                 return check_value<float>(req.name, std::get<float>(req.value));
             } break;
@@ -268,9 +300,6 @@ struct IsRoundSettingsManager : public BaseComponent {
             } break;
             case ConfigKeyType::Int: {
                 return check_value<int>(req.name, std::get<int>(req.value));
-            } break;
-            case ConfigKeyType::Activity: {
-                return false;
             } break;
         }
         return false;

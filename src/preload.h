@@ -84,13 +84,10 @@ struct Preload {
 
         // drinks use models, so let those load first
         load_drink_recipes();
-
-        load_upgrades();
     }
 
     void load_map_generation_info();
     void load_keymapping();
-    void load_upgrades();
 
     void load_translations() {
         // TODO :IMPACT: load correct language pack for settings file
