@@ -62,7 +62,6 @@
 #include "progression.h"
 #include "rendering_system.h"
 #include "ui_rendering_system.h"
-#include "upgrade_system.h"
 
 extern ui::UITheme UI_THEME;
 
@@ -878,16 +877,19 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 case UpgradeType::None: {
                 } break;
                 case UpgradeType::Upgrade: {
-                    const std::string& option =
-                        (option_chosen == 0 ? ipm.upgradeOption1
-                                            : ipm.upgradeOption2);
-                    irsm.unlock_upgrade(option);
+                    /*
+                     * TODO
+const std::string& option =
+(option_chosen == 0 ? ipm.upgradeOption1
+                 : ipm.upgradeOption2);
+irsm.unlock_upgrade(option);
 
-                    // They will be spawned in upgrade_system at Unlock time
+// They will be spawned in upgrade_system at Unlock time
 
-                    // TODO If an upgrade also unlocked machines, we probably
-                    // have to handle it
-                    // spawn_machines_for_new_unlock_DONOTCALL(irsm);
+// TODO If an upgrade also unlocked machines, we probably
+// have to handle it
+// spawn_machines_for_new_unlock_DONOTCALL(irsm);
+// */
 
                     break;
                 }
@@ -1720,7 +1722,8 @@ void SystemManager::process_state_change(
             // customers are already in line, but doesnt hurt to reset
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
-            system_manager::upgrade::on_round_finished(entity, dt);
+            // TODO
+            // system_manager::upgrade::on_round_finished(entity, dt);
         });
     };
 
@@ -1731,7 +1734,8 @@ void SystemManager::process_state_change(
             system_manager::release_mop_buddy_at_start_of_day(entity);
             system_manager::delete_trash_when_leaving_planning(entity);
 
-            system_manager::upgrade::on_round_started(entity, dt);
+            // TODO
+            // system_manager::upgrade::on_round_started(entity, dt);
         });
     };
 
@@ -1856,7 +1860,8 @@ void SystemManager::in_round_update(
         system_manager::pass_time_for_active_fishing_games(entity, dt);
         system_manager::pass_time_for_transaction_animation(entity, dt);
 
-        system_manager::upgrade::in_round_update(entity, dt);
+        // TODO
+        // system_manager::upgrade::in_round_update(entity, dt);
     });
 }
 

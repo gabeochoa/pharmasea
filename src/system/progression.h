@@ -8,7 +8,6 @@
 #include "../entity_helper.h"
 #include "magic_enum/magic_enum.hpp"
 #include "system_manager.h"
-#include "upgrade_system.h"
 
 namespace system_manager {
 namespace progression {
@@ -108,6 +107,7 @@ inline bool collect_upgrade_options(Entity& entity) {
 
     log_info("num upgrades without filters : {}", UpgradeLibrary::get().size());
 
+    /* TODO
     for (const auto& kv : UpgradeLibrary::get()) {
         const Upgrade& upgrade = kv.second;
 
@@ -118,6 +118,7 @@ inline bool collect_upgrade_options(Entity& entity) {
 
         possible_upgrades.push_back(upgrade);
     }
+    */
 
     log_info("num upgrades with filters : {}", possible_upgrades.size());
 
@@ -185,10 +186,11 @@ inline void update_upgrade_variables() {
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     // IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
 
+    // TODO ?
     // Apply activity outcomes,
-    upgrade::execute_activites(irsm, upgrade::UpgradeTimeOfDay::Unlock,
-                               irsm.activities);
-
+    // upgrade::execute_activites(irsm, upgrade::UpgradeTimeOfDay::Unlock,
+    // irsm.activities);
+    //
     magic_enum::enum_for_each<ConfigKey>([&](auto val) {
         constexpr ConfigKey key = val;
 

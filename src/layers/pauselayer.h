@@ -50,6 +50,7 @@ struct BasePauseLayer : public Layer {
                                .whereHasComponent<IsRoundSettingsManager>()
                                .gen_first();
         if (!sophie) return;
+        /*
 
         const IsRoundSettingsManager& irsm =
             sophie->get<IsRoundSettingsManager>();
@@ -111,6 +112,7 @@ struct BasePauseLayer : public Layer {
             text(flavor, hovered_upgrade->flavor_text);
             text(desc, hovered_upgrade->description);
         }
+        */
     }
 
     virtual void onDraw(float dt) override {

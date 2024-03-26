@@ -279,6 +279,9 @@ void deleting_item_needed_for_recipe(Entity& entity) {
     // same so using it for now
     has_req_machines &= _hasAtLeastOneNotInTrash(EntityType::Trash);
 
+    /*
+     *  TODO add support for requiring entities, for new recipies or for
+     *  new upgrades (ie toilet)
     // TODO this one isnt "needed for recipies" but like 90% of the code is the
     // same so using it for now
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
@@ -288,6 +291,7 @@ void deleting_item_needed_for_recipe(Entity& entity) {
                 magic_enum::enum_value<EntityType>(type_index);
             has_req_machines &= _hasAtLeastOneNotInTrash(et);
         });
+        */
 
     // can we make all the recipies with the remaining ents
 
