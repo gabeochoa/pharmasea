@@ -6,6 +6,7 @@
 //
 #include "../dataclass/ingredient.h"
 #include "../dataclass/settings.h"
+#include "../dataclass/upgrades.h"
 #include "../recipe_library.h"
 #include "base_component.h"
 
@@ -146,8 +147,9 @@ struct IsProgressionManager : public BaseComponent {
                                        is_first ? drinkOption1 : drinkOption2));
             case UpgradeType::Upgrade:
                 // TODO
-                return fmt::format("{}",
-                                   is_first ? upgradeOption1 : upgradeOption2);
+                return fmt::format(
+                    "{}", magic_enum::enum_name<UpgradeClass>(
+                              is_first ? upgradeOption1 : upgradeOption2));
         }
     }
 
@@ -161,8 +163,9 @@ struct IsProgressionManager : public BaseComponent {
                                        is_first ? drinkOption1 : drinkOption2));
             case UpgradeType::Upgrade:
                 // TODO
-                return fmt::format("{}",
-                                   is_first ? upgradeOption1 : upgradeOption2);
+                return fmt::format(
+                    "{}", magic_enum::enum_name<UpgradeClass>(
+                              is_first ? upgradeOption1 : upgradeOption2));
         }
     }
 
@@ -178,8 +181,8 @@ struct IsProgressionManager : public BaseComponent {
     Drink drinkOption1 = coke;
     Drink drinkOption2 = coke;
 
-    std::string upgradeOption1;
-    std::string upgradeOption2;
+    UpgradeClass upgradeOption1;
+    UpgradeClass upgradeOption2;
 
     Drink lastUnlockedDrink = coke;
 
@@ -199,8 +202,8 @@ struct IsProgressionManager : public BaseComponent {
         s.value4b(drinkOption1);
         s.value4b(drinkOption2);
 
-        s.text1b(upgradeOption1, 64);
-        s.text1b(upgradeOption2, 64);
+        s.value4b(upgradeOption1);
+        s.value4b(upgradeOption2);
 
         s.value4b(upgrade_index);
         s.value1b(collectedOptions);

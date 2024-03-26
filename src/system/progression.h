@@ -103,22 +103,22 @@ inline bool collect_upgrade_options(Entity& entity) {
     IsProgressionManager& ipm = entity.get<IsProgressionManager>();
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
-    std::vector<Upgrade> possible_upgrades;
+    std::vector<std::shared_ptr<UpgradeImpl>> possible_upgrades;
 
-    log_info("num upgrades without filters : {}", UpgradeLibrary::get().size());
+    log_info("num upgrades without filters : {}",
+             magic_enum::enum_count<UpgradeClass>());
 
-    /* TODO
-    for (const auto& kv : UpgradeLibrary::get()) {
-        const Upgrade& upgrade = kv.second;
+    magic_enum::enum_for_each<UpgradeClass>([&](auto val) {
+        constexpr UpgradeClass upgrade = val;
 
-        if (irsm.has_upgrade_unlocked(upgrade.name)) continue;
+        // TODO check if already unlocked?
 
-        bool meets_preq = irsm.meets_prereqs_for_upgrade(upgrade.name);
-        if (!meets_preq) continue;
-
-        possible_upgrades.push_back(upgrade);
-    }
-    */
+        auto impl = make_upgrade(upgrade);
+        bool meets = impl->meetsPrereqs(irsm.config);
+        if (meets) {
+            possible_upgrades.push_back(impl);
+        }
+    });
 
     log_info("num upgrades with filters : {}", possible_upgrades.size());
 
@@ -135,11 +135,11 @@ inline bool collect_upgrade_options(Entity& entity) {
         return false;
     }
 
-    ipm.upgradeOption1 = possible_upgrades[0].name;
-    ipm.upgradeOption2 = possible_upgrades[1].name;
+    ipm.upgradeOption1 = possible_upgrades[0]->type;
+    ipm.upgradeOption2 = possible_upgrades[1]->type;
 
-    log_info(" The two options we got are {} and {}", ipm.upgradeOption1,
-             ipm.upgradeOption2);
+    log_info(" The two options we got are {} and {}",
+             possible_upgrades[0]->name, possible_upgrades[1]->name);
     return true;
 }
 

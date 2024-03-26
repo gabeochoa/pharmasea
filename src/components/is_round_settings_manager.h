@@ -5,7 +5,6 @@
 
 #include "../dataclass/configdata.h"
 #include "../dataclass/upgrades.h"
-#include "../upgrade_library.h"
 #include "../vec_util.h"
 #include "base_component.h"
 

@@ -12,10 +12,13 @@
 #include "magic_enum/magic_enum.hpp"
 #include "map_generation.h"
 #include "recipe_library.h"
-#include "upgrade_library.h"
 
 // dataclass/settings.h
-std::vector<UpgradeType> upgrade_rounds;
+std::vector<UpgradeType> upgrade_rounds = {{
+    UpgradeType::Upgrade,
+    UpgradeType::Upgrade,
+    UpgradeType::Drink,
+}};
 
 float DEADZONE = 0.25f;
 int LOG_LEVEL = 2;
