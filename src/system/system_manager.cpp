@@ -1677,15 +1677,58 @@ inline void in_round_update(Entity& entity, float dt) {
         //  should we instead run X times at least for acitvities?
     }
 
-    irsm.ran_for_hour = hour;
+    const auto& collect_mods = [&]() {
+        Mods mods;
+        for (const auto& upgrade : irsm.selected_upgrades) {
+            if (!upgrade->onHourMods) continue;
+            auto new_mods = upgrade->onHourMods(irsm.config, ipm, hour);
+            mods.insert(mods.end(), new_mods.begin(), new_mods.end());
+        }
+        irsm.config.this_hours_mods = mods;
+    };
+    collect_mods();
 
-    Mods mods;
+    // Run actions...
+    // we need to run for every hour we missed
+
+    const auto spawn_customer_action = []() {
+        auto spawner =
+            EntityQuery().whereType(EntityType::CustomerSpawner).gen_first();
+        if (!spawner) {
+            log_warn("Could not find customer spawner?");
+            return;
+        }
+        auto& new_ent = EntityHelper::createEntity();
+        make_customer(new_ent,
+                      SpawnInfo{.location = spawner->get<Transform>().as2(),
+                                .is_first_this_round = false},
+                      true);
+        return;
+    };
+
     for (const auto& upgrade : irsm.selected_upgrades) {
-        if (!upgrade->onHour) continue;
-        auto new_mods = upgrade->onHour(irsm.config, ipm, hour);
-        mods.insert(mods.end(), new_mods.begin(), new_mods.end());
+        if (!upgrade->onHourActions) continue;
+
+        // We start at 1 since its normal to have 1 hour missed ^^ see above
+        int i = 1;
+        while (i < hours_missed) {
+            log_info("running actions for {} for hour {} (currently {})",
+                     upgrade->name, irsm.ran_for_hour + i, hour);
+            i++;
+
+            auto actions =
+                upgrade->onHourActions(irsm.config, ipm, irsm.ran_for_hour + i);
+            for (auto action : actions) {
+                switch (action) {
+                    case SpawnCustomer:
+                        spawn_customer_action();
+                        break;
+                }
+            }
+        }
     }
-    irsm.config.this_hours_mods = mods;
+
+    irsm.ran_for_hour = hour;
 }
 
 inline void on_round_finished(Entity& entity, float) {

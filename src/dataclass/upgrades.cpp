@@ -164,13 +164,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     "(more people at the beginning of the day but cheaper "
                     "drinks)",
                 .onUnlock = [](ConfigData&, IsProgressionManager&) {},
-                .onHour = [](const ConfigData&, const IsProgressionManager&,
-                             int hour) -> Mods {
+                .onHourMods = [](const ConfigData&, const IsProgressionManager&,
+                                 int hour) -> Mods {
                     Mods mods;
                     // no modification during those hours
                     if (hour > 15 || hour < 10) return mods;
-
-                    // TODO spawn a customer every time this is called
 
                     mods.push_back(UpgradeModification{
                         .name = ConfigKey::DrinkCostMultiplier,
@@ -178,6 +176,14 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                         .value = 0.75f,
                     });
                     return mods;
+                },
+                .onHourActions = [](const ConfigData&,
+                                    const IsProgressionManager&,
+                                    int hour) -> Actions {
+                    Actions actions;
+                    if (hour > 15 || hour < 10) return actions;
+                    actions.push_back(UpgradeAction::SpawnCustomer);
+                    return actions;
                 },
                 .meetsPrereqs = [](const ConfigData&,
                                    const IsProgressionManager&) -> bool {

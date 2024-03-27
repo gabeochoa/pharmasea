@@ -192,3 +192,8 @@ struct UpgradeModification {
 };
 
 using Mods = std::vector<UpgradeModification>;
+
+enum UpgradeAction {
+    SpawnCustomer,
+};
+using Actions = std::vector<UpgradeAction>;
