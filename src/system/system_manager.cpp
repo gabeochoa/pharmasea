@@ -1661,13 +1661,22 @@ inline void in_round_update(Entity& entity, float dt) {
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
 
-    //  TODO when you ffwd in debug mode it skips some of the hours
-    //  should we instead run X times at least for acitvities?
     HasTimer& hasTimer = entity.get<HasTimer>();
     int hour = 100 - static_cast<int>(hasTimer.pct() * 100.f);
 
     // Make sure we only run this once an hour
     if (hour <= irsm.ran_for_hour) return;
+
+    int hours_missed = (hour - irsm.ran_for_hour);
+    if (hours_missed > 1) {
+        // 1 means normal, so >1 means we actually missed one
+        // this currently only happens in debug mode so lets just log it
+        log_warn("missed {} hours", hours_missed);
+
+        //  TODO when you ffwd in debug mode it skips some of the hours
+        //  should we instead run X times at least for acitvities?
+    }
+
     irsm.ran_for_hour = hour;
 
     Mods mods;
