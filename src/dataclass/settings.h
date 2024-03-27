@@ -184,3 +184,11 @@ inline std::string_view key_name(ConfigKey key) {
 inline std::string_view op_name(Operation key) {
     return magic_enum::enum_name<Operation>(key);
 }
+
+struct UpgradeModification {
+    ConfigKey name;
+    Operation operation;
+    ConfigValueType value;
+};
+
+using Mods = std::vector<UpgradeModification>;

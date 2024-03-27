@@ -153,6 +153,37 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     return !ipm.is_drink_unlocked(champagne);
                 }};
             break;
+
+        case UpgradeClass::HappyHour:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "Happy Hour",
+                .icon_name = "happy_hour",
+                .flavor_text = "all the buzz at half the price",
+                .description =
+                    "(more people at the beginning of the day but cheaper "
+                    "drinks)",
+                .onUnlock = [](ConfigData&, IsProgressionManager&) {},
+                .onHour = [](ConfigData&, IsProgressionManager&,
+                             int hour) -> Mods {
+                    Mods mods;
+                    // no modification during those hours
+                    if (hour > 15 || hour < 10) return mods;
+
+                    // TODO spawn a customer every time this is called
+
+                    mods.push_back(UpgradeModification{
+                        .name = ConfigKey::DrinkCostMultiplier,
+                        .operation = Operation::Multiplier,
+                        .value = 0.75f,
+                    });
+                    return mods;
+                },
+                .meetsPrereqs = [](const ConfigData&,
+                                   const IsProgressionManager&) -> bool {
+                    return true;
+                }};
+            break;
     }
 
     if (ptr == nullptr) {

@@ -11,6 +11,8 @@ struct ConfigData {
     std::vector<EntityType> forever_required;
     std::vector<EntityType> store_to_spawn;
 
+    Mods this_hours_mods;
+
     UpgradeClassBitSet unlocked_upgrades = UpgradeClassBitSet().reset();
 
    private:
@@ -51,8 +53,16 @@ struct ConfigData {
         T real_value = raw_get<T>(key);
         T new_value = real_value;
 
-        auto vt = data.at(key);
-        return std::get<T>(vt);
+        // Modify the value based on the mods
+        for (auto& mod : this_hours_mods) {
+            if (mod.name != key) continue;
+
+            new_value = modify<T>(key, new_value, mod.operation,
+                                  std::get<T>(mod.value));
+        }
+
+        // return new value
+        return new_value;
     }
 
     template<typename T>

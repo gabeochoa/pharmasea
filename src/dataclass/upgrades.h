@@ -15,9 +15,11 @@ struct UpgradeImpl {
     std::string icon_name;
     std::string flavor_text;
     std::string description;
-    std::function<void(ConfigData&, IsProgressionManager&)> onUnlock;
+    std::function<Mods(ConfigData&, IsProgressionManager&, int)> onHour =
+        nullptr;
+    std::function<void(ConfigData&, IsProgressionManager&)> onUnlock = nullptr;
     std::function<bool(const ConfigData&, const IsProgressionManager&)>
-        meetsPrereqs;
+        meetsPrereqs = nullptr;
 };
 
 std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc);
