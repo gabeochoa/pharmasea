@@ -40,7 +40,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     "the "
                     "bathroom)",
                 .onUnlock =
-                    [](ConfigData& config, IsProgressionManager&) {
+                    [](ConfigData& config, IsProgressionManager& ipm) {
                         config.permanently_modify<int>(ConfigKey::MaxNumOrders,
                                                        Operation::Multiplier,
                                                        2.f);
@@ -48,10 +48,12 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                         config.permanent_set<bool>(ConfigKey::UnlockedToilet,
                                                    true);
 
-                        // TODO ipm unlocked entity types?
-                        // TODO add supoprt for OnUpgrade (see entity_type.h)
-                        config.store_to_spawn.push_back(EntityType::Toilet);
-                        config.forever_required.push_back(EntityType::Toilet);
+                        {
+                            ipm.unlock_entity(EntityType::Toilet);
+                            config.store_to_spawn.push_back(EntityType::Toilet);
+                            config.forever_required.push_back(
+                                EntityType::Toilet);
+                        }
                     },
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
@@ -143,10 +145,14 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     [](ConfigData& config, IsProgressionManager& ipm) {
                         ipm.unlock_drink(champagne);
 
-                        config.store_to_spawn.push_back(
-                            EntityType::ChampagneHolder);
-                        config.forever_required.push_back(
-                            EntityType::ChampagneHolder);
+                        // TODO should these be one function call somehow?
+                        {
+                            ipm.unlock_entity(EntityType::ChampagneHolder);
+                            config.store_to_spawn.push_back(
+                                EntityType::ChampagneHolder);
+                            config.forever_required.push_back(
+                                EntityType::ChampagneHolder);
+                        }
                     },
                 .meetsPrereqs = [](const ConfigData&,
                                    const IsProgressionManager& ipm) -> bool {
@@ -203,13 +209,15 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     "drink)",
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager& ipm) {
-                        ipm.unlock_drink(champagne);
-
+                        ipm.unlock_entity(EntityType::PitcherCupboard);
                         config.store_to_spawn.push_back(
                             EntityType::PitcherCupboard);
+                        // We explicitly dont mark it required, until
+                        // the next upgrade "me and the boys"
+                        // where it actually is required
                     },
                 .meetsPrereqs = [](const ConfigData&,
-                                   const IsProgressionManager& ipm) -> bool {
+                                   const IsProgressionManager&) -> bool {
                     return true;
                 }};
             break;
