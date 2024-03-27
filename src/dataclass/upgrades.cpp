@@ -190,6 +190,29 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     return true;
                 }};
             break;
+
+        case UpgradeClass::Pitcher:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "Pitcher",
+                // TODO
+                .icon_name = "upgrade_default",
+                .flavor_text = "its actually a carafe.",
+                .description =
+                    "(Unlocks a pitcher which can store up to 10 of the same "
+                    "drink)",
+                .onUnlock =
+                    [](ConfigData& config, IsProgressionManager& ipm) {
+                        ipm.unlock_drink(champagne);
+
+                        config.store_to_spawn.push_back(
+                            EntityType::PitcherCupboard);
+                    },
+                .meetsPrereqs = [](const ConfigData&,
+                                   const IsProgressionManager& ipm) -> bool {
+                    return true;
+                }};
+            break;
     }
 
     if (ptr == nullptr) {
