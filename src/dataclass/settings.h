@@ -33,7 +33,6 @@ enum struct ConfigKey {
     PissTimer,
     BladderSize,
     //
-    HasCityMultiplier,
     DrinkCostMultiplier,
     //
     VomitFreqMultiplier,
@@ -44,10 +43,6 @@ enum struct ConfigKey {
     // Entity,
     // Drink,
     // CustomerSpawn,
-
-    // TODO need some way to track already upgraded
-    UnlockedToilet,
-    UnlockedLongerDay,
 };
 
 struct ConfigValue {
@@ -73,10 +68,6 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::BladderSize:
         case ConfigKey::DayCount:
             return ConfigKeyType::Int;
-        case ConfigKey::UnlockedToilet:
-        case ConfigKey::HasCityMultiplier:
-        case ConfigKey::UnlockedLongerDay:
-            return ConfigKeyType::Bool;
     }
     return ConfigKeyType::Float;
 }

@@ -5,6 +5,12 @@
 #include "ingredient.h"
 #include "settings.h"
 
+[[nodiscard]] bool has_city_upgrade(const ConfigData& config) {
+    return bitset_utils::test(config.unlocked_upgrades,
+                              UpgradeClass::SmallTown) ||
+           bitset_utils::test(config.unlocked_upgrades, UpgradeClass::BigCity);
+}
+
 std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
     UpgradeImpl* ptr = nullptr;
 
@@ -20,13 +26,10 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(
                             ConfigKey::RoundLength, Operation::Multiplier, 2.f);
-                        bitset_utils::set(config.unlocked_upgrades,
-                                          UpgradeClass::LongerDay);
                     },
-                .meetsPrereqs = [](const ConfigData& config,
+                .meetsPrereqs = [](const ConfigData&,
                                    const IsProgressionManager&) -> bool {
-                    return bitset_utils::test(config.unlocked_upgrades,
-                                              UpgradeClass::LongerDay);
+                    return true;
                 }};
             break;
         case UpgradeClass::UnlockToilet:
@@ -45,9 +48,6 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                                                        Operation::Multiplier,
                                                        2.f);
 
-                        config.permanent_set<bool>(ConfigKey::UnlockedToilet,
-                                                   true);
-
                         {
                             ipm.unlock_entity(EntityType::Toilet);
                             config.store_to_spawn.push_back(EntityType::Toilet);
@@ -55,9 +55,9 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                                 EntityType::Toilet);
                         }
                     },
-                .meetsPrereqs = [](const ConfigData& config,
+                .meetsPrereqs = [](const ConfigData&,
                                    const IsProgressionManager&) -> bool {
-                    return config.get<bool>(ConfigKey::UnlockedToilet) == false;
+                    return true;
                 }};
             break;
         case UpgradeClass::BigBladders:
@@ -79,7 +79,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     },
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
-                    return config.get<bool>(ConfigKey::UnlockedToilet) == true;
+                    return bitset_utils::test(config.unlocked_upgrades,
+                                              UpgradeClass::UnlockToilet);
                 }};
             break;
         case UpgradeClass::BigCity:
@@ -98,13 +99,10 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                         config.permanently_modify<float>(
                             ConfigKey::DrinkCostMultiplier,
                             Operation::Multiplier, 2.0f);
-                        config.permanent_set<bool>(ConfigKey::HasCityMultiplier,
-                                                   true);
                     },
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
-                    return config.get<bool>(ConfigKey::HasCityMultiplier) ==
-                           false;
+                    return !has_city_upgrade(config);
                 }};
             break;
         case UpgradeClass::SmallTown:
@@ -123,13 +121,10 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                         config.permanently_modify<float>(
                             ConfigKey::DrinkCostMultiplier,
                             Operation::Multiplier, 0.5f);
-                        config.permanent_set<bool>(ConfigKey::HasCityMultiplier,
-                                                   true);
                     },
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
-                    return config.get<bool>(ConfigKey::HasCityMultiplier) ==
-                           false;
+                    return !has_city_upgrade(config);
                 }};
             break;
         case UpgradeClass::Champagne:

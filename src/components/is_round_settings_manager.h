@@ -31,9 +31,6 @@ struct IsRoundSettingsManager : public BaseComponent {
             config.permanent_set<float>(ConfigKey::PissTimer, 2.5f);
             config.permanent_set<float>(ConfigKey::VomitFreqMultiplier, 1.0f);
             config.permanent_set<float>(ConfigKey::VomitAmountMultiplier, 1.0f);
-
-            config.permanent_set<bool>(ConfigKey::UnlockedToilet, false);
-            config.permanent_set<bool>(ConfigKey::HasCityMultiplier, false);
         }
     }
 
@@ -68,6 +65,10 @@ struct IsRoundSettingsManager : public BaseComponent {
                       key_name(key));
         }
         return config.get<T>(key);
+    }
+
+    [[nodiscard]] bool has_upgrade_unlocked(const UpgradeClass& uc) const {
+        return config.has_upgrade_unlocked(uc);
     }
 
    private:

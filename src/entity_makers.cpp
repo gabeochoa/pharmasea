@@ -22,6 +22,7 @@
 #include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
 #include "dataclass/ingredient.h"
+#include "dataclass/upgrade_class.h"
 #include "engine/bitset_utils.h"
 #include "engine/sound_library.h"
 #include "engine/ui/color.h"
@@ -1262,7 +1263,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         }
     }
 
-    bool bathroom_unlocked = irsm.get<bool>(ConfigKey::UnlockedToilet);
+    bool bathroom_unlocked =
+        irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet);
     if (bathroom_unlocked) {
         customer.addComponent<AIUseBathroom>();
     }

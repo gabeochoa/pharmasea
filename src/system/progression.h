@@ -109,11 +109,14 @@ inline bool collect_upgrade_options(Entity& entity) {
     log_info("num upgrades without filters : {}",
              magic_enum::enum_count<UpgradeClass>());
 
-    /*
     magic_enum::enum_for_each<UpgradeClass>([&](auto val) {
         constexpr UpgradeClass upgrade = val;
 
-        // TODO check if already unlocked?
+        if (bitset_utils::test(irsm.config.unlocked_upgrades, upgrade)) {
+            // By default we just assume you can only have each upgrade once...
+            // TODO do we need to support multiple?
+            return;
+        }
 
         auto impl = make_upgrade(upgrade);
         bool meets = impl->meetsPrereqs(irsm.config, ipm);
@@ -121,10 +124,6 @@ inline bool collect_upgrade_options(Entity& entity) {
             possible_upgrades.push_back(impl);
         }
     });
-    */
-    // TODO for now just force the ones we want to test
-    possible_upgrades.push_back(make_upgrade(UpgradeClass::Pitcher));
-    possible_upgrades.push_back(make_upgrade(UpgradeClass::LongerDay));
 
     log_info("num upgrades with filters : {}", possible_upgrades.size());
 
@@ -225,15 +224,12 @@ inline void update_upgrade_variables() {
             case ConfigKey::PatienceMultiplier:
             case ConfigKey::CustomerSpawnMultiplier:
             case ConfigKey::NumStoreSpawns:
-            case ConfigKey::UnlockedToilet:
             case ConfigKey::PissTimer:
             case ConfigKey::BladderSize:
-            case ConfigKey::HasCityMultiplier:
             case ConfigKey::DrinkCostMultiplier:
             case ConfigKey::VomitFreqMultiplier:
             case ConfigKey::VomitAmountMultiplier:
             case ConfigKey::DayCount:
-            case ConfigKey::UnlockedLongerDay:
                 break;
         }
     });

@@ -4,6 +4,7 @@
 #include <string>
 #include <variant>
 
+#include "../engine/bitset_utils.h"
 #include "settings.h"
 #include "upgrade_class.h"
 
@@ -93,5 +94,9 @@ struct ConfigData {
         T input = raw_get<T>(key);
         T new_value = modify<T>(key, input, op, value);
         permanent_set<T>(key, new_value);
+    }
+
+    [[nodiscard]] bool has_upgrade_unlocked(const UpgradeClass& uc) const {
+        return bitset_utils::test(unlocked_upgrades, uc);
     }
 };
