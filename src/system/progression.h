@@ -109,6 +109,7 @@ inline bool collect_upgrade_options(Entity& entity) {
     log_info("num upgrades without filters : {}",
              magic_enum::enum_count<UpgradeClass>());
 
+    /*
     magic_enum::enum_for_each<UpgradeClass>([&](auto val) {
         constexpr UpgradeClass upgrade = val;
 
@@ -120,6 +121,10 @@ inline bool collect_upgrade_options(Entity& entity) {
             possible_upgrades.push_back(impl);
         }
     });
+    */
+    // TODO for now just force the ones we want to test
+    possible_upgrades.push_back(make_upgrade(UpgradeClass::Champagne));
+    possible_upgrades.push_back(make_upgrade(UpgradeClass::LongerDay));
 
     log_info("num upgrades with filters : {}", possible_upgrades.size());
 

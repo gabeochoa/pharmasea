@@ -18,11 +18,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                 .description = "(Makes the day twice as long)",
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
-                        {
-                            float val =
-                                config.get<float>(ConfigKey::RoundLength);
-                            config.set<float>(ConfigKey::RoundLength, val * 2);
-                        }
+                        config.permanently_modify<float>(
+                            ConfigKey::RoundLength, Operation::Multiplier, 2.f);
                         bitset_utils::set(config.unlocked_upgrades,
                                           UpgradeClass::LongerDay);
                     },
@@ -44,11 +41,12 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     "bathroom)",
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
-                        {
-                            int val = config.get<int>(ConfigKey::MaxNumOrders);
-                            config.set<int>(ConfigKey::MaxNumOrders, val * 2);
-                        }
-                        config.set<bool>(ConfigKey::UnlockedToilet, true);
+                        config.permanently_modify<int>(ConfigKey::MaxNumOrders,
+                                                       Operation::Multiplier,
+                                                       2.f);
+
+                        config.permanent_set<bool>(ConfigKey::UnlockedToilet,
+                                                   true);
 
                         // TODO ipm unlocked entity types?
                         // TODO add supoprt for OnUpgrade (see entity_type.h)
@@ -72,14 +70,10 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     "longer)",
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
-                        {
-                            int val = config.get<int>(ConfigKey::PissTimer);
-                            config.set<int>(ConfigKey::PissTimer, val * 2);
-                        }
-                        {
-                            int val = config.get<int>(ConfigKey::BladderSize);
-                            config.set<int>(ConfigKey::BladderSize, val * 2);
-                        }
+                        config.permanently_modify<int>(
+                            ConfigKey::PissTimer, Operation::Multiplier, 2);
+                        config.permanently_modify<int>(
+                            ConfigKey::BladderSize, Operation::Multiplier, 2);
                     },
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
@@ -96,19 +90,14 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                 .description = "(Customers pay double but have less patience)",
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
-                        {
-                            float val = config.get<float>(
-                                ConfigKey::PatienceMultiplier);
-                            config.set<float>(ConfigKey::PatienceMultiplier,
-                                              val * 0.5f);
-                        }
-                        {
-                            float val = config.get<float>(
-                                ConfigKey::DrinkCostMultiplier);
-                            config.set<float>(ConfigKey::DrinkCostMultiplier,
-                                              val * 2.0f);
-                        }
-                        config.set<bool>(ConfigKey::HasCityMultiplier, true);
+                        config.permanently_modify<float>(
+                            ConfigKey::PatienceMultiplier,
+                            Operation::Multiplier, 0.5f);
+                        config.permanently_modify<float>(
+                            ConfigKey::DrinkCostMultiplier,
+                            Operation::Multiplier, 2.0f);
+                        config.permanent_set<bool>(ConfigKey::HasCityMultiplier,
+                                                   true);
                     },
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
@@ -126,19 +115,14 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                 .description = "(Customers pay half but have double patience)",
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
-                        {
-                            float val = config.get<float>(
-                                ConfigKey::PatienceMultiplier);
-                            config.set<float>(ConfigKey::PatienceMultiplier,
-                                              val * 2.0f);
-                        }
-                        {
-                            float val = config.get<float>(
-                                ConfigKey::DrinkCostMultiplier);
-                            config.set<float>(ConfigKey::DrinkCostMultiplier,
-                                              val * 0.5f);
-                        }
-                        config.set<bool>(ConfigKey::HasCityMultiplier, true);
+                        config.permanently_modify<float>(
+                            ConfigKey::PatienceMultiplier,
+                            Operation::Multiplier, 2.0f);
+                        config.permanently_modify<float>(
+                            ConfigKey::DrinkCostMultiplier,
+                            Operation::Multiplier, 0.5f);
+                        config.permanent_set<bool>(ConfigKey::HasCityMultiplier,
+                                                   true);
                     },
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {

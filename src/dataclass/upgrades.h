@@ -6,6 +6,7 @@
 
 #include "../components/is_progression_manager.h"
 #include "configdata.h"
+#include "settings.h"
 #include "upgrade_class.h"
 
 struct UpgradeImpl {

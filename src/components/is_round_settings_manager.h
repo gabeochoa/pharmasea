@@ -16,22 +16,23 @@ struct IsRoundSettingsManager : public BaseComponent {
     IsRoundSettingsManager() {
         // init config
         {
-            config.set<int>(ConfigKey::DayCount, 1);
+            config.permanent_set<int>(ConfigKey::DayCount, 1);
 
-            config.set<int>(ConfigKey::MaxNumOrders, 1);
-            config.set<int>(ConfigKey::NumStoreSpawns, 5);
-            config.set<int>(ConfigKey::BladderSize, 1);
+            config.permanent_set<int>(ConfigKey::MaxNumOrders, 1);
+            config.permanent_set<int>(ConfigKey::NumStoreSpawns, 5);
+            config.permanent_set<int>(ConfigKey::BladderSize, 1);
 
-            config.set<float>(ConfigKey::RoundLength, 100.f);
-            config.set<float>(ConfigKey::PatienceMultiplier, 1.f);
-            config.set<float>(ConfigKey::CustomerSpawnMultiplier, 1.f);
-            config.set<float>(ConfigKey::DrinkCostMultiplier, 1.f);
-            config.set<float>(ConfigKey::PissTimer, 2.5f);
-            config.set<float>(ConfigKey::VomitFreqMultiplier, 1.0f);
-            config.set<float>(ConfigKey::VomitAmountMultiplier, 1.0f);
+            config.permanent_set<float>(ConfigKey::RoundLength, 100.f);
+            config.permanent_set<float>(ConfigKey::PatienceMultiplier, 1.f);
+            config.permanent_set<float>(ConfigKey::CustomerSpawnMultiplier,
+                                        1.f);
+            config.permanent_set<float>(ConfigKey::DrinkCostMultiplier, 1.f);
+            config.permanent_set<float>(ConfigKey::PissTimer, 2.5f);
+            config.permanent_set<float>(ConfigKey::VomitFreqMultiplier, 1.0f);
+            config.permanent_set<float>(ConfigKey::VomitAmountMultiplier, 1.0f);
 
-            config.set<bool>(ConfigKey::UnlockedToilet, false);
-            config.set<bool>(ConfigKey::HasCityMultiplier, false);
+            config.permanent_set<bool>(ConfigKey::UnlockedToilet, false);
+            config.permanent_set<bool>(ConfigKey::HasCityMultiplier, false);
         }
     }
 
