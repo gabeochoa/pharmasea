@@ -15,8 +15,8 @@ struct UpgradeImpl {
     std::string icon_name;
     std::string flavor_text;
     std::string description;
-    std::function<Mods(ConfigData&, IsProgressionManager&, int)> onHour =
-        nullptr;
+    std::function<Mods(const ConfigData&, const IsProgressionManager&, int)>
+        onHour = nullptr;
     std::function<void(ConfigData&, IsProgressionManager&)> onUnlock = nullptr;
     std::function<bool(const ConfigData&, const IsProgressionManager&)>
         meetsPrereqs = nullptr;

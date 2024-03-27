@@ -12,6 +12,7 @@ struct IsRoundSettingsManager : public BaseComponent {
     ConfigData config;
 
     std::vector<std::shared_ptr<UpgradeImpl>> selected_upgrades;
+    int ran_for_hour = -1;
 
     IsRoundSettingsManager() {
         // init config

@@ -1652,6 +1652,43 @@ void move_purchased_furniture() {
 
 }  // namespace store
 
+namespace upgrade {
+inline void in_round_update(Entity& entity, float dt) {
+    if (entity.is_missing<IsRoundSettingsManager>()) return;
+    IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
+
+    // TODO can i just use entity here? irsm should be on the same ent as ipm?
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+
+    //  TODO when you ffwd in debug mode it skips some of the hours
+    //  should we instead run X times at least for acitvities?
+    HasTimer& hasTimer = entity.get<HasTimer>();
+    int hour = 100 - static_cast<int>(hasTimer.pct() * 100.f);
+
+    // Make sure we only run this once an hour
+    if (hour <= irsm.ran_for_hour) return;
+    irsm.ran_for_hour = hour;
+
+    Mods mods;
+    for (const auto& upgrade : irsm.selected_upgrades) {
+        if (!upgrade->onHour) continue;
+        auto new_mods = upgrade->onHour(irsm.config, ipm, hour);
+        mods.insert(mods.end(), new_mods.begin(), new_mods.end());
+    }
+    irsm.config.this_hours_mods = mods;
+}
+
+inline void on_round_finished(Entity& entity, float) {
+    if (entity.is_missing<IsRoundSettingsManager>()) return;
+    IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
+
+    irsm.ran_for_hour = -1;
+    irsm.config.this_hours_mods.clear();
+}
+
+}  // namespace upgrade
+
 }  // namespace system_manager
 
 void SystemManager::on_game_state_change(game::State new_state,
@@ -1746,8 +1783,7 @@ void SystemManager::process_state_change(
             // customers are already in line, but doesnt hurt to reset
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
-            // TODO
-            // system_manager::upgrade::on_round_finished(entity, dt);
+            system_manager::upgrade::on_round_finished(entity, dt);
         });
     };
 
@@ -1884,8 +1920,7 @@ void SystemManager::in_round_update(
         system_manager::pass_time_for_active_fishing_games(entity, dt);
         system_manager::pass_time_for_transaction_animation(entity, dt);
 
-        // TODO
-        // system_manager::upgrade::in_round_update(entity, dt);
+        system_manager::upgrade::in_round_update(entity, dt);
     });
 }
 

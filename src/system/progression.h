@@ -123,7 +123,7 @@ inline bool collect_upgrade_options(Entity& entity) {
     });
     */
     // TODO for now just force the ones we want to test
-    possible_upgrades.push_back(make_upgrade(UpgradeClass::Champagne));
+    possible_upgrades.push_back(make_upgrade(UpgradeClass::HappyHour));
     possible_upgrades.push_back(make_upgrade(UpgradeClass::LongerDay));
 
     log_info("num upgrades with filters : {}", possible_upgrades.size());

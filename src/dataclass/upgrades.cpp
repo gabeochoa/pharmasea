@@ -164,7 +164,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     "(more people at the beginning of the day but cheaper "
                     "drinks)",
                 .onUnlock = [](ConfigData&, IsProgressionManager&) {},
-                .onHour = [](ConfigData&, IsProgressionManager&,
+                .onHour = [](const ConfigData&, const IsProgressionManager&,
                              int hour) -> Mods {
                     Mods mods;
                     // no modification during those hours
