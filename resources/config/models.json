@@ -74,6 +74,15 @@
         },
         {
             "folder": "models/kennynl",
+            // TODO 
+            "filename": "sodaBottle.obj",
+            "library_name": "beer_pitcher",
+            "size_scale": 2.0,
+            "position_offset": [0,0,0],
+            "rotation_angle": 0.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "barrel.glb",
             "library_name": "draft_tap",
             "size_scale": 2.0,
@@ -341,8 +350,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kennynl",
-            "filename": "sodaGlass.obj",
+            "folder": "models/zmoo",
+            "filename": "normal.obj",
             "library_name": "rum_and_coke",
             "size_scale": 2.0,
             "position_offset": [0,0,0],

@@ -11,11 +11,11 @@
 using StdMap = bitsery::ext::StdMap;
 
 struct IsDrink : public BaseComponent {
-    IsDrink() : supports_multiple(false) {}
+    IsDrink() : _supports_multiple(false) {}
     virtual ~IsDrink() {}
 
     auto& turn_on_support_multiple(int max) {
-        supports_multiple = true;
+        _supports_multiple = true;
         max_count = max;
         return *this;
     }
@@ -23,7 +23,7 @@ struct IsDrink : public BaseComponent {
     [[nodiscard]] bool can_add(Ingredient i) const {
         int count = count_of_ingredient(i);
         if (count == 0) return true;
-        if (count >= 1 && supports_multiple && count <= max_count) return true;
+        if (count >= 1 && _supports_multiple && count <= max_count) return true;
         return false;
     }
 
@@ -95,6 +95,8 @@ struct IsDrink : public BaseComponent {
 
     void fold_tip_multiplier(float amt) { tip_multiplier *= amt; }
 
+    [[nodiscard]] bool supports_multiple() const { return _supports_multiple; }
+
    private:
     [[nodiscard]] int calc_completed() {
         // If theres no matching drink then nothing in here yet
@@ -126,7 +128,7 @@ struct IsDrink : public BaseComponent {
     int num_completed = 0;
     std::map<Ingredient, int> ingredients;
     IngredientBitSet unique_igs;
-    bool supports_multiple = false;
+    bool _supports_multiple = false;
 
     float tip_multiplier = 1.f;
 
@@ -135,7 +137,7 @@ struct IsDrink : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        s.value1b(supports_multiple);
+        s.value1b(_supports_multiple);
 
         s.value4b(num_completed);
 

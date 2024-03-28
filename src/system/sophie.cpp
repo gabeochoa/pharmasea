@@ -282,12 +282,9 @@ void deleting_item_needed_for_recipe(Entity& entity) {
     // TODO this one isnt "needed for recipies" but like 90% of the code is the
     // same so using it for now
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-    bitset_utils::for_each_enabled_bit(
-        irsm.required_entities(), [&](size_t type_index) {
-            const EntityType et =
-                magic_enum::enum_value<EntityType>(type_index);
-            has_req_machines &= _hasAtLeastOneNotInTrash(et);
-        });
+    for (const EntityType& et : irsm.config.forever_required) {
+        has_req_machines &= _hasAtLeastOneNotInTrash(et);
+    };
 
     // can we make all the recipies with the remaining ents
 

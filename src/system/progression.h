@@ -5,10 +5,10 @@
 #include "../components/has_timer.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
+#include "../dataclass/upgrades.h"
 #include "../entity_helper.h"
 #include "magic_enum/magic_enum.hpp"
 #include "system_manager.h"
-#include "upgrade_system.h"
 
 namespace system_manager {
 namespace progression {
@@ -104,20 +104,26 @@ inline bool collect_upgrade_options(Entity& entity) {
     IsProgressionManager& ipm = entity.get<IsProgressionManager>();
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
-    std::vector<Upgrade> possible_upgrades;
+    std::vector<std::shared_ptr<UpgradeImpl>> possible_upgrades;
 
-    log_info("num upgrades without filters : {}", UpgradeLibrary::get().size());
+    log_info("num upgrades without filters : {}",
+             magic_enum::enum_count<UpgradeClass>());
 
-    for (const auto& kv : UpgradeLibrary::get()) {
-        const Upgrade& upgrade = kv.second;
+    magic_enum::enum_for_each<UpgradeClass>([&](auto val) {
+        constexpr UpgradeClass upgrade = val;
 
-        if (irsm.has_upgrade_unlocked(upgrade.name)) continue;
+        if (bitset_utils::test(irsm.config.unlocked_upgrades, upgrade)) {
+            // By default we just assume you can only have each upgrade once...
+            // TODO do we need to support multiple?
+            return;
+        }
 
-        bool meets_preq = irsm.meets_prereqs_for_upgrade(upgrade.name);
-        if (!meets_preq) continue;
-
-        possible_upgrades.push_back(upgrade);
-    }
+        auto impl = make_upgrade(upgrade);
+        bool meets = impl->meetsPrereqs(irsm.config, ipm);
+        if (meets) {
+            possible_upgrades.push_back(impl);
+        }
+    });
 
     log_info("num upgrades with filters : {}", possible_upgrades.size());
 
@@ -134,11 +140,11 @@ inline bool collect_upgrade_options(Entity& entity) {
         return false;
     }
 
-    ipm.upgradeOption1 = possible_upgrades[0].name;
-    ipm.upgradeOption2 = possible_upgrades[1].name;
+    ipm.upgradeOption1 = possible_upgrades[0]->type;
+    ipm.upgradeOption2 = possible_upgrades[1]->type;
 
-    log_info(" The two options we got are {} and {}", ipm.upgradeOption1,
-             ipm.upgradeOption2);
+    log_info(" The two options we got are {} and {}",
+             possible_upgrades[0]->name, possible_upgrades[1]->name);
     return true;
 }
 
@@ -185,10 +191,11 @@ inline void update_upgrade_variables() {
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     // IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
 
+    // TODO ?
     // Apply activity outcomes,
-    upgrade::execute_activites(irsm, upgrade::UpgradeTimeOfDay::Unlock,
-                               irsm.activities);
-
+    // upgrade::execute_activites(irsm, upgrade::UpgradeTimeOfDay::Unlock,
+    // irsm.activities);
+    //
     magic_enum::enum_for_each<ConfigKey>([&](auto val) {
         constexpr ConfigKey key = val;
 
@@ -199,6 +206,7 @@ inline void update_upgrade_variables() {
                     irsm.get<float>(ConfigKey::RoundLength));
 
             } break;
+            /*
             case ConfigKey::Drink: {
                 // bitset_utils::for_each_enabled_bit(
                 // irsm.unlocked_drinks, [&](size_t index) {
@@ -207,21 +215,21 @@ inline void update_upgrade_variables() {
                 // });
                 // irsm.unlocked_drinks.reset();
             } break;
+            case ConfigKey::Entity:
+            case ConfigKey::CustomerSpawn:
+            break;
+            */
             case ConfigKey::Test:
             case ConfigKey::MaxNumOrders:
             case ConfigKey::PatienceMultiplier:
             case ConfigKey::CustomerSpawnMultiplier:
             case ConfigKey::NumStoreSpawns:
-            case ConfigKey::UnlockedToilet:
             case ConfigKey::PissTimer:
             case ConfigKey::BladderSize:
-            case ConfigKey::HasCityMultiplier:
             case ConfigKey::DrinkCostMultiplier:
             case ConfigKey::VomitFreqMultiplier:
             case ConfigKey::VomitAmountMultiplier:
             case ConfigKey::DayCount:
-            case ConfigKey::Entity:
-            case ConfigKey::CustomerSpawn:
                 break;
         }
     });

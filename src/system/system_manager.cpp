@@ -46,6 +46,7 @@
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
+#include "../dataclass/upgrades.h"
 #include "../engine/util.h"
 #include "sophie.h"
 ///
@@ -62,7 +63,6 @@
 #include "progression.h"
 #include "rendering_system.h"
 #include "ui_rendering_system.h"
-#include "upgrade_system.h"
 
 extern ui::UITheme UI_THEME;
 
@@ -878,10 +878,15 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 case UpgradeType::None: {
                 } break;
                 case UpgradeType::Upgrade: {
-                    const std::string& option =
+                    const UpgradeClass& option =
                         (option_chosen == 0 ? ipm.upgradeOption1
                                             : ipm.upgradeOption2);
-                    irsm.unlock_upgrade(option);
+                    auto optionImpl = make_upgrade(option);
+                    optionImpl->onUnlock(irsm.config, ipm);
+
+                    // TODO why does this not show up in the pause menu?
+                    irsm.selected_upgrades.push_back(optionImpl);
+                    bitset_utils::set(irsm.config.unlocked_upgrades, option);
 
                     // They will be spawned in upgrade_system at Unlock time
 
@@ -1543,7 +1548,7 @@ void generate_store_options() {
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsProgressionManager& ipp = sophie.get<IsProgressionManager>();
     const EntityTypeSet& unlocked = ipp.enabled_entity_types();
-    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+    IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
     int num_to_spawn = irsm.get<int>(ConfigKey::NumStoreSpawns);
 
@@ -1569,6 +1574,28 @@ void generate_store_options() {
             entity.cleanup = true;
         }
     }
+
+    // Add any that came from upgrades
+
+    // Note we spawn free items in the purchase area so its more obvious
+    // that they are free
+    OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
+        IsFloorMarker::Type::Store_PurchaseArea);
+
+    for (EntityType et : irsm.config.store_to_spawn) {
+        auto& entity = EntityHelper::createEntity();
+        entity.addComponent<IsStoreSpawned>();
+        entity.addComponent<IsFreeInStore>();
+
+        bool success =
+            convert_to_type(et, entity, purchase_area->get<Transform>().as2());
+
+        if (!success) {
+            entity.cleanup = true;
+            log_error("Store spawn of newly unlocked item failed to generate");
+        }
+    }
+    irsm.config.store_to_spawn.clear();
 }
 
 void move_purchased_furniture() {
@@ -1625,6 +1652,95 @@ void move_purchased_furniture() {
 }
 
 }  // namespace store
+
+namespace upgrade {
+inline void in_round_update(Entity& entity, float dt) {
+    if (entity.is_missing<IsRoundSettingsManager>()) return;
+    IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
+
+    // TODO can i just use entity here? irsm should be on the same ent as ipm?
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+
+    HasTimer& hasTimer = entity.get<HasTimer>();
+    int hour = 100 - static_cast<int>(hasTimer.pct() * 100.f);
+
+    // Make sure we only run this once an hour
+    if (hour <= irsm.ran_for_hour) return;
+
+    int hours_missed = (hour - irsm.ran_for_hour);
+    if (hours_missed > 1) {
+        // 1 means normal, so >1 means we actually missed one
+        // this currently only happens in debug mode so lets just log it
+        log_warn("missed {} hours", hours_missed);
+
+        //  TODO when you ffwd in debug mode it skips some of the hours
+        //  should we instead run X times at least for acitvities?
+    }
+
+    const auto& collect_mods = [&]() {
+        Mods mods;
+        for (const auto& upgrade : irsm.selected_upgrades) {
+            if (!upgrade->onHourMods) continue;
+            auto new_mods = upgrade->onHourMods(irsm.config, ipm, hour);
+            mods.insert(mods.end(), new_mods.begin(), new_mods.end());
+        }
+        irsm.config.this_hours_mods = mods;
+    };
+    collect_mods();
+
+    // Run actions...
+    // we need to run for every hour we missed
+
+    const auto spawn_customer_action = []() {
+        auto spawner =
+            EntityQuery().whereType(EntityType::CustomerSpawner).gen_first();
+        if (!spawner) {
+            log_warn("Could not find customer spawner?");
+            return;
+        }
+        auto& new_ent = EntityHelper::createEntity();
+        make_customer(new_ent,
+                      SpawnInfo{.location = spawner->get<Transform>().as2(),
+                                .is_first_this_round = false},
+                      true);
+        return;
+    };
+
+    for (const auto& upgrade : irsm.selected_upgrades) {
+        if (!upgrade->onHourActions) continue;
+
+        // We start at 1 since its normal to have 1 hour missed ^^ see above
+        int i = 1;
+        while (i < hours_missed) {
+            log_info("running actions for {} for hour {} (currently {})",
+                     upgrade->name, irsm.ran_for_hour + i, hour);
+            i++;
+
+            auto actions =
+                upgrade->onHourActions(irsm.config, ipm, irsm.ran_for_hour + i);
+            for (auto action : actions) {
+                switch (action) {
+                    case SpawnCustomer:
+                        spawn_customer_action();
+                        break;
+                }
+            }
+        }
+    }
+
+    irsm.ran_for_hour = hour;
+}
+
+inline void on_round_finished(Entity& entity, float) {
+    if (entity.is_missing<IsRoundSettingsManager>()) return;
+    IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
+
+    irsm.ran_for_hour = -1;
+    irsm.config.this_hours_mods.clear();
+}
+
+}  // namespace upgrade
 
 }  // namespace system_manager
 
@@ -1731,7 +1847,8 @@ void SystemManager::process_state_change(
             system_manager::release_mop_buddy_at_start_of_day(entity);
             system_manager::delete_trash_when_leaving_planning(entity);
 
-            system_manager::upgrade::on_round_started(entity, dt);
+            // TODO
+            // system_manager::upgrade::on_round_started(entity, dt);
         });
     };
 

@@ -30,11 +30,9 @@ enum struct ConfigKey {
     //
     NumStoreSpawns,
     //
-    UnlockedToilet,
     PissTimer,
     BladderSize,
     //
-    HasCityMultiplier,
     DrinkCostMultiplier,
     //
     VomitFreqMultiplier,
@@ -42,9 +40,9 @@ enum struct ConfigKey {
 
     //
     DayCount,
-    Entity,
-    Drink,
-    CustomerSpawn,
+    // Entity,
+    // Drink,
+    // CustomerSpawn,
 };
 
 struct ConfigValue {
@@ -52,7 +50,7 @@ struct ConfigValue {
     ConfigValueType value;
 };
 
-enum struct ConfigKeyType { Activity, Drink, Entity, Float, Bool, Int };
+enum struct ConfigKeyType { Float, Bool, Int };
 
 inline ConfigKeyType get_type(ConfigKey key) {
     switch (key) {
@@ -70,15 +68,6 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::BladderSize:
         case ConfigKey::DayCount:
             return ConfigKeyType::Int;
-        case ConfigKey::UnlockedToilet:
-        case ConfigKey::HasCityMultiplier:
-            return ConfigKeyType::Bool;
-        case ConfigKey::Entity:
-            return ConfigKeyType::Entity;
-        case ConfigKey::Drink:
-            return ConfigKeyType::Drink;
-        case ConfigKey::CustomerSpawn:
-            return ConfigKeyType::Activity;
     }
     return ConfigKeyType::Float;
 }
@@ -110,7 +99,6 @@ struct UpgradeEffect {
     Operation operation;
     ConfigValueType value;
 };
-
 
 struct ConfigKeyValue {
     ConfigKey name;
@@ -180,56 +168,6 @@ inline Drink str_to_drink(const std::string& str) {
     return Drink::coke;
 }
 
-inline bool can_have_key_as_prereq(ConfigKey key) {
-    switch (key) {
-        case ConfigKey::Test:
-        case ConfigKey::RoundLength:
-        case ConfigKey::MaxNumOrders:
-        case ConfigKey::NumStoreSpawns:
-        case ConfigKey::UnlockedToilet:
-        case ConfigKey::PissTimer:
-        case ConfigKey::BladderSize:
-        case ConfigKey::HasCityMultiplier:
-        case ConfigKey::DayCount:
-        case ConfigKey::Entity:
-        case ConfigKey::Drink:
-            return true;
-        case ConfigKey::PatienceMultiplier:
-        case ConfigKey::CustomerSpawnMultiplier:
-        case ConfigKey::DrinkCostMultiplier:
-        case ConfigKey::VomitFreqMultiplier:
-        case ConfigKey::VomitAmountMultiplier:
-        case ConfigKey::CustomerSpawn:
-            return false;
-    }
-    return false;
-}
-
-inline bool can_have_key_as_every_hour(ConfigKey key) {
-    switch (key) {
-        case ConfigKey::NumStoreSpawns:
-        case ConfigKey::DayCount:
-        case ConfigKey::Entity:
-        case ConfigKey::Drink:
-        case ConfigKey::HasCityMultiplier:
-        case ConfigKey::UnlockedToilet:
-        case ConfigKey::CustomerSpawnMultiplier:
-        case ConfigKey::RoundLength:
-        case ConfigKey::MaxNumOrders:
-        case ConfigKey::Test:
-        case ConfigKey::PatienceMultiplier:
-        case ConfigKey::PissTimer:
-        case ConfigKey::BladderSize:
-        case ConfigKey::DrinkCostMultiplier:
-        case ConfigKey::VomitFreqMultiplier:
-        case ConfigKey::VomitAmountMultiplier:
-            return false;
-        case ConfigKey::CustomerSpawn:
-            return true;
-    }
-    return false;
-}
-
 inline std::string_view key_name(ConfigKey key) {
     return magic_enum::enum_name<ConfigKey>(key);
 }
@@ -237,3 +175,16 @@ inline std::string_view key_name(ConfigKey key) {
 inline std::string_view op_name(Operation key) {
     return magic_enum::enum_name<Operation>(key);
 }
+
+struct UpgradeModification {
+    ConfigKey name;
+    Operation operation;
+    ConfigValueType value;
+};
+
+using Mods = std::vector<UpgradeModification>;
+
+enum UpgradeAction {
+    SpawnCustomer,
+};
+using Actions = std::vector<UpgradeAction>;

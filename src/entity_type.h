@@ -188,8 +188,7 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::PitcherCupboard:
         case EntityType::Guitar:
         case EntityType::Toilet:
-            // TODO fall through for now until we support onUpgrade
-            // return StoreEligibilityType::OnUpgrade;
+            return StoreEligibilityType::OnUpgrade;
         case EntityType::Table:
         case EntityType::Register:
         case EntityType::SingleAlcohol:

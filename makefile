@@ -67,6 +67,7 @@ clean:
 	rm -r $(OBJ_DIR)
 	mkdir -p $(OBJ_DIR)/src/network/
 	mkdir -p $(OBJ_DIR)/src/layers/
+	mkdir -p $(OBJ_DIR)/src/dataclass/
 	mkdir -p $(OBJ_DIR)/src/engine/
 	mkdir -p $(OBJ_DIR)/src/engine/network/
 	mkdir -p $(OBJ_DIR)/src/components/

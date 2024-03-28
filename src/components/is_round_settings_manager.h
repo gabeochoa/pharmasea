@@ -1,77 +1,42 @@
 
 #pragma once
 
-#include "../dataclass/config.h"
-#include "../upgrade_library.h"
+#include <variant>
+
+#include "../dataclass/configdata.h"
+#include "../dataclass/upgrades.h"
 #include "../vec_util.h"
 #include "base_component.h"
 
 struct IsRoundSettingsManager : public BaseComponent {
-    enum UpgradeTimeOfDay {
-        Unlock,
-        Daily,
-        Hour,
-    };
+    ConfigData config;
 
-    Config config;
-
+    std::vector<std::shared_ptr<UpgradeImpl>> selected_upgrades;
     int ran_for_hour = -1;
 
-    int num_unlocked;
-    std::vector<std::string> unlocked_upgrades;
-    std::vector<ActivityOutcome> activities;
+    IsRoundSettingsManager() {
+        // init config
+        {
+            config.permanent_set<int>(ConfigKey::DayCount, 1);
 
-    std::vector<std::string> active_upgrades;
+            config.permanent_set<int>(ConfigKey::MaxNumOrders, 1);
+            config.permanent_set<int>(ConfigKey::NumStoreSpawns, 5);
+            config.permanent_set<int>(ConfigKey::BladderSize, 1);
 
-    EntityTypeSet on_unlock_entities;
-    EntityTypeSet on_daily_entities;
-    EntityTypeSet on_hour_entities;
-
-    void set_active_upgrade(const std::string& name) {
-        if (is_upgrade_active(name)) return;
-        active_upgrades.push_back(name);
-    }
-    void unset_active_upgrade(const std::string& name) {
-        remove_if_matching(active_upgrades, name);
-    }
-    bool is_upgrade_active(const std::string& name) const {
-        return vector::contains(active_upgrades, name);
-    }
-
-    [[nodiscard]] EntityTypeSet required_entities() const {
-        return on_unlock_entities | on_daily_entities | on_hour_entities;
-    }
-
-    [[nodiscard]] bool has_upgrade_unlocked(const std::string& name) const {
-        return vector::contains(unlocked_upgrades, name);
-    }
-
-    void apply_effects(const std::string& name, UpgradeEffects& effects) {
-        set_active_upgrade(name);
-        for (const UpgradeEffect& effect : effects) {
-            apply_effect(effect);
+            config.permanent_set<float>(ConfigKey::RoundLength, 100.f);
+            config.permanent_set<float>(ConfigKey::PatienceMultiplier, 1.f);
+            config.permanent_set<float>(ConfigKey::CustomerSpawnMultiplier,
+                                        1.f);
+            config.permanent_set<float>(ConfigKey::DrinkCostMultiplier, 1.f);
+            config.permanent_set<float>(ConfigKey::PissTimer, 2.5f);
+            config.permanent_set<float>(ConfigKey::VomitFreqMultiplier, 1.0f);
+            config.permanent_set<float>(ConfigKey::VomitAmountMultiplier, 1.0f);
         }
     }
 
-    void unapply_effects(const std::string& name, UpgradeEffects& effects) {
-        unset_active_upgrade(name);
-        for (const UpgradeEffect& effect : effects) {
-            unapply_effect(effect);
-        }
-    }
-
-    void unlock_upgrade(const std::string& name) {
-        if (has_upgrade_unlocked(name)) {
-            log_error("upgrade unlock failed since its already unlocked {}",
-                      name);
-            return;
-        }
-        unlocked_upgrades.push_back(name);
-        num_unlocked++;
-
-        // TODO i still would like this as a single function but its not bad
-        auto upgrade = fetch_upgrade(name);
-        apply_effects(name, upgrade.on_unlock);
+    [[nodiscard]] bool is_upgrade_active(const UpgradeClass&) const {
+        // TODO add support
+        return true;
     }
 
     template<typename T>
@@ -102,121 +67,11 @@ struct IsRoundSettingsManager : public BaseComponent {
         return config.get<T>(key);
     }
 
-    [[nodiscard]] bool meets_prereqs_for_upgrade(
-        const std::string& name) const {
-        auto upgrade = fetch_upgrade(name);
-        for (const UpgradeRequirement& req : upgrade.prereqs) {
-            if (!meets_prereq(req)) return false;
-        }
-        return true;
-    }
-    IsRoundSettingsManager() {
-        for (const auto& pair : ConfigValueLibrary::get()) {
-            const ConfigValue& config_value = pair.second;
-            const auto type = get_type(config_value.key);
-            switch (type) {
-                case ConfigKeyType::Entity:
-                    config.set(config_value.key,
-                               std::get<EntityType>(config_value.value));
-                    break;
-                case ConfigKeyType::Drink:
-                    config.set(config_value.key,
-                               std::get<Drink>(config_value.value));
-                    break;
-                case ConfigKeyType::Float:
-                    config.set(config_value.key,
-                               std::get<float>(config_value.value));
-                    break;
-                case ConfigKeyType::Bool:
-                    config.set(config_value.key,
-                               std::get<bool>(config_value.value));
-                    break;
-                case ConfigKeyType::Int:
-                    config.set(config_value.key,
-                               std::get<int>(config_value.value));
-                    break;
-                case ConfigKeyType::Activity:
-                    break;
-            }
-        }
-    }
-
-    void apply_effect(const UpgradeEffect& effect) {
-        ConfigKeyType ckt = get_type(effect.name);
-
-        switch (ckt) {
-            case ConfigKeyType::Float: {
-                fetch_and_apply<float>(effect.name, effect.operation,
-                                       effect.value);
-            } break;
-            case ConfigKeyType::Bool: {
-                fetch_and_apply<bool>(effect.name, effect.operation,
-                                      effect.value);
-            } break;
-            case ConfigKeyType::Int: {
-                fetch_and_apply<int>(effect.name, effect.operation,
-                                     effect.value);
-            } break;
-            case ConfigKeyType::Entity:
-            case ConfigKeyType::Drink:
-            case ConfigKeyType::Activity: {
-                activities.push_back({effect.name, effect.value});
-            } break;
-        }
-    }
-
-    void unapply_effect(const UpgradeEffect& effect) {
-        ConfigKeyType ckt = get_type(effect.name);
-
-        switch (ckt) {
-            case ConfigKeyType::Float: {
-                fetch_and_unapply<float>(effect.name, effect.operation,
-                                         effect.value);
-            } break;
-            case ConfigKeyType::Bool: {
-                fetch_and_unapply<bool>(effect.name, effect.operation,
-                                        effect.value);
-            } break;
-            case ConfigKeyType::Int: {
-                fetch_and_unapply<int>(effect.name, effect.operation,
-                                       effect.value);
-            } break;
-            case ConfigKeyType::Entity:
-            case ConfigKeyType::Drink:
-            case ConfigKeyType::Activity: {
-                // cant undo these
-                // TODO add verification on upgrade preload to stop this
-            } break;
-        }
+    [[nodiscard]] bool has_upgrade_unlocked(const UpgradeClass& uc) const {
+        return config.has_upgrade_unlocked(uc);
     }
 
    private:
-    template<typename T>
-    T unapply_operation(const Operation& op, T before, T value) {
-        switch (op) {
-            case Operation::Multiplier:
-                return before / value;
-            case Operation::Set:
-                log_error("Unsetting isnt supported on {}", type_name<T>());
-                break;
-            case Operation::Custom:
-                // ignore
-                break;
-        }
-        return value;
-    }
-
-    template<typename T>
-    void fetch_and_unapply(const ConfigKey& key, const Operation& op,
-                           const ConfigValueType& value) {
-        T before = get<T>(key);
-        T nv = unapply_operation<T>(op, before, std::get<T>(value));
-        config.set<T>(key, nv);
-
-        log_info("unapply effect key: {} op {} before: {} after {}",
-                 key_name(key), op_name(op), before, nv);
-    }
-
     template<typename T>
     [[nodiscard]] bool check_value(const ConfigKey& key, T value) const {
         // Right now we only support bool and greater than
@@ -230,17 +85,6 @@ struct IsRoundSettingsManager : public BaseComponent {
             return get<T>(key) == value;
         }
 
-        /*
-         * TODO
-        if constexpr (std::is_same_v<T, EntityType>) {
-            return bitset_utils::test(unlocked_entities, value);
-        }
-
-        if constexpr (std::is_same_v<T, Drink>) {
-            return bitset_utils::test(unlocked_drinks, value);
-        }
-        */
-
         T current_value = get<T>(key);
         bool meets = current_value > value;
 
@@ -250,92 +94,9 @@ struct IsRoundSettingsManager : public BaseComponent {
         return meets;
     }
 
-    [[nodiscard]] bool meets_prereq(const UpgradeRequirement& req) const {
-        ConfigKeyType ckt = get_type(req.name);
-        switch (ckt) {
-            case ConfigKeyType::Entity: {
-                return check_value<EntityType>(req.name,
-                                               std::get<EntityType>(req.value));
-            } break;
-            case ConfigKeyType::Drink: {
-                return check_value<Drink>(req.name, std::get<Drink>(req.value));
-            } break;
-            case ConfigKeyType::Float: {
-                return check_value<float>(req.name, std::get<float>(req.value));
-            } break;
-            case ConfigKeyType::Bool: {
-                return check_value<bool>(req.name, std::get<bool>(req.value));
-            } break;
-            case ConfigKeyType::Int: {
-                return check_value<int>(req.name, std::get<int>(req.value));
-            } break;
-            case ConfigKeyType::Activity: {
-                return false;
-            } break;
-        }
-        return false;
-    }
-
-    template<typename T>
-    void fetch_and_apply(const ConfigKey& key, const Operation& op,
-                         const ConfigValueType& value) {
-        T before = get<T>(key);
-        T nv = apply_operation<T>(op, before, std::get<T>(value));
-        config.set<T>(key, nv);
-
-        log_info("apply effect key: {} op {} before: {} after {}",
-                 key_name(key), op_name(op), before, nv);
-    }
-
-    template<typename T>
-    T apply_operation(const Operation& op, T before, T value) {
-        switch (op) {
-            case Operation::Multiplier:
-                return before * value;
-            case Operation::Set:
-                return value;
-            case Operation::Custom:
-                log_error("{} isnt supported on {}",
-                          magic_enum::enum_name<Operation>(op), type_name<T>());
-                break;
-        }
-        return value;
-    }
-
-    [[nodiscard]] Upgrade fetch_upgrade(const std::string& name) const {
-        if (!UpgradeLibrary::get().contains(name)) {
-            log_error("Failed to find upgrade with name: {}", name);
-        }
-        return UpgradeLibrary::get().get(name);
-    }
-
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(num_unlocked);
-        s.container(unlocked_upgrades, num_unlocked,
-                    [](S& s2, std::string& str) { s2.text1b(str, 64); });
-
-        s.container(active_upgrades, num_unlocked,
-                    [](S& s2, std::string& str) { s2.text1b(str, 64); });
-    }
-
-   public:
-    template<typename T>
-    void fetch_and_apply_TEST_ONLY(const ConfigKey& key, const Operation& op,
-                                   const ConfigValueType& value) {
-        return fetch_and_apply<T>(key, op, value);
-    }
-
-    template<typename T>
-    T unapply_operation_TEST_ONLY(const Operation& op, T before, T value) {
-        return unapply_operation<T>(op, before, value);
-    }
-
-    template<typename T>
-    T apply_operation_TEST_ONLY(const Operation& op, T before, T value) {
-        return apply_operation<T>(op, before, value);
     }
 };

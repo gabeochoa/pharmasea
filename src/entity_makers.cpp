@@ -22,6 +22,7 @@
 #include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
 #include "dataclass/ingredient.h"
+#include "dataclass/upgrade_class.h"
 #include "engine/bitset_utils.h"
 #include "engine/sound_library.h"
 #include "engine/ui/color.h"
@@ -933,7 +934,11 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         // TODO reset progress when taking out if not done
         if (!ii.is_held_by(EntityType::DraftTap)) return;
 
-        if (isdrink.has_ingredient(Ingredient::Beer)) return;
+        // TODO we need way better ingredient validation across these kinds of
+        // additive machines
+        if (isdrink.has_ingredient(Ingredient::Beer)) {
+            if (!isdrink.supports_multiple()) return;
+        }
 
         const float amt = 0.75f;
         hasWork.increase_pct(amt * dt);
@@ -1262,7 +1267,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         }
     }
 
-    bool bathroom_unlocked = irsm.get<bool>(ConfigKey::UnlockedToilet);
+    bool bathroom_unlocked =
+        irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet);
     if (bathroom_unlocked) {
         customer.addComponent<AIUseBathroom>();
     }

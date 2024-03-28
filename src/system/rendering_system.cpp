@@ -13,6 +13,7 @@
 #include "../components/is_progression_manager.h"
 #include "../components/is_toilet.h"
 #include "../components/transform.h"
+#include "../dataclass/upgrades.h"
 #include "../drawing_util.h"
 #include "../engine/texture_library.h"
 #include "../engine/ui/theme.h"
@@ -523,23 +524,21 @@ void render_trigger_area(const Entity& entity, float dt) {
         });
     };
 
-    const auto _render_upgrade_preview = [&](const std::string& upgrade_name) {
-        if (upgrade_name.empty()) return;
-
-        const Upgrade& upgrade = UpgradeLibrary::get().get(upgrade_name);
+    const auto _render_upgrade_preview = [&](const UpgradeClass& uc) {
+        auto impl = make_upgrade(uc);
 
         const auto font = Preload::get().font;
         const auto start_position =
             transform.raw() + vec3{0, 1.0f * TILESIZE, -2.f * TILESIZE};
 
-        raylib::DrawFloatingText(start_position, font, upgrade.name.c_str());
+        raylib::DrawFloatingText(start_position, font, impl->name.c_str());
         int i = 0;
 
         raylib::DrawFloatingText(start_position - vec3{0, 0.3f * (i++ + 1), 0},
-                                 font, upgrade.flavor_text.c_str());
+                                 font, impl->flavor_text.c_str());
 
         raylib::DrawFloatingText(start_position - vec3{0, 0.3f * (i++ + 1), 0},
-                                 font, upgrade.description.c_str());
+                                 font, impl->description.c_str());
     };
 
     const auto _render_progression_option = [&](IsTriggerArea::Type type) {

@@ -21,7 +21,6 @@
 #include "globals.h"
 #include "resources/fonts/Karmina_Regular_256.h"
 #include "strings.h"
-#include "upgrade_library.h"
 
 inline raylib::Font load_karmina_regular() {
     auto font = font::LoadFont_KarminaRegular256();
@@ -69,7 +68,6 @@ struct Preload {
         SoundLibrary::get().unload_all();
         ShaderLibrary::get().unload_all();
         FontLibrary::get().unload_all();
-        UpgradeLibrary::get().unload_all();
     }
 
     // Note: Defined in .cpp to avoid LOG_LEVEL violating C++ ODR during
@@ -84,13 +82,10 @@ struct Preload {
 
         // drinks use models, so let those load first
         load_drink_recipes();
-
-        load_upgrades();
     }
 
     void load_map_generation_info();
     void load_keymapping();
-    void load_upgrades();
 
     void load_translations() {
         // TODO :IMPACT: load correct language pack for settings file
