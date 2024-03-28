@@ -212,8 +212,31 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                         // where it actually is required
                     },
                 .meetsPrereqs = [](const ConfigData&,
+                                   const IsProgressionManager& ipm) -> bool {
+                    return ipm.is_drink_unlocked(beer);
+                }};
+            break;
+        case UpgradeClass::MeAndTheBoys:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "me and the boys",
+                // TODO
+                .icon_name = "upgrade_default",
+                .flavor_text = "crackin open a cold one or two... or ten .",
+                .description =
+                    "(Customers will now order a pitcher of 10 beers)",
+                .onUnlock =
+                    [](ConfigData& config, IsProgressionManager& ipm) {
+                        ipm.unlock_drink(beer_pitcher);
+
+                        config.forever_required.push_back(
+                            EntityType::PitcherCupboard);
+                    },
+                .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
-                    return true;
+                    // Require that you have normal pitcher unlocked first
+                    return bitset_utils::test(config.unlocked_upgrades,
+                                              UpgradeClass::Pitcher);
                 }};
             break;
     }
