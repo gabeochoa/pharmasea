@@ -350,8 +350,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kennynl",
-            "filename": "sodaGlass.obj",
+            "folder": "models/zmoo",
+            "filename": "normal.obj",
             "library_name": "rum_and_coke",
             "size_scale": 2.0,
             "position_offset": [0,0,0],
