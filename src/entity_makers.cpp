@@ -1021,7 +1021,7 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
                                      (int) ingredient::AlcoholsInCycle.size(),
                                  index);
     alc.addComponent<AddsIngredient>(
-           [](const Entity&, const Entity& alcohol) -> IngredientBitSet {
+           [](const Entity& alcohol, const Entity&) -> IngredientBitSet {
                const HasSubtype& hst = alcohol.get<HasSubtype>();
                return IngredientBitSet().reset().set(get_ingredient_from_index(
                    ingredient::AlcoholsInCycle[0] + hst.get_type_index()));
