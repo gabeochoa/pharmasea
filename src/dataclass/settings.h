@@ -35,8 +35,8 @@ enum struct ConfigKey {
     //
     DrinkCostMultiplier,
     //
-    VomitFreqMultiplier,
-    VomitAmountMultiplier,
+    VomitFreqMultiplier,    // time between vomits
+    VomitAmountMultiplier,  // max vomit amount
 
     //
     DayCount,

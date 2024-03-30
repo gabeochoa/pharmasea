@@ -307,6 +307,56 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     return true;
                 }};
             break;
+        case UpgradeClass::HeavyHanded:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "HeavyHanded",
+                // TODO
+                .icon_name = "upgrade_default",
+                .flavor_text = "Oops, hopefully you have a ride home",
+                // TODO make it so that you have to add one more alcohol
+                // to get the effect?
+                .description =
+                    "(less profit & more vomit, but customers will order more)",
+                .onUnlock =
+                    [](ConfigData& config, IsProgressionManager&) {
+                        config.permanently_modify<int>(
+                            ConfigKey::MaxNumOrders, Operation::Multiplier, 2);
+
+                        config.permanently_modify<float>(
+                            ConfigKey::VomitFreqMultiplier,
+                            Operation::Multiplier, 2);
+
+                        config.permanently_modify<float>(
+                            ConfigKey::VomitAmountMultiplier,
+                            Operation::Multiplier, 2);
+
+                        config.permanently_modify<float>(
+                            ConfigKey::DrinkCostMultiplier,
+                            Operation::Multiplier, 0.75);
+                    },
+                .meetsPrereqs = [](const ConfigData&,
+                                   const IsProgressionManager&) -> bool {
+                    return true;
+                }};
+            break;
+        case UpgradeClass::PottyProtocol:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "Potty Protocol",
+                // TODO
+                .icon_name = "upgrade_default",
+                .flavor_text = "aim for the bowl",
+                .description =
+                    "(before vomiting customers will try to find an empty "
+                    "toilet)",
+                .onUnlock = [](ConfigData&, IsProgressionManager&) {},
+                .meetsPrereqs = [](const ConfigData& config,
+                                   const IsProgressionManager&) -> bool {
+                    return bitset_utils::test(config.unlocked_upgrades,
+                                              UpgradeClass::UnlockToilet);
+                }};
+            break;
     }
 
     if (ptr == nullptr) {

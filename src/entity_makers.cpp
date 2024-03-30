@@ -1298,6 +1298,7 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
                 EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const IsRoundSettingsManager& irsm =
                 sophie.get<IsRoundSettingsManager>();
+
             float vomit_amount_multiplier =
                 irsm.get<float>(ConfigKey::VomitAmountMultiplier);
             float vomit_freq_multiplier =
@@ -1307,7 +1308,44 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
             vom_spewer.set_total(static_cast<int>(cod.num_alcoholic_drinks_had *
                                                   vomit_amount_multiplier));
             vom_spewer.set_time_between(5.f * vomit_freq_multiplier);
-            return true;
+
+            bool should_vomit = true;
+
+            // Before we return true, should we vomit in a toilet
+            if (irsm.has_upgrade_unlocked(UpgradeClass::PottyProtocol)) {
+                // Are there any toilets?
+
+                std::vector<RefEntity> all_toilets =
+                    EntityQuery().whereHasComponent<IsToilet>().gen();
+
+                // TODO sort by distance?
+                OptEntity best_target = {};
+                for (Entity& r : all_toilets) {
+                    const IsToilet& toilet = r.get<IsToilet>();
+                    if (toilet.available()) {
+                        best_target = r;
+                    }
+                }
+                // We found an empty toilet, go go go
+                if (best_target) {
+                    vom_spewer.post_spawn_reset();
+                    // TODO probably also lower max?
+
+                    should_vomit = false;
+                    // TODO make the person go to the bathroom isntead
+                    //
+                    // not really a TODO but if the person is outside at the
+                    // despawn postition and needs to vomit and the bathroom is
+                    // full or in use then they will vomit over there, probably
+                    // we'd want them to walk to the bathroom first to check so
+                    // they vomit closer? but then now we have to have some
+                    // kinda 3 strike system or something idk
+                    log_warn(
+                        "I was gonna vomit but seeing that the bathroom is "
+                        "empty, actually ive decided against it PLS FIX");
+                }
+            }
+            return should_vomit;
         })
         // check if there is already vomit in that spot
         .enable_prevent_duplicates()

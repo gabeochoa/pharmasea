@@ -16,6 +16,7 @@
 // dataclass/settings.h
 std::vector<UpgradeType> upgrade_rounds = {{
     UpgradeType::Upgrade,
+    UpgradeType::Upgrade,
     UpgradeType::Drink,
     UpgradeType::Drink,
     UpgradeType::Drink,

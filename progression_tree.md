@@ -271,7 +271,7 @@ what do you mean it costs 3000$
 (adds an automatic juicer)
 
 Beer Wall
-its all watered down any
+its all watered down anyway
 (customers who want beer can reuse their cup and get their own drink)
 
 SodaFountain
@@ -296,6 +296,9 @@ wow these things have gotten so realistic
 Vacuum Sealer 
 wheres the straw
 (you can save one drink between days)
+
+plunger
+(customers can clean the toilet) 
 
 jukebox
 gimme 14D
