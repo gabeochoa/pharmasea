@@ -137,6 +137,7 @@ Speakeasy
 (the more travel it takes customers to order the higher the tip)
 (also harder to clean up the vomit)
 __track time spent in each job? does it need to be that complicated__ 
+__ decided to just go based on max pathfind length_
 
 Tourist
 im visiting from michigan

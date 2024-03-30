@@ -259,6 +259,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                 }};
             break;
         case UpgradeClass::MeAndTheBoys:
+            // TODO add a way for the other people to be spawned and not order
+            // but take up space in the line?
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "me and the boys",
@@ -279,6 +281,30 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     // Require that you have normal pitcher unlocked first
                     return bitset_utils::test(config.unlocked_upgrades,
                                               UpgradeClass::Pitcher);
+                }};
+            break;
+        case UpgradeClass::Mocktails:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "Mocktails",
+                // TODO
+                .icon_name = "upgrade_default",
+                .flavor_text = "does this taste weak to you?",
+                .description =
+                    "(You can forget one alcohol in a recipe but customers "
+                    "will order more to make up for it)",
+                .onUnlock =
+                    [](ConfigData& config, IsProgressionManager&) {
+                        // TODO do they only order more when you mess up?
+                        // TODO do they not vomit if you forget alcohol?
+
+                        // People order more because they want the same buzz
+                        config.permanently_modify<int>(
+                            ConfigKey::MaxNumOrders, Operation::Multiplier, 2);
+                    },
+                .meetsPrereqs = [](const ConfigData&,
+                                   const IsProgressionManager&) -> bool {
+                    return true;
                 }};
             break;
     }

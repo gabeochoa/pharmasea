@@ -16,6 +16,7 @@ enum struct UpgradeClass {
     MeAndTheBoys,
     MainStreet,
     Speakeasy,
+    Mocktails,
 };
 
 using UpgradeClassBitSet = std::bitset<magic_enum::enum_count<UpgradeClass>()>;
