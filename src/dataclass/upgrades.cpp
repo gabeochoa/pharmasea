@@ -83,6 +83,48 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                                               UpgradeClass::UnlockToilet);
                 }};
             break;
+        case UpgradeClass::Speakeasy:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "Speakeasy",
+                // TODO icon
+                .icon_name = "upgrade_default",
+                .flavor_text =
+                    "first you gotta get a fish, then bring it to the...",
+                .description =
+                    "(Half the customers, but they will pay 1% more for "
+                    "every extra tile they have to visit before finding the "
+                    "register)",
+                .onUnlock =
+                    [](ConfigData& config, IsProgressionManager&) {
+                        config.permanently_modify<float>(
+                            ConfigKey::CustomerSpawnMultiplier,
+                            Operation::Multiplier, 0.5f);
+                    },
+                .meetsPrereqs = [](const ConfigData&,
+                                   const IsProgressionManager&) -> bool {
+                    return true;
+                }};
+            break;
+        case UpgradeClass::MainStreet:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "Main Street",
+                // TODO icon
+                .icon_name = "upgrade_default",
+                .flavor_text = "location, location, location.",
+                .description = "(Twice as many Customers will visit)",
+                .onUnlock =
+                    [](ConfigData& config, IsProgressionManager&) {
+                        config.permanently_modify<float>(
+                            ConfigKey::CustomerSpawnMultiplier,
+                            Operation::Multiplier, 2.0f);
+                    },
+                .meetsPrereqs = [](const ConfigData&,
+                                   const IsProgressionManager&) -> bool {
+                    return true;
+                }};
+            break;
         case UpgradeClass::BigCity:
             ptr = new UpgradeImpl{
                 .type = uc,

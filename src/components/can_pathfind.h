@@ -45,6 +45,8 @@ struct CanPathfind : public BaseComponent {
         }
     }
 
+    [[nodiscard]] size_t get_max_length() const { return max_path_length; }
+
    private:
     [[nodiscard]] bool is_at_position(vec2 position) {
         return vec::distance(parent->get<Transform>().as2(), position) <
@@ -106,6 +108,7 @@ struct CanPathfind : public BaseComponent {
             log_warn("no pathing even after noclip... {} {} {}=>{}", "my name",
                      "my id", start, goal);
         }
+        max_path_length = std::max(max_path_length, path.size());
     }
 
     void ensure_active_local_target() {
@@ -125,6 +128,7 @@ struct CanPathfind : public BaseComponent {
 
     int path_size = 0;
     std::deque<vec2> path;
+    size_t max_path_length = 0;
 
     void update_path(const std::deque<vec2>& new_path) {
         path = new_path;

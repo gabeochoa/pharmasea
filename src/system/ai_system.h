@@ -260,11 +260,26 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     // mark how much we are paying for this drink
     // + how much we will tip
     {
+        float base_price =
+            get_base_price_for_drink(canOrderDrink.current_order);
+
+        float speakeasy_multiplier = 1.f;
+        if (irsm.has_upgrade_unlocked(UpgradeClass::Speakeasy)) {
+            speakeasy_multiplier +=
+                (0.01f * entity.get<CanPathfind>().get_max_length());
+        }
+
         float cost_multiplier = irsm.get<float>(ConfigKey::DrinkCostMultiplier);
-        int price = static_cast<int>(
-            cost_multiplier *
-            get_base_price_for_drink(canOrderDrink.current_order));
+
+        float price_float = cost_multiplier * speakeasy_multiplier * base_price;
+        int price = static_cast<int>(price_float);
         canOrderDrink.tab_cost += price;
+
+        log_info(
+            "Drink price was {} (base_price({}) * speakeasy({}) * "
+            "cost_mult({}) => {})",
+            price, base_price, speakeasy_multiplier, cost_multiplier,
+            price_float);
 
         const HasPatience& hasPatience = entity.get<HasPatience>();
         int tip = (int) fmax(0, ceil(price * 0.8f * hasPatience.pct()));
