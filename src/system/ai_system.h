@@ -374,6 +374,9 @@ inline void process_ai_drinking(Entity& entity, float dt) {
     if (entity.is_missing<AIDrinking>()) return;
     if (entity.is_missing<CanOrderDrink>()) return;
 
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
     AIDrinking& aidrinking = entity.get<AIDrinking>();
     aidrinking.pass_time(dt);
     if (!aidrinking.ready()) return;
@@ -386,8 +389,8 @@ inline void process_ai_drinking(Entity& entity, float dt) {
     if (!aidrinking.has_available_target()) {
         // TODO choose a better place
         aidrinking.set_target(vec2{0, 0});
-        // TODO add a variable for how long people drink
-        aidrinking.set_drink_time(1.f);  // randfIn(1.f, 5.f));
+        float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
+        aidrinking.set_drink_time(randfIn(1.f, drink_time));
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
@@ -412,7 +415,6 @@ inline void process_ai_drinking(Entity& entity, float dt) {
     // Do we want another drink?
     //
 
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     bool want_another = cod.num_orders_rem > 0;
 
     // done drinking

@@ -16,22 +16,56 @@ struct IsRoundSettingsManager : public BaseComponent {
 
     IsRoundSettingsManager() {
         // init config
-        {
-            config.permanent_set<int>(ConfigKey::DayCount, 1);
+        //
 
-            config.permanent_set<int>(ConfigKey::MaxNumOrders, 1);
-            config.permanent_set<int>(ConfigKey::NumStoreSpawns, 5);
-            config.permanent_set<int>(ConfigKey::BladderSize, 1);
-
-            config.permanent_set<float>(ConfigKey::RoundLength, 100.f);
-            config.permanent_set<float>(ConfigKey::PatienceMultiplier, 1.f);
-            config.permanent_set<float>(ConfigKey::CustomerSpawnMultiplier,
-                                        1.f);
-            config.permanent_set<float>(ConfigKey::DrinkCostMultiplier, 1.f);
-            config.permanent_set<float>(ConfigKey::PissTimer, 2.5f);
-            config.permanent_set<float>(ConfigKey::VomitFreqMultiplier, 1.0f);
-            config.permanent_set<float>(ConfigKey::VomitAmountMultiplier, 1.0f);
-        }
+        magic_enum::enum_for_each<ConfigKey>([&](auto val) {
+            constexpr ConfigKey key = val;
+            switch (key) {
+                case ConfigKey::Test:
+                    break;
+                case ConfigKey::RoundLength:
+                    config.permanent_set<float>(ConfigKey::RoundLength, 100.f);
+                    break;
+                case ConfigKey::MaxNumOrders:
+                    config.permanent_set<int>(ConfigKey::MaxNumOrders, 1);
+                    break;
+                case ConfigKey::PatienceMultiplier:
+                    config.permanent_set<float>(ConfigKey::PatienceMultiplier,
+                                                1.f);
+                    break;
+                case ConfigKey::CustomerSpawnMultiplier:
+                    config.permanent_set<float>(
+                        ConfigKey::CustomerSpawnMultiplier, 1.f);
+                    break;
+                case ConfigKey::NumStoreSpawns:
+                    config.permanent_set<int>(ConfigKey::NumStoreSpawns, 5);
+                    break;
+                case ConfigKey::PissTimer:
+                    config.permanent_set<float>(ConfigKey::PissTimer, 2.5f);
+                    break;
+                case ConfigKey::BladderSize:
+                    config.permanent_set<int>(ConfigKey::BladderSize, 1);
+                    break;
+                case ConfigKey::DrinkCostMultiplier:
+                    config.permanent_set<float>(ConfigKey::DrinkCostMultiplier,
+                                                1.f);
+                    break;
+                case ConfigKey::VomitFreqMultiplier:
+                    config.permanent_set<float>(ConfigKey::VomitFreqMultiplier,
+                                                1.0f);
+                    break;
+                case ConfigKey::VomitAmountMultiplier:
+                    config.permanent_set<float>(
+                        ConfigKey::VomitAmountMultiplier, 1.0f);
+                    break;
+                case ConfigKey::MaxDrinkTime:
+                    config.permanent_set<float>(ConfigKey::MaxDrinkTime, 1.0f);
+                    break;
+                case ConfigKey::DayCount:
+                    config.permanent_set<int>(ConfigKey::DayCount, 1);
+                    break;
+            }
+        });
     }
 
     [[nodiscard]] bool is_upgrade_active(const UpgradeClass&) const {
