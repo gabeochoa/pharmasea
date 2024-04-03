@@ -298,7 +298,12 @@ wheres the straw
 (you can save one drink between days)
 
 plunger
-(customers can clean the toilet) 
+just a minute
+(customers can clean the toilet but it takes time) 
+
+bidet
+clean as a whistle
+(toilet autocleans but customers go twice as often to visit) 
 
 jukebox
 gimme 14D

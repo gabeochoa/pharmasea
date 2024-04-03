@@ -64,7 +64,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "Big Bladders",
-                // TODO icon
+                // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
                 .flavor_text = "I've been training..",
                 .description =
@@ -87,7 +87,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "Speakeasy",
-                // TODO icon
+                // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
                 .flavor_text =
                     "first you gotta get a fish, then bring it to the...",
@@ -110,7 +110,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "Main Street",
-                // TODO icon
+                // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
                 .flavor_text = "location, location, location.",
                 .description = "(Twice as many Customers will visit)",
@@ -129,7 +129,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "Big City",
-                // TODO icon
+                // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
                 .flavor_text = "I'm walking 'ere.",
                 .description = "(Customers pay double but have less patience)",
@@ -151,7 +151,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "SmallTown",
-                // TODO icon
+                // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
                 .flavor_text = "This town ain't big enough for the two of us.",
                 .description = "(Customers pay half but have double patience)",
@@ -238,7 +238,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = "Pitcher",
-                // TODO
+                // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
                 .flavor_text = "its actually a carafe.",
                 .description =
