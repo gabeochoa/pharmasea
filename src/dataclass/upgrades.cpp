@@ -357,6 +357,57 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                                               UpgradeClass::UnlockToilet);
                 }};
             break;
+        case UpgradeClass::SippyCups:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "Sippy Cups",
+                // TODO
+                .icon_name = "upgrade_default",
+                .flavor_text = "savor the flavor",
+                .description =
+                    "(customers will take twice as long to drink and order "
+                    "less)",
+                .onUnlock =
+                    [](ConfigData& config, IsProgressionManager&) {
+                        config.permanently_modify<float>(
+                            ConfigKey::MaxDrinkTime, Operation::Multiplier,
+                            2.f);
+                        // TODO consider order of applying permanent upgrades
+                        // for keys that have minimums since the default orders
+                        // is 1, we need to require the current value is more
+                        // than that otherwise we might see different values
+                        // based on order unlocked
+                        config.permanently_modify<int>(ConfigKey::MaxNumOrders,
+                                                       Operation::Divide, 2);
+                    },
+                .meetsPrereqs = [](const ConfigData& config,
+                                   const IsProgressionManager&) -> bool {
+                    // See TODO above
+                    return config.get<int>(ConfigKey::MaxNumOrders) >= 2;
+                }};
+            break;
+        case UpgradeClass::DownTheHatch:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = "Down The Hatch",
+                // TODO
+                .icon_name = "upgrade_default",
+                .flavor_text = "chug chug chug chug!",
+                // TODO do they also order more?
+                .description = "(customers will drink faster)",
+                .onUnlock =
+                    [](ConfigData& config, IsProgressionManager&) {
+                        config.permanently_modify<float>(
+                            ConfigKey::MaxDrinkTime, Operation::Multiplier,
+                            0.5f);
+                        config.permanently_modify<int>(
+                            ConfigKey::MaxNumOrders, Operation::Multiplier, 2);
+                    },
+                .meetsPrereqs = [](const ConfigData&,
+                                   const IsProgressionManager&) -> bool {
+                    return true;
+                }};
+            break;
     }
 
     if (ptr == nullptr) {

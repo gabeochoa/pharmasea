@@ -1353,7 +1353,9 @@ void reset_customers_that_need_resetting(Entity& entity) {
         sophie.get<IsProgressionManager>();
 
     {
-        int max_num_orders = irsm.get<int>(ConfigKey::MaxNumOrders);
+        int max_num_orders =
+            // max() here to avoid a situation where we get 0 after an upgrade
+            (int) fmax(1, irsm.get<int>(ConfigKey::MaxNumOrders));
         cod.num_orders_rem = randIn(1, max_num_orders);
 
         cod.num_orders_had = 0;

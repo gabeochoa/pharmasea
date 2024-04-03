@@ -390,7 +390,8 @@ inline void process_ai_drinking(Entity& entity, float dt) {
         // TODO choose a better place
         aidrinking.set_target(vec2{0, 0});
         float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
-        aidrinking.set_drink_time(randfIn(1.f, drink_time));
+        drink_time += randfIn(0.1f, 1.f);
+        aidrinking.set_drink_time(drink_time);
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
