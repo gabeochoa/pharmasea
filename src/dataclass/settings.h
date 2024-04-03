@@ -85,7 +85,7 @@ inline ConfigKey to_configkey(const std::string& str) {
     return op.value();
 }
 
-enum struct Operation { Multiplier, Set, Custom };
+enum struct Operation { Multiplier, Divide, Set, Custom };
 
 inline Operation to_operation(const std::string& str) {
     const auto converted_str = util::remove_underscores(str);

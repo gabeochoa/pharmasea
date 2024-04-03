@@ -26,6 +26,9 @@ struct ConfigData {
             case Operation::Multiplier:
                 return input * value;
                 break;
+            case Operation::Divide:
+                return input / value;
+                break;
             case Operation::Set:
             case Operation::Custom:
                 log_error(
