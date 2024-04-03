@@ -8,7 +8,8 @@
 }
 
 [[nodiscard]] inline float randfIn(float a, float b) {
-    return a + (std::rand() * (b - a + 1));
+    // We dont check for div by zero sukah
+    return a + (std::rand() / (RAND_MAX / (b - a)));
 }
 
 [[nodiscard]] inline int randSign() { return randIn(0, 1) == 0 ? -1 : 1; }
