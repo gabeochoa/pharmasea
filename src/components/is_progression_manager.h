@@ -19,8 +19,6 @@ struct IsProgressionManager : public BaseComponent {
         unlock_drink(Drink::coke);
         unlock_ingredient(Ingredient::Soda);
 
-        unlock_drink(Drink::rum_and_coke);
-
         // Unlock all the starting store items
         magic_enum::enum_for_each<EntityType>([&](EntityType val) {
             StoreEligibilityType set = get_store_eligibility(val);

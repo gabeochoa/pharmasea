@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../engine.h"
+#include "../engine/bitset_utils.h"
 #include "../engine/layer.h"
 #include "../engine/ui/ui.h"
 #include "../external_include.h"
@@ -53,10 +54,11 @@ struct BasePauseLayer : public Layer {
 
         const IsRoundSettingsManager& irsm =
             sophie->get<IsRoundSettingsManager>();
+        const ConfigData& config = irsm.config;
 
-        if (irsm.selected_upgrades.empty()) return;
+        if (config.unlocked_upgrades.count() == 0) return;
 
-        if (irsm.selected_upgrades.size() > 100) {
+        if (config.unlocked_upgrades.count() > 100) {
             log_warn("More upgrades than we can display");
         }
 
@@ -77,21 +79,26 @@ struct BasePauseLayer : public Layer {
 
         std::shared_ptr<UpgradeImpl> hovered_upgrade = nullptr;
 
-        for (const auto& upgradeImpl : irsm.selected_upgrades) {
-            if (i > (int) rects.size()) break;
+        bitset_utils::for_each_enabled_bit(
+            config.unlocked_upgrades, [&](size_t index) {
+                UpgradeClass uc = magic_enum::enum_value<UpgradeClass>(index);
 
-            Widget icon = Widget{rects[i]};
+                if (i > (int) rects.size()) return;
 
-            if (irsm.is_upgrade_active(upgradeImpl->type)) {
-                div(icon, ui::theme::Usage::Primary);
-            }
+                Widget icon = Widget{rects[i]};
 
-            image(icon, upgradeImpl->icon_name);
-            if (hoverable(icon)) {
-                hovered_upgrade = upgradeImpl;
-            }
-            i++;
-        }
+                auto upgradeImpl = make_upgrade(uc);
+
+                if (irsm.is_upgrade_active(upgradeImpl->type)) {
+                    div(icon, ui::theme::Usage::Primary);
+                }
+
+                image(icon, upgradeImpl->icon_name);
+                if (hoverable(icon)) {
+                    hovered_upgrade = upgradeImpl;
+                }
+                i++;
+            });
 
         if (hovered_upgrade) {
             div(rect, ui::theme::Usage::Background);

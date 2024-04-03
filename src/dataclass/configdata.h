@@ -99,4 +99,10 @@ struct ConfigData {
     [[nodiscard]] bool has_upgrade_unlocked(const UpgradeClass& uc) const {
         return bitset_utils::test(unlocked_upgrades, uc);
     }
+
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(unlocked_upgrades, bitsery::ext::StdBitset{});
+    }
 };
