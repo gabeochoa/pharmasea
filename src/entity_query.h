@@ -173,6 +173,28 @@ struct EntityQuery {
         return add_mod(new WhereCollides(box));
     }
     /////////
+
+    struct OrderBy {
+        virtual ~OrderBy() {}
+        virtual bool operator()(const Entity& a, const Entity& b) = 0;
+    };
+
+    struct OrderByDistance : OrderBy {
+        vec2 position;
+        explicit OrderByDistance(vec2 position) : position(position) {}
+
+        virtual bool operator()(const Entity& a, const Entity& b) {
+            float a_dist = vec::distance(a.get<Transform>().as2(), position);
+            float b_dist = vec::distance(b.get<Transform>().as2(), position);
+            return a_dist < b_dist;
+        }
+    };
+
+    auto& orderByDist(vec2 position) {
+        return set_order_by(new OrderByDistance(position));
+    }
+
+    /////////
     struct UnderlyingOptions {
         bool stop_on_first = false;
     };
@@ -225,12 +247,23 @@ struct EntityQuery {
    private:
     Entities entities;
 
+    std::unique_ptr<OrderBy> orderby;
     std::vector<std::unique_ptr<Modification>> mods;
     mutable RefEntities ents;
     mutable bool ran_query = false;
 
     EntityQuery& add_mod(Modification* mod) {
         mods.push_back(std::unique_ptr<Modification>(mod));
+        return *this;
+    }
+
+    EntityQuery& set_order_by(OrderBy* ob) {
+        if (orderby) {
+            log_error(
+                "We only apply the first order by in a query at the moment");
+            return *this;
+        }
+        orderby = std::unique_ptr<OrderBy>(ob);
         return *this;
     }
 
@@ -249,6 +282,15 @@ struct EntityQuery {
             if (passed_all_mods) out.push_back(e);
             if (options.stop_on_first && !out.empty()) return out;
         }
+
+        // Now run any order bys
+        if (orderby) {
+            std::sort(out.begin(), out.end(),
+                      [&](const Entity& a, const Entity& b) {
+                          return (*orderby)(a, b);
+                      });
+        }
+
         // TODO turn off cache for now
         // ran_query = true;
         return out;
