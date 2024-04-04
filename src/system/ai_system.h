@@ -494,23 +494,23 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     if (!gotta_go) return;
 
     if (!aibathroom.has_available_target()) {
-        std::vector<RefEntity> all_toilets =
-            EntityQuery().whereHasComponent<IsToilet>().gen();
+        OptEntity closest_available_toilet =
+            EntityQuery()
+                .whereHasComponent<IsToilet>()
+                .whereLambda([](const Entity& entity) {
+                    const IsToilet& toilet = entity.get<IsToilet>();
+                    return toilet.available();
+                })
+                .orderByDist(entity.get<Transform>().as2())
+                .gen_first();
 
-        // TODO sort by distance?
-        OptEntity best_target = {};
-        for (Entity& r : all_toilets) {
-            const IsToilet& toilet = r.get<IsToilet>();
-            if (toilet.available()) {
-                best_target = r;
-            }
-        }
         // We couldnt find anything, for now just wait a second
-        if (!best_target) {
+        if (!closest_available_toilet) {
             aibathroom.reset();
             return;
         }
-        aibathroom.set_target(best_target->id);
+
+        aibathroom.set_target(closest_available_toilet->id);
     }
 
     // We have a target
