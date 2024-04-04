@@ -318,30 +318,11 @@ OptEntity EntityHelper::getMatchingEntityInFront(
 
 OptEntity EntityHelper::getClosestMatchingEntity(
     vec2 pos, float range, const std::function<bool(const Entity&)>& filter) {
-    // TODO We dont currently support order by
-    //      and even if we did it would be two full loops
-    /*
-    EntityQuery()
-    .whereLambda(filter)
-    .whereInRange(pos, range)
-    .orderBy(Distance)
-    .gen_first()
-    ;
-    */
-
-    float best_distance = range;
-    OptEntity best_so_far = {};
-    for (auto& e : get_entities()) {
-        if (!e) continue;
-        if (!filter(*e)) continue;
-        float d = vec::distance(pos, e->get<Transform>().as2());
-        if (d > range) continue;
-        if (d < best_distance) {
-            best_so_far = *e;
-            best_distance = d;
-        }
-    }
-    return best_so_far;
+    return EntityQuery()
+        .whereLambda(filter)
+        .whereInRange(pos, range)
+        .orderByDist(pos)
+        .gen_first();
 }
 
 bool EntityHelper::hasOverlappingSolidEntitiesInRange(vec2 range_min,

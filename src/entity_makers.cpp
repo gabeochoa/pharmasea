@@ -1315,19 +1315,18 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
             if (irsm.has_upgrade_unlocked(UpgradeClass::PottyProtocol)) {
                 // Are there any toilets?
 
-                std::vector<RefEntity> all_toilets =
-                    EntityQuery().whereHasComponent<IsToilet>().gen();
+                OptEntity closest_available_toilet =
+                    EntityQuery()
+                        .whereHasComponent<IsToilet>()
+                        .whereLambda([](const Entity& entity) {
+                            const IsToilet& toilet = entity.get<IsToilet>();
+                            return toilet.available();
+                        })
+                        .orderByDist(entity.get<Transform>().as2())
+                        .gen_first();
 
-                // TODO sort by distance?
-                OptEntity best_target = {};
-                for (Entity& r : all_toilets) {
-                    const IsToilet& toilet = r.get<IsToilet>();
-                    if (toilet.available()) {
-                        best_target = r;
-                    }
-                }
                 // We found an empty toilet, go go go
-                if (best_target) {
+                if (closest_available_toilet) {
                     vom_spewer.post_spawn_reset();
                     // TODO probably also lower max?
 

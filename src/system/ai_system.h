@@ -130,39 +130,34 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     AIWaitInQueue& aiwait = entity.get<AIWaitInQueue>();
 
     if (!aiwait.has_available_target()) {
-        std::vector<RefEntity> all_registers =
-            EntityQuery().whereHasComponent<HasWaitingQueue>().gen();
+        OptEntity best_register =
+            EntityQuery()
+                .whereHasComponent<HasWaitingQueue>()
+                .whereLambda([](const Entity& entity) {
+                    // Exclude full registers
+                    const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
+                    if (hwq.is_full()) return false;
+                    return true;
+                })
+                // Find the register with the least people on it
+                .orderByLambda([](const Entity& r1, const Entity& r2) {
+                    const HasWaitingQueue& hwq1 = r1.get<HasWaitingQueue>();
+                    int rpos1 = hwq1.get_next_pos();
+                    const HasWaitingQueue& hwq2 = r2.get<HasWaitingQueue>();
+                    int rpos2 = hwq2.get_next_pos();
+                    return rpos1 < rpos2;
+                })
+                .gen_first();
 
-        // Find the register with the least people on it
-        OptEntity best_target = {};
-        int best_pos = -1;
-        for (Entity& r : all_registers) {
-            const HasWaitingQueue& hwq = r.get<HasWaitingQueue>();
-            if (hwq.is_full()) continue;
-            int rpos = hwq.get_next_pos();
+        // TODO Check to see if we can path to that spot
 
-            // Check to see if we can path to that spot
-
-            // TODO causing no valid register to be found
-            // auto end = r.get<Transform>().tile_infront(rpos);
-            // auto new_path = bfs::find_path(
-            // entity.get<Transform>().as2(), end,
-            // std::bind(EntityHelper::isWalkable, std::placeholders::_1));
-            // if (new_path.empty()) continue;
-
-            if (best_pos == -1 || rpos < best_pos) {
-                best_target = r;
-                best_pos = rpos;
-            }
-        }
-        if (!best_target) {
+        if (!best_register) {
             aiwait.reset();
             return;
         }
-
-        aiwait.set_target(best_target->id);
+        aiwait.set_target(best_register->id);
         aiwait.position =
-            WIQ_add_to_queue_and_get_position(best_target.asE(), entity);
+            WIQ_add_to_queue_and_get_position(best_register.asE(), entity);
 
         return;
     }

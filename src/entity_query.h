@@ -174,24 +174,31 @@ struct EntityQuery {
     }
     /////////
 
+    using OrderByFn = std::function<bool(const Entity&, const Entity&)>;
     struct OrderBy {
         virtual ~OrderBy() {}
         virtual bool operator()(const Entity& a, const Entity& b) = 0;
     };
 
-    struct OrderByDistance : OrderBy {
-        vec2 position;
-        explicit OrderByDistance(vec2 position) : position(position) {}
+    struct OrderByLambda : OrderBy {
+        OrderByFn sortFn;
+        explicit OrderByLambda(const OrderByFn& sortFn) : sortFn(sortFn) {}
 
-        virtual bool operator()(const Entity& a, const Entity& b) {
-            float a_dist = vec::distance(a.get<Transform>().as2(), position);
-            float b_dist = vec::distance(b.get<Transform>().as2(), position);
-            return a_dist < b_dist;
+        virtual bool operator()(const Entity& a, const Entity& b) override {
+            return sortFn(a, b);
         }
     };
 
+    auto& orderByLambda(const OrderByFn& sortfn) {
+        return set_order_by(new OrderByLambda(sortfn));
+    }
+
     auto& orderByDist(vec2 position) {
-        return set_order_by(new OrderByDistance(position));
+        return orderByLambda([=](const Entity& a, const Entity& b) {
+            float a_dist = vec::distance(a.get<Transform>().as2(), position);
+            float b_dist = vec::distance(b.get<Transform>().as2(), position);
+            return a_dist < b_dist;
+        });
     }
 
     /////////
