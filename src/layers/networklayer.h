@@ -139,7 +139,7 @@ struct NetworkLayer : public Layer {
 
         text(Widget{label}, text_lookup(strings::i18n::USERNAME));
 
-        text(Widget{uname}, Settings::get().data.username);
+        text(Widget{uname}, NO_TRANSLATE(Settings::get().data.username));
 
         bool show_edit_button =
             network_info->client
@@ -229,9 +229,10 @@ struct NetworkLayer : public Layer {
                 // TODO figure out why there are null rps
                 if (!kv.second) continue;
 
-                text(Widget{players[i++]},
-                     fmt::format("{}({})", kv.second->get<HasName>().name(),
-                                 kv.first));
+                text(
+                    Widget{players[i++]},
+                    NO_TRANSLATE(fmt::format(
+                        "{}({})", kv.second->get<HasName>().name(), kv.first)));
             }
         }
 
@@ -242,20 +243,22 @@ struct NetworkLayer : public Layer {
 
             auto [_a, label, ip_addr, control] = rect::hsplit<4>(your_ip, 30);
 
-            // TODO not translated
-            text(Widget{label}, "Your IP is:");
+            // TODO not translated maybe we dont need this piece
+            // is the format XXX.XXX just obvious its an ip address
+            text(Widget{label},
+                 TODO_TRANSLATE("Your IP is:", TodoReason::Format));
 
             auto ip = should_show_host_ip ? network::my_remote_ip_address
                                           : "***.***.***.***";
-            text(Widget{ip_addr}, ip);
+            text(Widget{ip_addr}, NO_TRANSLATE(ip));
 
             auto [check, copy] = rect::vsplit<2>(control, 5);
 
             // TODO default value wont be setup correctly without this
             // bool sssb = Settings::get().data.show_streamer_safe_box;
-            std::string show_hide_host_ip_text =
-                should_show_host_ip ? text_lookup(strings::i18n::HIDE_IP)
-                                    : text_lookup(strings::i18n::SHOW_IP);
+            std::string show_hide_host_ip_text = should_show_host_ip
+                                                     ? strings::i18n::HIDE_IP
+                                                     : strings::i18n::SHOW_IP;
             if (auto result =
                     checkbox(Widget{check},
                              CheckboxData{.selected = should_show_host_ip,

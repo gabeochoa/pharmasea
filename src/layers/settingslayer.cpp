@@ -390,7 +390,9 @@ void SettingsLayer::draw_keybinding_screen(float) {
                     auto [label, remap_button] =
                         rect::vsplit<2>(rects[rendering_index++], 20);
 
-                    text(Widget{label}, util::space_between_caps(kv.second));
+                    text(Widget{label},
+                         TODO_TRANSLATE(util::space_between_caps(kv.second),
+                                        TodoReason::KeyName));
 
                     if (auto result =
                             checkbox(Widget{remap_button},
@@ -416,8 +418,10 @@ void SettingsLayer::draw_keybinding_screen(float) {
                 auto [label, input] = rect::hsplit<2>(popup);
 
                 text(Widget{label, windowresult.as<int>()},
-                     util::space_between_caps(
-                         magic_enum::enum_name(key_binding_popup.input)));
+                     TODO_TRANSLATE(
+                         util::space_between_caps(
+                             magic_enum::enum_name(key_binding_popup.input)),
+                         TodoReason::KeyName));
 
                 auto input_descr = _get_label(key_binding_popup.state,
                                               key_binding_popup.input);

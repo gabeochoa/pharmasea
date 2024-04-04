@@ -81,6 +81,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
  */
 
 #include <array>
+#include <iostream>
 #include <string>
 
 namespace strings {
@@ -304,12 +305,50 @@ constexpr const char* ITCH = "https://ochoag.com/pp-download.html";
 
 }  // namespace strings
 
+struct TranslatedString {
+    // TODO eventually make private
+    const char* underlying = "";
+
+    [[nodiscard]] inline bool empty() const { return strlen(underlying) == 0; }
+    [[nodiscard]] inline const char* debug() const { return underlying; }
+};
+
+[[nodiscard]] inline TranslatedString NO_TRANSLATE(const char* s) {
+    return TranslatedString{s};
+}
+
+[[nodiscard]] inline TranslatedString NO_TRANSLATE(const std::string& s) {
+    return TranslatedString{s.c_str()};
+}
+
+enum struct TodoReason { Format, UserFacingError, KeyName, Recursion };
+
+// TODO fix all of these before launch :)
+[[nodiscard]] inline TranslatedString TODO_TRANSLATE(const char* s,
+                                                     TodoReason) {
+    return TranslatedString{s};
+}
+
+[[nodiscard]] inline TranslatedString TODO_TRANSLATE(const std::string& s,
+                                                     TodoReason) {
+    return TranslatedString{s.c_str()};
+}
+
 // localization comes from engine/global.h
-inline const char* text_lookup(const char* s) {
-    if (!localization->mo_data) return s;
+[[nodiscard]] inline TranslatedString text_lookup(const char* s) {
+    if (!localization->mo_data) {
+        return TranslatedString{"Missing language data"};
+    }
 
     int target_index = get_target_index(localization, s);
-    if (target_index == -1) return s;  // Maybe we want to log an error?
+    if (target_index == -1) {
+        std::cout << "Failed to find translation for " << s << std::endl;
+        return TranslatedString{"Missing translation for word"};
+    }
 
-    return get_translated_string(localization, target_index);
+    const char* translated = get_translated_string(localization, target_index);
+    return TranslatedString{translated};
+}
+[[nodiscard]] inline TranslatedString text_lookup(const std::string& s) {
+    return text_lookup(s.c_str());
 }

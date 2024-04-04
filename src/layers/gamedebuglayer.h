@@ -53,8 +53,10 @@ struct GameDebugLayer : public Layer {
 
         {
             auto [menu_div, game_div] = rect::hsplit<2>(menu_state, 10);
-            text(Widget{menu_div}, std::string(MenuState::get().tostring()));
-            text(Widget{game_div}, std::string(GameState::get().tostring()));
+            text(Widget{menu_div},
+                 NO_TRANSLATE(std::string(MenuState::get().tostring())));
+            text(Widget{game_div},
+                 NO_TRANSLATE(std::string(GameState::get().tostring())));
         }
 
         // Player Info
@@ -72,23 +74,27 @@ struct GameDebugLayer : public Layer {
                     auto [id_div, position_div, holding_div, item_div] =
                         rect::hsplit<4>(player_info, 10);
 
-                    text(Widget{id_div}, fmt::format("{}", (player->id)));
+                    text(Widget{id_div},
+                         NO_TRANSLATE(fmt::format("{}", (player->id))));
                     text(Widget{position_div},
-                         fmt::format("{}", (player->get<Transform>().pos())));
+                         NO_TRANSLATE(fmt::format(
+                             "{}", (player->get<Transform>().pos()))));
                     text(Widget{holding_div},
-                         fmt::format("holding furniture?: {}",
-                                     furniture ? furniture->name() : "Empty"));
+                         NO_TRANSLATE(fmt::format(
+                             "holding furniture?: {}",
+                             furniture ? furniture->name() : "Empty")));
                     text(Widget{item_div},
-                         fmt::format(
+                         NO_TRANSLATE(fmt::format(
                              "holding item?: {}",
                              player->get<CanHoldItem>().is_holding_item()
                                  ? player->get<CanHoldItem>().item()->name()
-                                 : "Empty"));
+                                 : "Empty")));
                 } else {
-                    text(Widget{player_info}, "No matching player found");
+                    text(Widget{player_info},
+                         NO_TRANSLATE("No matching player found"));
                 }
             } else {
-                text(Widget{player_info}, "Map not valid");
+                text(Widget{player_info}, NO_TRANSLATE("Map not valid"));
             }
         }
 
@@ -104,9 +110,11 @@ struct GameDebugLayer : public Layer {
                       ingredients_div] = rect::hsplit<4>(round_info, 10);
 
                 text(Widget{round_time_div},
-                     fmt::format("Round Length: {:.0f}/{}",
-                                 hasTimer.get_current_round_time(),
-                                 hasTimer.get_total_round_time()));
+                     TODO_TRANSLATE(
+                         fmt::format("Round Length: {:.0f}/{}",
+                                     hasTimer.get_current_round_time(),
+                                     hasTimer.get_total_round_time()),
+                         TodoReason::Format));
 
                 {
                     auto [num_spawned, countdown] =
@@ -121,12 +129,13 @@ struct GameDebugLayer : public Layer {
 
                     const IsSpawner& iss = spawner.get<IsSpawner>();
                     text(Widget{num_spawned},
-                         fmt::format("Num Spawned: {} / {}",
-                                     iss.get_num_spawned(),
-                                     iss.get_max_spawned()));
+                         TODO_TRANSLATE(fmt::format("Num Spawned: {} / {}",
+                                                    iss.get_num_spawned(),
+                                                    iss.get_max_spawned()),
+                                        TodoReason::Format));
                 }
             } else {
-                text(Widget{round_info}, "Map not valid");
+                text(Widget{round_info}, NO_TRANSLATE("Map not valid"));
             }
         }
 

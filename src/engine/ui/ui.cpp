@@ -83,6 +83,7 @@ ElementResult colored_text(const Widget& widget, const std::string& content,
     // No need to render if text is empty
     if (content.empty()) return false;
 
+    // TODO change to use TranslatedText
     internal::draw_colored_text(text_lookup(content.c_str()), rect,
                                 widget.z_index, c);
 
@@ -94,7 +95,7 @@ ElementResult window(const Widget& widget) {
     return ElementResult{true, widget.z_index - 1};
 }
 
-ElementResult text(const Widget& widget, const std::string& content,
+ElementResult text(const Widget& widget, const TranslatedString& content,
                    ui::theme::Usage color_usage, bool draw_background
 
 ) {
@@ -109,8 +110,7 @@ ElementResult text(const Widget& widget, const std::string& content,
         // rect::expand_px(rect, 2.f), widget.z_index,
         // ui::theme::Usage::DarkFont);
     }
-    internal::draw_text(text_lookup(content.c_str()), rect, widget.z_index,
-                        color_usage);
+    internal::draw_text(content, rect, widget.z_index, color_usage);
 
     return true;
 }
@@ -146,7 +146,7 @@ ElementResult scroll_window(const Widget& widget, Rectangle view,
                          ScrollWindowResult{widget.rect, widget.z_index - 1}};
 }
 
-ElementResult button(const Widget& widget, const std::string& content,
+ElementResult button(const Widget& widget, const TranslatedString& content,
                      bool background) {
     Rectangle rect = widget.get_rect();
 
@@ -237,7 +237,7 @@ ElementResult checkbox(const Widget& widget, const CheckboxData& data) {
     state->on = data.selected;
     state->on.changed_since = false;
 
-    if (button(widget, "", true)) {
+    if (button(widget, NO_TRANSLATE(""), true)) {
         state->on = !state->on;
     }
 
@@ -245,7 +245,7 @@ ElementResult checkbox(const Widget& widget, const CheckboxData& data) {
     const std::string label =
         data.content.empty() ? default_label : data.content;
 
-    text(widget, label);
+    text(widget, NO_TRANSLATE(label));
 
     return ElementResult{state->on.changed_since, (bool) state->on};
 }
@@ -360,7 +360,7 @@ ElementResult dropdown(const Widget& widget, DropdownData data) {
         focus::set_previous();
     }
 
-    if (button(widget, "", true)) {
+    if (button(widget, NO_TRANSLATE(""), true)) {
         state->on = !state->on;
     }
 
@@ -434,13 +434,15 @@ ElementResult dropdown(const Widget& widget, DropdownData data) {
                 state->on = false;
             }
 
-            text(option_widget, data.options[i]);
+            text(option_widget,
+                 TODO_TRANSLATE(data.options[i], TodoReason::Recursion));
         }
     } else {
         state->focused = state->selected;
     }
 
-    text(widget, data.options[state->selected]);
+    text(widget,
+         TODO_TRANSLATE(data.options[state->selected], TodoReason::Recursion));
 
     return ElementResult{state->selected.changed_since, (int) state->selected};
 }
@@ -486,7 +488,7 @@ ElementResult control_input_field(const Widget& widget,
                             ? ui::theme::Usage::Secondary
                             : ui::theme::Usage::Primary);
 
-    text(widget, data.content);
+    text(widget, TODO_TRANSLATE(data.content, TodoReason::Recursion));
 
     return ElementResult{valid, ai};
 }
@@ -531,7 +533,7 @@ ElementResult textfield(const Widget& widget, const TextfieldData& data) {
 
         auto text_color =
             is_invalid ? ui::theme::Usage::Error : ui::theme::Usage::Font;
-        text(widget, focused_content, text_color);
+        text(widget, NO_TRANSLATE(focused_content), text_color);
     }
 
     {

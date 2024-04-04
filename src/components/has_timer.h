@@ -94,7 +94,7 @@ struct HasTimer : public BaseComponent {
     std::array<vec2, WaitingReasonLast> block_state_change_locations;
     vec2 invalid_location = vec2{999.f, 999.f};
 
-    [[nodiscard]] const char* text_reason(WaitingReason wr) const {
+    [[nodiscard]] TranslatedString text_reason(WaitingReason wr) const {
         switch (wr) {
             case CustomersInStore:
                 return text_lookup(strings::i18n::CUSTOMERS_IN_STORE);
@@ -114,11 +114,11 @@ struct HasTimer : public BaseComponent {
                 log_warn("got reason {} but dont have a way to render it", wr);
             case WaitingReasonLast:
             case None:
-                return "";
+                return NO_TRANSLATE("");
         }
     }
 
-    [[nodiscard]] const char* text_reason(int i) const {
+    [[nodiscard]] TranslatedString text_reason(int i) const {
         WaitingReason name = magic_enum::enum_value<WaitingReason>(i);
         return text_reason(name);
     }

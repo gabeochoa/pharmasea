@@ -151,7 +151,9 @@ struct BasePauseLayer : public Layer {
         if (button(Widget{settings}, text_lookup(strings::i18n::SETTINGS))) {
             MenuState::get().set(menu::State::Settings);
         }
-        if (button(Widget{config}, "RELOAD CONFIGS")) {
+
+        // TODO add debug check
+        if (button(Widget{config}, NO_TRANSLATE("RELOAD CONFIGS"))) {
             Preload::get().reload_config();
         }
         if (button(Widget{quit}, text_lookup(strings::i18n::QUIT))) {

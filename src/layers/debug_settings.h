@@ -137,7 +137,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         auto [game_state_label, game_state_dropdown, _a] =
             rect::vsplit<3>(container, 10);
 
-        text(Widget{game_state_label}, "Game State");
+        text(Widget{game_state_label}, NO_TRANSLATE("Game State"));
         if (auto result = dropdown(Widget{game_state_dropdown},
                                    DropdownData{
                                        val,
@@ -180,7 +180,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
             auto [label, control] = rect::vsplit(debug_mode, 30);
             control = rect::rpad(control, 10);
 
-            text(Widget{label}, "Debug Mode");
+            text(Widget{label}, NO_TRANSLATE("Debug Mode"));
 
             if (auto result =
                     checkbox(Widget{control},
@@ -194,7 +194,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
             auto [label, control] = rect::vsplit(no_clip, 30);
             control = rect::rpad(control, 10);
 
-            text(Widget{label}, "No Clip");
+            text(Widget{label}, NO_TRANSLATE("No Clip"));
 
             if (auto result = checkbox(
                     Widget{control}, CheckboxData{.selected = no_clip_enabled});
@@ -207,7 +207,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
             auto [label, control] = rect::vsplit(skip_ingredient_check, 30);
             control = rect::rpad(control, 10);
 
-            text(Widget{label}, "Skip Ingredient Check");
+            text(Widget{label}, NO_TRANSLATE("Skip Ingredient Check"));
 
             if (auto result =
                     checkbox(Widget{control},

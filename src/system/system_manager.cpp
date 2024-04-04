@@ -1002,25 +1002,23 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
         case IsTriggerArea::ModelTest_BackToLobby: {
             // TODO translate?
             ita.update_title("Back To Lobby");
-            ita.update_subtitle(text_lookup(strings::i18n::LOADING));
+            ita.update_subtitle(strings::i18n::LOADING);
             return;
         } break;
         case IsTriggerArea::Lobby_ModelTest: {
             // TODO translate?
             ita.update_title("Model Testing");
-            ita.update_subtitle(text_lookup(strings::i18n::LOADING));
+            ita.update_subtitle(strings::i18n::LOADING);
             return;
         } break;
         case IsTriggerArea::Lobby_PlayGame: {
-            ita.update_title(text_lookup(strings::i18n::START_GAME));
-            ita.update_subtitle(text_lookup(strings::i18n::LOADING));
+            ita.update_title(strings::i18n::START_GAME);
+            ita.update_subtitle(strings::i18n::LOADING);
             return;
         } break;
         case IsTriggerArea::Store_BackToPlanning: {
-            ita.update_title(
-                text_lookup(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
-            ita.update_subtitle(
-                text_lookup(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
+            ita.update_title(strings::i18n::TRIGGERAREA_PURCHASE_FINISH);
+            ita.update_subtitle(strings::i18n::TRIGGERAREA_PURCHASE_FINISH);
             return;
         } break;
         case IsTriggerArea::Unset:
@@ -1721,7 +1719,7 @@ inline void in_round_update(Entity& entity, float dt) {
         int i = 1;
         while (i < hours_missed) {
             log_info("running actions for {} for hour {} (currently {})",
-                     upgrade->name, irsm.ran_for_hour + i, hour);
+                     upgrade->name.debug(), irsm.ran_for_hour + i, hour);
             i++;
 
             auto actions =

@@ -36,7 +36,7 @@ ElementResult colored_text(const Widget& widget, const std::string& content,
                            Color c = WHITE);
 ElementResult window(const Widget& widget);
 
-ElementResult text(const Widget& widget, const std::string& content,
+ElementResult text(const Widget& widget, const TranslatedString& content,
                    ui::theme::Usage color_usage = ui::theme::Usage::Font,
                    bool draw_background = false
 
@@ -45,7 +45,8 @@ ElementResult text(const Widget& widget, const std::string& content,
 ElementResult scroll_window(const Widget& widget, Rectangle view,
                             std::function<void(ScrollWindowResult)> children);
 
-ElementResult button(const Widget& widget, const std::string& content = "",
+ElementResult button(const Widget& widget,
+                     const TranslatedString& content = TranslatedString(),
                      bool background = true);
 ElementResult image(const Widget& widget, const std::string& texture_name);
 

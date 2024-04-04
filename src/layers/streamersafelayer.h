@@ -35,7 +35,7 @@ struct StreamerSafeLayer : public Layer {
                 (FS / 4.f) /* lineThick */, BLACK);
 
             DrawTextEx(Preload::get().font,
-                       text_lookup(strings::i18n::SAFE_ZONE),
+                       text_lookup(strings::i18n::SAFE_ZONE).underlying,
                        vec2{(float) x_pos + (streamer_box_size / 2.f) - (FS),
                             (float) y_pos + (streamer_box_size / 2.f) - FS},
                        FS, 0, WHITE);

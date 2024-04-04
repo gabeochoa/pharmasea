@@ -33,7 +33,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         return EntityQuery().whereHasComponent<HasTimer>().gen_first();
     }
 
-    std::string get_status_text(const HasTimer& ht) {
+    TranslatedString get_status_text(const HasTimer& ht) {
         const bool is_closing = ht.store_is_closed();
         const bool is_day = GameState::get().in_round() && !is_closing;
         const int dayCount = ht.dayCount;
@@ -45,8 +45,11 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         // TODO figure out how to translate strings that have numbers in
         // them...
         auto day_text = fmt::format(
-            "{} {}", text_lookup(strings::i18n::ROUND_DAY), dayCount);
-        return std::string(fmt::format("{} {}", status_text, day_text));
+            "{} {}", text_lookup(strings::i18n::ROUND_DAY).underlying,
+            dayCount);
+        return TODO_TRANSLATE(
+            fmt::format("{} {}", status_text.underlying, day_text),
+            TodoReason::Format);
     }
 
     void animate_new_transaction(const IsBank::Transaction& transaction,
@@ -59,8 +62,9 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         unsigned char alpha =
             static_cast<unsigned char>(255 * transaction.pct());
 
-        const auto tip_string = fmt::format(
-            "{} {}", transaction.extra, text_lookup(strings::i18n::STORE_TIP));
+        const auto tip_string =
+            fmt::format("{} {}", transaction.extra,
+                        text_lookup(strings::i18n::STORE_TIP).underlying);
 
         colored_text(
             ui::Widget{spawn_count},
@@ -128,9 +132,12 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             if (sophie.valid()) {
                 const IsBank& bank = sophie->get<IsBank>();
                 text(Widget{spawn_count},
-                     fmt::format("{}: {}",
-                                 text_lookup(strings::i18n::STORE_BALANCE),
-                                 bank.balance()));
+                     TODO_TRANSLATE(
+                         fmt::format("{}: {}",
+                                     text_lookup(strings::i18n::STORE_BALANCE)
+                                         .underlying,
+                                     bank.balance()),
+                         TodoReason::Format));
 
                 const std::vector<IsBank::Transaction>& transactions =
                     bank.get_transactions();
@@ -153,10 +160,13 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
                                   .asE();
             const IsSpawner& iss = spawner.get<IsSpawner>();
             text(Widget{spawn_count},
-                 fmt::format(
-                     "{}: {}",
-                     text_lookup(strings::i18n::PLANNING_CUSTOMERS_COMING),
-                     iss.get_max_spawned()));
+                 TODO_TRANSLATE(
+                     fmt::format(
+                         "{}: {}",
+                         text_lookup(strings::i18n::PLANNING_CUSTOMERS_COMING)
+                             .underlying,
+                         iss.get_max_spawned()),
+                     TodoReason::Format));
         }
     }
 };

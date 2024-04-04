@@ -460,7 +460,9 @@ void render_trigger_area(const Entity& entity, float dt) {
         //
         raylib::DrawTextWave3D(
             font,
-            fmt::format("~~{}~~", text_lookup(ita.subtitle().c_str())).c_str(),
+            fmt::format("~~{}~~",
+                        text_lookup(ita.subtitle().c_str()).underlying)
+                .c_str(),
             text_position, fsize,
             4,                      // font spacing
             4,                      // line spacing
@@ -519,6 +521,7 @@ void render_trigger_area(const Entity& entity, float dt) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
             raylib::DrawFloatingText(
                 start_position - vec3{0, 0.3f * (i + 1), 0}, font,
+                // TODO translate?
                 fmt::format("{}", get_string_for_ingredient(ig)).c_str());
             i++;
         });
@@ -531,14 +534,14 @@ void render_trigger_area(const Entity& entity, float dt) {
         const auto start_position =
             transform.raw() + vec3{0, 1.0f * TILESIZE, -2.f * TILESIZE};
 
-        raylib::DrawFloatingText(start_position, font, impl->name.c_str());
+        raylib::DrawFloatingText(start_position, font, impl->name.underlying);
         int i = 0;
 
         raylib::DrawFloatingText(start_position - vec3{0, 0.3f * (i++ + 1), 0},
-                                 font, impl->flavor_text.c_str());
+                                 font, impl->flavor_text.underlying);
 
         raylib::DrawFloatingText(start_position - vec3{0, 0.3f * (i++ + 1), 0},
-                                 font, impl->description.c_str());
+                                 font, impl->description.underlying);
     };
 
     const auto _render_progression_option = [&](IsTriggerArea::Type type) {
@@ -598,7 +601,7 @@ void render_floor_marker(const Entity& entity, float) {
     const auto _get_string = [](const Entity& entity) {
         switch (entity.get<IsFloorMarker>().type) {
             case IsFloorMarker::Unset:
-                return "";
+                return NO_TRANSLATE("");
             // TODO for not use the other one but eventually probably just
             // make it invisible
             case IsFloorMarker::Store_SpawnArea:
@@ -609,16 +612,16 @@ void render_floor_marker(const Entity& entity, float) {
             case IsFloorMarker::Store_PurchaseArea:
                 return text_lookup(strings::i18n::FLOORMARKER_STORE_PURCHASE);
         }
-        return "";
+        return NO_TRANSLATE("");
     };
 
-    const std::string title = _get_string(entity);
+    const TranslatedString title = _get_string(entity);
 
     log_ifx(title.empty(), LogLevel::LOG_WARN,
             "Rendering trigger area with empty text string: id{} pos{}",
             entity.id, pos);
 
-    raylib::DrawText3D(font, title.c_str(), text_position, fsize,
+    raylib::DrawText3D(font, title.underlying, text_position, fsize,
                        4,      // font spacing
                        4,      // line spacing
                        false,  // backface

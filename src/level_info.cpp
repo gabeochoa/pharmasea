@@ -346,8 +346,7 @@ void LevelInfo::generate_store_map() {
                 int balance = bank.balance();
                 int cart = bank.cart();
                 if (balance < cart)
-                    return {false,
-                            text_lookup(strings::i18n::STORE_NOT_ENOUGH_COINS)};
+                    return {false, strings::i18n::STORE_NOT_ENOUGH_COINS};
 
                 // Are all the required machines here?
                 OptEntity cart_area =
@@ -371,9 +370,7 @@ void LevelInfo::generate_store_map() {
                 for (const Entity& ent : ents) {
                     if (ent.is_missing<IsFreeInStore>()) continue;
                     if (!cart_area->get<IsFloorMarker>().is_marked(ent.id)) {
-                        return {
-                            false,
-                            text_lookup(strings::i18n::STORE_MISSING_REQUIRED)};
+                        return {false, strings::i18n::STORE_MISSING_REQUIRED};
                     }
                 }
 
@@ -390,9 +387,7 @@ void LevelInfo::generate_store_map() {
                         }
                     }
                     if (!all_empty)
-                        return {
-                            false,
-                            text_lookup(strings::i18n::STORE_STEALING_MACHINE)};
+                        return {false, strings::i18n::STORE_STEALING_MACHINE};
                 }
 
                 return {true, ""};

@@ -25,11 +25,6 @@ TODO Variables to control?
    - conveyer belt stuff
    - store price
    -
-
-
-   - dont allow any rendering text fbt
-   - and then no_translate() for things that dont need
-
  * */
 enum struct ConfigKey {
     Test,
