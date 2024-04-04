@@ -18,7 +18,19 @@
 
 using ConfigValueType = std::variant<int, bool, float, EntityType, Drink>;
 
-// TODO get_speed_for_entity
+/*
+TODO Variables to control?
+
+   - customer speed
+   - conveyer belt stuff
+   - store price
+   -
+
+
+   - dont allow any rendering text fbt
+   - and then no_translate() for things that dont need
+
+ * */
 enum struct ConfigKey {
     Test,
     //
