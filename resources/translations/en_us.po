@@ -1,13 +1,259 @@
-msgid ""
-msgstr ""
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-07-07 09:51-0800\n"
-"Last-Translator: Gabe Ochoa <>\n"
-"Language-Team:  <>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
-"Content-Transfer-Encoding: 8bit\n"
+msgid "About"
+msgstr "About"
 
-# msgid "Exit"
-# msgstr "Correctly Loading Translation File en_us"
+msgid "Play"
+msgstr "Play"
+
+msgid "Settings"
+msgstr "Settings"
+
+
+msgid "Exit"
+msgstr "Exit"
+
+
+msgid "Back"
+msgstr "Back"
+
+
+msgid "Continue"
+msgstr "Continue"
+
+
+msgid "Quit"
+msgstr "Quit"
+
+
+msgid "Join"
+msgstr "Join"
+
+
+msgid "Host"
+msgstr "Host"
+
+
+msgid "Edit"
+msgstr "Edit"
+
+
+msgid "Start"
+msgstr "Start"
+
+
+msgid "Disconnect"
+msgstr "Disconnect"
+
+
+msgid "Username"
+msgstr "Username"
+
+
+msgid "Lock-In"
+msgstr "Lock-In"
+
+
+msgid "Enter IP Address"
+msgstr "Enter IP Address"
+
+
+msgid "Load Last Used IP"
+msgstr "Load Last Used IP"
+
+
+msgid "Connect"
+msgstr "Connect"
+
+
+msgid "Hide"
+msgstr "Hide"
+
+
+msgid "Show"
+msgstr "Show"
+
+
+msgid "Copy"
+msgstr "Copy"
+
+
+msgid "safe zone"
+msgstr "safe zone"
+
+
+msgid "Show Streamer Safe Box"
+msgstr "Show Streamer Safe Box"
+
+
+msgid "Enable Post-Processing Shaders"
+msgstr "Enable Post-Processing Shaders"
+
+
+msgid "Snap Camera"
+msgstr "Snap Camera"
+
+
+msgid "Master Volume"
+msgstr "Master Volume"
+
+
+msgid "Music Volume"
+msgstr "Music Volume"
+
+
+msgid "SFX Volume"
+msgstr "SFX Volume"
+
+
+msgid "Resolution"
+msgstr "Resolution"
+
+
+msgid "Theme"
+msgstr "Theme"
+
+
+msgid "Language"
+msgstr "Language"
+
+
+msgid "Fullscreen?"
+msgstr "Fullscreen?"
+
+
+msgid "Save and Exit"
+msgstr "Save and Exit"
+
+
+msgid "Exit without Saving"
+msgstr "Exit without Saving"
+
+
+msgid "General"
+msgstr "General"
+
+
+msgid "Controls"
+msgstr "Controls"
+
+
+msgid "Keyboard"
+msgstr "Keyboard"
+
+
+msgid "Gamepad"
+msgstr "Gamepad"
+
+
+msgid "Start Game"
+msgstr "Start Game"
+
+
+msgid "Can't close until all customers leave"
+msgstr "Can't close until all customers leave"
+
+
+msgid "Can't start game until all players drop furniture"
+msgstr "Can't start game until all players drop furniture"
+
+
+msgid "Can't start game until there is a path to a register"
+msgstr "Can't start game until there is a path to a register"
+
+
+msgid "Can't start game until your bar is all clean"
+msgstr "Can't start game until your bar is all clean"
+
+
+msgid "Can't start game if you have furniture overlapping"
+msgstr "Can't start game if you have furniture overlapping"
+
+
+msgid "Can't start game if you have furniture still in the spawn area"
+msgstr "Can't start game if you have furniture still in the spawn area"
+
+
+msgid "Can't trash machines you need for recipies..."
+msgstr "Can't trash machines you need for recipies..."
+
+
+msgid "Loading..."
+msgstr "Loading..."
+
+
+msgid "OPEN"
+msgstr "OPEN"
+
+
+msgid "CLOSING"
+msgstr "CLOSING"
+
+
+msgid "CLOSED"
+msgstr "CLOSED"
+
+
+msgid "Next Round Starting In"
+msgstr "Next Round Starting In"
+
+
+msgid "Character Switcher"
+msgstr "Character Switcher"
+
+
+msgid "Customers Coming"
+msgstr "Customers Coming"
+
+
+msgid "Day"
+msgstr "Day"
+
+
+msgid "Not enough coins"
+msgstr "Not enough coins"
+
+
+msgid "Missing required coins"
+msgstr "Missing required coins"
+
+
+msgid "Please put that machine back"
+msgstr "Please put that machine back"
+
+
+msgid "Balance"
+msgstr "Balance"
+
+
+msgid "tip"
+msgstr "tip"
+
+
+msgid "Submit and Return"
+msgstr "Submit and Return"
+
+
+msgid "Trash"
+msgstr "Trash"
+
+
+msgid "New Items"
+msgstr "New Items"
+
+
+msgid "Place to Purchase"
+msgstr "Place to Purchase"
+
+
+msgid "ABCDEFGHIJKLMNOPQRSTUVWXYZ "
+msgstr "ABCDEFGHIJKLMNOPQRSTUVWXYZ "
+
+
+msgid "abcdefghijklmnopqrstuvwxyz "
+msgstr "abcdefghijklmnopqrstuvwxyz "
+
+
+msgid "0123456789_-+=/[];,.<>?:"
+msgstr "0123456789_-+=/[];,.<>?:"
+
+msgid "Pub Panic!"
+msgstr "Pub Panic!"
