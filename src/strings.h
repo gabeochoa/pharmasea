@@ -81,6 +81,8 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
  */
 
 #include <array>
+#include <cassert>
+#include <iostream>
 #include <string>
 
 namespace strings {
@@ -242,8 +244,9 @@ constexpr const char* THEME = "Theme";
 constexpr const char* LANGUAGE = "Language";
 constexpr const char* FULLSCREEN = "Fullscreen?";
 
-constexpr const char* EXIT_AND_SAVE = "Save and Exit";
+constexpr const char* EXIT_AND_SAVE = "Save and exit";
 constexpr const char* EXIT_NO_SAVE = "Exit without Saving";
+constexpr const char* RESET_ALL_SETTINGS = "Reset all settings";
 
 constexpr const char* GENERAL = "General";
 constexpr const char* CONTROLS = "Controls";
@@ -304,12 +307,61 @@ constexpr const char* ITCH = "https://ochoag.com/pp-download.html";
 
 }  // namespace strings
 
+// TODO make those constexpr strings above translatablestring :)
+//
+struct TranslatableString {
+    explicit TranslatableString(const std::string& s) : content(s) {}
+    explicit TranslatableString(const std::string& s, bool ig)
+        : content(s), no_translate(ig) {}
+
+    [[nodiscard]] inline bool skip_translate() const { return no_translate; }
+    [[nodiscard]] inline bool empty() const { return content.empty(); }
+    [[nodiscard]] inline const char* debug() const { return content.c_str(); }
+    [[nodiscard]] inline const char* underlying_TL_ONLY() const {
+        return content.c_str();
+    }
+
+    [[nodiscard]] inline const std::string& str() const { return content; }
+
+   private:
+    std::string content;
+    bool no_translate = false;
+};
+
+[[nodiscard]] inline TranslatableString NO_TRANSLATE(const std::string& s) {
+    return TranslatableString{s, true};
+}
+
+enum struct TodoReason {
+    Format,
+    UserFacingError,
+    KeyName,
+    Recursion,
+    ServerString
+};
+
+// TODO fix all of these before launch :)
+[[nodiscard]] inline TranslatableString TODO_TRANSLATE(const std::string& s,
+                                                       TodoReason) {
+    return TranslatableString{s, true};
+}
+
 // localization comes from engine/global.h
-inline const char* text_lookup(const char* s) {
-    if (!localization->mo_data) return s;
+[[nodiscard]] inline std::string translation_lookup(
+    const TranslatableString& s) {
+    if (s.skip_translate()) return s.underlying_TL_ONLY();
 
-    int target_index = get_target_index(localization, s);
-    if (target_index == -1) return s;  // Maybe we want to log an error?
+    if (!localization->mo_data) {
+        return "Missing language data";
+    }
 
-    return get_translated_string(localization, target_index);
+    int target_index = get_target_index(localization, s.underlying_TL_ONLY());
+    if (target_index == -1) {
+        std::cout << "Failed to find translation for " << s.debug()
+                  << std::endl;
+        return s.underlying_TL_ONLY();
+    }
+
+    const char* translated = get_translated_string(localization, target_index);
+    return translated;
 }

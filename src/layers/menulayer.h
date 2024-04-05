@@ -63,7 +63,7 @@ struct MenuLayer : public Layer {
         // Title
         {
             auto text_loc = rect::lpad(top, 15);
-            text(Widget{text_loc}, text_lookup(strings::GAME_NAME));
+            text(Widget{text_loc}, TranslatableString(strings::GAME_NAME));
         }
 
         // Buttons
@@ -71,16 +71,20 @@ struct MenuLayer : public Layer {
             auto [rect1, rect2, rect3, rect4] =
                 rect::hsplit<4>(rect::hpad(body, 15), 20);
 
-            if (button(Widget{rect1}, text_lookup(strings::i18n::PLAY))) {
+            if (button(Widget{rect1},
+                       TranslatableString(strings::i18n::PLAY))) {
                 MenuState::get().set(menu::State::Network);
             }
-            if (button(Widget{rect2}, text_lookup(strings::i18n::ABOUT))) {
+            if (button(Widget{rect2},
+                       TranslatableString(strings::i18n::ABOUT))) {
                 MenuState::get().set(menu::State::About);
             }
-            if (button(Widget{rect3}, text_lookup(strings::i18n::SETTINGS))) {
+            if (button(Widget{rect3},
+                       TranslatableString(strings::i18n::SETTINGS))) {
                 MenuState::get().set(menu::State::Settings);
             }
-            if (button(Widget{rect4}, text_lookup(strings::i18n::EXIT))) {
+            if (button(Widget{rect4},
+                       TranslatableString(strings::i18n::EXIT))) {
                 App::get().close();
             }
         }

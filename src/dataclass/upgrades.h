@@ -11,10 +11,10 @@
 
 struct UpgradeImpl {
     UpgradeClass type;
-    std::string name;
+    TranslatableString name;
     std::string icon_name;
-    std::string flavor_text;
-    std::string description;
+    TranslatableString flavor_text;
+    TranslatableString description;
     std::function<Mods(const ConfigData&, const IsProgressionManager&, int)>
         onHourMods = nullptr;
     std::function<Actions(const ConfigData&, const IsProgressionManager&, int)>

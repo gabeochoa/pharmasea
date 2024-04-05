@@ -57,8 +57,9 @@ struct AboutLayer : public Layer {
         back = rect::rpad(back, 50);
         back = rect::bpad(back, 25);
 
-        text(Widget{info}, text_lookup(strings::ABOUT_INFO));
-        if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
+        text(Widget{info}, TranslatableString(strings::ABOUT_INFO));
+        if (button(Widget{back},
+                   TranslatableString(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
 

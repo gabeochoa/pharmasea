@@ -144,7 +144,8 @@ inline bool collect_upgrade_options(Entity& entity) {
     ipm.upgradeOption2 = possible_upgrades[1]->type;
 
     log_info(" The two options we got are {} and {}",
-             possible_upgrades[0]->name, possible_upgrades[1]->name);
+             possible_upgrades[0]->name.debug(),
+             possible_upgrades[1]->name.debug());
     return true;
 }
 

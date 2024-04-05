@@ -48,36 +48,36 @@ struct UITestLayer : public Layer {
         // Title
         {
             auto text_loc = rect::lpad(top, 15);
-            text(Widget{text_loc}, text_lookup(strings::GAME_NAME));
+            text(Widget{text_loc}, TranslatableString(strings::GAME_NAME));
         }
 
         // Buttons
         auto [sv, _a, _b] = rect::hsplit<3>(rect::hpad(body, 15));
-        scroll_window(Widget{rect::hpad(body, 15)}, sv,
-                      [](ScrollWindowResult swr) {
-                          Rectangle body_sv = swr.sv;
-                          int base_z_index = swr.z_index;
+        scroll_window(
+            Widget{rect::hpad(body, 15)}, sv, [](ScrollWindowResult swr) {
+                Rectangle body_sv = swr.sv;
+                int base_z_index = swr.z_index;
 
-                          auto [rect1, rect2, rect3, rect4] =
-                              rect::hsplit<4>(body_sv, 20);
+                auto [rect1, rect2, rect3, rect4] =
+                    rect::hsplit<4>(body_sv, 20);
 
-                          if (button(Widget{rect1, base_z_index},
-                                     text_lookup(strings::i18n::PLAY))) {
-                              MenuState::get().set(menu::State::Network);
-                          }
-                          if (button(Widget{rect2, base_z_index},
-                                     text_lookup(strings::i18n::ABOUT))) {
-                              MenuState::get().set(menu::State::About);
-                          }
-                          if (button(Widget{rect3, base_z_index},
-                                     text_lookup(strings::i18n::SETTINGS))) {
-                              MenuState::get().set(menu::State::Settings);
-                          }
-                          if (button(Widget{rect4, base_z_index},
-                                     text_lookup(strings::i18n::EXIT))) {
-                              App::get().close();
-                          }
-                      });
+                if (button(Widget{rect1, base_z_index},
+                           TranslatableString(strings::i18n::PLAY))) {
+                    MenuState::get().set(menu::State::Network);
+                }
+                if (button(Widget{rect2, base_z_index},
+                           TranslatableString(strings::i18n::ABOUT))) {
+                    MenuState::get().set(menu::State::About);
+                }
+                if (button(Widget{rect3, base_z_index},
+                           TranslatableString(strings::i18n::SETTINGS))) {
+                    MenuState::get().set(menu::State::Settings);
+                }
+                if (button(Widget{rect4, base_z_index},
+                           TranslatableString(strings::i18n::EXIT))) {
+                    App::get().close();
+                }
+            });
 
         // Ext Buttons
         {

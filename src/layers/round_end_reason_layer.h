@@ -74,15 +74,17 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
             0;  // this should never be more than reason_spots.size()
 
         if (ht.block_state_change_reasons.none()) {
-            text(Widget{reason_spots[0]},
-                 fmt::format(
-                     "{}: {}", text_lookup(strings::i18n::NEXT_ROUND_COUNTDOWN),
-                     (int) ceil(util::trunc(ht.roundSwitchCountdown, 1))),
-                 theme::Usage::Font, true);
+            TranslatableString countdown_ts = TODO_TRANSLATE(
+                fmt::format(
+                    "{}: {}", strings::i18n::NEXT_ROUND_COUNTDOWN,
+                    (int) ceil(util::trunc(ht.roundSwitchCountdown, 1))),
+                TodoReason::Format);
+            text(Widget{reason_spots[0]}, countdown_ts, theme::Usage::Font,
+                 true);
             return;
         }
 
-        std::vector<std::string> active_reasons;
+        std::vector<TranslatableString> active_reasons;
         std::vector<std::optional<vec2>> active_locations;
         // TODO Why does this start a 1?
         for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {
@@ -93,7 +95,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         }
 
         int i = 0;
-        for (auto txt : active_reasons) {
+        for (auto _txt : active_reasons) {
             if (i > max_reason_index) continue;
 
             text(Widget{reason_spots[i]}, active_reasons[i], theme::Usage::Font,
@@ -117,8 +119,8 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
 
                 reason_spots[i].x += reason_spots[i].width;
                 reason_spots[i].width = 100.f;
-                text(Widget{reason_spots[i]}, location_text, theme::Usage::Font,
-                     true);
+                text(Widget{reason_spots[i]}, NO_TRANSLATE(location_text),
+                     theme::Usage::Font, true);
             }
 
             i++;

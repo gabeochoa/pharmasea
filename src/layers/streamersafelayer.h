@@ -34,11 +34,13 @@ struct StreamerSafeLayer : public Layer {
                 0.25f /* roundness */, (int) (FS / 4.f) /* segments */,
                 (FS / 4.f) /* lineThick */, BLACK);
 
-            DrawTextEx(Preload::get().font,
-                       text_lookup(strings::i18n::SAFE_ZONE),
-                       vec2{(float) x_pos + (streamer_box_size / 2.f) - (FS),
-                            (float) y_pos + (streamer_box_size / 2.f) - FS},
-                       FS, 0, WHITE);
+            DrawTextEx(
+                Preload::get().font,
+                translation_lookup(TranslatableString(strings::i18n::SAFE_ZONE))
+                    .c_str(),
+                vec2{(float) x_pos + (streamer_box_size / 2.f) - (FS),
+                     (float) y_pos + (streamer_box_size / 2.f) - FS},
+                FS, 0, WHITE);
         }
     }
 };

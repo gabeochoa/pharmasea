@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "../strings.h"
 #include "log.h"
 
 enum AnnouncementType { Message, Error, Warning };

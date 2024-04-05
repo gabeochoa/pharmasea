@@ -145,16 +145,19 @@ struct BasePauseLayer : public Layer {
             rect::hsplit<4>(body, 20);
 
         if (button(Widget{continue_button},
-                   text_lookup(strings::i18n::CONTINUE))) {
+                   TranslatableString(strings::i18n::CONTINUE))) {
             GameState::get().go_back();
         }
-        if (button(Widget{settings}, text_lookup(strings::i18n::SETTINGS))) {
+        if (button(Widget{settings},
+                   TranslatableString(strings::i18n::SETTINGS))) {
             MenuState::get().set(menu::State::Settings);
         }
-        if (button(Widget{config}, "RELOAD CONFIGS")) {
+
+        // TODO add debug check
+        if (button(Widget{config}, NO_TRANSLATE("RELOAD CONFIGS"))) {
             Preload::get().reload_config();
         }
-        if (button(Widget{quit}, text_lookup(strings::i18n::QUIT))) {
+        if (button(Widget{quit}, TranslatableString(strings::i18n::QUIT))) {
             network::Info::reset_connections();
             return;
         }

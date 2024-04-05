@@ -94,31 +94,31 @@ struct HasTimer : public BaseComponent {
     std::array<vec2, WaitingReasonLast> block_state_change_locations;
     vec2 invalid_location = vec2{999.f, 999.f};
 
-    [[nodiscard]] const char* text_reason(WaitingReason wr) const {
+    [[nodiscard]] TranslatableString text_reason(WaitingReason wr) const {
         switch (wr) {
             case CustomersInStore:
-                return text_lookup(strings::i18n::CUSTOMERS_IN_STORE);
+                return TranslatableString(strings::i18n::CUSTOMERS_IN_STORE);
             case HoldingFurniture:
-                return text_lookup(strings::i18n::HOLDING_FURNITURE);
+                return TranslatableString(strings::i18n::HOLDING_FURNITURE);
             case NoPathToRegister:
-                return text_lookup(strings::i18n::NO_PATH_TO_REGISTER);
+                return TranslatableString(strings::i18n::NO_PATH_TO_REGISTER);
             case BarNotClean:
-                return text_lookup(strings::i18n::BAR_NOT_CLEAN);
+                return TranslatableString(strings::i18n::BAR_NOT_CLEAN);
             case FurnitureOverlapping:
-                return text_lookup(strings::i18n::FURNITURE_OVERLAPPING);
+                return TranslatableString(strings::i18n::FURNITURE_OVERLAPPING);
             case ItemInSpawnArea:
-                return text_lookup(strings::i18n::ITEMS_IN_SPAWN_AREA);
+                return TranslatableString(strings::i18n::ITEMS_IN_SPAWN_AREA);
             case DeletingNeededItem:
-                return text_lookup(strings::i18n::DELETING_NEEDED_ITEM);
+                return TranslatableString(strings::i18n::DELETING_NEEDED_ITEM);
             default:
                 log_warn("got reason {} but dont have a way to render it", wr);
             case WaitingReasonLast:
             case None:
-                return "";
+                return NO_TRANSLATE("");
         }
     }
 
-    [[nodiscard]] const char* text_reason(int i) const {
+    [[nodiscard]] TranslatableString text_reason(int i) const {
         WaitingReason name = magic_enum::enum_value<WaitingReason>(i);
         return text_reason(name);
     }

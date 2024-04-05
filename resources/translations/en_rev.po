@@ -91,11 +91,14 @@ msgstr "egaugnaL"
 msgid "Fullscreen?"
 msgstr "?neercslluF"
 
-msgid "Save and Exit"
-msgstr "tixE dna evaS"
+msgid "Save and exit"
+msgstr "tixe dna evaS"
 
 msgid "Exit without Saving"
 msgstr "gnivaS tuohtiw tixE"
+
+msgid "Reset all settings"
+msgstr "sgnittes lla teseR"
 
 msgid "General"
 msgstr "lareneG"
@@ -160,8 +163,8 @@ msgstr "yaD"
 msgid "Not enough coins"
 msgstr "snioc hguone toN"
 
-msgid "Missing required coins"
-msgstr "snioc deriuqer gnissiM"
+msgid "Missing required machine"
+msgstr "enihcam deriuqer gnissiM"
 
 msgid "Please put that machine back"
 msgstr "kcab enihcam taht tup esaelP"
@@ -192,4 +195,13 @@ msgstr " zyxwvutsrqponmlkjihgfedcba"
 
 msgid "0123456789_-+=/[];,.<>?:"
 msgstr ":?><.,;][/=+-_9876543210"
+
+msgid "Save and Exit"
+msgstr "tixE dna evaS"
+
+msgid "Missing required coins"
+msgstr "snioc deriuqer gnissiM"
+
+msgid "Pub Panic!"
+msgstr "!cinaP buP"
 

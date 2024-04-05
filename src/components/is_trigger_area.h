@@ -6,6 +6,8 @@
 
 struct IsTriggerArea;
 
+// This is not a translated string because we serialize it and it needs to be in
+// the local language of the client
 using ValidationResult = std::pair<bool, std::string>;
 using ValidationFn = std::function<ValidationResult(const IsTriggerArea&)>;
 

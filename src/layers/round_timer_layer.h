@@ -33,20 +33,24 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         return EntityQuery().whereHasComponent<HasTimer>().gen_first();
     }
 
-    std::string get_status_text(const HasTimer& ht) {
+    TranslatableString get_status_text(const HasTimer& ht) {
         const bool is_closing = ht.store_is_closed();
         const bool is_day = GameState::get().in_round() && !is_closing;
         const int dayCount = ht.dayCount;
 
         auto status_text =
-            is_day ? text_lookup(strings::i18n::OPEN)
-                   : (is_closing ? text_lookup(strings::i18n::CLOSING)
-                                 : text_lookup(strings::i18n::CLOSED));
+            is_day ? TranslatableString(strings::i18n::OPEN)
+                   : (is_closing ? TranslatableString(strings::i18n::CLOSING)
+                                 : TranslatableString(strings::i18n::CLOSED));
         // TODO figure out how to translate strings that have numbers in
         // them...
         auto day_text = fmt::format(
-            "{} {}", text_lookup(strings::i18n::ROUND_DAY), dayCount);
-        return std::string(fmt::format("{} {}", status_text, day_text));
+            "{} {}",
+            translation_lookup(TranslatableString(strings::i18n::ROUND_DAY)),
+            dayCount);
+        return TODO_TRANSLATE(
+            fmt::format("{} {}", translation_lookup(status_text), day_text),
+            TodoReason::Format);
     }
 
     void animate_new_transaction(const IsBank::Transaction& transaction,
@@ -60,14 +64,15 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             static_cast<unsigned char>(255 * transaction.pct());
 
         const auto tip_string = fmt::format(
-            "{} {}", transaction.extra, text_lookup(strings::i18n::STORE_TIP));
+            "{} {}", transaction.extra,
+            translation_lookup(TranslatableString(strings::i18n::STORE_TIP)));
 
         colored_text(
             ui::Widget{spawn_count},
-            fmt::format("          {}{} {}",
-                        positive ? "+" : "-",  //
-                        transaction.amount,
-                        transaction.extra ? tip_string : ""),
+            TranslatableString(fmt::format(
+                "          {}{} {}",
+                positive ? "+" : "-",  //
+                transaction.amount, transaction.extra ? tip_string : "")),
             positive ? Color{0, 255, 0, alpha} : Color{255, 0, 0, alpha}  //
         );
     }
@@ -128,9 +133,12 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             if (sophie.valid()) {
                 const IsBank& bank = sophie->get<IsBank>();
                 text(Widget{spawn_count},
-                     fmt::format("{}: {}",
-                                 text_lookup(strings::i18n::STORE_BALANCE),
-                                 bank.balance()));
+                     TODO_TRANSLATE(
+                         fmt::format("{}: {}",
+                                     translation_lookup(TranslatableString(
+                                         strings::i18n::STORE_BALANCE)),
+                                     bank.balance()),
+                         TodoReason::Format));
 
                 const std::vector<IsBank::Transaction>& transactions =
                     bank.get_transactions();
@@ -153,10 +161,12 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
                                   .asE();
             const IsSpawner& iss = spawner.get<IsSpawner>();
             text(Widget{spawn_count},
-                 fmt::format(
-                     "{}: {}",
-                     text_lookup(strings::i18n::PLANNING_CUSTOMERS_COMING),
-                     iss.get_max_spawned()));
+                 TODO_TRANSLATE(
+                     fmt::format("{}: {}",
+                                 translation_lookup(TranslatableString(
+                                     strings::i18n::PLANNING_CUSTOMERS_COMING)),
+                                 iss.get_max_spawned()),
+                     TodoReason::Format));
         }
     }
 };

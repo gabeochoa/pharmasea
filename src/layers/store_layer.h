@@ -34,14 +34,18 @@ struct StoreLayer : public BaseGameRendererLayer {
             Rectangle spawn_count(left_col);
             spawn_count.y += 60;
 
-            text(Widget{spawn_count}, fmt::format("Balance: {}", balance));
+            text(Widget{spawn_count},
+                 TODO_TRANSLATE(fmt::format("Balance: {}", balance),
+                                TodoReason::Format));
         }
 
         {
             Rectangle spawn_count(left_col);
             spawn_count.y += 120;
 
-            text(Widget{spawn_count}, fmt::format("In Cart: {}", cart),
+            text(Widget{spawn_count},
+                 TODO_TRANSLATE(fmt::format("In Cart: {}", cart),
+                                TodoReason::Format),
                  cart <= balance ? ui::theme::Usage::Font
                                  : ui::theme::Usage::Error);
         }
@@ -57,8 +61,7 @@ struct StoreLayer : public BaseGameRendererLayer {
         const IsTriggerArea& ita = purchase_area->get<IsTriggerArea>();
         if (ita.should_progress()) return;
 
-        // TODO this is where the translation should happen
-        text(Widget{content}, fmt::format("{}", ita.validation_msg()));
+        text(Widget{content}, TranslatableString(ita.validation_msg()));
     }
 
     virtual void onDrawUI(float) override {

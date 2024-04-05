@@ -516,6 +516,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
         // TODO For now we are okay doing this because the other indexer
         // (alcohol) always unlocks rum first which is index 0. if that changes
         // we gotta update this
+        //  --> should we just add an assert here so we catch it quickly?
         if (check_type(entity, EntityType::FruitBasket)) {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const IsProgressionManager& ipp =
@@ -828,6 +829,7 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
     });
 }
 
+// TODO look at the blame for this and clean it up if we no longer need it
 inline void spawn_machines_for_new_unlock_DONOTCALL(IsRoundSettingsManager&) {
     // We already spawn these in upgrade_system.h
     //
@@ -923,6 +925,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
     switch (ita.type) {
         case IsTriggerArea::Unset:
+            log_warn("Completed trigger area wait time but was Unset type");
             break;
         case IsTriggerArea::ModelTest_BackToLobby: {
             GameState::get().transition_to_lobby();
@@ -935,7 +938,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     {MODEL_TEST_ORIGIN + rad, rad});
 
                 for (Entity& to_delete : ents) {
-                    // TDOO add a way to skip the permananent ones
+                    // TODO add a way to skip the permananent ones
                     if (to_delete.has<IsTriggerArea>()) continue;
                     to_delete.cleanup = true;
                 }
@@ -997,25 +1000,25 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
     // These are the ones that should only change on language update
     switch (ita.type) {
         case IsTriggerArea::ModelTest_BackToLobby: {
+            // TODO translate?
             ita.update_title("Back To Lobby");
-            ita.update_subtitle(text_lookup(strings::i18n::LOADING));
+            ita.update_subtitle(strings::i18n::LOADING);
             return;
         } break;
         case IsTriggerArea::Lobby_ModelTest: {
+            // TODO translate?
             ita.update_title("Model Testing");
-            ita.update_subtitle(text_lookup(strings::i18n::LOADING));
+            ita.update_subtitle(strings::i18n::LOADING);
             return;
         } break;
         case IsTriggerArea::Lobby_PlayGame: {
-            ita.update_title(text_lookup(strings::i18n::START_GAME));
-            ita.update_subtitle(text_lookup(strings::i18n::LOADING));
+            ita.update_title(strings::i18n::START_GAME);
+            ita.update_subtitle(strings::i18n::LOADING);
             return;
         } break;
         case IsTriggerArea::Store_BackToPlanning: {
-            ita.update_title(
-                text_lookup(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
-            ita.update_subtitle(
-                text_lookup(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
+            ita.update_title(strings::i18n::TRIGGERAREA_PURCHASE_FINISH);
+            ita.update_subtitle(strings::i18n::TRIGGERAREA_PURCHASE_FINISH);
             return;
         } break;
         case IsTriggerArea::Unset:
@@ -1656,7 +1659,7 @@ void move_purchased_furniture() {
 }  // namespace store
 
 namespace upgrade {
-inline void in_round_update(Entity& entity, float dt) {
+inline void in_round_update(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
@@ -1716,7 +1719,7 @@ inline void in_round_update(Entity& entity, float dt) {
         int i = 1;
         while (i < hours_missed) {
             log_info("running actions for {} for hour {} (currently {})",
-                     upgrade->name, irsm.ran_for_hour + i, hour);
+                     upgrade->name.debug(), irsm.ran_for_hour + i, hour);
             i++;
 
             auto actions =
@@ -1843,7 +1846,7 @@ void SystemManager::process_state_change(
     };
 
     const auto onRoundStarted = [&]() {
-        for_each(entities, dt, [](Entity& entity, float dt) {
+        for_each(entities, dt, [](Entity& entity, float) {
             system_manager::handle_autodrop_furniture_when_exiting_planning(
                 entity);
             system_manager::release_mop_buddy_at_start_of_day(entity);
