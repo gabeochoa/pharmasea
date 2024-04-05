@@ -193,3 +193,9 @@ msgstr " zyxwvutsrqponmlkjihgfedcba"
 msgid "0123456789_-+=/[];,.<>?:"
 msgstr ":?><.,;][/=+-_9876543210"
 
+msgid "Missing required coins"
+msgstr "snioc deriuqer gnissiM"
+
+msgid "Pub Panic!"
+msgstr "!cinaP buP"
+

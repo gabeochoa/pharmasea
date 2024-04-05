@@ -75,22 +75,23 @@ void SettingsLayer::draw_footer(Rectangle footer) {
     auto [reset_to_default, force_save, back, controls, input_type] =
         rect::vsplit<5>(rect::rpad(footer, 90), 20);
 
-    if (button(Widget{reset_to_default}, text_lookup("reset all settings"),
-               true)) {
+    if (button(Widget{reset_to_default},
+               TranslatableString("reset all settings"), true)) {
         Settings::get().reset_to_default();
     }
 
-    if (button(Widget{force_save}, text_lookup(strings::i18n::EXIT_AND_SAVE),
-               true)) {
+    if (button(Widget{force_save},
+               TranslatableString(strings::i18n::EXIT_AND_SAVE), true)) {
         save_and_exit();
     }
-    if (button(Widget{back}, text_lookup(strings::i18n::EXIT_NO_SAVE), true)) {
+    if (button(Widget{back}, TranslatableString(strings::i18n::EXIT_NO_SAVE),
+               true)) {
         exit_without_save();
     }
 
     const auto controls_text = activeWindow == ActiveWindow::Root
-                                   ? text_lookup(strings::i18n::CONTROLS)
-                                   : text_lookup(strings::i18n::GENERAL);
+                                   ? TranslatableString(strings::i18n::CONTROLS)
+                                   : TranslatableString(strings::i18n::GENERAL);
 
     if (button(Widget{controls}, controls_text, true)) {
         switch (activeWindow) {
@@ -107,9 +108,9 @@ void SettingsLayer::draw_footer(Rectangle footer) {
     if (activeWindow == ActiveWindow::Root) return;
 
     if (button(Widget{input_type},
-               text_lookup(selected_input_type == InputType::Gamepad
-                               ? strings::i18n::GAMEPAD
-                               : strings::i18n::KEYBOARD),
+               TranslatableString(selected_input_type == InputType::Gamepad
+                                      ? strings::i18n::GAMEPAD
+                                      : strings::i18n::KEYBOARD),
                true)) {
         switch (selected_input_type) {
             case Keyboard:
@@ -140,7 +141,8 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(master_vol, 30);
             control = rect::rpad(control, 30);
 
-            text(Widget{label}, text_lookup(strings::i18n::MASTER_VOLUME));
+            text(Widget{label},
+                 TranslatableString(strings::i18n::MASTER_VOLUME));
             if (auto result =
                     slider(Widget{control},
                            {.value = Settings::get().data.master_volume});
@@ -153,7 +155,8 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(music_vol, 30);
             control = rect::rpad(control, 30);
 
-            text(Widget{label}, text_lookup(strings::i18n::MUSIC_VOLUME));
+            text(Widget{label},
+                 TranslatableString(strings::i18n::MUSIC_VOLUME));
             if (auto result =
                     slider(Widget{control},
                            {.value = Settings::get().data.music_volume});
@@ -166,7 +169,8 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(sfx_vol, 30);
             control = rect::rpad(control, 30);
 
-            text(Widget{label}, text_lookup(strings::i18n::SOUND_VOLUME));
+            text(Widget{label},
+                 TranslatableString(strings::i18n::SOUND_VOLUME));
             if (auto result =
                     slider(Widget{control},
                            {.value = Settings::get().data.sound_volume});
@@ -179,7 +183,7 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(ui_theme, 30);
             control = rect::rpad(control, 30);
 
-            text(Widget{label}, text_lookup(strings::i18n::THEME));
+            text(Widget{label}, TranslatableString(strings::i18n::THEME));
             if (auto result =
                     dropdown(Widget{control},
                              DropdownData{
@@ -195,7 +199,7 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(resolution, 30);
             control = rect::rpad(control, 30);
 
-            text(Widget{label}, text_lookup(strings::i18n::RESOLUTION));
+            text(Widget{label}, TranslatableString(strings::i18n::RESOLUTION));
             if (auto result =
                     dropdown(Widget{control},
                              DropdownData{
@@ -211,7 +215,7 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(language, 30);
             control = rect::rpad(control, 30);
 
-            text(Widget{label}, text_lookup(strings::i18n::LANGUAGE));
+            text(Widget{label}, TranslatableString(strings::i18n::LANGUAGE));
             if (auto result =
                     dropdown(Widget{control},
                              DropdownData{
@@ -227,7 +231,8 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(streamer, 30);
             control = rect::rpad(control, 10);
 
-            text(Widget{label}, text_lookup(strings::i18n::SHOW_SAFE_BOX));
+            text(Widget{label},
+                 TranslatableString(strings::i18n::SHOW_SAFE_BOX));
 
             if (auto result = checkbox(
                     Widget{control},
@@ -243,7 +248,7 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(postprocessing, 30);
             control = rect::rpad(control, 10);
 
-            text(Widget{label}, text_lookup(strings::i18n::ENABLE_PPS));
+            text(Widget{label}, TranslatableString(strings::i18n::ENABLE_PPS));
 
             if (auto result = checkbox(
                     Widget{control},
@@ -260,7 +265,7 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(snapCamera, 30);
             control = rect::rpad(control, 10);
 
-            text(Widget{label}, text_lookup(strings::i18n::SNAP_CAMERA));
+            text(Widget{label}, TranslatableString(strings::i18n::SNAP_CAMERA));
 
             if (auto result = checkbox(
                     Widget{control},
@@ -275,7 +280,7 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(fullscreen, 30);
             control = rect::rpad(control, 10);
 
-            text(Widget{label}, text_lookup(strings::i18n::FULLSCREEN));
+            text(Widget{label}, TranslatableString(strings::i18n::FULLSCREEN));
 
             if (auto result = checkbox(
                     Widget{control},

@@ -1659,7 +1659,7 @@ void move_purchased_furniture() {
 }  // namespace store
 
 namespace upgrade {
-inline void in_round_update(Entity& entity, float dt) {
+inline void in_round_update(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
@@ -1846,7 +1846,7 @@ void SystemManager::process_state_change(
     };
 
     const auto onRoundStarted = [&]() {
-        for_each(entities, dt, [](Entity& entity, float dt) {
+        for_each(entities, dt, [](Entity& entity, float) {
             system_manager::handle_autodrop_furniture_when_exiting_planning(
                 entity);
             system_manager::release_mop_buddy_at_start_of_day(entity);

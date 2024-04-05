@@ -23,8 +23,11 @@ inline bool should_exit_early(const Widget& widget) {
 
 inline ui::UITheme active_theme() { return ui::UI_THEME; }
 
-inline void draw_colored_text(const TranslatedString& content, Rectangle parent,
-                              int z_index, Color color = WHITE) {
+inline void draw_colored_text(const TranslatableString& content,
+                              Rectangle parent, int z_index,
+                              Color color = WHITE) {
+    std::string printable_string = translation_lookup(content);
+
     callback_registry.register_call(
         context,
         [=]() {
@@ -46,7 +49,7 @@ inline void draw_colored_text(const TranslatedString& content, Rectangle parent,
             auto spacing = 0.f;
             // TODO move the generator out of context
             auto font_size = context->get_font_size(
-                content.underlying, rect.width, rect.height, spacing);
+                printable_string, rect.width, rect.height, spacing);
 
             // Disable this warning when we are in debug mode since dev facing
             // UI is okay to be too small at the moment
@@ -62,20 +65,19 @@ inline void draw_colored_text(const TranslatedString& content, Rectangle parent,
                         "for "
                         "this resolution {}, text was {}",
                         font_size, (min_text_size_px * pct_1080),
-                        content.underlying);
+                        printable_string);
                 }
             }
-
-            DrawTextEx(font,                //
-                       content.underlying,  //
-                       {rect.x, rect.y},    //
-                       font_size, spacing,  //
+            DrawTextEx(font,                      //
+                       printable_string.c_str(),  //
+                       {rect.x, rect.y},          //
+                       font_size, spacing,        //
                        color);
         },
         z_index);
 }
 
-inline void draw_text(const TranslatedString& content, Rectangle parent,
+inline void draw_text(const TranslatableString& content, Rectangle parent,
                       int z_index,
                       ui::theme::Usage color_usage = ui::theme::Usage::Font) {
     draw_colored_text(content, parent, z_index,

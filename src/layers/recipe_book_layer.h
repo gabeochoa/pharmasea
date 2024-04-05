@@ -158,7 +158,7 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
         auto description = rect::tpad(right, 20);
         description = rect::lpad(description, 10);
 
-        text(Widget{title}, text_lookup(get_string_for_drink(drink)));
+        text(Widget{title}, TranslatableString(get_string_for_drink(drink)));
 
         // TODO we dont have a static max ingredients
         const auto igs = rect::hsplit<MAX_VISIBLE_IGS>(description);
@@ -169,7 +169,8 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
         bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
             if (i > MAX_VISIBLE_IGS) return;
             Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
-            text(Widget{igs[i]}, text_lookup(get_string_for_ingredient(ig)));
+            text(Widget{igs[i]},
+                 TranslatableString(get_string_for_ingredient(ig)));
             i++;
         });
 

@@ -18,11 +18,12 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::LongerDay:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Longer Day"),
+                .name = TranslatableString("Longer Day"),
                 .icon_name = "longer_day",
-                .flavor_text =
-                    text_lookup("Find an extra couple hours in the day."),
-                .description = text_lookup("(Makes the day twice as long)"),
+                .flavor_text = TranslatableString(
+                    "Find an extra couple hours in the day."),
+                .description =
+                    TranslatableString("(Makes the day twice as long)"),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(
@@ -36,10 +37,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::UnlockToilet:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Gotta go"),
+                .name = TranslatableString("Gotta go"),
                 .icon_name = "gotta_go",
-                .flavor_text = text_lookup("Drinking has its consequences."),
-                .description = text_lookup(
+                .flavor_text =
+                    TranslatableString("Drinking has its consequences."),
+                .description = TranslatableString(
                     "(Customers will order twice, but will need to go to "
                     "the "
                     "bathroom)"),
@@ -64,11 +66,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::BigBladders:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Big Bladders"),
+                .name = TranslatableString("Big Bladders"),
                 // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup("I've been training.."),
-                .description = text_lookup(
+                .flavor_text = TranslatableString("I've been training.."),
+                .description = TranslatableString(
                     "(Customers will go too the bathroom less often but for "
                     "longer)"),
                 .onUnlock =
@@ -87,12 +89,12 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::Speakeasy:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Speakeasy"),
+                .name = TranslatableString("Speakeasy"),
                 // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup(
+                .flavor_text = TranslatableString(
                     "first you gotta get a fish, then bring it to the..."),
-                .description = text_lookup(
+                .description = TranslatableString(
                     "(Half the customers, but they will pay 1% more for "
                     "every extra tile they have to visit before finding the "
                     "register)"),
@@ -110,12 +112,13 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::MainStreet:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Main Street"),
+                .name = TranslatableString("Main Street"),
                 // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup("location, location, location."),
+                .flavor_text =
+                    TranslatableString("location, location, location."),
                 .description =
-                    text_lookup("(Twice as many Customers will visit)"),
+                    TranslatableString("(Twice as many Customers will visit)"),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(
@@ -130,11 +133,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::BigCity:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Big City"),
+                .name = TranslatableString("Big City"),
                 // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup("I'm walking 'ere."),
-                .description = text_lookup(
+                .flavor_text = TranslatableString("I'm walking 'ere."),
+                .description = TranslatableString(
                     "(Customers pay double but have less patience)"),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
@@ -153,12 +156,12 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::SmallTown:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("SmallTown"),
+                .name = TranslatableString("SmallTown"),
                 // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup(
+                .flavor_text = TranslatableString(
                     "This town ain't big enough for the two of us."),
-                .description = text_lookup(
+                .description = TranslatableString(
                     "(Customers pay half but have double patience)"),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
@@ -177,10 +180,10 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::Champagne:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Champagne"),
+                .name = TranslatableString("Champagne"),
                 .icon_name = "upgrade_champagne",
-                .flavor_text = text_lookup("Someone get the bandaids."),
-                .description = text_lookup(
+                .flavor_text = TranslatableString("Someone get the bandaids."),
+                .description = TranslatableString(
                     "(Unlocks Champagne which needs to be saber'd before "
                     "pouring)"),
                 .onUnlock =
@@ -205,10 +208,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::HappyHour:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Happy Hour"),
+                .name = TranslatableString("Happy Hour"),
                 .icon_name = "happy_hour",
-                .flavor_text = text_lookup("all the buzz at half the price"),
-                .description = text_lookup(
+                .flavor_text =
+                    TranslatableString("all the buzz at half the price"),
+                .description = TranslatableString(
                     "(more people at the beginning of the day but cheaper "
                     "drinks)"),
                 .onUnlock = [](ConfigData&, IsProgressionManager&) {},
@@ -242,11 +246,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::Pitcher:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Pitcher"),
+                .name = TranslatableString("Pitcher"),
                 // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup("its actually a carafe."),
-                .description = text_lookup(
+                .flavor_text = TranslatableString("its actually a carafe."),
+                .description = TranslatableString(
                     "(Unlocks a pitcher which can store up to 10 of the same "
                     "drink)"),
                 .onUnlock =
@@ -268,12 +272,12 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             // but take up space in the line?
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("me and the boys"),
+                .name = TranslatableString("me and the boys"),
                 // TODO
                 .icon_name = "upgrade_default",
-                .flavor_text =
-                    text_lookup("crackin open a cold one or two... or ten ."),
-                .description = text_lookup(
+                .flavor_text = TranslatableString(
+                    "crackin open a cold one or two... or ten ."),
+                .description = TranslatableString(
                     "(Customers will now order a pitcher of 10 beers)"),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager& ipm) {
@@ -292,11 +296,12 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::Mocktails:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Mocktails"),
+                .name = TranslatableString("Mocktails"),
                 // TODO
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup("does this taste weak to you?"),
-                .description = text_lookup(
+                .flavor_text =
+                    TranslatableString("does this taste weak to you?"),
+                .description = TranslatableString(
                     "(You can forget one alcohol in a recipe but customers "
                     "will order more to make up for it)"),
                 .onUnlock =
@@ -316,15 +321,16 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::HeavyHanded:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("HeavyHanded"),
+                .name = TranslatableString("HeavyHanded"),
                 // TODO
                 .icon_name = "upgrade_default",
                 .flavor_text =
-                    text_lookup("Oops, hopefully you have a ride home"),
+                    TranslatableString("Oops, hopefully you have a ride home"),
                 // TODO make it so that you have to add one more alcohol
                 // to get the effect?
-                .description = text_lookup("(less profit & more vomit, but "
-                                           "customers will order more)"),
+                .description =
+                    TranslatableString("(less profit & more vomit, but "
+                                       "customers will order more)"),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<int>(
@@ -350,11 +356,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::PottyProtocol:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Potty Protocol"),
+                .name = TranslatableString("Potty Protocol"),
                 // TODO
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup("aim for the bowl"),
-                .description = text_lookup(
+                .flavor_text = TranslatableString("aim for the bowl"),
+                .description = TranslatableString(
                     "(before vomiting customers will try to find an empty "
                     "toilet)"),
                 .onUnlock = [](ConfigData&, IsProgressionManager&) {},
@@ -367,11 +373,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::SippyCups:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Sippy Cups"),
+                .name = TranslatableString("Sippy Cups"),
                 // TODO
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup("savor the flavor"),
-                .description = text_lookup(
+                .flavor_text = TranslatableString("savor the flavor"),
+                .description = TranslatableString(
                     "(customers will take twice as long to drink and order "
                     "less)"),
                 .onUnlock =
@@ -396,12 +402,13 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::DownTheHatch:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = text_lookup("Down The Hatch"),
+                .name = TranslatableString("Down The Hatch"),
                 // TODO
                 .icon_name = "upgrade_default",
-                .flavor_text = text_lookup("chug chug chug chug!"),
+                .flavor_text = TranslatableString("chug chug chug chug!"),
                 // TODO do they also order more?
-                .description = text_lookup("(customers will drink faster)"),
+                .description =
+                    TranslatableString("(customers will drink faster)"),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(

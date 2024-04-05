@@ -76,16 +76,14 @@ ElementResult div(const Widget& widget, theme::Usage theme) {
 }
 
 // TODO merge with text()
-ElementResult colored_text(const Widget& widget, const std::string& content,
-                           Color c) {
+ElementResult colored_text(const Widget& widget,
+                           const TranslatableString& content, Color c) {
     Rectangle rect = widget.get_rect();
 
     // No need to render if text is empty
     if (content.empty()) return false;
 
-    // TODO change to use TranslatedText
-    internal::draw_colored_text(text_lookup(content.c_str()), rect,
-                                widget.z_index, c);
+    internal::draw_colored_text(content, rect, widget.z_index, c);
 
     return true;
 }
@@ -95,7 +93,7 @@ ElementResult window(const Widget& widget) {
     return ElementResult{true, widget.z_index - 1};
 }
 
-ElementResult text(const Widget& widget, const TranslatedString& content,
+ElementResult text(const Widget& widget, const TranslatableString& content,
                    ui::theme::Usage color_usage, bool draw_background
 
 ) {
@@ -146,7 +144,7 @@ ElementResult scroll_window(const Widget& widget, Rectangle view,
                          ScrollWindowResult{widget.rect, widget.z_index - 1}};
 }
 
-ElementResult button(const Widget& widget, const TranslatedString& content,
+ElementResult button(const Widget& widget, const TranslatableString& content,
                      bool background) {
     Rectangle rect = widget.get_rect();
 

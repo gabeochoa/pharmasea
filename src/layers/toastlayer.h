@@ -71,7 +71,9 @@ struct ToastLayer : public BaseGameRendererLayer {
                 }},
                 t_accent);
             div(Widget{spot}, t_primary);
-            colored_text(Widget{spot}, toast.msg, t_font_color);
+            colored_text(Widget{spot},
+                         (TODO_TRANSLATE(toast.msg, TodoReason::ServerString)),
+                         t_font_color);
 
             i--;
             if (i < 0) break;

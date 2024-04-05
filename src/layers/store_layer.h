@@ -61,7 +61,7 @@ struct StoreLayer : public BaseGameRendererLayer {
         const IsTriggerArea& ita = purchase_area->get<IsTriggerArea>();
         if (ita.should_progress()) return;
 
-        text(Widget{content}, text_lookup(ita.validation_msg()));
+        text(Widget{content}, TranslatableString(ita.validation_msg()));
     }
 
     virtual void onDrawUI(float) override {

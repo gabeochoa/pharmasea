@@ -81,6 +81,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
  */
 
 #include <array>
+#include <cassert>
 #include <iostream>
 #include <string>
 
@@ -305,50 +306,62 @@ constexpr const char* ITCH = "https://ochoag.com/pp-download.html";
 
 }  // namespace strings
 
-struct TranslatedString {
-    // TODO eventually make private
-    const char* underlying = "";
+// TODO make those constexpr strings above translatablestring :)
+//
+struct TranslatableString {
+    explicit TranslatableString(const std::string& s) : content(s) {}
+    explicit TranslatableString(const std::string& s, bool ig)
+        : content(s), no_translate(ig) {}
 
-    [[nodiscard]] inline bool empty() const { return strlen(underlying) == 0; }
-    [[nodiscard]] inline const char* debug() const { return underlying; }
+    [[nodiscard]] inline bool skip_translate() const { return no_translate; }
+    [[nodiscard]] inline bool empty() const { return content.empty(); }
+    [[nodiscard]] inline const char* debug() const { return content.c_str(); }
+    [[nodiscard]] inline const char* underlying_TL_ONLY() const {
+        return content.c_str();
+    }
+
+    [[nodiscard]] inline const std::string& str() const { return content; }
+
+   private:
+    std::string content;
+    bool no_translate = false;
 };
 
-[[nodiscard]] inline TranslatedString NO_TRANSLATE(const char* s) {
-    return TranslatedString{s};
+[[nodiscard]] inline TranslatableString NO_TRANSLATE(const std::string& s) {
+    return TranslatableString{s, true};
 }
 
-[[nodiscard]] inline TranslatedString NO_TRANSLATE(const std::string& s) {
-    return TranslatedString{s.c_str()};
-}
-
-enum struct TodoReason { Format, UserFacingError, KeyName, Recursion };
+enum struct TodoReason {
+    Format,
+    UserFacingError,
+    KeyName,
+    Recursion,
+    ServerString
+};
 
 // TODO fix all of these before launch :)
-[[nodiscard]] inline TranslatedString TODO_TRANSLATE(const char* s,
-                                                     TodoReason) {
-    return TranslatedString{s};
-}
-
-[[nodiscard]] inline TranslatedString TODO_TRANSLATE(const std::string& s,
-                                                     TodoReason) {
-    return TranslatedString{s.c_str()};
+[[nodiscard]] inline TranslatableString TODO_TRANSLATE(const std::string& s,
+                                                       TodoReason) {
+    return TranslatableString{s, true};
 }
 
 // localization comes from engine/global.h
-[[nodiscard]] inline TranslatedString text_lookup(const char* s) {
+[[nodiscard]] inline std::string translation_lookup(
+    const TranslatableString& s) {
+    if (s.skip_translate()) return s.underlying_TL_ONLY();
+
     if (!localization->mo_data) {
-        return TranslatedString{"Missing language data"};
+        return "Missing language data";
     }
 
-    int target_index = get_target_index(localization, s);
+    int target_index = get_target_index(localization, s.underlying_TL_ONLY());
     if (target_index == -1) {
-        std::cout << "Failed to find translation for " << s << std::endl;
-        return TranslatedString{"Missing translation for word"};
+        std::cout << "Failed to find translation for " << s.debug()
+                  << std::endl;
+        assert(false);
+        return s.underlying_TL_ONLY();
     }
 
     const char* translated = get_translated_string(localization, target_index);
-    return TranslatedString{translated};
-}
-[[nodiscard]] inline TranslatedString text_lookup(const std::string& s) {
-    return text_lookup(s.c_str());
+    return translated;
 }

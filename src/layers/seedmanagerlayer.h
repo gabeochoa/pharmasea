@@ -101,7 +101,7 @@ struct SeedManagerLayer : public Layer {
             auto [label, tf, buttons] = rect::hsplit<3>(popup, 20);
 
             text(Widget{label, windowresult.as<int>()},
-                 text_lookup("Enter Seed:"));
+                 TranslatableString("Enter Seed:"));
 
             if (auto result = textfield(
                     Widget{tf, z_index},
@@ -121,14 +121,14 @@ struct SeedManagerLayer : public Layer {
             auto [_b1, randomize, _b2, select, _b3] =
                 rect::vsplit<5>(buttons, 20);
 
-            if (button(Widget{randomize, z_index}, text_lookup("Randomize"),
-                       true)) {
+            if (button(Widget{randomize, z_index},
+                       TranslatableString("Randomize"), true)) {
                 const auto name = get_random_name_rot13();
                 network_info->send_updated_seed(name);
                 map_ptr->showSeedInputBox = false;
             }
 
-            if (button(Widget{select, z_index}, text_lookup("Save Seed"),
+            if (button(Widget{select, z_index}, TranslatableString("Save Seed"),
                        true)) {
                 network_info->send_updated_seed(tempSeed);
                 map_ptr->showSeedInputBox = false;

@@ -104,7 +104,7 @@ struct NetworkLayer : public Layer {
         controls = rect::rpad(controls, 30);
         auto [lock, back] = rect::hsplit<2>(controls, 20);
 
-        text(Widget{label}, text_lookup(strings::i18n::USERNAME));
+        text(Widget{label}, TranslatableString(strings::i18n::USERNAME));
 
         if (auto result = textfield(
                 Widget{name},
@@ -120,11 +120,12 @@ struct NetworkLayer : public Layer {
             Settings::get().data.username = result.as<std::string>();
         }
 
-        if (button(Widget{lock}, text_lookup(strings::i18n::LOCK_IN))) {
+        if (button(Widget{lock}, TranslatableString(strings::i18n::LOCK_IN))) {
             network_info->lock_in_username();
         }
 
-        if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
+        if (button(Widget{back},
+                   TranslatableString(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
     }
@@ -137,7 +138,7 @@ struct NetworkLayer : public Layer {
 
         auto [label, uname, _empty, edit] = rect::vsplit<4>(username, 20);
 
-        text(Widget{label}, text_lookup(strings::i18n::USERNAME));
+        text(Widget{label}, TranslatableString(strings::i18n::USERNAME));
 
         text(Widget{uname}, NO_TRANSLATE(Settings::get().data.username));
 
@@ -149,7 +150,7 @@ struct NetworkLayer : public Layer {
         if (show_edit_button) {
             edit = rect::tpad(edit, 20);
             edit = rect::bpad(edit, 80);
-            if (button(Widget{edit}, text_lookup(strings::i18n::EDIT))) {
+            if (button(Widget{edit}, TranslatableString(strings::i18n::EDIT))) {
                 network_info->unlock_username();
             }
         }
@@ -168,13 +169,14 @@ struct NetworkLayer : public Layer {
 
             auto [host, join, _empty, back] = rect::hsplit<4>(buttons, 20);
 
-            if (button(Widget{host}, text_lookup(strings::i18n::HOST))) {
+            if (button(Widget{host}, TranslatableString(strings::i18n::HOST))) {
                 network_info->set_role(network::Info::Role::s_Host);
             }
-            if (button(Widget{join}, text_lookup(strings::i18n::JOIN))) {
+            if (button(Widget{join}, TranslatableString(strings::i18n::JOIN))) {
                 network_info->set_role(network::Info::Role::s_Client);
             }
-            if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
+            if (button(Widget{back},
+                       TranslatableString(strings::i18n::BACK_BUTTON))) {
                 MenuState::get().clear_history();
                 MenuState::get().set(menu::State::Root);
             }
@@ -200,18 +202,19 @@ struct NetworkLayer : public Layer {
             auto [start, _a, _b, disconnect] = rect::hsplit<4>(buttons, 30);
 
             if (network_info->is_host()) {
-                if (button(Widget{start}, text_lookup(strings::i18n::START))) {
+                if (button(Widget{start},
+                           TranslatableString(strings::i18n::START))) {
                     MenuState::get().set(menu::State::Game);
                     GameState::get().set(game::State::Lobby);
                 }
                 if (button(Widget{disconnect},
-                           text_lookup(strings::i18n::DISCONNECT))) {
+                           TranslatableString(strings::i18n::DISCONNECT))) {
                     network::Info::reset_connections();
                     return;
                 }
             } else {
                 if (button(Widget{disconnect},
-                           text_lookup(strings::i18n::DISCONNECT))) {
+                           TranslatableString(strings::i18n::DISCONNECT))) {
                     network::Info::reset_connections();
                     return;
                 }
@@ -267,7 +270,8 @@ struct NetworkLayer : public Layer {
                 should_show_host_ip = !should_show_host_ip;
             }
 
-            if (button(Widget{copy}, text_lookup(strings::i18n::COPY_IP))) {
+            if (button(Widget{copy},
+                       TranslatableString(strings::i18n::COPY_IP))) {
                 ext::set_clipboard_text(my_ip_address.c_str());
             }
         }
@@ -295,7 +299,7 @@ struct NetworkLayer : public Layer {
 
             auto [label, control] = rect::vsplit<2>(ip);
 
-            text(Widget{label}, text_lookup(strings::i18n::ENTER_IP));
+            text(Widget{label}, TranslatableString(strings::i18n::ENTER_IP));
 
             if (auto result = textfield(
                     Widget{control},
@@ -325,12 +329,13 @@ struct NetworkLayer : public Layer {
             auto [load_ip, connect] = rect::hsplit<2>(buttons);
 
             if (button(Widget{load_ip},
-                       text_lookup(strings::i18n::LOAD_LAST_IP))) {
+                       TranslatableString(strings::i18n::LOAD_LAST_IP))) {
                 network_info->host_ip_address() =
                     Settings::get().last_used_ip();
             }
 
-            if (button(Widget{connect}, text_lookup(strings::i18n::CONNECT))) {
+            if (button(Widget{connect},
+                       TranslatableString(strings::i18n::CONNECT))) {
                 Settings::get().update_last_used_ip_address(
                     network_info->host_ip_address());
                 network_info->lock_in_ip();
@@ -344,7 +349,8 @@ struct NetworkLayer : public Layer {
         // Back button
         {
             back = rect::rpad(back, 20);
-            if (button(Widget{back}, text_lookup(strings::i18n::BACK_BUTTON))) {
+            if (button(Widget{back},
+                       TranslatableString(strings::i18n::BACK_BUTTON))) {
                 network_info->unlock_username();
             }
         }
