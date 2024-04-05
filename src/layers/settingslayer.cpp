@@ -72,13 +72,8 @@ void SettingsLayer::draw_footer(Rectangle footer) {
         footer = rect::lpad(footer, 10);
     footer = rect::bpad(footer, 30);
 
-    auto [reset_to_default, force_save, back, controls, input_type] =
+    auto [force_save, back, reset_to_default, controls, input_type] =
         rect::vsplit<5>(rect::rpad(footer, 90), 20);
-
-    if (button(Widget{reset_to_default},
-               TranslatableString("reset all settings"), true)) {
-        Settings::get().reset_to_default();
-    }
 
     if (button(Widget{force_save},
                TranslatableString(strings::i18n::EXIT_AND_SAVE), true)) {
@@ -87,6 +82,11 @@ void SettingsLayer::draw_footer(Rectangle footer) {
     if (button(Widget{back}, TranslatableString(strings::i18n::EXIT_NO_SAVE),
                true)) {
         exit_without_save();
+    }
+
+    if (button(Widget{reset_to_default},
+               TranslatableString(strings::i18n::RESET_ALL_SETTINGS), true)) {
+        Settings::get().reset_to_default();
     }
 
     const auto controls_text = activeWindow == ActiveWindow::Root

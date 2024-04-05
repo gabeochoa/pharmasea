@@ -244,8 +244,9 @@ constexpr const char* THEME = "Theme";
 constexpr const char* LANGUAGE = "Language";
 constexpr const char* FULLSCREEN = "Fullscreen?";
 
-constexpr const char* EXIT_AND_SAVE = "Save and Exit";
+constexpr const char* EXIT_AND_SAVE = "Save and exit";
 constexpr const char* EXIT_NO_SAVE = "Exit without Saving";
+constexpr const char* RESET_ALL_SETTINGS = "Reset all settings";
 
 constexpr const char* GENERAL = "General";
 constexpr const char* CONTROLS = "Controls";
@@ -358,7 +359,6 @@ enum struct TodoReason {
     if (target_index == -1) {
         std::cout << "Failed to find translation for " << s.debug()
                   << std::endl;
-        assert(false);
         return s.underlying_TL_ONLY();
     }
 
