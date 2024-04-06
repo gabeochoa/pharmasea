@@ -61,9 +61,6 @@ struct IsRoundSettingsManager : public BaseComponent {
                 case ConfigKey::MaxDrinkTime:
                     config.permanent_set<float>(ConfigKey::MaxDrinkTime, 1.0f);
                     break;
-                case ConfigKey::DayCount:
-                    config.permanent_set<int>(ConfigKey::DayCount, 1);
-                    break;
             }
         });
     }

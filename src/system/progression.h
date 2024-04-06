@@ -210,19 +210,6 @@ inline void update_upgrade_variables() {
                     irsm.get<float>(ConfigKey::RoundLength));
 
             } break;
-            /*
-            case ConfigKey::Drink: {
-                // bitset_utils::for_each_enabled_bit(
-                // irsm.unlocked_drinks, [&](size_t index) {
-                // Drink drink = magic_enum::enum_value<Drink>(index);
-                // ipm.unlock_drink(drink);
-                // });
-                // irsm.unlocked_drinks.reset();
-            } break;
-            case ConfigKey::Entity:
-            case ConfigKey::CustomerSpawn:
-            break;
-            */
             case ConfigKey::Test:
             case ConfigKey::MaxNumOrders:
             case ConfigKey::PatienceMultiplier:
@@ -233,7 +220,6 @@ inline void update_upgrade_variables() {
             case ConfigKey::DrinkCostMultiplier:
             case ConfigKey::VomitFreqMultiplier:
             case ConfigKey::VomitAmountMultiplier:
-            case ConfigKey::DayCount:
             case ConfigKey::MaxDrinkTime:
                 break;
         }
