@@ -10,6 +10,20 @@ bouncer
 
 Some upgrade ideas: 
 
+ddr 
+(i had actually built a ton of this but im bad at git so its gone now :( )
+The idea is that there is an upgrade where it adds a new trigger area to the store 
+one player can stand on it and play a rhythm game. 
+based on their score they will get a discount on their next purchase. 
+you can only play once per store round. 
+originally i was going to make it a UI based but it might actually be simpler for me to make it diagetic like the piano in Big. 
+- do we care about other players being able to see? 
+- do we want other players to be able to help? (i think we should not let them) 
+- doing it diagetically means custom entity type 
+- hit 100% of notes get 100% of discount? or 5 notes get 20% off for each? 
+- how to handle hitting iwhen too far away, is that a partial point etc? 
+- pointer for direction vs timing 
+
 five finger discount
 dont mind if i do
 (customers sometimes will steal bottles from behind the bar) 
