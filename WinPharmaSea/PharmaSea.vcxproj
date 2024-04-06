@@ -226,6 +226,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\components\has_waiting_queue.cpp" />
+    <ClCompile Include="..\src\dataclass\upgrades.cpp" />
     <ClCompile Include="..\src\engine\app.cpp" />
     <ClCompile Include="..\src\engine\files.cpp" />
     <ClCompile Include="..\src\engine\globals_register.cpp" />

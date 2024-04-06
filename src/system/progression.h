@@ -143,9 +143,12 @@ inline bool collect_upgrade_options(Entity& entity) {
     ipm.upgradeOption1 = possible_upgrades[0]->type;
     ipm.upgradeOption2 = possible_upgrades[1]->type;
 
-    log_info(" The two options we got are {} and {}",
+    log_info(" The two options we got are {} {} and {} {}",
              possible_upgrades[0]->name.debug(),
-             possible_upgrades[1]->name.debug());
+             magic_enum::enum_name<UpgradeClass>(possible_upgrades[0]->type),
+             possible_upgrades[1]->name.debug(),
+             magic_enum::enum_name<UpgradeClass>(possible_upgrades[1]->type)
+    );
     return true;
 }
 

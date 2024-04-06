@@ -15,11 +15,11 @@ struct UpgradeImpl {
     std::string icon_name;
     TranslatableString flavor_text;
     TranslatableString description;
+    std::function<void(ConfigData&, IsProgressionManager&)> onUnlock = nullptr;
     std::function<Mods(const ConfigData&, const IsProgressionManager&, int)>
         onHourMods = nullptr;
     std::function<Actions(const ConfigData&, const IsProgressionManager&, int)>
         onHourActions = nullptr;
-    std::function<void(ConfigData&, IsProgressionManager&)> onUnlock = nullptr;
     std::function<bool(const ConfigData&, const IsProgressionManager&)>
         meetsPrereqs = nullptr;
 };

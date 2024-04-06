@@ -528,7 +528,13 @@ void render_trigger_area(const Entity& entity, float dt) {
     };
 
     const auto _render_upgrade_preview = [&](const UpgradeClass& uc) {
+        log_info("{}", magic_enum::enum_name<UpgradeClass>(uc));
         auto impl = make_upgrade(uc);
+        // TODO add some fallback
+        if (!impl) {
+            // no options set yet
+            return;
+        }
 
         const auto font = Preload::get().font;
         const auto start_position =
