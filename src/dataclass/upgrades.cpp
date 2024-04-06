@@ -90,8 +90,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("Speakeasy"),
-                // TODO make upgrade icon for
-                .icon_name = "upgrade_default",
+                .icon_name = "speakeasy",
                 .flavor_text = TranslatableString(
                     "first you gotta get a fish, then bring it to the..."),
                 .description = TranslatableString(
@@ -113,8 +112,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("Main Street"),
-                // TODO make upgrade icon for
-                .icon_name = "upgrade_default",
+                .icon_name = "main_street",
                 .flavor_text =
                     TranslatableString("location, location, location."),
                 .description =
@@ -134,8 +132,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("Big City"),
-                // TODO make upgrade icon for
-                .icon_name = "upgrade_default",
+                .icon_name = "big_city",
                 .flavor_text = TranslatableString("I'm walking 'ere."),
                 .description = TranslatableString(
                     "(Customers pay double but have less patience)"),
@@ -157,8 +154,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("SmallTown"),
-                // TODO make upgrade icon for
-                .icon_name = "upgrade_default",
+                .icon_name = "small_town",
                 .flavor_text = TranslatableString(
                     "This town ain't big enough for the two of us."),
                 .description = TranslatableString(
@@ -247,8 +243,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("Pitcher"),
-                // TODO make upgrade icon for
-                .icon_name = "upgrade_default",
+                .icon_name = "pitcher",
                 .flavor_text = TranslatableString("its actually a carafe."),
                 .description = TranslatableString(
                     "(Unlocks a pitcher which can store up to 10 of the same "
@@ -273,8 +268,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("me and the boys"),
-                // TODO
-                .icon_name = "upgrade_default",
+                .icon_name = "me_and_the_boys",
                 .flavor_text = TranslatableString(
                     "crackin open a cold one or two... or ten ."),
                 .description = TranslatableString(
@@ -297,8 +291,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("Mocktails"),
-                // TODO
-                .icon_name = "upgrade_default",
+                .icon_name = "mocktails",
                 .flavor_text =
                     TranslatableString("does this taste weak to you?"),
                 .description = TranslatableString(
@@ -322,8 +315,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("HeavyHanded"),
-                // TODO
-                .icon_name = "upgrade_default",
+                .icon_name = "heavy_handed",
                 .flavor_text =
                     TranslatableString("Oops, hopefully you have a ride home"),
                 // TODO make it so that you have to add one more alcohol
@@ -357,8 +349,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("Potty Protocol"),
-                // TODO
-                .icon_name = "upgrade_default",
+                .icon_name = "potty_protocol",
                 .flavor_text = TranslatableString("aim for the bowl"),
                 .description = TranslatableString(
                     "(before vomiting customers will try to find an empty "
@@ -374,8 +365,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("Sippy Cups"),
-                // TODO
-                .icon_name = "upgrade_default",
+                .icon_name = "sippy_cups",
                 .flavor_text = TranslatableString("savor the flavor"),
                 .description = TranslatableString(
                     "(customers will take twice as long to drink and order "
@@ -403,8 +393,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             ptr = new UpgradeImpl{
                 .type = uc,
                 .name = TranslatableString("Down The Hatch"),
-                // TODO
-                .icon_name = "upgrade_default",
+                .icon_name = "down_the_hatch",
                 .flavor_text = TranslatableString("chug chug chug chug!"),
                 // TODO do they also order more?
                 .description =
