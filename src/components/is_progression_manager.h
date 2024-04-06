@@ -136,38 +136,9 @@ struct IsProgressionManager : public BaseComponent {
         return upgrade_rounds[upgrade_index];
     }
 
-    [[nodiscard]] std::string get_option_title(bool is_first) const {
-        switch (upgrade_type()) {
-            case UpgradeType::None:
-                return "(invalid)";
+    [[nodiscard]] TranslatableString get_option_title(bool is_first) const;
 
-            case UpgradeType::Drink:
-                return fmt::format("{}",
-                                   magic_enum::enum_name<Drink>(
-                                       is_first ? drinkOption1 : drinkOption2));
-            case UpgradeType::Upgrade:
-                // TODO
-                return fmt::format(
-                    "{}", magic_enum::enum_name<UpgradeClass>(
-                              is_first ? upgradeOption1 : upgradeOption2));
-        }
-    }
-
-    [[nodiscard]] std::string get_option_subtitle(bool is_first) const {
-        switch (upgrade_type()) {
-            case UpgradeType::None:
-                return "(invalid)";
-            case UpgradeType::Drink:
-                return fmt::format("{}",
-                                   magic_enum::enum_name<Drink>(
-                                       is_first ? drinkOption1 : drinkOption2));
-            case UpgradeType::Upgrade:
-                // TODO
-                return fmt::format(
-                    "{}", magic_enum::enum_name<UpgradeClass>(
-                              is_first ? upgradeOption1 : upgradeOption2));
-        }
-    }
+    [[nodiscard]] TranslatableString get_option_subtitle(bool is_first) const;
 
     void next_round() {
         // Increment to the next upgrade type (drink -> upgrade etc)

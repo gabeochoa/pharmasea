@@ -993,7 +993,9 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
 
     if (ita.type == IsTriggerArea::Unset) {
         log_warn("You created a trigger area without a type");
-        ita.update_title("Not Configured");
+        TranslatableString not_configured_ts =
+            TODO_TRANSLATE("Not Configured", TodoReason::UserFacingError);
+        ita.update_title(not_configured_ts);
         return;
     }
 
@@ -1001,24 +1003,25 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
     switch (ita.type) {
         case IsTriggerArea::ModelTest_BackToLobby: {
             // TODO translate?
-            ita.update_title("Back To Lobby");
-            ita.update_subtitle(strings::i18n::LOADING);
+            ita.update_title(NO_TRANSLATE("Back To Lobby"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
         case IsTriggerArea::Lobby_ModelTest: {
-            // TODO translate?
-            ita.update_title("Model Testing");
-            ita.update_subtitle(strings::i18n::LOADING);
+            ita.update_title(NO_TRANSLATE("Model Testing"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
         case IsTriggerArea::Lobby_PlayGame: {
-            ita.update_title(strings::i18n::START_GAME);
-            ita.update_subtitle(strings::i18n::LOADING);
+            ita.update_title(TranslatableString(strings::i18n::START_GAME));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
         case IsTriggerArea::Store_BackToPlanning: {
-            ita.update_title(strings::i18n::TRIGGERAREA_PURCHASE_FINISH);
-            ita.update_subtitle(strings::i18n::TRIGGERAREA_PURCHASE_FINISH);
+            ita.update_title(
+                TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
+            ita.update_subtitle(
+                TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
             return;
         } break;
         case IsTriggerArea::Unset:
@@ -1029,12 +1032,14 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
 
     // These are the dynamic ones
 
+    TranslatableString internal_ts =
+        TODO_TRANSLATE("(internal)", TodoReason::UserFacingError);
     switch (ita.type) {
         case IsTriggerArea::Progression_Option1:  // fall through
         case IsTriggerArea::Progression_Option2: {
             if (GameState::get().is_not(game::State::Progression)) {
-                ita.update_title("(internal)");
-                ita.update_subtitle("(internal)");
+                ita.update_title(internal_ts);
+                ita.update_subtitle(internal_ts);
                 return;
             }
 
@@ -1043,8 +1048,8 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
                 sophie.get<IsProgressionManager>();
 
             if (!ipm.collectedOptions) {
-                ita.update_title("(internal)");
-                ita.update_subtitle("(internal)");
+                ita.update_title(internal_ts);
+                ita.update_subtitle(internal_ts);
                 return;
             }
 
@@ -1058,8 +1063,11 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             break;
     }
 
-    ita.update_title("Not Configured");
-    ita.update_subtitle("Not Configured");
+    TranslatableString not_configured_ts =
+        TODO_TRANSLATE("Not Configured", TodoReason::UserFacingError);
+
+    ita.update_title(not_configured_ts);
+    ita.update_subtitle(not_configured_ts);
     log_warn(
         "Trying to update trigger area title but type {} not handled "
         "anywhere",

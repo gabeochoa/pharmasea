@@ -147,8 +147,7 @@ inline bool collect_upgrade_options(Entity& entity) {
              possible_upgrades[0]->name.debug(),
              magic_enum::enum_name<UpgradeClass>(possible_upgrades[0]->type),
              possible_upgrades[1]->name.debug(),
-             magic_enum::enum_name<UpgradeClass>(possible_upgrades[1]->type)
-    );
+             magic_enum::enum_name<UpgradeClass>(possible_upgrades[1]->type));
     return true;
 }
 
@@ -191,15 +190,12 @@ inline void collect_progression_options(Entity& entity, float) {
 }
 
 inline void update_upgrade_variables() {
+    // For certain config keys, we dont "read" them live so to speak
+    // and so we might need to update manually when they change
+
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-    // IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
 
-    // TODO ?
-    // Apply activity outcomes,
-    // upgrade::execute_activites(irsm, upgrade::UpgradeTimeOfDay::Unlock,
-    // irsm.activities);
-    //
     magic_enum::enum_for_each<ConfigKey>([&](auto val) {
         constexpr ConfigKey key = val;
 

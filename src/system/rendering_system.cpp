@@ -446,7 +446,7 @@ void render_trigger_area(const Entity& entity, float dt) {
     // place the english
     auto fsize = 500.f;
 
-    std::string title = entity.get<IsTriggerArea>().title();
+    TranslatableString title = entity.get<IsTriggerArea>().title();
     log_ifx(title.empty(), LogLevel::LOG_WARN,
             "Rendering trigger area with empty text string: id{} pos{}",
             entity.id, pos);
@@ -472,7 +472,8 @@ void render_trigger_area(const Entity& entity, float dt) {
             WHITE);
 
     } else {
-        raylib::DrawText3D(font, title.c_str(), text_position, fsize,
+        raylib::DrawText3D(font, translation_lookup(title).c_str(),
+                           text_position, fsize,
                            4,      // font spacing
                            4,      // line spacing
                            false,  // backface
@@ -528,7 +529,6 @@ void render_trigger_area(const Entity& entity, float dt) {
     };
 
     const auto _render_upgrade_preview = [&](const UpgradeClass& uc) {
-        log_info("{}", magic_enum::enum_name<UpgradeClass>(uc));
         auto impl = make_upgrade(uc);
         // TODO add some fallback
         if (!impl) {

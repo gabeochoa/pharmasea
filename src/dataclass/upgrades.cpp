@@ -18,12 +18,14 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::LongerDay:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Longer Day"),
+                .name =
+                    TODO_TRANSLATE("Longer Day", TodoReason::SubjectToChange),
                 .icon_name = "longer_day",
-                .flavor_text = TranslatableString(
-                    "Find an extra couple hours in the day."),
-                .description =
-                    TranslatableString("(Makes the day twice as long)"),
+                .flavor_text =
+                    TODO_TRANSLATE("Find an extra couple hours in the day.",
+                                   TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE("(Makes the day twice as long)",
+                                              TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(
@@ -37,14 +39,15 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::UnlockToilet:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Gotta go"),
+                .name = TODO_TRANSLATE("Gotta go", TodoReason::SubjectToChange),
                 .icon_name = "gotta_go",
-                .flavor_text =
-                    TranslatableString("Drinking has its consequences."),
-                .description = TranslatableString(
+                .flavor_text = TODO_TRANSLATE("Drinking has its consequences.",
+                                              TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
                     "(Customers will order twice, but will need to go to "
                     "the "
-                    "bathroom)"),
+                    "bathroom)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager& ipm) {
                         config.permanently_modify<int>(ConfigKey::MaxNumOrders,
@@ -66,17 +69,25 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::BigBladders:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Big Bladders"),
+                .name =
+                    TODO_TRANSLATE("Big Bladders", TodoReason::SubjectToChange),
                 // TODO make upgrade icon for
                 .icon_name = "upgrade_default",
-                .flavor_text = TranslatableString("I've been training.."),
-                .description = TranslatableString(
+                .flavor_text = TODO_TRANSLATE("I've been training..",
+                                              TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
                     "(Customers will go too the bathroom less often but for "
-                    "longer)"),
+                    "longer)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
-                        config.permanently_modify<int>(
-                            ConfigKey::PissTimer, Operation::Multiplier, 2);
+                        // TODO if you accidentally choose the wrong type
+                        // this line will just crash but one once you choose the
+                        // upgrade can we catch this at compile time or load
+                        // time?
+                        // maybe its worth just hardtyping the config keys...
+                        config.permanently_modify<float>(
+                            ConfigKey::PissTimer, Operation::Multiplier, 2.f);
                         config.permanently_modify<int>(
                             ConfigKey::BladderSize, Operation::Multiplier, 2);
                     },
@@ -89,14 +100,17 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::Speakeasy:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Speakeasy"),
+                .name =
+                    TODO_TRANSLATE("Speakeasy", TodoReason::SubjectToChange),
                 .icon_name = "speakeasy",
-                .flavor_text = TranslatableString(
-                    "first you gotta get a fish, then bring it to the..."),
-                .description = TranslatableString(
+                .flavor_text = TODO_TRANSLATE(
+                    "first you gotta get a fish, then bring it to the...",
+                    TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
                     "(Half the customers, but they will pay 1% more for "
                     "every extra tile they have to visit before finding the "
-                    "register)"),
+                    "register)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(
@@ -111,12 +125,14 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::MainStreet:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Main Street"),
+                .name =
+                    TODO_TRANSLATE("Main Street", TodoReason::SubjectToChange),
                 .icon_name = "main_street",
-                .flavor_text =
-                    TranslatableString("location, location, location."),
+                .flavor_text = TODO_TRANSLATE("location, location, location.",
+                                              TodoReason::SubjectToChange),
                 .description =
-                    TranslatableString("(Twice as many Customers will visit)"),
+                    TODO_TRANSLATE("(Twice as many Customers will visit)",
+                                   TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(
@@ -131,11 +147,13 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::BigCity:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Big City"),
+                .name = TODO_TRANSLATE("Big City", TodoReason::SubjectToChange),
                 .icon_name = "big_city",
-                .flavor_text = TranslatableString("I'm walking 'ere."),
-                .description = TranslatableString(
-                    "(Customers pay double but have less patience)"),
+                .flavor_text = TODO_TRANSLATE("I'm walking 'ere.",
+                                              TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
+                    "(Customers pay double but have less patience)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(
@@ -153,12 +171,15 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::SmallTown:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("SmallTown"),
+                .name =
+                    TODO_TRANSLATE("SmallTown", TodoReason::SubjectToChange),
                 .icon_name = "small_town",
-                .flavor_text = TranslatableString(
-                    "This town ain't big enough for the two of us."),
-                .description = TranslatableString(
-                    "(Customers pay half but have double patience)"),
+                .flavor_text = TODO_TRANSLATE(
+                    "This town ain't big enough for the two of us.",
+                    TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
+                    "(Customers pay half but have double patience)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(
@@ -176,12 +197,15 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::Champagne:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Champagne"),
+                .name =
+                    TODO_TRANSLATE("Champagne", TodoReason::SubjectToChange),
                 .icon_name = "upgrade_champagne",
-                .flavor_text = TranslatableString("Someone get the bandaids."),
-                .description = TranslatableString(
+                .flavor_text = TODO_TRANSLATE("Someone get the bandaids.",
+                                              TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
                     "(Unlocks Champagne which needs to be saber'd before "
-                    "pouring)"),
+                    "pouring)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager& ipm) {
                         ipm.unlock_drink(champagne);
@@ -204,13 +228,15 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::HappyHour:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Happy Hour"),
+                .name =
+                    TODO_TRANSLATE("Happy Hour", TodoReason::SubjectToChange),
                 .icon_name = "happy_hour",
-                .flavor_text =
-                    TranslatableString("all the buzz at half the price"),
-                .description = TranslatableString(
+                .flavor_text = TODO_TRANSLATE("all the buzz at half the price",
+                                              TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
                     "(more people at the beginning of the day but cheaper "
-                    "drinks)"),
+                    "drinks)",
+                    TodoReason::SubjectToChange),
                 .onUnlock = [](ConfigData&, IsProgressionManager&) {},
                 .onHourMods = [](const ConfigData&, const IsProgressionManager&,
                                  int hour) -> Mods {
@@ -242,12 +268,14 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::Pitcher:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Pitcher"),
+                .name = TODO_TRANSLATE("Pitcher", TodoReason::SubjectToChange),
                 .icon_name = "pitcher",
-                .flavor_text = TranslatableString("its actually a carafe."),
-                .description = TranslatableString(
+                .flavor_text = TODO_TRANSLATE("its actually a carafe.",
+                                              TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
                     "(Unlocks a pitcher which can store up to 10 of the same "
-                    "drink)"),
+                    "drink)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager& ipm) {
                         ipm.unlock_entity(EntityType::PitcherCupboard);
@@ -267,12 +295,15 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
             // but take up space in the line?
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("me and the boys"),
+                .name = TODO_TRANSLATE("me and the boys",
+                                       TodoReason::SubjectToChange),
                 .icon_name = "me_and_the_boys",
-                .flavor_text = TranslatableString(
-                    "crackin open a cold one or two... or ten ."),
-                .description = TranslatableString(
-                    "(Customers will now order a pitcher of 10 beers)"),
+                .flavor_text =
+                    TODO_TRANSLATE("crackin open a cold one or two... or ten .",
+                                   TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
+                    "(Customers will now order a pitcher of 10 beers)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager& ipm) {
                         ipm.unlock_drink(beer_pitcher);
@@ -290,13 +321,15 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::Mocktails:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Mocktails"),
+                .name =
+                    TODO_TRANSLATE("Mocktails", TodoReason::SubjectToChange),
                 .icon_name = "mocktails",
-                .flavor_text =
-                    TranslatableString("does this taste weak to you?"),
-                .description = TranslatableString(
+                .flavor_text = TODO_TRANSLATE("does this taste weak to you?",
+                                              TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
                     "(You can forget one alcohol in a recipe but customers "
-                    "will order more to make up for it)"),
+                    "will order more to make up for it)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         // TODO do they only order more when you mess up?
@@ -314,15 +347,17 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::HeavyHanded:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("HeavyHanded"),
+                .name =
+                    TODO_TRANSLATE("HeavyHanded", TodoReason::SubjectToChange),
                 .icon_name = "heavy_handed",
                 .flavor_text =
-                    TranslatableString("Oops, hopefully you have a ride home"),
+                    TODO_TRANSLATE("Oops, hopefully you have a ride home",
+                                   TodoReason::SubjectToChange),
                 // TODO make it so that you have to add one more alcohol
                 // to get the effect?
-                .description =
-                    TranslatableString("(less profit & more vomit, but "
-                                       "customers will order more)"),
+                .description = TODO_TRANSLATE("(less profit & more vomit, but "
+                                              "customers will order more)",
+                                              TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<int>(
@@ -348,12 +383,15 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::PottyProtocol:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Potty Protocol"),
+                .name = TODO_TRANSLATE("Potty Protocol",
+                                       TodoReason::SubjectToChange),
                 .icon_name = "potty_protocol",
-                .flavor_text = TranslatableString("aim for the bowl"),
-                .description = TranslatableString(
+                .flavor_text = TODO_TRANSLATE("aim for the bowl",
+                                              TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
                     "(before vomiting customers will try to find an empty "
-                    "toilet)"),
+                    "toilet)",
+                    TodoReason::SubjectToChange),
                 .onUnlock = [](ConfigData&, IsProgressionManager&) {},
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
@@ -364,12 +402,15 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::SippyCups:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Sippy Cups"),
+                .name =
+                    TODO_TRANSLATE("Sippy Cups", TodoReason::SubjectToChange),
                 .icon_name = "sippy_cups",
-                .flavor_text = TranslatableString("savor the flavor"),
-                .description = TranslatableString(
+                .flavor_text = TODO_TRANSLATE("savor the flavor",
+                                              TodoReason::SubjectToChange),
+                .description = TODO_TRANSLATE(
                     "(customers will take twice as long to drink and order "
-                    "less)"),
+                    "less)",
+                    TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(
@@ -392,12 +433,14 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
         case UpgradeClass::DownTheHatch:
             ptr = new UpgradeImpl{
                 .type = uc,
-                .name = TranslatableString("Down The Hatch"),
+                .name = TODO_TRANSLATE("Down The Hatch",
+                                       TodoReason::SubjectToChange),
                 .icon_name = "down_the_hatch",
-                .flavor_text = TranslatableString("chug chug chug chug!"),
+                .flavor_text = TODO_TRANSLATE("chug chug chug chug!",
+                                              TodoReason::SubjectToChange),
                 // TODO do they also order more?
-                .description =
-                    TranslatableString("(customers will drink faster)"),
+                .description = TODO_TRANSLATE("(customers will drink faster)",
+                                              TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager&) {
                         config.permanently_modify<float>(

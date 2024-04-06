@@ -29,8 +29,10 @@ struct IsTriggerArea : public BaseComponent {
 
     virtual ~IsTriggerArea() {}
 
-    [[nodiscard]] const std::string& title() const { return _title; }
-    [[nodiscard]] const std::string& subtitle() const { return _subtitle; }
+    [[nodiscard]] const TranslatableString& title() const { return _title; }
+    [[nodiscard]] const TranslatableString& subtitle() const {
+        return _subtitle;
+    }
     [[nodiscard]] bool should_wave() const {
         return has_min_matching_entrants() && should_progress();
     }
@@ -65,26 +67,26 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
-    auto& update_title(const std::string& nt) {
+    auto& update_title(const TranslatableString& nt) {
         _title = nt;
         if ((int) _title.size() > max_title_length) {
             log_warn(
                 "title for trigger area is too long, max is {} chars, you had "
                 "{} ({})",
-                max_title_length, _title.size(), nt);
+                max_title_length, _title.size(), nt.debug());
             _title.resize(max_title_length);
         }
         return *this;
     }
 
-    auto& update_subtitle(const std::string& nt) {
+    auto& update_subtitle(const TranslatableString& nt) {
         _subtitle = nt;
         if ((int) _subtitle.size() > max_title_length) {
             log_warn(
                 "subtitle for trigger area is too long, max is {} chars, you "
                 "had "
                 "{} ({})",
-                max_title_length, _subtitle.size(), nt);
+                max_title_length, _subtitle.size(), nt.debug());
             _subtitle.resize(max_title_length);
         }
         return *this;
@@ -125,9 +127,9 @@ struct IsTriggerArea : public BaseComponent {
 
     int wanted_entrants = 1;
     int current_entrants = 0;
-    std::string _title;
-    std::string _subtitle;
-    int max_title_length = 20;
+    TranslatableString _title;
+    TranslatableString _subtitle;
+    int max_title_length = TranslatableString::MAX_LENGTH;
 
     float completion_time_max = 0.f;
     float completion_time_passed = 0.f;
@@ -151,7 +153,7 @@ struct IsTriggerArea : public BaseComponent {
         s.value4b(type);
 
         s.value4b(max_title_length);
-        s.text1b(_title, max_title_length);
-        s.text1b(_subtitle, max_title_length);
+        s.object(_title);
+        s.object(_subtitle);
     }
 };

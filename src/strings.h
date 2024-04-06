@@ -85,6 +85,8 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
 #include <iostream>
 #include <string>
 
+#include "bitsery_include.h"
+
 namespace strings {
 
 constexpr const char* GAME_NAME = "Pub Panic!";
@@ -309,36 +311,50 @@ constexpr const char* ITCH = "https://ochoag.com/pp-download.html";
 
 // TODO make those constexpr strings above translatablestring :)
 //
-struct TranslatableString {
-    explicit TranslatableString(const std::string& s) : content(s) {}
-    explicit TranslatableString(const std::string& s, bool ig)
-        : content(s), no_translate(ig) {}
-
-    [[nodiscard]] inline bool skip_translate() const { return no_translate; }
-    [[nodiscard]] inline bool empty() const { return content.empty(); }
-    [[nodiscard]] inline const char* debug() const { return content.c_str(); }
-    [[nodiscard]] inline const char* underlying_TL_ONLY() const {
-        return content.c_str();
-    }
-
-    [[nodiscard]] inline const std::string& str() const { return content; }
-
-   private:
-    std::string content;
-    bool no_translate = false;
-};
-
-[[nodiscard]] inline TranslatableString NO_TRANSLATE(const std::string& s) {
-    return TranslatableString{s, true};
-}
-
 enum struct TodoReason {
     Format,
     UserFacingError,
     KeyName,
     Recursion,
-    ServerString
+    ServerString,
+    SubjectToChange,
 };
+
+struct TranslatableString {
+    static const int MAX_LENGTH = 50;
+
+    explicit TranslatableString() {}
+    explicit TranslatableString(const std::string& s) : content(s) {}
+    explicit TranslatableString(const std::string& s, bool ig)
+        : content(s), no_translate(ig) {}
+
+    [[nodiscard]] bool skip_translate() const { return no_translate; }
+    [[nodiscard]] bool empty() const { return content.empty(); }
+    [[nodiscard]] const char* debug() const { return content.c_str(); }
+    [[nodiscard]] const char* underlying_TL_ONLY() const {
+        return content.c_str();
+    }
+
+    [[nodiscard]] const std::string& str(TodoReason) const { return content; }
+
+    [[nodiscard]] size_t size() const { return content.size(); }
+    void resize(size_t len) { content.resize(len); }
+
+   private:
+    std::string content;
+    bool no_translate = false;
+
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.text1b(content, MAX_LENGTH);
+        s.value1b(no_translate);
+    }
+};
+
+[[nodiscard]] inline TranslatableString NO_TRANSLATE(const std::string& s) {
+    return TranslatableString{s, true};
+}
 
 // TODO fix all of these before launch :)
 [[nodiscard]] inline TranslatableString TODO_TRANSLATE(const std::string& s,

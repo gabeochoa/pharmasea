@@ -69,10 +69,11 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
 
         colored_text(
             ui::Widget{spawn_count},
-            TranslatableString(fmt::format(
-                "          {}{} {}",
-                positive ? "+" : "-",  //
-                transaction.amount, transaction.extra ? tip_string : "")),
+            TODO_TRANSLATE(fmt::format("          {}{} {}",
+                                       positive ? "+" : "-",  //
+                                       transaction.amount,
+                                       transaction.extra ? tip_string : ""),
+                           TodoReason::Format),
             positive ? Color{0, 255, 0, alpha} : Color{255, 0, 0, alpha}  //
         );
     }
