@@ -62,6 +62,78 @@ I am publishing some releases on itch, you can find the url in the code or build
 if you need the password join the discord and say hi!
 
 
+### alpha_0.24.04.05
+
+Known Issues
+- (Store) New machines spawn on top of each other
+- (UI) Controls are not remappable in UI 
+- (Game) Map generator always makes basically the same map
+- (Game) No way to know if you made the wrong drink 
+- (Game) Can place items where it collides with your body
+
+
+impact / design changes 
+
+bug fixes
+
+better eng
+
+* 34cf42e8 - (HEAD -> main, origin/main) [be] Better translation system (#28) (2 minutes ago) <Gabriel Ochoa>
+* 74ef9c36 - be - switch some existing queries to orderBy (2 days ago) <Gabe Ochoa>
+* c45a69dc - be - change toilet search to find closest (2 days ago) <Gabe Ochoa>
+* 4379933c - be - add support for orderby and make example distance orderby (2 days ago) <Gabe Ochoa>
+* 2ef24164 - design - add upgrades that change drink speed (3 days ago) <Gabe Ochoa>
+* 73d846f1 - be - add ability to do division on config keys (3 days ago) <Gabe Ochoa>
+* b841fb55 - bf - fix issue with randF returning a number between [a+32k, b+32k] so now it should be in the range you want (3 days ago) <Gabe Ochoa>
+* 3634d4a3 - be - add ability to control length of drink time with upgrades (3 days ago) <Gabe Ochoa>
+* 0d6cae25 - bf - fix showing currently unlocked upgrades during pause menu (3 days ago) <Gabe Ochoa>
+* 75bf7311 - be - better todo message (3 days ago) <Gabe Ochoa>
+* 0b40fea9 - design - HeavyHanded (more vomit) and PottyProtocol (vomit into toilet) upgrades (6 days ago) <Gabe Ochoa>
+* a41ed43e - bf - fix crash when alcohol is first liquid added (idk how this ever worked though) (6 days ago) <Gabe Ochoa>
+* 976bd8eb - design - add upgrade mocktails (6 days ago) <Gabe Ochoa>
+* 32714cf6 - design - add two new upgrades Speakeasy and MainStreet (6 days ago) <Gabe Ochoa>
+* 97cf3d5e - [be] rework the entire upgrade system  (#27) (9 days ago) <Gabriel Ochoa>
+* 633795e6 - bf - fix issue where upgrades would respawn entities every morning (7 weeks ago) <Gabe Ochoa>
+* a8469aa3 - be - fix some warnings (7 weeks ago) <Gabe Ochoa>
+* 7a0c8b2d - be - remove key pressed log (3 months ago) <Gabe Ochoa>
+* cc9cc386 - bf - windows users were always using the mac keymapping and so paste never worked. just allow them to use control or windows if they want (3 months ago) <gabeochoa>
+* 6d25321b - mark ps4 issues no repro (at least it works fine on mac) (3 months ago) <Gabe Ochoa>
+* 81f0a5ca - be - switch from logging to log error so that we can better understand what is causing entity types to fail to convert (3 months ago) <Gabe Ochoa>
+* dba2a179 - bf - remove underscores when converting from config entity to EntityType (3 months ago) <Gabe Ochoa>
+* 6002b574 - bf - hide animating transaction when the amount and extra is zero (3 months ago) <Gabe Ochoa>
+* 205a1762 - be - turn back on tests for upgrades (4 months ago) <Gabe Ochoa>
+* 47a10cba - ui - update icons for some upgrades (4 months ago) <Gabe Ochoa>
+* 4eadcf97 - ui - hide register queue when paused (4 months ago) <Gabe Ochoa>
+* 8040ddc4 - ui - add background to show which upgrades are active at any moment (4 months ago) <Gabe Ochoa>
+* 9c9445c1 - be - upgrade system rewrite (4 months ago) <Gabe Ochoa>
+* a1de3ca2 - be - add contains vec (4 months ago) <Gabe Ochoa>
+* 9d6ee63e - be - fix warning (4 months ago) <Gabe Ochoa>
+* b80ddb9b - upgrade - happy hour now actually spawns people (4 months ago) <Gabe Ochoa>
+* 469da203 - be - add description for what should happen (4 months ago) <Gabe Ochoa>
+* 7cc7e018 - be - add remove_all for std map (4 months ago) <Gabe Ochoa>
+* 268cdc2a - be - extract config struct (4 months ago) <Gabe Ochoa>
+* 9c9cd766 - upgrade - happy hour (4 months ago) <Gabe Ochoa>
+* e458555c - impact - add icon for champagne upgrade (4 months ago) <Gabe Ochoa>
+* ec80df02 - impact - add ui in pause menu to show upgrades (4 months ago) <Gabe Ochoa>
+* f1d95847 - impact - render upgrade icons in the pause menu (4 months ago) <Gabe Ochoa>
+* 068e897b - be - add icon name to upgrades (4 months ago) <Gabe Ochoa>
+* 0b6274b9 - be - remove debugname which should speed up all type checking (4 months ago) <Gabe Ochoa>
+* 06c75274 - query - convert trigger area to query (4 months ago) <Gabe Ochoa>
+* 1d48d37c - be - switch floor marking to entquery (4 months ago) <Gabe Ochoa>
+* 05aeccc8 - query - add support for getting ids (4 months ago) <Gabe Ochoa>
+* 0b009b6f - query - add whereCollides and whereMissingComponent (4 months ago) <Gabe Ochoa>
+* 57647048 - be - slightly faster overlapping entity check (4 months ago) <Gabe Ochoa>
+* a6f349b8 - be - add whereNotType (4 months ago) <Gabe Ochoa>
+* 1cdf4c43 - be - privatize num_stars (4 months ago) <Gabe Ochoa>
+* 192f5609 - impact - add star ui to show higher quality fishing game ingredient (4 months ago) <Gabe Ochoa>
+* d01395fa - be - some translations (4 months ago) <Gabe Ochoa>
+* ac2e8c87 - impact - add tip as part of the transaction (4 months ago) <Gabe Ochoa>
+* 524675c1 - impui - animation for when money is deposited in your account (5 months ago) <Gabe Ochoa>
+* 90729a62 - be - remove and add ai components as an easy way to reset all the data in them safely (5 months ago) <Gabe Ochoa>
+* 7133456e - be - add new job type where they pay (this makes it so the deposit happens at the right time now) (5 months ago) <Gabe Ochoa>
+* 0a879daa - update readme (5 months ago) <Gabe Ochoa>
+
+
 ### alpha_0.23.11.22
 
 Known Issues
