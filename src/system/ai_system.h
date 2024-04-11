@@ -133,6 +133,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
         // TODO :DUPE: same as process_ai_paying
         OptEntity best_register =
             EntityQuery()
+                .whereType(EntityType::Register)
                 .whereHasComponent<HasWaitingQueue>()
                 .whereLambda([](const Entity& entity) {
                     // Exclude full registers
@@ -584,6 +585,7 @@ inline void process_ai_paying(Entity& entity, float dt) {
         // TODO :DUPE: same as process_ai_waitinqueue
         OptEntity best_register =
             EntityQuery()
+                .whereType(EntityType::Register)
                 .whereHasComponent<HasWaitingQueue>()
                 .whereLambda([](const Entity& entity) {
                     // Exclude full registers
