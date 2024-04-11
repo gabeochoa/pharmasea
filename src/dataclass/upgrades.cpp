@@ -467,6 +467,10 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager& ipm) {
+                        // TODO what if instead of just money is also works to
+                        // give you more time ot make drinks somehow? like they
+                        // will order and leave the line to go to the jukebox
+                        // and then when they get back the patience is renewed?
                         {
                             ipm.unlock_entity(EntityType::Jukebox);
                             config.store_to_spawn.push_back(
@@ -474,9 +478,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                             // Specifically not making it required forever
                         }
                     },
-                .meetsPrereqs = [](const ConfigData&,
+                .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
-                    return true;
+                    // make sure we have at least 2 max orders
+                    // because jukebox only works between orders
+                    return config.get<int>(ConfigKey::MaxNumOrders) >= 2;
                 }};
             break;
     }

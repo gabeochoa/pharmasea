@@ -6,6 +6,7 @@
 #include "components/ai_clean_vomit.h"
 #include "components/ai_close_tab.h"
 #include "components/ai_drinking.h"
+#include "components/ai_play_jukebox.h"
 #include "components/ai_use_bathroom.h"
 #include "components/ai_wait_in_queue.h"
 #include "components/can_pathfind.h"
@@ -132,6 +133,7 @@ void register_all_components() {
         Transform, HasName,
         //
         AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AICloseTab,
+        AIPlayJukebox,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
@@ -1273,6 +1275,11 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         customer.addComponent<AIUseBathroom>();
     }
 
+    bool jukebox_unlocked = irsm.has_upgrade_unlocked(UpgradeClass::Jukebox);
+    if (jukebox_unlocked) {
+        customer.addComponent<AIPlayJukebox>();
+    }
+
     customer.addComponent<HasPatience>().update_max(20.f);
 
     customer.addComponent<HasSpeechBubble>();
@@ -1382,6 +1389,7 @@ void make_champagne_holder(Entity& container, vec2 pos) {
 
 void make_jukebox(Entity& jukebox, vec2 pos) {
     furniture::make_furniture(jukebox, {EntityType::Jukebox}, pos);
+    jukebox.addComponent<HasWaitingQueue>();
 }
 
 }  // namespace furniture

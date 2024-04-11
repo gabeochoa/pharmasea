@@ -4,6 +4,7 @@
 #include "../components/ai_clean_vomit.h"
 #include "../components/ai_close_tab.h"
 #include "../components/ai_drinking.h"
+#include "../components/ai_play_jukebox.h"
 #include "../components/ai_use_bathroom.h"
 #include "../components/ai_wait_in_queue.h"
 #include "../components/can_order_drink.h"
@@ -365,6 +366,20 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     reset_job_component<AIWaitInQueue>(entity);
 }
 
+inline void _set_customer_next_order(Entity& entity) {
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    // get next order
+    const IsProgressionManager& progressionManager =
+        sophie.get<IsProgressionManager>();
+
+    CanOrderDrink& cod = entity.get<CanOrderDrink>();
+    // TODO make a function set_order()
+    cod.current_order = progressionManager.get_random_unlocked_drink();
+
+    reset_job_component<AIDrinking>(entity);
+    next_job(entity, JobType::WaitInQueue);
+}
+
 inline void process_ai_drinking(Entity& entity, float dt) {
     if (entity.is_missing<AIDrinking>()) return;
     if (entity.is_missing<CanOrderDrink>()) return;
@@ -421,15 +436,18 @@ inline void process_ai_drinking(Entity& entity, float dt) {
         return;
     }
 
-    // get next order
-    const IsProgressionManager& progressionManager =
-        sophie.get<IsProgressionManager>();
-
-    // TODO make a function set_order()
-    cod.current_order = progressionManager.get_random_unlocked_drink();
-
-    reset_job_component<AIDrinking>(entity);
-    next_job(entity, JobType::WaitInQueue);
+    // TODO decide how often customers want to do this...
+    // for now lets just say every time
+    // TODO only have them go up when someone else changes the song (like as if
+    // they are annoyed) for now just random
+    bool jukebox_unlocked = irsm.has_upgrade_unlocked(UpgradeClass::Jukebox);
+    if (jukebox_unlocked) {
+        if (randBool()) {
+            next_job(entity, JobType::PlayJukebox);
+            return;
+        }
+    }
+    _set_customer_next_order(entity);
 }
 
 inline void process_ai_clean_vomit(Entity& entity, float dt) {
@@ -654,6 +672,8 @@ inline void process_ai_paying(Entity& entity, float dt) {
         aiclosetab.position = reg.get<Transform>().tile_infront(1);
     }
 
+    // TODO just copy the time stuff from the other ai so its not instant
+
     // Now we should be at the front of the line
     // TODO i would like for the player to have to go over and "work" to process
     // their payment
@@ -677,6 +697,123 @@ inline void process_ai_paying(Entity& entity, float dt) {
     reset_job_component<AICloseTab>(entity);
 }
 
+inline void process_jukebox_play(Entity& entity, float dt) {
+    if (entity.is_missing<AIPlayJukebox>()) return;
+    if (entity.is_missing<CanOrderDrink>()) return;
+
+    AIPlayJukebox& ai_play_jukebox = entity.get<AIPlayJukebox>();
+
+    const auto _find_available_jukebox = [&]() -> bool {
+        if (ai_play_jukebox.has_available_target()) {
+            return true;
+        }
+        OptEntity best_jukebox =
+            EntityQuery()
+                .whereType(EntityType::Jukebox)
+                .whereHasComponent<HasWaitingQueue>()
+                .whereLambda([](const Entity& entity) {
+                    // Exclude full jukeboxs
+                    const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
+                    if (hwq.is_full()) return false;
+                    return true;
+                })
+                // Find the jukebox with the least people on it
+                .orderByLambda([](const Entity& r1, const Entity& r2) {
+                    const HasWaitingQueue& hwq1 = r1.get<HasWaitingQueue>();
+                    int rpos1 = hwq1.get_next_pos();
+                    const HasWaitingQueue& hwq2 = r2.get<HasWaitingQueue>();
+                    int rpos2 = hwq2.get_next_pos();
+                    return rpos1 < rpos2;
+                })
+                .gen_first();
+
+        if (!best_jukebox) {
+            ai_play_jukebox.reset();
+            return false;
+        }
+
+        ai_play_jukebox.set_target(best_jukebox->id);
+        ai_play_jukebox.position =
+            WIQ_add_to_queue_and_get_position(best_jukebox.asE(), entity);
+        return true;
+    };
+
+    bool found = _find_available_jukebox();
+    if (!found) {
+        _set_customer_next_order(entity);
+        reset_job_component<AIPlayJukebox>(entity);
+        // We probably dont have a jukebox, so just ignore this for now
+        // go back to ordering
+        return;
+    }
+
+    bool reached = entity.get<CanPathfind>().travel_toward(
+        ai_play_jukebox.position, get_speed_for_entity(entity) * dt);
+    if (!reached) return;
+
+    ai_play_jukebox.pass_time(dt);
+    if (!ai_play_jukebox.ready()) return;
+
+    OptEntity opt_reg = EntityHelper::getEntityForID(ai_play_jukebox.id());
+    if (!opt_reg) {
+        log_warn("got an invalid jukebox");
+        ai_play_jukebox.unset_target();
+        return;
+    }
+    Entity& reg = opt_reg.asE();
+    entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
+
+    int spot_in_line = WIQ_position_in_line(reg, entity);
+    if (spot_in_line != 0) {
+        // Waiting in line :)
+
+        // TODO We didnt move so just wait a bit before trying again
+
+        if (!WIQ_can_move_up(reg, entity)) {
+            // We cant move so just wait a bit before trying again
+            log_trace("im just going to wait a bit longer");
+
+            // Add the current job to the queue,
+            // and then add the waiting job
+
+            ai_play_jukebox.reset();
+            return;
+        }
+        // otherwise walk up one spot
+        ai_play_jukebox.position =
+            reg.get<Transform>().tile_infront(spot_in_line);
+        return;
+    } else {
+        ai_play_jukebox.position = reg.get<Transform>().tile_infront(1);
+
+        if (ai_play_jukebox.findSongTime == -1) {
+            // TODO make into a config?
+            float song_time = 5.f;
+            ai_play_jukebox.set_findSong_time(song_time);
+        }
+    }
+
+    // Now we should be at the front of the line
+
+    bool completed = ai_play_jukebox.findSong(dt);
+    if (!completed) {
+        return;
+    }
+
+    // TODO implement jukebox song change
+    {
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        IsBank& bank = sophie.get<IsBank>();
+        bank.deposit(10);
+    }
+
+    WIQ_leave_line(reg, entity);
+
+    _set_customer_next_order(entity);
+
+    reset_job_component<AIPlayJukebox>(entity);
+}
+
 inline void process_(Entity& entity, float dt) {
     if (entity.is_missing<CanPathfind>()) return;
 
@@ -698,6 +835,9 @@ inline void process_(Entity& entity, float dt) {
             break;
         case Paying:
             process_ai_paying(entity, dt);
+            break;
+        case PlayJukebox:
+            process_jukebox_play(entity, dt);
             break;
         case NoJob:
         case Wait:

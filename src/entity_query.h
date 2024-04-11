@@ -290,6 +290,8 @@ struct EntityQuery {
             if (options.stop_on_first && !out.empty()) return out;
         }
 
+        // TODO :SPEED: if there is only one item no need to sort
+        // TODO :SPEED: if we are doing gen_first() then partial sort?
         // Now run any order bys
         if (orderby) {
             std::sort(out.begin(), out.end(),

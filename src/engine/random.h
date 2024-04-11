@@ -7,6 +7,8 @@
     return a + (std::rand() % (b - a + 1));
 }
 
+[[nodiscard]] inline bool randBool() { return randIn(0, 1) == 1; }
+
 [[nodiscard]] inline float randfIn(float a, float b) {
     // We dont check for div by zero sukah
     return a + (std::rand() / (RAND_MAX / (b - a)));

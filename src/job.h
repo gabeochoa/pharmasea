@@ -18,6 +18,7 @@ enum JobType {
     Drinking,
     Mopping,
     Bathroom,
+    PlayJukebox,
 
     // Not used yet
     Wandering,

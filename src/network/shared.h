@@ -6,6 +6,7 @@
 #include "../components/ai_clean_vomit.h"
 #include "../components/ai_close_tab.h"
 #include "../components/ai_drinking.h"
+#include "../components/ai_play_jukebox.h"
 #include "../components/ai_use_bathroom.h"
 #include "../components/ai_wait_in_queue.h"
 #include "../components/base_component.h"
@@ -89,6 +90,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
           IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
           AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
+          AIPlayJukebox,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};
