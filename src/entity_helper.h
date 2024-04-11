@@ -178,34 +178,4 @@ struct EntityHelper {
     // each target get and path find runs through all entities
     // so this will just get slower and slower over time
     static bool isWalkableRawEntities(const vec2& pos);
-
-   private:
-    template<typename T>
-    static std::vector<RefEntity> getAllWithComponent() {
-        std::vector<RefEntity> matching;
-        for (const auto& e : get_entities()) {
-            if (!e) continue;
-            if (e->has<T>()) matching.push_back(*e);
-        }
-        return matching;
-    }
-
-    template<typename T>
-    static OptEntity getFirstWithComponent() {
-        for (const auto& e : get_entities()) {
-            if (!e) continue;
-            if (e->has<T>()) return *e;
-        }
-        return {};
-    }
-
-    static std::vector<RefEntity> getAllWithType(const EntityType& type);
-
-    static OptEntity getFirstOfType(EntityType type) {
-        for (const auto& e : get_entities()) {
-            if (!e) continue;
-            if (check_type(*e, type)) return *e;
-        }
-        return {};
-    }
 };

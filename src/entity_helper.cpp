@@ -29,7 +29,8 @@ OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
         Entity* e_ptr = nullptr;
         switch (name) {
             case NamedEntity::Sophie:
-                OptEntity opt_e = getFirstOfType(EntityType::Sophie);
+                OptEntity opt_e =
+                    EntityQuery().whereType(EntityType::Sophie).gen_first();
                 e_ptr = opt_e.has_value() ? opt_e.value() : nullptr;
                 break;
         }
@@ -240,11 +241,6 @@ OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
             return ta.type == type;
         })
         .gen_first();
-}
-
-// TODO :BE: change other debugname filter guys to this
-std::vector<RefEntity> EntityHelper::getAllWithType(const EntityType& type) {
-    return EntityQuery().whereType(type).gen();
 }
 
 bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
