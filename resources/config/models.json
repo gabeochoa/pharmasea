@@ -628,7 +628,7 @@
             "library_name": "jukebox",
             "size_scale": 3.0,
             "position_offset": [-0.25,-0.5,0.0],
-            "rotation_angle": 0.0
+            "rotation_angle": 180.0
         },
         {
             "folder": "models/kennynl",
