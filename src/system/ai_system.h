@@ -11,6 +11,7 @@
 #include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
 #include "../components/has_base_speed.h"
+#include "../components/has_last_interacted_customer.h"
 #include "../components/has_patience.h"
 #include "../components/has_speech_bubble.h"
 #include "../components/has_timer.h"
@@ -727,8 +728,17 @@ inline void process_jukebox_play(Entity& entity, float dt) {
                 })
                 .gen_first();
 
+        // We probably dont have a jukebox, so just ignore this for now
+        // go back to ordering
         if (!best_jukebox) {
             ai_play_jukebox.reset();
+            return false;
+        }
+
+        // We were the last person to put on a song, so we dont need to change
+        // it (yet...)
+        if (best_jukebox->get<HasLastInteractedCustomer>().customer_id ==
+            entity.id) {
             return false;
         }
 
@@ -742,8 +752,6 @@ inline void process_jukebox_play(Entity& entity, float dt) {
     if (!found) {
         _set_customer_next_order(entity);
         reset_job_component<AIPlayJukebox>(entity);
-        // We probably dont have a jukebox, so just ignore this for now
-        // go back to ordering
         return;
     }
 
@@ -806,6 +814,9 @@ inline void process_jukebox_play(Entity& entity, float dt) {
         IsBank& bank = sophie.get<IsBank>();
         bank.deposit(10);
     }
+
+    // TODO it woud be nice to show the customer's face above the entity
+    reg.get<HasLastInteractedCustomer>().customer_id = entity.id;
 
     WIQ_leave_line(reg, entity);
 

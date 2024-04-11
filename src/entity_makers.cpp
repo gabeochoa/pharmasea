@@ -11,6 +11,7 @@
 #include "components/ai_wait_in_queue.h"
 #include "components/can_pathfind.h"
 #include "components/has_fishing_game.h"
+#include "components/has_last_interacted_customer.h"
 #include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
@@ -147,7 +148,7 @@ void register_all_components() {
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
-        HasFishingGame,
+        HasFishingGame, HasLastInteractedCustomer,
         // render
         ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
         //
@@ -1390,6 +1391,7 @@ void make_champagne_holder(Entity& container, vec2 pos) {
 void make_jukebox(Entity& jukebox, vec2 pos) {
     furniture::make_furniture(jukebox, {EntityType::Jukebox}, pos);
     jukebox.addComponent<HasWaitingQueue>();
+    jukebox.addComponent<HasLastInteractedCustomer>();
 }
 
 }  // namespace furniture
