@@ -10,6 +10,7 @@ struct AICloseTab : public AIComponent {
 
     virtual ~AICloseTab() {}
 
+    // TODO :BE: so many have this, can we make it an interface?
     [[nodiscard]] bool has_available_target() const {
         return target_id.has_value();
     }

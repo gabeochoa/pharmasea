@@ -4,6 +4,8 @@
 #include "base_component.h"
 
 struct AIComponent : BaseComponent {
+    // TODO :BE: what does cooldown do? when should we use it? do all AI need
+    // it?
     float cooldown;
     float cooldownReset = 1.f;
 
