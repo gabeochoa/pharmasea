@@ -197,6 +197,8 @@ void LevelInfo::generate_model_test_map() {
         return;
     };
 
+    int num_items_spawned = 0;
+
     vec2 start_location = vec::to2(model_test_origin) + vec2{-10, -5};
     float x = 0;
     float y = 0;
@@ -265,6 +267,7 @@ void LevelInfo::generate_model_test_map() {
 
     for (const auto& mtmi : static_map_info) {
         _process_single_mtmi(mtmi);
+        num_items_spawned++;
     }
 
     _carraige_return();
@@ -301,7 +304,29 @@ void LevelInfo::generate_model_test_map() {
             .spawner_type = ModelTestMapInfo::Drink,
             .drink = magic_enum::enum_value<Drink>(i),
         });
+        num_items_spawned++;
     }
+
+    int known_missing =
+        // describe each +1 please
+        0    //
+        + 1  // Unknown
+        + 3  // x,y,z
+        + 1  // RemotePlayer
+        + 1  // Player
+        + 1  // Customer
+        + 1  // CharacterSwitcher
+        + 1  // MapRandomizer
+        ;
+
+    int shouldve_spawned =
+        (magic_enum::enum_count<EntityType>() - known_missing);
+
+    VALIDATE(num_items_spawned >= shouldve_spawned,
+             fmt::format(
+                 "Model test is missing {} items (spawned {} shouldve been {})",
+                 (num_items_spawned - shouldve_spawned), num_items_spawned,
+                 shouldve_spawned));
 
     //
     // {EntityType::Drink},
