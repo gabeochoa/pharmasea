@@ -100,7 +100,7 @@ struct PolymorphicBaseClass<BaseComponent>
 template<>
 struct PolymorphicBaseClass<AIComponent>
     : PolymorphicDerivedClasses<AICleanVomit, AIUseBathroom, AIDrinking,
-                                AIWaitInQueue> {};
+                                AIWaitInQueue, AIPlayJukebox> {};
 
 }  // namespace ext
 }  // namespace bitsery
