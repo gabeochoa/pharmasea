@@ -45,8 +45,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                                               TodoReason::SubjectToChange),
                 .description = TODO_TRANSLATE(
                     "(Customers will order twice, but will need to go to "
-                    "the "
-                    "bathroom)",
+                    "the bathroom)",
                     TodoReason::SubjectToChange),
                 .onUnlock =
                     [](ConfigData& config, IsProgressionManager& ipm) {
@@ -448,6 +447,32 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                             0.5f);
                         config.permanently_modify<int>(
                             ConfigKey::MaxNumOrders, Operation::Multiplier, 2);
+                    },
+                .meetsPrereqs = [](const ConfigData&,
+                                   const IsProgressionManager&) -> bool {
+                    return true;
+                }};
+            break;
+        case UpgradeClass::Jukebox:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = TODO_TRANSLATE("Jukebox", TodoReason::SubjectToChange),
+                // TODO make upgrade icon for
+                .icon_name = "upgrade_default",
+                .flavor_text =
+                    TODO_TRANSLATE("gimme 14D", TodoReason::SubjectToChange),
+                // TODO do they also order more?
+                .description = TODO_TRANSLATE(
+                    "(unlocks a jukebox customers will pay to use)",
+                    TodoReason::SubjectToChange),
+                .onUnlock =
+                    [](ConfigData& config, IsProgressionManager& ipm) {
+                        {
+                            ipm.unlock_entity(EntityType::Jukebox);
+                            config.store_to_spawn.push_back(
+                                EntityType::Jukebox);
+                            // Specifically not making it required forever
+                        }
                     },
                 .meetsPrereqs = [](const ConfigData&,
                                    const IsProgressionManager&) -> bool {

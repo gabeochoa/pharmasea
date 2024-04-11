@@ -49,6 +49,7 @@ enum struct EntityType {
     Guitar,
     ChampagneHolder,  // TODO i wish there was an easier way to have this be
                       // alcohol without adding it to the cycler
+    Jukebox,
 
     //
     // Items
@@ -86,7 +87,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b0111111111111111111111111111111111111111111111;
+    return 0b01111111111111111111111111111111111111111111111;
 #endif
 }
 
@@ -105,8 +106,9 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
     switch (type) {
         // TODO this one should be based on average customer spend
         // customer count * avg unlocked drink price * 0.5
-        case EntityType::Guitar:
-            // TODO add support for dynamic prices
+        case EntityType::Guitar:   // TODO add support for dynamic prices
+        case EntityType::Jukebox:  // TODO decide based off how much money it
+                                   // makes
             return 1;
         case EntityType::PitcherCupboard:
         case EntityType::Cupboard:
@@ -188,6 +190,7 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::PitcherCupboard:
         case EntityType::Guitar:
         case EntityType::Toilet:
+        case EntityType::Jukebox:
             return StoreEligibilityType::OnUpgrade;
         case EntityType::Table:
         case EntityType::Register:

@@ -1380,6 +1380,10 @@ void make_champagne_holder(Entity& container, vec2 pos) {
                                   EntityType::Champagne);
 }
 
+void make_jukebox(Entity& jukebox, vec2 pos) {
+    furniture::make_furniture(jukebox, {EntityType::Jukebox}, pos);
+}
+
 }  // namespace furniture
 
 bool convert_to_type(const EntityType& entity_type, Entity& entity,
@@ -1477,6 +1481,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::Face: {
             make_face(entity, pos);
+        } break;
+        case EntityType::Jukebox: {
+            furniture::make_jukebox(entity, location);
         } break;
 
         // These return false

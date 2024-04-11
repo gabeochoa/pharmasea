@@ -67,6 +67,7 @@ bool check_if_drink(const Entity& entity) {
         case EntityType::PitcherCupboard:
         case EntityType::ChampagneHolder:
         case EntityType::Champagne:
+        case EntityType::Jukebox:
             return false;
         case EntityType::Pitcher:
         case EntityType::Drink:

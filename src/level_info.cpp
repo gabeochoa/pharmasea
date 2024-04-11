@@ -255,6 +255,7 @@ void LevelInfo::generate_model_test_map() {
                 .et = EntityType::Vomit,
                 .spawner_type = ModelTestMapInfo::Some,
             },
+            {EntityType::Jukebox},
         }};
 
     const auto _carraige_return = [&]() {
