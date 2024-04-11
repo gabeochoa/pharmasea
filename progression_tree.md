@@ -24,6 +24,12 @@ originally i was going to make it a UI based but it might actually be simpler fo
 - how to handle hitting iwhen too far away, is that a partial point etc? 
 - pointer for direction vs timing 
 
+plunger minigame 
+
+having to check id 
+
+limited inventory 
+
 five finger discount
 dont mind if i do
 (customers sometimes will steal bottles from behind the bar) 

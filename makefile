@@ -10,7 +10,7 @@ FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
 # LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
-		  -Wno-implicit-int-float-conversion
+		  -Wno-implicit-int-float-conversion -Werror
 INCLUDES = -Ivendor/ 
 LIBS = -L. -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
