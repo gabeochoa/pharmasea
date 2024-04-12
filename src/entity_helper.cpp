@@ -344,7 +344,7 @@ RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
 // TODO :EQ_CPP: We cant expose this function direction because
 // EntityQuery cant be including in entity helper du eot circular
 // need to move into a cpp
-EntityQuery& getOverlappingSolidEntityInRangeQuery(
+EntityQuery& getOverlappingSolidEntityInRangeQuery2(
     vec2 range_min, vec2 range_max,
     const std::function<bool(const Entity&)>& filter) {
     return EntityQuery()                    //
@@ -365,7 +365,7 @@ EntityQuery& getOverlappingSolidEntityInRangeQuery(
 OptEntity EntityHelper::getOverlappingSolidEntityInRange(
     vec2 range_min, vec2 range_max,
     const std::function<bool(const Entity&)>& filter) {
-    return getOverlappingSolidEntityInRangeQuery(range_min, range_max, filter)
+    return getOverlappingSolidEntityInRangeQuery2(range_min, range_max, filter)
         .gen_first();
 }
 

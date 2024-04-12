@@ -144,7 +144,7 @@ struct UpgradeInstance {
     int id;
     Upgrade parent_copy;
 
-    UpgradeInstance() : id(UPGRADE_INSTANCE_ID_GEN++) {}
+    UpgradeInstance() : id(UPGRADE_INSTANCE_ID_GEN++), parent_copy(Upgrade()) {}
     explicit UpgradeInstance(const Upgrade& copy)
         : id(UPGRADE_INSTANCE_ID_GEN++), parent_copy(copy) {}
 };
@@ -154,7 +154,7 @@ inline EntityType str_to_entity_type(const std::string& str) {
         return magic_enum::enum_cast<EntityType>(str,
                                                  magic_enum::case_insensitive)
             .value();
-    } catch (std::exception e) {
+    } catch (const std::exception& e) {
         log_error("exception converting entity type input:{} {}", str,
                   e.what());
     }
@@ -165,7 +165,7 @@ inline Drink str_to_drink(const std::string& str) {
     try {
         return magic_enum::enum_cast<Drink>(str, magic_enum::case_insensitive)
             .value();
-    } catch (std::exception e) {
+    } catch (const std::exception& e) {
         log_error("exception converting drink input:{} {}", str, e.what());
     }
     return Drink::coke;

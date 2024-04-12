@@ -23,7 +23,8 @@ OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
 OUTPUT_EXE := pharmasea.exe
 
 # CXX := g++
-CXX := clang++
+cxx := clang++ 
+# cxx := clang++ --analyze
 # CXX := include-what-you-use
 
 OUTPUT_LOG = $(OBJ_DIR)/build.log

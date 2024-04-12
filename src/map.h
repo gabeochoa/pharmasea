@@ -64,7 +64,8 @@ struct Map {
                                                   dt);
     }
 
-    void _onUpdate(std::vector<std::shared_ptr<Entity>> players, float dt) {
+    void _onUpdate(const std::vector<std::shared_ptr<Entity>>& players,
+                   float dt) {
         TRACY_ZONE_SCOPED;
         // TODO :BE: add to debug overlay
         // log_info("num items {}", items().size());

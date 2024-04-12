@@ -1,7 +1,10 @@
 
 #include "is_progression_manager.h"
 
+#include <utility>
+
 #include "../dataclass/upgrades.h"
+#include "../engine/unreachable.h"
 
 TranslatableString IsProgressionManager::get_option_title(bool is_first) const {
     TranslatableString internal_ts =
@@ -19,6 +22,8 @@ TranslatableString IsProgressionManager::get_option_title(bool is_first) const {
                 make_upgrade(is_first ? upgradeOption1 : upgradeOption2);
             return impl->name;
     }
+    unreachable();
+    return TranslatableString{""};
 }
 
 TranslatableString IsProgressionManager::get_option_subtitle(
@@ -37,4 +42,6 @@ TranslatableString IsProgressionManager::get_option_subtitle(
                 make_upgrade(is_first ? upgradeOption1 : upgradeOption2);
             return impl->name;
     }
+    unreachable();
+    return TranslatableString{""};
 }

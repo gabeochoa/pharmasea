@@ -14,18 +14,16 @@ struct AppSettings {
     raylib::TraceLogLevel logLevel = raylib::LOG_ERROR;
 };
 
-
 struct App;
 extern std::shared_ptr<App> App_single;
 
-
-//SINGLETON_FWD(App)
+// SINGLETON_FWD(App)
 struct App {
-//    SINGLETON_PARAM(App, AppSettings)
+    //    SINGLETON_PARAM(App, AppSettings)
 
     static App* create(const AppSettings& pt) {
-		if (!App_single) App_single.reset(new App(pt));
-	    return App_single.get();
+        if (!App_single) App_single.reset(new App(pt));
+        return App_single.get();
     }
     [[nodiscard]] static App& get() { return *App_single; }
 
@@ -60,6 +58,8 @@ struct App {
     static void start_post_processing();
     static void end_post_processing();
 
+    /*
     static void start_remove_invisible();
     static void end_remove_invisible();
+    */
 };

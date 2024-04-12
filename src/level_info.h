@@ -47,7 +47,7 @@ struct LevelInfo {
     //
 
     void update_seed(const std::string& s);
-    void onUpdate(Entities& players, float dt);
+    void onUpdate(const Entities& players, float dt);
     void onDraw(float dt) const;
     void onDrawUI(float dt);
     void grab_things();

@@ -26,7 +26,11 @@ struct IsBank : public BaseComponent {
         }
 
         // This exists for serialization
-        Transaction() : amount(0), extra(0), remainingTime(0.f) {}
+        Transaction()
+            : amount(0),
+              extra(0),
+              remainingTime(0.f),
+              remainingTimeTotal(0.f) {}
         friend bitsery::Access;
         template<typename S>
         void serialize(S& s) {
