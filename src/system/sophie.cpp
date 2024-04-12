@@ -1,6 +1,10 @@
 
 #include "sophie.h"
 
+#include <algorithm>
+#include <iterator>
+#include <tuple>
+
 #include "../components/can_hold_furniture.h"
 #include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
@@ -74,21 +78,10 @@ void overlapping_furniture(Entity& entity) {
 
     // Right now the map is starting at 00 and at most is  -50,-50 to 50,50
 
-    // TODO :EQ_CPP: We could use this if we fix the cpp include issue
-    /*
-        OptEntity overlapping_entity =
-            EntityHelper::getOverlappingSolidEntityInRangeQuery(
-                {-50, -50}, {50, 50}, [](const Entity&) { return true; })
-                // Skip the soda rope because the rope overlapps with itself
-                // and we are okay with that
-                .whereNotType(EntityType::SodaSpout)
-                .gen_first();
-                */
-
     vec2 range_min = {-50, -50};
     vec2 range_max = {50, 50};
 
-    OptEntity overlapping_entity =
+    auto solid_ents =
         EntityQuery()                      //
             .whereHasComponent<IsSolid>()  //
                                            // Skip the soda rope because the
@@ -96,16 +89,30 @@ void overlapping_furniture(Entity& entity) {
                                            // are okay with that
             .whereNotType(EntityType::SodaSpout)  //
             .whereInside(range_min, range_max)    //
-            .whereLambda([&](const Entity& entity) -> bool {
-                return EntityQuery()                    //
-                    .whereNotID(entity.id)              //
-                    .whereHasComponent<IsSolid>()       //
-                    .whereInside(range_min, range_max)  //
-                    .wherePositionMatches(entity)       //
-                    .first()                            //
-                    .has_values();
-            })
-            .gen_first();
+            .gen();
+
+    // Convert them all to just ids and position
+    std::vector<std::pair<EntityID, vec3>> solid_ids;
+    std::transform(
+        solid_ents.begin(), solid_ents.end(), std::back_inserter(solid_ids),
+        [](Entity& ent) -> std::pair<EntityID, vec3> {
+            return std::make_pair(ent.id, ent.get<Transform>().pos());
+        });
+
+    const auto _hasDuplicates =
+        [](const std::vector<std::pair<EntityID, vec3>>& arr) -> EntityID {
+        for (auto e1 : arr) {
+            for (auto e2 : arr) {
+                if (e1.first == e2.first) continue;
+                if (e1.second == e2.second) return e1.first;
+            }
+        }
+        return -1;
+    };
+
+    EntityID overlapping_id = _hasDuplicates(solid_ids);
+    OptEntity overlapping_entity =
+        EntityQuery().whereID(overlapping_id).gen_first();
 
     bool has_overlapping = overlapping_entity.valid();
     std::optional<vec2> pos = has_overlapping
@@ -275,12 +282,12 @@ void deleting_item_needed_for_recipe(Entity& entity) {
 
     has_req_machines &= _hasAtLeastOneNotInTrash(EntityType::Cupboard);
 
-    // TODO this one isnt "needed for recipies" but like 90% of the code is the
-    // same so using it for now
+    // TODO this one isnt "needed for recipies" but like 90% of the code is
+    // the same so using it for now
     has_req_machines &= _hasAtLeastOneNotInTrash(EntityType::Trash);
 
-    // TODO this one isnt "needed for recipies" but like 90% of the code is the
-    // same so using it for now
+    // TODO this one isnt "needed for recipies" but like 90% of the code is
+    // the same so using it for now
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     for (const EntityType& et : irsm.config.forever_required) {
         has_req_machines &= _hasAtLeastOneNotInTrash(et);
