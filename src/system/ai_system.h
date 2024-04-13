@@ -307,16 +307,23 @@ inline void process_ai_drinking(Entity& entity, float dt) {
         return;
     }
 
-    if (!aidrinking.has_available_target()) {
-        // TODO choose a better place
-        aidrinking.set_target(vec2{0, 0});
-        float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
-        drink_time += randfIn(0.1f, 1.f);
-        aidrinking.set_drink_time(drink_time);
+    bool found =
+        aidrinking.target.find_if_missing(entity, nullptr, [&](Entity&) {
+            float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
+            drink_time += randfIn(0.1f, 1.f);
+            aidrinking.set_drink_time(drink_time);
+        });
+    if (!found) {
+        return;
     }
 
+    // We have a target
+    OptEntity opt_drink_pos =
+        EntityHelper::getEntityForID(aidrinking.target.id());
+
     bool reached = entity.get<CanPathfind>().travel_toward(
-        aidrinking.pos(), get_speed_for_entity(entity) * dt);
+        opt_drink_pos.asE().get<Transform>().as2(),
+        get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
     bool completed = aidrinking.drink(dt);
@@ -331,7 +338,12 @@ inline void process_ai_drinking(Entity& entity, float dt) {
 
     // Mark our current order finished
     cod.on_order_finished();
-    aidrinking.unset_target();
+
+    // TODO :MAKE_DURING_FIND: because we made an entity during find_target,
+    // we need to delete it before we unset
+    opt_drink_pos.asE().cleanup = true;
+
+    aidrinking.target.unset();
 
     //
     // Do we want another drink?

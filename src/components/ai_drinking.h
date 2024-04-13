@@ -5,17 +5,23 @@
 #include "base_component.h"
 
 struct AIDrinking : public AIComponent {
+    struct AIDrinkingTarget : AITarget {
+        explicit AIDrinkingTarget(const ResetFn& resetFn) : AITarget(resetFn) {}
+
+        virtual OptEntity find_target(const Entity&) override {
+            // TODO :MAKE_DURING_FIND: need a way to clean this up on unset
+            auto& entity = EntityHelper::createEntity();
+            // TODO in debug mode add renderer for ai target location?
+            convert_to_type(EntityType::AITargetLocation, entity,
+                            // TODO choose a better place
+                            vec2{0, 0});
+            return entity;
+        }
+    } target;
+
+    AIDrinking() : target(std::bind(&AIComponent::reset, this)) {}
+
     virtual ~AIDrinking() {}
-
-    [[nodiscard]] bool has_available_target() const {
-        return target_pos.has_value();
-    }
-
-    void unset_target() { target_pos = {}; }
-    void set_target(vec2 pos) { target_pos = pos; }
-    [[nodiscard]] vec2 pos() const { return target_pos.value(); }
-
-    std::optional<vec2> target_pos;
 
     float drinkTime;
     void set_drink_time(float pt) { drinkTime = pt; }

@@ -310,6 +310,10 @@ void make_face(Entity& face, vec3 pos) {
     face.addComponent<CanBeHeld>();
 }
 
+void make_ai_target_location(Entity& entity, vec3 pos) {
+    make_entity(entity, {EntityType::AITargetLocation}, pos);
+}
+
 // TODO This namespace should probably be "furniture::"
 // or add the ones above into it
 namespace furniture {
@@ -1510,6 +1514,10 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
 
         case EntityType::CustomerSpawner: {
             furniture::make_customer_spawner(entity, pos);
+        } break;
+
+        case EntityType::AITargetLocation: {
+            make_ai_target_location(entity, pos);
         } break;
 
         // TODO is anyone even doing this?

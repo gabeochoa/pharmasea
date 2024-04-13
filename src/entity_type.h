@@ -50,6 +50,7 @@ enum struct EntityType {
     ChampagneHolder,  // TODO i wish there was an easier way to have this be
                       // alcohol without adding it to the cycler
     Jukebox,
+    AITargetLocation,
 
     //
     // Items
@@ -87,7 +88,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b01111111111111111111111111111111111111111111111;
+    return 0b011111111111111111111111111111111111111111111111;
 #endif
 }
 
@@ -169,6 +170,7 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::Face:
         case EntityType::Pitcher:
         case EntityType::Champagne:
+        case EntityType::AITargetLocation:
             // log_warn("You should probably not need the price for this {}",
             // magic_enum::enum_name<EntityType>(type));
             return -1;
@@ -241,6 +243,7 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::SodaSpout:
         case EntityType::Pitcher:
         case EntityType::Champagne:
+        case EntityType::AITargetLocation:
             return StoreEligibilityType::Never;
     }
     return StoreEligibilityType::Never;
