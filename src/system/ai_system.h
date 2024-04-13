@@ -594,6 +594,7 @@ inline void process_ai_leaving(Entity& entity, float dt) {
         vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
 }
 
+// TODO make this take time
 inline void process_ai_paying(Entity& entity, float dt) {
     if (entity.is_missing<AICloseTab>()) return;
     if (entity.is_missing<CanOrderDrink>()) return;

@@ -1047,7 +1047,7 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
     simple_syrup
         .addComponent<AddsIngredient>(
             [](const Entity&, Entity&) -> IngredientBitSet {
-                return {Ingredient::SimpleSyrup};
+                return IngredientBitSet().reset().set(Ingredient::SimpleSyrup);
             })
         .set_num_uses(-1);
 
