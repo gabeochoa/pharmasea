@@ -62,6 +62,7 @@ struct AITarget {
 struct AILineWait {
     using ResetFn = std::function<void()>;
 
+    bool has_set_position_before = false;
     vec2 position;
 
    private:
@@ -77,6 +78,8 @@ struct AILineWait {
         HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
         int next_position = hwq.add_customer(entity).get_next_pos();
         position = reg.get<Transform>().tile_infront((next_position + 1));
+
+        has_set_position_before = true;
     }
 
     [[nodiscard]] int position_in_line(Entity& reg, const Entity& entity) {
@@ -97,6 +100,12 @@ struct AILineWait {
     [[nodiscard]] bool try_to_move_closer(
         Entity& reg, Entity& entity, float distance,
         const std::function<void()>& onReachedFront = nullptr) {
+        if (!has_set_position_before) {
+            log_error(
+                "You never called add_to_queue before calling "
+                "move_closer");
+        }
+
         //
         (void) entity.get<CanPathfind>().travel_toward(position, distance);
 
