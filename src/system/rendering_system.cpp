@@ -4,6 +4,7 @@
 #include "../components/adds_ingredient.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_pathfind.h"
+#include "../components/can_perform_job.h"
 #include "../components/has_client_id.h"
 #include "../components/has_fishing_game.h"
 #include "../components/has_patience.h"
@@ -370,6 +371,19 @@ void render_debug_num_uses_left(const Entity& entity, float) {
                      std::string(content).c_str(), 50);
 }
 
+void render_debug_ai_info(const Entity& entity, float) {
+    if (entity.is_missing<CanPerformJob>()) return;
+
+    const Transform& transform = entity.get<Transform>();
+
+    const CanPerformJob& cpj = entity.get<CanPerformJob>();
+
+    const auto content =
+        fmt::format("{}", magic_enum::enum_name<JobType>(cpj.current));
+    DrawFloatingText(vec::raise(transform.raw(), 2.0f), Preload::get().font,
+                     std::string(content).c_str(), 150);
+}
+
 void render_debug_filter_info(const Entity& entity, float) {
     if (entity.is_missing<CanHoldItem>()) return;
     const EntityFilter& filter = entity.get<CanHoldItem>().get_filter();
@@ -400,6 +414,7 @@ bool render_debug(const Entity& entity, float dt) {
     render_debug_subtype(entity, dt);
     render_debug_drink_info(entity, dt);
     render_debug_filter_info(entity, dt);
+    render_debug_ai_info(entity, dt);
 
     // Ghost player only render during debug mode
     if (entity.has<CanBeGhostPlayer>() &&
@@ -871,6 +886,8 @@ void render_normal(const Entity& entity, float dt) {
     render_debug_filter_info(entity, dt);
     render_debug_fruit_juice(entity, dt);
     render_debug_num_uses_left(entity, dt);
+
+    render_debug_ai_info(entity, dt);
 
     render_waiting_queue(entity, dt);
     render_smelly_toilet(entity, dt);

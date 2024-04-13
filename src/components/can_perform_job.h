@@ -17,6 +17,7 @@ struct CanPerformJob : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
+        s.value4b(current);
         // Note we are choosing not to send this data to the client
         // s.ext(current_job, bitsery::ext::StdSmartPtr{});
 
