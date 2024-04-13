@@ -435,6 +435,8 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     IsToilet& istoilet = toilet.get<IsToilet>();
     bool we_are_using_it = istoilet.is_user(entity.id);
 
+    // TODO currently toilets dont have HasWaitingQueue, but we could add it? 0
+
     // Someone else is using it
     if (istoilet.occupied() && !we_are_using_it) {
         // TODO after a couple loops maybe you just go on the floor :(
