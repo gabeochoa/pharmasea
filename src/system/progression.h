@@ -109,7 +109,8 @@ inline bool collect_upgrade_options(Entity& entity) {
     log_info("num upgrades without filters : {}",
              magic_enum::enum_count<UpgradeClass>());
 
-    // possible_upgrades.push_back(make_upgrade(UpgradeClass::Jukebox));
+    irsm.config.permanent_set<int>(ConfigKey::MaxNumOrders, 100);
+    possible_upgrades.push_back(make_upgrade(UpgradeClass::CantEvenTell));
     // possible_upgrades.push_back(make_upgrade(UpgradeClass::UnlockToilet));
 
     magic_enum::enum_for_each<UpgradeClass>([&](auto val) {

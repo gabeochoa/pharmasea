@@ -27,7 +27,8 @@
 namespace system_manager {
 namespace ai {
 
-inline bool validate_drink_order(Drink orderedDrink, Item& madeDrink) {
+inline bool validate_drink_order(const Entity& customer, Drink orderedDrink,
+                                 Item& madeDrink) {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     // TODO how many ingredients have to be correct?
@@ -76,6 +77,8 @@ inline bool validate_drink_order(Drink orderedDrink, Item& madeDrink) {
         auto xorbits = orderedDrinkSet ^ madeDrinkSet;
         // How many ingredients did we mess up?
         if (xorbits.count() != 1) {
+            // TODO this return is what keeps us from being able to support
+            // both upgrades at the same time (if we wanted that)
             return false;
         }
         // TODO idk if index is right 100% of the time but lets try it
@@ -85,6 +88,28 @@ inline bool validate_drink_order(Drink orderedDrink, Item& madeDrink) {
         // is the (one) ingredient we messed up an alcoholic one?
         // if so then we are good
         if (ingredient::is_alcohol(ig)) {
+            return true;
+        }
+    }
+
+    if (irsm.has_upgrade_unlocked(UpgradeClass::CantEvenTell)) {
+        const CanOrderDrink& cod = customer.get<CanOrderDrink>();
+        size_t num_alc_drank = cod.num_alcoholic_drinks_had;
+
+        Recipe recipe = RecipeLibrary::get().get(
+            std::string(magic_enum::enum_name(orderedDrink)));
+        IngredientBitSet orderedDrinkSet = recipe.ingredients;
+        IngredientBitSet madeDrinkSet = madeDrink.get<IsDrink>().ing();
+
+        auto xorbits = orderedDrinkSet ^ madeDrinkSet;
+        size_t num_messed_up = xorbits.count();
+
+        // You messed up less ingredients than
+        // the number of drinks they had
+        //
+        // So they cant tell :)
+        //
+        if (num_messed_up < num_alc_drank) {
             return true;
         }
     }
@@ -210,7 +235,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     log_info("i got **A** drink ");
 
     Drink orderdDrink = canOrderDrink.order();
-    bool was_drink_correct = validate_drink_order(orderdDrink, *drink);
+    bool was_drink_correct = validate_drink_order(entity, orderdDrink, *drink);
     if (!was_drink_correct) {
         log_info("this isnt what i ordered");
         aiwait.reset();

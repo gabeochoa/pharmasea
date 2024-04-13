@@ -338,9 +338,11 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                         config.permanently_modify<int>(
                             ConfigKey::MaxNumOrders, Operation::Multiplier, 2);
                     },
-                .meetsPrereqs = [](const ConfigData&,
+                .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
-                    return true;
+                    // Make sure they dont have the other ingredient one
+                    return !bitset_utils::test(config.unlocked_upgrades,
+                                               UpgradeClass::CantEvenTell);
                 }};
             break;
         case UpgradeClass::HeavyHanded:
@@ -483,6 +485,32 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     // make sure we have at least 2 max orders
                     // because jukebox only works between orders
                     return config.get<int>(ConfigKey::MaxNumOrders) >= 2;
+                }};
+            break;
+            // TODO is this too similar to mocktails?
+        case UpgradeClass::CantEvenTell:
+            ptr = new UpgradeImpl{
+                .type = uc,
+                .name = TODO_TRANSLATE("Cant Even Tell",
+                                       TodoReason::SubjectToChange),
+                // TODO make upgrade icon for
+                .icon_name = "upgrade_default",
+                .flavor_text =
+                    TODO_TRANSLATE("uhhh...gimme....ya...know...whatever",
+                                   TodoReason::SubjectToChange),
+                // TODO do they also order more?
+                .description = TODO_TRANSLATE("(the more drinks a customer has "
+                                              "the less the recipe matters)",
+                                              TodoReason::SubjectToChange),
+                .onUnlock = [](ConfigData&, IsProgressionManager&) {},
+                .meetsPrereqs = [](const ConfigData& config,
+                                   const IsProgressionManager&) -> bool {
+                    // make sure we have at least 4 max orders
+                    // because it doesnt matter if people cant actually have
+                    // more drinks
+                    return config.get<int>(ConfigKey::MaxNumOrders) >= 4 &&
+                           !bitset_utils::test(config.unlocked_upgrades,
+                                               UpgradeClass::Mocktails);
                 }};
             break;
     }
