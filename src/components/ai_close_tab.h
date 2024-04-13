@@ -33,13 +33,15 @@ struct AICloseTab : public AIComponent {
         }
     } target;
 
-    AICloseTab() : target(std::bind(&AIComponent::reset, this)) {
+    AILineWait line_wait;
+
+    AICloseTab()
+        : target(std::bind(&AIComponent::reset, this)),
+          line_wait(std::bind(&AIComponent::reset, this)) {
         set_cooldown(0.1f);
     }
 
     virtual ~AICloseTab() {}
-
-    vec2 position;
 
     float PayProcessingTime = -1;
     void set_PayProcessing_time(float pt) { PayProcessingTime = pt; }

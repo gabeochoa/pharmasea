@@ -36,13 +36,15 @@ struct AIWaitInQueue : public AIComponent {
         }
     } target;
 
-    AIWaitInQueue() : target(std::bind(&AIComponent::reset, this)) {
+    AILineWait line_wait;
+
+    AIWaitInQueue()
+        : target(std::bind(&AIComponent::reset, this)),
+          line_wait(std::bind(&AIComponent::reset, this)) {
         set_cooldown(0.1f);
     }
 
     virtual ~AIWaitInQueue() {}
-
-    vec2 position;
 
    private:
     friend bitsery::Access;

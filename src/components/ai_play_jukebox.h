@@ -33,10 +33,12 @@ struct AIPlayJukebox : public AIComponent {
         }
     } target;
 
-    AIPlayJukebox() : target(std::bind(&AIComponent::reset, this)) {}
-    virtual ~AIPlayJukebox() {}
+    AILineWait line_wait;
 
-    vec2 position;
+    AIPlayJukebox()
+        : target(std::bind(&AIComponent::reset, this)),
+          line_wait(std::bind(&AIComponent::reset, this)) {}
+    virtual ~AIPlayJukebox() {}
 
     float findSongTime = -1;
     void set_findSong_time(float pt) { findSongTime = pt; }

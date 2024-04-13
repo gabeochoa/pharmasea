@@ -27,52 +27,6 @@
 namespace system_manager {
 namespace ai {
 
-inline bool WIQ_can_move_up(const Entity& reg, const Entity& customer) {
-    VALIDATE(reg.has<HasWaitingQueue>(),
-             "Trying to can-move-up for entity which doesnt "
-             "have a waiting queue ");
-    return reg.get<HasWaitingQueue>().matching_id(customer.id, 0);
-}
-
-inline int WIQ_position_in_line(const Entity& reg, const Entity& customer) {
-    // VALIDATE(customer, "entity passed to position-in-line should not be
-    // null"); VALIDATE(reg, "entity passed to position-in-line should not be
-    // null");
-    VALIDATE(
-        reg.has<HasWaitingQueue>(),
-        "Trying to pos-in-line for entity which doesnt have a waiting queue ");
-    const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
-    return hwq.has_matching_person(customer.id);
-}
-
-inline vec2 WIQ_add_to_queue_and_get_position(Entity& reg,
-                                              const Entity& customer) {
-    VALIDATE(reg.has<HasWaitingQueue>(),
-             "Trying to get-next-queue-pos for entity which doesnt have a "
-             "waiting queue ");
-    // VALIDATE(customer, "entity passed to register queue should not be null");
-
-    int next_position = reg.get<HasWaitingQueue>()
-                            .add_customer(customer)  //
-                            .get_next_pos();
-
-    // the place the customers stand is 1 tile infront of the register
-    return reg.get<Transform>().tile_infront((next_position + 1));
-}
-
-inline void WIQ_leave_line(Entity& reg, const Entity& customer) {
-    // VALIDATE(customer, "entity passed to leave-line should not be null");
-    // VALIDATE(reg, "register passed to leave-line should not be null");
-    VALIDATE(
-        reg.has<HasWaitingQueue>(),
-        "Trying to leave-line for entity which doesnt have a waiting queue ");
-
-    int pos = WIQ_position_in_line(reg, customer);
-    if (pos == -1) return;
-
-    reg.get<HasWaitingQueue>().erase(pos);
-}
-
 inline float get_speed_for_entity(Entity& entity) {
     float base_speed = entity.get<HasBaseSpeed>().speed();
 
@@ -133,15 +87,14 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
 
     bool found = aiwait.target.find_if_missing(
         entity, nullptr, [&](Entity& best_register) {
-            aiwait.position =
-                WIQ_add_to_queue_and_get_position(best_register, entity);
+            aiwait.line_wait.add_to_queue(best_register, entity);
         });
     if (!found) {
         return;
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        aiwait.position, get_speed_for_entity(entity) * dt);
+        aiwait.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
     aiwait.pass_time(dt);
@@ -155,27 +108,10 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     Entity& reg = opt_reg.asE();
     entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
 
-    int spot_in_line = WIQ_position_in_line(reg, entity);
-    if (spot_in_line != 0) {
-        // Waiting in line :)
-
-        // TODO We didnt move so just wait a bit before trying again
-
-        if (!WIQ_can_move_up(reg, entity)) {
-            // We cant move so just wait a bit before trying again
-            log_trace("im just going to wait a bit longer");
-
-            // Add the current job to the queue,
-            // and then add the waiting job
-
-            aiwait.reset();
-            return;
-        }
-        // otherwise walk up one spot
-        aiwait.position = reg.get<Transform>().tile_infront(spot_in_line);
+    bool reached_front = aiwait.line_wait.try_to_move_closer(
+        reg, entity, get_speed_for_entity(entity) * dt);
+    if (!reached_front) {
         return;
-    } else {
-        aiwait.position = reg.get<Transform>().tile_infront(1);
     }
 
     // Now we should be at the front of the line
@@ -322,7 +258,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     regCHI.update(nullptr, -1);
 
     log_info("got it");
-    WIQ_leave_line(reg, entity);
+    aiwait.line_wait.leave_line(reg, entity);
 
     // TODO Should move to system
     {
@@ -552,15 +488,14 @@ inline void process_ai_paying(Entity& entity, float dt) {
 
     bool found_target = aiclosetab.target.find_if_missing(
         entity, nullptr, [&](Entity& best_register) {
-            aiclosetab.position =
-                WIQ_add_to_queue_and_get_position(best_register, entity);
+            aiclosetab.line_wait.add_to_queue(best_register, entity);
         });
     if (!found_target) {
         return;
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        aiclosetab.position, get_speed_for_entity(entity) * dt);
+        aiclosetab.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
     aiclosetab.pass_time(dt);
@@ -575,32 +510,16 @@ inline void process_ai_paying(Entity& entity, float dt) {
     Entity& reg = opt_reg.asE();
     entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
 
-    int spot_in_line = WIQ_position_in_line(reg, entity);
-    if (spot_in_line != 0) {
-        // Waiting in line :)
-
-        // TODO We didnt move so just wait a bit before trying again
-
-        if (!WIQ_can_move_up(reg, entity)) {
-            // We cant move so just wait a bit before trying again
-            log_trace("im just going to wait a bit longer");
-
-            // Add the current job to the queue,
-            // and then add the waiting job
-
-            aiclosetab.reset();
-            return;
-        }
-        // otherwise walk up one spot
-        aiclosetab.position = reg.get<Transform>().tile_infront(spot_in_line);
+    bool reached_front = aiclosetab.line_wait.try_to_move_closer(
+        reg, entity, get_speed_for_entity(entity) * dt, [&]() {
+            if (aiclosetab.PayProcessingTime == -1) {
+                // TODO make into a config?
+                float pay_process_time = 1.f;
+                aiclosetab.set_PayProcessing_time(pay_process_time);
+            }
+        });
+    if (!reached_front) {
         return;
-    } else {
-        aiclosetab.position = reg.get<Transform>().tile_infront(1);
-        if (aiclosetab.PayProcessingTime == -1) {
-            // TODO make into a config?
-            float pay_process_time = 1.f;
-            aiclosetab.set_PayProcessing_time(pay_process_time);
-        }
     }
 
     // TODO show an icon cause right now it just looks like they are standing
@@ -628,7 +547,7 @@ inline void process_ai_paying(Entity& entity, float dt) {
         cod.tip = 0;
     }
 
-    WIQ_leave_line(reg, entity);
+    aiclosetab.line_wait.leave_line(reg, entity);
 
     next_job(entity, JobType::Leaving);
 
@@ -653,8 +572,7 @@ inline void process_jukebox_play(Entity& entity, float dt) {
             return true;
         },
         [&](Entity& best_jukebox) -> void {
-            ai_play_jukebox.position =
-                WIQ_add_to_queue_and_get_position(best_jukebox, entity);
+            ai_play_jukebox.line_wait.add_to_queue(best_jukebox, entity);
         });
 
     if (!found) {
@@ -664,7 +582,7 @@ inline void process_jukebox_play(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        ai_play_jukebox.position, get_speed_for_entity(entity) * dt);
+        ai_play_jukebox.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
     ai_play_jukebox.pass_time(dt);
@@ -680,34 +598,16 @@ inline void process_jukebox_play(Entity& entity, float dt) {
     Entity& reg = opt_reg.asE();
     entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
 
-    int spot_in_line = WIQ_position_in_line(reg, entity);
-    if (spot_in_line != 0) {
-        // Waiting in line :)
-
-        // TODO We didnt move so just wait a bit before trying again
-
-        if (!WIQ_can_move_up(reg, entity)) {
-            // We cant move so just wait a bit before trying again
-            log_trace("im just going to wait a bit longer");
-
-            // Add the current job to the queue,
-            // and then add the waiting job
-
-            ai_play_jukebox.reset();
-            return;
-        }
-        // otherwise walk up one spot
-        ai_play_jukebox.position =
-            reg.get<Transform>().tile_infront(spot_in_line);
+    bool reached_front = ai_play_jukebox.line_wait.try_to_move_closer(
+        reg, entity, get_speed_for_entity(entity) * dt, [&]() {
+            if (ai_play_jukebox.findSongTime == -1) {
+                // TODO make into a config?
+                float song_time = 5.f;
+                ai_play_jukebox.set_findSong_time(song_time);
+            }
+        });
+    if (!reached_front) {
         return;
-    } else {
-        ai_play_jukebox.position = reg.get<Transform>().tile_infront(1);
-
-        if (ai_play_jukebox.findSongTime == -1) {
-            // TODO make into a config?
-            float song_time = 5.f;
-            ai_play_jukebox.set_findSong_time(song_time);
-        }
     }
 
     // Now we should be at the front of the line
@@ -727,7 +627,7 @@ inline void process_jukebox_play(Entity& entity, float dt) {
     // TODO it woud be nice to show the customer's face above the entity
     reg.get<HasLastInteractedCustomer>().customer_id = entity.id;
 
-    WIQ_leave_line(reg, entity);
+    ai_play_jukebox.line_wait.leave_line(reg, entity);
 
     _set_customer_next_order(entity);
 
