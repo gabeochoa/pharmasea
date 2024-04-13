@@ -796,11 +796,6 @@ void render_speech_bubble(const Entity& entity, float) {
 void render_waiting_queue(const Entity& entity, float) {
     if (entity.is_missing<HasWaitingQueue>()) return;
 
-    // TODO this keep crashing the game if you put the pumpkin holder
-    // somewhere else? im wondering if it has to do with the server thread
-    // killing the cache?
-    return;
-
     const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
 
     const Transform& transform = entity.get<Transform>();

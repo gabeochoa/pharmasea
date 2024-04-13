@@ -486,6 +486,8 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
 inline void process_ai_leaving(Entity& entity, float dt) {
     // TODO check the return value here and if true, stop running the
     // pathfinding
+    // ^ does this mean just dynamically remove CanPathfind from the customer
+    // entity?
     //
     // I noticed this during profiling :)
     //
