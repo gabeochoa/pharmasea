@@ -1089,7 +1089,7 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
 
     fruit
         .addComponent<AddsIngredient>(
-            [](const Entity&, const Entity& fruit) -> IngredientBitSet {
+            [](const Entity& fruit, const Entity&) -> IngredientBitSet {
                 const HasSubtype& hst = fruit.get<HasSubtype>();
                 return IngredientBitSet().reset().set(
                     ingredient::Fruits[0 + hst.get_type_index()]);
