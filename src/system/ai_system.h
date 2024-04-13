@@ -671,6 +671,18 @@ inline void process_ai_paying(Entity& entity, float dt) {
         return;
     } else {
         aiclosetab.position = reg.get<Transform>().tile_infront(1);
+        if (aiclosetab.PayProcessingTime == -1) {
+            // TODO make into a config?
+            float pay_process_time = 1.f;
+            aiclosetab.set_PayProcessing_time(pay_process_time);
+        }
+    }
+
+    // TODO show an icon cause right now it just looks like they are standing
+    // there
+    bool completed = aiclosetab.PayProcessing(dt);
+    if (!completed) {
+        return;
     }
 
     // TODO just copy the time stuff from the other ai so its not instant

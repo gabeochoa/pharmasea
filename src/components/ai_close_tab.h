@@ -22,6 +22,13 @@ struct AICloseTab : public AIComponent {
 
     vec2 position;
 
+    float PayProcessingTime = -1;
+    void set_PayProcessing_time(float pt) { PayProcessingTime = pt; }
+    [[nodiscard]] bool PayProcessing(float dt) {
+        PayProcessingTime -= dt;
+        return PayProcessingTime <= 0.f;
+    }
+
    private:
     friend bitsery::Access;
     template<typename S>
