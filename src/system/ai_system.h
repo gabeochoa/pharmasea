@@ -131,38 +131,12 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
 
     AIWaitInQueue& aiwait = entity.get<AIWaitInQueue>();
 
-    if (!aiwait.has_available_target()) {
-        // TODO :DUPE: same as process_ai_paying
-        OptEntity best_register =
-            EntityQuery()
-                .whereType(EntityType::Register)
-                .whereHasComponent<HasWaitingQueue>()
-                .whereLambda([](const Entity& entity) {
-                    // Exclude full registers
-                    const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
-                    if (hwq.is_full()) return false;
-                    return true;
-                })
-                // Find the register with the least people on it
-                .orderByLambda([](const Entity& r1, const Entity& r2) {
-                    const HasWaitingQueue& hwq1 = r1.get<HasWaitingQueue>();
-                    int rpos1 = hwq1.get_next_pos();
-                    const HasWaitingQueue& hwq2 = r2.get<HasWaitingQueue>();
-                    int rpos2 = hwq2.get_next_pos();
-                    return rpos1 < rpos2;
-                })
-                .gen_first();
-
-        // TODO Check to see if we can path to that spot
-
-        if (!best_register) {
-            aiwait.reset();
-            return;
-        }
-        aiwait.set_target(best_register->id);
-        aiwait.position =
-            WIQ_add_to_queue_and_get_position(best_register.asE(), entity);
-
+    bool found = aiwait.target.find_if_missing(
+        entity, nullptr, [&](Entity& best_register) {
+            aiwait.position =
+                WIQ_add_to_queue_and_get_position(best_register, entity);
+        });
+    if (!found) {
         return;
     }
 
@@ -173,7 +147,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     aiwait.pass_time(dt);
     if (!aiwait.ready()) return;
 
-    OptEntity opt_reg = EntityHelper::getEntityForID(aiwait.id());
+    OptEntity opt_reg = EntityHelper::getEntityForID(aiwait.target.id());
     if (!opt_reg) {
         log_warn("got an invalid register");
         return;
@@ -499,28 +473,11 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
     if (!gotta_go) return;
 
-    if (!aibathroom.has_available_target()) {
-        OptEntity closest_available_toilet =
-            EntityQuery()
-                .whereHasComponent<IsToilet>()
-                .whereLambda([](const Entity& entity) {
-                    const IsToilet& toilet = entity.get<IsToilet>();
-                    return toilet.available();
-                })
-                .orderByDist(entity.get<Transform>().as2())
-                .gen_first();
-
-        // We couldnt find anything, for now just wait a second
-        if (!closest_available_toilet) {
-            aibathroom.reset();
-            return;
-        }
-
-        aibathroom.set_target(closest_available_toilet->id);
-    }
+    bool found = aibathroom.target.find_if_missing(entity);
+    if (!found) return;
 
     // We have a target
-    OptEntity opt_toilet = EntityHelper::getEntityForID(aibathroom.id());
+    OptEntity opt_toilet = EntityHelper::getEntityForID(aibathroom.target.id());
     Entity& toilet = opt_toilet.asE();
 
     bool reached = entity.get<CanPathfind>().travel_toward(
@@ -559,7 +516,7 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
 
     bool completed = aibathroom.piss(dt);
     if (completed) {
-        aibathroom.unset_target();
+        aibathroom.target.unset();
         entity.get<CanOrderDrink>().empty_bladder();
         istoilet.end_use();
 
