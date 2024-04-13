@@ -5,15 +5,16 @@
 #include "base_component.h"
 
 struct AICleanVomit : public AIComponent {
-    AITarget target;
+    struct AICleanVomitTarget : AITarget {
+        explicit AICleanVomitTarget(const ResetFn& resetFn)
+            : AITarget(resetFn) {}
 
-    AICleanVomit()
-        : target(AITarget(
-              [](const Entity& entity) -> OptEntity {
-                  return EntityHelper::getClosestOfType(entity,
-                                                        EntityType::Vomit);
-              },
-              std::bind(&AIComponent::reset, this))) {}
+        virtual OptEntity find_target(const Entity& entity) override {
+            return EntityHelper::getClosestOfType(entity, EntityType::Vomit);
+        }
+    } target;
+
+    AICleanVomit() : target(std::bind(&AIComponent::reset, this)) {}
 
     virtual ~AICleanVomit() {}
 

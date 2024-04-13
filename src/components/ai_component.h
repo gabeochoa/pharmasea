@@ -8,13 +8,11 @@
 #include "base_component.h"
 
 struct AITarget {
-    using FindTargetFn = std::function<OptEntity(const Entity&)>;
     using ResetFn = std::function<void()>;
+    using SuccessFn = std::function<void(Entity&)>;
 
-    FindTargetFn ft = nullptr;
-    ResetFn reset = nullptr;
-    explicit AITarget(const FindTargetFn& ft, const ResetFn& rst)
-        : ft(ft), reset(rst) {}
+    ResetFn reset;
+    explicit AITarget(const ResetFn& resetFn) : reset(resetFn) {}
 
     [[nodiscard]] bool exists() const { return target_id.has_value(); }
     [[nodiscard]] bool missing() const { return !exists(); }
@@ -25,13 +23,9 @@ struct AITarget {
 
     std::optional<int> target_id;
 
-    bool find_target(const Entity& entity) {
-        VALIDATE(ft == nullptr,
-                 "Using AITarget but forgot to set find function");
-        VALIDATE(reset == nullptr,
-                 "Using AITarget but forgot to set reset function");
-
-        OptEntity closest = ft(entity);
+    bool _find_target(const Entity& entity,
+                      const SuccessFn& onFound = nullptr) {
+        OptEntity closest = find_target(entity);
 
         // We couldnt find anything, for now just wait a second
         if (!closest) {
@@ -39,12 +33,16 @@ struct AITarget {
             return false;
         }
         set(closest->id);
+        if (onFound) onFound(closest.asE());
         return true;
     }
 
-    bool find_if_missing(const Entity& entity) {
+    virtual OptEntity find_target(const Entity& entity) = 0;
+
+    bool find_if_missing(const Entity& entity,
+                         const SuccessFn& onFound = nullptr) {
         if (missing()) {
-            return find_target(entity);
+            return _find_target(entity, onFound);
         }
         return true;
     }

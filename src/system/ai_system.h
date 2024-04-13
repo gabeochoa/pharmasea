@@ -593,37 +593,12 @@ inline void process_ai_paying(Entity& entity, float dt) {
 
     AICloseTab& aiclosetab = entity.get<AICloseTab>();
 
-    if (!aiclosetab.has_available_target()) {
-        // TODO :DUPE: same as process_ai_waitinqueue
-        OptEntity best_register =
-            EntityQuery()
-                .whereType(EntityType::Register)
-                .whereHasComponent<HasWaitingQueue>()
-                .whereLambda([](const Entity& entity) {
-                    // Exclude full registers
-                    const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
-                    if (hwq.is_full()) return false;
-                    return true;
-                })
-                // Find the register with the least people on it
-                .orderByLambda([](const Entity& r1, const Entity& r2) {
-                    const HasWaitingQueue& hwq1 = r1.get<HasWaitingQueue>();
-                    int rpos1 = hwq1.get_next_pos();
-                    const HasWaitingQueue& hwq2 = r2.get<HasWaitingQueue>();
-                    int rpos2 = hwq2.get_next_pos();
-                    return rpos1 < rpos2;
-                })
-                .gen_first();
-
-        if (!best_register) {
-            aiclosetab.reset();
-            return;
-        }
-
-        aiclosetab.set_target(best_register->id);
-        aiclosetab.position =
-            WIQ_add_to_queue_and_get_position(best_register.asE(), entity);
-
+    bool found_target =
+        aiclosetab.target.find_if_missing(entity, [&](Entity& best_register) {
+            aiclosetab.position =
+                WIQ_add_to_queue_and_get_position(best_register, entity);
+        });
+    if (!found_target) {
         return;
     }
 
@@ -634,10 +609,10 @@ inline void process_ai_paying(Entity& entity, float dt) {
     aiclosetab.pass_time(dt);
     if (!aiclosetab.ready()) return;
 
-    OptEntity opt_reg = EntityHelper::getEntityForID(aiclosetab.id());
+    OptEntity opt_reg = EntityHelper::getEntityForID(aiclosetab.target.id());
     if (!opt_reg) {
         log_warn("got an invalid register");
-        aiclosetab.unset_target();
+        aiclosetab.target.unset();
         return;
     }
     Entity& reg = opt_reg.asE();
