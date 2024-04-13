@@ -27,6 +27,71 @@
 namespace system_manager {
 namespace ai {
 
+inline bool validate_drink_order(Drink orderedDrink, Item& madeDrink) {
+    const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+    // TODO how many ingredients have to be correct?
+    // as people get more drunk they should care less and less
+    //
+    bool all_ingredients_match =
+        madeDrink.get<IsDrink>().matches_drink(orderedDrink);
+
+    // all good
+    if (all_ingredients_match) return true;
+    // Otherwise Something was wrong with the drink
+
+    // For debug, if we have this set, just assume it was correct
+    if (GLOBALS.get_or_default<bool>("skip_ingredient_match", false)) {
+        return true;
+    }
+
+    // If you have the mocktail upgrade an an ingredient was wrong,
+    // figure out if it was alcohol and if theres only one missing then
+    // we are good
+    if (irsm.has_upgrade_unlocked(UpgradeClass::Mocktails)) {
+        Recipe recipe = RecipeLibrary::get().get(
+            std::string(magic_enum::enum_name(orderedDrink)));
+
+        IngredientBitSet orderedDrinkSet = recipe.ingredients;
+        IngredientBitSet madeDrinkSet = madeDrink.get<IsDrink>().ing();
+
+        // Imagine we have a Mojito order (Soda, Rum, LimeJ, SimpleSyrup for
+        // ex) We also support Whiskey. So mojito would look like 11011
+        // (whiskey being zero)
+        //
+        // Two examples, one where we forget the rum (good) and one where we
+        // swap rum with whiskey (bad)
+        //
+        // one, madeDrink 10011 => this is good
+        // 11011 xor 10011 => 01000
+        // count_bits(01000) => 1 (good)
+        // is_bit_alc(01000) => true (good)
+        // return true;
+        //
+        // two madeDrink 10111 => this is bad
+        // 11011 xor 10111 => 01100
+        // count_bits(01100) => 2 (bad)
+        // is_bit_alc(01100) => true for both (?mixed)
+
+        auto xorbits = orderedDrinkSet ^ madeDrinkSet;
+        // How many ingredients did we mess up?
+        if (xorbits.count() != 1) {
+            return false;
+        }
+        // TODO idk if index is right 100% of the time but lets try it
+        Ingredient ig = get_ingredient_from_index(
+            bitset_utils::get_first_enabled_bit(xorbits));
+
+        // is the (one) ingredient we messed up an alcoholic one?
+        // if so then we are good
+        if (ingredient::is_alcohol(ig)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 inline float get_speed_for_entity(Entity& entity) {
     float base_speed = entity.get<HasBaseSpeed>().speed();
 
@@ -144,74 +209,8 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
 
     log_info("i got **A** drink ");
 
-    const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-
-    const auto validate_drink_order = [&]() {
-        // TODO how many ingredients have to be correct?
-        // as people get more drunk they should care less and less
-        //
-        Drink orderdDrink = canOrderDrink.order();
-        bool all_ingredients_match =
-            drink->get<IsDrink>().matches_drink(orderdDrink);
-
-        // all good
-        if (all_ingredients_match) return true;
-        // Otherwise Something was wrong with the drink
-
-        // For debug, if we have this set, just assume it was correct
-        if (GLOBALS.get_or_default<bool>("skip_ingredient_match", false)) {
-            return true;
-        }
-
-        // If you have the mocktail upgrade an an ingredient was wrong,
-        // figure out if it was alcohol and if theres only one missing then
-        // we are good
-        if (irsm.has_upgrade_unlocked(UpgradeClass::Mocktails)) {
-            Recipe recipe = RecipeLibrary::get().get(
-                std::string(magic_enum::enum_name(orderdDrink)));
-
-            IngredientBitSet orderedDrinkSet = recipe.ingredients;
-            IngredientBitSet madeDrinkSet = drink->get<IsDrink>().ing();
-
-            // Imagine we have a Mojito order (Soda, Rum, LimeJ, SimpleSyrup for
-            // ex) We also support Whiskey. So mojito would look like 11011
-            // (whiskey being zero)
-            //
-            // Two examples, one where we forget the rum (good) and one where we
-            // swap rum with whiskey (bad)
-            //
-            // one, madeDrink 10011 => this is good
-            // 11011 xor 10011 => 01000
-            // count_bits(01000) => 1 (good)
-            // is_bit_alc(01000) => true (good)
-            // return true;
-            //
-            // two madeDrink 10111 => this is bad
-            // 11011 xor 10111 => 01100
-            // count_bits(01100) => 2 (bad)
-            // is_bit_alc(01100) => true for both (?mixed)
-
-            auto xorbits = orderedDrinkSet ^ madeDrinkSet;
-            // How many ingredients did we mess up?
-            if (xorbits.count() != 1) {
-                return false;
-            }
-            // TODO idk if index is right 100% of the time but lets try it
-            Ingredient ig = get_ingredient_from_index(
-                bitset_utils::get_first_enabled_bit(xorbits));
-
-            // is the (one) ingredient we messed up an alcoholic one?
-            // if so then we are good
-            if (ingredient::is_alcohol(ig)) {
-                return true;
-            }
-        }
-
-        return false;
-    };
-
-    bool was_drink_correct = validate_drink_order();
+    Drink orderdDrink = canOrderDrink.order();
+    bool was_drink_correct = validate_drink_order(orderdDrink, *drink);
     if (!was_drink_correct) {
         log_info("this isnt what i ordered");
         aiwait.reset();
@@ -219,6 +218,8 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     }
 
     // I'm relatively happy with my drink
+    const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
     // mark how much we are paying for this drink
     // + how much we will tip
