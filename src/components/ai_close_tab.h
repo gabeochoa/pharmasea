@@ -34,6 +34,7 @@ struct AICloseTab : public AIComponent {
     } target;
 
     AILineWait line_wait;
+    AITakesTime timer;
 
     AICloseTab()
         : target(std::bind(&AIComponent::reset, this)),
@@ -42,13 +43,6 @@ struct AICloseTab : public AIComponent {
     }
 
     virtual ~AICloseTab() {}
-
-    float PayProcessingTime = -1;
-    void set_PayProcessing_time(float pt) { PayProcessingTime = pt; }
-    [[nodiscard]] bool PayProcessing(float dt) {
-        PayProcessingTime -= dt;
-        return PayProcessingTime <= 0.f;
-    }
 
    private:
     friend bitsery::Access;

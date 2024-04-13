@@ -150,6 +150,22 @@ struct AILineWait {
     }
 };
 
+struct AITakesTime {
+    bool initialized = false;
+    float totalTime = -1;
+
+    void set_time(float t) {
+        VALIDATE(t > 0, "time must be positive");
+        totalTime = t;
+        initialized = true;
+    }
+    [[nodiscard]] bool pass_time(float dt) {
+        VALIDATE(initialized, "AITakesTime was never initialized");
+        totalTime -= dt;
+        return totalTime <= 0.f;
+    }
+};
+
 struct AIComponent : BaseComponent {
     // TODO :BE: what does cooldown do? when should we use it? do all AI need
     // it?

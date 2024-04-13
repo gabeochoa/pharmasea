@@ -41,16 +41,11 @@ struct AIDrinking : public AIComponent {
         }
     } target;
 
+    AITakesTime timer;
+
     AIDrinking() : target(std::bind(&AIComponent::reset, this)) {}
 
     virtual ~AIDrinking() {}
-
-    float drinkTime;
-    void set_drink_time(float pt) { drinkTime = pt; }
-    [[nodiscard]] bool drink(float dt) {
-        drinkTime -= dt;
-        return drinkTime <= 0.f;
-    }
 
    private:
     friend bitsery::Access;

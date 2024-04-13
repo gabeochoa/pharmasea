@@ -33,19 +33,13 @@ struct AIPlayJukebox : public AIComponent {
         }
     } target;
 
+    AITakesTime timer;
     AILineWait line_wait;
 
     AIPlayJukebox()
         : target(std::bind(&AIComponent::reset, this)),
           line_wait(std::bind(&AIComponent::reset, this)) {}
     virtual ~AIPlayJukebox() {}
-
-    float findSongTime = -1;
-    void set_findSong_time(float pt) { findSongTime = pt; }
-    [[nodiscard]] bool findSong(float dt) {
-        findSongTime -= dt;
-        return findSongTime <= 0.f;
-    }
 
    private:
     friend bitsery::Access;

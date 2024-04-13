@@ -311,7 +311,7 @@ inline void process_ai_drinking(Entity& entity, float dt) {
         aidrinking.target.find_if_missing(entity, nullptr, [&](Entity&) {
             float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
             drink_time += randfIn(0.1f, 1.f);
-            aidrinking.set_drink_time(drink_time);
+            aidrinking.timer.set_time(drink_time);
         });
     if (!found) {
         return;
@@ -326,7 +326,7 @@ inline void process_ai_drinking(Entity& entity, float dt) {
         get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
-    bool completed = aidrinking.drink(dt);
+    bool completed = aidrinking.timer.pass_time(dt);
     if (!completed) {
         return;
     }
@@ -460,11 +460,11 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
         // instead of the wait above, maybe do a wait and search?
 
         float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
-        aibathroom.set_piss_time(piss_timer);
+        aibathroom.timer.set_time(piss_timer);
         istoilet.start_use(entity.id);
     }
 
-    bool completed = aibathroom.piss(dt);
+    bool completed = aibathroom.timer.pass_time(dt);
     if (completed) {
         aibathroom.target.unset();
         entity.get<CanOrderDrink>().empty_bladder();
@@ -495,7 +495,6 @@ inline void process_ai_leaving(Entity& entity, float dt) {
         vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
 }
 
-// TODO make this take time
 inline void process_ai_paying(Entity& entity, float dt) {
     if (entity.is_missing<AICloseTab>()) return;
     if (entity.is_missing<CanOrderDrink>()) return;
@@ -528,10 +527,10 @@ inline void process_ai_paying(Entity& entity, float dt) {
 
     bool reached_front = aiclosetab.line_wait.try_to_move_closer(
         reg, entity, get_speed_for_entity(entity) * dt, [&]() {
-            if (aiclosetab.PayProcessingTime == -1) {
+            if (!aiclosetab.timer.initialized) {
                 // TODO make into a config?
                 float pay_process_time = 1.f;
-                aiclosetab.set_PayProcessing_time(pay_process_time);
+                aiclosetab.timer.set_time(pay_process_time);
             }
         });
     if (!reached_front) {
@@ -540,7 +539,7 @@ inline void process_ai_paying(Entity& entity, float dt) {
 
     // TODO show an icon cause right now it just looks like they are standing
     // there
-    bool completed = aiclosetab.PayProcessing(dt);
+    bool completed = aiclosetab.timer.pass_time(dt);
     if (!completed) {
         return;
     }
@@ -616,10 +615,10 @@ inline void process_jukebox_play(Entity& entity, float dt) {
 
     bool reached_front = ai_play_jukebox.line_wait.try_to_move_closer(
         reg, entity, get_speed_for_entity(entity) * dt, [&]() {
-            if (ai_play_jukebox.findSongTime == -1) {
+            if (!ai_play_jukebox.timer.initialized) {
                 // TODO make into a config?
                 float song_time = 5.f;
-                ai_play_jukebox.set_findSong_time(song_time);
+                ai_play_jukebox.timer.set_time(song_time);
             }
         });
     if (!reached_front) {
@@ -628,7 +627,7 @@ inline void process_jukebox_play(Entity& entity, float dt) {
 
     // Now we should be at the front of the line
 
-    bool completed = ai_play_jukebox.findSong(dt);
+    bool completed = ai_play_jukebox.timer.pass_time(dt);
     if (!completed) {
         return;
     }

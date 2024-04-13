@@ -25,17 +25,12 @@ struct AIUseBathroom : public AIComponent {
         }
     } target;
 
+    AITakesTime timer;
+
     AIUseBathroom() : target(std::bind(&AIComponent::reset, this)) {}
     virtual ~AIUseBathroom() {}
 
     JobType next_job;
-
-    float pissTime;
-    void set_piss_time(float pt) { pissTime = pt; }
-    [[nodiscard]] bool piss(float dt) {
-        pissTime -= dt;
-        return pissTime <= 0.f;
-    }
 
    private:
     friend bitsery::Access;
