@@ -5,17 +5,17 @@
 #include "base_component.h"
 
 struct AICleanVomit : public AIComponent {
+    AITarget target;
+
+    AICleanVomit()
+        : target(AITarget(
+              [](const Entity& entity) -> OptEntity {
+                  return EntityHelper::getClosestOfType(entity,
+                                                        EntityType::Vomit);
+              },
+              std::bind(&AIComponent::reset, this))) {}
+
     virtual ~AICleanVomit() {}
-
-    [[nodiscard]] bool has_available_target() const {
-        return target_id.has_value();
-    }
-
-    void unset_target() { target_id = {}; }
-    void set_target(int id) { target_id = id; }
-    [[nodiscard]] int id() const { return target_id.value(); }
-
-    std::optional<int> target_id;
 
    private:
     friend bitsery::Access;

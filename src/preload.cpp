@@ -13,11 +13,13 @@
 #include "map_generation.h"
 #include "recipe_library.h"
 
+// TODO move to a config?
 // dataclass/settings.h
 std::vector<UpgradeType> upgrade_rounds = {{
-    UpgradeType::Upgrade,
+    UpgradeType::Drink,
     UpgradeType::Upgrade,
     UpgradeType::Drink,
+    UpgradeType::Upgrade,
     UpgradeType::Drink,
     UpgradeType::Drink,
     UpgradeType::Upgrade,

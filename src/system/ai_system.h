@@ -458,36 +458,28 @@ inline void process_ai_clean_vomit(Entity& entity, float dt) {
     aiclean.pass_time(dt);
     if (!aiclean.ready()) return;
 
-    if (!aiclean.has_available_target()) {
-        OptEntity closest =
-            EntityHelper::getClosestOfType(entity, EntityType::Vomit);
-
-        // We couldnt find anything, for now just wait a second
-        if (!closest) {
-            aiclean.reset();
-            return;
-        }
-        aiclean.set_target(closest->id);
+    bool found_target = aiclean.target.find_if_missing(entity);
+    if (!found_target) {
+        return;
     }
 
     // We have a target
-    OptEntity vomit = EntityHelper::getEntityForID(aiclean.id());
+    OptEntity vomit = EntityHelper::getEntityForID(aiclean.target.id());
 
     if (!vomit) {
-        aiclean.unset_target();
+        aiclean.target.unset();
         return;
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
         vomit->get<Transform>().as2(), get_speed_for_entity(entity) * dt);
-
     if (!reached) return;
 
     HasWork& vomWork = vomit->get<HasWork>();
     vomWork.call(vomit.asE(), entity, dt);
     // check if we did it
     if (vomit->cleanup) {
-        aiclean.unset_target();
+        aiclean.target.unset();
         return;
     }
 }
