@@ -721,6 +721,41 @@ void render_patience(const Entity& entity, float) {
     });
 }
 
+void render_ai_info(const Entity& entity, float) {
+    if (entity.is_missing<CanPerformJob>()) return;
+    const Transform& transform = entity.get<Transform>();
+    const CanPerformJob& cpj = entity.get<CanPerformJob>();
+
+    const vec3 position = transform.pos();
+    const vec3 icon_position = vec3{position.x + (TILESIZE * 0.05f),  //
+                                    position.y + (TILESIZE * 2.f),    //
+                                    position.z};
+    switch (cpj.current) {
+        case Bathroom: {
+            GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+            // TODO reuse the toilet upgrade one for now
+            raylib::Texture texture = TextureLibrary::get().get("gotta_go");
+            raylib::DrawBillboard(cam.camera, texture,
+                                  // move it a bit so that it doesnt overlap
+                                  icon_position + vec3{0.f, 1.f, 0},
+                                  0.75f * TILESIZE, raylib::WHITE);
+        } break;
+        case NoJob:
+        case Wait:
+        case WaitInQueue:
+        case Paying:
+        case Drinking:
+        case Mopping:
+        case PlayJukebox:
+        case Wandering:
+        case EnterStore:
+        case WaitInQueueForPickup:
+        case Leaving:
+        case MAX_JOB_TYPE:
+            break;
+    }
+}
+
 void render_speech_bubble(const Entity& entity, float) {
     if (entity.is_missing<HasSpeechBubble>()) return;
     if (entity.get<HasSpeechBubble>().disabled()) return;
@@ -887,7 +922,7 @@ void render_normal(const Entity& entity, float dt) {
     render_debug_fruit_juice(entity, dt);
     render_debug_num_uses_left(entity, dt);
 
-    render_debug_ai_info(entity, dt);
+    render_ai_info(entity, dt);
 
     render_waiting_queue(entity, dt);
     render_smelly_toilet(entity, dt);

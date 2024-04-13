@@ -451,7 +451,7 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
         // at the same time.
         //
         // this means that its possible there is a free toilet on the other side
-        // of the map and people are still using this one because they all
+        // of the map and people are still 'using' this one because they all
         // grabbed at the same time
         //
         // this might be frustrating as a player since you are like "why are
