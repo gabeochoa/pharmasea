@@ -593,8 +593,8 @@ inline void process_ai_paying(Entity& entity, float dt) {
 
     AICloseTab& aiclosetab = entity.get<AICloseTab>();
 
-    bool found_target =
-        aiclosetab.target.find_if_missing(entity, [&](Entity& best_register) {
+    bool found_target = aiclosetab.target.find_if_missing(
+        entity, nullptr, [&](Entity& best_register) {
             aiclosetab.position =
                 WIQ_add_to_queue_and_get_position(best_register, entity);
         });
@@ -684,51 +684,22 @@ inline void process_jukebox_play(Entity& entity, float dt) {
 
     AIPlayJukebox& ai_play_jukebox = entity.get<AIPlayJukebox>();
 
-    const auto _find_available_jukebox = [&]() -> bool {
-        if (ai_play_jukebox.has_available_target()) {
+    bool found = ai_play_jukebox.target.find_if_missing(
+        entity,
+        [&](const Entity& best_jukebox) -> bool {
+            // We were the last person to put on a song, so we dont need to
+            // change it (yet...)
+            if (best_jukebox.get<HasLastInteractedCustomer>().customer_id ==
+                entity.id) {
+                return false;
+            }
             return true;
-        }
-        OptEntity best_jukebox =
-            EntityQuery()
-                .whereType(EntityType::Jukebox)
-                .whereHasComponent<HasWaitingQueue>()
-                .whereLambda([](const Entity& entity) {
-                    // Exclude full jukeboxs
-                    const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
-                    if (hwq.is_full()) return false;
-                    return true;
-                })
-                // Find the jukebox with the least people on it
-                .orderByLambda([](const Entity& r1, const Entity& r2) {
-                    const HasWaitingQueue& hwq1 = r1.get<HasWaitingQueue>();
-                    int rpos1 = hwq1.get_next_pos();
-                    const HasWaitingQueue& hwq2 = r2.get<HasWaitingQueue>();
-                    int rpos2 = hwq2.get_next_pos();
-                    return rpos1 < rpos2;
-                })
-                .gen_first();
+        },
+        [&](Entity& best_jukebox) -> void {
+            ai_play_jukebox.position =
+                WIQ_add_to_queue_and_get_position(best_jukebox, entity);
+        });
 
-        // We probably dont have a jukebox, so just ignore this for now
-        // go back to ordering
-        if (!best_jukebox) {
-            ai_play_jukebox.reset();
-            return false;
-        }
-
-        // We were the last person to put on a song, so we dont need to change
-        // it (yet...)
-        if (best_jukebox->get<HasLastInteractedCustomer>().customer_id ==
-            entity.id) {
-            return false;
-        }
-
-        ai_play_jukebox.set_target(best_jukebox->id);
-        ai_play_jukebox.position =
-            WIQ_add_to_queue_and_get_position(best_jukebox.asE(), entity);
-        return true;
-    };
-
-    bool found = _find_available_jukebox();
     if (!found) {
         _set_customer_next_order(entity);
         reset_job_component<AIPlayJukebox>(entity);
@@ -742,10 +713,11 @@ inline void process_jukebox_play(Entity& entity, float dt) {
     ai_play_jukebox.pass_time(dt);
     if (!ai_play_jukebox.ready()) return;
 
-    OptEntity opt_reg = EntityHelper::getEntityForID(ai_play_jukebox.id());
+    OptEntity opt_reg =
+        EntityHelper::getEntityForID(ai_play_jukebox.target.id());
     if (!opt_reg) {
         log_warn("got an invalid jukebox");
-        ai_play_jukebox.unset_target();
+        ai_play_jukebox.target.unset();
         return;
     }
     Entity& reg = opt_reg.asE();

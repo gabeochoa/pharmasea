@@ -9,6 +9,7 @@
 
 struct AITarget {
     using ResetFn = std::function<void()>;
+    using ValidateFn = std::function<bool(const Entity&)>;
     using SuccessFn = std::function<void(Entity&)>;
 
     ResetFn reset;
@@ -24,6 +25,7 @@ struct AITarget {
     std::optional<int> target_id;
 
     bool _find_target(const Entity& entity,
+                      const ValidateFn& validate = nullptr,
                       const SuccessFn& onFound = nullptr) {
         OptEntity closest = find_target(entity);
 
@@ -32,6 +34,12 @@ struct AITarget {
             reset();
             return false;
         }
+
+        if (validate) {
+            bool success = validate(closest.asE());
+            if (!success) return false;
+        }
+
         set(closest->id);
         if (onFound) onFound(closest.asE());
         return true;
@@ -40,9 +48,10 @@ struct AITarget {
     virtual OptEntity find_target(const Entity& entity) = 0;
 
     bool find_if_missing(const Entity& entity,
+                         const ValidateFn& validate = nullptr,
                          const SuccessFn& onFound = nullptr) {
         if (missing()) {
-            return _find_target(entity, onFound);
+            return _find_target(entity, validate, onFound);
         }
         return true;
     }
