@@ -839,7 +839,7 @@ void render_price(const Entity& entity, float) {
                              is_free ? GREEN : BLUE);
 }
 
-void render_machine_name(const Entity& entity, float) {
+void render_machine_name(const Entity& entity, int font_size = 200) {
     if (entity.is_missing<IsSolid>()) return;
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
@@ -847,7 +847,7 @@ void render_machine_name(const Entity& entity, float) {
     // TODO rotate the name with the camera?
     raylib::DrawFloatingText(
         transform.raw() + vec3{0, 1.0f * TILESIZE, 0.2f * TILESIZE},
-        Preload::get().font, std::string(entity.name()).c_str(), 200);
+        Preload::get().font, std::string(entity.name()).c_str(), font_size);
 }
 
 void render_debug_fruit_juice(const Entity& entity, float) {
@@ -951,8 +951,17 @@ void render_normal(const Entity& entity, float dt) {
         render_floor_marker(entity, dt);
     }
 
+    //  Showing machine name because playtesters
+    //  didnt find it clear enough that they were still in
+    //  planning state.
+    //
+    //  They kept trying to grab the cups and start making drinks
+    if (GameState::get().is(game::State::Planning)) {
+        render_machine_name(entity, 100);
+    }
+
     if (GameState::get().is(game::State::Store)) {
-        render_machine_name(entity, dt);
+        render_machine_name(entity, 200);
         render_price(entity, dt);
     }
 
