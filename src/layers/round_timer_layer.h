@@ -129,7 +129,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             EntityQuery().whereType(EntityType::Sophie).gen_first();
         {
             Rectangle spawn_count(rounded_rect);
-            spawn_count.y += 60;
+            spawn_count.y += 80;
 
             if (sophie.valid()) {
                 const IsBank& bank = sophie->get<IsBank>();
@@ -154,7 +154,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         // Only show the customer count during planning
         if (GameState::get().is(game::State::Planning)) {
             Rectangle spawn_count(rounded_rect);
-            spawn_count.y += 120;
+            spawn_count.y += 160;
 
             Entity& spawner = (EntityQuery()
                                    .whereType(EntityType::CustomerSpawner)
