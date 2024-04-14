@@ -86,7 +86,18 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
         } break;
         case game::InRound:  // fall through
         case game::Planning: {
-            position = {0, 0, 0};
+            OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
+                IsFloorMarker::Planning_SpawnArea);
+            if (!spawn_area) {
+                position = {0, 0, 0};
+            } else {
+                // this is a guess based off the current size of the trigger
+                // area
+                // TODO read the actual size?
+                // TODO validate nothing is already there
+                vec2 pos = spawn_area.asE().get<Transform>().as2();
+                position = {pos.x, 0, pos.y + 3};
+            }
         } break;
         case game::Progression: {
             position = {PROGRESSION_ORIGIN, 0, 0};
