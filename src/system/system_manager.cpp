@@ -945,6 +945,14 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             {
                 // TODO add a tagging system so we can delete certain sets of
                 // ents
+                // ^ okay so i tried adding a CreationOptions component
+                // this worked great for any furniture, but all the
+                // items stayed floating
+                //
+                // I think it could work but you would need to have items
+                // inherit the creation options of the parent? which might cause
+                // issues for permanant, when this is a simple brute force
+                // solution for now
                 float rad = 30;
                 const auto ents = EntityHelper::getAllInRange(
                     {MODEL_TEST_ORIGIN - rad, -1.f * rad},
