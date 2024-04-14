@@ -450,6 +450,8 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
                               DebugOptions{.type = EntityType::FastForward},
                               pos, ui::color::apricot, ui::color::apricot);
 
+    fast_forward.removeComponent<CanHoldItem>();
+
     // TODO translate
     fast_forward.addComponent<HasName>().update("Fast-Forward Day");
 
