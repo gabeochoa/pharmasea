@@ -796,6 +796,11 @@ void render_speech_bubble(const Entity& entity, float) {
 void render_waiting_queue(const Entity& entity, float) {
     if (entity.is_missing<HasWaitingQueue>()) return;
 
+    // TODO its crashing again, this time it looks like its an issue with
+    // EntityHelper::isWalkable where fetching a vec2 from a map is causing a
+    // segfault
+    return;
+
     const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
 
     const Transform& transform = entity.get<Transform>();
