@@ -24,12 +24,9 @@ struct AIDrinking : public AIComponent {
                     randfIn(-10, 10),
                 };
 
-                bool has_values = EntityQuery()
-                                      .whereHasComponent<IsSolid>()
-                                      .whereSnappedPositionMatches(new_pos)
-                                      .has_values();
+                const auto walkable = EntityHelper::isWalkable(new_pos);
 
-                if (!has_values) {
+                if (walkable) {
                     position = customer.get<Transform>().as2() + new_pos;
                     break;
                 }
