@@ -708,6 +708,16 @@ void handle_grab(Entity& player) {
         playerCHI.update(item, player.id);
         item->get<Transform>().update(player.get<Transform>().snap_position());
         furnCanHold.update(nullptr, -1);
+
+        // In certain cases, we need to reset the progress when you pick up an
+        // item. im not sure exactly when this needs to be, but im sure over
+        // time we will see a pattern.
+        //
+        // Reset work progress bar if you remove the drink from it
+        if (closest_furniture->has<HasWork>() && item->has<IsDrink>()) {
+            closest_furniture->get<HasWork>().reset_pct();
+        }
+
         return true;
     };
 
