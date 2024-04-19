@@ -281,6 +281,9 @@ void Preload::load_models() {
                 object["position_offset"][2].get<float>();
             modelInfo.rotation_angle = object["rotation_angle"].get<float>();
 
+            log_trace("attempting loading {} as {} ", modelInfo.filename,
+                      modelInfo.library_name);
+
             // Load the ModelLoadingInfo into the ModelInfoLibrary
             ModelInfoLibrary::get().load({
                 .folder = modelInfo.folder,

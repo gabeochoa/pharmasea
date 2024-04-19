@@ -57,6 +57,8 @@ release: clean all
 	cp -r resources release/
 	cp -r vendor release/
 
+modeltest:
+	clang++ -std=c++2a -g `pkg-config --cflags raylib` -Ivendor/ -L/opt/homebrew/Cellar/raylib/5.0/lib -lraylib model_test.cpp;./a.out
 
 $(OBJ_DIR)/%.o: %.cpp makefile
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d) 
