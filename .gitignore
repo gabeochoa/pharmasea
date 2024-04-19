@@ -17,6 +17,7 @@ release/*
 cppcheck_err
 *.gcno
 *.gcov
+!/lib*.dylib
 release*
 recording.trace/
 output/
