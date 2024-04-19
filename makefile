@@ -58,7 +58,7 @@ release: clean all
 	cp -r vendor release/
 
 modeltest:
-	clang++ -std=c++2a -g `pkg-config --cflags raylib` -Ivendor/ -L/opt/homebrew/Cellar/raylib/5.0/lib -lraylib model_test.cpp;./a.out
+	clang++ -std=c++2a -g $(RAYLIB_FLAGS) $(RAYLIB_LIB) -Ivendor/ model_test.cpp;./a.out
 
 $(OBJ_DIR)/%.o: %.cpp makefile
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d) 
@@ -126,6 +126,10 @@ findstr:
 
 cleansave:
 	rm "/Users/gabeochoa/Library/Application Support/pharmasea/settings.bin"
+
+bring:
+	cp ~/p/GameNetworkingSockets/build/bin/libGameNetworkingSockets.dylib .
+	cp ~/p/GameNetworkingSockets/build/bin/libGameNetworkingSockets.dylib vendor/
 
 # When using lldb, you have to run these commands:
 # 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION
