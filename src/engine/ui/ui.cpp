@@ -65,14 +65,14 @@ ElementResult hoverable(const Widget& widget) {
     return false;
 }
 
-ElementResult div(const Widget& widget, Color c) {
+ElementResult div(const Widget& widget, Color c, bool rounded) {
     Rectangle rect = widget.get_rect();
-    internal::draw_rect_color(rect, widget.z_index, c, false);
+    internal::draw_rect_color(rect, widget.z_index, c, rounded);
     return true;
 }
 
-ElementResult div(const Widget& widget, theme::Usage theme) {
-    return div(widget, UI_THEME.from_usage(theme));
+ElementResult div(const Widget& widget, theme::Usage theme, bool rounded) {
+    return div(widget, UI_THEME.from_usage(theme), rounded);
 }
 
 // TODO merge with text()

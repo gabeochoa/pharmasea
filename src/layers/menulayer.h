@@ -124,44 +124,5 @@ struct MenuLayer : public Layer {
         }
 
         end();
-
-        /*
-
-        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto [top, rest] = rect::hsplit(window, 33);
-        auto [body, footer] = rect::hsplit(rest, 66);
-
-        // Title
-        {
-            auto text_loc = rect::lpad(top, 15);
-            text(Widget{text_loc}, TranslatableString(strings::GAME_NAME));
-        }
-
-        // Buttons
-        {
-            auto [rect1, rect2, rect3, rect4] =
-                rect::hsplit<4>(rect::hpad(body, 15), 20);
-
-            if (button(Widget{rect1},
-                       TranslatableString(strings::i18n::PLAY))) {
-                MenuState::get().set(menu::State::Network);
-            }
-            if (button(Widget{rect2},
-                       TranslatableString(strings::i18n::ABOUT))) {
-                MenuState::get().set(menu::State::About);
-            }
-            if (button(Widget{rect3},
-                       TranslatableString(strings::i18n::SETTINGS))) {
-                MenuState::get().set(menu::State::Settings);
-            }
-            if (button(Widget{rect4},
-                       TranslatableString(strings::i18n::EXIT))) {
-                App::get().close();
-            }
-        }
-
-
-        end();
-        */
     }
 };

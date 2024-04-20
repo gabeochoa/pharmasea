@@ -29,9 +29,9 @@ void end();
 
 ElementResult hoverable(const Widget& widget);
 
-// TODO add rounded corners
-ElementResult div(const Widget& widget, Color c);
-ElementResult div(const Widget& widget, theme::Usage theme);
+ElementResult div(const Widget& widget, Color c, bool rounded = false);
+ElementResult div(const Widget& widget, theme::Usage theme,
+                  bool rounded = false);
 ElementResult colored_text(const Widget& widget,
                            const TranslatableString& content, Color c = WHITE);
 ElementResult window(const Widget& widget);

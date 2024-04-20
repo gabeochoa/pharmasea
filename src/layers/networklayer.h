@@ -219,8 +219,6 @@ struct NetworkLayer : public Layer {
 
         auto [username, ip_address, disconnect] = rect::hsplit<3>(left);
         auto [top_right, bottom_right] = rect::hsplit<2>(right);
-        (void) top_right;
-
         auto start = rect::vpad(rect::hpad(bottom_right, 30), 30);
 
         disconnect = rect::hpad(rect::vpad(disconnect, 20), 20);
@@ -283,14 +281,11 @@ struct NetworkLayer : public Layer {
             }
         }
 
-        /*
-        auto [username, content] = rect::hsplit(window, 33);
-
-        auto [buttons, your_ip, player_box] = rect::vsplit<3>(content);
-
         {
-            player_box = rect::lpad(player_box, 20);
-            player_box = rect::rpad(player_box, 60);
+            auto [lobby_label, player_box] = rect::hsplit<2>(top_right);
+
+            text(Widget{lobby_label},
+                 TODO_TRANSLATE("Lobby", TodoReason::SubjectToChange));
 
             auto players = rect::hsplit<4>(player_box, 15);
 
@@ -306,8 +301,6 @@ struct NetworkLayer : public Layer {
             }
         }
 
-
-        */
         // Even though the ui shows up at the top
         // we dont want the tabbing to be first, so
         // we put it here
