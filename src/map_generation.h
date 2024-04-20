@@ -58,6 +58,7 @@ struct helper {
 
     vec2 generate(std::function<Entity&()>&& add_to_map = nullptr) {
         vec2 origin = find_origin();
+        log_info(" origin : {}", origin);
 
         const auto default_create = []() -> Entity& {
             return EntityHelper::createEntity();
@@ -231,6 +232,7 @@ struct helper {
                 }
             }
         }
+        origin = vec2{0, 0};
         return origin;
     }
 

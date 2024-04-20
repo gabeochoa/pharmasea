@@ -17,6 +17,7 @@
 #include "map_generation.h"
 #include "network/server.h"
 #include "recipe_library.h"
+#include "simple.h"
 #include "strings.h"
 #include "system/system_manager.h"
 #include "vec_util.h"
@@ -440,19 +441,65 @@ void LevelInfo::generate_default_seed() {
     EntityHelper::invalidatePathCache();
 }
 
-vec2 generate_in_game_map_wfc(const std::string& seed) {
+vec2 generate_in_game_map_wfc(const std::string&) {
     // int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     // int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
     // int rows = 5;
     // int cols = 5;
 
-    wfc::WaveCollapse wc(static_cast<unsigned int>(hashString(seed)));
-    wc.run();
+    // wfc::WaveCollapse wc(static_cast<unsigned int>(hashString(seed)));
+    // wc.run();
+    // generation::helper helper(wc.get_lines());
 
-    generation::helper helper(wc.get_lines());
+    int rows = 20;
+    int cols = 20;
+    std::vector<char> chars = something(rows, cols);
+
+    std::vector<std::string> lines;
+    std::string tmp;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            tmp.push_back(chars[i * rows + j]);
+        }
+        lines.push_back(tmp);
+        tmp.clear();
+    }
+
+    std::vector<char> required = {{
+        generation::CUST_SPAWNER,
+        generation::SODA_MACHINE,
+        generation::TRASH,
+        generation::REGISTER,
+        generation::ORIGIN,
+        generation::SOPHIE,
+        generation::FAST_FORWARD,
+        generation::CUPBOARD,
+
+        generation::TABLE,
+        generation::TABLE,
+        generation::TABLE,
+        generation::TABLE,
+    }};
+    tmp.clear();
+    for (auto c : required) {
+        tmp.push_back(c);
+        if (tmp.size() == (size_t) rows) {
+            lines.push_back(tmp);
+            tmp.clear();
+        }
+    }
+    lines.push_back(tmp);
+
+    for (const auto& c : lines) {
+        std::cout << c;
+        std::cout << std::endl;
+    }
+
+    generation::helper helper(lines);
     vec2 max_location = helper.generate();
     helper.validate();
     EntityHelper::invalidatePathCache();
+    log_info("max location {}", max_location);
 
     return max_location;
 }
@@ -495,6 +542,7 @@ void LevelInfo::generate_in_game_map() {
 
         return;
     }
+
     vec2 mx = generate_in_game_map_wfc(seed);
     add_outside_triggers(mx);
 

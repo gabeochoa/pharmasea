@@ -2,6 +2,7 @@
 #include "game.h"
 
 #include "engine/assert.h"
+#include "map_generation.h"
 
 namespace network {
 long long total_ping = 0;
