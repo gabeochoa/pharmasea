@@ -173,16 +173,13 @@ struct NetworkLayer : public Layer {
         auto [top_left, bottom_left] = rect::hsplit<2>(left);
         auto [top_right, bottom_right] = rect::hsplit<2>(right);
 
-        div(top_left, color::green_blue);
-        div(bottom_left, color::pine_green);
-        div(top_right, color::pine_green);
-        div(bottom_right, color::green_blue);
-
         {
             auto [a, b, c, back] = rect::hsplit<4>(bottom_left);
             (void) a;
             (void) b;
             (void) c;
+
+            back = rect::hpad(back, 10);
             if (button(Widget{back},
                        TranslatableString(strings::i18n::BACK_BUTTON))) {
                 MenuState::get().clear_history();
@@ -190,39 +187,25 @@ struct NetworkLayer : public Layer {
             }
         }
 
-        draw_username_with_edit(top_left, dt);
+        {
+            auto [host, join] =
+                rect::hsplit<2>(rect::vpad(rect::hpad(top_right, 20), 20));
 
-        /*
-        auto content = rect::vpad(rect::hpad(window, 20), 10);
-        div(content, color::brownish_purple);
+            host = rect::bpad(host, 95);
+            join = rect::tpad(join, 5);
 
-        auto [left, right] = rect::vsplit<2>(content);
-        left = rect::rpad(left, 90);
-        right = rect::lpad(right, 10);
-        div(left, color::green_blue);
-        div(right, color::pine_green);
-
-        auto [top_left, bottom_left] = rect::hsplit<2>(left);
-
-        auto [top_right, _2] = rect::hsplit<2>(right);
-
-        top_right = rect::hpad(top_right, 20);
-        auto [host, join] = rect::hsplit<2>(top_right, 20);
-
-        if (button(Widget{host}, TranslatableString(strings::i18n::HOST))) {
-            network_info->set_role(network::Info::Role::s_Host);
+            if (button(Widget{host}, TranslatableString(strings::i18n::HOST))) {
+                network_info->set_role(network::Info::Role::s_Host);
+            }
+            if (button(Widget{join}, TranslatableString(strings::i18n::JOIN))) {
+                network_info->set_role(network::Info::Role::s_Client);
+            }
         }
-        if (button(Widget{join}, TranslatableString(strings::i18n::JOIN))) {
-            network_info->set_role(network::Info::Role::s_Client);
-        }
-
-        auto back = rect::all_pad(bottom_left, 20);
 
         // Even though the ui shows up at the top
         // we dont want the tabbing to be first, so
         // we put it here
         draw_username_with_edit(top_left, dt);
-        */
     }
 
     void draw_connected_screen(float dt) {
