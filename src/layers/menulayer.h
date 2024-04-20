@@ -57,6 +57,78 @@ struct MenuLayer : public Layer {
         begin(ui_context, dt);
 
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+
+        auto [left, right] = rect::vsplit(window, 50);
+
+        left = rect::rpad(rect::lpad(left, 20), 90);
+
+        // TODO add non rounded rectangle
+        div(left, color::brownish_purple);
+        // TODO we cant draw this because it hides the accent ring
+
+        left = rect::rpad(rect::lpad(left, 10), 90);
+
+        auto [title, buttons] = rect::hsplit(left, 50);
+
+        // Title
+        {
+            title = rect::tpad(rect::bpad(title, 50), 30);
+            text(Widget{title}, TranslatableString(strings::GAME_NAME));
+        }
+
+        // Buttons
+        {
+            buttons = rect::tpad(rect::all_pad(buttons, 10), 10);
+            // div(buttons, color::coffee);
+
+            auto [buttons_top, buttons_bottom] = rect::hsplit<2>(buttons);
+            auto [rect1, rect2] = rect::vsplit<2>(buttons_top);
+            auto [rect3, rect4] = rect::vsplit<2>(buttons_bottom);
+
+            rect1 = rect::rpad(rect::vpad(rect1, 20), 95);
+            rect2 = rect::lpad(rect::vpad(rect2, 20), 5);
+
+            rect3 = rect::rpad(rect::vpad(rect3, 20), 95);
+            rect4 = rect::lpad(rect::vpad(rect4, 20), 5);
+
+            if (button(Widget{rect1},
+                       TranslatableString(strings::i18n::PLAY))) {
+                MenuState::get().set(menu::State::Network);
+            }
+            if (button(Widget{rect2},
+                       TranslatableString(strings::i18n::ABOUT))) {
+                MenuState::get().set(menu::State::About);
+            }
+            if (button(Widget{rect3},
+                       TranslatableString(strings::i18n::SETTINGS))) {
+                MenuState::get().set(menu::State::Settings);
+            }
+            if (button(Widget{rect4},
+                       TranslatableString(strings::i18n::EXIT))) {
+                App::get().close();
+            }
+        }
+
+        // Ext Buttons
+        {
+            auto [_, footer] = rect::hsplit(right, 80);
+            auto ext_buttons = rect::rpad(rect::lpad(footer, 70), 80);
+            auto [b1, b2] = rect::vsplit<2>(ext_buttons, 20);
+
+            if (image_button(Widget{b1}, "discord")) {
+                util::open_url(strings::urls::DISCORD);
+            }
+            // TODO chose the right color based on the theme
+            if (image_button(Widget{b2}, "itch-white")) {
+                util::open_url(strings::urls::ITCH);
+            }
+        }
+
+        end();
+
+        /*
+
+        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         auto [top, rest] = rect::hsplit(window, 33);
         auto [body, footer] = rect::hsplit(rest, 66);
 
@@ -89,20 +161,8 @@ struct MenuLayer : public Layer {
             }
         }
 
-        // Ext Buttons
-        {
-            auto ext_buttons = rect::rpad(rect::lpad(footer, 80), 90);
-            auto [b1, b2] = rect::vsplit<2>(ext_buttons, 20);
-
-            if (image_button(Widget{b1}, "discord")) {
-                util::open_url(strings::urls::DISCORD);
-            }
-            // TODO chose the right color based on the theme
-            if (image_button(Widget{b2}, "itch-white")) {
-                util::open_url(strings::urls::ITCH);
-            }
-        }
 
         end();
+        */
     }
 };

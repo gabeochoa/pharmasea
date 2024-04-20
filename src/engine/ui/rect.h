@@ -84,11 +84,15 @@ inline Rectangle bpad(const Rectangle& r, float pct) {
 }
 
 inline Rectangle vpad(const Rectangle& r, float pct) {
-    return tpad(bpad(r, pct), pct);
+    return tpad(bpad(r, 100 - pct), pct);
 }
 
 inline Rectangle hpad(const Rectangle& r, float pct) {
-    return rpad(lpad(r, pct), pct);
+    return rpad(lpad(r, pct), 100 - pct);
+}
+
+inline Rectangle all_pad(const Rectangle& r, float pct) {
+    return hpad(vpad(r, pct), pct);
 }
 
 template<size_t N>
