@@ -2,9 +2,9 @@
 
 #include "../engine.h"
 #include "../engine/app.h"
-#include "../engine/ui/ui.h"
 #include "../engine/util.h"
 #include "../external_include.h"
+#include "../local_ui.h"
 
 struct MenuLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
@@ -90,20 +90,20 @@ struct MenuLayer : public Layer {
             rect3 = rect::rpad(rect::vpad(rect3, 20), 95);
             rect4 = rect::lpad(rect::vpad(rect4, 20), 5);
 
-            if (button(Widget{rect1},
-                       TranslatableString(strings::i18n::PLAY))) {
+            if (ps::button(Widget{rect1},
+                           TranslatableString(strings::i18n::PLAY))) {
                 MenuState::get().set(menu::State::Network);
             }
-            if (button(Widget{rect2},
-                       TranslatableString(strings::i18n::ABOUT))) {
+            if (ps::button(Widget{rect2},
+                           TranslatableString(strings::i18n::ABOUT))) {
                 MenuState::get().set(menu::State::About);
             }
-            if (button(Widget{rect3},
-                       TranslatableString(strings::i18n::SETTINGS))) {
+            if (ps::button(Widget{rect3},
+                           TranslatableString(strings::i18n::SETTINGS))) {
                 MenuState::get().set(menu::State::Settings);
             }
-            if (button(Widget{rect4},
-                       TranslatableString(strings::i18n::EXIT))) {
+            if (ps::button(Widget{rect4},
+                           TranslatableString(strings::i18n::EXIT))) {
                 App::get().close();
             }
         }

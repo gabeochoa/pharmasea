@@ -10,7 +10,7 @@
 #include "../globals.h"
 //
 #include "../engine/toastmanager.h"
-#include "../engine/ui/ui.h"
+#include "../local_ui.h"
 #include "../network/network.h"
 
 extern std::shared_ptr<network::Info> network_info;
@@ -120,12 +120,13 @@ struct NetworkLayer : public Layer {
             Settings::get().data.username = result.as<std::string>();
         }
 
-        if (button(Widget{lock}, TranslatableString(strings::i18n::LOCK_IN))) {
+        if (ps::button(Widget{lock},
+                       TranslatableString(strings::i18n::LOCK_IN))) {
             network_info->lock_in_username();
         }
 
-        if (button(Widget{back},
-                   TranslatableString(strings::i18n::BACK_BUTTON))) {
+        if (ps::button(Widget{back},
+                       TranslatableString(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
     }
@@ -149,7 +150,8 @@ struct NetworkLayer : public Layer {
         if (show_edit_button) {
             edit = rect::hpad(edit, 20);
             edit = rect::vpad(edit, 5);
-            if (button(Widget{edit}, TranslatableString(strings::i18n::EDIT))) {
+            if (ps::button(Widget{edit},
+                           TranslatableString(strings::i18n::EDIT))) {
                 network_info->unlock_username();
             }
         }
@@ -177,10 +179,12 @@ struct NetworkLayer : public Layer {
             host = rect::bpad(host, 95);
             join = rect::tpad(join, 5);
 
-            if (button(Widget{host}, TranslatableString(strings::i18n::HOST))) {
+            if (ps::button(Widget{host},
+                           TranslatableString(strings::i18n::HOST))) {
                 network_info->set_role(network::Info::Role::s_Host);
             }
-            if (button(Widget{join}, TranslatableString(strings::i18n::JOIN))) {
+            if (ps::button(Widget{join},
+                           TranslatableString(strings::i18n::JOIN))) {
                 network_info->set_role(network::Info::Role::s_Client);
             }
         }
@@ -192,8 +196,8 @@ struct NetworkLayer : public Layer {
             (void) c;
 
             back = rect::hpad(back, 10);
-            if (button(Widget{back},
-                       TranslatableString(strings::i18n::BACK_BUTTON))) {
+            if (ps::button(Widget{back},
+                           TranslatableString(strings::i18n::BACK_BUTTON))) {
                 MenuState::get().clear_history();
                 MenuState::get().set(menu::State::Root);
             }
@@ -225,19 +229,19 @@ struct NetworkLayer : public Layer {
         /// Buttons
         {
             if (network_info->is_host()) {
-                if (button(Widget{start},
-                           TranslatableString(strings::i18n::START))) {
+                if (ps::button(Widget{start},
+                               TranslatableString(strings::i18n::START))) {
                     MenuState::get().set(menu::State::Game);
                     GameState::get().set(game::State::Lobby);
                 }
-                if (button(Widget{disconnect},
-                           TranslatableString(strings::i18n::DISCONNECT))) {
+                if (ps::button(Widget{disconnect},
+                               TranslatableString(strings::i18n::DISCONNECT))) {
                     network::Info::reset_connections();
                     return;
                 }
             } else {
-                if (button(Widget{disconnect},
-                           TranslatableString(strings::i18n::DISCONNECT))) {
+                if (ps::button(Widget{disconnect},
+                               TranslatableString(strings::i18n::DISCONNECT))) {
                     network::Info::reset_connections();
                     return;
                 }
@@ -267,16 +271,18 @@ struct NetworkLayer : public Layer {
             std::string show_hide_host_ip_text = should_show_host_ip
                                                      ? strings::i18n::HIDE_IP
                                                      : strings::i18n::SHOW_IP;
-            if (auto result =
-                    checkbox(Widget{check},
-                             CheckboxData{.selected = should_show_host_ip,
-                                          .content = show_hide_host_ip_text});
+            if (auto result = ps::checkbox(
+                    Widget{check},
+                    CheckboxData{.selected = should_show_host_ip,
+                                 .content = show_hide_host_ip_text},
+                    ps::Size::Small);
                 result) {
                 should_show_host_ip = !should_show_host_ip;
             }
 
-            if (button(Widget{copy},
-                       TranslatableString(strings::i18n::COPY_IP))) {
+            if (ps::button(Widget{copy},
+                           TranslatableString(strings::i18n::COPY_IP),
+                           ps::Size::Small)) {
                 ext::set_clipboard_text(my_ip_address.c_str());
             }
         }
@@ -353,14 +359,14 @@ struct NetworkLayer : public Layer {
 
             auto [load_ip, connect] = rect::hsplit<2>(buttons);
 
-            if (button(Widget{load_ip},
-                       TranslatableString(strings::i18n::LOAD_LAST_IP))) {
+            if (ps::button(Widget{load_ip},
+                           TranslatableString(strings::i18n::LOAD_LAST_IP))) {
                 network_info->host_ip_address() =
                     Settings::get().last_used_ip();
             }
 
-            if (button(Widget{connect},
-                       TranslatableString(strings::i18n::CONNECT))) {
+            if (ps::button(Widget{connect},
+                           TranslatableString(strings::i18n::CONNECT))) {
                 Settings::get().update_last_used_ip_address(
                     network_info->host_ip_address());
                 network_info->lock_in_ip();
@@ -374,8 +380,8 @@ struct NetworkLayer : public Layer {
         // Back button
         {
             back = rect::rpad(back, 20);
-            if (button(Widget{back},
-                       TranslatableString(strings::i18n::BACK_BUTTON))) {
+            if (ps::button(Widget{back},
+                           TranslatableString(strings::i18n::BACK_BUTTON))) {
                 network_info->unlock_username();
             }
         }
