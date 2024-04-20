@@ -157,24 +157,32 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_role_selector_screen(float dt) {
-        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto [username, content] = rect::hsplit(window, 33);
-        content = rect::bpad(content, 66);
+        // auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
 
-        auto buttons = content;
-        // button
+        float bg_width = WIN_WF() * 0.6f;
+        float bg_height = WIN_HF() * 0.8f;
+        auto background = Rectangle{(WIN_WF() - bg_width) / 2.f,   //
+                                    (WIN_HF() - bg_height) / 2.f,  //
+                                    bg_width, bg_height};
+        div(background, color::brownish_purple);
+
+        auto [left, right] = rect::vsplit<2>(background);
+        left = rect::rpad(left, 95);
+        right = rect::lpad(right, 5);
+
+        auto [top_left, bottom_left] = rect::hsplit<2>(left);
+        auto [top_right, bottom_right] = rect::hsplit<2>(right);
+
+        div(top_left, color::green_blue);
+        div(bottom_left, color::pine_green);
+        div(top_right, color::pine_green);
+        div(bottom_right, color::green_blue);
+
         {
-            buttons = rect::lpad(buttons, 15);
-            buttons = rect::rpad(buttons, 15);
-
-            auto [host, join, _empty, back] = rect::hsplit<4>(buttons, 20);
-
-            if (button(Widget{host}, TranslatableString(strings::i18n::HOST))) {
-                network_info->set_role(network::Info::Role::s_Host);
-            }
-            if (button(Widget{join}, TranslatableString(strings::i18n::JOIN))) {
-                network_info->set_role(network::Info::Role::s_Client);
-            }
+            auto [a, b, c, back] = rect::hsplit<4>(bottom_left);
+            (void) a;
+            (void) b;
+            (void) c;
             if (button(Widget{back},
                        TranslatableString(strings::i18n::BACK_BUTTON))) {
                 MenuState::get().clear_history();
@@ -182,10 +190,39 @@ struct NetworkLayer : public Layer {
             }
         }
 
+        draw_username_with_edit(top_left, dt);
+
+        /*
+        auto content = rect::vpad(rect::hpad(window, 20), 10);
+        div(content, color::brownish_purple);
+
+        auto [left, right] = rect::vsplit<2>(content);
+        left = rect::rpad(left, 90);
+        right = rect::lpad(right, 10);
+        div(left, color::green_blue);
+        div(right, color::pine_green);
+
+        auto [top_left, bottom_left] = rect::hsplit<2>(left);
+
+        auto [top_right, _2] = rect::hsplit<2>(right);
+
+        top_right = rect::hpad(top_right, 20);
+        auto [host, join] = rect::hsplit<2>(top_right, 20);
+
+        if (button(Widget{host}, TranslatableString(strings::i18n::HOST))) {
+            network_info->set_role(network::Info::Role::s_Host);
+        }
+        if (button(Widget{join}, TranslatableString(strings::i18n::JOIN))) {
+            network_info->set_role(network::Info::Role::s_Client);
+        }
+
+        auto back = rect::all_pad(bottom_left, 20);
+
         // Even though the ui shows up at the top
         // we dont want the tabbing to be first, so
         // we put it here
-        draw_username_with_edit(username, dt);
+        draw_username_with_edit(top_left, dt);
+        */
     }
 
     void draw_connected_screen(float dt) {
