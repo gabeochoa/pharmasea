@@ -131,14 +131,13 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_username_with_edit(Rectangle username, float) {
-        username = rect::lpad(username, 25);
-        username = rect::rpad(username, 75);
-        username = rect::tpad(username, 35);
-        username = rect::bpad(username, 85);
+        username = rect::tpad(username, 20);
+        username = rect::hpad(username, 20);
 
-        auto [label, uname, _empty, edit] = rect::vsplit<4>(username, 20);
+        auto [label, uname, edit] = rect::hsplit<3>(username);
 
-        text(Widget{label}, TranslatableString(strings::i18n::USERNAME));
+        text(Widget{rect::hpad(label, 5)},
+             TranslatableString(strings::i18n::USERNAME));
 
         text(Widget{uname}, NO_TRANSLATE(Settings::get().data.username));
 
@@ -148,8 +147,8 @@ struct NetworkLayer : public Layer {
                 : true;
 
         if (show_edit_button) {
-            edit = rect::tpad(edit, 20);
-            edit = rect::bpad(edit, 80);
+            edit = rect::hpad(edit, 20);
+            edit = rect::vpad(edit, 5);
             if (button(Widget{edit}, TranslatableString(strings::i18n::EDIT))) {
                 network_info->unlock_username();
             }
@@ -157,8 +156,6 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_role_selector_screen(float dt) {
-        // auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-
         float bg_width = WIN_WF() * 0.6f;
         float bg_height = WIN_HF() * 0.8f;
         auto background = Rectangle{(WIN_WF() - bg_width) / 2.f,   //
@@ -172,20 +169,6 @@ struct NetworkLayer : public Layer {
 
         auto [top_left, bottom_left] = rect::hsplit<2>(left);
         auto [top_right, bottom_right] = rect::hsplit<2>(right);
-
-        {
-            auto [a, b, c, back] = rect::hsplit<4>(bottom_left);
-            (void) a;
-            (void) b;
-            (void) c;
-
-            back = rect::hpad(back, 10);
-            if (button(Widget{back},
-                       TranslatableString(strings::i18n::BACK_BUTTON))) {
-                MenuState::get().clear_history();
-                MenuState::get().set(menu::State::Root);
-            }
-        }
 
         {
             auto [host, join] =
@@ -202,6 +185,20 @@ struct NetworkLayer : public Layer {
             }
         }
 
+        {
+            auto [a, b, c, back] = rect::hsplit<4>(bottom_left);
+            (void) a;
+            (void) b;
+            (void) c;
+
+            back = rect::hpad(back, 10);
+            if (button(Widget{back},
+                       TranslatableString(strings::i18n::BACK_BUTTON))) {
+                MenuState::get().clear_history();
+                MenuState::get().set(menu::State::Root);
+            }
+        }
+
         // Even though the ui shows up at the top
         // we dont want the tabbing to be first, so
         // we put it here
@@ -209,18 +206,26 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_connected_screen(float dt) {
-        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto [username, content] = rect::hsplit(window, 33);
+        float bg_width = WIN_WF() * 0.6f;
+        float bg_height = WIN_HF() * 0.8f;
+        auto background = Rectangle{(WIN_WF() - bg_width) / 2.f,   //
+                                    (WIN_HF() - bg_height) / 2.f,  //
+                                    bg_width, bg_height};
+        div(background, color::brownish_purple);
 
-        auto [buttons, your_ip, player_box] = rect::vsplit<3>(content);
+        auto [left, right] = rect::vsplit<2>(background);
+        left = rect::rpad(left, 95);
+        right = rect::lpad(right, 5);
 
+        auto [username, ip_address, disconnect] = rect::hsplit<3>(left);
+        auto [top_right, bottom_right] = rect::hsplit<2>(right);
+        (void) top_right;
+
+        auto start = rect::vpad(rect::hpad(bottom_right, 30), 30);
+
+        disconnect = rect::hpad(rect::vpad(disconnect, 20), 20);
         /// Buttons
         {
-            buttons = rect::lpad(buttons, 45);
-            buttons = rect::rpad(buttons, 75);
-
-            auto [start, _a, _b, disconnect] = rect::hsplit<4>(buttons, 30);
-
             if (network_info->is_host()) {
                 if (button(Widget{start},
                            TranslatableString(strings::i18n::START))) {
@@ -241,27 +246,9 @@ struct NetworkLayer : public Layer {
             }
         }
 
-        {
-            player_box = rect::lpad(player_box, 20);
-            player_box = rect::rpad(player_box, 60);
-
-            auto players = rect::hsplit<4>(player_box, 15);
-
-            int i = 0;
-            for (const auto& kv : network_info->client->remote_players) {
-                // TODO figure out why there are null rps
-                if (!kv.second) continue;
-
-                text(
-                    Widget{players[i++]},
-                    NO_TRANSLATE(fmt::format(
-                        "{}({})", kv.second->get<HasName>().name(), kv.first)));
-            }
-        }
-
         // your ip is .... show copy
         if (network_info->is_host()) {
-            your_ip = rect::lpad(your_ip, 20);
+            auto your_ip = rect::lpad(ip_address, 20);
             your_ip = rect::rpad(your_ip, 60);
 
             auto [_a, label, ip_addr, control] = rect::hsplit<4>(your_ip, 30);
@@ -296,6 +283,31 @@ struct NetworkLayer : public Layer {
             }
         }
 
+        /*
+        auto [username, content] = rect::hsplit(window, 33);
+
+        auto [buttons, your_ip, player_box] = rect::vsplit<3>(content);
+
+        {
+            player_box = rect::lpad(player_box, 20);
+            player_box = rect::rpad(player_box, 60);
+
+            auto players = rect::hsplit<4>(player_box, 15);
+
+            int i = 0;
+            for (const auto& kv : network_info->client->remote_players) {
+                // TODO figure out why there are null rps
+                if (!kv.second) continue;
+
+                text(
+                    Widget{players[i++]},
+                    NO_TRANSLATE(fmt::format(
+                        "{}({})", kv.second->get<HasName>().name(), kv.first)));
+            }
+        }
+
+
+        */
         // Even though the ui shows up at the top
         // we dont want the tabbing to be first, so
         // we put it here
