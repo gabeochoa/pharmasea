@@ -67,7 +67,7 @@ ElementResult hoverable(const Widget& widget) {
 
 ElementResult div(const Widget& widget, Color c) {
     Rectangle rect = widget.get_rect();
-    internal::draw_rect_color(rect, widget.z_index, c);
+    internal::draw_rect_color(rect, widget.z_index, c, false);
     return true;
 }
 
@@ -102,7 +102,7 @@ ElementResult text(const Widget& widget, const TranslatableString& content,
     // No need to render if text is empty
     if (content.empty()) return false;
     if (draw_background) {
-        internal::draw_rect_color(rect, widget.z_index, {0, 0, 0, 180});
+        internal::draw_rect_color(rect, widget.z_index, {0, 0, 0, 180}, false);
         // Disable the dark text since it doesnt align correctly
         // internal::draw_text(text_lookup(content.c_str()),
         // rect::expand_px(rect, 2.f), widget.z_index,
@@ -153,7 +153,7 @@ ElementResult button(const Widget& widget, const TranslatableString& content,
     //
     focus::active_if_mouse_inside(widget);
     focus::try_to_grab(widget);
-    internal::draw_focus_ring(widget);
+    internal::draw_focus_ring(widget, true);
     focus::handle_tabbing(widget);
 
     if (background) {
@@ -163,7 +163,7 @@ ElementResult button(const Widget& widget, const TranslatableString& content,
         if (focus::is_hot(widget.id)) {
             color_usage = ui::theme::Usage::Accent;
         }
-        internal::draw_rect(rect, widget.z_index, color_usage);
+        internal::draw_rect(rect, widget.z_index, color_usage, true);
     }
 
     const auto _press_logic = [&]() -> bool {
