@@ -64,7 +64,6 @@ struct MenuLayer : public Layer {
 
         // TODO add non rounded rectangle
         div(left, color::brownish_purple);
-        // TODO we cant draw this because it hides the accent ring
 
         left = rect::rpad(rect::lpad(left, 10), 90);
 

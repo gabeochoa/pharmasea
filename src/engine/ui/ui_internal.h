@@ -111,7 +111,7 @@ inline void draw_focus_ring(const Widget& widget) {
     Rectangle rect = widget.get_rect();
     float pixels = WIN_HF() * 0.003f;
     rect = rect::expand(rect, {pixels, pixels, pixels, pixels});
-    internal::draw_rect(rect, widget.z_index + 1, ui::theme::Usage::Accent);
+    internal::draw_rect(rect, widget.z_index, ui::theme::Usage::Accent);
 }
 
 }  // namespace internal
