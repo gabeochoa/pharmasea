@@ -232,7 +232,6 @@ struct helper {
                 }
             }
         }
-        origin = vec2{0, 0};
         return origin;
     }
 

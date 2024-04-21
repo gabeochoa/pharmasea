@@ -178,6 +178,7 @@ struct Transform : public BaseComponent {
             tile.y += distance * TILESIZE;
             tile.y = ceil(tile.y);
         }
+
         if (direction & Transform::BACK) {
             tile.y -= distance * TILESIZE;
             tile.y = floor(tile.y);
@@ -187,6 +188,7 @@ struct Transform : public BaseComponent {
             tile.x += distance * TILESIZE;
             tile.x = ceil(tile.x);
         }
+
         if (direction & Transform::LEFT) {
             tile.x -= distance * TILESIZE;
             tile.x = floor(tile.x);

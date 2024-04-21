@@ -1451,9 +1451,10 @@ void reduce_impatient_customers(Entity& entity, float dt) {
     hp.pass_time(dt);
 
     // TODO actually do something when they get mad
-    if (hp.pct() <= 0) hp.reset();
-
-    log_warn("You wont like me when im angry");
+    if (hp.pct() <= 0) {
+        hp.reset();
+        log_warn("You wont like me when im angry");
+    }
 }
 
 void pass_time_for_active_fishing_games(Entity& entity, float dt) {
