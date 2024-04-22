@@ -358,23 +358,36 @@ void drop_held_furniture(Entity& player) {
     bool can_place =
         EntityHelper::isWalkableRawEntities(vec::to2(drop_location));
 
-    if (can_place) {
-        hf->get<CanBeHeld>().set_is_being_held(false);
-        hf->get<Transform>().update(drop_location);
-
-        ourCHF.update(-1, vec3{});
-        log_info("we {} dropped the furniture {} we were holding", player.id,
-                 hf->id);
-
-        EntityHelper::invalidatePathCache();
-
-        // TODO :PICKUP: i dont like that these are spread everywhere,
-        network::Server::play_sound(player.get<Transform>().as2(),
-                                    strings::sounds::PLACE);
-    }
-
     // need to make sure it doesnt place ontop of another one
     // log_info("you cant place that here...");
+    if (!can_place) {
+        return;
+    }
+
+    hf->get<CanBeHeld>().set_is_being_held(false);
+    Transform& hftrans = hf->get<Transform>();
+    hftrans.update(drop_location);
+
+    ourCHF.update(-1, vec3{});
+    log_info("we {} dropped the furniture {} we were holding", player.id,
+             hf->id);
+
+    EntityHelper::invalidatePathCache();
+
+    // TODO :PICKUP: i dont like that these are spread everywhere,
+    network::Server::play_sound(player.get<Transform>().as2(),
+                                strings::sounds::PLACE);
+
+    {
+        Transform& transform = player.get<Transform>();
+        auto my_bounds = transform.bounds();
+        auto their_bounds = hftrans.bounds();
+
+        if (raylib::CheckCollisionBoxes(my_bounds, their_bounds)) {
+            // player is inside dropped object
+            transform.update(vec::to3(transform.tile_behind(0.15f)));
+        }
+    }
 }
 
 void handle_grab_or_drop(Entity& player) {

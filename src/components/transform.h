@@ -159,6 +159,16 @@ struct Transform : public BaseComponent {
         vec2 tile = vec::to2(snap_position());
         return tile_infront_given_pos(tile, distance, face_direction());
     }
+    vec2 tile_behind(int distance) const {
+        vec2 tile = vec::to2(snap_position());
+        return tile_infront_given_pos(
+            tile, distance, offsetFaceDirection(face_direction(), 180));
+    }
+    vec2 tile_behind(float distance) const {
+        vec2 tile = vec::to2(snap_position());
+        return tile_infront_given_pos(
+            tile, distance, offsetFaceDirection(face_direction(), 180));
+    }
 
     /*
      * Given a tile, distance, and direction, returns the location of the
@@ -170,30 +180,36 @@ struct Transform : public BaseComponent {
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    static vec2 tile_infront_given_pos(vec2 tile, int dist,
+    static vec2 tile_infront_given_pos(vec2 tile, float distance,
                                        FrontFaceDirection direction) {
-        float distance = static_cast<float>(dist);
+        // {0.3, 4.08}, 1, Transform::Forward
+        // {0.3, ceil(4.08 + 1)} => ceil(5.08) => {0.3, 6}
 
         if (direction & Transform::FORWARD) {
-            tile.y += distance * TILESIZE;
             tile.y = ceil(tile.y);
+            tile.y += distance * TILESIZE;
         }
 
         if (direction & Transform::BACK) {
-            tile.y -= distance * TILESIZE;
             tile.y = floor(tile.y);
+            tile.y -= distance * TILESIZE;
         }
 
         if (direction & Transform::RIGHT) {
-            tile.x += distance * TILESIZE;
             tile.x = ceil(tile.x);
+            tile.x += distance * TILESIZE;
         }
 
         if (direction & Transform::LEFT) {
-            tile.x -= distance * TILESIZE;
             tile.x = floor(tile.x);
+            tile.x -= distance * TILESIZE;
         }
         return tile;
+    }
+    static vec2 tile_infront_given_pos(vec2 tile, int dist,
+                                       FrontFaceDirection direction) {
+        float distance = static_cast<float>(dist);
+        return tile_infront_given_pos(tile, distance, direction);
     }
 
     void turn_to_face_pos(const vec2 goal) {
@@ -221,7 +237,8 @@ struct Transform : public BaseComponent {
     // This exists so that its easy to make sure the real location
     // matches the preview location
     [[nodiscard]] vec3 drop_location() const {
-        return vec::snap(vec::to3(tile_infront(1)));
+        vec2 drop_1 = (tile_infront(1));
+        return vec::snap(vec::to3(drop_1));
     }
 
     // TODO private
