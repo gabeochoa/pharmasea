@@ -2,6 +2,11 @@
   "LOG_LEVEL": 2,
   "DEADZONE": 0.25,
   "theme": "default",
+  "fonts": {
+      "en_rev": "Gaegu-Bold.ttf",
+      "en_us": "Gaegu-Bold.ttf",
+      "ko_kr": "NotoSansKR.ttf"
+  },
   "themes" : {
       "grayscale": {
           "font": [255, 255, 255, 255], 

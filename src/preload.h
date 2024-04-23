@@ -45,7 +45,6 @@ struct Preload {
         load_translations();
         load_shaders();
 
-        load_fonts();
         load_textures();
         if (ENABLE_SOUND) {
             ext::init_audio_device();
@@ -98,10 +97,14 @@ struct Preload {
     std::vector<std::string> ui_theme_options();
 
     void on_language_change(const char* lang_name, const char* fn);
+
+   private:
     void _load_font_from_name(const std::string& filename,
                               const std::string& lang);
     const char* get_font_for_lang(const char* lang_name);
-    void load_fonts();
+    void load_fonts(const nlohmann::json& data);
+
+   public:
     void load_textures();
     void load_models();
     auto load_json_config_file(

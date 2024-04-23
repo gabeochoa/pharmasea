@@ -98,30 +98,23 @@ void Preload::_load_font_from_name(const std::string& filename,
     FontLibrary::get().load(fli, lang.c_str());
 }
 
-const char* Preload::get_font_for_lang(const char* lang_name) {
-    // TODO :BE: eventually load from json config
-    switch (hashString(lang_name)) {
-        case hashString("en_rev"):
-        case hashString("en_us"):
-            return "Gaegu-Bold.ttf";
-        case hashString("ko_kr"):
-            return "NotoSansKR.ttf";
-    }
-    return "Gaegu-Bold.ttf";
-}
-
-void Preload::load_fonts() {
+void Preload::load_fonts(const nlohmann::json& fonts) {
     // Font loading must happen after InitWindow
 
-    // TODO :BE: load from json
-    std::array<const char*, 3> langs = {
-        "en_us",
-        "en_rev",
-        "ko_kr",
-    };
+    const auto& font_object = fonts.get<nlohmann::json::object_t>();
+    // TODO we load every font on startup, even though 99% of the time
+    //      the user isnt going to change from the language they already have
+    //      selected
+    //      we could instead just load the new file when they try to change the
+    //      language
 
-    for (const auto lang : langs) {
-        _load_font_from_name(get_font_for_lang(lang), lang);
+    for (const auto& font_kv : font_object) {
+        std::string language = font_kv.first;
+        std::string font_name = font_kv.second;
+
+        log_info("loading font {} for language {}", font_name, language);
+
+        _load_font_from_name(font_name, language);
     }
 
     // default to en us
@@ -236,6 +229,8 @@ void Preload::load_config() {
         log_trace("LOG_LEVEL read from file: {}", LOG_LEVEL);
 
         DEADZONE = contents.value("DEADZONE", 0.25f);
+
+        load_fonts(contents["fonts"]);
 
         EXAMPLE_MAP = contents["DEFAULT_MAP"];
         log_trace("DEFAULT_MAP read from file: {}", EXAMPLE_MAP.size());
