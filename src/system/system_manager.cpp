@@ -1393,22 +1393,16 @@ void reset_customers_that_need_resetting(Entity& entity) {
         int max_num_orders =
             // max() here to avoid a situation where we get 0 after an upgrade
             (int) fmax(1, irsm.get<int>(ConfigKey::MaxNumOrders));
-        cod.num_orders_rem = randIn(1, max_num_orders);
 
-        cod.num_orders_had = 0;
-        // If we have a forced order use that otherwise grab a random unlocked
-        // drink
-        cod.current_order = cod.forced_first_order.value_or(
-            progressionManager.get_random_unlocked_drink());
-        cod.forced_first_order = {};
-        cod.order_state = CanOrderDrink::OrderState::Ordering;
+        cod.reset_customer(max_num_orders,
+                           progressionManager.get_random_unlocked_drink());
     }
 
     {
         // Set the patience based on how many ingredients there are
         // TODO add a map of ingredient to how long it probably takes to make
 
-        auto ingredients = get_req_ingredients_for_drink(cod.current_order);
+        auto ingredients = get_req_ingredients_for_drink(cod.get_order());
         float patience_multiplier =
             irsm.get<float>(ConfigKey::PatienceMultiplier);
         entity.get<HasPatience>().update_max(ingredients.count() * 30.f *

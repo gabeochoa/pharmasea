@@ -94,7 +94,7 @@ inline bool validate_drink_order(const Entity& customer, Drink orderedDrink,
 
     if (irsm.has_upgrade_unlocked(UpgradeClass::CantEvenTell)) {
         const CanOrderDrink& cod = customer.get<CanOrderDrink>();
-        size_t num_alc_drank = cod.num_alcoholic_drinks_had;
+        size_t num_alc_drank = cod.num_alcoholic_drinks_drank();
 
         Recipe recipe = RecipeLibrary::get().get(
             std::string(magic_enum::enum_name(orderedDrink)));
@@ -135,7 +135,7 @@ inline float get_speed_for_entity(Entity& entity) {
         // float stagger_multiplier = cha.ailment().stagger(); if
         // (stagger_multiplier != 0) base_speed *= stagger_multiplier;
 
-        int denom = randIn(1, std::max(1, cha.num_alcoholic_drinks_had));
+        int denom = randIn(1, std::max(1, cha.num_alcoholic_drinks_drank()));
         base_speed *= 1.f / denom;
 
         base_speed = fmaxf(1.f, base_speed);
@@ -159,7 +159,7 @@ inline void next_job(Entity& entity, JobType suggestion) {
         const CanOrderDrink& cod = entity.get<CanOrderDrink>();
 
         int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
-        bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
+        bool gotta_go = (cod.get_drinks_in_bladder() >= bladder_size);
         if (gotta_go) {
             entity.get<CanPerformJob>().current = JobType::Bathroom;
             entity.get<AIUseBathroom>().next_job = suggestion;
@@ -249,8 +249,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     // mark how much we are paying for this drink
     // + how much we will tip
     {
-        float base_price =
-            get_base_price_for_drink(canOrderDrink.current_order);
+        float base_price = get_base_price_for_drink(canOrderDrink.get_order());
 
         float speakeasy_multiplier = 1.f;
         if (irsm.has_upgrade_unlocked(UpgradeClass::Speakeasy)) {
@@ -262,7 +261,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
 
         float price_float = cost_multiplier * speakeasy_multiplier * base_price;
         int price = static_cast<int>(price_float);
-        canOrderDrink.tab_cost += price;
+        canOrderDrink.increment_tab(price);
 
         log_info(
             "Drink price was {} (base_price({}) * speakeasy({}) * "
@@ -272,11 +271,11 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
 
         const HasPatience& hasPatience = entity.get<HasPatience>();
         int tip = (int) fmax(0, ceil(price * 0.8f * hasPatience.pct()));
-        canOrderDrink.tip += tip;
+        canOrderDrink.increment_tip(tip);
 
         // If the drink has any "fancy" ingredients or other multipliers
-        canOrderDrink.tip = static_cast<int>(floor(
-            canOrderDrink.tip * drink.get<IsDrink>().get_tip_multiplier()));
+        canOrderDrink.apply_tip_multiplier(
+            drink.get<IsDrink>().get_tip_multiplier());
     }
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
@@ -311,7 +310,7 @@ inline void _set_customer_next_order(Entity& entity) {
 
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
     // TODO make a function set_order()
-    cod.current_order = progressionManager.get_random_unlocked_drink();
+    cod.set_order(progressionManager.get_random_unlocked_drink());
 
     reset_job_component<AIDrinking>(entity);
     next_job(entity, JobType::WaitInQueue);
@@ -375,7 +374,7 @@ inline void process_ai_drinking(Entity& entity, float dt) {
     // Do we want another drink?
     //
 
-    bool want_another = cod.num_orders_rem > 0;
+    bool want_another = cod.wants_more_drinks();
 
     // done drinking
     if (!want_another) {
@@ -444,7 +443,7 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     if (!aibathroom.ready()) return;
 
     int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
-    bool gotta_go = (cod.drinks_in_bladder >= bladder_size);
+    bool gotta_go = (cod.get_drinks_in_bladder() >= bladder_size);
     if (!gotta_go) return;
 
     bool found = aibathroom.target.find_if_missing(entity);
@@ -581,11 +580,10 @@ inline void process_ai_paying(Entity& entity, float dt) {
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
     {
         IsBank& bank = sophie.get<IsBank>();
-        bank.deposit_with_tip(cod.tab_cost, cod.tip);
+        bank.deposit_with_tip(cod.get_current_tab(), cod.get_current_tip());
 
         // i dont think we need to do this, but just in case
-        cod.tab_cost = 0;
-        cod.tip = 0;
+        cod.clear_tab_and_tip();
     }
 
     aiclosetab.line_wait.leave_line(reg, entity);

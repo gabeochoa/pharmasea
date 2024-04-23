@@ -817,7 +817,7 @@ void render_speech_bubble(const Entity& entity, float) {
                               0.75f * TILESIZE, raylib::WHITE);
     }
 
-    const auto model_name = get_model_name_for_drink(cod.current_order);
+    const auto model_name = get_model_name_for_drink(cod.get_order());
     const auto model = ModelLibrary::get().get(model_name);
     const ModelInfo& model_info = ModelInfoLibrary::get().get(model_name);
 

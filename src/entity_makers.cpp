@@ -1304,8 +1304,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet
 
-            if (cod.num_orders_had <= 0) return false;
-            if (cod.num_alcoholic_drinks_had <= 0) return false;
+            if (cod.num_drinks_drank() <= 0) return false;
+            if (cod.num_alcoholic_drinks_drank() <= 0) return false;
 
             const Entity& sophie =
                 EntityHelper::getNamedEntity(NamedEntity::Sophie);
@@ -1318,8 +1318,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
                 irsm.get<float>(ConfigKey::VomitFreqMultiplier);
 
             IsSpawner& vom_spewer = entity.get<IsSpawner>();
-            vom_spewer.set_total(static_cast<int>(cod.num_alcoholic_drinks_had *
-                                                  vomit_amount_multiplier));
+            vom_spewer.set_total(static_cast<int>(
+                cod.num_alcoholic_drinks_drank() * vomit_amount_multiplier));
             vom_spewer.set_time_between(5.f * vomit_freq_multiplier);
 
             bool should_vomit = true;
