@@ -465,3 +465,103 @@ void Preload::load_map_generation_info() {
                      MAP_GEN_INFO.patterns.size());
         });
 }
+
+void Preload::load_sounds() {
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "roblox_oof.ogg")
+            .c_str(),
+        strings::sounds::ROBLOX);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "vom.wav")
+            .c_str(),
+        strings::sounds::VOMIT);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
+            .c_str(),
+        strings::sounds::SELECT);
+
+    SoundLibrary::get().load(
+        Files::get()
+            // TODO replace sound
+            .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
+            .c_str(),
+        strings::sounds::CLICK);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "water.ogg")
+            .c_str(),
+        strings::sounds::WATER);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "blender.ogg")
+            .c_str(),
+        strings::sounds::BLENDER);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "solid.ogg")
+            .c_str(),
+        strings::sounds::SOLID);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "ice.ogg")
+            .c_str(),
+        strings::sounds::ICE);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "pickup.ogg")
+            .c_str(),
+        strings::sounds::PICKUP);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "place.ogg")
+            .c_str(),
+        strings::sounds::PLACE);
+
+    Files::get().for_resources_in_folder(
+        strings::settings::SOUNDS, "pa_announcements",
+        [](const std::string& name, const std::string& filename) {
+            SoundLibrary::get().load(
+                filename.c_str(),
+                fmt::format("pa_announcements_{}", name).c_str());
+        });
+}
+
+void Preload::load_music() {
+    MusicLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::MUSIC, "jaunt.ogg")
+            .c_str(),
+        "supermarket");
+
+    MusicLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::MUSIC, "theme.ogg")
+            .c_str(),
+        "theme");
+}
+
+void Preload::load_shaders() {
+    const std::tuple<const char*, const char*, const char*> shaders[] = {
+        {strings::settings::SHADERS, "post_processing.fs", "post_processing"},
+        {strings::settings::SHADERS, "discard_alpha.fs", "discard_alpha"},
+    };
+
+    for (const auto& s : shaders) {
+        ShaderLibrary::get().load(
+            Files::get()
+                .fetch_resource_path(std::get<0>(s), std::get<1>(s))
+                .c_str(),
+            std::get<2>(s));
+    }
+}
