@@ -54,6 +54,7 @@ struct IsProgressionManager : public BaseComponent {
                     magic_enum::enum_name<Ingredient>(ig));
 
                 unlock_ingredient(ig);
+                return bitset_utils::ForEachFlow::NormalFlow;
             });
         }
 

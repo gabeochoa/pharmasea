@@ -167,11 +167,12 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
         int i = 0;
 
         bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
-            if (i > MAX_VISIBLE_IGS) return;
+            if (i > MAX_VISIBLE_IGS) return bitset_utils::ForEachFlow::Break;
             Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
             text(Widget{igs[i]},
                  TranslatableString(get_string_for_ingredient(ig)));
             i++;
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
 
         auto index = rect::tpad(content, 80);

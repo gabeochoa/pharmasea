@@ -155,6 +155,7 @@ void LevelInfo::generate_model_test_map() {
                                 Ingredient ig =
                                     magic_enum::enum_value<Ingredient>(index);
                                 item.get<IsDrink>().add_ingredient(ig);
+                                return bitset_utils::ForEachFlow::NormalFlow;
                             });
 
                         canHold.update(EntityHelper::getEntityAsSharedPtr(item),

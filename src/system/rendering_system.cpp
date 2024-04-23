@@ -574,6 +574,7 @@ void render_trigger_area(const Entity& entity, float dt) {
                 // TODO translate?
                 fmt::format("{}", get_string_for_ingredient(ig)).c_str());
             i++;
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
     };
 

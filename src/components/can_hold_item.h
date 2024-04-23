@@ -21,6 +21,7 @@ struct CanHoldItem : public BaseComponent {
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
+    // TODO add a comment for why we are storing the item as a shared_ptr
     CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
         if (held_item != nullptr && !held_item->cleanup &&
             //
@@ -92,7 +93,7 @@ struct CanHoldItem : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.value4b(held_by);
 
-        // TODO we only need these for debug info
+        // we only need these for debug info
         s.ext(held_item, bitsery::ext::StdSmartPtr{});
         s.object(filter);
     }

@@ -83,7 +83,8 @@ struct BasePauseLayer : public Layer {
             config.unlocked_upgrades, [&](size_t index) {
                 UpgradeClass uc = magic_enum::enum_value<UpgradeClass>(index);
 
-                if (i > (int) rects.size()) return;
+                if (i > (int) rects.size())
+                    return bitset_utils::ForEachFlow::Break;
 
                 Widget icon = Widget{rects[i]};
 
@@ -98,6 +99,7 @@ struct BasePauseLayer : public Layer {
                     hovered_upgrade = upgradeImpl;
                 }
                 i++;
+                return bitset_utils::ForEachFlow::NormalFlow;
             });
 
         if (hovered_upgrade) {

@@ -85,12 +85,26 @@ int get_first_enabled_bit(const std::bitset<N>& bitset) {
     return -1;
 }
 
+// TODO combine with the one in entity helper?
+enum struct ForEachFlow {
+    NormalFlow = 0,
+    Continue = 1,
+    Break = 2,
+};
+
 template<size_t N>
 void for_each_enabled_bit(const std::bitset<N>& bitset,
-                          const std::function<void(size_t)>& cb) {
+                          const std::function<ForEachFlow(size_t)>& cb) {
     for (size_t i = 0; i < bitset.size(); ++i) {
         if (bitset.test(i)) {
-            cb(i);
+            ForEachFlow fef = cb(i);
+            switch (fef) {
+                case ForEachFlow::NormalFlow:
+                case ForEachFlow::Continue:
+                    break;
+                case ForEachFlow::Break:
+                    return;
+            }
         }
     }
 }

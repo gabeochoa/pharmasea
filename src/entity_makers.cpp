@@ -115,6 +115,7 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
     bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
         Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
         _add_ingredient_to_drink_NO_VALIDATION(drink, ig);
+        return bitset_utils::ForEachFlow::NormalFlow;
     });
 
     addsIG.decrement_uses();
@@ -978,6 +979,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
             any |= isdrink.can_add(ig);
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
         if (!any) return;
 

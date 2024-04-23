@@ -764,7 +764,8 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
         };
 
         // Already has the machine so we good
-        if (IngredientHelper::has_machines_required_for_ingredient(ig)) return;
+        if (IngredientHelper::has_machines_required_for_ingredient(ig))
+            return bitset_utils::ForEachFlow::Continue;
 
         switch (ig) {
             case Soda: {
@@ -840,6 +841,7 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
             case Invalid:
                 break;
         }
+        return bitset_utils::ForEachFlow::NormalFlow;
     });
 }
 
@@ -925,6 +927,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                             Ingredient ig =
                                 magic_enum::enum_value<Ingredient>(index);
                             ipm.unlock_ingredient(ig);
+                            return bitset_utils::ForEachFlow::NormalFlow;
                         });
 
                     spawn_machines_for_newly_unlocked_drink_DONOTCALL(ipm,

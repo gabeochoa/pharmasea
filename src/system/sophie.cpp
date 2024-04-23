@@ -301,6 +301,7 @@ void deleting_item_needed_for_recipe(Entity& entity) {
         has_req_machines =
             has_req_machines &&
             IngredientHelper::has_machines_required_for_ingredient(ents, ig);
+        return bitset_utils::ForEachFlow::NormalFlow;
         // log_info(
         // "hasMachines {} {}",
         // magic_enum::enum_name<Ingredient>(ig),

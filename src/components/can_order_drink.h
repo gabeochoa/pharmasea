@@ -33,12 +33,13 @@ struct CanOrderDrink : public BaseComponent {
 
     [[nodiscard]] bool current_order_has_alcohol() const {
         bool yes = false;
-        bitset_utils::for_each_enabled_bit(recipe(), [&](size_t index) {
-            // TODO add support for flow control
-            if (yes) return;
-            Ingredient ig = magic_enum::enum_value<Ingredient>(index);
-            yes |= ingredient::is_alcohol(ig);
-        });
+        bitset_utils::for_each_enabled_bit(
+            recipe(), [&](size_t index) -> bitset_utils::ForEachFlow {
+                if (yes) return bitset_utils::ForEachFlow::Break;
+                Ingredient ig = magic_enum::enum_value<Ingredient>(index);
+                yes |= ingredient::is_alcohol(ig);
+                return bitset_utils::ForEachFlow::NormalFlow;
+            });
         return yes;
     }
 
