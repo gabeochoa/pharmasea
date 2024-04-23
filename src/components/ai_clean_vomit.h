@@ -23,5 +23,6 @@ struct AICleanVomit : public AIComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<AIComponent>{});
+        s.object(target);
     }
 };

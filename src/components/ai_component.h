@@ -57,6 +57,14 @@ struct AITarget {
         }
         return true;
     }
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(target_id, bitsery::ext::StdOptional{},
+              [](S& sv, int& val) { sv.value4b(val); });
+    }
 };
 
 struct AILineWait {
@@ -113,7 +121,7 @@ struct AILineWait {
         if (spot_in_line != 0) {
             // Waiting in line :)
 
-            // TODO We didnt move so just wait a bit before trying again
+            // We didnt move so just wait a bit before trying again
 
             if (!can_move_up(reg, entity)) {
                 // We cant move so just wait a bit before trying again
@@ -167,8 +175,13 @@ struct AITakesTime {
 };
 
 struct AIComponent : BaseComponent {
-    // TODO :BE: what does cooldown do? when should we use it? do all AI need
-    // it?
+    // Cooldown provides a way for us to skip processing ai on certain frames
+    // when the ai is in a particular state.
+    // For example
+    //  Its not useful to run every single frame when the AI is just waiting for
+    //  you to make the drink. So instead we just have a cooldown where they
+    //  only check if theres a drink in front of them every second instead of
+    //  every frame
     float cooldown;
     float cooldownReset = 1.f;
 

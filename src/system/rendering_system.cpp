@@ -2,6 +2,12 @@
 #include "rendering_system.h"
 
 #include "../components/adds_ingredient.h"
+#include "../components/ai_clean_vomit.h"
+#include "../components/ai_close_tab.h"
+#include "../components/ai_drinking.h"
+#include "../components/ai_play_jukebox.h"
+#include "../components/ai_use_bathroom.h"
+#include "../components/ai_wait_in_queue.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
@@ -371,6 +377,28 @@ void render_debug_num_uses_left(const Entity& entity, float) {
                      std::string(content).c_str(), 50);
 }
 
+template<typename C>
+void _render_ai_target_if_exists(const Entity& entity) {
+    if (entity.is_missing<C>()) return;
+    const C& ai_component = entity.get<C>();
+
+    // no active target
+    if (ai_component.target.missing()) return;
+
+    OptEntity opt_target =
+        EntityHelper::getEntityForID(ai_component.target.id());
+
+    // Didnt find the target for some reason...
+    if (!opt_target.valid()) return;
+
+    // TODO I would like for non debug mode if there would be a tooltip
+    // with the customer's face or something so we know who is going there
+    Entity& target = opt_target.asE();
+    vec3 position = target.get<Transform>().pos();
+    DrawCubeCustom(position, 1.f, 1.f, 1.f, 0, ui::color::hot_pink,
+                   ui::color::hot_pink);
+}
+
 void render_debug_ai_info(const Entity& entity, float) {
     if (entity.is_missing<CanPerformJob>()) return;
 
@@ -382,6 +410,12 @@ void render_debug_ai_info(const Entity& entity, float) {
         fmt::format("{}", magic_enum::enum_name<JobType>(cpj.current));
     DrawFloatingText(vec::raise(transform.raw(), 2.0f), Preload::get().font,
                      std::string(content).c_str(), 150);
+
+    _render_ai_target_if_exists<AICleanVomit>(entity);
+    _render_ai_target_if_exists<AIUseBathroom>(entity);
+    _render_ai_target_if_exists<AIDrinking>(entity);
+    _render_ai_target_if_exists<AIWaitInQueue>(entity);
+    _render_ai_target_if_exists<AIPlayJukebox>(entity);
 }
 
 void render_debug_filter_info(const Entity& entity, float) {
