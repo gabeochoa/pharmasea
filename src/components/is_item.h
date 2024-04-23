@@ -44,7 +44,7 @@ struct IsItem : public BaseComponent {
     }
 
     [[nodiscard]] bool is_held() const {
-        // TODO might need to do something more sophisticated
+        // might need to do something more sophisticated
         return held_by != EntityType::Unknown;
     }
 

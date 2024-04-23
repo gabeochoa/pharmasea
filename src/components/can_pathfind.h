@@ -91,17 +91,12 @@ struct CanPathfind : public BaseComponent {
 
         // TODO For now we are just going to let the customer noclip
         if (path.empty()) {
-            // TODO we dont know how to get the entity we are at the moment
             log_warn("Forcing {} {} to noclip in order to get valid path",
-                     "some entity with canpathfind", "idk");
-            // log_warn("Forcing {} {} to noclip in order to get valid path",
-            // entity.name(), entity.id);
+                     "some entity with canpathfind", parent->name(),
+                     parent->id);
             auto new_path =
                 bfs::find_path(start, goal, [](auto&&) { return true; });
             update_path(new_path);
-            // system_manager::logging_manager::announce(
-            // entity, fmt::format("gen path from {} to {} with {} steps", me,
-            // goal, p_size()));
         }
         // what happens if we get here and the path is still empty?
         if (path.empty()) {

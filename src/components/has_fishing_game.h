@@ -54,7 +54,6 @@ struct HasFishingGame : public BaseComponent {
         countdown -= dt;
 
         if (countdown <= 0.f) {
-            // TODO figure out scoring
             float amount = abs(progress - best_location);
 
             int index = first_matching<Band, 4>(
