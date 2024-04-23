@@ -280,7 +280,7 @@ void update_held_item_position(Entity& entity, float) {
                        ? get_new_held_position_custom(entity)
                        : get_new_held_position_default(entity);
 
-    can_hold_item.item()->get<Transform>().update(new_pos);
+    can_hold_item.item().get<Transform>().update(new_pos);
 }
 
 void reset_highlighted(Entity& entity, float) {
@@ -352,7 +352,7 @@ void process_conveyer_items(Entity& entity, float dt) {
         // can this furniture hold the item we are passing?
         // some have filters
         bool can_hold =
-            furnCHI.can_hold(*(canHold.item()), RespectFilter::ReqOnly);
+            furnCHI.can_hold(canHold.const_item(), RespectFilter::ReqOnly);
 
         return can_hold;
     };
@@ -398,7 +398,8 @@ void process_conveyer_items(Entity& entity, float dt) {
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
-    matchCHI.update(ourCHI.item(), entity.id);
+    matchCHI.update(EntityHelper::getEntityAsSharedPtr(ourCHI.item()),
+                    entity.id);
 
     ourCHI.update(nullptr, -1);
 
@@ -452,7 +453,7 @@ void process_grabber_items(Entity& entity, float) {
 
             // Can we hold the item it has?
             bool can_hold = entity.get<CanHoldItem>().can_hold(
-                *(furnCHI.const_item()), RespectFilter::All);
+                (furnCHI.const_item()), RespectFilter::All);
 
             // we cant
             if (!can_hold) return false;
@@ -470,7 +471,8 @@ void process_grabber_items(Entity& entity, float) {
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
-    ourCHI.update(matchCHI.item(), entity.id);
+    ourCHI.update(EntityHelper::getEntityAsSharedPtr(matchCHI.item()),
+                  entity.id);
     matchCHI.update(nullptr, -1);
 
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
@@ -487,7 +489,7 @@ void process_grabber_filter(Entity& entity, float) {
     // - or we should set the filter
 
     EntityFilter& ef = canHold.get_filter();
-    ef.set_filter_with_entity(*(canHold.const_item()));
+    ef.set_filter_with_entity(canHold.const_item());
 }
 
 template<typename... TArgs>
@@ -563,7 +565,7 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
 
     // Delete the currently held item
     if (canHold.is_holding_item()) {
-        canHold.item()->cleanup = true;
+        canHold.item().cleanup = true;
         canHold.update(nullptr, -1);
     }
 
@@ -589,10 +591,10 @@ void process_is_indexed_container_holding_incorrect_item(Entity& entity,
     if (canHold.empty()) return;
 
     int current_value = indexer.value();
-    int item_value = canHold.item()->get<HasSubtype>().get_type_index();
+    int item_value = canHold.item().get<HasSubtype>().get_type_index();
 
     if (current_value != item_value) {
-        canHold.item()->cleanup = true;
+        canHold.item().cleanup = true;
         canHold.update(nullptr, -1);
     }
 }
@@ -613,10 +615,10 @@ void release_mop_buddy_at_start_of_day(Entity& entity) {
     if (chi.empty()) return;
 
     // grab yaboi
-    std::shared_ptr<Item> item = chi.item();
+    Item& item = chi.item();
 
     // let go of the item
-    item->get<IsItem>().set_held_by(EntityType::Unknown, -1);
+    item.get<IsItem>().set_held_by(EntityType::Unknown, -1);
     chi.update(nullptr, -1);
 }
 
@@ -635,7 +637,7 @@ void delete_trash_when_leaving_planning(Entity& entity) {
         // Also delete the held item
         CanHoldItem& markedCHI = marked_entity->get<CanHoldItem>();
         if (!markedCHI.empty()) {
-            markedCHI.item()->cleanup = true;
+            markedCHI.item().cleanup = true;
             markedCHI.update(nullptr, -1);
         }
     }
@@ -675,10 +677,9 @@ void delete_held_items_when_leaving_inround(Entity& entity) {
     if (canHold.empty()) return;
 
     // Mark it as deletable
-    const std::shared_ptr<Item>& item = canHold.item();
-
     // let go of the item
-    item->cleanup = true;
+    Item& item = canHold.item();
+    item.cleanup = true;
     canHold.update(nullptr, -1);
 }
 
@@ -1223,12 +1224,13 @@ void process_has_rope(Entity& entity, float) {
         if (!e) continue;
         // only route to players
         if (!check_type(*e, EntityType::Player)) continue;
-        auto i = e->get<CanHoldItem>().item();
-        if (!i) continue;
+        const CanHoldItem& e_chi = e->get<CanHoldItem>();
+        if (!e_chi.is_holding_item()) continue;
+        const Item& i = e_chi.item();
         // that are holding spouts
-        if (!check_type(*i, EntityType::SodaSpout)) continue;
+        if (!check_type(i, EntityType::SodaSpout)) continue;
         // that match the one we were holding
-        if (i->id != chi.last_id()) continue;
+        if (i.id != chi.last_id()) continue;
         player = *e;
     }
     if (!player) return;
@@ -1279,7 +1281,7 @@ void process_squirter(Entity& entity, float) {
     if (sqCHI.empty()) return;
 
     // cant squirt into this !
-    if (sqCHI.item()->is_missing<IsDrink>()) return;
+    if (sqCHI.item().is_missing<IsDrink>()) return;
 
     // so we got something, lets see if anyone around can give us something
     // to use
@@ -1290,18 +1292,18 @@ void process_squirter(Entity& entity, float) {
             const CanHoldItem& fchi = f.get<CanHoldItem>();
             if (fchi.empty()) return false;
 
-            std::shared_ptr<Item> item = fchi.const_item();
+            const Item& item = fchi.const_item();
 
             // TODO should we instead check for <AddsIngredient>?
-            if (!check_type(*item, EntityType::Alcohol)) return false;
+            if (!check_type(item, EntityType::Alcohol)) return false;
             return true;
         });
     if (!closest_furniture) return;
 
-    std::shared_ptr<Entity> drink = sqCHI.item();
-    std::shared_ptr<Item> item = closest_furniture->get<CanHoldItem>().item();
+    Entity& drink = sqCHI.item();
+    Item& item = closest_furniture->get<CanHoldItem>().item();
 
-    bool cleanup = items::_add_item_to_drink_NO_VALIDATION(*drink, *item);
+    bool cleanup = items::_add_item_to_drink_NO_VALIDATION(drink, item);
     if (cleanup) {
         closest_furniture->get<CanHoldItem>().update(nullptr, -1);
     }
@@ -1315,7 +1317,7 @@ void process_trash(Entity& entity, float) {
     // If we arent holding anything, nothing to delete
     if (trashCHI.empty()) return;
 
-    trashCHI.item()->cleanup = true;
+    trashCHI.item().cleanup = true;
     trashCHI.update(nullptr, -1);
 }
 
@@ -1352,7 +1354,7 @@ void process_pnumatic_pipe_movement(Entity& entity, float) {
         return;
     }
 
-    int cur_id = chi.const_item()->id;
+    int cur_id = chi.const_item().id;
     ipp.item_id = cur_id;
 }
 
@@ -1565,8 +1567,7 @@ void cleanup_old_store_options() {
         if (entity.is_missing<CanHoldItem>()) continue;
         CanHoldItem& chi = entity.get<CanHoldItem>();
         if (!chi.is_holding_item()) continue;
-        if (!chi.item()) continue;
-        chi.item()->cleanup = true;
+        chi.item().cleanup = true;
     }
 }
 

@@ -32,7 +32,6 @@ struct AIDrinking : public AIComponent {
                 }
             }
 
-            // TODO in debug mode add renderer for ai target location?
             convert_to_type(EntityType::AITargetLocation, entity, position);
             return entity;
         }

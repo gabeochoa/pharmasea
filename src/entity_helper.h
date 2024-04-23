@@ -93,12 +93,17 @@ struct EntityHelper {
     }
 
     // TODO exists as a conversion for things that need shared_ptr right now
-    static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity) {
-        if (!entity) return {};
+    static std::shared_ptr<Entity> getEntityAsSharedPtr(const Entity& entity) {
         for (std::shared_ptr<Entity> current_entity : get_entities()) {
-            if (entity->id == current_entity->id) return current_entity;
+            if (entity.id == current_entity->id) return current_entity;
         }
         return {};
+    }
+
+    static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity) {
+        if (!entity) return {};
+        const Entity& e = entity.asE();
+        return getEntityAsSharedPtr(e);
     }
 
     static OptEntity getClosestMatchingFurniture(

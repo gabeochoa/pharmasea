@@ -48,16 +48,8 @@ struct CanHoldItem : public BaseComponent {
         return *this;
     }
 
-    // TODO this isnt const because we want to write to the item
-    // we could make this const and then expose certain things that we want to
-    // change separately like 'held_by'
-    // (change to use update instead and make this const)
-    [[nodiscard]] std::shared_ptr<Entity>& item() { return held_item; }
-
-    // const?
-    [[nodiscard]] const std::shared_ptr<Entity> const_item() const {
-        return held_item;
-    }
+    [[nodiscard]] Entity& item() const { return *held_item; }
+    [[nodiscard]] const Entity& const_item() const { return *held_item; }
 
     CanHoldItem& set_filter(EntityFilter ef) {
         filter = ef;

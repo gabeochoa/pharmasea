@@ -354,14 +354,16 @@ void process_table_working(Entity& table, HasWork& hasWork, Entity& player,
     CanHoldItem& tableCHI = table.get<CanHoldItem>();
     if (tableCHI.empty()) return;
 
-    if (!tableCHI.item()->has<HasWork>()) return;
+    if (!tableCHI.const_item().has<HasWork>()) return;
 
-    // TODO add comment on why we have to run the "itemHasWork" and not
-    // hasWork.call()
-    HasWork& itemHasWork = tableCHI.item()->get<HasWork>();
-    itemHasWork.call(hasWork, *tableCHI.item(), player, dt);
-
-    return;
+    Item& item = tableCHI.item();
+    // We have to call the item's hasWork because the table
+    // doesnt actually do anything, its the item that we are working
+    //
+    // It has to be this way otherwise you would be able to do work while just
+    // standing around which wouldnt make sense
+    HasWork& itemHasWork = item.get<HasWork>();
+    itemHasWork.call(hasWork, item, player, dt);
 }
 
 void make_table(Entity& table, vec2 pos) {
@@ -597,12 +599,12 @@ void make_ice_machine(Entity& machine, vec2 pos) {
         [](Entity&, HasWork& hasWork, Entity& player, float dt) {
             CanHoldItem& chi = player.get<CanHoldItem>();
             if (chi.empty()) return;
-            std::shared_ptr<Item> item = chi.item();
-            if (!check_if_drink(*item)) return;
+            Item& item = chi.item();
+            if (!check_if_drink(item)) return;
 
             Ingredient ing = Ingredient::IceCubes;
 
-            IsDrink& isdrink = item->get<IsDrink>();
+            IsDrink& isdrink = item.get<IsDrink>();
             if (isdrink.has_ingredient(ing)) return;
 
             const float amt = 1.0f;
@@ -610,8 +612,7 @@ void make_ice_machine(Entity& machine, vec2 pos) {
 
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
-
-                items::_add_ingredient_to_drink_NO_VALIDATION(*item, ing);
+                items::_add_ingredient_to_drink_NO_VALIDATION(item, ing);
             }
         });
 }
@@ -858,9 +859,9 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
                 const CanHoldItem& playerCHI = entity.get<CanHoldItem>();
                 // not holding anything
                 if (playerCHI.empty()) return {true, 0.25f};
-                std::shared_ptr<Item> item = playerCHI.const_item();
+                const Item& item = playerCHI.const_item();
                 // Has to be holding mop
-                if (check_type(*item, EntityType::Mop)) return {true, 2.f};
+                if (check_type(item, EntityType::Mop)) return {true, 2.f};
 
                 // holding something other than mop
                 return {false, 0.f};
@@ -962,10 +963,10 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         // not holding anything
         if (playerCHI.empty()) return;
-        std::shared_ptr<Item> item = playerCHI.const_item();
+        Item& item = playerCHI.item();
         // not holding item that adds ingredients
-        if (item->is_missing<AddsIngredient>()) return;
-        const AddsIngredient& addsIG = item->get<AddsIngredient>();
+        if (item.is_missing<AddsIngredient>()) return;
+        const AddsIngredient& addsIG = item.get<AddsIngredient>();
 
         bool valid = addsIG.validate(drink);
         if (!valid) return;
@@ -985,7 +986,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
 
-            bool cleaned_up = _add_item_to_drink_NO_VALIDATION(drink, *item);
+            bool cleaned_up = _add_item_to_drink_NO_VALIDATION(drink, item);
             if (cleaned_up) playerCHI.update(nullptr, -1);
         }
     };

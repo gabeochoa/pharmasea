@@ -225,8 +225,8 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
         return;
     }
 
-    std::shared_ptr<Item> drink = reg.get<CanHoldItem>().item();
-    if (!drink || !check_if_drink(*drink)) {
+    Item& drink = regCHI.item();
+    if (!check_if_drink(drink)) {
         log_info("this isnt a drink");
         aiwait.reset();
         return;
@@ -235,7 +235,7 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     log_info("i got **A** drink ");
 
     Drink orderdDrink = canOrderDrink.order();
-    bool was_drink_correct = validate_drink_order(entity, orderdDrink, *drink);
+    bool was_drink_correct = validate_drink_order(entity, orderdDrink, drink);
     if (!was_drink_correct) {
         log_info("this isnt what i ordered");
         aiwait.reset();
@@ -276,11 +276,11 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
 
         // If the drink has any "fancy" ingredients or other multipliers
         canOrderDrink.tip = static_cast<int>(floor(
-            canOrderDrink.tip * drink->get<IsDrink>().get_tip_multiplier()));
+            canOrderDrink.tip * drink.get<IsDrink>().get_tip_multiplier()));
     }
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
-    ourCHI.update(regCHI.item(), entity.id);
+    ourCHI.update(EntityHelper::getEntityAsSharedPtr(regCHI.item()), entity.id);
     regCHI.update(nullptr, -1);
 
     log_info("got it");
@@ -359,7 +359,7 @@ inline void process_ai_drinking(Entity& entity, float dt) {
 
     // Done with my drink, delete it
     CanHoldItem& chi = entity.get<CanHoldItem>();
-    chi.item()->cleanup = true;
+    chi.item().cleanup = true;
     chi.update(nullptr, -1);
 
     // Mark our current order finished

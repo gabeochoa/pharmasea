@@ -83,12 +83,13 @@ struct GameDebugLayer : public Layer {
                          NO_TRANSLATE(fmt::format(
                              "holding furniture?: {}",
                              furniture ? furniture->name() : "Empty")));
-                    text(Widget{item_div},
-                         NO_TRANSLATE(fmt::format(
-                             "holding item?: {}",
-                             player->get<CanHoldItem>().is_holding_item()
-                                 ? player->get<CanHoldItem>().item()->name()
-                                 : "Empty")));
+                    text(
+                        Widget{item_div},
+                        NO_TRANSLATE(fmt::format(
+                            "holding item?: {}",
+                            player->get<CanHoldItem>().is_holding_item()
+                                ? player->get<CanHoldItem>().const_item().name()
+                                : "Empty")));
                 } else {
                     text(Widget{player_info},
                          NO_TRANSLATE("No matching player found"));
