@@ -215,8 +215,8 @@ struct NetworkLayer : public Layer {
             // TODO make that a function
             // convert_from_baseline_to_current_resolution?
 
-            float min_name_height = 32.f * (WIN_HF() / 720.f);
-            float max_name_height = 64.f * (WIN_HF() / 720.f);
+            float min_name_height = lobby_screen.scale_to_resolution(32.f);
+            float max_name_height = lobby_screen.scale_to_resolution(64.f);
             float height_per = std::min(
                 max_name_height,
                 std::max(min_name_height, lobby_area.height / num_players));

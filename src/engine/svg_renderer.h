@@ -21,6 +21,9 @@ struct SVGRenderer {
         background_texture = TextureLibrary::get().get(svg_name);
     }
 
+    // Provide a way to scale from a 720p number to the current resolution
+    float scale_to_resolution(float val) { return val * (WIN_HF() / 720.f); }
+
     void draw_background() {
         float scale = background_texture.width / 1280.f;
         raylib::DrawTextureEx(background_texture, {0, 0}, 0.f, scale, WHITE);
