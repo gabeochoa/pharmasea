@@ -31,6 +31,7 @@ inline bool validate_ip(const std::string& ip) {
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     SVGRenderer lobby_screen;
+    SVGRenderer network_selection_screen;
 
     std::string my_ip_address;
     bool should_show_host_ip = false;
@@ -38,7 +39,8 @@ struct NetworkLayer : public Layer {
     NetworkLayer()
         : Layer("Network"),
           ui_context(std::make_shared<ui::UIContext>()),
-          lobby_screen("lobby_screen") {
+          lobby_screen("lobby_screen"),
+          network_selection_screen("network_selection_screen") {
         if (network_info) {
             if (!Settings::get().data.username.empty()) {
                 network_info->lock_in_username();
@@ -161,56 +163,38 @@ struct NetworkLayer : public Layer {
         }
     }
 
-    void draw_role_selector_screen(float dt) {
-        float bg_width = WIN_WF() * 0.6f;
-        float bg_height = WIN_HF() * 0.8f;
-        auto background = Rectangle{(WIN_WF() - bg_width) / 2.f,   //
-                                    (WIN_HF() - bg_height) / 2.f,  //
-                                    bg_width, bg_height};
-        div(background, color::brownish_purple);
+    void draw_role_selector_screen(float) {
+        network_selection_screen.draw_background();
 
-        auto [left, right] = rect::vsplit<2>(background);
-        left = rect::rpad(left, 95);
-        right = rect::lpad(right, 5);
-
-        auto [top_left, bottom_left] = rect::hsplit<2>(left);
-        auto [top_right, bottom_right] = rect::hsplit<2>(right);
-
-        {
-            auto [host, join] =
-                rect::hsplit<2>(rect::vpad(rect::hpad(top_right, 20), 20));
-
-            host = rect::bpad(host, 95);
-            join = rect::tpad(join, 5);
-
-            if (ps::button(Widget{host},
-                           TranslatableString(strings::i18n::HOST))) {
-                network_info->set_role(network::Info::Role::s_Host);
-            }
-            if (ps::button(Widget{join},
-                           TranslatableString(strings::i18n::JOIN))) {
-                network_info->set_role(network::Info::Role::s_Client);
-            }
+        if (network_selection_screen.button(
+                "HostButton", TranslatableString(strings::i18n::HOST))) {
+            network_info->set_role(network::Info::Role::s_Host);
+        }
+        if (network_selection_screen.button(
+                "JoinButton", TranslatableString(strings::i18n::JOIN))) {
+            network_info->set_role(network::Info::Role::s_Client);
         }
 
-        {
-            auto [a, b, c, back] = rect::hsplit<4>(bottom_left);
-            (void) a;
-            (void) b;
-            (void) c;
-
-            back = rect::hpad(back, 10);
-            if (ps::button(Widget{back},
-                           TranslatableString(strings::i18n::BACK_BUTTON))) {
-                MenuState::get().clear_history();
-                MenuState::get().set(menu::State::Root);
-            }
+        if (network_selection_screen.button(
+                "BackButton", TranslatableString(strings::i18n::BACK_BUTTON))) {
+            MenuState::get().clear_history();
+            MenuState::get().set(menu::State::Root);
         }
 
-        // Even though the ui shows up at the top
-        // we dont want the tabbing to be first, so
-        // we put it here
-        draw_username_with_edit(top_left, dt);
+        // draw lobby username
+        {
+            network_selection_screen.text(
+                "UsernameText", TranslatableString(strings::i18n::USERNAME));
+
+            network_selection_screen.text(
+                "PlayerUsernameText",
+                NO_TRANSLATE(Settings::get().data.username));
+
+            if (network_selection_screen.button(
+                    "EditButton", TranslatableString(strings::i18n::EDIT))) {
+                network_info->unlock_username();
+            }
+        }
     }
 
     void draw_connected_screen(float) {
