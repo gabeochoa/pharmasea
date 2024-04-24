@@ -141,8 +141,8 @@ struct Parser {
     explicit Parser(const std::string& source) : input(source) { pos = 0; }
 
     void validate(unsigned char c, unsigned char m, const std::string& msg) {
-        VALIDATE(c == m,
-                 fmt::format("{} != {} => {}", (char) c, (char) m, msg));
+        VALIDATE(c == m, fmt::format("{} != {} => {} (next char is {}) ",
+                                     (char) c, (char) m, msg, input[pos + 1]));
     }
 
     unsigned char next_char() const { return input[pos]; }
@@ -154,7 +154,7 @@ struct Parser {
     bool is_eof() const { return pos >= input.size(); }
 
     unsigned char consume() {
-        // std::cout << "consumed: " << input[pos] << std::endl;
+        // std::cout << input[pos];
         return input[pos++];
     }
 
@@ -238,6 +238,7 @@ struct Parser {
 
             children = parse_nodes();
 
+            consume_whitespace();
             validate(consume(), '<', "parsing a closing tag open");
             validate(consume(), '/', "parsing a closing tag slash");
             VALIDATE(parse_tag_name() == tag_name, "parsing an tag name close");
@@ -258,8 +259,8 @@ struct Parser {
     SVGNodes parse_nodes() {
         SVGNodes nodes;
         int i = 0;
-        // only 20 max siblings for now :)
-        while (i++ < 20) {
+        // only 100 max siblings for now :)
+        while (i++ < 100) {
             consume_whitespace();
             if (is_eof() || starts_with("</")) break;
             auto single_ = parse_node();

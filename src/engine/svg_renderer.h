@@ -2,6 +2,9 @@
 #pragma once
 
 #include "../strings.h"
+#include "log.h"
+//
+#include "ui/element_result.h"
 #include "ui/svg.h"
 #include "ui/ui.h"
 
@@ -22,27 +25,33 @@ struct SVGRenderer {
         raylib::DrawTextureEx(background_texture, {0, 0}, 0.f, scale, WHITE);
     }
 
-    ui::ElementResult button(const std::string& id,
-                             const TranslatableString& content) {
+    Rectangle rect(const std::string& id) {
         auto element = SVGNode::find_matching_id(root, id);
         if (!element.has_value()) {
-            log_warn("Failed to find {} in svg {}", id, svg_name);
-            return ui::ElementResult{false};
+            log_error("Failed to find {} in svg {}", id, svg_name);
+            return Rectangle{};
         }
-        Rectangle rect = element.value().get_and_scale_rect();
+        return element.value().get_and_scale_rect();
+    }
+
+    ui::ElementResult button(const std::string& id,
+                             const TranslatableString& content) {
+        auto r = rect(id);
         // log_info("id {} @ {} ", id, rect);
-        return ui::button(ui::Widget{rect}, content, false);
+        return ui::button(ui::Widget{r}, content, false);
     }
 
     ui::ElementResult text(const std::string& id,
                            const TranslatableString& content) {
-        auto element = SVGNode::find_matching_id(root, id);
-        if (!element.has_value()) {
-            log_warn("Failed to find {} in svg {}", id, svg_name);
-            return ui::ElementResult{false};
-        }
-        Rectangle rect = element.value().get_and_scale_rect();
+        auto r = rect(id);
         // log_info("id {} @ {} ", id, rect);
-        return ui::text(ui::Widget{rect}, content);
+        return ui::text(ui::Widget{r}, content);
+    }
+
+    ui::ElementResult checkbox(const std::string& id,
+                               const ui::CheckboxData& data) {
+        auto r = rect(id);
+        // log_info("id {} @ {} ", id, rect);
+        return ui::checkbox(ui::Widget{r}, data);
     }
 };

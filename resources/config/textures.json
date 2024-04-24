@@ -104,6 +104,11 @@
             "folder": "ui",
             "filename": "main_menu.png",
             "library_name": "main_menu"
+        },
+        {
+            "folder": "ui",
+            "filename": "lobby_screen.png",
+            "library_name": "lobby_screen"
         }
         // TODO btw if you have two textures with the same name but in different folders 
         // only the first one loaded matters 

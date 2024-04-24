@@ -9,6 +9,7 @@
 //
 #include "../globals.h"
 //
+#include "../engine/svg_renderer.h"
 #include "../engine/toastmanager.h"
 #include "../local_ui.h"
 #include "../network/network.h"
@@ -29,12 +30,15 @@ inline bool validate_ip(const std::string& ip) {
 
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
+    SVGRenderer lobby_screen;
 
     std::string my_ip_address;
     bool should_show_host_ip = false;
 
     NetworkLayer()
-        : Layer("Network"), ui_context(std::make_shared<ui::UIContext>()) {
+        : Layer("Network"),
+          ui_context(std::make_shared<ui::UIContext>()),
+          lobby_screen("lobby_screen") {
         if (network_info) {
             if (!Settings::get().data.username.empty()) {
                 network_info->lock_in_username();
@@ -209,108 +213,95 @@ struct NetworkLayer : public Layer {
         draw_username_with_edit(top_left, dt);
     }
 
-    void draw_connected_screen(float dt) {
-        float bg_width = WIN_WF() * 0.6f;
-        float bg_height = WIN_HF() * 0.8f;
-        auto background = Rectangle{(WIN_WF() - bg_width) / 2.f,   //
-                                    (WIN_HF() - bg_height) / 2.f,  //
-                                    bg_width, bg_height};
-        div(background, color::brownish_purple);
+    void draw_connected_screen(float) {
+        lobby_screen.draw_background();
 
-        auto [left, right] = rect::vsplit<2>(background);
-        left = rect::rpad(left, 95);
-        right = rect::lpad(right, 5);
-
-        auto [username, ip_address, disconnect] = rect::hsplit<3>(left);
-        auto [top_right, bottom_right] = rect::hsplit<2>(right);
-        auto start = rect::vpad(rect::hpad(bottom_right, 30), 30);
-
-        disconnect = rect::hpad(rect::vpad(disconnect, 20), 20);
-        /// Buttons
+        // draw lobby
         {
-            if (network_info->is_host()) {
-                if (ps::button(Widget{start},
-                               TranslatableString(strings::i18n::START))) {
-                    MenuState::get().set(menu::State::Game);
-                    GameState::get().set(game::State::Lobby);
-                }
-                if (ps::button(Widget{disconnect},
-                               TranslatableString(strings::i18n::DISCONNECT))) {
-                    network::Info::reset_connections();
-                    return;
-                }
-            } else {
-                if (ps::button(Widget{disconnect},
-                               TranslatableString(strings::i18n::DISCONNECT))) {
-                    network::Info::reset_connections();
-                    return;
-                }
+            lobby_screen.text(
+                "LobbyText",
+                TODO_TRANSLATE("Lobby", TodoReason::SubjectToChange));
+
+            Rectangle lobby_area = lobby_screen.rect("LobbyPlayersText");
+
+            int num_players =
+                std::max(1, (int) network_info->client->remote_players.size());
+            // TODO make that a function
+            // convert_from_baseline_to_current_resolution?
+            float height_per = std::max(32.f * (WIN_HF() / 720.f),
+                                        lobby_area.height / num_players);
+
+            Rectangle player_name{lobby_area.x, lobby_area.y, lobby_area.width,
+                                  height_per};
+
+            for (const auto& kv : network_info->client->remote_players) {
+                text(
+                    player_name,
+                    NO_TRANSLATE(fmt::format(
+                        "{}({})", kv.second->get<HasName>().name(), kv.first)));
+
+                player_name.y += height_per;
             }
         }
 
-        // your ip is .... show copy
-        if (network_info->is_host()) {
-            auto your_ip = rect::lpad(ip_address, 20);
-            your_ip = rect::rpad(your_ip, 60);
+        // Buttons
+        {
+            if (network_info->is_host()) {
+                if (lobby_screen.button(
+                        "StartButton",
+                        TranslatableString(strings::i18n::START))) {
+                    MenuState::get().set(menu::State::Game);
+                    GameState::get().set(game::State::Lobby);
+                }
+            }
 
-            auto [_a, label, ip_addr, control] = rect::hsplit<4>(your_ip, 30);
+            if (lobby_screen.button(
+                    "DisconnectButton",
+                    TranslatableString(strings::i18n::DISCONNECT))) {
+                network::Info::reset_connections();
+            }
+        }
 
-            // TODO not translated maybe we dont need this piece
-            // is the format XXX.XXX just obvious its an ip address
-            text(Widget{label},
-                 TODO_TRANSLATE("Your IP is:", TodoReason::Format));
+        // draw ip address
+        {
+            lobby_screen.text("IPAddrText",
+                              TODO_TRANSLATE("IP Address", TodoReason::Format));
 
             auto ip = should_show_host_ip ? network::my_remote_ip_address
                                           : "***.***.***.***";
-            text(Widget{ip_addr}, NO_TRANSLATE(ip));
+            lobby_screen.text("IPAddrValueText", NO_TRANSLATE(ip));
 
-            auto [check, copy] = rect::vsplit<2>(control, 5);
-
-            // TODO default value wont be setup correctly without this
-            // bool sssb = Settings::get().data.show_streamer_safe_box;
             std::string show_hide_host_ip_text = should_show_host_ip
                                                      ? strings::i18n::HIDE_IP
                                                      : strings::i18n::SHOW_IP;
-            if (auto result = ps::checkbox(
-                    Widget{check},
-                    CheckboxData{.selected = should_show_host_ip,
-                                 .content = show_hide_host_ip_text},
-                    ps::Size::Small);
-                result) {
+            if (lobby_screen.checkbox(
+                    "ShowHideButton",
+                    ui::CheckboxData{
+                        .selected = should_show_host_ip,
+                        .content = TranslatableString(show_hide_host_ip_text)
+                                       .str(TodoReason::UILibrary)})) {
                 should_show_host_ip = !should_show_host_ip;
             }
 
-            if (ps::button(Widget{copy},
-                           TranslatableString(strings::i18n::COPY_IP),
-                           ps::Size::Small)) {
+            if (lobby_screen.button(
+                    "CopyButton", TranslatableString(strings::i18n::COPY_IP))) {
                 ext::set_clipboard_text(my_ip_address.c_str());
             }
         }
 
+        // draw lobby username
         {
-            auto [lobby_label, player_box] = rect::hsplit<2>(top_right);
+            lobby_screen.text("UsernameText",
+                              TranslatableString(strings::i18n::USERNAME));
 
-            text(Widget{lobby_label},
-                 TODO_TRANSLATE("Lobby", TodoReason::SubjectToChange));
+            lobby_screen.text("PlayerUsernameText",
+                              NO_TRANSLATE(Settings::get().data.username));
 
-            auto players = rect::hsplit<4>(player_box, 15);
-
-            int i = 0;
-            for (const auto& kv : network_info->client->remote_players) {
-                // TODO figure out why there are null rps
-                if (!kv.second) continue;
-
-                text(
-                    Widget{players[i++]},
-                    NO_TRANSLATE(fmt::format(
-                        "{}({})", kv.second->get<HasName>().name(), kv.first)));
+            if (lobby_screen.button("EditButton",
+                                    TranslatableString(strings::i18n::EDIT))) {
+                network_info->unlock_username();
             }
         }
-
-        // Even though the ui shows up at the top
-        // we dont want the tabbing to be first, so
-        // we put it here
-        draw_username_with_edit(username, dt);
     }
 
     void draw_ip_input_screen(float dt) {

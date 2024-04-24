@@ -318,6 +318,7 @@ enum struct TodoReason {
     Recursion,
     ServerString,
     SubjectToChange,
+    UILibrary,
 };
 
 struct TranslatableString {
