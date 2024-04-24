@@ -307,6 +307,7 @@ struct NetworkLayer : public Layer {
             lobby_screen.text("PlayerUsernameText",
                               NO_TRANSLATE(Settings::get().data.username));
 
+            // TODO add a way to edit your username without disconnecting
             bool show_edit_button =
                 network_info->client
                     ? network_info->client->remote_players.size() <= 1
