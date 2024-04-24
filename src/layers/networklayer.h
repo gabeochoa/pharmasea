@@ -220,6 +220,9 @@ struct NetworkLayer : public Layer {
             Rectangle player_name{lobby_area.x, lobby_area.y, lobby_area.width,
                                   height_per};
 
+            // TODO when you are joining a lobby and there is no host yet,
+            // you will see no players,
+            // force the current viewers name to show up in the list
             for (const auto& kv : network_info->client->remote_players) {
                 text(
                     player_name,
@@ -232,6 +235,9 @@ struct NetworkLayer : public Layer {
 
         // Buttons
         {
+            // TODO because only the host can control this
+            // need a way to their hide it from the screen
+            // or to put some text that says "Host only" or somethign
             if (network_info->is_host()) {
                 if (lobby_screen.button(
                         "StartButton",
