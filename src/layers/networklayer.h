@@ -192,9 +192,17 @@ struct NetworkLayer : public Layer {
                 "PlayerUsernameText",
                 NO_TRANSLATE(Settings::get().data.username));
 
-            if (network_selection_screen.button(
-                    "EditButton", TranslatableString(strings::i18n::EDIT))) {
-                network_info->unlock_username();
+            bool show_edit_button =
+                network_info->client
+                    ? network_info->client->remote_players.size() <= 1
+                    : true;
+
+            if (show_edit_button) {
+                if (network_selection_screen.button(
+                        "EditButton",
+                        TranslatableString(strings::i18n::EDIT))) {
+                    network_info->unlock_username();
+                }
             }
         }
     }
@@ -212,8 +220,6 @@ struct NetworkLayer : public Layer {
 
             int num_players =
                 std::max(1, (int) network_info->client->remote_players.size());
-            // TODO make that a function
-            // convert_from_baseline_to_current_resolution?
 
             float min_name_height = lobby_screen.scale_to_resolution(32.f);
             float max_name_height = lobby_screen.scale_to_resolution(64.f);
@@ -301,9 +307,17 @@ struct NetworkLayer : public Layer {
             lobby_screen.text("PlayerUsernameText",
                               NO_TRANSLATE(Settings::get().data.username));
 
-            if (lobby_screen.button("EditButton",
-                                    TranslatableString(strings::i18n::EDIT))) {
-                network_info->unlock_username();
+            bool show_edit_button =
+                network_info->client
+                    ? network_info->client->remote_players.size() <= 1
+                    : true;
+
+            if (show_edit_button) {
+                if (lobby_screen.button(
+                        "EditButton",
+                        TranslatableString(strings::i18n::EDIT))) {
+                    network_info->unlock_username();
+                }
             }
         }
     }
