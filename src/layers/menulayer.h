@@ -7,13 +7,12 @@
 #include "../external_include.h"
 #include "../local_ui.h"
 
-struct SVGLayer : public Layer {
+struct SVGRenderer {
     SVGNode root;
     raylib::Texture background_texture;
     std::string svg_name;
 
-    SVGLayer(const std::string& layer_name, const std::string& svg_name)
-        : Layer(layer_name), svg_name(svg_name) {
+    explicit SVGRenderer(const std::string& svg_name) : svg_name(svg_name) {
         // TODO replace with actual file loading
         std::string svg = fmt::format("./resources/ui/{}.svg", svg_name);
         root = load_and_parse(svg);
@@ -25,8 +24,8 @@ struct SVGLayer : public Layer {
         raylib::DrawTextureEx(background_texture, {0, 0}, 0.f, scale, WHITE);
     }
 
-    ui::ElementResult draw_svg_button(const std::string& id,
-                                      const TranslatableString& content) {
+    ui::ElementResult button(const std::string& id,
+                             const TranslatableString& content) {
         auto element = SVGNode::find_matching_id(root, id);
         if (!element.has_value()) {
             log_warn("Failed to find {} in svg {}", id, svg_name);
@@ -37,8 +36,8 @@ struct SVGLayer : public Layer {
         return ui::button(ui::Widget{rect}, content, false);
     }
 
-    ui::ElementResult draw_svg_text(const std::string& id,
-                                    const TranslatableString& content) {
+    ui::ElementResult text(const std::string& id,
+                           const TranslatableString& content) {
         auto element = SVGNode::find_matching_id(root, id);
         if (!element.has_value()) {
             log_warn("Failed to find {} in svg {}", id, svg_name);
@@ -50,11 +49,13 @@ struct SVGLayer : public Layer {
     }
 };
 
-struct MenuLayer : public SVGLayer {
+struct MenuLayer : public Layer {
+    SVGRenderer svg;
     std::shared_ptr<ui::UIContext> ui_context;
 
     MenuLayer()
-        : SVGLayer(strings::menu::MENU, "main_menu"),
+        : Layer(strings::menu::MENU),
+          svg(SVGRenderer("main_menu")),
           ui_context(std::make_shared<ui::UIContext>()) {}
 
     virtual ~MenuLayer() {}
@@ -98,36 +99,34 @@ struct MenuLayer : public SVGLayer {
         ext::clear_background(ui::UI_THEME.background);
         using namespace ui;
 
-        draw_background();
-
         begin(ui_context, dt);
 
-        draw_svg_text("Title", TranslatableString(strings::GAME_NAME));
+        svg.draw_background();
 
-        if (draw_svg_button("PlayButton",
-                            TranslatableString(strings::i18n::PLAY))) {
+        svg.text("Title", TranslatableString(strings::GAME_NAME));
+
+        if (svg.button("PlayButton", TranslatableString(strings::i18n::PLAY))) {
             MenuState::get().set(menu::State::Network);
         }
-        if (draw_svg_button("AboutButton",
-                            TranslatableString(strings::i18n::ABOUT))) {
+        if (svg.button("AboutButton",
+                       TranslatableString(strings::i18n::ABOUT))) {
             MenuState::get().set(menu::State::About);
         }
 
-        if (draw_svg_button("SettingsButton",
-                            TranslatableString(strings::i18n::SETTINGS))) {
+        if (svg.button("SettingsButton",
+                       TranslatableString(strings::i18n::SETTINGS))) {
             MenuState::get().set(menu::State::Settings);
         }
 
-        if (draw_svg_button("ExitButton",
-                            TranslatableString(strings::i18n::EXIT))) {
+        if (svg.button("ExitButton", TranslatableString(strings::i18n::EXIT))) {
             App::get().close();
         }
 
-        if (draw_svg_button("discord", NO_TRANSLATE(""))) {
+        if (svg.button("discord", NO_TRANSLATE(""))) {
             util::open_url(strings::urls::DISCORD);
         }
 
-        if (draw_svg_button("itch-white", NO_TRANSLATE(""))) {
+        if (svg.button("itch-white", NO_TRANSLATE(""))) {
             util::open_url(strings::urls::ITCH);
         }
 
