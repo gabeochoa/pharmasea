@@ -93,11 +93,12 @@ struct DropdownData {
 
 struct CheckboxData {
     bool selected = false;
-    std::string content = "";
+    std::string content;
+    bool background = true;
 };
 
 struct TextfieldData {
-    std::string content = "";
+    std::string content;
     TextFieldValidationFn validationFunction = {};
 };
 

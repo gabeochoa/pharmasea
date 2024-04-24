@@ -235,7 +235,7 @@ ElementResult checkbox(const Widget& widget, const CheckboxData& data) {
     state->on = data.selected;
     state->on.changed_since = false;
 
-    if (button(widget, NO_TRANSLATE(""), true)) {
+    if (button(widget, NO_TRANSLATE(""), data.background)) {
         state->on = !state->on;
     }
 

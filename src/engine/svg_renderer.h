@@ -7,6 +7,7 @@
 #include "ui/element_result.h"
 #include "ui/svg.h"
 #include "ui/ui.h"
+#include "ui/widget.h"
 
 struct SVGRenderer {
     SVGNode root;
@@ -52,6 +53,11 @@ struct SVGRenderer {
                                const ui::CheckboxData& data) {
         auto r = rect(id);
         // log_info("id {} @ {} ", id, rect);
-        return ui::checkbox(ui::Widget{r}, data);
+        return ui::checkbox(ui::Widget{r}, ui::CheckboxData{
+                                               .selected = data.selected,
+                                               .content = data.content,
+                                               // remove the background
+                                               .background = false,
+                                           });
     }
 };
