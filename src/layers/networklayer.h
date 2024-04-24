@@ -214,8 +214,12 @@ struct NetworkLayer : public Layer {
                 std::max(1, (int) network_info->client->remote_players.size());
             // TODO make that a function
             // convert_from_baseline_to_current_resolution?
-            float height_per = std::max(32.f * (WIN_HF() / 720.f),
-                                        lobby_area.height / num_players);
+
+            float min_name_height = 32.f * (WIN_HF() / 720.f);
+            float max_name_height = 64.f * (WIN_HF() / 720.f);
+            float height_per = std::min(
+                max_name_height,
+                std::max(min_name_height, lobby_area.height / num_players));
 
             Rectangle player_name{lobby_area.x, lobby_area.y, lobby_area.width,
                                   height_per};
