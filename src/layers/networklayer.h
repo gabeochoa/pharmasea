@@ -220,9 +220,17 @@ struct NetworkLayer : public Layer {
             Rectangle player_name{lobby_area.x, lobby_area.y, lobby_area.width,
                                   height_per};
 
-            // TODO when you are joining a lobby and there is no host yet,
+            auto remote_players = network_info->client->remote_players;
+
+            // when you are joining a lobby and there is no host yet,
             // you will see no players,
+            //
             // force the current viewers name to show up in the list
+            if (!network_info->is_host() && remote_players.empty()) {
+                text(player_name, NO_TRANSLATE(Settings::get().data.username));
+                player_name.y += height_per;
+            }
+
             for (const auto& kv : network_info->client->remote_players) {
                 text(
                     player_name,
