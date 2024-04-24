@@ -32,6 +32,7 @@ struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     SVGRenderer lobby_screen;
     SVGRenderer join_lobby_screen;
+    SVGRenderer username_screen;
     SVGRenderer network_selection_screen;
 
     std::string my_ip_address;
@@ -42,6 +43,7 @@ struct NetworkLayer : public Layer {
           ui_context(std::make_shared<ui::UIContext>()),
           lobby_screen("lobby_screen"),
           join_lobby_screen("join_lobby_screen"),
+          username_screen("username_screen"),
           network_selection_screen("network_selection_screen") {
         if (network_info) {
             if (!Settings::get().data.username.empty()) {
@@ -99,21 +101,12 @@ struct NetworkLayer : public Layer {
     }
 
     void draw_username_picker(float) {
-        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto content = rect::tpad(window, 30);
-        content = rect::lpad(content, 30);
+        username_screen.draw_background();
 
-        auto [username, controls] = rect::hsplit(content, 20);
+        username_screen.text("UsernameText",
+                             TranslatableString(strings::i18n::USERNAME));
 
-        username = rect::rpad(username, 50);
-        auto [label, name] = rect::hsplit<2>(username);
-
-        controls = rect::tpad(controls, 50);
-        controls = rect::rpad(controls, 30);
-        auto [lock, back] = rect::hsplit<2>(controls, 20);
-
-        text(Widget{label}, TranslatableString(strings::i18n::USERNAME));
-
+        auto name = username_screen.rect("PlayerUsernameInputText");
         if (auto result = textfield(
                 Widget{name},
                 TextfieldData{Settings::get().data.username,
@@ -128,13 +121,13 @@ struct NetworkLayer : public Layer {
             Settings::get().data.username = result.as<std::string>();
         }
 
-        if (ps::button(Widget{lock},
-                       TranslatableString(strings::i18n::LOCK_IN))) {
+        if (username_screen.button(
+                "SaveButton", TranslatableString(strings::i18n::LOCK_IN))) {
             network_info->lock_in_username();
         }
 
-        if (ps::button(Widget{back},
-                       TranslatableString(strings::i18n::BACK_BUTTON))) {
+        if (username_screen.button(
+                "BackButton", TranslatableString(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
     }
