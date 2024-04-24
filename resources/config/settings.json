@@ -3,8 +3,8 @@
   "DEADZONE": 0.25,
   "theme": "default",
   "fonts": {
-      "en_rev": "Gaegu-Bold.ttf",
-      "en_us": "Gaegu-Bold.ttf",
+      "en_rev": "constan.ttf",
+      "en_us": "Gaegu-bold.ttf",
       "ko_kr": "NotoSansKR.ttf"
   },
   "themes" : {

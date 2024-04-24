@@ -2,6 +2,7 @@
 #include "game.h"
 
 #include "engine/assert.h"
+#include "engine/ui/svg.h"
 #include "map_generation.h"
 
 namespace network {

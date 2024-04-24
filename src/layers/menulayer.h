@@ -2,15 +2,59 @@
 
 #include "../engine.h"
 #include "../engine/app.h"
+#include "../engine/ui/svg.h"
 #include "../engine/util.h"
 #include "../external_include.h"
 #include "../local_ui.h"
 
-struct MenuLayer : public Layer {
+struct SVGLayer : public Layer {
+    SVGNode root;
+    raylib::Texture background_texture;
+    std::string svg_name;
+
+    SVGLayer(const std::string& layer_name, const std::string& svg_name)
+        : Layer(layer_name), svg_name(svg_name) {
+        // TODO replace with actual file loading
+        std::string svg = fmt::format("./resources/ui/{}.svg", svg_name);
+        root = load_and_parse(svg);
+        background_texture = TextureLibrary::get().get(svg_name);
+    }
+
+    void draw_background() {
+        float scale = background_texture.width / 1280.f;
+        raylib::DrawTextureEx(background_texture, {0, 0}, 0.f, scale, WHITE);
+    }
+
+    ui::ElementResult draw_svg_button(const std::string& id,
+                                      const TranslatableString& content) {
+        auto element = SVGNode::find_matching_id(root, id);
+        if (!element.has_value()) {
+            log_warn("Failed to find {} in svg {}", id, svg_name);
+            return ui::ElementResult{false};
+        }
+        Rectangle rect = element.value().get_and_scale_rect();
+        // log_info("id {} @ {} ", id, rect);
+        return ui::button(ui::Widget{rect}, content, false);
+    }
+
+    ui::ElementResult draw_svg_text(const std::string& id,
+                                    const TranslatableString& content) {
+        auto element = SVGNode::find_matching_id(root, id);
+        if (!element.has_value()) {
+            log_warn("Failed to find {} in svg {}", id, svg_name);
+            return ui::ElementResult{false};
+        }
+        Rectangle rect = element.value().get_and_scale_rect();
+        // log_info("id {} @ {} ", id, rect);
+        return ui::text(ui::Widget{rect}, content);
+    }
+};
+
+struct MenuLayer : public SVGLayer {
     std::shared_ptr<ui::UIContext> ui_context;
 
     MenuLayer()
-        : Layer(strings::menu::MENU),
+        : SVGLayer(strings::menu::MENU, "main_menu"),
           ui_context(std::make_shared<ui::UIContext>()) {}
 
     virtual ~MenuLayer() {}
@@ -54,73 +98,37 @@ struct MenuLayer : public Layer {
         ext::clear_background(ui::UI_THEME.background);
         using namespace ui;
 
+        draw_background();
+
         begin(ui_context, dt);
 
-        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+        draw_svg_text("Title", TranslatableString(strings::GAME_NAME));
 
-        auto [left, right] = rect::vsplit(window, 50);
-
-        left = rect::rpad(rect::lpad(left, 20), 90);
-
-        // TODO add non rounded rectangle
-        div(left, color::brownish_purple);
-
-        left = rect::rpad(rect::lpad(left, 10), 90);
-
-        auto [title, buttons] = rect::hsplit(left, 50);
-
-        // Title
-        {
-            title = rect::tpad(rect::bpad(title, 50), 30);
-            text(Widget{title}, TranslatableString(strings::GAME_NAME));
+        if (draw_svg_button("PlayButton",
+                            TranslatableString(strings::i18n::PLAY))) {
+            MenuState::get().set(menu::State::Network);
+        }
+        if (draw_svg_button("AboutButton",
+                            TranslatableString(strings::i18n::ABOUT))) {
+            MenuState::get().set(menu::State::About);
         }
 
-        // Buttons
-        {
-            buttons = rect::tpad(rect::all_pad(buttons, 10), 10);
-            // div(buttons, color::coffee);
-
-            auto [buttons_top, buttons_bottom] = rect::hsplit<2>(buttons);
-            auto [rect1, rect2] = rect::vsplit<2>(buttons_top);
-            auto [rect3, rect4] = rect::vsplit<2>(buttons_bottom);
-
-            rect1 = rect::rpad(rect::vpad(rect1, 20), 95);
-            rect2 = rect::lpad(rect::vpad(rect2, 20), 5);
-
-            rect3 = rect::rpad(rect::vpad(rect3, 20), 95);
-            rect4 = rect::lpad(rect::vpad(rect4, 20), 5);
-
-            if (ps::button(Widget{rect1},
-                           TranslatableString(strings::i18n::PLAY))) {
-                MenuState::get().set(menu::State::Network);
-            }
-            if (ps::button(Widget{rect2},
-                           TranslatableString(strings::i18n::ABOUT))) {
-                MenuState::get().set(menu::State::About);
-            }
-            if (ps::button(Widget{rect3},
-                           TranslatableString(strings::i18n::SETTINGS))) {
-                MenuState::get().set(menu::State::Settings);
-            }
-            if (ps::button(Widget{rect4},
-                           TranslatableString(strings::i18n::EXIT))) {
-                App::get().close();
-            }
+        if (draw_svg_button("SettingsButton",
+                            TranslatableString(strings::i18n::SETTINGS))) {
+            MenuState::get().set(menu::State::Settings);
         }
 
-        // Ext Buttons
-        {
-            auto [_, footer] = rect::hsplit(right, 80);
-            auto ext_buttons = rect::rpad(rect::lpad(footer, 70), 80);
-            auto [b1, b2] = rect::vsplit<2>(ext_buttons, 20);
+        if (draw_svg_button("ExitButton",
+                            TranslatableString(strings::i18n::EXIT))) {
+            App::get().close();
+        }
 
-            if (image_button(Widget{b1}, "discord")) {
-                util::open_url(strings::urls::DISCORD);
-            }
-            // TODO chose the right color based on the theme
-            if (image_button(Widget{b2}, "itch-white")) {
-                util::open_url(strings::urls::ITCH);
-            }
+        if (draw_svg_button("discord", NO_TRANSLATE(""))) {
+            util::open_url(strings::urls::DISCORD);
+        }
+
+        if (draw_svg_button("itch-white", NO_TRANSLATE(""))) {
+            util::open_url(strings::urls::ITCH);
         }
 
         end();
