@@ -112,6 +112,11 @@
         },
         {
             "folder": "ui",
+            "filename": "join_lobby_screen.png",
+            "library_name": "join_lobby_screen"
+        },
+        {
+            "folder": "ui",
             "filename": "network_selection_screen.png",
             "library_name": "network_selection_screen"
         }

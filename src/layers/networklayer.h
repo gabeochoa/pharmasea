@@ -31,6 +31,7 @@ inline bool validate_ip(const std::string& ip) {
 struct NetworkLayer : public Layer {
     std::shared_ptr<ui::UIContext> ui_context;
     SVGRenderer lobby_screen;
+    SVGRenderer join_lobby_screen;
     SVGRenderer network_selection_screen;
 
     std::string my_ip_address;
@@ -40,6 +41,7 @@ struct NetworkLayer : public Layer {
         : Layer("Network"),
           ui_context(std::make_shared<ui::UIContext>()),
           lobby_screen("lobby_screen"),
+          join_lobby_screen("join_lobby_screen"),
           network_selection_screen("network_selection_screen") {
         if (network_info) {
             if (!Settings::get().data.username.empty()) {
@@ -288,25 +290,16 @@ struct NetworkLayer : public Layer {
         }
     }
 
-    void draw_ip_input_screen(float dt) {
-        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto [username, body] = rect::hsplit(window, 33);
-        body = rect::lpad(body, 20);
-        body = rect::rpad(body, 80);
-
-        auto [ip, buttons, back] = rect::hsplit<3>(body, 30);
+    void draw_ip_input_screen(float) {
+        join_lobby_screen.draw_background();
 
         // TODO add showhide button
         // IP addr input
         {
-            ip = rect::tpad(ip, 30);
-            ip = rect::bpad(ip, 30);
-            ip = rect::rpad(ip, 80);
+            join_lobby_screen.text("IPAddrText",
+                                   TranslatableString(strings::i18n::ENTER_IP));
 
-            auto [label, control] = rect::vsplit<2>(ip);
-
-            text(Widget{label}, TranslatableString(strings::i18n::ENTER_IP));
-
+            auto control = join_lobby_screen.rect("IPAddrInput");
             if (auto result = textfield(
                     Widget{control},
                     TextfieldData{
@@ -329,19 +322,16 @@ struct NetworkLayer : public Layer {
 
         // Buttons
         {
-            auto [bs, _a, _b] = rect::vsplit<3>(buttons);
-            buttons = bs;
-
-            auto [load_ip, connect] = rect::hsplit<2>(buttons);
-
-            if (ps::button(Widget{load_ip},
-                           TranslatableString(strings::i18n::LOAD_LAST_IP))) {
+            if (join_lobby_screen.button(
+                    "LoadLastUsedButton",
+                    TranslatableString(strings::i18n::LOAD_LAST_IP))) {
                 network_info->host_ip_address() =
                     Settings::get().last_used_ip();
             }
 
-            if (ps::button(Widget{connect},
-                           TranslatableString(strings::i18n::CONNECT))) {
+            if (join_lobby_screen.button(
+                    "ConnectButton",
+                    TranslatableString(strings::i18n::START))) {
                 Settings::get().update_last_used_ip_address(
                     network_info->host_ip_address());
                 network_info->lock_in_ip();
@@ -350,13 +340,10 @@ struct NetworkLayer : public Layer {
                 // save the "last successful"
                 Settings::get().write_save_file();
             }
-        }
 
-        // Back button
-        {
-            back = rect::rpad(back, 20);
-            if (ps::button(Widget{back},
-                           TranslatableString(strings::i18n::BACK_BUTTON))) {
+            if (join_lobby_screen.button(
+                    "BackButton",
+                    TranslatableString(strings::i18n::BACK_BUTTON))) {
                 network_info->unlock_username();
             }
         }
@@ -364,7 +351,18 @@ struct NetworkLayer : public Layer {
         // Even though the ui shows up at the top
         // we dont want the tabbing to be first, so
         // we put it here
-        draw_username_with_edit(username, dt);
+        {
+            join_lobby_screen.text("UsernameText",
+                                   TranslatableString(strings::i18n::USERNAME));
+
+            join_lobby_screen.text("PlayerUsernameText",
+                                   NO_TRANSLATE(Settings::get().data.username));
+
+            if (join_lobby_screen.button(
+                    "EditButton", TranslatableString(strings::i18n::EDIT))) {
+                network_info->unlock_username();
+            }
+        }
     }
 
     void draw_screen(float dt) {
