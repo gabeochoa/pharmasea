@@ -65,9 +65,33 @@ struct IsRoundSettingsManager : public BaseComponent {
         });
     }
 
-    [[nodiscard]] bool is_upgrade_active(const UpgradeClass&) const {
-        // TODO add support
-        return true;
+    [[nodiscard]] bool is_upgrade_active(const UpgradeClass& upgrade) const {
+        switch (upgrade) {
+            case UpgradeClass::LongerDay:
+            case UpgradeClass::UnlockToilet:
+            case UpgradeClass::BigBladders:
+            case UpgradeClass::BigCity:
+            case UpgradeClass::SmallTown:
+            case UpgradeClass::Champagne:
+            case UpgradeClass::Pitcher:
+            case UpgradeClass::MeAndTheBoys:
+            case UpgradeClass::MainStreet:
+            case UpgradeClass::Speakeasy:
+            case UpgradeClass::Mocktails:
+            case UpgradeClass::HeavyHanded:
+            case UpgradeClass::PottyProtocol:
+            case UpgradeClass::SippyCups:
+            case UpgradeClass::DownTheHatch:
+            case UpgradeClass::Jukebox:
+            case UpgradeClass::CantEvenTell:
+                return true;
+                break;
+            case UpgradeClass::HappyHour:
+                // TODO add support for upgrades that arent active 100% of the
+                // time
+                break;
+        }
+        return false;
     }
 
     template<typename T>

@@ -67,9 +67,3 @@ static std::string get_random_name_rot13() {
     return fmt::format("{}_{}", rot13(alcy_firsts[first]),
                        rot13(alcohol_names[last]));
 }
-
-// TODO full names (special customers/doctors?)
-//  Dr. Sturgeon
-//  Herman Merman
-//  Doctopus
-//  Gordon Freewilly

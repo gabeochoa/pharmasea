@@ -99,7 +99,6 @@ struct Transform : public BaseComponent {
         return get_bounds(this->raw_position, this->size());
     }
 
-    // TODO we should draw this during debug
     [[nodiscard]] BoundingBox expanded_bounds(vec3 inc) const {
         return get_bounds(this->raw_position, this->size() + inc);
     }
@@ -254,8 +253,10 @@ struct Transform : public BaseComponent {
     }
 
     void sync() {
-        // TODO is there a way for us to figure out if this
-        // is a snappable entity?
+        // TODO neeed to add a component for snappable then we can just do
+        // if(parent->has<IsSnappedToGrid>()){
+        //  snap();
+        // }
         this->position = this->raw_position;
     }
 

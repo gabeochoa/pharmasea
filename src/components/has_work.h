@@ -7,10 +7,12 @@
 struct Entity;
 
 struct HasWork : public BaseComponent {
-    // TODO idk if false is a reasonable default
     HasWork()
-        : pct_work_complete(0.f),
+        :  // Start with 0% progress
+          pct_work_complete(0.f),
+          //  TODO is this a reasonable default
           more_to_do(true),
+          // TODO what breaks if we turn this on?
           reset_on_empty(false),
           hide_progress_bar_on_full(false),
           hide_progress_bar(false) {}

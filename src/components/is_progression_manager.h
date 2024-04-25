@@ -22,8 +22,6 @@ struct IsProgressionManager : public BaseComponent {
         // Unlock all the starting store items
         magic_enum::enum_for_each<EntityType>([&](EntityType val) {
             StoreEligibilityType set = get_store_eligibility(val);
-            // TODO right now we also unlock time based things
-            // but need to figure out when to do this
             if (set == StoreEligibilityType::OnStart ||
                 set == StoreEligibilityType::TimeBased) {
                 unlock_entity(val);

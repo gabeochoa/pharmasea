@@ -211,6 +211,9 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::PnumaticPipe:
         case EntityType::MopHolder:
         case EntityType::MopBuddyHolder:
+            // TODO Right now we unlock these at the start of game
+            //      but we probably should build a system to
+            //      configure day count or upgrade count or something
             return StoreEligibilityType::TimeBased;
         case EntityType::FruitBasket:
         case EntityType::SimpleSyrupHolder:
