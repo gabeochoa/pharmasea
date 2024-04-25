@@ -15,9 +15,8 @@ struct SVGRenderer {
     std::string svg_name;
 
     explicit SVGRenderer(const std::string& svg_name) : svg_name(svg_name) {
-        // TODO replace with actual file loading
-        std::string svg = fmt::format("./resources/ui/{}.svg", svg_name);
-        root = load_and_parse(svg);
+        root = load_and_parse(Files::get().fetch_resource_path(
+            strings::settings::UI, fmt::format("{}.svg", svg_name)));
         background_texture = TextureLibrary::get().get(svg_name);
     }
 

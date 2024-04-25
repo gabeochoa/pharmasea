@@ -152,6 +152,7 @@ constexpr const char* TRANSLATIONS = "translations";
 constexpr const char* IMAGES = "images";
 constexpr const char* MODELS = "models";
 constexpr const char* SOUNDS = "sounds";
+constexpr const char* UI = "ui";
 constexpr const char* MUSIC = "music";
 constexpr const char* SHADERS = "shaders";
 constexpr const char* CONFIG = "config";
