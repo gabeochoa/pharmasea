@@ -14,7 +14,9 @@ struct AITarget {
     using ValidateFn = std::function<bool(const Entity&)>;
     using SuccessFn = std::function<void(Entity&)>;
 
+    std::optional<int> target_id;
     ResetFn reset;
+
     explicit AITarget(const ResetFn& resetFn) : reset(resetFn) {}
 
     [[nodiscard]] bool exists() const { return target_id.has_value(); }
@@ -23,8 +25,6 @@ struct AITarget {
     void unset() { target_id = {}; }
     void set(int id) { target_id = id; }
     [[nodiscard]] int id() const { return target_id.value(); }
-
-    std::optional<int> target_id;
 
     [[nodiscard]] bool _find_target(const Entity& entity,
                                     const ValidateFn& validate = nullptr,
