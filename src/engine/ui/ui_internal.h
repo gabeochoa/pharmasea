@@ -132,11 +132,6 @@ inline void draw_any_rect(const RectRenderInfo& info) {
 inline void draw_rect_color(Rectangle rect, int z_index, Color color,
                             bool rounded = false, bool outlineOnly = false) {
     draw_any_rect(RectRenderInfo{
-        .rect = rect,
-        .z_index = z_index,
-        .color = color,
-
-        //
         .roundedInfo =
             RectRenderInfo::RoundedInfo{
                 .rounded = rounded,
@@ -145,6 +140,10 @@ inline void draw_rect_color(Rectangle rect, int z_index, Color color,
             RectRenderInfo::OutlineInfo{
                 .outlineOnly = outlineOnly,
             },
+        //
+        .rect = rect,
+        .z_index = z_index,
+        .color = color,
     });
 }
 

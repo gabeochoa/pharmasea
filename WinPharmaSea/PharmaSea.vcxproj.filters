@@ -712,5 +712,8 @@
     <ClCompile Include="..\src\dataclass\upgrades.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\components\is_progression_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
