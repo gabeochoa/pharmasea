@@ -455,6 +455,9 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     return true;
                 }};
             break;
+            // TODO what if while the song is playing, that persons patience
+            // doesnt drain? or what if playing the music refils their patience
+            // (slowly?)
         case UpgradeClass::Jukebox:
             ptr = new UpgradeImpl{
                 .type = uc,
