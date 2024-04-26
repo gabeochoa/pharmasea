@@ -99,11 +99,37 @@ inline void draw_rect_color(Rectangle rect, int z_index, Color c,
         z_index);
 }
 
+// TODO eventually combine with draw_rect and just add flags
+inline void draw_rect_outline_color(Rectangle rect, int z_index, Color c,
+                                    // TODO replace with RenderFlags
+                                    bool rounded) {
+    callback_registry.register_call(
+        context,
+        [=]() {
+            // TODO does this need to depend on resolution?
+            float thickness = 5.f;
+            if (rounded) {
+                DrawRectangleRoundedLines(rect, 0.25f, 4, thickness, c);
+            } else {
+                DrawRectangleLinesEx(rect, thickness, c);
+            }
+        },
+        z_index);
+}
+
 inline void draw_rect(Rectangle rect, int z_index,
                       ui::theme::Usage color_usage = ui::theme::Usage::Primary,
                       bool rounded = false) {
     draw_rect_color(rect, z_index, active_theme().from_usage(color_usage),
                     rounded);
+}
+
+inline void draw_rect_outline(
+    Rectangle rect, int z_index,
+    ui::theme::Usage color_usage = ui::theme::Usage::Primary,
+    bool rounded = false) {
+    draw_rect_outline_color(rect, z_index,
+                            active_theme().from_usage(color_usage), rounded);
 }
 
 inline void draw_image(vec2 pos, raylib::Texture texture, float scale,
@@ -122,8 +148,8 @@ inline void draw_focus_ring(const Widget& widget, bool rounded = false) {
     Rectangle rect = widget.get_rect();
     float pixels = WIN_HF() * 0.003f;
     rect = rect::expand(rect, {pixels, pixels, pixels, pixels});
-    internal::draw_rect(rect, widget.z_index, ui::theme::Usage::Accent,
-                        rounded);
+    internal::draw_rect_outline(rect, widget.z_index, ui::theme::Usage::Accent,
+                                rounded);
 }
 
 }  // namespace internal
