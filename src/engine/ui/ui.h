@@ -47,7 +47,8 @@ ElementResult scroll_window(const Widget& widget, Rectangle view,
 
 ElementResult button(const Widget& widget,
                      const TranslatableString& content = NO_TRANSLATE(""),
-                     bool background = true);
+                     bool background = true,
+                     bool draw_background_when_hot = true);
 ElementResult image(const Widget& widget, const std::string& texture_name);
 
 ElementResult image_button(const Widget& widget,

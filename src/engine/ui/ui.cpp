@@ -145,7 +145,7 @@ ElementResult scroll_window(const Widget& widget, Rectangle view,
 }
 
 ElementResult button(const Widget& widget, const TranslatableString& content,
-                     bool background) {
+                     bool background, bool draw_background_when_hot) {
     Rectangle rect = widget.get_rect();
 
     //
@@ -156,12 +156,12 @@ ElementResult button(const Widget& widget, const TranslatableString& content,
     internal::draw_focus_ring(widget, true);
     focus::handle_tabbing(widget);
 
-    if (background) {
+    if (background || (draw_background_when_hot && focus::is_hot(widget.id))) {
         // We dont allow customization because
         // you should be using the themed colors
         auto color_usage = ui::theme::Usage::Primary;
         if (focus::is_hot(widget.id)) {
-            color_usage = ui::theme::Usage::Accent;
+            color_usage = ui::theme::Usage::Secondary;
         }
         internal::draw_rect(rect, widget.z_index, color_usage, true);
     }
@@ -282,7 +282,7 @@ ElementResult slider(const Widget& widget, const SliderData& data) {
             vertical ? rect.height / 5.f : rect.height,
         };
 
-        internal::draw_rect(rect, widget.z_index, ui::theme::Usage::Accent);
+        internal::draw_rect(rect, widget.z_index, ui::theme::Usage::Secondary);
     }
 
     {
