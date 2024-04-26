@@ -6,13 +6,16 @@
 #include "raylib.h"
 //
 #include "../engine.h"
+#include "../engine/svg_renderer.h"
 #include "../engine/ui/ui.h"
 
 struct AboutLayer : public Layer {
+    SVGRenderer svg;
     std::shared_ptr<ui::UIContext> ui_context;
 
     AboutLayer()
         : Layer(strings::menu::ABOUT),
+          svg(SVGRenderer("about_screen")),
           ui_context(std::make_shared<ui::UIContext>()) {}
     virtual ~AboutLayer() {}
 
@@ -51,15 +54,11 @@ struct AboutLayer : public Layer {
         using namespace ui;
         begin(ui_context, dt);
 
-        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        window = rect::lpad(window, 20);
-        auto [info, back] = rect::hsplit<2>(window);
-        back = rect::rpad(back, 50);
-        back = rect::bpad(back, 25);
+        svg.draw_background();
+        svg.text("AboutText", NO_TRANSLATE(strings::ABOUT_INFO));
 
-        text(Widget{info}, NO_TRANSLATE(strings::ABOUT_INFO));
-        if (button(Widget{back},
-                   TranslatableString(strings::i18n::BACK_BUTTON))) {
+        if (svg.button("BackButton",
+                       TranslatableString(strings::i18n::BACK_BUTTON))) {
             MenuState::get().go_back();
         }
 

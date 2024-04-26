@@ -122,6 +122,11 @@
         },
         {
             "folder": "ui",
+            "filename": "about_screen.png",
+            "library_name": "about_screen"
+        },
+        {
+            "folder": "ui",
             "filename": "network_selection_screen.png",
             "library_name": "network_selection_screen"
         }
