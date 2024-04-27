@@ -156,7 +156,12 @@ ElementResult button(const Widget& widget, const TranslatableString& content,
     internal::draw_focus_ring(widget, true);
     focus::handle_tabbing(widget);
 
-    if (background || (draw_background_when_hot && focus::is_hot(widget.id))) {
+    if (focus::is_hot(widget.id)) {
+        focus::set(widget.id);
+    }
+
+    if (background ||
+        (draw_background_when_hot && focus::is_active(widget.id))) {
         // We dont allow customization because
         // you should be using the themed colors
         auto color_usage = ui::theme::Usage::Primary;
@@ -263,6 +268,10 @@ ElementResult slider(const Widget& widget, const SliderData& data) {
     focus::try_to_grab(widget);
     internal::draw_focus_ring(widget);
     focus::handle_tabbing(widget);
+
+    if (focus::is_hot(widget.id)) {
+        focus::set(widget.id);
+    }
 
     {
         internal::draw_rect(widget.get_rect(), widget.z_index,
