@@ -222,40 +222,43 @@ inline std::ostream& operator<<(std::ostream& os,
                                 const ClientPacket::Msg& msgtype) {
     os << std::visit(
         util::overloaded{
-            [&](ClientPacket::AnnouncementInfo info) {
+            [&](const ClientPacket::AnnouncementInfo& info) {
                 return fmt::format("Announcement: {}", info.message);
             },
-            [&](ClientPacket::PlayerJoinInfo info) {
-                return fmt::format("PlayerJoinInfo( is_you: {}, id: {})",
-                                   info.is_you, info.client_id);
+            [&](const ClientPacket::PlayerJoinInfo& info) {
+                return fmt::format(
+                    "PlayerJoinInfo( is_you: {}, id: {}, username {})",
+                    info.is_you, info.client_id, info.username);
             },
-            [&](ClientPacket::PlayerControlInfo info) {
+            [&](const ClientPacket::PlayerControlInfo& info) {
                 return fmt::format("PlayerControlInfo( num_inputs: {})",
                                    info.inputs.size());
             },
-            [&](ClientPacket::GameStateInfo info) {
+            [&](const ClientPacket::GameStateInfo& info) {
                 return fmt::format("GameStateInfo( menu: {} game: {})",
                                    info.host_menu_state, info.host_game_state);
             },
-            [&](ClientPacket::MapInfo) { return std::string("map info"); },
-            [&](ClientPacket::MapSeedInfo s) {
+            [&](const ClientPacket::MapInfo&) {
+                return std::string("map info");
+            },
+            [&](const ClientPacket::MapSeedInfo& s) {
                 return fmt::format("Map Seed: {}", s.seed);
             },
-            [&](ClientPacket::PlayerInfo info) {
+            [&](const ClientPacket::PlayerInfo& info) {
                 return fmt::format("PlayerInfo( pos({}, {}, {}), facing {})",
                                    info.location[0], info.location[1],
                                    info.location[2], info.facing);
             },
-            [&](ClientPacket::PlayerLeaveInfo info) {
+            [&](const ClientPacket::PlayerLeaveInfo& info) {
                 return fmt::format("PlayerLeave({})", info.client_id);
             },
-            [&](ClientPacket::PlayerRareInfo info) {
+            [&](const ClientPacket::PlayerRareInfo& info) {
                 return fmt::format("PlayerRare({})", info.client_id);
             },
-            [&](ClientPacket::PingInfo info) {
+            [&](const ClientPacket::PingInfo& info) {
                 return fmt::format("Ping({}, {})", info.ping, info.pong);
             },
-            [&](ClientPacket::PlaySoundInfo info) {
+            [&](const ClientPacket::PlaySoundInfo& info) {
                 return fmt::format("PlaySound({} {}, {})", info.location[0],
                                    info.location[1], info.sound);
             },
