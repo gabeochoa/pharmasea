@@ -392,6 +392,20 @@ void Preload::load_textures() {
             TextureLibrary::get().load(filename.c_str(), name.c_str());
         });
 
+    // TODO how safe is the path combination here esp for mac vs windows
+    Files::get().for_resources_in_folder(
+        strings::settings::IMAGES, "controls/keyboard_default",
+        [](const std::string& name, const std::string& filename) {
+            TextureLibrary::get().load(filename.c_str(), name.c_str());
+        });
+
+    // TODO how safe is the path combination here esp for mac vs windows
+    Files::get().for_resources_in_folder(
+        strings::settings::IMAGES, "controls/xbox_default",
+        [](const std::string& name, const std::string& filename) {
+            TextureLibrary::get().load(filename.c_str(), name.c_str());
+        });
+
     // Now load the one off ones
 
     load_json_config_file("textures.json", [](const nlohmann::json& contents) {

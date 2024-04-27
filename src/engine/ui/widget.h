@@ -95,11 +95,13 @@ struct CheckboxData {
     bool selected = false;
     std::string content;
     bool background = true;
+    bool content_is_icon = false;
 };
 
 struct TextfieldData {
     std::string content;
     TextFieldValidationFn validationFunction = {};
+    bool content_is_icon = false;
 };
 
 struct SliderData {

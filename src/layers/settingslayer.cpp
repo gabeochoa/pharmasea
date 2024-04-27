@@ -374,16 +374,59 @@ void SettingsLayer::draw_keybinding_screen(float) {
             }
         };
 
+        const auto _get_icon_for_key =
+            [](menu::State state,
+               InputName name) -> tl::expected<std::string, std::string> {
+            const auto keys = KeyMap::get_valid_keys(state, name);
+            if (keys.empty())
+                return tl::unexpected("input not used in this state");
+            auto icon = KeyMap::get().icon_for_input(keys[0]);
+            if (icon.empty()) return tl::unexpected("icon not found");
+            return icon;
+        };
+
+        const auto _get_icon_for_gamepad =
+            [](menu::State state,
+               InputName name) -> tl::expected<std::string, std::string> {
+            const auto button = KeyMap::get_button(state, name);
+            if (button == raylib::GAMEPAD_BUTTON_UNKNOWN)
+                return tl::unexpected("input not used in this state");
+            return KeyMap::get().icon_for_input(button);
+        };
+
+        const auto _get_icon =
+            // TODO
+            [=](menu::State state,
+                InputName name) -> tl::expected<std::string, std::string> {
+            switch (selected_input_type) {
+                case Keyboard:
+                    return _get_icon_for_key(state, name);
+                case Gamepad:
+                    return _get_icon_for_gamepad(state, name);
+                case GamepadWithAxis:
+                    // TODO
+                    return tl::unexpected("input not used in this state");
+            }
+        };
+
         const auto _keys_for_state =
             [=](menu::State state, std::array<Rectangle, num_per_col> rects,
                 int starting_index = 0) {
                 int rendering_index = 0;
                 for (int i = starting_index; i < num_inputs; i++) {
                     const auto kv = keyInputNames[i];
-                    const auto i_label = _get_label(state, kv.first);
-                    if (!i_label.has_value()) {
-                        log_trace("{} => {}", kv.second, i_label.error());
-                        continue;
+
+                    bool has_icon = false;
+                    auto checkbox_content = _get_icon(state, kv.first);
+                    if (!checkbox_content.has_value()) {
+                        checkbox_content = _get_label(state, kv.first);
+                        if (!checkbox_content.has_value()) {
+                            log_trace("{} => {}", kv.second,
+                                      checkbox_content.error());
+                            continue;
+                        }
+                    } else {
+                        has_icon = true;
                     }
 
                     // TODO we have more inptus than items in col
@@ -393,28 +436,33 @@ void SettingsLayer::draw_keybinding_screen(float) {
                     }
 
                     auto [label, remap_button] =
-                        rect::vsplit<2>(rects[rendering_index++], 20);
+                        rect::vsplit<2>(rects[rendering_index++], 10);
 
                     text(Widget{label},
                          TODO_TRANSLATE(util::space_between_caps(kv.second),
                                         TodoReason::KeyName));
 
-                    if (auto result =
-                            checkbox(Widget{remap_button},
-                                     CheckboxData{.content = i_label.value()});
+                    if (auto result = checkbox(
+                            Widget{remap_button},
+                            CheckboxData{.content_is_icon = has_icon,
+                                         .content = checkbox_content.value()});
                         result) {
                         // TODO disabling popup for now
                         //
-                        // key_binding_popup =
-                        // KeyBindingPopup{.show = result.as<bool>(),
-                        // .state = state,
-                        // .input = kv.first};
+                        /*
+                        key_binding_popup =
+                            KeyBindingPopup{.show = result.as<bool>(),
+                                            .state = state,
+                                            .input = kv.first};
+                                            */
                     }
                 }
             };
 
         _keys_for_state(menu::State::UI, key_rects_1);
         _keys_for_state(menu::State::Game, key_rects_2, 1);
+
+        // TODO pressing UI keys when this popup is open still uses them
 
         if (key_binding_popup.show) {
             auto [_t, middle, _b] = rect::hsplit<3>(screen);
@@ -428,13 +476,21 @@ void SettingsLayer::draw_keybinding_screen(float) {
                              magic_enum::enum_name(key_binding_popup.input)),
                          TodoReason::KeyName));
 
-                auto input_descr = _get_label(key_binding_popup.state,
-                                              key_binding_popup.input);
+                bool has_icon = false;
+                auto input_descr =
+                    _get_icon(key_binding_popup.state, key_binding_popup.input);
+                if (!input_descr.has_value()) {
+                    input_descr = _get_label(key_binding_popup.state,
+                                             key_binding_popup.input);
+                } else {
+                    has_icon = true;
+                }
 
                 if (input_descr.has_value()) {
                     if (auto control_result = control_input_field(
                             Widget{input, windowresult.as<int>()},
-                            TextfieldData{input_descr.value()});
+                            TextfieldData{.content_is_icon = has_icon,
+                                          .content = input_descr.value()});
                         control_result) {
                         KeyMap::get().set_mapping(
                             key_binding_popup.state, key_binding_popup.input,

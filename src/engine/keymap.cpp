@@ -252,6 +252,291 @@ std::string KeyMap::name_for_button(GamepadButton input) {
     }
 }
 
+std::string icon_for_button(GamepadButton input) {
+    switch (input) {
+        case raylib::GAMEPAD_BUTTON_LEFT_FACE_UP:
+            return "xbox_dpad_up";
+        case raylib::GAMEPAD_BUTTON_LEFT_FACE_RIGHT:
+            return "xbox_dpad_right";
+        case raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN:
+            return "xbox_dpad_down";
+        case raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT:
+            return "xbox_dpad_left";
+        case raylib::GAMEPAD_BUTTON_RIGHT_FACE_UP:
+            // return "PS3: Triangle, Xbox: Y";
+            // TODO for now just use the xbox ones
+            return "xbox_button_color_y";
+        case raylib::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT:
+            // return "PS3: Square, Xbox: X";
+            return "xbox_button_color_x";
+        case raylib::GAMEPAD_BUTTON_RIGHT_FACE_DOWN:
+            // return "PS3: Cross, Xbox: A";
+            return "xbox_button_color_a";
+        case raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT:
+            // return "PS3: Circle, Xbox: B";
+            return "xbox_button_color_b";
+        case raylib::GAMEPAD_BUTTON_MIDDLE_LEFT:
+            return "xbox_button_view";
+        case raylib::GAMEPAD_BUTTON_MIDDLE:
+            return "xbox_guide";
+        case raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT:
+            return "xbox_button_menu";
+        default:
+            log_warn("Missing icon for button {}",
+                     magic_enum::enum_name(input));
+            return std::string(magic_enum::enum_name(input));
+    }
+}
+
+std::string icon_for_key(int keycode) {
+    KeyboardKey key = magic_enum::enum_cast<KeyboardKey>(keycode).value();
+    switch (key) {
+        case raylib::KEY_TAB:
+            return "keyboard_tab";
+        case raylib::KEY_LEFT_SHIFT:
+            return "keyboard_shift";
+        case raylib::KEY_BACKSPACE:
+            return "keyboard_backspace";
+        case raylib::KEY_LEFT_SUPER:
+            // TODO add icon for mac?
+            return "keyboard_win";
+        case raylib::KEY_V:
+            return "keyboard_v";
+        case raylib::KEY_ENTER:
+            return "keyboard_enter";
+        case raylib::KEY_UP:
+            return "keyboard_arrow_up";
+        case raylib::KEY_DOWN:
+            return "keyboard_arrow_down";
+        case raylib::KEY_LEFT:
+            return "keyboard_arrow_left";
+        case raylib::KEY_RIGHT:
+            return "keyboard_arrow_right";
+        case raylib::KEY_W:
+            return "keyboard_w";
+        case raylib::KEY_S:
+            return "keyboard_s";
+        case raylib::KEY_SPACE:
+            return "keyboard_space";
+        case raylib::KEY_R:
+            return "keyboard_r";
+        case raylib::KEY_BACKSLASH:
+            return "keyboard_slash_back";
+        case raylib::KEY_L:
+            return "keyboard_l";
+        case raylib::KEY_EQUAL:
+            return "keyboard_equals";
+        case raylib::KEY_A:
+            return "keyboard_a";
+        case raylib::KEY_B:
+            return "keyboard_b";
+        case raylib::KEY_C:
+            return "keyboard_c";
+        case raylib::KEY_D:
+            return "keyboard_d";
+        case raylib::KEY_E:
+            return "keyboard_e";
+        case raylib::KEY_F:
+            return "keyboard_f";
+        case raylib::KEY_G:
+            return "keyboard_g";
+        case raylib::KEY_H:
+            return "keyboard_h";
+        case raylib::KEY_APOSTROPHE:
+            return "keyboard_apostrophe";
+        case raylib::KEY_COMMA:
+            return "keyboard_comma";
+        case raylib::KEY_MINUS:
+            return "keyboard_minus";
+        case raylib::KEY_PERIOD:
+            return "keyboard_period";
+        case raylib::KEY_SLASH:
+            return "keyboard_slash";
+        case raylib::KEY_ZERO:
+            return "keyboard_zero";
+        case raylib::KEY_ONE:
+            return "keyboard_one";
+        case raylib::KEY_TWO:
+            return "keyboard_two";
+        case raylib::KEY_THREE:
+            return "keyboard_three";
+        case raylib::KEY_FOUR:
+            return "keyboard_four";
+        case raylib::KEY_FIVE:
+            return "keyboard_five";
+        case raylib::KEY_SIX:
+            return "keyboard_six";
+        case raylib::KEY_SEVEN:
+            return "keyboard_seven";
+        case raylib::KEY_EIGHT:
+            return "keyboard_eight";
+        case raylib::KEY_NINE:
+            return "keyboard_nine";
+        case raylib::KEY_SEMICOLON:
+            return "keyboard_semicolon";
+        case raylib::KEY_I:
+            return "keyboard_i";
+        case raylib::KEY_J:
+            return "keyboard_j";
+        case raylib::KEY_K:
+            return "keyboard_k";
+        case raylib::KEY_M:
+            return "keyboard_m";
+        case raylib::KEY_N:
+            return "keyboard_n";
+        case raylib::KEY_O:
+            return "keyboard_o";
+        case raylib::KEY_P:
+            return "keyboard_p";
+        case raylib::KEY_Q:
+            return "keyboard_q";
+        case raylib::KEY_T:
+            return "keyboard_t";
+        case raylib::KEY_U:
+            return "keyboard_u";
+        case raylib::KEY_X:
+            return "keyboard_x";
+        case raylib::KEY_Y:
+            return "keyboard_y";
+        case raylib::KEY_Z:
+            return "keyboard_z";
+        case raylib::KEY_LEFT_BRACKET:
+            return "keyboard_left_bracket";
+        case raylib::KEY_RIGHT_BRACKET:
+            return "keyboard_right_bracket";
+        case raylib::KEY_GRAVE:
+            return "keyboard_grave";
+        case raylib::KEY_ESCAPE:
+            return "keyboard_escape";
+        case raylib::KEY_INSERT:
+            return "keyboard_insert";
+        case raylib::KEY_DELETE:
+            return "keyboard_delete";
+        case raylib::KEY_PAGE_UP:
+            return "keyboard_page_up";
+        case raylib::KEY_PAGE_DOWN:
+            return "keyboard_page_down";
+        case raylib::KEY_HOME:
+            return "keyboard_home";
+        case raylib::KEY_END:
+            return "keyboard_end";
+        case raylib::KEY_CAPS_LOCK:
+            return "keyboard_caps_lock";
+        case raylib::KEY_SCROLL_LOCK:
+            return "keyboard_scroll_lock";
+        case raylib::KEY_NUM_LOCK:
+            return "keyboard_num_lock";
+        case raylib::KEY_PRINT_SCREEN:
+            return "keyboard_print_screen";
+        case raylib::KEY_PAUSE:
+            return "keyboard_pause";
+        case raylib::KEY_F1:
+            return "keyboard_f1";
+        case raylib::KEY_F2:
+            return "keyboard_f2";
+        case raylib::KEY_F3:
+            return "keyboard_f3";
+        case raylib::KEY_F4:
+            return "keyboard_f4";
+        case raylib::KEY_F5:
+            return "keyboard_f5";
+        case raylib::KEY_F6:
+            return "keyboard_f6";
+        case raylib::KEY_F7:
+            return "keyboard_f7";
+        case raylib::KEY_F8:
+            return "keyboard_f8";
+        case raylib::KEY_F9:
+            return "keyboard_f9";
+        case raylib::KEY_F10:
+            return "keyboard_f10";
+        case raylib::KEY_F11:
+            return "keyboard_f11";
+        case raylib::KEY_F12:
+            return "keyboard_f12";
+        case raylib::KEY_LEFT_CONTROL:
+            return "keyboard_left_control";
+        case raylib::KEY_LEFT_ALT:
+            return "keyboard_left_alt";
+        case raylib::KEY_RIGHT_SHIFT:
+            return "keyboard_right_shift";
+        case raylib::KEY_RIGHT_CONTROL:
+            return "keyboard_right_control";
+        case raylib::KEY_RIGHT_ALT:
+            return "keyboard_right_alt";
+        case raylib::KEY_RIGHT_SUPER:
+            return "keyboard_right_super";
+        case raylib::KEY_KB_MENU:
+            return "keyboard_kb_menu";
+        case raylib::KEY_KP_0:
+            return "keyboard_kp_0";
+        case raylib::KEY_KP_1:
+            return "keyboard_kp_1";
+        case raylib::KEY_KP_2:
+            return "keyboard_kp_2";
+        case raylib::KEY_KP_3:
+            return "keyboard_kp_3";
+        case raylib::KEY_KP_4:
+            return "keyboard_kp_4";
+        case raylib::KEY_KP_5:
+            return "keyboard_kp_5";
+        case raylib::KEY_KP_6:
+            return "keyboard_kp_6";
+        case raylib::KEY_KP_7:
+            return "keyboard_kp_7";
+        case raylib::KEY_KP_8:
+            return "keyboard_kp_8";
+        case raylib::KEY_KP_9:
+            return "keyboard_kp_9";
+        case raylib::KEY_KP_DECIMAL:
+            return "keyboard_kp_decimal";
+        case raylib::KEY_KP_DIVIDE:
+            return "keyboard_kp_divide";
+        case raylib::KEY_KP_MULTIPLY:
+            return "keyboard_kp_multiply";
+        case raylib::KEY_KP_SUBTRACT:
+            return "keyboard_kp_subtract";
+        case raylib::KEY_KP_ADD:
+            return "keyboard_kp_add";
+        case raylib::KEY_KP_ENTER:
+            return "keyboard_kp_enter";
+        case raylib::KEY_KP_EQUAL:
+            return "keyboard_kp_equal";
+        case raylib::KEY_BACK:
+            return "keyboard_back";
+        case raylib::KEY_VOLUME_UP:
+            return "keyboard_volume_up";
+        case raylib::KEY_VOLUME_DOWN:
+            return "keyboard_volume_down";
+        case raylib::KEY_NULL:
+            break;
+    }
+    return "";
+}
+
+std::string KeyMap::icon_for_input(AnyInput input) {
+    if (!input_to_icon.contains(input)) {
+        std::string value =
+            std::visit(util::overloaded{
+                           //
+                           [](int keycode) -> std::string {
+                               return icon_for_key(keycode);
+                           },
+                           [](GamepadAxisWithDir) -> std::string {
+                               return std::string("TODO AXIS?");
+                           },
+                           [](GamepadButton button) -> std::string {
+                               return icon_for_button(button);
+                           },
+                           [](auto) {},
+                       },
+                       input);
+
+        input_to_icon[input] = value;
+    }
+    return input_to_icon[input];
+}
+
 std::string KeyMap::name_for_input(AnyInput input) {
     if (!input_to_human_name.contains(input)) {
         std::string value =

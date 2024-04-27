@@ -234,6 +234,8 @@ ElementResult image_button(const Widget& widget,
 }
 
 ElementResult checkbox(const Widget& widget, const CheckboxData& data) {
+    // TODO add focus on hover
+    //
     if (internal::should_exit_early(widget)) return false;
     //
     auto state = context->widget_init<ui::CheckboxState>(
@@ -241,15 +243,20 @@ ElementResult checkbox(const Widget& widget, const CheckboxData& data) {
     state->on = data.selected;
     state->on.changed_since = false;
 
-    if (button(widget, NO_TRANSLATE(""), data.background)) {
-        state->on = !state->on;
+    if (data.content_is_icon) {
+        if (image_button(widget, data.content)) {
+            state->on = !state->on;
+        }
+    } else {
+        if (button(widget, NO_TRANSLATE(""), data.background)) {
+            state->on = !state->on;
+        }
+        const std::string default_label = state->on ? "  X" : " ";
+        const std::string label =
+            data.content.empty() ? default_label : data.content;
+
+        text(widget, NO_TRANSLATE(label));
     }
-
-    const std::string default_label = state->on ? "  X" : " ";
-    const std::string label =
-        data.content.empty() ? default_label : data.content;
-
-    text(widget, NO_TRANSLATE(label));
 
     return ElementResult{state->on.changed_since, (bool) state->on};
 }
@@ -496,7 +503,11 @@ ElementResult control_input_field(const Widget& widget,
                             ? ui::theme::Usage::Secondary
                             : ui::theme::Usage::Primary);
 
-    text(widget, TODO_TRANSLATE(data.content, TodoReason::Recursion));
+    if (data.content_is_icon) {
+        image(widget, data.content);
+    } else {
+        text(widget, TODO_TRANSLATE(data.content, TodoReason::Recursion));
+    }
 
     return ElementResult{valid, ai};
 }

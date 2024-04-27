@@ -165,8 +165,11 @@ struct KeyMap {
     std::string name_for_button(GamepadButton input);
     std::string name_for_input(AnyInput input);
 
+    std::string icon_for_input(AnyInput input);
+
    private:
     std::map<AnyInput, std::string, AnyInputLess> input_to_human_name;
+    std::map<AnyInput, std::string, AnyInputLess> input_to_icon;
     FullMap mapping;
 
     KeyMap() {
