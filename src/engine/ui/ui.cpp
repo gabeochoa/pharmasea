@@ -213,6 +213,10 @@ ElementResult image_button(const Widget& widget,
     internal::draw_focus_ring(widget);
     focus::handle_tabbing(widget);
 
+    if (focus::is_hot(widget.id)) {
+        focus::set(widget.id);
+    }
+
     const raylib::Texture texture = TextureLibrary::get().get(texture_name);
     const vec2 tex_size = {(float) texture.width, (float) texture.height};
     const vec2 button_size = {rect.width, rect.height};
