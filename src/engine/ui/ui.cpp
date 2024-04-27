@@ -113,8 +113,9 @@ ElementResult text(const Widget& widget, const TranslatableString& content,
     return true;
 }
 
-ElementResult scroll_window(const Widget& widget, Rectangle view,
-                            std::function<void(ScrollWindowResult)> children) {
+ElementResult scroll_window(
+    const Widget& widget, Rectangle view,
+    const std::function<void(ScrollWindowResult)>& children) {
     //
     auto state = context->widget_init<ui::ScrollViewState>(
         ui::MK_UUID(widget.id, widget.id));

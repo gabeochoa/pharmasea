@@ -42,8 +42,9 @@ ElementResult text(const Widget& widget, const TranslatableString& content,
 
 );
 
-ElementResult scroll_window(const Widget& widget, Rectangle view,
-                            std::function<void(ScrollWindowResult)> children);
+ElementResult scroll_window(
+    const Widget& widget, Rectangle view,
+    const std::function<void(ScrollWindowResult)>& children);
 
 ElementResult button(const Widget& widget,
                      const TranslatableString& content = NO_TRANSLATE(""),
