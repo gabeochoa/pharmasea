@@ -1399,6 +1399,46 @@ void make_jukebox(Entity& jukebox, vec2 pos) {
     jukebox.addComponent<HasLastInteractedCustomer>();
 }
 
+void make_interactive_settings_changet(
+    Entity& isc, vec2 pos,
+    IsRoundSettingsManager::InteractiveSettingChangerStyle style) {
+    furniture::make_furniture(isc, {EntityType::InteractiveSettingChanger},
+                              pos);
+
+    auto get_name =
+        [](IsRoundSettingsManager::InteractiveSettingChangerStyle style,
+           bool bool_value) {
+            switch (style) {
+                case IsRoundSettingsManager::ToggleIsTutorial:
+                    return fmt::format("Tutorial On: {}", bool_value);
+                    break;
+            }
+        };
+
+    isc.addComponent<HasName>().update(get_name(style, false));
+
+    isc.addComponent<HasWork>().init(
+        [style, get_name](Entity& isc, HasWork& hasWork, Entity& /*player*/,
+                          float dt) {
+            const float amt = 2.f;
+            hasWork.increase_pct(amt * dt);
+            if (!hasWork.is_work_complete()) return;
+            hasWork.reset_pct();
+
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+            switch (style) {
+                case IsRoundSettingsManager::ToggleIsTutorial: {
+                    irsm.interactive_settings.is_tutorial_active =
+                        !irsm.interactive_settings.is_tutorial_active;
+                    isc.get<HasName>().update(get_name(
+                        style, irsm.interactive_settings.is_tutorial_active));
+                } break;
+            }
+        });
+}
+
 }  // namespace furniture
 
 bool convert_to_type(const EntityType& entity_type, Entity& entity,
@@ -1519,6 +1559,12 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
 
         case EntityType::AITargetLocation: {
             make_ai_target_location(entity, pos);
+        } break;
+        case EntityType::InteractiveSettingChanger: {
+            log_warn(
+                "You should call 'make_interactive_setting_changer() manually "
+                "instead of using convert to type");
+            return false;
         } break;
 
         // TODO is anyone even doing this?

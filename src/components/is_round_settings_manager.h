@@ -9,6 +9,21 @@
 #include "base_component.h"
 
 struct IsRoundSettingsManager : public BaseComponent {
+    // TODO idk if this is the best place to put it but for now why not
+    enum InteractiveSettingChangerStyle {
+        ToggleIsTutorial,
+    };
+
+    struct InteractiveSettings {
+        bool is_tutorial_active = false;
+
+        friend bitsery::Access;
+        template<typename S>
+        void serialize(S& s) {
+            s.value1b(is_tutorial_active);
+        }
+    } interactive_settings;
+
     ConfigData config;
 
     std::vector<std::shared_ptr<UpgradeImpl>> selected_upgrades;

@@ -6,6 +6,7 @@
 
 #include "components/has_work.h"
 #include "components/is_floor_marker.h"
+#include "components/is_round_settings_manager.h"
 #include "components/is_spawner.h"
 #include "components/is_trigger_area.h"
 #include "dataclass/ingredient.h"
@@ -45,6 +46,10 @@ void make_vomit(Entity&, const SpawnInfo&);
 void make_fruit_basket(Entity&, vec2, int starting_index);
 void make_table(Entity&, vec2);
 void make_cupboard(Entity&, vec2, int index = 0);
+
+void make_interactive_settings_changet(
+    Entity& isc, vec2 pos,
+    IsRoundSettingsManager::InteractiveSettingChangerStyle style);
 
 }  // namespace furniture
 

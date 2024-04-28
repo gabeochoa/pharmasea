@@ -5,6 +5,7 @@
 #include <variant>
 
 #include "../engine/bitset_utils.h"
+#include "../engine/type_name.h"
 #include "settings.h"
 #include "upgrade_class.h"
 

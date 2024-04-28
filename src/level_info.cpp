@@ -5,6 +5,7 @@
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
 #include "components/is_progression_manager.h"
+#include "components/is_round_settings_manager.h"
 #include "components/is_trigger_area.h"
 #include "dataclass/ingredient.h"
 #include "engine/bitset_utils.h"
@@ -70,6 +71,14 @@ void LevelInfo::generate_lobby_map() {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_character_switcher(
             entity, vec::to2(lobby_origin) + vec2{4.f, -2.f});
+    }
+
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_interactive_settings_changet(
+            entity, vec::to2(lobby_origin) + vec2{6.f, -2.f},
+            IsRoundSettingsManager::InteractiveSettingChangerStyle::
+                ToggleIsTutorial);
     }
 
     {
