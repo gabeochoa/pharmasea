@@ -1402,8 +1402,11 @@ void make_jukebox(Entity& jukebox, vec2 pos) {
 void make_interactive_settings_changet(
     Entity& isc, vec2 pos,
     IsRoundSettingsManager::InteractiveSettingChangerStyle style) {
-    furniture::make_furniture(isc, {EntityType::InteractiveSettingChanger},
-                              pos);
+    furniture::make_furniture(isc, {EntityType::InteractiveSettingChanger}, pos,
+                              PINK, PINK,
+                              // we make this static so its not highlightable
+                              // but we want it to be a little
+                              true);
 
     auto get_name =
         [](IsRoundSettingsManager::InteractiveSettingChangerStyle style,
@@ -1417,9 +1420,23 @@ void make_interactive_settings_changet(
 
     isc.addComponent<HasName>().update(get_name(style, false));
 
+    auto update_color_for_bool = [](Entity& isc, bool value) {
+        // TODO eventually read from theme... (imports)
+        // auto color = value ? UI_THEME.from_usage(theme::Usage::Primary)
+        // : UI_THEME.from_usage(theme::Usage::Error);
+
+        auto color = value ?  //
+                         ui::color::green_apple
+                           : ui::color::red;
+
+        isc.get<SimpleColoredBoxRenderer>()  //
+            .update_face(color)
+            .update_base(color);
+    };
+
     isc.addComponent<HasWork>().init(
-        [style, get_name](Entity& isc, HasWork& hasWork, Entity& /*player*/,
-                          float dt) {
+        [style, get_name, update_color_for_bool](Entity& isc, HasWork& hasWork,
+                                                 Entity& /*player*/, float dt) {
             const float amt = 2.f;
             hasWork.increase_pct(amt * dt);
             if (!hasWork.is_work_complete()) return;
@@ -1434,6 +1451,8 @@ void make_interactive_settings_changet(
                         !irsm.interactive_settings.is_tutorial_active;
                     isc.get<HasName>().update(get_name(
                         style, irsm.interactive_settings.is_tutorial_active));
+                    update_color_for_bool(
+                        isc, irsm.interactive_settings.is_tutorial_active);
                 } break;
             }
         });
