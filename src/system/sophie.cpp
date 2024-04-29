@@ -24,6 +24,7 @@
 namespace system_manager {
 
 namespace sophie {
+
 void customers_in_store(Entity& entity) {
     // Handle customers finally leaving the store
     // TODO with the others siwtch to something else... customer

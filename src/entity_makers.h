@@ -29,6 +29,9 @@ void update_player_rare_remotely(Entity& entity, int model_index,
 void make_player(Entity& player, vec3 p);
 void make_customer(Entity& customer, const SpawnInfo& info, bool has_order);
 
+void make_entity(Entity& entity, const DebugOptions& options,
+                 vec3 p = {-2, 0, -2});
+
 namespace furniture {
 
 void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown);

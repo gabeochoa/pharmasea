@@ -46,6 +46,7 @@
 #include "../components/is_free_in_store.h"
 #include "../components/is_item.h"
 #include "../components/is_item_container.h"
+#include "../components/is_nux_manager.h"
 #include "../components/is_pnumatic_pipe.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_rotatable.h"
@@ -93,7 +94,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
           AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
           AIPlayJukebox, HasLastInteractedCustomer,
-          CanChangeSettingsInteractively,
+          CanChangeSettingsInteractively, IsNuxManager, IsNux,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

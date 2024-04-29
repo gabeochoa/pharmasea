@@ -1160,6 +1160,72 @@ void update_visuals_for_settings_changer(Entity& entity, float) {
     }
 }
 
+void __create_nuxes(Entity&) {
+    {
+        auto& entity = EntityHelper::createEntity();
+        make_entity(entity, {EntityType::Unknown}, {0, 0});
+
+        entity.addComponent<SimpleColoredBoxRenderer>()
+            .update_base(RED)
+            .update_face(PINK);
+
+        entity.addComponent<IsNux>()
+            .set_eligibility_fn([]() -> bool { return true; })
+            .set_completion_fn([&]() -> bool {
+                // TODO need to check "has been dropped"
+                return EntityQuery()
+                    .whereCollides(entity.get<Transform>().raw_bounds())
+                    .whereHasComponent<IsSolid>()
+                    .has_values();
+            })
+            .set_content("example nux");
+    }
+}
+
+void process_nux_updates(Entity& entity, float) {
+    if (entity.is_missing<IsNuxManager>()) return;
+
+    IsNuxManager& inm = entity.get<IsNuxManager>();
+    if (!inm.initialized) {
+        __create_nuxes(entity);
+        inm.initialized = true;
+    }
+
+    OptEntity active_nux = EntityQuery()
+                               .whereHasComponent<IsNux>()
+                               .whereLambda([](const Entity& entity) {
+                                   return entity.get<IsNux>().is_active;
+                               })
+                               // there should only ever be one
+                               .gen_first();
+
+    // Process updates for current showing nux
+    if (active_nux.has_value()) {
+        Entity& nux = active_nux.asE();
+        IsNux& inux = nux.get<IsNux>();
+        if (inux.isComplete()) {
+            nux.cleanup = true;
+            active_nux = {};
+        }
+    }
+
+    // if that one is still active, nothing else to do
+    if (active_nux.has_value()) return;
+
+    // find next active nux
+    OptEntity next_active = EntityQuery()
+                                .whereHasComponent<IsNux>()
+                                .whereLambda([](const Entity& entity) {
+                                    return entity.get<IsNux>().shouldTrigger();
+                                })
+                                .gen_first();
+
+    // if we found one, then make it active
+    if (next_active.has_value()) {
+        next_active->get<IsNux>().is_active = true;
+    }
+}
+
 void process_spawner(Entity& entity, float dt) {
     if (entity.is_missing<IsSpawner>()) return;
     vec2 pos = entity.get<Transform>().as2();
@@ -1991,6 +2057,7 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
 
         system_manager::process_trigger_area(entity, dt);
         system_manager::update_visuals_for_settings_changer(entity, dt);
+        system_manager::process_nux_updates(entity, dt);
 
         system_manager::render_manager::update_character_model_from_index(
             entity, dt);

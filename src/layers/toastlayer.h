@@ -63,6 +63,7 @@ struct ToastLayer : public BaseGameRendererLayer {
             t_accent.a = alpha;
             t_font_color.a = alpha;
 
+            // TODO replace this with just the outline or something
             div(Widget{Rectangle{
                     spot.x,
                     spot.y + (WIN_HF() * 0.005f),

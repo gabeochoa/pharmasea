@@ -19,6 +19,7 @@
 #include "components/is_bank.h"
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
+#include "components/is_nux_manager.h"
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
 #include "components/is_round_settings_manager.h"
@@ -141,6 +142,7 @@ void register_all_components() {
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
         IsFreeInStore, IsToilet, IsRoundSettingsManager, IsStoreSpawned,
+        IsNuxManager, IsNux,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
@@ -215,8 +217,7 @@ void add_person_components(Entity& person, DebugOptions options = {}) {
     }
 }
 
-void make_entity(Entity& entity, const DebugOptions& options,
-                 vec3 p = {-2, 0, -2}) {
+void make_entity(Entity& entity, const DebugOptions& options, vec3 p) {
     entity.type = options.type;
 
     add_entity_components(entity);
@@ -835,6 +836,7 @@ void make_sophie(Entity& sophie, vec3 pos) {
         irsm.get_for_init<float>(ConfigKey::RoundLength));
     sophie.addComponent<IsProgressionManager>().init();
     sophie.addComponent<IsBank>();
+    sophie.addComponent<IsNuxManager>();
 }
 
 void make_vomit(Entity& vomit, const SpawnInfo& info) {
