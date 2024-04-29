@@ -15,6 +15,7 @@
 #include "../components/can_be_highlighted.h"
 #include "../components/can_be_pushed.h"
 #include "../components/can_be_taken_from.h"
+#include "../components/can_change_settings_interactively.h"
 #include "../components/can_grab_from_other_furniture.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
@@ -92,6 +93,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
           AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
           AIPlayJukebox, HasLastInteractedCustomer,
+          CanChangeSettingsInteractively,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};

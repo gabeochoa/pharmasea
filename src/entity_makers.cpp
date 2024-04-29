@@ -9,6 +9,7 @@
 #include "components/ai_play_jukebox.h"
 #include "components/ai_use_bathroom.h"
 #include "components/ai_wait_in_queue.h"
+#include "components/can_change_settings_interactively.h"
 #include "components/can_pathfind.h"
 #include "components/has_fishing_game.h"
 #include "components/has_last_interacted_customer.h"
@@ -145,7 +146,7 @@ void register_all_components() {
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
         CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
-        CanOrderDrink, CanPathfind,
+        CanOrderDrink, CanPathfind, CanChangeSettingsInteractively,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
@@ -1400,43 +1401,18 @@ void make_jukebox(Entity& jukebox, vec2 pos) {
 }
 
 void make_interactive_settings_changet(
-    Entity& isc, vec2 pos,
-    IsRoundSettingsManager::InteractiveSettingChangerStyle style) {
+    Entity& isc, vec2 pos, CanChangeSettingsInteractively::Style style) {
     furniture::make_furniture(isc, {EntityType::InteractiveSettingChanger}, pos,
                               PINK, PINK,
                               // we make this static so its not highlightable
                               // but we want it to be a little
                               true);
 
-    auto get_name =
-        [](IsRoundSettingsManager::InteractiveSettingChangerStyle style,
-           bool bool_value) {
-            switch (style) {
-                case IsRoundSettingsManager::ToggleIsTutorial:
-                    return fmt::format("Tutorial On: {}", bool_value);
-                    break;
-            }
-        };
-
-    isc.addComponent<HasName>().update(get_name(style, false));
-
-    auto update_color_for_bool = [](Entity& isc, bool value) {
-        // TODO eventually read from theme... (imports)
-        // auto color = value ? UI_THEME.from_usage(theme::Usage::Primary)
-        // : UI_THEME.from_usage(theme::Usage::Error);
-
-        auto color = value ?  //
-                         ui::color::green_apple
-                           : ui::color::red;
-
-        isc.get<SimpleColoredBoxRenderer>()  //
-            .update_face(color)
-            .update_base(color);
-    };
+    isc.addComponent<HasName>();
+    isc.addComponent<CanChangeSettingsInteractively>(style);
 
     isc.addComponent<HasWork>().init(
-        [style, get_name, update_color_for_bool](Entity& isc, HasWork& hasWork,
-                                                 Entity& /*player*/, float dt) {
+        [](Entity& isc, HasWork& hasWork, Entity& /*player*/, float dt) {
             const float amt = 2.f;
             hasWork.increase_pct(amt * dt);
             if (!hasWork.is_work_complete()) return;
@@ -1445,15 +1421,15 @@ void make_interactive_settings_changet(
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
+            auto style = isc.get<CanChangeSettingsInteractively>().style;
+
             switch (style) {
-                case IsRoundSettingsManager::ToggleIsTutorial: {
+                case CanChangeSettingsInteractively::ToggleIsTutorial: {
                     irsm.interactive_settings.is_tutorial_active =
                         !irsm.interactive_settings.is_tutorial_active;
-                    isc.get<HasName>().update(get_name(
-                        style, irsm.interactive_settings.is_tutorial_active));
-                    update_color_for_bool(
-                        isc, irsm.interactive_settings.is_tutorial_active);
                 } break;
+                case CanChangeSettingsInteractively::Unknown:
+                    break;
             }
         });
 }

@@ -1107,6 +1107,59 @@ void process_trigger_area(Entity& entity, float dt) {
     trigger_cb_on_full_progress(entity, dt);
 }
 
+void update_visuals_for_settings_changer(Entity& entity, float) {
+    if (entity.is_missing<CanChangeSettingsInteractively>()) return;
+
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+    auto get_name = [](CanChangeSettingsInteractively::Style style,
+                       bool bool_value) {
+        auto bool_str = bool_value ? "Enabled" : "Disabled";
+
+        switch (style) {
+            case CanChangeSettingsInteractively::ToggleIsTutorial:
+                return fmt::format("Tutorial: {}", bool_str);
+                break;
+            case CanChangeSettingsInteractively::Unknown:
+                break;
+        }
+        log_warn(
+            "Tried to get_name for Interactive Setting Style {} but it was not "
+            "handled",
+            magic_enum::enum_name<CanChangeSettingsInteractively::Style>(
+                style));
+        return std::string("");
+    };
+
+    auto update_color_for_bool = [](Entity& isc, bool value) {
+        // TODO eventually read from theme... (imports)
+        // auto color = value ? UI_THEME.from_usage(theme::Usage::Primary)
+        // : UI_THEME.from_usage(theme::Usage::Error);
+
+        auto color = value ?  //
+                         ::ui::color::green_apple
+                           : ::ui::color::red;
+
+        isc.get<SimpleColoredBoxRenderer>()  //
+            .update_face(color)
+            .update_base(color);
+    };
+
+    auto style = entity.get<CanChangeSettingsInteractively>().style;
+
+    switch (style) {
+        case CanChangeSettingsInteractively::ToggleIsTutorial: {
+            entity.get<HasName>().update(
+                get_name(style, irsm.interactive_settings.is_tutorial_active));
+            update_color_for_bool(entity,
+                                  irsm.interactive_settings.is_tutorial_active);
+        } break;
+        case CanChangeSettingsInteractively::Unknown:
+            break;
+    }
+}
+
 void process_spawner(Entity& entity, float dt) {
     if (entity.is_missing<IsSpawner>()) return;
     vec2 pos = entity.get<Transform>().as2();
@@ -1937,6 +1990,7 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
         system_manager::update_held_item_position(entity, dt);
 
         system_manager::process_trigger_area(entity, dt);
+        system_manager::update_visuals_for_settings_changer(entity, dt);
 
         system_manager::render_manager::update_character_model_from_index(
             entity, dt);
