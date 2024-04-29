@@ -172,6 +172,13 @@ struct EntityQuery {
     auto& whereCollides(BoundingBox box) {
         return add_mod(new WhereCollides(box));
     }
+
+    auto& whereIsNotBeingHeld() {
+        return add_mod(new WhereHasComponent<CanBeHeld>())
+            .add_mod(new WhereLambda([](const Entity& entity) {
+                return entity.get<CanBeHeld>().is_not_held();
+            }));
+    }
     /////////
 
     using OrderByFn = std::function<bool(const Entity&, const Entity&)>;

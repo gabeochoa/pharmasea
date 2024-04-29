@@ -1172,10 +1172,10 @@ void __create_nuxes(Entity&) {
         entity.addComponent<IsNux>()
             .set_eligibility_fn([]() -> bool { return true; })
             .set_completion_fn([&]() -> bool {
-                // TODO need to check "has been dropped"
                 return EntityQuery()
                     .whereCollides(entity.get<Transform>().raw_bounds())
                     .whereHasComponent<IsSolid>()
+                    .whereIsNotBeingHeld()
                     .has_values();
             })
             .set_content("example nux");
