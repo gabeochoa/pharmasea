@@ -222,12 +222,8 @@ void draw_valid_colored_box(const Transform& transform,
                    transform.sizez(), transform.facing, f, b);
 }
 
-bool draw_internal_model(const Entity& entity, Color color) {
-    if (entity.is_missing<ModelRenderer>()) return false;
-    if (entity.is_missing<Transform>()) return false;
-
-    const Transform& transform = entity.get<Transform>();
-    const ModelRenderer& renderer = entity.get<ModelRenderer>();
+bool draw_transform_with_model(const Transform& transform,
+                               const ModelRenderer& renderer, Color color) {
     if (renderer.missing()) return false;
     ModelInfo& model_info = renderer.model_info();
 
@@ -243,6 +239,15 @@ bool draw_internal_model(const Entity& entity, Color color) {
                 transform.size() * model_info.size_scale, color);
 
     return true;
+}
+
+bool draw_internal_model(const Entity& entity, Color color) {
+    if (entity.is_missing<ModelRenderer>()) return false;
+    if (entity.is_missing<Transform>()) return false;
+
+    const Transform& transform = entity.get<Transform>();
+    const ModelRenderer& renderer = entity.get<ModelRenderer>();
+    return draw_transform_with_model(transform, renderer, color);
 }
 
 void update_character_model_from_index(Entity& entity, float) {
@@ -511,13 +516,18 @@ void render_nux(const Entity& entity, float) {
     // _render_ghost
     {
         if (nux.ghost != EntityType::Unknown) {
-            // TODO eventually draw an example of what the ghost type is
-            // we probably have to make ent for it (and add IsGhost) or
-            // something, then we can just do render_normal(ghost)
-            DrawCubeCustom(
-                transform.pos(), 1.f, 1.f, 1.f, 0,
-                ui::color::change_opacity(ui::color::green_apple, 100),
+            ModelRenderer ghost(nux.ghost);
+
+            bool has_model = draw_transform_with_model(
+                transform, ghost,
                 ui::color::change_opacity(ui::color::green_apple, 100));
+
+            if (!has_model) {
+                DrawCubeCustom(
+                    transform.pos(), 1.f, 1.f, 1.f, 0,
+                    ui::color::change_opacity(ui::color::green_apple, 100),
+                    ui::color::change_opacity(ui::color::green_apple, 100));
+            }
         }
     }
 }
