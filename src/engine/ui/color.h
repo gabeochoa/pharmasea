@@ -14,6 +14,14 @@ inline Color getOppositeColor(const Color& color) {
                  color.a};
 }
 
+inline Color change_opacity(const Color& color, unsigned char alpha) {
+    return Color{                                      //
+                 static_cast<unsigned char>(color.r),  //
+                 static_cast<unsigned char>(color.g),  //
+                 static_cast<unsigned char>(color.b),  //
+                 alpha};
+}
+
 inline unsigned char comp_min(const Color& a) {
     return (unsigned char) std::min({a.r, a.g, a.b});
 }
