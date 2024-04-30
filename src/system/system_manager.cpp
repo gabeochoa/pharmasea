@@ -1229,8 +1229,7 @@ bool __create_nuxes(Entity&) {
                     .whereSnappedPositionMatches(entity)
                     .has_values();
             })
-            // .set_ghost(EntityType::Register)
-            .set_ghost(EntityType::FastForward)
+            .set_ghost(EntityType::Register)
             .set_content("Place it on the highlighted square");
     }
 
