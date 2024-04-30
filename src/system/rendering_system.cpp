@@ -508,8 +508,7 @@ void render_nux(const Entity& entity, float) {
             // we probably have to make ent for it (and add IsGhost) or
             // something, then we can just do render_normal(ghost)
             DrawCubeCustom(
-                transform.raw(), transform.sizex(), transform.sizey(),
-                transform.sizez(), transform.facing,
+                transform.pos(), 1.f, 1.f, 1.f, 0,
                 ui::color::change_opacity(ui::color::green_apple, 100),
                 ui::color::change_opacity(ui::color::green_apple, 100));
         }

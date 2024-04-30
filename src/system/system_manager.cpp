@@ -1167,17 +1167,15 @@ bool __create_nuxes(Entity&) {
                            .whereType(EntityType::Player)
                            .gen_first();
     if (!player.has_value()) return false;
-
     OptEntity reg = EntityQuery().whereType(EntityType::Register).gen_first();
-
     if (!reg.has_value()) return false;
 
-    {
-        int player_id = player->id;
-        int register_id = reg->id;
+    int player_id = player->id;
+    int register_id = reg->id;
 
+    {
         auto& entity = EntityHelper::createEntity();
-        make_entity(entity, {EntityType::Unknown}, {0, 0});
+        make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
 
         entity.addComponent<IsNux>()
             .should_attach_to(player_id)
@@ -1193,41 +1191,46 @@ bool __create_nuxes(Entity&) {
                     .whereInRange(reg->get<Transform>().as2(), 2.f)
                     .has_values();
             })
-            .set_content("Go inside and look for the register");
+            .set_content("Look for the register");
     }
 
     {
         auto& entity = EntityHelper::createEntity();
-        make_entity(entity, {EntityType::Unknown}, {0, 0});
+        make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
 
         entity.addComponent<IsNux>()
+            .should_attach_to(player_id)
             .set_eligibility_fn([](const IsNux&) -> bool { return true; })
-            .set_completion_fn([&](const IsNux&) -> bool {
-                return EntityQuery()
-                    .whereCollides(entity.get<Transform>().raw_bounds())
-                    .whereHasComponent<IsSolid>()
-                    .whereIsNotBeingHeld()
-                    .has_values();
-            })
-            .set_ghost(EntityType::Table)
-            .set_content("example nux");
-    }
-
-    {
-        // Find a random register
-        auto& entity = EntityHelper::createEntity();
-        make_entity(entity, {EntityType::Unknown}, {10, 10});
-
-        entity.addComponent<IsNux>()
-            .should_attach_to(reg->id)
-            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
-            .set_completion_fn([](const IsNux& inux) -> bool {
-                return EntityQuery()
+            .set_completion_fn([register_id](const IsNux& inux) -> bool {
+                return EntityQuery(SystemManager::get().oldAll)
                     .whereID(inux.entityID)
-                    .whereSnappedPositionMatches({0, 0})
+                    .whereLambda([register_id](const Entity& player) {
+                        const CanHoldFurniture& chf =
+                            player.get<CanHoldFurniture>();
+                        return chf.is_holding_furniture() &&
+                               chf.furniture_id() == register_id;
+                    })
                     .has_values();
             })
-            .set_content("Place me at 0,0");
+            // TODO replace playerpickup with the actual control
+            .set_content("Grab it with [PlayerPickup]");
+    }
+
+    {
+        auto& entity = EntityHelper::createEntity();
+        make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+        entity.addComponent<IsNux>()
+            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+            .set_completion_fn([register_id, &entity](const IsNux&) -> bool {
+                return EntityQuery()
+                    .whereID(register_id)
+                    .whereIsNotBeingHeld()
+                    .whereSnappedPositionMatches(entity)
+                    .has_values();
+            })
+            .set_ghost(EntityType::Register)
+            .set_content("Place it on the highlighted square");
     }
 
     log_info("created nuxes");
