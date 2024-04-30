@@ -480,6 +480,13 @@ void render_nux(const Entity& entity, float) {
     vec3 entity_pos = transform.pos();
     if (nux.is_attached()) {
         OptEntity attached_opt = EntityHelper::getEntityForID(nux.entityID);
+        // if the attached entity is a player we have to do something else
+        if (!attached_opt.has_value()) {
+            attached_opt = EntityQuery(SystemManager::get().oldAll)
+                               .whereID(nux.entityID)
+                               .gen_first();
+        }
+
         if (attached_opt.has_value()) {
             entity_pos = attached_opt->get<Transform>().pos();
         }

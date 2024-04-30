@@ -1160,7 +1160,42 @@ void update_visuals_for_settings_changer(Entity& entity, float) {
     }
 }
 
-void __create_nuxes(Entity&) {
+bool __create_nuxes(Entity&) {
+    if (GameState::get().read() != game::State::Planning) return false;
+
+    OptEntity player = EntityQuery(SystemManager::get().oldAll)
+                           .whereType(EntityType::Player)
+                           .gen_first();
+    if (!player.has_value()) return false;
+
+    OptEntity reg = EntityQuery().whereType(EntityType::Register).gen_first();
+
+    if (!reg.has_value()) return false;
+
+    {
+        int player_id = player->id;
+        int register_id = reg->id;
+
+        auto& entity = EntityHelper::createEntity();
+        make_entity(entity, {EntityType::Unknown}, {0, 0});
+
+        entity.addComponent<IsNux>()
+            .should_attach_to(player_id)
+            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+            .set_completion_fn([register_id](const IsNux& inux) -> bool {
+                OptEntity reg = EntityQuery().whereID(register_id).gen_first();
+                if (!reg.has_value()) return false;
+
+                // We have to do oldAll because players
+                // are not in the normal entity list
+                return EntityQuery(SystemManager::get().oldAll)
+                    .whereID(inux.entityID)
+                    .whereInRange(reg->get<Transform>().as2(), 2.f)
+                    .has_values();
+            })
+            .set_content("Go inside and look for the register");
+    }
+
     {
         auto& entity = EntityHelper::createEntity();
         make_entity(entity, {EntityType::Unknown}, {0, 0});
@@ -1180,26 +1215,23 @@ void __create_nuxes(Entity&) {
 
     {
         // Find a random register
-        OptEntity reg =
-            EntityQuery().whereType(EntityType::Register).gen_first();
-        if (reg.has_value()) {
-            auto& entity = EntityHelper::createEntity();
-            make_entity(entity, {EntityType::Unknown}, {10, 10});
+        auto& entity = EntityHelper::createEntity();
+        make_entity(entity, {EntityType::Unknown}, {10, 10});
 
-            entity.addComponent<IsNux>()
-                .should_attach_to(reg->id)
-                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
-                .set_completion_fn([](const IsNux& inux) -> bool {
-                    return EntityQuery()
-                        .whereID(inux.entityID)
-                        .whereSnappedPositionMatches({0, 0})
-                        .has_values();
-                })
-                .set_content("Place me at 0,0");
-        } else {
-            log_warn("could not find register?");
-        }
+        entity.addComponent<IsNux>()
+            .should_attach_to(reg->id)
+            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+            .set_completion_fn([](const IsNux& inux) -> bool {
+                return EntityQuery()
+                    .whereID(inux.entityID)
+                    .whereSnappedPositionMatches({0, 0})
+                    .has_values();
+            })
+            .set_content("Place me at 0,0");
     }
+
+    log_info("created nuxes");
+    return true;
 }
 
 void process_nux_updates(Entity& entity, float) {
@@ -1207,8 +1239,9 @@ void process_nux_updates(Entity& entity, float) {
 
     IsNuxManager& inm = entity.get<IsNuxManager>();
     if (!inm.initialized) {
-        __create_nuxes(entity);
-        inm.initialized = true;
+        bool init = __create_nuxes(entity);
+        if (!init) return;
+        inm.initialized = init;
     }
 
     OptEntity active_nux = EntityQuery()
@@ -1427,8 +1460,8 @@ void process_squirter(Entity& entity, float) {
     // cant squirt into this !
     if (sqCHI.item().is_missing<IsDrink>()) return;
 
-    // so we got something, lets see if anyone around can give us something
-    // to use
+    // so we got something, lets see if anyone around can give us
+    // something to use
 
     OptEntity closest_furniture = EntityHelper::getClosestMatchingEntity(
         entity.get<Transform>().as2(), 1.25f, [](const Entity& f) {
@@ -1532,7 +1565,8 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
     {
         int max_num_orders =
-            // max() here to avoid a situation where we get 0 after an upgrade
+            // max() here to avoid a situation where we get 0 after an
+            // upgrade
             (int) fmax(1, irsm.get<int>(ConfigKey::MaxNumOrders));
 
         cod.reset_customer(max_num_orders,
@@ -1541,7 +1575,8 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
     {
         // Set the patience based on how many ingredients there are
-        // TODO add a map of ingredient to how long it probably takes to make
+        // TODO add a map of ingredient to how long it probably takes to
+        // make
 
         auto ingredients = get_req_ingredients_for_drink(cod.get_order());
         float patience_multiplier =
@@ -1712,8 +1747,8 @@ void cleanup_old_store_options() {
 void generate_store_options() {
     // Figure out what kinds of things we can spawn generally
     // - what is spawnable?
-    // - are they capped by progression? (alcohol / fruits for sure right?)
-    // choose a couple options to spawn
+    // - are they capped by progression? (alcohol / fruits for sure
+    // right?) choose a couple options to spawn
     // - how many?
     // spawn them
     // - use the place machine thing
@@ -1768,7 +1803,9 @@ void generate_store_options() {
 
         if (!success) {
             entity.cleanup = true;
-            log_error("Store spawn of newly unlocked item failed to generate");
+            log_error(
+                "Store spawn of newly unlocked item failed to "
+                "generate");
         }
     }
     irsm.config.store_to_spawn.clear();
@@ -1808,7 +1845,8 @@ void move_purchased_furniture() {
         }
 
         // Some items can hold other items, we should move that item too
-        // they arent being caught by the marker since we only mark solid items
+        // they arent being caught by the marker since we only mark
+        // solid items
         system_manager::update_held_item_position(marked_entity.asE(), 0.f);
 
         // Its not free!
@@ -1834,7 +1872,8 @@ inline void in_round_update(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
-    // TODO can i just use entity here? irsm should be on the same ent as ipm?
+    // TODO can i just use entity here? irsm should be on the same ent
+    // as ipm?
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
 
@@ -1886,7 +1925,8 @@ inline void in_round_update(Entity& entity, float) {
     for (const auto& upgrade : irsm.selected_upgrades) {
         if (!upgrade->onHourActions) continue;
 
-        // We start at 1 since its normal to have 1 hour missed ^^ see above
+        // We start at 1 since its normal to have 1 hour missed ^^ see
+        // above
         int i = 1;
         while (i < hours_missed) {
             log_info("running actions for {} for hour {} (currently {})",
@@ -2008,8 +2048,9 @@ void SystemManager::process_state_change(
             // Handle updating all the things that rely on progression
             system_manager::update_new_max_customers(entity, dt);
 
-            // I think this will only happen when you debug change round while
-            // customers are already in line, but doesnt hurt to reset
+            // I think this will only happen when you debug change round
+            // while customers are already in line, but doesnt hurt to
+            // reset
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
             system_manager::upgrade::on_round_finished(entity, dt);
@@ -2084,10 +2125,10 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
         system_manager::render_manager::update_character_model_from_index(
             entity, dt);
 
-        // TODO :SPEED: originally this was running in "process_game_state"
-        // and only supposed to run on transitions but
-        // when i fixed it to actually run only on transitions
-        // it broke the model for vodka (just different one) and lime
+        // TODO :SPEED: originally this was running in
+        // "process_game_state" and only supposed to run on transitions
+        // but when i fixed it to actually run only on transitions it
+        // broke the model for vodka (just different one) and lime
         // (invisible)
         //
         // For now its okay to stay here its just a perf thing
@@ -2157,7 +2198,8 @@ void SystemManager::in_round_update(
 
 void SystemManager::store_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // If you add something here think should it also go in planning?
+        // If you add something here think should it also go in
+        // planning?
         system_manager::update_held_furniture_position(entity, dt);
         system_manager::store::cart_management(entity, dt);
         system_manager::pop_out_when_colliding(entity, dt);
@@ -2179,8 +2221,8 @@ void SystemManager::planning_update(
 
 void SystemManager::progression_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // TODO this runs every progression frame when it probably just needs to
-        // run on transition
+        // TODO this runs every progression frame when it probably just
+        // needs to run on transition
         system_manager::progression::collect_progression_options(entity, dt);
     });
 }
@@ -2192,15 +2234,15 @@ void SystemManager::render_entities(const Entities& entities, float dt) const {
     // debug only
     system_manager::render_manager::render_walkable_spots(dt);
 
-    // TODO do measurements on if the game actually runs faster with camera
-    // culling
+    // TODO do measurements on if the game actually runs faster with
+    // camera culling
     //
     // GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
 
     for_each(entities, dt, [debug_mode_on](const Entity& entity, float dt) {
         // vec2 e_pos = entity.get<Transform>().as2();
-        // if (vec::distance(e_pos, vec::to2(cam.camera.position)) > 50.f) {
-        // return;
+        // if (vec::distance(e_pos,
+        // vec::to2(cam.camera.position)) > 50.f) { return;
         // }
 
         system_manager::render_manager::render(entity, dt, debug_mode_on);
