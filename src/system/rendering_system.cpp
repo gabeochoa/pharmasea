@@ -475,7 +475,15 @@ void render_nux(const Entity& entity, float) {
     const IsNux& nux = entity.get<IsNux>();
     const Transform& transform = entity.get<Transform>();
 
+    if (!nux.is_active) return;
+
     vec3 entity_pos = transform.pos();
+    if (nux.is_attached()) {
+        OptEntity attached_opt = EntityHelper::getEntityForID(nux.entityID);
+        if (attached_opt.has_value()) {
+            entity_pos = attached_opt->get<Transform>().pos();
+        }
+    }
 
     // _render_tooltip
     {

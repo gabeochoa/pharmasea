@@ -1166,8 +1166,8 @@ void __create_nuxes(Entity&) {
         make_entity(entity, {EntityType::Unknown}, {0, 0});
 
         entity.addComponent<IsNux>()
-            .set_eligibility_fn([]() -> bool { return true; })
-            .set_completion_fn([&]() -> bool {
+            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+            .set_completion_fn([&](const IsNux&) -> bool {
                 return EntityQuery()
                     .whereCollides(entity.get<Transform>().raw_bounds())
                     .whereHasComponent<IsSolid>()
@@ -1176,6 +1176,29 @@ void __create_nuxes(Entity&) {
             })
             .set_ghost(EntityType::Table)
             .set_content("example nux");
+    }
+
+    {
+        // Find a random register
+        OptEntity reg =
+            EntityQuery().whereType(EntityType::Register).gen_first();
+        if (reg.has_value()) {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, {10, 10});
+
+            entity.addComponent<IsNux>()
+                .should_attach_to(reg->id)
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn([](const IsNux& inux) -> bool {
+                    return EntityQuery()
+                        .whereID(inux.entityID)
+                        .whereSnappedPositionMatches({0, 0})
+                        .has_values();
+                })
+                .set_content("Place me at 0,0");
+        } else {
+            log_warn("could not find register?");
+        }
     }
 }
 
@@ -1200,20 +1223,22 @@ void process_nux_updates(Entity& entity, float) {
     if (active_nux.has_value()) {
         Entity& nux = active_nux.asE();
         IsNux& inux = nux.get<IsNux>();
-        if (inux.isComplete()) {
+        if (inux.isComplete(inux)) {
             nux.cleanup = true;
+            inux.is_active = false;
             active_nux = {};
         }
     }
 
     // if that one is still active, nothing else to do
-    if (active_nux.has_value()) return;
+    if (active_nux.has_value() && active_nux->get<IsNux>().is_active) return;
 
     // find next active nux
     OptEntity next_active = EntityQuery()
                                 .whereHasComponent<IsNux>()
                                 .whereLambda([](const Entity& entity) {
-                                    return entity.get<IsNux>().shouldTrigger();
+                                    const IsNux& inux = entity.get<IsNux>();
+                                    return inux.shouldTrigger(inux);
                                 })
                                 .gen_first();
 

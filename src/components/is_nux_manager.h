@@ -5,10 +5,12 @@
 #include "../vec_util.h"
 #include "base_component.h"
 
+struct IsNux;
+
 struct IsNux : public BaseComponent {
     bool is_active = false;
-    std::function<bool()> shouldTrigger;
-    std::function<bool()> isComplete;
+    std::function<bool(const IsNux&)> shouldTrigger;
+    std::function<bool(const IsNux&)> isComplete;
 
     int entityID = -1;
     EntityType ghost = EntityType::Unknown;
@@ -19,12 +21,12 @@ struct IsNux : public BaseComponent {
 
     [[nodiscard]] bool is_attached() const { return entityID != -1; }
 
-    auto& set_eligibility_fn(const std::function<bool()>& trigger) {
+    auto& set_eligibility_fn(const std::function<bool(const IsNux&)>& trigger) {
         shouldTrigger = trigger;
         return *this;
     }
 
-    auto& set_completion_fn(const std::function<bool()>& trigger) {
+    auto& set_completion_fn(const std::function<bool(const IsNux&)>& trigger) {
         isComplete = trigger;
         return *this;
     }
