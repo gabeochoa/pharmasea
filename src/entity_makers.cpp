@@ -224,6 +224,13 @@ void make_entity(Entity& entity, const DebugOptions& options, vec3 p) {
     entity.get<Transform>().update(p);
 }
 
+void make_entity(Entity& entity, const DebugOptions& options, vec2 p) {
+    // This function exists because without it calling
+    // make_entity(..., {0,1}) would call the vec3 version
+    // but with y = 1 instead of z = 1 as youd expect
+    return make_entity(entity, options, vec::to3(p));
+}
+
 void add_player_components(Entity& player) {
     player.addComponent<CanHighlightOthers>();
     player.addComponent<CanHoldFurniture>();

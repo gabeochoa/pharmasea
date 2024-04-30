@@ -261,8 +261,8 @@ struct Transform : public BaseComponent {
     }
 
     vec3 _size = {TILESIZE, TILESIZE, TILESIZE};
-    vec3 position;
-    vec3 raw_position;
+    vec3 position = {0, 0, 0};
+    vec3 raw_position = {0, 0, 0};
 
     friend bitsery::Access;
     template<typename S>

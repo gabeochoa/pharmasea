@@ -32,6 +32,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order);
 void make_entity(Entity& entity, const DebugOptions& options,
                  vec3 p = {-2, 0, -2});
 
+void make_entity(Entity& entity, const DebugOptions& options, vec2 p);
+
 namespace furniture {
 
 void make_wall(Entity& wall, vec2 pos, Color c = ui::color::brown);
