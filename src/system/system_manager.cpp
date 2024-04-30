@@ -1240,6 +1240,11 @@ bool __create_nuxes(Entity&) {
 void process_nux_updates(Entity& entity, float) {
     if (entity.is_missing<IsNuxManager>()) return;
 
+    // Tutorial isnt on so dont do any nuxes
+    if (!entity.get<IsRoundSettingsManager>()
+             .interactive_settings.is_tutorial_active)
+        return;
+
     IsNuxManager& inm = entity.get<IsNuxManager>();
     if (!inm.initialized) {
         bool init = __create_nuxes(entity);
