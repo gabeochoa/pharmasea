@@ -494,15 +494,18 @@ void render_nux(const Entity& entity, float) {
 
     // _render_tooltip
     {
+        const float scale = 2.f;
+
         const auto font = Preload::get().font;
         const auto nux_position = entity_pos + vec3{-1.f, 1.25f * TILESIZE, 0};
 
-        DrawCubeCustom(nux_position + vec3{1.f, 1.0f, -0.1f}, 4.f, 0.5f, 0.10f,
-                       0.f, WHITE, BLACK);
+        DrawCubeCustom(nux_position + vec3{1.f, 1.0f, -0.1f}, scale * 4.f,
+                       0.5f * scale, 0.10f, 0.f, WHITE, BLACK);
 
         raylib::DrawFloatingText(nux_position, font,
                                  // TODO translate
-                                 (nux.content).c_str(), 96, BLACK, false);
+                                 (nux.content).c_str(),
+                                 static_cast<int>(96 * scale), BLACK, false);
     }
 
     // _render_ghost

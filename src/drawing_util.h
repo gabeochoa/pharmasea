@@ -170,11 +170,14 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
 static void DrawFloatingText(const vec3& position, Font font, const char* text,
                              int size = 96, Color color = BLACK,
                              bool backface = true) {
+    vec3 text_size = MeasureText3D(font, text, size, 1.f, 1.f);
+    text_size /= 3.f;
+
     rlPushMatrix();
-    rlTranslatef(    //
-        position.x,  //
-        position.y,  //
-        position.z   //
+    rlTranslatef(                  //
+        position.x - text_size.x,  //
+        position.y,                //
+        position.z                 //
     );
     rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
 
