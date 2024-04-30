@@ -1165,10 +1165,6 @@ void __create_nuxes(Entity&) {
         auto& entity = EntityHelper::createEntity();
         make_entity(entity, {EntityType::Unknown}, {0, 0});
 
-        entity.addComponent<SimpleColoredBoxRenderer>()
-            .update_base(RED)
-            .update_face(PINK);
-
         entity.addComponent<IsNux>()
             .set_eligibility_fn([]() -> bool { return true; })
             .set_completion_fn([&]() -> bool {

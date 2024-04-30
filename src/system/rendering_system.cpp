@@ -17,6 +17,7 @@
 #include "../components/has_subtype.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/is_free_in_store.h"
+#include "../components/is_nux_manager.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_toilet.h"
 #include "../components/transform.h"
@@ -466,6 +467,23 @@ bool render_model_highlighted(const Entity& entity, float) {
 bool render_model_normal(const Entity& entity, float) {
     if (!ENABLE_MODELS) return false;
     return draw_internal_model(entity, WHITE);
+}
+
+void render_nux(const Entity& entity, float) {
+    if (entity.is_missing<IsNux>()) return;
+
+    const IsNux& nux = entity.get<IsNux>();
+    const Transform& transform = entity.get<Transform>();
+
+    vec3 entity_pos = transform.pos();
+    // _render_tooltip
+    {
+        const auto font = Preload::get().font;
+        const auto nux_position = entity_pos + vec3{0, 0.5f * TILESIZE, 0};
+        raylib::DrawFloatingText(nux_position, font,
+                                 // TODO translate
+                                 (nux.content).c_str());
+    }
 }
 
 void render_trigger_area(const Entity& entity, float dt) {
@@ -974,6 +992,11 @@ void render_normal(const Entity& entity, float dt) {
             cam->camera, TextureLibrary::get().get(strings::textures::FACE),
             entity.get<Transform>().pos(), TILESIZE, WHITE);
 
+        return;
+    }
+
+    if (entity.has<IsNux>()) {
+        render_nux(entity, dt);
         return;
     }
 
