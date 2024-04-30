@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../entity_type.h"
+#include "../strings.h"
 #include "../vec_util.h"
 #include "base_component.h"
 
@@ -15,9 +16,7 @@ struct IsNux : public BaseComponent {
     int entityID = -1;
     EntityType ghost = EntityType::Unknown;
 
-    // TODO should we be able to serialize TranslatableContent?
-    std::string content;
-    static constexpr int MAX_CONTENT_LENGTH = 100;
+    TranslatableString content;
 
     [[nodiscard]] bool is_attached() const { return entityID != -1; }
 
@@ -36,7 +35,7 @@ struct IsNux : public BaseComponent {
         return *this;
     }
 
-    auto& set_content(const std::string& c) {
+    auto& set_content(const TranslatableString& c) {
         content = c;
         return *this;
     }
@@ -56,7 +55,7 @@ struct IsNux : public BaseComponent {
 
         s.value1b(is_active);
         s.value4b(entityID);
-        s.text1b(content, MAX_CONTENT_LENGTH);
+        s.object(content);
         s.value4b(ghost);
     }
 };

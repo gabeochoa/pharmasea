@@ -1191,7 +1191,8 @@ bool __create_nuxes(Entity&) {
                     .whereInRange(reg->get<Transform>().as2(), 2.f)
                     .has_values();
             })
-            .set_content("Look for the register");
+            .set_content(TODO_TRANSLATE("Look for the Register",
+                                        TodoReason::SubjectToChange));
     }
 
     {
@@ -1213,7 +1214,8 @@ bool __create_nuxes(Entity&) {
                     .has_values();
             })
             // TODO replace playerpickup with the actual control
-            .set_content("Grab it with [PlayerPickup]");
+            .set_content(TODO_TRANSLATE("Grab it with [PlayerPickup]",
+                                        TodoReason::SubjectToChange));
     }
 
     {
@@ -1230,7 +1232,8 @@ bool __create_nuxes(Entity&) {
                     .has_values();
             })
             .set_ghost(EntityType::Register)
-            .set_content("Place it on the highlighted square");
+            .set_content(TODO_TRANSLATE("Place it on the highlighted square",
+                                        TodoReason::SubjectToChange));
     }
 
     log_info("created nuxes");

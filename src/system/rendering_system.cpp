@@ -508,8 +508,7 @@ void render_nux(const Entity& entity, float) {
                        0.5f * scale, 0.10f, 0.f, WHITE, BLACK);
 
         raylib::DrawFloatingText(nux_position, font,
-                                 // TODO translate
-                                 (nux.content).c_str(),
+                                 translation_lookup(nux.content).c_str(),
                                  static_cast<int>(96 * scale), BLACK, false);
     }
 
