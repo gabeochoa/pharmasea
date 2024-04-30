@@ -1174,6 +1174,7 @@ void __create_nuxes(Entity&) {
                     .whereIsNotBeingHeld()
                     .has_values();
             })
+            .set_ghost(EntityType::Table)
             .set_content("example nux");
     }
 }

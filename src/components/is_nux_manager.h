@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../entity_type.h"
 #include "../vec_util.h"
 #include "base_component.h"
 
@@ -10,6 +11,7 @@ struct IsNux : public BaseComponent {
     std::function<bool()> isComplete;
 
     int entityID = -1;
+    EntityType ghost = EntityType::Unknown;
 
     // TODO should we be able to serialize TranslatableContent?
     std::string content;
@@ -37,6 +39,11 @@ struct IsNux : public BaseComponent {
         return *this;
     }
 
+    auto& set_ghost(const EntityType& g) {
+        ghost = g;
+        return *this;
+    }
+
     virtual ~IsNux() {}
 
    private:
@@ -48,6 +55,7 @@ struct IsNux : public BaseComponent {
         s.value1b(is_active);
         s.value4b(entityID);
         s.text1b(content, MAX_CONTENT_LENGTH);
+        s.value4b(ghost);
     }
 };
 

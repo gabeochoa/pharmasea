@@ -476,6 +476,7 @@ void render_nux(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
 
     vec3 entity_pos = transform.pos();
+
     // _render_tooltip
     {
         const auto font = Preload::get().font;
@@ -483,6 +484,20 @@ void render_nux(const Entity& entity, float) {
         raylib::DrawFloatingText(nux_position, font,
                                  // TODO translate
                                  (nux.content).c_str());
+    }
+
+    // _render_ghost
+    {
+        if (nux.ghost != EntityType::Unknown) {
+            // TODO eventually draw an example of what the ghost type is
+            // we probably have to make ent for it (and add IsGhost) or
+            // something, then we can just do render_normal(ghost)
+            DrawCubeCustom(
+                transform.raw(), transform.sizex(), transform.sizey(),
+                transform.sizez(), transform.facing,
+                ui::color::change_opacity(ui::color::green_apple, 100),
+                ui::color::change_opacity(ui::color::green_apple, 100));
+        }
     }
 }
 
