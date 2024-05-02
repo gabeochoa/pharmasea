@@ -315,7 +315,8 @@ void SettingsLayer::onDraw(float dt) {
     end();
 }
 
-void SettingsLayer::draw_column(Rectangle column, Rectangle screen) {
+void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
+    (void) index;
     // NOTE: we only draw the first N, each state only has N inputs
     // today but if you want all then use this
 
@@ -494,7 +495,7 @@ void SettingsLayer::draw_keybinding_screen(float) {
 
         for (size_t i = 0; i < columns.size(); i++) {
             columns[i] = rect::hpad(columns[i], 10);
-            draw_column(columns[i], i, screen);
+            draw_column(columns[i], (int) i, screen);
         }
     }
 
