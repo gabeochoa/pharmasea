@@ -289,7 +289,8 @@ std::string icon_for_button(GamepadButton input) {
 }
 
 std::string icon_for_key(int keycode) {
-    KeyboardKey key = magic_enum::enum_cast<KeyboardKey>(keycode).value();
+    KeyboardKey key = magic_enum::enum_cast<KeyboardKey>(keycode).value_or(
+        KeyboardKey::KEY_NULL);
     switch (key) {
         case raylib::KEY_TAB:
             return "keyboard_tab";
@@ -509,6 +510,7 @@ std::string icon_for_key(int keycode) {
         case raylib::KEY_VOLUME_DOWN:
             return "keyboard_volume_down";
         case raylib::KEY_NULL:
+            log_info("Passed in {} but wasnt able to parse it", keycode);
             break;
     }
     return "";
