@@ -23,6 +23,10 @@ struct TextureLibrary {
         impl.load(filename, name);
     }
 
+    [[nodiscard]] bool contains(const std::string& name) {
+        return impl.contains(name);
+    }
+
    private:
     struct TextureLibraryImpl : Library<raylib::Texture2D> {
         virtual raylib::Texture2D convert_filename_to_object(
