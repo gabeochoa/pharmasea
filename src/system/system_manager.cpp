@@ -1173,6 +1173,7 @@ bool __create_nuxes(Entity&) {
     int player_id = player->id;
     int register_id = reg->id;
 
+    // Find register
     {
         auto& entity = EntityHelper::createEntity();
         make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
@@ -1195,6 +1196,7 @@ bool __create_nuxes(Entity&) {
                                         TodoReason::SubjectToChange));
     }
 
+    // Grab register
     {
         auto& entity = EntityHelper::createEntity();
         make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
@@ -1218,6 +1220,7 @@ bool __create_nuxes(Entity&) {
                                         TodoReason::SubjectToChange));
     }
 
+    // Place register
     {
         auto& entity = EntityHelper::createEntity();
         make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
@@ -1236,6 +1239,57 @@ bool __create_nuxes(Entity&) {
                                         TodoReason::SubjectToChange));
     }
 
+    // Find FFD
+    {
+        auto& entity = EntityHelper::createEntity();
+        make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+        OptEntity ffd =
+            EntityQuery().whereType(EntityType::FastForward).gen_first();
+        int ffd_id = ffd->id;
+
+        entity.addComponent<IsNux>()
+            .should_attach_to(ffd_id)
+            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+            .set_completion_fn([ffd_id, player_id](const IsNux&) -> bool {
+                OptEntity ffd = EntityQuery().whereID(ffd_id).gen_first();
+                if (!ffd.has_value()) return false;
+
+                // We have to do oldAll because players
+                // are not in the normal entity list
+                return EntityQuery(SystemManager::get().oldAll)
+                    .whereID(player_id)
+                    .whereInRange(ffd->get<Transform>().as2(), 2.f)
+                    .has_values();
+            })
+            .set_content(
+                TODO_TRANSLATE("You get all night to setup your pub.\nYou can "
+                               "use the FastForward Box to skip ahead",
+                               TodoReason::SubjectToChange));
+    }
+
+    // Use FFD
+    {
+        auto& entity = EntityHelper::createEntity();
+        make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+        OptEntity ffd =
+            EntityQuery().whereType(EntityType::FastForward).gen_first();
+        int ffd_id = ffd->id;
+
+        entity.addComponent<IsNux>()
+            .should_attach_to(ffd_id)
+            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+            .set_completion_fn([](const IsNux&) -> bool {
+                auto e_ht =
+                    EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                if (!e_ht.has_value()) return false;
+                const HasTimer& timer = e_ht->get<HasTimer>();
+                return timer.remaining_time_in_round() >= 50.f;
+            })
+            .set_content(TODO_TRANSLATE("Use [PlayerWork] to skip time",
+                                        TodoReason::SubjectToChange));
+    }
     log_info("created nuxes");
     return true;
 }
