@@ -1,6 +1,8 @@
 
 #include "rendering_system.h"
 
+#include <regex>
+
 #include "../components/adds_ingredient.h"
 #include "../components/ai_clean_vomit.h"
 #include "../components/ai_close_tab.h"
@@ -474,6 +476,56 @@ bool render_model_normal(const Entity& entity, float) {
     return draw_internal_model(entity, WHITE);
 }
 
+std::tuple<std::string, int, int> get_texture_name_and_position(
+    const std::string& input) {
+    std::regex pattern("\\[(.*?)\\]");
+    std::match_results<std::string::const_iterator> what;
+    if (!std::regex_search(input, what, pattern)) {
+        return {"", -1, -1};
+    }
+    size_t position =
+        what.position(0);  // return the index of the '[' character
+
+    auto extract_string = [](const std::string& input,
+                             size_t index) -> std::string {
+        size_t start = index;  // index of the '[' character
+        size_t end =
+            input.find(']', start);  // find the index of the ']' character
+        if (end != std::string::npos) {
+            return input.substr(start + 1,
+                                end - start - 1);  // extract the string inside
+        }
+        return "";  // return an empty string if no ']' character is found
+    };
+
+    auto extracted = extract_string(input, position);
+    if (!TextureLibrary::get().contains(extracted)) return {"", -1, -1};
+    return {extracted, position, input.find(']', position)};
+}
+
+// TODO at some point move to the other drawing utils
+static void DrawFloatingTextWithIcons(const std::string& content,
+                                      const vec3& position, font::Font font,
+                                      int size = 96, Color color = BLACK,
+                                      bool backface = true) {
+    auto tex_position = get_texture_name_and_position(content);
+
+    // No texture found, just draw normally
+    if (std::get<1>(tex_position) == -1) {
+        return DrawFloatingText(position, font, content.c_str(), size, color,
+                                backface);
+    }
+
+    int start = std::get<1>(tex_position);
+    int end = std::get<2>(tex_position);
+
+    std::string post = content;
+    post.replace(start, end - start + 1, "   ");
+
+    DrawFloatingText(position, font, post.c_str(), size, color, backface,
+                     std::get<0>(tex_position), start);
+}
+
 void render_nux(const Entity& entity, float) {
     if (entity.is_missing<IsNux>()) return;
 
@@ -507,9 +559,9 @@ void render_nux(const Entity& entity, float) {
         DrawCubeCustom(nux_position + vec3{1.f, 0.5f, -0.1f}, scale * 4.f,
                        0.5f * scale, 0.10f, 0.f, WHITE, BLACK);
 
-        raylib::DrawFloatingText(nux_position, font,
-                                 translation_lookup(nux.content).c_str(),
-                                 static_cast<int>(96 * scale), BLACK, false);
+        DrawFloatingTextWithIcons(translation_lookup(nux.content), nux_position,
+                                  font, static_cast<int>(96 * scale), BLACK,
+                                  false);
     }
 
     // _render_ghost

@@ -2,7 +2,9 @@
 
 #include "external_include.h"
 //
+#include "camera.h"
 #include "engine/log.h"
+#include "engine/texture_library.h"
 #include "engine/ui/color.h"
 #include "globals.h"
 #include "raylib.h"
@@ -169,7 +171,9 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
 
 static void DrawFloatingText(const vec3& position, Font font, const char* text,
                              int size = 96, Color color = BLACK,
-                             bool backface = true) {
+                             bool backface = true,
+                             std::string texture_name = "",
+                             int texture_position = -1) {
     vec3 text_size = MeasureText3D(font, text, size, 1.f, 1.f);
     text_size /= 3.f;
 
@@ -179,6 +183,19 @@ static void DrawFloatingText(const vec3& position, Font font, const char* text,
         position.y,                //
         position.z                 //
     );
+
+    if (!texture_name.empty()) {
+        vec3 t_size = MeasureText3D(
+            font, std::string(text).substr(0, texture_position).c_str(), size,
+            1.f, 1.f);
+        vec3 icon_pos = vec3{t_size.x, text_size.y * 9.f, 0.05f};
+        raylib::Texture texture = TextureLibrary::get().get(texture_name);
+        GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+        raylib::DrawBillboard(cam.camera, texture, icon_pos,
+                              (size / 96.f) / 3.f,  //
+                              color);
+    }
+
     rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
 
     rlTranslatef(          //
