@@ -323,7 +323,7 @@ enum struct TodoReason {
 };
 
 struct TranslatableString {
-    static const int MAX_LENGTH = 50;
+    static const int MAX_LENGTH = 100;
 
     explicit TranslatableString() {}
     explicit TranslatableString(const std::string& s) : content(s) {}
