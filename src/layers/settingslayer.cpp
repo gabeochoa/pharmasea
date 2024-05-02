@@ -315,6 +315,172 @@ void SettingsLayer::onDraw(float dt) {
     end();
 }
 
+void SettingsLayer::draw_column(Rectangle column, Rectangle screen) {
+    // NOTE: we only draw the first N, each state only has N inputs
+    // today but if you want all then use this
+
+    constexpr int num_inputs = magic_enum::enum_count<InputName>();
+    constexpr int num_per_col = 12;  // (int) (num_inputs / 2.f);
+
+    auto key_rects_1 = rect::hsplit<num_per_col>(column, 15);
+
+    const auto _get_label_for_key =
+        [](menu::State state,
+           InputName name) -> tl::expected<std::string, std::string> {
+        const auto keys = KeyMap::get_valid_keys(state, name);
+        if (keys.empty()) return tl::unexpected("input not used in this state");
+        return KeyMap::get().name_for_input(keys[0]);
+    };
+
+    const auto _get_label_for_gamepad =
+        [](menu::State state,
+           InputName name) -> tl::expected<std::string, std::string> {
+        const auto button = KeyMap::get_button(state, name);
+        if (button == raylib::GAMEPAD_BUTTON_UNKNOWN)
+            return tl::unexpected("input not used in this state");
+        return KeyMap::get().name_for_input(button);
+    };
+    const auto _get_label =
+        [=](menu::State state,
+            InputName name) -> tl::expected<std::string, std::string> {
+        switch (selected_input_type) {
+            case Keyboard:
+                return _get_label_for_key(state, name);
+            case Gamepad:
+                return _get_label_for_gamepad(state, name);
+            case GamepadWithAxis:
+                // TODO
+                log_error("idk how to handle axis right now");
+                break;
+        }
+    };
+
+    const auto _get_icon_for_key =
+        [](menu::State state,
+           InputName name) -> tl::expected<std::string, std::string> {
+        const auto keys = KeyMap::get_valid_keys(state, name);
+        if (keys.empty()) return tl::unexpected("input not used in this state");
+        auto icon = KeyMap::get().icon_for_input(keys[0]);
+        if (icon.empty()) return tl::unexpected("icon not found");
+        return icon;
+    };
+
+    const auto _get_icon_for_gamepad =
+        [](menu::State state,
+           InputName name) -> tl::expected<std::string, std::string> {
+        const auto button = KeyMap::get_button(state, name);
+        if (button == raylib::GAMEPAD_BUTTON_UNKNOWN)
+            return tl::unexpected("input not used in this state");
+        return KeyMap::get().icon_for_input(button);
+    };
+
+    const auto _get_icon =
+        // TODO
+        [=](menu::State state,
+            InputName name) -> tl::expected<std::string, std::string> {
+        switch (selected_input_type) {
+            case Keyboard:
+                return _get_icon_for_key(state, name);
+            case Gamepad:
+                return _get_icon_for_gamepad(state, name);
+            case GamepadWithAxis:
+                // TODO
+                return tl::unexpected("input not used in this state");
+        }
+    };
+
+    const auto _keys_for_state = [=](menu::State state,
+                                     std::array<Rectangle, num_per_col> rects,
+                                     int starting_index = 0) {
+        int rendering_index = 0;
+        for (int i = starting_index; i < num_inputs; i++) {
+            const auto kv = keyInputNames[i];
+
+            bool has_icon = false;
+            auto checkbox_content = _get_icon(state, kv.first);
+            if (!checkbox_content.has_value()) {
+                checkbox_content = _get_label(state, kv.first);
+                if (!checkbox_content.has_value()) {
+                    log_trace("{} => {}", kv.second, checkbox_content.error());
+                    continue;
+                }
+            } else {
+                has_icon = true;
+            }
+
+            // TODO we have more inptus than items in col
+            // if we go
+            if (rendering_index >= num_per_col) {
+                continue;
+            }
+
+            auto [label, remap_button] =
+                rect::vsplit<2>(rects[rendering_index], 10);
+
+            rendering_index++;
+
+            text(Widget{label},
+                 TODO_TRANSLATE(util::space_between_caps(kv.second),
+                                TodoReason::KeyName));
+
+            if (auto result =
+                    checkbox(Widget{remap_button},
+                             CheckboxData{.content_is_icon = has_icon,
+                                          .content = checkbox_content.value()});
+                result) {
+                // TODO disabling popup for now
+                //
+                /*
+                key_binding_popup =
+                    KeyBindingPopup{.show = result.as<bool>(),
+                                    .state = state,
+                                    .input = kv.first};
+                                    */
+            }
+        }
+    };
+
+    _keys_for_state(menu::State::UI, key_rects_1);
+    // _keys_for_state(menu::State::Game, key_rects_1, 1);
+
+    // TODO pressing UI keys when this popup is open still uses them
+
+    if (key_binding_popup.show) {
+        auto [_t, middle, _b] = rect::hsplit<3>(screen);
+        auto [_l, popup, _r] = rect::vsplit<3>(middle);
+        if (auto windowresult = window(Widget{popup, -10}); windowresult) {
+            auto [label, input] = rect::hsplit<2>(popup);
+
+            text(Widget{label, windowresult.as<int>()},
+                 TODO_TRANSLATE(util::space_between_caps(magic_enum::enum_name(
+                                    key_binding_popup.input)),
+                                TodoReason::KeyName));
+
+            bool has_icon = false;
+            auto input_descr =
+                _get_icon(key_binding_popup.state, key_binding_popup.input);
+            if (!input_descr.has_value()) {
+                input_descr = _get_label(key_binding_popup.state,
+                                         key_binding_popup.input);
+            } else {
+                has_icon = true;
+            }
+
+            if (input_descr.has_value()) {
+                if (auto control_result = control_input_field(
+                        Widget{input, windowresult.as<int>()},
+                        TextfieldData{.content_is_icon = has_icon,
+                                      .content = input_descr.value()});
+                    control_result) {
+                    KeyMap::get().set_mapping(key_binding_popup.state,
+                                              key_binding_popup.input,
+                                              control_result.as<AnyInput>());
+                }
+            }
+        }
+    }
+}
+
 void SettingsLayer::draw_keybinding_screen(float) {
     auto screen = Rectangle{0, 0, WIN_WF(), WIN_HF()};
     auto content = rect::tpad(screen, 20);
@@ -323,181 +489,12 @@ void SettingsLayer::draw_keybinding_screen(float) {
 
     {
         body = rect::bpad(body, 95);
-        auto [col1, col2] = rect::vsplit<2>(body);
+        constexpr int num_cols = 2;
+        auto columns = rect::vsplit<num_cols>(body);
 
-        // These should match
-        col1 = rect::lpad(col1, 20);
-        col1 = rect::rpad(col1, 70);
-        col2 = rect::lpad(col2, 10);
-        col2 = rect::rpad(col2, 80);
-
-        // NOTE: we only draw the first N, each state only has N inputs
-        // today but if you want all then use this
-
-        constexpr int num_inputs = magic_enum::enum_count<InputName>();
-        constexpr int num_per_col = 12;  // (int) (num_inputs / 2.f);
-
-        // we want both cols to look the same so they should always match
-        auto key_rects_1 = rect::hsplit<num_per_col>(col1, 15);
-        auto key_rects_2 = rect::hsplit<num_per_col>(col2, 15);
-
-        const auto _get_label_for_key =
-            [](menu::State state,
-               InputName name) -> tl::expected<std::string, std::string> {
-            const auto keys = KeyMap::get_valid_keys(state, name);
-            if (keys.empty())
-                return tl::unexpected("input not used in this state");
-            return KeyMap::get().name_for_input(keys[0]);
-        };
-
-        const auto _get_label_for_gamepad =
-            [](menu::State state,
-               InputName name) -> tl::expected<std::string, std::string> {
-            const auto button = KeyMap::get_button(state, name);
-            if (button == raylib::GAMEPAD_BUTTON_UNKNOWN)
-                return tl::unexpected("input not used in this state");
-            return KeyMap::get().name_for_input(button);
-        };
-
-        const auto _get_label =
-            [=](menu::State state,
-                InputName name) -> tl::expected<std::string, std::string> {
-            switch (selected_input_type) {
-                case Keyboard:
-                    return _get_label_for_key(state, name);
-                case Gamepad:
-                    return _get_label_for_gamepad(state, name);
-                case GamepadWithAxis:
-                    // TODO
-                    log_error("idk how to handle axis right now");
-                    break;
-            }
-        };
-
-        const auto _get_icon_for_key =
-            [](menu::State state,
-               InputName name) -> tl::expected<std::string, std::string> {
-            const auto keys = KeyMap::get_valid_keys(state, name);
-            if (keys.empty())
-                return tl::unexpected("input not used in this state");
-            auto icon = KeyMap::get().icon_for_input(keys[0]);
-            if (icon.empty()) return tl::unexpected("icon not found");
-            return icon;
-        };
-
-        const auto _get_icon_for_gamepad =
-            [](menu::State state,
-               InputName name) -> tl::expected<std::string, std::string> {
-            const auto button = KeyMap::get_button(state, name);
-            if (button == raylib::GAMEPAD_BUTTON_UNKNOWN)
-                return tl::unexpected("input not used in this state");
-            return KeyMap::get().icon_for_input(button);
-        };
-
-        const auto _get_icon =
-            // TODO
-            [=](menu::State state,
-                InputName name) -> tl::expected<std::string, std::string> {
-            switch (selected_input_type) {
-                case Keyboard:
-                    return _get_icon_for_key(state, name);
-                case Gamepad:
-                    return _get_icon_for_gamepad(state, name);
-                case GamepadWithAxis:
-                    // TODO
-                    return tl::unexpected("input not used in this state");
-            }
-        };
-
-        const auto _keys_for_state =
-            [=](menu::State state, std::array<Rectangle, num_per_col> rects,
-                int starting_index = 0) {
-                int rendering_index = 0;
-                for (int i = starting_index; i < num_inputs; i++) {
-                    const auto kv = keyInputNames[i];
-
-                    bool has_icon = false;
-                    auto checkbox_content = _get_icon(state, kv.first);
-                    if (!checkbox_content.has_value()) {
-                        checkbox_content = _get_label(state, kv.first);
-                        if (!checkbox_content.has_value()) {
-                            log_trace("{} => {}", kv.second,
-                                      checkbox_content.error());
-                            continue;
-                        }
-                    } else {
-                        has_icon = true;
-                    }
-
-                    // TODO we have more inptus than items in col
-                    // if we go
-                    if (rendering_index >= num_per_col) {
-                        continue;
-                    }
-
-                    auto [label, remap_button] =
-                        rect::vsplit<2>(rects[rendering_index++], 10);
-
-                    text(Widget{label},
-                         TODO_TRANSLATE(util::space_between_caps(kv.second),
-                                        TodoReason::KeyName));
-
-                    if (auto result = checkbox(
-                            Widget{remap_button},
-                            CheckboxData{.content_is_icon = has_icon,
-                                         .content = checkbox_content.value()});
-                        result) {
-                        // TODO disabling popup for now
-                        //
-                        /*
-                        key_binding_popup =
-                            KeyBindingPopup{.show = result.as<bool>(),
-                                            .state = state,
-                                            .input = kv.first};
-                                            */
-                    }
-                }
-            };
-
-        _keys_for_state(menu::State::UI, key_rects_1);
-        _keys_for_state(menu::State::Game, key_rects_2, 1);
-
-        // TODO pressing UI keys when this popup is open still uses them
-
-        if (key_binding_popup.show) {
-            auto [_t, middle, _b] = rect::hsplit<3>(screen);
-            auto [_l, popup, _r] = rect::vsplit<3>(middle);
-            if (auto windowresult = window(Widget{popup, -10}); windowresult) {
-                auto [label, input] = rect::hsplit<2>(popup);
-
-                text(Widget{label, windowresult.as<int>()},
-                     TODO_TRANSLATE(
-                         util::space_between_caps(
-                             magic_enum::enum_name(key_binding_popup.input)),
-                         TodoReason::KeyName));
-
-                bool has_icon = false;
-                auto input_descr =
-                    _get_icon(key_binding_popup.state, key_binding_popup.input);
-                if (!input_descr.has_value()) {
-                    input_descr = _get_label(key_binding_popup.state,
-                                             key_binding_popup.input);
-                } else {
-                    has_icon = true;
-                }
-
-                if (input_descr.has_value()) {
-                    if (auto control_result = control_input_field(
-                            Widget{input, windowresult.as<int>()},
-                            TextfieldData{.content_is_icon = has_icon,
-                                          .content = input_descr.value()});
-                        control_result) {
-                        KeyMap::get().set_mapping(
-                            key_binding_popup.state, key_binding_popup.input,
-                            control_result.as<AnyInput>());
-                    }
-                }
-            }
+        for (size_t i = 0; i < columns.size(); i++) {
+            columns[i] = rect::hpad(columns[i], 10);
+            draw_column(columns[i], i, screen);
         }
     }
 
