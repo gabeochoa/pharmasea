@@ -502,9 +502,9 @@ void render_nux(const Entity& entity, float) {
         const float scale = 2.f;
 
         const auto font = Preload::get().font;
-        const auto nux_position = entity_pos + vec3{-1.f, 1.25f * TILESIZE, 0};
+        const auto nux_position = entity_pos + vec3{-1.f, 2.f * TILESIZE, 0};
 
-        DrawCubeCustom(nux_position + vec3{1.f, 1.0f, -0.1f}, scale * 4.f,
+        DrawCubeCustom(nux_position + vec3{1.f, 0.5f, -0.1f}, scale * 4.f,
                        0.5f * scale, 0.10f, 0.f, WHITE, BLACK);
 
         raylib::DrawFloatingText(nux_position, font,
