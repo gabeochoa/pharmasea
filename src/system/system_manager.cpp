@@ -1173,123 +1173,328 @@ bool __create_nuxes(Entity&) {
     int player_id = player->id;
     int register_id = reg->id;
 
-    // Find register
-    {
-        auto& entity = EntityHelper::createEntity();
-        make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+    // Planning mode tutorial
+    if (1) {
+        // Find register
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
 
-        entity.addComponent<IsNux>()
-            .should_attach_to(player_id)
-            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
-            .set_completion_fn([register_id](const IsNux& inux) -> bool {
-                OptEntity reg = EntityQuery().whereID(register_id).gen_first();
-                if (!reg.has_value()) return false;
+            entity.addComponent<IsNux>()
+                .should_attach_to(player_id)
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn([register_id](const IsNux& inux) -> bool {
+                    OptEntity reg =
+                        EntityQuery().whereID(register_id).gen_first();
+                    if (!reg.has_value()) return false;
 
-                // We have to do oldAll because players
-                // are not in the normal entity list
-                return EntityQuery(SystemManager::get().oldAll)
-                    .whereID(inux.entityID)
-                    .whereInRange(reg->get<Transform>().as2(), 2.f)
-                    .has_values();
-            })
-            .set_content(TODO_TRANSLATE("Look for the Register",
-                                        TodoReason::SubjectToChange));
-    }
+                    // We have to do oldAll because players
+                    // are not in the normal entity list
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(inux.entityID)
+                        .whereInRange(reg->get<Transform>().as2(), 2.f)
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE("Look for the Register",
+                                            TodoReason::SubjectToChange));
+        }
 
-    // Grab register
-    {
-        auto& entity = EntityHelper::createEntity();
-        make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+        // Grab register
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
 
-        entity.addComponent<IsNux>()
-            .should_attach_to(player_id)
-            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
-            .set_completion_fn([register_id](const IsNux& inux) -> bool {
-                return EntityQuery(SystemManager::get().oldAll)
-                    .whereID(inux.entityID)
-                    .whereLambda([register_id](const Entity& player) {
-                        const CanHoldFurniture& chf =
-                            player.get<CanHoldFurniture>();
-                        return chf.is_holding_furniture() &&
-                               chf.furniture_id() == register_id;
+            entity.addComponent<IsNux>()
+                .should_attach_to(player_id)
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn([register_id](const IsNux& inux) -> bool {
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(inux.entityID)
+                        .whereLambda([register_id](const Entity& player) {
+                            const CanHoldFurniture& chf =
+                                player.get<CanHoldFurniture>();
+                            return chf.is_holding_furniture() &&
+                                   chf.furniture_id() == register_id;
+                        })
+                        .has_values();
+                })
+                // TODO replace playerpickup with the actual control
+                .set_content(TODO_TRANSLATE("Grab it with [PlayerPickup]",
+                                            TodoReason::SubjectToChange));
+        }
+
+        // Place register
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn(
+                    [register_id, &entity](const IsNux&) -> bool {
+                        return EntityQuery()
+                            .whereID(register_id)
+                            .whereIsNotBeingHeld()
+                            .whereSnappedPositionMatches(entity)
+                            .has_values();
                     })
-                    .has_values();
-            })
-            // TODO replace playerpickup with the actual control
-            .set_content(TODO_TRANSLATE("Grab it with [PlayerPickup]",
-                                        TodoReason::SubjectToChange));
+                .set_ghost(EntityType::Register)
+                .set_content(
+                    TODO_TRANSLATE("Place it on the highlighted square",
+                                   TodoReason::SubjectToChange));
+        }
+
+        // Find FFD
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+            OptEntity ffd =
+                EntityQuery().whereType(EntityType::FastForward).gen_first();
+            int ffd_id = ffd->id;
+
+            entity.addComponent<IsNux>()
+                .should_attach_to(ffd_id)
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn([ffd_id, player_id](const IsNux&) -> bool {
+                    OptEntity ffd = EntityQuery().whereID(ffd_id).gen_first();
+                    if (!ffd.has_value()) return false;
+
+                    // We have to do oldAll because players
+                    // are not in the normal entity list
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(player_id)
+                        .whereInRange(ffd->get<Transform>().as2(), 2.f)
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE(
+                    "You get all night to setup your pub.\nYou can "
+                    "use the FastForward Box to skip ahead",
+                    TodoReason::SubjectToChange));
+        }
+
+        // Use FFD
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+            OptEntity ffd =
+                EntityQuery().whereType(EntityType::FastForward).gen_first();
+            int ffd_id = ffd->id;
+
+            entity.addComponent<IsNux>()
+                .should_attach_to(ffd_id)
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    auto e_ht =
+                        EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                    if (!e_ht.has_value()) return false;
+                    const HasTimer& timer = e_ht->get<HasTimer>();
+                    return timer.remaining_time_in_round() >= 50.f;
+                })
+                .set_content(TODO_TRANSLATE("Use [PlayerWork] to skip time",
+                                            TodoReason::SubjectToChange));
+        }
     }
 
-    // Place register
-    {
-        auto& entity = EntityHelper::createEntity();
-        make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+    // During round tutorial
+    if (1) {
+        // Explain customer
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
 
-        entity.addComponent<IsNux>()
-            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
-            .set_completion_fn([register_id, &entity](const IsNux&) -> bool {
-                return EntityQuery()
-                    .whereID(register_id)
-                    .whereIsNotBeingHeld()
-                    .whereSnappedPositionMatches(entity)
-                    .has_values();
-            })
-            .set_ghost(EntityType::Register)
-            .set_content(TODO_TRANSLATE("Place it on the highlighted square",
-                                        TodoReason::SubjectToChange));
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    // Now that the customer exists, we can attach to it
+                    auto customer = EntityQuery()
+                                        .whereType(EntityType::Customer)
+                                        .gen_first();
+                    inux.should_attach_to(customer->id);
+                })
+                .set_completion_fn([](const IsNux& inux) -> bool {
+                    if (inux.time_shown < 5.f) return false;
+
+                    auto customer = EntityHelper::getEntityForID(inux.entityID);
+                    if (!customer) return false;
+
+                    AIWaitInQueue& ai_wiq = customer->get<AIWaitInQueue>();
+                    return ai_wiq.line_wait.last_line_position == 0;
+                })
+                .set_content(TODO_TRANSLATE(
+                    "This is a customer, they will wait in line, \nand once at "
+                    "the front will order a drink",
+                    TodoReason::SubjectToChange));
+        }
+
+        // Grab a cup
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto cups = EntityQuery()
+                                    .whereType(EntityType::Cupboard)
+                                    .gen_first();
+                    inux.should_attach_to(cups->id);
+                })
+                .set_completion_fn([player_id](const IsNux&) -> bool {
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(player_id)
+                        .whereLambda([](const Entity& player) {
+                            const CanHoldItem& chf = player.get<CanHoldItem>();
+                            return chf.is_holding_item() &&
+                                   chf.item().type == EntityType::Drink;
+                        })
+                        .has_values();
+                })
+                .set_content(
+                    TODO_TRANSLATE("Grab a cup", TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto table =
+                        EntityQuery().whereType(EntityType::Table).gen_first();
+                    inux.should_attach_to(table->id);
+                })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    return EntityQuery()
+                        // Instead of finding the exact table we marked, just
+                        // find any table with a cup
+                        .whereType(EntityType::Table)
+                        .whereLambda([](const Entity& table) {
+                            const CanHoldItem& chf = table.get<CanHoldItem>();
+                            return chf.is_holding_item() &&
+                                   chf.item().type == EntityType::Drink;
+                        })
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE("Place it down on a table",
+                                            TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto sodamach = EntityQuery()
+                                        .whereType(EntityType::SodaMachine)
+                                        .gen_first();
+                    inux.should_attach_to(sodamach->id);
+                })
+                .set_completion_fn([player_id](const IsNux&) -> bool {
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(player_id)
+                        .whereLambda([](const Entity& player) {
+                            const CanHoldItem& chf = player.get<CanHoldItem>();
+                            return chf.is_holding_item() &&
+                                   chf.item().type == EntityType::SodaSpout;
+                        })
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE("Grab the soda wand",
+                                            TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto drink =
+                        EntityQuery().whereType(EntityType::Drink).gen_first();
+                    inux.should_attach_to(drink->id);
+                })
+                .set_completion_fn([](const IsNux& inux) -> bool {
+                    return EntityQuery()
+                        .whereID(inux.entityID)
+                        .whereHasComponent<IsDrink>()
+                        .whereLambda([](const Entity& drink) {
+                            return drink.get<IsDrink>().matches_drink(
+                                Drink::coke);
+                        })
+                        .has_values();
+                })
+                .set_content(
+                    TODO_TRANSLATE("Use [PlayerWork] to fill the cup with soda",
+                                   TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto reg = EntityQuery()
+                                   .whereType(EntityType::Register)
+                                   .gen_first();
+                    inux.should_attach_to(reg->id);
+                })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    return EntityQuery()
+                        .whereType(EntityType::Register)
+                        .whereLambda([](const Entity& table) {
+                            const CanHoldItem& chf = table.get<CanHoldItem>();
+                            if (!chf.is_holding_item()) return false;
+                            const Item& item = chf.item();
+                            if (item.type != EntityType::Drink) return false;
+                            return item.get<IsDrink>().matches_drink(
+                                Drink::coke);
+                        })
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE(
+                    "Place it on the register to serve the customer",
+                    TodoReason::SubjectToChange));
+        }
     }
 
-    // Find FFD
-    {
-        auto& entity = EntityHelper::createEntity();
-        make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
-
-        OptEntity ffd =
-            EntityQuery().whereType(EntityType::FastForward).gen_first();
-        int ffd_id = ffd->id;
-
-        entity.addComponent<IsNux>()
-            .should_attach_to(ffd_id)
-            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
-            .set_completion_fn([ffd_id, player_id](const IsNux&) -> bool {
-                OptEntity ffd = EntityQuery().whereID(ffd_id).gen_first();
-                if (!ffd.has_value()) return false;
-
-                // We have to do oldAll because players
-                // are not in the normal entity list
-                return EntityQuery(SystemManager::get().oldAll)
-                    .whereID(player_id)
-                    .whereInRange(ffd->get<Transform>().as2(), 2.f)
-                    .has_values();
-            })
-            .set_content(
-                TODO_TRANSLATE("You get all night to setup your pub.\nYou can "
-                               "use the FastForward Box to skip ahead",
-                               TodoReason::SubjectToChange));
-    }
-
-    // Use FFD
-    {
-        auto& entity = EntityHelper::createEntity();
-        make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
-
-        OptEntity ffd =
-            EntityQuery().whereType(EntityType::FastForward).gen_first();
-        int ffd_id = ffd->id;
-
-        entity.addComponent<IsNux>()
-            .should_attach_to(ffd_id)
-            .set_eligibility_fn([](const IsNux&) -> bool { return true; })
-            .set_completion_fn([](const IsNux&) -> bool {
-                auto e_ht =
-                    EntityQuery().whereHasComponent<HasTimer>().gen_first();
-                if (!e_ht.has_value()) return false;
-                const HasTimer& timer = e_ht->get<HasTimer>();
-                return timer.remaining_time_in_round() >= 50.f;
-            })
-            .set_content(TODO_TRANSLATE("Use [PlayerWork] to skip time",
-                                        TodoReason::SubjectToChange));
-    }
     log_info("created nuxes");
     return true;
 }
