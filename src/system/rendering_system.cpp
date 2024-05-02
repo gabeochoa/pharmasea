@@ -940,12 +940,16 @@ void render_price(const Entity& entity, float) {
 void render_machine_name(const Entity& entity, int font_size = 200) {
     if (entity.is_missing<IsSolid>()) return;
     if (entity.is_missing<Transform>()) return;
+    // not really a point to show "wall" on every wall
+    // so using this as a way to ignore those
+    if (entity.is_missing<CanBeHeld>()) return;
+
     const Transform& transform = entity.get<Transform>();
 
     // TODO rotate the name with the camera?
-    raylib::DrawFloatingText(
-        transform.raw() + vec3{0, 1.0f * TILESIZE, 0.2f * TILESIZE},
-        Preload::get().font, std::string(entity.name()).c_str(), font_size);
+    raylib::DrawFloatingText(transform.raw() + vec3{0.3f, 0.2f, 0.2f},
+                             Preload::get().font,
+                             std::string(entity.name()).c_str(), font_size);
 }
 
 void render_debug_fruit_juice(const Entity& entity, float) {
