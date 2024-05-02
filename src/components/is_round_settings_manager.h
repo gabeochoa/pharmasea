@@ -10,7 +10,8 @@
 
 struct IsRoundSettingsManager : public BaseComponent {
     struct InteractiveSettings {
-        bool is_tutorial_active = false;
+        // Turn tutorial on by default for now :)
+        bool is_tutorial_active = true;
 
         friend bitsery::Access;
         template<typename S>
