@@ -72,6 +72,7 @@ struct AILineWait {
 
     bool has_set_position_before = false;
     vec2 position;
+    int last_line_position = -1;
 
    private:
     ResetFn reset;
@@ -95,7 +96,8 @@ struct AILineWait {
                  "Trying to pos-in-line for entity which doesnt have a "
                  "waiting queue ");
         const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
-        return hwq.get_customer_position(entity.id);
+        last_line_position = hwq.get_customer_position(entity.id);
+        return last_line_position;
     }
 
     [[nodiscard]] bool can_move_up(const Entity& reg, const Entity& customer) {
