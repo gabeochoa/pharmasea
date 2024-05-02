@@ -1201,6 +1201,10 @@ bool __create_nuxes(Entity&) {
 
         // Grab register
         {
+            const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
+                menu::State::Game, InputName::PlayerPickup);
+            const auto tex_name = KeyMap::get().icon_for_input(valid_inputs[0]);
+
             auto& entity = EntityHelper::createEntity();
             make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
 
@@ -1219,8 +1223,9 @@ bool __create_nuxes(Entity&) {
                         .has_values();
                 })
                 // TODO replace playerpickup with the actual control
-                .set_content(TODO_TRANSLATE("Grab it with [PlayerPickup]",
-                                            TodoReason::SubjectToChange));
+                .set_content(
+                    TODO_TRANSLATE(fmt::format("Grab it with [{}]", tex_name),
+                                   TodoReason::SubjectToChange));
         }
 
         // Place register
@@ -1275,6 +1280,10 @@ bool __create_nuxes(Entity&) {
 
         // Use FFD
         {
+            const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
+                menu::State::Game, InputName::PlayerDoWork);
+            const auto tex_name = KeyMap::get().icon_for_input(valid_inputs[0]);
+
             auto& entity = EntityHelper::createEntity();
             make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
 
@@ -1292,8 +1301,9 @@ bool __create_nuxes(Entity&) {
                     const HasTimer& timer = e_ht->get<HasTimer>();
                     return timer.remaining_time_in_round() >= 50.f;
                 })
-                .set_content(TODO_TRANSLATE("Use [PlayerWork] to skip time",
-                                            TodoReason::SubjectToChange));
+                .set_content(TODO_TRANSLATE(
+                    fmt::format("Use [{}] to skip time", tex_name),
+                    TodoReason::SubjectToChange));
         }
     }
 
@@ -1429,6 +1439,10 @@ bool __create_nuxes(Entity&) {
         }
 
         {
+            const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
+                menu::State::Game, InputName::PlayerDoWork);
+            const auto tex_name = KeyMap::get().icon_for_input(valid_inputs[0]);
+
             auto& entity = EntityHelper::createEntity();
             make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
 
@@ -1454,9 +1468,9 @@ bool __create_nuxes(Entity&) {
                         })
                         .has_values();
                 })
-                .set_content(
-                    TODO_TRANSLATE("Use [PlayerWork] to fill the cup with soda",
-                                   TodoReason::SubjectToChange));
+                .set_content(TODO_TRANSLATE(
+                    fmt::format("Use [{}] to fill the cup with soda", tex_name),
+                    TodoReason::SubjectToChange));
         }
 
         {
