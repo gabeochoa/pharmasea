@@ -316,6 +316,7 @@ void SettingsLayer::onDraw(float dt) {
 }
 
 void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
+    // not sure why i had index in the first place
     (void) index;
     // NOTE: we only draw the first N, each state only has N inputs
     // today but if you want all then use this
