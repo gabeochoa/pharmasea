@@ -10,8 +10,12 @@ struct IsNux;
 
 struct IsNux : public BaseComponent {
     bool is_active = false;
+    std::function<void(IsNux&)> onTrigger;
     std::function<bool(const IsNux&)> shouldTrigger;
+    std::function<void(const IsNux&, float)> whileShowing;
     std::function<bool(const IsNux&)> isComplete;
+
+    float time_shown = 0.f;
 
     int entityID = -1;
     EntityType ghost = EntityType::Unknown;
@@ -19,6 +23,19 @@ struct IsNux : public BaseComponent {
     TranslatableString content;
 
     [[nodiscard]] bool is_attached() const { return entityID != -1; }
+
+    void pass_time(float dt) { time_shown += dt; }
+
+    auto& set_on_trigger(const std::function<void(IsNux&)>& trigger) {
+        onTrigger = trigger;
+        return *this;
+    }
+
+    auto& set_while_showing(
+        const std::function<void(const IsNux&, float)>& trigger) {
+        whileShowing = trigger;
+        return *this;
+    }
 
     auto& set_eligibility_fn(const std::function<bool(const IsNux&)>& trigger) {
         shouldTrigger = trigger;

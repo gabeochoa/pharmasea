@@ -1294,7 +1294,7 @@ bool __create_nuxes(Entity&) {
     return true;
 }
 
-void process_nux_updates(Entity& entity, float) {
+void process_nux_updates(Entity& entity, float dt) {
     if (entity.is_missing<IsNuxManager>()) return;
 
     // Tutorial isnt on so dont do any nuxes
@@ -1321,6 +1321,11 @@ void process_nux_updates(Entity& entity, float) {
     if (active_nux.has_value()) {
         Entity& nux = active_nux.asE();
         IsNux& inux = nux.get<IsNux>();
+
+        inux.pass_time(dt);
+
+        if (inux.whileShowing) inux.whileShowing(inux, dt);
+
         if (inux.isComplete(inux)) {
             nux.cleanup = true;
             inux.is_active = false;
@@ -1342,7 +1347,9 @@ void process_nux_updates(Entity& entity, float) {
 
     // if we found one, then make it active
     if (next_active.has_value()) {
-        next_active->get<IsNux>().is_active = true;
+        IsNux& inux = next_active->get<IsNux>();
+        if (inux.onTrigger) inux.onTrigger(inux);
+        inux.is_active = true;
     }
 }
 
