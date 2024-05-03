@@ -188,7 +188,7 @@ static void DrawFloatingText(const vec3& position, Font font, const char* text,
         vec3 t_size = MeasureText3D(
             font, std::string(text).substr(0, texture_position).c_str(), size,
             1.f, 1.f);
-        vec3 icon_pos = vec3{t_size.x, text_size.y * 9.f, 0.05f};
+        vec3 icon_pos = vec3{t_size.x * 0.9f, text_size.y * 9.f, 0.05f};
         raylib::Texture texture = TextureLibrary::get().get(texture_name);
         GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
         raylib::DrawBillboard(cam.camera, texture, icon_pos,

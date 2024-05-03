@@ -520,7 +520,7 @@ static void DrawFloatingTextWithIcons(const std::string& content,
     int end = std::get<2>(tex_position);
 
     std::string post = content;
-    post.replace(start, end - start + 1, "   ");
+    post.replace(start, end - start + 1, "    ");
 
     DrawFloatingText(position, font, post.c_str(), size, color, backface,
                      std::get<0>(tex_position), start);

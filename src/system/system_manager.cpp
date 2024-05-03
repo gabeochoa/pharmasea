@@ -1507,6 +1507,18 @@ bool __create_nuxes(Entity&) {
                     "Place it on the register to serve the customer",
                     TodoReason::SubjectToChange));
         }
+
+        // place soda wand back down
+        //
+        // when day is not done but all customers finish - upsell the ffwd
+        //
+        // this is the upgrade room, you will either get a new recipe or a new
+        // gimmic for your restaurant
+        //
+        // often new upgrades, unlock new furniture. for the ones that are
+        // required, you will get one for free
+        //
+        // why is the "cant start until" showing so early in the day
     }
 
     log_info("created nuxes");
