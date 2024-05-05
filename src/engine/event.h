@@ -70,7 +70,7 @@ struct EventDispatcher {
     Event& event;
 
     template<typename T>
-    bool dispatch(std::function<bool(T&)> func) {
+    bool dispatch(const std::function<bool(T&)>& func) {
         if (event.getEventType() == T::getStaticType()) {
             event.handled = func(*(T*) &event);
             return true;

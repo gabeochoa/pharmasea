@@ -39,7 +39,6 @@ GAME_LOG = $(OBJ_DIR)/game.log
 all: $(OUTPUT_EXE)
 	install_name_tool -change @rpath/libGameNetworkingSockets.dylib @executable_path/vendor/libGameNetworkingSockets.dylib $(OUTPUT_EXE)
 	./$(OUTPUT_EXE) 2>&1 $(GAME_LOG)
-
 # -g disables sounds 
 # ./$(OUTPUT_EXE) -g 2>&1 $(GAME_LOG)
 
