@@ -5,6 +5,15 @@
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
 
+EntityQuery& EntityQuery::whereIsHoldingAnyFurniture() {
+    return  //
+        add_mod(new WhereHasComponent<CanHoldFurniture>())
+            .add_mod(new WhereLambda([](const Entity& entity) {
+                const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
+                return chf.is_holding_furniture();
+            }));
+}
+
 EntityQuery& EntityQuery::whereIsHoldingFurnitureID(EntityID entityID) {
     return  //
         add_mod(new WhereHasComponent<CanHoldFurniture>())

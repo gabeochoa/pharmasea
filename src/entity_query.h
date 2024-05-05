@@ -194,6 +194,7 @@ struct EntityQuery {
             }));
     }
 
+    EntityQuery& whereIsHoldingAnyFurniture();
     EntityQuery& whereIsHoldingFurnitureID(EntityID entityID);
     EntityQuery& whereIsHoldingItemOfType(EntityType type);
     EntityQuery& whereIsDrinkAndMatches(Drink recipe);
