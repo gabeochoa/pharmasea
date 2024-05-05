@@ -1160,7 +1160,7 @@ void update_visuals_for_settings_changer(Entity& entity, float) {
     }
 }
 
-bool __create_nuxes(Entity&) {
+bool _create_nuxes(Entity&) {
     if (GameState::get().read() != game::State::Planning) return false;
 
     OptEntity player = EntityQuery(SystemManager::get().oldAll)
@@ -1479,6 +1479,60 @@ bool __create_nuxes(Entity&) {
 
             entity.addComponent<IsNux>()
                 .set_eligibility_fn([](const IsNux&) -> bool {
+                    bool filled_cup_exists =
+                        EntityQuery()
+                            .whereHasComponent<IsDrink>()
+                            .whereLambda([](const Entity& drink) {
+                                return drink.get<IsDrink>().matches_drink(
+                                    Drink::coke);
+                            })
+                            .has_values();
+
+                    bool player_holding_spout =
+                        EntityQuery(SystemManager::get().oldAll)
+                            .whereType(EntityType::Player)
+                            .whereHasComponent<CanHoldItem>()
+                            .whereLambda([](const Entity& player) {
+                                const CanHoldItem& chf =
+                                    player.get<CanHoldItem>();
+                                return chf.is_holding_item() &&
+                                       chf.item().type == EntityType::SodaSpout;
+                            })
+                            .has_values();
+                    return filled_cup_exists && player_holding_spout;
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto sodamach = EntityQuery()
+                                        .whereType(EntityType::SodaMachine)
+                                        .gen_first();
+                    inux.should_attach_to(sodamach->id);
+                })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    return !EntityQuery(SystemManager::get().oldAll)
+                                .whereType(EntityType::Player)
+                                .whereHasComponent<CanHoldItem>()
+                                .whereLambda([](const Entity& player) {
+                                    const CanHoldItem& chf =
+                                        player.get<CanHoldItem>();
+                                    // no holding anything? good
+                                    if (!chf.is_holding_item()) return false;
+                                    // holding a non spout? also good
+                                    return chf.is_holding_item() &&
+                                           chf.item().type ==
+                                               EntityType::SodaSpout;
+                                })
+                                .has_values();
+                })
+                .set_content(TODO_TRANSLATE("Place the soda wand back down",
+                                            TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
                     // Wait until theres at least one customer
                     return EntityQuery()
                         .whereType(EntityType::Customer)
@@ -1508,8 +1562,6 @@ bool __create_nuxes(Entity&) {
                     TodoReason::SubjectToChange));
         }
 
-        // place soda wand back down
-        //
         // when day is not done but all customers finish - upsell the ffwd
         //
         // this is the upgrade room, you will either get a new recipe or a new
@@ -1535,7 +1587,7 @@ void process_nux_updates(Entity& entity, float dt) {
 
     IsNuxManager& inm = entity.get<IsNuxManager>();
     if (!inm.initialized) {
-        bool init = __create_nuxes(entity);
+        bool init = _create_nuxes(entity);
         if (!init) return;
         inm.initialized = init;
     }
