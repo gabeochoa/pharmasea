@@ -145,13 +145,6 @@ struct EntityHelper {
         vec2 range_min, vec2 range_max,
         const std::function<bool(const Entity&)>& filter);
 
-    static OptEntity getOverlappingSolidEntityInRange(
-        vec2 range_min, vec2 range_max,
-        const std::function<bool(const Entity&)>& = {});
-
-    static bool hasOverlappingSolidEntitiesInRange(vec2 range_min,
-                                                   vec2 range_max);
-
     static OptEntity getOverlappingEntityIfExists(
         const Entity& entity, float range,
         const std::function<bool(const Entity&)>& filter = {});
