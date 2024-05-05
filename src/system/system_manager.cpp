@@ -1214,12 +1214,7 @@ bool _create_nuxes(Entity&) {
                 .set_completion_fn([register_id](const IsNux& inux) -> bool {
                     return EntityQuery(SystemManager::get().oldAll)
                         .whereID(inux.entityID)
-                        .whereLambda([register_id](const Entity& player) {
-                            const CanHoldFurniture& chf =
-                                player.get<CanHoldFurniture>();
-                            return chf.is_holding_furniture() &&
-                                   chf.furniture_id() == register_id;
-                        })
+                        .whereIsHoldingFurnitureID(register_id)
                         .has_values();
                 })
                 // TODO replace playerpickup with the actual control
@@ -1364,11 +1359,7 @@ bool _create_nuxes(Entity&) {
                 .set_completion_fn([player_id](const IsNux&) -> bool {
                     return EntityQuery(SystemManager::get().oldAll)
                         .whereID(player_id)
-                        .whereLambda([](const Entity& player) {
-                            const CanHoldItem& chf = player.get<CanHoldItem>();
-                            return chf.is_holding_item() &&
-                                   chf.item().type == EntityType::Drink;
-                        })
+                        .whereIsHoldingItemOfType(EntityType::Drink)
                         .has_values();
                 })
                 .set_content(
@@ -1396,11 +1387,7 @@ bool _create_nuxes(Entity&) {
                         // Instead of finding the exact table we marked, just
                         // find any table with a cup
                         .whereType(EntityType::Table)
-                        .whereLambda([](const Entity& table) {
-                            const CanHoldItem& chf = table.get<CanHoldItem>();
-                            return chf.is_holding_item() &&
-                                   chf.item().type == EntityType::Drink;
-                        })
+                        .whereIsHoldingItemOfType(EntityType::Drink)
                         .has_values();
                 })
                 .set_content(TODO_TRANSLATE("Place it down on a table",
@@ -1427,11 +1414,7 @@ bool _create_nuxes(Entity&) {
                 .set_completion_fn([player_id](const IsNux&) -> bool {
                     return EntityQuery(SystemManager::get().oldAll)
                         .whereID(player_id)
-                        .whereLambda([](const Entity& player) {
-                            const CanHoldItem& chf = player.get<CanHoldItem>();
-                            return chf.is_holding_item() &&
-                                   chf.item().type == EntityType::SodaSpout;
-                        })
+                        .whereIsHoldingItemOfType(EntityType::SodaSpout)
                         .has_values();
                 })
                 .set_content(TODO_TRANSLATE("Grab the soda wand",
@@ -1461,11 +1444,7 @@ bool _create_nuxes(Entity&) {
                 .set_completion_fn([](const IsNux& inux) -> bool {
                     return EntityQuery()
                         .whereID(inux.entityID)
-                        .whereHasComponent<IsDrink>()
-                        .whereLambda([](const Entity& drink) {
-                            return drink.get<IsDrink>().matches_drink(
-                                Drink::coke);
-                        })
+                        .whereIsDrinkAndMatches(Drink::coke)
                         .has_values();
                 })
                 .set_content(TODO_TRANSLATE(
@@ -1481,23 +1460,14 @@ bool _create_nuxes(Entity&) {
                 .set_eligibility_fn([](const IsNux&) -> bool {
                     bool filled_cup_exists =
                         EntityQuery()
-                            .whereHasComponent<IsDrink>()
-                            .whereLambda([](const Entity& drink) {
-                                return drink.get<IsDrink>().matches_drink(
-                                    Drink::coke);
-                            })
+                            .whereIsDrinkAndMatches(Drink::coke)
                             .has_values();
 
                     bool player_holding_spout =
                         EntityQuery(SystemManager::get().oldAll)
                             .whereType(EntityType::Player)
                             .whereHasComponent<CanHoldItem>()
-                            .whereLambda([](const Entity& player) {
-                                const CanHoldItem& chf =
-                                    player.get<CanHoldItem>();
-                                return chf.is_holding_item() &&
-                                       chf.item().type == EntityType::SodaSpout;
-                            })
+                            .whereIsHoldingItemOfType(EntityType::SodaSpout)
                             .has_values();
                     return filled_cup_exists && player_holding_spout;
                 })
@@ -1508,17 +1478,10 @@ bool _create_nuxes(Entity&) {
                     inux.should_attach_to(sodamach->id);
                 })
                 .set_completion_fn([](const IsNux&) -> bool {
+                    // No players holding spouts anymore
                     return EntityQuery(SystemManager::get().oldAll)
                         .whereType(EntityType::Player)
-                        .whereHasComponent<CanHoldItem>()
-                        .whereLambda([](const Entity& player) {
-                            const CanHoldItem& chf = player.get<CanHoldItem>();
-                            // no holding anything? good
-                            if (!chf.is_holding_item()) return false;
-                            // holding a non spout? also good
-                            return chf.is_holding_item() &&
-                                   chf.item().type == EntityType::SodaSpout;
-                        })
+                        .whereIsHoldingItemOfType(EntityType::SodaSpout)
                         .is_empty();
                 })
                 .set_content(TODO_TRANSLATE("Place the soda wand back down",
@@ -1545,10 +1508,8 @@ bool _create_nuxes(Entity&) {
                 .set_completion_fn([](const IsNux&) -> bool {
                     return EntityQuery()
                         .whereType(EntityType::Register)
-                        .whereLambda([](const Entity& table) {
-                            const CanHoldItem& chf = table.get<CanHoldItem>();
-                            if (!chf.is_holding_item()) return false;
-                            const Item& item = chf.item();
+                        .whereIsHoldingItemOfType(EntityType::Drink)
+                        .whereHeldItemMatches([](const Entity& item) {
                             if (item.type != EntityType::Drink) return false;
                             return item.get<IsDrink>().matches_drink(
                                 Drink::coke);
