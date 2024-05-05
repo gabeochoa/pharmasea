@@ -51,7 +51,18 @@ struct Client {
     std::function<void(std::string)> process_message_cb;
 
     Client() {}
-    ~Client() { send_leave_info_request(); }
+    ~Client() {
+        try {
+            send_leave_info_request();
+        } catch (std::exception &) {
+            // Bitsery can ause this to throw
+            //
+            //
+            // but since we are shutting down anyway,
+            // worst case, we can just ignore it
+            // and the server will kill the player through heartbeat
+        }
+    }
 
     [[nodiscard]] bool is_connected() const {
         return connection != k_HSteamNetConnection_Invalid;
