@@ -178,6 +178,14 @@ struct EntityQuery {
                 return entity.get<CanBeHeld>().is_not_held();
             }));
     }
+
+    EntityQuery& whereIsHoldingFurnitureID(EntityID entityID);
+    EntityQuery& whereIsHoldingItemOfType(EntityType type);
+    EntityQuery& whereIsDrinkAndMatches(Drink recipe);
+
+    EntityQuery& whereHeldItemMatches(
+        const std::function<bool(const Entity&)>& fn);
+
     /////////
 
     using OrderByFn = std::function<bool(const Entity&, const Entity&)>;
