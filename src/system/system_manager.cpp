@@ -1508,20 +1508,18 @@ bool _create_nuxes(Entity&) {
                     inux.should_attach_to(sodamach->id);
                 })
                 .set_completion_fn([](const IsNux&) -> bool {
-                    return !EntityQuery(SystemManager::get().oldAll)
-                                .whereType(EntityType::Player)
-                                .whereHasComponent<CanHoldItem>()
-                                .whereLambda([](const Entity& player) {
-                                    const CanHoldItem& chf =
-                                        player.get<CanHoldItem>();
-                                    // no holding anything? good
-                                    if (!chf.is_holding_item()) return false;
-                                    // holding a non spout? also good
-                                    return chf.is_holding_item() &&
-                                           chf.item().type ==
-                                               EntityType::SodaSpout;
-                                })
-                                .has_values();
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereType(EntityType::Player)
+                        .whereHasComponent<CanHoldItem>()
+                        .whereLambda([](const Entity& player) {
+                            const CanHoldItem& chf = player.get<CanHoldItem>();
+                            // no holding anything? good
+                            if (!chf.is_holding_item()) return false;
+                            // holding a non spout? also good
+                            return chf.is_holding_item() &&
+                                   chf.item().type == EntityType::SodaSpout;
+                        })
+                        .is_empty();
                 })
                 .set_content(TODO_TRANSLATE("Place the soda wand back down",
                                             TodoReason::SubjectToChange));

@@ -216,6 +216,10 @@ struct EntityQuery {
         return !run_query({.stop_on_first = true}).empty();
     }
 
+    [[nodiscard]] bool is_empty() const {
+        return run_query({.stop_on_first = true}).empty();
+    }
+
     [[nodiscard]] RefEntities values_ignore_cache(
         UnderlyingOptions options) const {
         ents = run_query(options);
