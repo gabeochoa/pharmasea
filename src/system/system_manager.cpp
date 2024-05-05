@@ -1819,17 +1819,25 @@ void process_pnumatic_pipe_pairing(Entity& entity, float) {
 
     if (ipp.has_pair()) return;
 
-    for (Entity& other :
-         EntityQuery().whereHasComponent<IsPnumaticPipe>().gen()) {
-        if (other.cleanup) continue;
-        if (other.id == entity.id) continue;
-        IsPnumaticPipe& otherpp = other.get<IsPnumaticPipe>();
-        if (otherpp.has_pair()) continue;
+    OptEntity other_pipe = EntityQuery()  //
+                               .whereNotMarkedForCleanup()
+                               .whereNotID(entity.id)
+                               .whereHasComponent<IsPnumaticPipe>()
+                               .whereLambda([](const Entity& pipe) {
+                                   const IsPnumaticPipe& otherpp =
+                                       pipe.get<IsPnumaticPipe>();
+                                   // Find only the ones that dont have a
+                                   // pair
+                                   return !otherpp.has_pair();
+                               })
+                               .gen_first();
 
+    if (other_pipe.has_value()) {
+        IsPnumaticPipe& otherpp = other_pipe->get<IsPnumaticPipe>();
         otherpp.paired_id = entity.id;
-        ipp.paired_id = other.id;
-        break;
+        ipp.paired_id = other_pipe->id;
     }
+
     // still dont have a pair, we probably just have an odd number
     if (!ipp.has_pair()) return;
 }

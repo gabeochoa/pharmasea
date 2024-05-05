@@ -57,6 +57,19 @@ struct EntityQuery {
         return add_mod(new Not(new WhereType(t)));
     }
 
+    struct WhereMarkedForCleanup : Modification {
+        bool operator()(const Entity& entity) const override {
+            return entity.cleanup;
+        }
+    };
+
+    auto& whereMarkedForCleanup() {
+        return add_mod(new WhereMarkedForCleanup());
+    }
+    auto& whereNotMarkedForCleanup() {
+        return add_mod(new Not(new WhereMarkedForCleanup()));
+    }
+
     template<typename T>
     struct WhereHasComponent : Modification {
         bool operator()(const Entity& entity) const override {
