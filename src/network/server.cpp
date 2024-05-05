@@ -1,5 +1,6 @@
 #include "server.h"
 
+#include <chrono>
 #include <thread>
 
 #include "shared.h"
@@ -86,6 +87,7 @@ void Server::run() {
     thread_id = std::this_thread::get_id();
     GLOBALS.set("server_thread_id", &thread_id);
 
+    // should probably always be about / above whats in the game.h
     constexpr float desiredFrameRate = 240.0f;
     constexpr std::chrono::duration<float> fixedTimeStep(1.0f /
                                                          desiredFrameRate);
@@ -100,11 +102,10 @@ void Server::run() {
             std::chrono::duration_cast<std::chrono::duration<float>>(
                 currentTime - previousTime)
                 .count();
-        // 240fps would be 4ms (well like 4.16ms)
-        // log_info("last server frame took {}ms ",
-        // std::chrono::duration_cast<std::chrono::milliseconds>(
-        // currentTime - previousTime)
-        // .count());
+
+        size_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        currentTime - previousTime)
+                        .count();
 
         if (duration >= fixedTimeStep.count()) {
             tick(fixedTimeStep.count());
@@ -113,8 +114,27 @@ void Server::run() {
             previousTime = currentTime;
         }
 
+#if 0
+        last_frames[last_frames_index] = ms;
+        last_frames_index = (last_frames_index + 1);
+        if (!has_looped && last_frames_index >= last_frames.size())
+            has_looped = true;
+        last_frames_index = last_frames_index % last_frames.size();
+
+        float avglf = 0.f;
+        for (size_t i = 0;
+             i < (has_looped ? last_frames.size() : last_frames_index); i++) {
+            avglf += (last_frames[i]);
+        }
+        avglf /= (has_looped ? last_frames.size() : last_frames_index);
+        log_info("avg frame {:2}ms", avglf);
+#endif
+        // 240fps would be 4ms (well like 4.16ms)
+
         // Sleep to control the frame rate
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        if (ms < 3) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
     }
 }
 

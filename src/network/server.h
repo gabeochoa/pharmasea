@@ -53,6 +53,10 @@ struct Server {
     menu::State current_menu_state;
     game::State current_game_state;
 
+    std::array<size_t, 10000> last_frames;
+    size_t last_frames_index = 0;
+    bool has_looped = false;
+
     float next_map_tick_reset = 1.f / 30;  // 60fps
     float next_map_tick = 0;
 
