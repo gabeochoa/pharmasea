@@ -199,6 +199,24 @@ struct EntityQuery {
     EntityQuery& whereHeldItemMatches(
         const std::function<bool(const Entity&)>& fn);
 
+    template<typename Component>
+    struct WhereHasComponentAndLambda : Modification {
+        std::function<bool(const Component&)> fn;
+        explicit WhereHasComponentAndLambda(
+            const std::function<bool(const Component&)>& fn)
+            : fn(fn) {}
+
+        bool operator()(const Entity& entity) const override {
+            return entity.has<Component>() && fn(entity.get<Component>());
+        }
+    };
+
+    template<typename Component>
+    auto& whereHasComponentAndLambda(
+        const std::function<bool(const Component&)>& fn) {
+        return add_mod(new WhereHasComponentAndLambda<Component>(fn));
+    }
+
     /////////
 
     using OrderByFn = std::function<bool(const Entity&, const Entity&)>;

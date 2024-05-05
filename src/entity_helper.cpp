@@ -1,5 +1,6 @@
 #include "entity_helper.h"
 
+#include "components/is_floor_marker.h"
 #include "components/is_trigger_area.h"
 #include "entity_query.h"
 #include "system/input_process_manager.h"
@@ -225,21 +226,15 @@ OptEntity EntityHelper::getClosestOfType(const Entity& entity,
 
 OptEntity EntityHelper::getMatchingFloorMarker(IsFloorMarker::Type type) {
     return EntityQuery()
-        .whereHasComponent<IsFloorMarker>()
-        .whereLambda([type](const Entity& entity) {
-            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            return fm.type == type;
-        })
+        .whereHasComponentAndLambda<IsFloorMarker>(
+            [type](const IsFloorMarker& fm) { return fm.type == type; })
         .gen_first();
 }
 
 OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
     return EntityQuery()
-        .whereHasComponent<IsTriggerArea>()
-        .whereLambda([type](const Entity& entity) {
-            const IsTriggerArea& ta = entity.get<IsTriggerArea>();
-            return ta.type == type;
-        })
+        .whereHasComponentAndLambda<IsTriggerArea>(
+            [type](const IsTriggerArea& ta) { return ta.type == type; })
         .gen_first();
 }
 
