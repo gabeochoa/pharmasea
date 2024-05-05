@@ -286,9 +286,8 @@ struct EntityQuery {
             if (!e_ptr) continue;
             Entity& e = *e_ptr;
 
-            bool passed_all_mods = std::all_of(
-                mods.begin(), mods.end(),
-                [&](const std::unique_ptr<Modification>& mod) -> bool {
+            bool passed_all_mods = std::ranges::all_of(
+                mods, [&](const std::unique_ptr<Modification>& mod) -> bool {
                     return (*mod)(e);
                 });
 
