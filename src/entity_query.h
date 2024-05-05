@@ -373,8 +373,7 @@ struct EntityQuery {
                       });
         }
 
-        // TODO turn off cache for now
-        // ran_query = true;
+        ran_query = true;
         return out;
     }
 };
