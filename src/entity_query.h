@@ -284,6 +284,19 @@ struct EntityQuery {
         return {};
     }
 
+    [[nodiscard]] std::optional<int> gen_first_id() const {
+        if (!has_values()) return {};
+        return gen_with_options({.stop_on_first = true})[0].get().id;
+    }
+
+    [[nodiscard]] std::optional<std::pair<int, vec3>> gen_first_position()
+        const {
+        if (!has_values()) return {};
+        auto ent_ = gen_with_options({.stop_on_first = true})[0];
+        auto& ent = ent_.get();
+        return std::pair{ent.id, ent.get<Transform>().pos()};
+    }
+
     [[nodiscard]] size_t gen_count() const {
         if (!ran_query) return values_ignore_cache({}).size();
         return ents.size();
