@@ -28,7 +28,7 @@ std::vector<UpgradeType> upgrade_rounds = {{
 float DEADZONE = 0.25f;
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;
-i18n::LocalizationText* localization;
+std::unique_ptr<i18n::LocalizationText> localization;
 
 namespace wfc {
 MapGenerationInformation MAP_GEN_INFO;
@@ -130,8 +130,7 @@ void Preload::load_fonts(const nlohmann::json& fonts) {
 
 void Preload::on_language_change(const char* lang_name, const char* fn) {
     // Reset localization and reload from file...
-    if (localization) delete localization;
-    localization = new i18n::LocalizationText(fn);
+    localization.reset(new i18n::LocalizationText(fn));
 
     // During startup we load settings before preload, but that means that
     // the fonts arent loaded yet.

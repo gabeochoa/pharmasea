@@ -373,13 +373,15 @@ struct TranslatableString {
         return "Missing language data";
     }
 
-    int target_index = get_target_index(localization, s.underlying_TL_ONLY());
+    int target_index =
+        get_target_index(localization.get(), s.underlying_TL_ONLY());
     if (target_index == -1) {
         std::cout << "Failed to find translation for " << s.debug()
                   << std::endl;
         return s.underlying_TL_ONLY();
     }
 
-    const char* translated = get_translated_string(localization, target_index);
+    const char* translated =
+        get_translated_string(localization.get(), target_index);
     return translated;
 }

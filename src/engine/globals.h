@@ -41,7 +41,7 @@ static int __WIN_H = 720;
 static int __WIN_W = 1280;
 
 // Stored in preload.cpp
-extern i18n::LocalizationText* localization;
+extern std::unique_ptr<i18n::LocalizationText> localization;
 extern int LOG_LEVEL;
 
 [[nodiscard]] inline int WIN_W() { return __WIN_W; }

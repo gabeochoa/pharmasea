@@ -55,8 +55,6 @@ struct Preload {
     }
 
     ~Preload() {
-        delete localization;
-
         if (ENABLE_SOUND) {
             ext::close_audio_device();
         }
