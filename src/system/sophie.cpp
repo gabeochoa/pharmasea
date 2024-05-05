@@ -44,22 +44,10 @@ void customers_in_store(Entity& entity) {
 
 // Handle some player is holding furniture
 void player_holding_furniture(Entity& entity) {
-    bool all_empty = true;
-    // TODO i want to to do it this way: but players are not in
-    // entities, so its not possible
-    //
-    // auto players =
-    // EntityHelper::getAllWithComponent<CanHoldFurniture>();
+    bool all_empty = EntityQuery(SystemManager::get().oldAll)
+                         .whereIsHoldingAnyFurniture()
+                         .is_empty();
 
-    // TODO need support for 'break' to use for_each_old
-    for (std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
-        if (!e) continue;
-        if (e->is_missing<CanHoldFurniture>()) continue;
-        if (e->get<CanHoldFurniture>().is_holding_furniture()) {
-            all_empty = false;
-            break;
-        }
-    }
     entity.get<HasTimer>().write_reason(
         HasTimer::WaitingReason::HoldingFurniture, !all_empty,
         // players can figure it out on their own
