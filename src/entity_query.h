@@ -7,17 +7,16 @@
 
 struct EntityQuery {
     struct Modification {
-        virtual ~Modification() {}
+        virtual ~Modification() = default;
         virtual bool operator()(const Entity&) const = 0;
     };
 
-    // TODO add predicates
     struct Not : Modification {
         std::unique_ptr<Modification> mod;
 
         explicit Not(Modification* m) : mod(m) {}
 
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return !((*mod)(entity));
         }
     };
@@ -27,7 +26,7 @@ struct EntityQuery {
         mutable int amount_taken;
         explicit Limit(int amt) : amount(amt), amount_taken(0) {}
 
-        virtual bool operator()(const Entity&) const override {
+        bool operator()(const Entity&) const override {
             if (amount_taken > amount) return false;
             amount_taken++;
             return true;
@@ -39,7 +38,7 @@ struct EntityQuery {
     struct WhereID : Modification {
         int id;
         explicit WhereID(int id) : id(id) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return entity.id == id;
         }
     };
@@ -49,7 +48,7 @@ struct EntityQuery {
     struct WhereType : Modification {
         EntityType type;
         explicit WhereType(const EntityType& t) : type(t) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return check_type(entity, type);
         }
     };
@@ -60,7 +59,7 @@ struct EntityQuery {
 
     template<typename T>
     struct WhereHasComponent : Modification {
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return entity.has<T>();
         }
     };
@@ -77,7 +76,7 @@ struct EntityQuery {
         std::function<bool(const Entity&)> filter;
         explicit WhereLambda(const std::function<bool(const Entity&)>& cb)
             : filter(cb) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return filter(entity);
         }
     };
@@ -98,7 +97,7 @@ struct EntityQuery {
         // TODO mess around with the right epsilon here
         explicit WhereInRange(vec2 pos, float r = 0.01f, bool snap = false)
             : position(pos), range(r), should_snap(snap) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             vec2 pos = entity.get<Transform>().as2();
             if (should_snap) pos = vec::snap(pos);
             return vec::distance(position, pos) < range;
@@ -126,7 +125,7 @@ struct EntityQuery {
         float range;
 
         explicit WhereInFront(vec2 pos, float r) : position(pos), range(r) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             float dist = vec::distance(entity.get<Transform>().as2(), position);
             if (abs(dist) > range) return false;
             if (dist < 0) return false;
@@ -148,7 +147,7 @@ struct EntityQuery {
 
         explicit WhereInside(vec2 mn, vec2 mx) : min(mn), max(mx) {}
 
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             const auto pos = entity.get<Transform>().as2();
             if (pos.x > max.x || pos.x < min.x) return false;
             if (pos.y > max.y || pos.y < min.y) return false;
@@ -164,7 +163,7 @@ struct EntityQuery {
 
         explicit WhereCollides(BoundingBox box) : bounds(box) {}
 
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return CheckCollisionBoxes(entity.get<Transform>().bounds(),
                                        bounds);
         }
@@ -191,7 +190,7 @@ struct EntityQuery {
         OrderByFn sortFn;
         explicit OrderByLambda(const OrderByFn& sortFn) : sortFn(sortFn) {}
 
-        virtual bool operator()(const Entity& a, const Entity& b) override {
+        bool operator()(const Entity& a, const Entity& b) override {
             return sortFn(a, b);
         }
     };
