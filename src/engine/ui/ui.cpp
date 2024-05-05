@@ -157,12 +157,7 @@ ElementResult button(const Widget& widget, const TranslatableString& content,
     internal::draw_focus_ring(widget, true);
     focus::handle_tabbing(widget);
 
-    if (focus::is_hot(widget.id)) {
-        focus::set(widget.id);
-    }
-
-    if (background ||
-        (draw_background_when_hot && focus::is_active(widget.id))) {
+    if (background || (draw_background_when_hot && focus::is_hot(widget.id))) {
         // We dont allow customization because
         // you should be using the themed colors
         auto color_usage = ui::theme::Usage::Primary;
@@ -448,13 +443,11 @@ ElementResult dropdown(const Widget& widget, DropdownData data) {
                 focus::set(option_widget.id);
             }
 
-            if (button(option_widget)) {
+            if (button(option_widget, TODO_TRANSLATE(data.options[i],
+                                                     TodoReason::Recursion))) {
                 state->selected = i;
                 state->on = false;
             }
-
-            text(option_widget,
-                 TODO_TRANSLATE(data.options[i], TodoReason::Recursion));
         }
     } else {
         state->focused = state->selected;

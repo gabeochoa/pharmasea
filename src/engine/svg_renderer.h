@@ -24,7 +24,7 @@ struct SVGRenderer {
     float scale_to_resolution(float val) { return val * (WIN_HF() / 720.f); }
 
     void draw_background() {
-        float scale = background_texture.width / 1280.f;
+        float scale = WIN_WF() / 1280.f;
         raylib::DrawTextureEx(background_texture, {0, 0}, 0.f, scale, WHITE);
     }
 
@@ -41,7 +41,7 @@ struct SVGRenderer {
                              const TranslatableString& content) {
         auto r = rect(id);
         // log_info("id {} @ {} ", id, rect);
-        return ui::button(ui::Widget{r}, content, false);
+        return ui::button(ui::Widget{r}, content, false, true);
     }
 
     ui::ElementResult text(const std::string& id,
