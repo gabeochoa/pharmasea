@@ -82,7 +82,7 @@ void overlapping_furniture(Entity& entity) {
     vec2 range_min = {-50, -50};
     vec2 range_max = {50, 50};
 
-    auto solid_ents =
+    auto solid_ids =
         EntityQuery()                      //
             .whereHasComponent<IsSolid>()  //
                                            // Skip the soda rope because the
@@ -90,15 +90,8 @@ void overlapping_furniture(Entity& entity) {
                                            // are okay with that
             .whereNotType(EntityType::SodaSpout)  //
             .whereInside(range_min, range_max)    //
-            .gen();
-
-    // Convert them all to just ids and position
-    std::vector<std::pair<EntityID, vec3>> solid_ids;
-    std::transform(
-        solid_ents.begin(), solid_ents.end(), std::back_inserter(solid_ids),
-        [](Entity& ent) -> std::pair<EntityID, vec3> {
-            return std::make_pair(ent.id, ent.get<Transform>().pos());
-        });
+            // Convert them all to just ids and position
+            .gen_positions();
 
     const auto _hasDuplicates =
         [](const std::vector<std::pair<EntityID, vec3>>& arr) -> EntityID {

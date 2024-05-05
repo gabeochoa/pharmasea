@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <iterator>
+
 #include "entity.h"
 #include "entity_helper.h"
 #include "entity_type.h"
@@ -289,9 +291,18 @@ struct EntityQuery {
     [[nodiscard]] std::vector<int> gen_ids() const {
         const auto results = ran_query ? ents : values_ignore_cache({});
         std::vector<int> ids;
-        for (const Entity& ent : results) {
-            ids.push_back(ent.id);
-        }
+        std::transform(results.begin(), results.end(), std::back_inserter(ids),
+                       [](const Entity& ent) -> int { return ent.id; });
+        return ids;
+    }
+
+    [[nodiscard]] std::vector<std::pair<EntityID, vec3>> gen_positions() const {
+        const auto results = ran_query ? ents : values_ignore_cache({});
+        std::vector<std::pair<EntityID, vec3>> ids;
+        std::transform(results.begin(), results.end(), std::back_inserter(ids),
+                       [](const Entity& ent) -> std::pair<EntityID, vec3> {
+                           return {ent.id, ent.get<Transform>().pos()};
+                       });
         return ids;
     }
 
