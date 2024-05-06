@@ -16,6 +16,7 @@ struct IsNux : public BaseComponent {
     std::function<bool(const IsNux&)> isComplete;
 
     float time_shown = 0.f;
+    bool cleanup_on_parent_death = false;
 
     int entityID = -1;
     EntityType ghost = EntityType::Unknown;
@@ -25,6 +26,11 @@ struct IsNux : public BaseComponent {
     [[nodiscard]] bool is_attached() const { return entityID != -1; }
 
     void pass_time(float dt) { time_shown += dt; }
+
+    auto& should_cleanup_on_parent_death() {
+        cleanup_on_parent_death = true;
+        return *this;
+    }
 
     auto& set_on_trigger(const std::function<void(IsNux&)>& trigger) {
         onTrigger = trigger;

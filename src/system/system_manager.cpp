@@ -1310,6 +1310,7 @@ bool _create_nuxes(Entity&) {
             make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
 
             entity.addComponent<IsNux>()
+                .should_cleanup_on_parent_death()
                 .set_eligibility_fn([](const IsNux&) -> bool {
                     // Wait until theres at least one customer
                     return EntityQuery()
@@ -1568,8 +1569,11 @@ void process_nux_updates(Entity& entity, float dt) {
 
         if (inux.whileShowing) inux.whileShowing(inux, dt);
 
-        auto exi = EntityHelper::getEntityForID(inux.entityID);
-        bool parent_died = !exi.has_value();
+        bool parent_died = false;
+        if (inux.cleanup_on_parent_death && inux.entityID != -1) {
+            auto exi = EntityHelper::getEntityForID(inux.entityID);
+            parent_died = !exi.has_value();
+        }
 
         if (parent_died || inux.isComplete(inux)) {
             nux.cleanup = true;
