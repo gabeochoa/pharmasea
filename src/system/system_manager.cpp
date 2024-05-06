@@ -1568,7 +1568,10 @@ void process_nux_updates(Entity& entity, float dt) {
 
         if (inux.whileShowing) inux.whileShowing(inux, dt);
 
-        if (inux.isComplete(inux)) {
+        auto exi = EntityHelper::getEntityForID(inux.entityID);
+        bool parent_died = !exi.has_value();
+
+        if (parent_died || inux.isComplete(inux)) {
             nux.cleanup = true;
             inux.is_active = false;
             active_nux = {};

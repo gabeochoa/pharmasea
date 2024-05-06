@@ -55,6 +55,7 @@ void player_holding_furniture(Entity& entity) {
 }
 
 void bar_not_clean(Entity& entity) {
+    // TODO check toilet
     auto any = EntityQuery().whereType(EntityType::Vomit).gen_first_position();
     vec2 pos = any.has_value() ? vec::to2(any->second) : vec2{0, 0};
     entity.get<HasTimer>().write_reason(HasTimer::WaitingReason::BarNotClean,

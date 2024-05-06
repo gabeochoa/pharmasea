@@ -439,12 +439,12 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     const CanOrderDrink& cod = entity.get<CanOrderDrink>();
 
-    aibathroom.pass_time(dt);
-    if (!aibathroom.ready()) return;
-
     int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
     bool gotta_go = (cod.get_drinks_in_bladder() >= bladder_size);
     if (!gotta_go) return;
+
+    aibathroom.pass_time(dt);
+    if (!aibathroom.ready()) return;
 
     bool found = aibathroom.target.find_if_missing(entity);
     if (!found) return;
