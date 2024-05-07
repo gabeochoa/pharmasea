@@ -1535,6 +1535,11 @@ bool _create_nuxes(Entity&) {
                 .set_eligibility_fn([](const IsNux&) -> bool {
                     if (!GameState::get().in_round()) return false;
 
+                    bool has_customers = EntityQuery()
+                                             .whereType(EntityType::Customer)
+                                             .has_values();
+                    if (!has_customers) return false;
+
                     // TODO :DUPE: used as well for sophie checks
                     const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
                     bool all_customers_at_gather =
@@ -1560,7 +1565,7 @@ bool _create_nuxes(Entity&) {
                     const HasTimer& timer = e_ht->get<HasTimer>();
                     return timer.remaining_time_in_round() >= 80.f;
                 })
-                .set_content(TODO_TRANSLATE("Since customers are all done, \n"
+                .set_content(TODO_TRANSLATE("Since customers are all gone, \n"
                                             "Fast Forward to the next day",
                                             TodoReason::SubjectToChange));
         }
