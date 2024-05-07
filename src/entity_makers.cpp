@@ -178,8 +178,6 @@ void register_all_components() {
     for (auto it = entity->componentArray.cbegin(), next_it = it;
          it != entity->componentArray.cend(); it = next_it) {
         ++next_it;
-        BaseComponent* comp = it->second;
-        if (comp) delete comp;
         entity->componentArray.erase(it);
     }
 

@@ -25,7 +25,7 @@ using StdMap = bitsery::ext::StdMap;
 using ComponentBitSet = std::bitset<max_num_components>;
 // originally this was a std::array<BaseComponent*, max_num_components> but i
 // cant seem to serialize this so lets try map
-using ComponentArray = std::map<int, BaseComponent*>;
+using ComponentArray = std::map<int, std::unique_ptr<BaseComponent>>;
 using Item = Entity;
 using EntityID = int;
 
@@ -93,9 +93,9 @@ struct Entity {
                 name(), id, components::get_type_id<T>(), type_name<T>());
         }
         componentSet[components::get_type_id<T>()] = false;
-        BaseComponent* ptr = componentArray[components::get_type_id<T>()];
+        // BaseComponent* ptr = componentArray[components::get_type_id<T>()];
         componentArray.erase(components::get_type_id<T>());
-        if (ptr) delete ptr;
+        // if (ptr) delete ptr;
     }
 
     template<typename T, typename... TArgs>
@@ -119,15 +119,20 @@ struct Entity {
             // return this->get<T>();
         }
 
-        T* component(new T(std::forward<TArgs>(args)...));
-        componentArray[components::get_type_id<T>()] = component;
+        // non uinque ptr
+        // T* component(new T(std::forward<TArgs>(args)...));
+        // componentArray[components::get_type_id<T>()] = component;
+        // componentSet[components::get_type_id<T>()] = true;
+
+        auto component = std::make_unique<T>(std::forward<TArgs>(args)...);
+        componentArray[components::get_type_id<T>()] = std::move(component);
         componentSet[components::get_type_id<T>()] = true;
 
         log_trace("your set is now {}", componentSet);
 
-        component->attach_parent(this);
+        componentArray[components::get_type_id<T>()]->attach_parent(this);
 
-        return *component;
+        return get<T>();
     }
 
     template<typename A>
@@ -156,15 +161,22 @@ struct Entity {
     template<typename T>
     [[nodiscard]] T& get() {
         warnIfMissingComponent<T>();
-        BaseComponent* comp = componentArray.at(components::get_type_id<T>());
-        return *static_cast<T*>(comp);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreturn-stack-address"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreturn-stack-address"
+        return static_cast<T&>(
+            *componentArray.at(components::get_type_id<T>()).get());
     }
 
     template<typename T>
     [[nodiscard]] const T& get() const {
         warnIfMissingComponent<T>();
-        BaseComponent* comp = componentArray.at(components::get_type_id<T>());
-        return *static_cast<T*>(comp);
+
+        return static_cast<const T&>(
+            *componentArray.at(components::get_type_id<T>()).get());
+#pragma GCC diagnostic pop
+#pragma clang diagnostic pop
     }
 
    private:
@@ -178,9 +190,10 @@ struct Entity {
         s.value1b(cleanup);
 
         s.ext(componentArray, StdMap{max_num_components},
-              [](S& sv, int& key, BaseComponent*(&value)) {
+              [](S& sv, int& key, std::unique_ptr<BaseComponent>(&value)) {
                   sv.value4b(key);
-                  sv.ext(value, PointerOwner{PointerType::Nullable});
+                  // sv.ext(value, PointerOwner{PointerType::Nullable});
+                  sv.ext(value, bitsery::ext::StdSmartPtr{});
               });
     }
 };
