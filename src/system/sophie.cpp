@@ -32,6 +32,7 @@ void customers_in_store(Entity& entity) {
     // spawner?
     const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
+    // TODO :DUPE: used as well for nux checks
     OptEntity any = EntityQuery()
                         .whereType(EntityType::Customer)
                         .whereNotInRange(endpos, TILESIZE * 2.f)

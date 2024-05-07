@@ -1522,8 +1522,49 @@ bool _create_nuxes(Entity&) {
                     TodoReason::SubjectToChange));
         }
 
-        // when day is not done but all customers finish - upsell the ffwd
-        //
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            OptEntity ffd =
+                EntityQuery().whereType(EntityType::FastForward).gen_first();
+            int ffd_id = ffd->id;
+
+            entity.addComponent<IsNux>()
+                .should_attach_to(ffd_id)
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    if (!GameState::get().in_round()) return false;
+
+                    // TODO :DUPE: used as well for sophie checks
+                    const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
+                    bool all_customers_at_gather =
+                        EntityQuery()
+                            .whereType(EntityType::Customer)
+                            .whereNotInRange(endpos, TILESIZE * 2.f)
+                            .is_empty();
+
+                    auto e_ht =
+                        EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                    if (!e_ht.has_value()) return false;
+                    const HasTimer& timer = e_ht->get<HasTimer>();
+                    bool lt_halfway_through_day =
+                        timer.remaining_time_in_round() <= 50.f;
+
+                    return all_customers_at_gather && lt_halfway_through_day;
+                })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    // hide when 80% through the day
+                    auto e_ht =
+                        EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                    if (!e_ht.has_value()) return false;
+                    const HasTimer& timer = e_ht->get<HasTimer>();
+                    return timer.remaining_time_in_round() >= 80.f;
+                })
+                .set_content(TODO_TRANSLATE("Since customers are all done, \n"
+                                            "Fast Forward to the next day",
+                                            TodoReason::SubjectToChange));
+        }
+
         // this is the upgrade room, you will either get a new recipe or a new
         // gimmic for your restaurant
         //
