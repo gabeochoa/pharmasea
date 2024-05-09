@@ -176,7 +176,11 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
     AIWaitInQueue& aiwait = entity.get<AIWaitInQueue>();
 
     bool found = aiwait.target.find_if_missing(
-        entity, nullptr, [&](Entity& best_register) {
+        entity,
+        [](const Entity& toilet) {
+            return toilet.get<HasWaitingQueue>().has_space();
+        },
+        [&](Entity& best_register) {
             aiwait.line_wait.add_to_queue(best_register, entity);
         });
     if (!found) {
@@ -446,44 +450,45 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     aibathroom.pass_time(dt);
     if (!aibathroom.ready()) return;
 
-    bool found = aibathroom.target.find_if_missing(entity);
+    bool found = aibathroom.target.find_if_missing(
+        entity,
+        [](const Entity& toilet) {
+            return toilet.get<HasWaitingQueue>().has_space();
+        },
+        [&](Entity& best_toilet) {
+            aibathroom.line_wait.add_to_queue(best_toilet, entity);
+        });
     if (!found) return;
 
-    // We have a target
-    OptEntity opt_toilet = EntityHelper::getEntityForID(aibathroom.target.id());
-    Entity& toilet = opt_toilet.asE();
-
     bool reached = entity.get<CanPathfind>().travel_toward(
-        toilet.get<Transform>().as2(), get_speed_for_entity(entity) * dt);
+        aibathroom.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
-    IsToilet& istoilet = toilet.get<IsToilet>();
-    bool we_are_using_it = istoilet.is_user(entity.id);
+    OptEntity opt_toilet = EntityHelper::getEntityForID(aibathroom.target.id());
+    if (!opt_toilet) {
+        log_warn("got an invalid toilet");
+        return;
+    }
+    Entity& toilet = opt_toilet.asE();
+    entity.get<Transform>().turn_to_face_pos(toilet.get<Transform>().as2());
 
-    // TODO currently toilets dont have HasWaitingQueue, but we could add it? 0
-
-    // Someone else is using it
-    if (istoilet.occupied() && !we_are_using_it) {
-        // TODO after a couple loops maybe you just go on the floor :(
-        aibathroom.reset();
+    bool reached_front = aibathroom.line_wait.try_to_move_closer(
+        toilet, entity, get_speed_for_entity(entity) * dt);
+    if (!reached_front) {
         return;
     }
 
-    // we are using it
-    if (!we_are_using_it) {
-        // ?TODO right now we dont mark occupied until the person gets there
-        // obv this is like real life where two people just gotta go
-        // at the same time.
-        //
-        // this means that its possible there is a free toilet on the other side
-        // of the map and people are still 'using' this one because they all
-        // grabbed at the same time
-        //
-        // this might be frustrating as a player since you are like "why are
-        // they so dumb"
-        //
-        // instead of the wait above, maybe do a wait and search?
+    // Now we are at the front of the line
+    IsToilet& istoilet = toilet.get<IsToilet>();
 
+    // Either needs cleaning or someone else is using it
+    bool not_me = !istoilet.available() && !istoilet.is_user(entity.id);
+    if (not_me) {
+        return;
+    }
+
+    bool we_are_using_it = istoilet.is_user(entity.id);
+    if (!we_are_using_it) {
         float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
         aibathroom.timer.set_time(piss_timer);
         istoilet.start_use(entity.id);
@@ -491,6 +496,8 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
 
     bool completed = aibathroom.timer.pass_time(dt);
     if (completed) {
+        aibathroom.line_wait.leave_line(toilet, entity);
+
         aibathroom.target.unset();
         entity.get<CanOrderDrink>().empty_bladder();
         istoilet.end_use();
@@ -527,7 +534,11 @@ inline void process_ai_paying(Entity& entity, float dt) {
     AICloseTab& aiclosetab = entity.get<AICloseTab>();
 
     bool found_target = aiclosetab.target.find_if_missing(
-        entity, nullptr, [&](Entity& best_register) {
+        entity,
+        [](const Entity& reg) {
+            return reg.get<HasWaitingQueue>().has_space();
+        },
+        [&](Entity& best_register) {
             aiclosetab.line_wait.add_to_queue(best_register, entity);
         });
     if (!found_target) {

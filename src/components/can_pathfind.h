@@ -21,7 +21,6 @@ struct CanPathfind : public BaseComponent {
         Transform& transform = parent->get<Transform>();
         vec2 me = transform.as2();
 
-        // TODO always overwrite?
         global_target = end;
 
         if (is_path_empty()) {
@@ -100,8 +99,7 @@ struct CanPathfind : public BaseComponent {
         }
         // what happens if we get here and the path is still empty?
         if (path.empty()) {
-            log_warn("no pathing even after noclip... {} {} {}=>{}", "my name",
-                     "my id", start, goal);
+            log_warn("no pathing even after noclip... {}=>{}", start, goal);
         }
         max_path_length = std::max(max_path_length, path.size());
     }

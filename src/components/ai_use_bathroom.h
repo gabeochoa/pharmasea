@@ -13,21 +13,34 @@ struct AIUseBathroom : public AIComponent {
         explicit AIUseBathroomTarget(const ResetFn& resetFn)
             : AITarget(resetFn) {}
 
-        virtual OptEntity find_target(const Entity& entity) override {
+        virtual OptEntity find_target(const Entity&) override {
             return EntityQuery()
                 .whereHasComponent<IsToilet>()
+                .whereHasComponent<HasWaitingQueue>()
                 .whereLambda([](const Entity& entity) {
-                    const IsToilet& toilet = entity.get<IsToilet>();
-                    return toilet.available();
+                    // Exclude full toilets
+                    const HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
+                    if (hwq.is_full()) return false;
+                    return true;
                 })
-                .orderByDist(entity.get<Transform>().as2())
+                // Find the one with the least people on it
+                .orderByLambda([](const Entity& r1, const Entity& r2) {
+                    const HasWaitingQueue& hwq1 = r1.get<HasWaitingQueue>();
+                    int rpos1 = hwq1.get_next_pos();
+                    const HasWaitingQueue& hwq2 = r2.get<HasWaitingQueue>();
+                    int rpos2 = hwq2.get_next_pos();
+                    return rpos1 < rpos2;
+                })
                 .gen_first();
         }
     } target;
 
+    AILineWait line_wait;
     AITakesTime timer;
 
-    AIUseBathroom() : target(std::bind(&AIComponent::reset, this)) {}
+    AIUseBathroom()
+        : target(std::bind(&AIComponent::reset, this)),
+          line_wait(std::bind(&AIComponent::reset, this)) {}
     virtual ~AIUseBathroom() {}
 
     JobType next_job;

@@ -32,7 +32,6 @@ struct AIWaitInQueue : public AIComponent {
                     return rpos1 < rpos2;
                 })
                 .gen_first();
-            // TODO Check to see if we can path to that spot
         }
     } target;
 

@@ -567,6 +567,9 @@ void make_toilet(Entity& toilet, vec2 pos) {
 
     toilet.addComponent<IsToilet>();
 
+    // TODO should this happen with an upgrade?
+    toilet.addComponent<HasWaitingQueue>();
+
     toilet.addComponent<HasWork>().init(
         [](Entity& toilet, HasWork& hasWork, Entity& /*player*/, float dt) {
             IsToilet& istoilet = toilet.get<IsToilet>();

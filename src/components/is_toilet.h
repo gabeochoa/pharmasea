@@ -15,8 +15,8 @@ struct IsToilet : public BaseComponent {
 
     [[nodiscard]] bool occupied() const { return state != Available; }
     [[nodiscard]] bool available() const {
-        log_info("current state is {}",
-                 magic_enum::enum_name<IsToilet::State>(state));
+        // log_info("current state is {}",
+        // magic_enum::enum_name<IsToilet::State>(state));
         return !occupied();
     }
     [[nodiscard]] bool is_user(int id) const { return user == id; }
