@@ -67,7 +67,6 @@ if you need the password join the discord and say hi!
 New Upgrades
 - Jukebox: Customers will pay money to use and keeps their patience from draining (no actual music yet tho) 
 - Cant Event Tell: The more customers drink the less they care about the recipe's accuracy 
-- 
 
 impact
 - Menu UI fully redesigned (#thanks @steven for the design feedback) 
@@ -86,8 +85,6 @@ bug fix
 - fix a crash that happened sometimes when adding solid fruits to a drink 
 - Progress bars will now dissapear if the drink was removed before complete
 - Fast Forward Box can no longer be used as a table 
-- 
-
 
 better eng
 - translations support for trigger areas
@@ -97,7 +94,6 @@ better eng
 - Rewrote AI system to be much more ergonomic and easier to read/develop for 
 - More debug ui for ai system 
 - Address a ton of floating todos that were mostly tech debt (still 630 in the codebase though) 
-
 
 
 ### alpha_0.24.04.06
