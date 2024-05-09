@@ -37,6 +37,7 @@ struct AIUseBathroom : public AIComponent {
 
     AILineWait line_wait;
     AITakesTime timer;
+    AITakesTime floor_timer;
 
     AIUseBathroom()
         : target(std::bind(&AIComponent::reset, this)),

@@ -457,12 +457,13 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
         },
         [&](Entity& best_toilet) {
             aibathroom.line_wait.add_to_queue(best_toilet, entity);
+
+            // TODO setting?
+            // right now just set it to 5 seconds in line until you go on the
+            // floor
+            aibathroom.floor_timer.set_time(5.f);
         });
     if (!found) return;
-
-    bool reached = entity.get<CanPathfind>().travel_toward(
-        aibathroom.line_wait.position, get_speed_for_entity(entity) * dt);
-    if (!reached) return;
 
     OptEntity opt_toilet = EntityHelper::getEntityForID(aibathroom.target.id());
     if (!opt_toilet) {
@@ -471,31 +472,9 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     }
     Entity& toilet = opt_toilet.asE();
     entity.get<Transform>().turn_to_face_pos(toilet.get<Transform>().as2());
-
-    bool reached_front = aibathroom.line_wait.try_to_move_closer(
-        toilet, entity, get_speed_for_entity(entity) * dt);
-    if (!reached_front) {
-        return;
-    }
-
-    // Now we are at the front of the line
     IsToilet& istoilet = toilet.get<IsToilet>();
 
-    // Either needs cleaning or someone else is using it
-    bool not_me = !istoilet.available() && !istoilet.is_user(entity.id);
-    if (not_me) {
-        return;
-    }
-
-    bool we_are_using_it = istoilet.is_user(entity.id);
-    if (!we_are_using_it) {
-        float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
-        aibathroom.timer.set_time(piss_timer);
-        istoilet.start_use(entity.id);
-    }
-
-    bool completed = aibathroom.timer.pass_time(dt);
-    if (completed) {
+    const auto _onFinishedGoing = [&]() {
         aibathroom.line_wait.leave_line(toilet, entity);
 
         aibathroom.target.unset();
@@ -512,6 +491,51 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
 
         reset_job_component<AIUseBathroom>(entity);
         return;
+    };
+
+    // We are now in line, so start the floor timer
+    bool floor_complete = aibathroom.floor_timer.pass_time(dt);
+    if (floor_complete) {
+        // ive been in line so long, im just gonna pee on the ground
+        auto& vom = EntityHelper::createEntity();
+        furniture::make_vomit(vom,
+                              SpawnInfo{
+                                  .location = entity.get<Transform>().as2(),
+                                  .is_first_this_round = false,
+                              });
+        // then empty bladder and end job
+        _onFinishedGoing();
+        return;
+    }
+
+    bool reached = entity.get<CanPathfind>().travel_toward(
+        aibathroom.line_wait.position, get_speed_for_entity(entity) * dt);
+    if (!reached) return;
+
+    bool reached_front = aibathroom.line_wait.try_to_move_closer(
+        toilet, entity, get_speed_for_entity(entity) * dt);
+    if (!reached_front) {
+        return;
+    }
+
+    // Now we are at the front of the line
+
+    // Either needs cleaning or someone else is using it
+    bool not_me = !istoilet.available() && !istoilet.is_user(entity.id);
+    if (not_me) {
+        return;
+    }
+
+    bool we_are_using_it = istoilet.is_user(entity.id);
+    if (!we_are_using_it) {
+        float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
+        aibathroom.timer.set_time(piss_timer);
+        istoilet.start_use(entity.id);
+    }
+
+    bool completed = aibathroom.timer.pass_time(dt);
+    if (completed) {
+        _onFinishedGoing();
     }
 }
 
