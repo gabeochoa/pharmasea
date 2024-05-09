@@ -915,7 +915,7 @@ void render_ai_info(const Entity& entity, float) {
         } break;
         case Paying: {
             GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-            // TODO reuse the toilet upgrade one for now
+            // TODO reuse the store dollar sign one for now
             raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
             raylib::DrawBillboard(cam.camera, texture,
                                   // move it a bit so that it doesnt overlap
