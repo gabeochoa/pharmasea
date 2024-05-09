@@ -913,10 +913,18 @@ void render_ai_info(const Entity& entity, float) {
                                   icon_position + vec3{0.f, 1.f, 0},
                                   0.75f * TILESIZE, raylib::WHITE);
         } break;
+        case Paying: {
+            GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+            // TODO reuse the toilet upgrade one for now
+            raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
+            raylib::DrawBillboard(cam.camera, texture,
+                                  // move it a bit so that it doesnt overlap
+                                  icon_position + vec3{0.f, 1.f, 0},
+                                  0.75f * TILESIZE, raylib::WHITE);
+        } break;
         case NoJob:
         case Wait:
         case WaitInQueue:
-        case Paying:
         case Drinking:
         case Mopping:
         case PlayJukebox:
