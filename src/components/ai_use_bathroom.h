@@ -52,5 +52,6 @@ struct AIUseBathroom : public AIComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<AIComponent>{});
         s.object(target);
+        s.object(floor_timer);
     }
 };

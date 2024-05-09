@@ -854,6 +854,29 @@ void render_trash_marker(const Entity& entity) {
                           raylib::WHITE);
 }
 
+void render_toilet_floor_timer(const Entity& entity, float) {
+    if (entity.is_missing<AIUseBathroom>()) return;
+    const Transform& transform = entity.get<Transform>();
+    const AIUseBathroom& aiusebathroom = entity.get<AIUseBathroom>();
+
+    const AITakesTime floor_timer = aiusebathroom.floor_timer;
+
+    // no timer set yet
+    if (!floor_timer.initialized) return;
+
+    float pct = floor_timer.timeRemaining / floor_timer.totalTime;
+
+    DrawProgressBar(ProgressBarConfig{
+        .type = ProgressBarConfig::Vertical,
+        .position = transform.pos(),
+        .scale = {0.75f, 0.75f, 0.75f},
+        .pct_full = pct,
+        .y_offset = 2.f * TILESIZE,
+        .x_offset = -0.45f * TILESIZE,
+        .use_color = true,
+    });
+}
+
 void render_patience(const Entity& entity, float) {
     if (entity.is_missing<HasPatience>()) return;
     const Transform& transform = entity.get<Transform>();
@@ -1135,6 +1158,7 @@ void render_normal(const Entity& entity, float dt) {
 
     render_speech_bubble(entity, dt);
     render_patience(entity, dt);
+    render_toilet_floor_timer(entity, dt);
 
     bool used = render_model_normal(entity, dt);
     if (!used) {
