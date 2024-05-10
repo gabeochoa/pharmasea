@@ -147,21 +147,25 @@ void DrawProgressBar(const ProgressBarConfig& config) {
             const float x_size =
                 fmax(0.000001f, util::lerp(0, size.x, config.pct_full));
 
-            DrawCubeCustom(
-                {
-                    x_offset + (x_size / 2.f) - (config.scale.x / 4.f),
-                    y_offset,  //
-                    0          //
-                },
-                x_size, size.y, size.z, 0, primary, primary);
+            if (x_size > 0.f) {
+                DrawCubeCustom(
+                    {
+                        x_offset + (x_size / 2.f) - (config.scale.x / 4.f),
+                        y_offset,  //
+                        0          //
+                    },
+                    x_size, size.y, size.z, 0, primary, primary);
+            }
 
-            DrawCubeCustom(
-                {
-                    x_offset + (x_size / 2.f) + (config.scale.x / 4.f),
-                    y_offset,  //
-                    0          //
-                },
-                size.x - x_size, size.y, size.z, 0, background, background);
+            if (size.x - x_size > 0.f) {
+                DrawCubeCustom(
+                    {
+                        x_offset + (x_size / 2.f) + (config.scale.x / 4.f),
+                        y_offset,  //
+                        0          //
+                    },
+                    size.x - x_size, size.y, size.z, 0, background, background);
+            }
         }
         raylib::rlPopMatrix();
         return;
@@ -180,21 +184,25 @@ void DrawProgressBar(const ProgressBarConfig& config) {
         const float y_size =
             fmax(0.000001f, util::lerp(0, size.y, config.pct_full));
 
-        DrawCubeCustom(
-            {
-                x_offset,  //
-                y_offset + (y_size / 2.f) - (config.scale.y / 4.f),
-                0  //
-            },
-            size.x, y_size, size.z, 0, primary, primary);
+        if (y_size > 0.f) {
+            DrawCubeCustom(
+                {
+                    x_offset,  //
+                    y_offset + (y_size / 2.f) - (config.scale.y / 4.f),
+                    0  //
+                },
+                size.x, y_size, size.z, 0, primary, primary);
+        }
 
-        DrawCubeCustom(
-            {
-                x_offset,  //
-                y_offset + (y_size / 2.f) + (config.scale.y / 4.f),
-                0  //
-            },
-            size.x, size.y - y_size, size.z, 0, background, background);
+        if ((size.y - y_size) > 0.f) {
+            DrawCubeCustom(
+                {
+                    x_offset,  //
+                    y_offset + (y_size / 2.f) + (config.scale.y / 4.f),
+                    0  //
+                },
+                size.x, size.y - y_size, size.z, 0, background, background);
+        }
     }
     raylib::rlPopMatrix();
 }
