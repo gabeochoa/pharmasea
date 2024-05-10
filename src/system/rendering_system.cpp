@@ -871,8 +871,11 @@ void render_toilet_floor_timer(const Entity& entity, float) {
 
     // no timer set yet
     if (!floor_timer.initialized) return;
+    if (floor_timer.totalTime == -1) return;
+    if (floor_timer.timeRemaining == -1) return;
 
     float pct = floor_timer.timeRemaining / floor_timer.totalTime;
+    if (pct == 1.f) return;
 
     DrawProgressBar(ProgressBarConfig{
         .type = ProgressBarConfig::Vertical,
