@@ -8,6 +8,8 @@
 // TODO add more cleaning bots in the store
 // TODO cleaning bots place some shiny on the floor so its harder to get dirtyu
 // TODO fix bug where "place ghost" green box kept showing
+// TODO add a auto-mop where you can just hold it over the dirt (you can already
+// do this with the roomba)
 
 namespace network {
 long long total_ping = 0;

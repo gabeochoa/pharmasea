@@ -1966,6 +1966,12 @@ void reset_register_queue_when_leaving_inround(Entity& entity) {
     hwq.clear();
 }
 
+void cleanup_old_floor_attributes(Entity& entity, float) {
+    if (entity.is_missing<IsFloorAttributeManager>()) return;
+    IsFloorAttributeManager& ifam = entity.get<IsFloorAttributeManager>();
+    ifam.remove_empty_flags();
+}
+
 void reset_customers_that_need_resetting(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return;
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
@@ -2486,6 +2492,7 @@ void SystemManager::process_state_change(
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
             system_manager::upgrade::on_round_finished(entity, dt);
+            system_manager::cleanup_old_floor_attributes(entity, dt);
         });
     };
 
@@ -2599,7 +2606,10 @@ void SystemManager::model_test_update(
 
 void SystemManager::in_round_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-    for_each(entity_list, dt, [](Entity& entity, float dt) {
+    const bool debug_mode_on =
+        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+
+    for_each(entity_list, dt, [debug_mode_on](Entity& entity, float dt) {
         system_manager::reset_customers_that_need_resetting(entity);
         //
         system_manager::ai::process_(entity, dt);
@@ -2625,6 +2635,10 @@ void SystemManager::in_round_update(
         system_manager::pass_time_for_transaction_animation(entity, dt);
 
         system_manager::upgrade::in_round_update(entity, dt);
+
+        if (debug_mode_on) {
+            system_manager::cleanup_old_floor_attributes(entity, dt);
+        }
     });
 }
 

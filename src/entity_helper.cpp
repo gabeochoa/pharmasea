@@ -1,5 +1,6 @@
 #include "entity_helper.h"
 
+#include "components/is_floor_attribute_manager.h"
 #include "components/is_floor_marker.h"
 #include "components/is_trigger_area.h"
 #include "entity_query.h"
@@ -153,10 +154,39 @@ void EntityHelper::cleanup() {
     // Cleanup entities marked cleanup
     Entities& entities = get_entities();
 
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [](const auto& entity) { return !entity || entity->cleanup; });
+    std::map<vec2, AttributeFlags> positions_to_clear;
 
+    const auto onCleanup = [&](Entity& entity) {
+        if (entity.has<CanAffectFloorAttributes>()) {
+            positions_to_clear[entity.get<Transform>().as2()] =
+                entity.get<CanAffectFloorAttributes>().removeOnCleanup;
+        }
+    };
+
+    auto newend = std::remove_if(
+        entities.begin(), entities.end(), [&](const auto& entity) {
+            bool should_remove = !entity || entity->cleanup;
+            if (!should_remove) return false;
+            onCleanup(*entity);
+            return true;
+        });
+
+    // Remove flags from any deleted entities
+    OptEntity sophie = EntityQuery().whereType(EntityType::Sophie).gen_first();
+    if (sophie) {
+        IsFloorAttributeManager& ifam = sophie->get<IsFloorAttributeManager>();
+        for (auto& kv : positions_to_clear) {
+            auto& [pos, flag] = kv;
+
+            // skip empty ones
+            if (flag == AttributeFlags{}) continue;
+
+            ifam.remove_set_flag(pos, flag);
+        }
+        positions_to_clear.clear();
+    }
+
+    // Actually release the memory
     entities.erase(newend, entities.end());
 }
 

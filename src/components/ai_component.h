@@ -202,10 +202,13 @@ struct AIComponent : BaseComponent {
         // start with 0 for instant first frame use
         cooldown = 0;
     }
+
     void pass_time(float dt) {
         if (cooldown > 0) cooldown -= dt;
     }
+
     [[nodiscard]] bool ready() const { return cooldown <= 0; }
+
     void reset() { cooldown = cooldownReset; }
     void set_cooldown(float d) { cooldownReset = d; }
 

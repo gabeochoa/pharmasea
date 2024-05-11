@@ -18,6 +18,7 @@
 #include "../components/has_patience.h"
 #include "../components/has_subtype.h"
 #include "../components/has_waiting_queue.h"
+#include "../components/is_floor_attribute_manager.h"
 #include "../components/is_free_in_store.h"
 #include "../components/is_nux_manager.h"
 #include "../components/is_progression_manager.h"
@@ -1109,6 +1110,29 @@ void render_smelly_toilet(const Entity& entity, float) {
                           raylib::WHITE);
 }
 
+void render_floor_attribute(const Entity& entity, float) {
+    if (entity.is_missing<IsFloorAttributeManager>()) return;
+    // TODO spelling?
+    Color transleucent_green = Color{0, 250, 50, 50};
+    Color transleucent_red = Color{250, 0, 50, 50};
+
+    const IsFloorAttributeManager& ifam = entity.get<IsFloorAttributeManager>();
+
+    vec3 size = {0.5f, 0.5f, 0.5f};
+
+    for (const auto& kv : ifam.all_flags()) {
+        auto& [position, flag] = kv;
+        auto pos = vec::to3(position);
+
+        bool not_dirty = !static_cast<int>(flag & AttributeFlags::Dirty);
+
+        DrawCubeCustom({pos.x, pos.y - (TILESIZE * 0.5f), pos.z}, size.x,
+                       size.y, size.z, 0,
+                       not_dirty ? transleucent_green : transleucent_red,
+                       not_dirty ? transleucent_green : transleucent_red);
+    }
+}
+
 // TODO theres two functions called render normal, maybe we should address
 // this
 void render_normal(const Entity& entity, float dt) {
@@ -1118,6 +1142,7 @@ void render_normal(const Entity& entity, float dt) {
     render_debug_filter_info(entity, dt);
     render_debug_fruit_juice(entity, dt);
     render_debug_num_uses_left(entity, dt);
+    render_floor_attribute(entity, dt);
 
     render_ai_info(entity, dt);
 

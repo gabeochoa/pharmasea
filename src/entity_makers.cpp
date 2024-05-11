@@ -17,6 +17,7 @@
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
 #include "components/is_bank.h"
+#include "components/is_floor_attribute_manager.h"
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
 #include "components/is_nux_manager.h"
@@ -142,13 +143,14 @@ void register_all_components() {
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
         IsFreeInStore, IsToilet, IsRoundSettingsManager, IsStoreSpawned,
-        IsNuxManager, IsNux,
+        IsNuxManager, IsNux, IsFloorAttributeManager,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
         CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
         CanOrderDrink, CanPathfind, CanChangeSettingsInteractively,
+        CanAffectFloorAttributes,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
@@ -293,23 +295,37 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     person.addComponent<CanPathfind>();
 }
 
-void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
+void make_mop_buddy(Entity& mop_buddy, vec2 pos, int index) {
     make_aiperson(mop_buddy,
                   DebugOptions{.type = EntityType::MopBuddy,
                                .enableCharacterModel = false},
                   vec::to3(pos));
+    // TODO make these numbers const
+    mop_buddy.addComponent<HasSubtype>(0, 2, index);
 
+    // TODO make it dynamic based on subtype
     mop_buddy.get<ModelRenderer>().update_model_name(
         util::convertToSnakeCase(EntityType::MopBuddy));
 
-    mop_buddy.get<HasBaseSpeed>().update(1.5f);
     mop_buddy.get<CanPerformJob>().current = JobType::Mopping;
+
     mop_buddy.addComponent<AICleanVomit>();
 
     mop_buddy
         .addComponent<IsItem>()  //
         .clear_hb_filter()
         .set_hb_filter(EntityType::Player);
+
+    mop_buddy.addComponent<CanAffectFloorAttributes>();
+
+    switch (index) {
+        case 1: {
+            mop_buddy.get<HasBaseSpeed>().update(3.f);
+        } break;
+        default:
+        case 0: {
+        }
+    }
 }
 
 void make_face(Entity& face, vec3 pos) {
@@ -334,8 +350,8 @@ void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
                                     {TILESIZE, TILESIZE, TILESIZE});
     furniture.addComponent<IsSolid>();
 
-    // For renderers we prioritize the ModelRenderer and will fall back if we
-    // need
+    // For renderers we prioritize the ModelRenderer and will fall back if
+    // we need
     furniture.addComponent<SimpleColoredBoxRenderer>()
         .update_face(face)
         .update_base(base);
@@ -368,8 +384,8 @@ void process_table_working(Entity& table, HasWork& hasWork, Entity& player,
     // We have to call the item's hasWork because the table
     // doesnt actually do anything, its the item that we are working
     //
-    // It has to be this way otherwise you would be able to do work while just
-    // standing around which wouldnt make sense
+    // It has to be this way otherwise you would be able to do work while
+    // just standing around which wouldnt make sense
     HasWork& itemHasWork = item.get<HasWork>();
     itemHasWork.call(hasWork, item, player, dt);
 }
@@ -581,7 +597,8 @@ void make_toilet(Entity& toilet, vec2 pos) {
                 return;
             }
 
-            // TODO maybe if you have the mop or something it should be faster
+            // TODO maybe if you have the mop or something it should be
+            // faster
 
             const float amt = 1.0f;
             hasWork.increase_pct(amt * dt);
@@ -764,7 +781,17 @@ void make_mopbuddy_holder(Entity& mopbuddy_holder, vec2 pos) {
     furniture::make_itemcontainer(
         mopbuddy_holder, DebugOptions{.type = EntityType::MopBuddyHolder}, pos,
         EntityType::MopBuddy);
-    mopbuddy_holder.get<IsItemContainer>().set_max_generations(1);
+
+    // TODO make this a const somewhere
+    mopbuddy_holder
+        .addComponent<Indexer>(2)
+        // TODO nocommit - spawn the new guy
+        .set_value(1);
+
+    mopbuddy_holder.get<IsItemContainer>()
+        .set_max_generations(1)
+        .set_uses_indexer(true);
+
     mopbuddy_holder.get<CanHoldItem>().set_filter(
         EntityFilter()
             .set_enabled_flags(EntityFilter::FilterDatumType::Name)
@@ -778,12 +805,11 @@ void make_mop_holder(Entity& mop_holder, vec2 pos) {
                                   DebugOptions{.type = EntityType::MopHolder},
                                   pos, EntityType::Mop);
     mop_holder.get<IsItemContainer>().set_max_generations(1);
-    mop_holder.get<CanHoldItem>().set_filter(
-        EntityFilter()
-            .set_enabled_flags(EntityFilter::FilterDatumType::Name)
-            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                       EntityType::Mop)
-            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
+    EntityFilter()
+        .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+        .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+                                   EntityType::Mop)
+        .set_filter_strength(EntityFilter::FilterStrength::Requirement);
 }
 
 void make_floor_marker(Entity& floor_marker, vec3 pos, float width,
@@ -845,6 +871,7 @@ void make_sophie(Entity& sophie, vec3 pos) {
     sophie.addComponent<IsProgressionManager>().init();
     sophie.addComponent<IsBank>();
     sophie.addComponent<IsNuxManager>();
+    sophie.addComponent<IsFloorAttributeManager>();
 }
 
 void make_vomit(Entity& vomit, const SpawnInfo& info) {
@@ -857,6 +884,15 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
     }
 
     vomit.addComponent<CanBeHighlighted>();
+
+    vomit.addComponent<CanAffectFloorAttributes>().set_on_cleanup_flag(
+        AttributeFlags::Dirty);
+    // TODO this feels like it should be handled in the component
+    {
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        IsFloorAttributeManager& ifam = sophie.get<IsFloorAttributeManager>();
+        ifam.set_flags(info.location, AttributeFlags::Dirty);
+    }
 
     vomit.addComponent<HasWork>().init(
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
@@ -915,10 +951,10 @@ void make_soda_spout(Item& soda_spout, vec2 pos) {
         .set_hb_filter(EntityType::SodaMachine)
         .set_hb_filter(EntityType::Player);
 
-    // TODO :SODAWAND: right now theres no good way to change what is selected
-    // in the soda wand, id like to have it automatically figure it out but it
-    // doesnt really work because we dont know what the player is trying to make
-    // and so its easier if everything is soda
+    // TODO :SODAWAND: right now theres no good way to change what is
+    // selected in the soda wand, id like to have it automatically figure it
+    // out but it doesnt really work because we dont know what the player is
+    // trying to make and so its easier if everything is soda
     soda_spout.addComponent<AddsIngredient>(
         [](const Entity&, Entity&) -> IngredientBitSet {
             return IngredientBitSet().reset().set(Ingredient::Soda);
@@ -952,8 +988,8 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         // TODO reset progress when taking out if not done
         if (!ii.is_held_by(EntityType::DraftTap)) return;
 
-        // TODO we need way better ingredient validation across these kinds of
-        // additive machines
+        // TODO we need way better ingredient validation across these kinds
+        // of additive machines
         if (isdrink.has_ingredient(Ingredient::Beer)) {
             if (!isdrink.supports_multiple()) return;
         }
@@ -1067,7 +1103,8 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
             })
         .set_num_uses(-1);
 
-    // Since theres only one of these and its inf uses, dont let it get deleted
+    // Since theres only one of these and its inf uses, dont let it get
+    // deleted
     simple_syrup.get<IsItem>()
         .clear_hb_filter()
         .set_hb_filter(ETS_NON_DESTRUCTIVE)
@@ -1141,7 +1178,8 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
             OptEntity blender = EntityHelper::getEntityForID(ii.holder());
             if (!blender) {
                 log_warn(
-                    "trying to spawn juice but the fruit is not being held by "
+                    "trying to spawn juice but the fruit is not being held "
+                    "by "
                     "a valid entity");
                 return;
             }
@@ -1225,8 +1263,8 @@ void make_pitcher(Item& pitcher, vec2 pos) {
 }
 
 void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
-    // log_info("generating new item {} of type {} at {} subtype{}", item.id,
-    // type_name, pos, index);
+    // log_info("generating new item {} of type {} at {} subtype{}",
+    // item.id, type_name, pos, index);
 
     // TODO make exhaustive
     switch (type) {
@@ -1245,7 +1283,7 @@ void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
         case EntityType::Mop:
             return make_mop(item, pos);
         case EntityType::MopBuddy:
-            return make_mop_buddy(item, pos);
+            return make_mop_buddy(item, pos, index);
         case EntityType::SimpleSyrup:
             return make_simple_syrup(item, pos);
         default:
@@ -1276,8 +1314,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         customer.addComponent<AIWaitInQueue>();
         customer.addComponent<AICloseTab>();
         CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();
-        // If we are the first guy spawned this round, force the drink to be the
-        // most recently unlocked one
+        // If we are the first guy spawned this round, force the drink to be
+        // the most recently unlocked one
         if (info.is_first_this_round) {
             const IsProgressionManager& ipp =
                 sophie.get<IsProgressionManager>();
@@ -1305,8 +1343,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
     customer.get<HasBaseSpeed>().update(debug_mode_on ? 20.f : 5.f);
 
-    // TODO if we do dirty-cups, we should have people leave them on any flat
-    // surface but if they are too drunk... just smash on the ground
+    // TODO if we do dirty-cups, we should have people leave them on any
+    // flat surface but if they are too drunk... just smash on the ground
     customer
         .addComponent<IsSpawner>()  //
         .set_fn(&furniture::make_vomit)
@@ -1358,11 +1396,11 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
                     // TODO make the person go to the bathroom isntead
                     //
                     // not really a TODO but if the person is outside at the
-                    // despawn postition and needs to vomit and the bathroom is
-                    // full or in use then they will vomit over there, probably
-                    // we'd want them to walk to the bathroom first to check so
-                    // they vomit closer? but then now we have to have some
-                    // kinda 3 strike system or something idk
+                    // despawn postition and needs to vomit and the bathroom
+                    // is full or in use then they will vomit over there,
+                    // probably we'd want them to walk to the bathroom first
+                    // to check so they vomit closer? but then now we have
+                    // to have some kinda 3 strike system or something idk
                     log_warn(
                         "I was gonna vomit but seeing that the bathroom is "
                         "empty, actually ive decided against it PLS FIX");
@@ -1372,8 +1410,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         })
         // check if there is already vomit in that spot
         .enable_prevent_duplicates()
-        // This has to be 1 so that the above validation function runs at least
-        // once
+        // This has to be 1 so that the above validation function runs at
+        // least once
         .set_total(1)
         .set_time_between(5.f);
 }
@@ -1414,8 +1452,8 @@ void make_interactive_settings_changet(
     Entity& isc, vec2 pos, CanChangeSettingsInteractively::Style style) {
     furniture::make_furniture(isc, {EntityType::InteractiveSettingChanger}, pos,
                               PINK, PINK,
-                              // we make this static so its not highlightable
-                              // but we want it to be a little
+                              // we make this static so its not
+                              // highlightable but we want it to be a little
                               true);
 
     isc.addComponent<HasName>();
@@ -1567,16 +1605,13 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::InteractiveSettingChanger: {
             log_warn(
-                "You should call 'make_interactive_setting_changer() manually "
+                "You should call 'make_interactive_setting_changer() "
+                "manually "
                 "instead of using convert to type");
             return false;
         } break;
 
-        // TODO is anyone even doing this?
-        case EntityType::MopBuddy: {
-            make_mop_buddy(entity, location);
-            return false;
-        } break;
+        case EntityType::MopBuddy:
         case EntityType::SingleAlcohol:
         case EntityType::TriggerArea:
         case EntityType::FloorMarker:
@@ -1598,7 +1633,8 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
     if (entity.has<CanHoldItem>()) {
         if (entity.get<CanHoldItem>().hb_type() == EntityType::Unknown) {
             log_warn(
-                "Created an entity with canhold item {} but didnt set heldby "
+                "Created an entity with canhold item {} but didnt set "
+                "heldby "
                 "type",
                 entity_type);
         }

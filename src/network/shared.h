@@ -43,6 +43,7 @@
 #include "../components/indexer.h"
 #include "../components/is_bank.h"
 #include "../components/is_drink.h"
+#include "../components/is_floor_attribute_manager.h"
 #include "../components/is_free_in_store.h"
 #include "../components/is_item.h"
 #include "../components/is_item_container.h"
@@ -95,6 +96,7 @@ struct PolymorphicBaseClass<BaseComponent>
           AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
           AIPlayJukebox, HasLastInteractedCustomer,
           CanChangeSettingsInteractively, IsNuxManager, IsNux,
+          IsFloorAttributeManager, CanAffectFloorAttributes,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};
