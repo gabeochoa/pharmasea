@@ -68,6 +68,13 @@ extern ui::UITheme UI_THEME;
 
 namespace system_manager {
 
+namespace store {
+void cart_management(Entity&, float);
+void cleanup_old_store_options();
+void generate_store_options();
+void move_purchased_furniture();
+}  // namespace store
+
 void move_player_SERVER_ONLY(Entity& entity, game::State location) {
     if (!is_server()) {
         log_warn(
@@ -732,6 +739,10 @@ void update_trigger_area_percent(Entity& entity, float dt) {
     ita.should_wave()  //
         ? ita.increase_progress(dt)
         : ita.decrease_progress(dt);
+
+    // If no one is currently standing on it or whatever
+    // then decrease the cooldown
+    if (!ita.should_progress()) ita.decrease_cooldown(dt);
 }
 
 void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
@@ -873,8 +884,10 @@ inline void spawn_machines_for_new_unlock_DONOTCALL(IsRoundSettingsManager&) {
 
 void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
-    const IsTriggerArea& ita = entity.get<IsTriggerArea>();
+    IsTriggerArea& ita = entity.get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
+
+    ita.reset_cooldown();
 
     const auto _choose_option = [](int option_chosen) {
         GameState::get().transition_to_store();
@@ -941,6 +954,18 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     };
 
     switch (ita.type) {
+        case IsTriggerArea::Store_Reroll: {
+            system_manager::store::cleanup_old_store_options();
+            system_manager::store::generate_store_options();
+            {
+                OptEntity sophie =
+                    EntityQuery().whereType(EntityType::Sophie).gen_first();
+                IsBank& bank = sophie->get<IsBank>();
+                // TODO :REROLLPRICE:
+                bank.withdraw(50);
+            }
+
+        } break;
         case IsTriggerArea::Unset:
             log_warn("Completed trigger area wait time but was Unset type");
             break;
@@ -975,7 +1000,6 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         } break;
         case IsTriggerArea::Lobby_ModelTest: {
             GameState::get().transition_to_model_test();
-
             if (is_server()) {
                 network::Server* server =
                     GLOBALS.get_ptr<network::Server>("server");
@@ -1047,6 +1071,13 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
                 TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
             ita.update_subtitle(
                 TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
+            return;
+        } break;
+        case IsTriggerArea::Store_Reroll: {
+            ita.update_title(
+                TODO_TRANSLATE("Reroll shop for 50 coins", TodoReason::Format));
+            ita.update_subtitle(
+                TODO_TRANSLATE("Reroll shop for 50 coins", TodoReason::Format));
             return;
         } break;
         case IsTriggerArea::Unset:
@@ -2107,8 +2138,25 @@ void cart_management(Entity& entity, float) {
 }
 
 void cleanup_old_store_options() {
+    OptEntity cart_area =
+        EntityQuery()
+            .whereHasComponent<IsFloorMarker>()
+            .whereLambda([](const Entity& entity) {
+                if (entity.is_missing<IsFloorMarker>()) return false;
+                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
+            })
+            .gen_first();
+
     for (Entity& entity :
          EntityQuery().whereHasComponent<IsStoreSpawned>().gen()) {
+        // ignore antyhing in the cart
+        if (cart_area) {
+            if (cart_area->get<IsFloorMarker>().is_marked(entity.id)) {
+                continue;
+            }
+        }
+
         entity.cleanup = true;
 
         // Also cleanup the item its holding if it has one

@@ -706,6 +706,7 @@ inline void process_jukebox_play(Entity& entity, float dt) {
     {
         Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         IsBank& bank = sophie.get<IsBank>();
+        // TODO jukebox cost
         bank.deposit(10);
     }
 

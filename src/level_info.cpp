@@ -442,6 +442,40 @@ void LevelInfo::generate_store_map() {
             entity, store_origin + vec3{-5, TILESIZE / -2.f, 0}, 8, 3,
             IsFloorMarker::Type::Store_SpawnArea);
     }
+
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_trigger_area(entity,
+                                     store_origin + vec3{5, TILESIZE / -2.f, 0},
+                                     8, 3, IsTriggerArea::Store_Reroll);
+
+        entity.get<IsTriggerArea>().update_cooldown_max(2.f).set_validation_fn(
+            [](const IsTriggerArea&) -> ValidationResult {
+                // TODO should we only run the below when there is at least one
+                // person standing on it?
+
+                OptEntity sophie =
+                    EntityQuery().whereType(EntityType::Sophie).gen_first();
+
+                // TODO translate these strings .
+                if (!sophie.valid()) return {false, "Internal Error"};
+
+                // Do we have enough money?
+                const IsBank& bank = sophie->get<IsBank>();
+                int balance = bank.balance();
+
+                // TODO make this into a variable
+                int reroll_price = 50;
+                // TODO :REROLLPRICE:
+                if (balance < reroll_price)
+                    // TODO more accurate string?
+                    return {false, strings::i18n::STORE_NOT_ENOUGH_COINS};
+
+                // TODO only run if everyone is on this?
+
+                return {true, ""};
+            });
+    }
 }
 
 void LevelInfo::generate_default_seed() {
