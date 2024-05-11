@@ -62,6 +62,40 @@ I am publishing some releases on itch, you can find the url in the code or build
 if you need the password join the discord and say hi!
 
 
+### alpha_0.24.05.11
+
+design changes
+
+impact 
+- Added a tutorial for the first two rounds (toggle it in the lobby) 
+- Controls now have icons instead of the underlying name (see settings page or tutorial)
+- better mouse hover graphics 
+- customers will now show a "dollar" icon when paying 
+- shop
+    - increase number of items in shop from 5 to 10
+    - add way to reroll, starts at 50 coins and goes up by 25 each use
+- toilet 
+    - needs to be cleaned at end of day 
+    - has a queue and those waiting in line to the bathroom will eventually go on the floor if they wait too long 
+    - customer patience will increase when they move up in line 
+
+bug fix 
+- fix bug where customers always thought they were second in line 
+- hide names for walls when in planning phase 
+- fix a crash that would happen when you close the game
+- fix issue where only UI keys were visible in the settings
+
+better eng
+- switch from bind to lambda to save 3 seconds on full build :) (120.3s -> 117.30s on m1 air) 
+- Query builder upgrades and new features 
+- move all components to unique_ptr instead of raw points
+- added the ablity to draw ghost blocks
+- better dylib commands 
+- more color utils 
+- eliminate a class of auto conversion make_entity bugs 
+- onboard onto sonar cloud: https://sonarcloud.io/summary/new_code?id=gabeochoa_pharmasea 
+
+
 ### alpha_0.24.04.25
 
 New Upgrades
