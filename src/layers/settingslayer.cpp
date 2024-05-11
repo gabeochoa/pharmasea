@@ -427,10 +427,8 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
 
             if (auto result =
                     checkbox(Widget{remap_button},
-                             CheckboxData{
-                                          .content = checkbox_content.value(),
-                            .content_is_icon = has_icon
-                        });
+                             CheckboxData{.content = checkbox_content.value(),
+                                          .content_is_icon = has_icon});
                 result) {
                 // TODO disabling popup for now
                 //
@@ -473,10 +471,8 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
             if (input_descr.has_value()) {
                 if (auto control_result = control_input_field(
                         Widget{input, windowresult.as<int>()},
-                        TextfieldData{
-                                      .content = input_descr.value(),
-                        .content_is_icon = has_icon
-                    });
+                        TextfieldData{.content = input_descr.value(),
+                                      .content_is_icon = has_icon});
                     control_result) {
                     KeyMap::get().set_mapping(key_binding_popup.state,
                                               key_binding_popup.input,
