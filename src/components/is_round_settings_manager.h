@@ -49,7 +49,7 @@ struct IsRoundSettingsManager : public BaseComponent {
                         ConfigKey::CustomerSpawnMultiplier, 1.f);
                     break;
                 case ConfigKey::NumStoreSpawns:
-                    config.permanent_set<int>(ConfigKey::NumStoreSpawns, 5);
+                    config.permanent_set<int>(ConfigKey::NumStoreSpawns, 10);
                     break;
                 case ConfigKey::PissTimer:
                     config.permanent_set<float>(ConfigKey::PissTimer, 2.5f);
