@@ -609,7 +609,6 @@ inline void process_ai_paying(Entity& entity, float dt) {
     // Now we should be at the front of the line
     // TODO i would like for the player to have to go over and "work" to process
     // their payment
-    // TODO we also should show an Icon for what they want to do $$$
 
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
