@@ -36,6 +36,7 @@ enum struct ConfigKey {
     CustomerSpawnMultiplier,
     //
     NumStoreSpawns,
+    StoreRerollPrice,
     //
     PissTimer,
     BladderSize,
@@ -46,6 +47,7 @@ enum struct ConfigKey {
     VomitAmountMultiplier,  // max vomit amount
     //
     MaxDrinkTime,  // how long it takes to drink
+    //
 };
 
 struct ConfigValue {
@@ -70,6 +72,7 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::MaxNumOrders:
         case ConfigKey::NumStoreSpawns:
         case ConfigKey::BladderSize:
+        case ConfigKey::StoreRerollPrice:
             return ConfigKeyType::Int;
     }
     return ConfigKeyType::Float;

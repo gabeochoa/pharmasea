@@ -210,6 +210,7 @@ inline void update_upgrade_variables() {
 
             } break;
             case ConfigKey::Test:
+            case ConfigKey::StoreRerollPrice:
             case ConfigKey::MaxNumOrders:
             case ConfigKey::PatienceMultiplier:
             case ConfigKey::CustomerSpawnMultiplier:

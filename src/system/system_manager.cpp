@@ -961,8 +961,13 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 OptEntity sophie =
                     EntityQuery().whereType(EntityType::Sophie).gen_first();
                 IsBank& bank = sophie->get<IsBank>();
-                // TODO :REROLLPRICE:
-                bank.withdraw(50);
+
+                IsRoundSettingsManager& irsm =
+                    sophie->get<IsRoundSettingsManager>();
+                int reroll_price = irsm.get<int>(ConfigKey::StoreRerollPrice);
+                bank.withdraw(reroll_price);
+                irsm.config.permanently_modify(ConfigKey::StoreRerollPrice,
+                                               Operation::Add, 25);
             }
 
         } break;
@@ -972,16 +977,15 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::ModelTest_BackToLobby: {
             GameState::get().transition_to_lobby();
             {
-                // TODO add a tagging system so we can delete certain sets of
-                // ents
-                // ^ okay so i tried adding a CreationOptions component
-                // this worked great for any furniture, but all the
-                // items stayed floating
+                // TODO add a tagging system so we can delete certain sets
+                // of ents ^ okay so i tried adding a CreationOptions
+                // component this worked great for any furniture, but all
+                // the items stayed floating
                 //
                 // I think it could work but you would need to have items
-                // inherit the creation options of the parent? which might cause
-                // issues for permanant, when this is a simple brute force
-                // solution for now
+                // inherit the creation options of the parent? which might
+                // cause issues for permanant, when this is a simple brute
+                // force solution for now
                 float rad = 30;
                 const auto ents = EntityHelper::getAllInRange(
                     {MODEL_TEST_ORIGIN - rad, -1.f * rad},
@@ -1074,10 +1078,14 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             return;
         } break;
         case IsTriggerArea::Store_Reroll: {
-            ita.update_title(
-                TODO_TRANSLATE("Reroll shop for 50 coins", TodoReason::Format));
-            ita.update_subtitle(
-                TODO_TRANSLATE("Reroll shop for 50 coins", TodoReason::Format));
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const IsRoundSettingsManager& irsm =
+                sophie.get<IsRoundSettingsManager>();
+            int reroll_cost = irsm.get<int>(ConfigKey::StoreRerollPrice);
+            auto str = fmt::format("Reroll shop for {} coins", reroll_cost);
+
+            ita.update_title(TODO_TRANSLATE(str, TodoReason::Format));
+            ita.update_subtitle(TODO_TRANSLATE(str, TodoReason::Format));
             return;
         } break;
         case IsTriggerArea::Unset:
@@ -1156,7 +1164,8 @@ void update_visuals_for_settings_changer(Entity& entity, float) {
                 break;
         }
         log_warn(
-            "Tried to get_name for Interactive Setting Style {} but it was not "
+            "Tried to get_name for Interactive Setting Style {} but it was "
+            "not "
             "handled",
             magic_enum::enum_name<CanChangeSettingsInteractively::Style>(
                 style));
@@ -1364,10 +1373,10 @@ bool _create_nuxes(Entity&) {
                     AIWaitInQueue& ai_wiq = customer->get<AIWaitInQueue>();
                     return ai_wiq.line_wait.last_line_position == 0;
                 })
-                .set_content(TODO_TRANSLATE(
-                    "This is a customer, they will wait in line, \nand once at "
-                    "the front will order a drink",
-                    TodoReason::SubjectToChange));
+                .set_content(TODO_TRANSLATE("This is a customer, they will "
+                                            "wait in line, \nand once at "
+                                            "the front will order a drink",
+                                            TodoReason::SubjectToChange));
         }
 
         // Grab a cup
@@ -1416,8 +1425,8 @@ bool _create_nuxes(Entity&) {
                 })
                 .set_completion_fn([](const IsNux&) -> bool {
                     return EntityQuery()
-                        // Instead of finding the exact table we marked, just
-                        // find any table with a cup
+                        // Instead of finding the exact table we marked,
+                        // just find any table with a cup
                         .whereType(EntityType::Table)
                         .whereIsHoldingItemOfType(EntityType::Drink)
                         .has_values();
@@ -1601,8 +1610,8 @@ bool _create_nuxes(Entity&) {
                                             TodoReason::SubjectToChange));
         }
 
-        // this is the upgrade room, you will either get a new recipe or a new
-        // gimmic for your restaurant
+        // this is the upgrade room, you will either get a new recipe or a
+        // new gimmic for your restaurant
         //
         // often new upgrades, unlock new furniture. for the ones that are
         // required, you will get one for free

@@ -464,10 +464,10 @@ void LevelInfo::generate_store_map() {
                 const IsBank& bank = sophie->get<IsBank>();
                 int balance = bank.balance();
 
-                // TODO make this into a variable
-                int reroll_price = 50;
-                // TODO :REROLLPRICE:
-                if (balance < reroll_price)
+                const IsRoundSettingsManager& isrm =
+                    sophie->get<IsRoundSettingsManager>();
+
+                if (balance < isrm.get<int>(ConfigKey::StoreRerollPrice))
                     // TODO more accurate string?
                     return {false, strings::i18n::STORE_NOT_ENOUGH_COINS};
 
