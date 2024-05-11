@@ -316,8 +316,6 @@ void SettingsLayer::onDraw(float dt) {
 }
 
 void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
-    // not sure why i had index in the first place
-    (void) index;
     // NOTE: we only draw the first N, each state only has N inputs
     // today but if you want all then use this
 
@@ -442,8 +440,11 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
         }
     };
 
-    _keys_for_state(menu::State::UI, key_rects_1);
-    // _keys_for_state(menu::State::Game, key_rects_1, 1);
+    if (index == 0) {
+        _keys_for_state(menu::State::UI, key_rects_1);
+    } else if (index == 1) {
+        _keys_for_state(menu::State::Game, key_rects_1, 1);
+    }
 
     // TODO pressing UI keys when this popup is open still uses them
 
