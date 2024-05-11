@@ -24,6 +24,9 @@ struct ConfigData {
     template<typename T>
     T modify(ConfigKey key, T input, Operation op, T value) const {
         switch (op) {
+            case Operation::Add:
+                return input + value;
+                break;
             case Operation::Multiplier:
                 return input * value;
                 break;
