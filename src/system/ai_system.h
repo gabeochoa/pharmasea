@@ -512,8 +512,17 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
         aibathroom.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
+    int previous_position = aibathroom.line_wait.last_line_position;
     bool reached_front = aibathroom.line_wait.try_to_move_closer(
         toilet, entity, get_speed_for_entity(entity) * dt);
+    int new_position = aibathroom.line_wait.last_line_position;
+
+    if (previous_position != new_position) {
+        float totalTime = aibathroom.floor_timer.totalTime;
+        // when you move up a spot give a 10% timer boost
+        (void) aibathroom.floor_timer.pass_time(-1.f * totalTime * 0.1f);
+    }
+
     if (!reached_front) {
         return;
     }
@@ -532,6 +541,9 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
         aibathroom.timer.set_time(piss_timer);
         istoilet.start_use(entity.id);
     }
+
+    // TODO can we just stop the timer if you are pissing
+    (void) aibathroom.floor_timer.pass_time(-1.f * dt);
 
     bool completed = aibathroom.timer.pass_time(dt);
     if (completed) {
