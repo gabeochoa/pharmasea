@@ -5,6 +5,10 @@
 #include "engine/ui/svg.h"
 #include "map_generation.h"
 
+// TODO add more cleaning bots in the store
+// TODO cleaning bots place some shiny on the floor so its harder to get dirtyu
+// TODO fix bug where "place ghost" green box kept showing
+
 namespace network {
 long long total_ping = 0;
 long long there_ping = 0;
