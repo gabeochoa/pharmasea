@@ -231,12 +231,14 @@
     <ClCompile Include="..\src\engine\app.cpp" />
     <ClCompile Include="..\src\engine\files.cpp" />
     <ClCompile Include="..\src\engine\globals_register.cpp" />
+    <ClCompile Include="..\src\engine\keymap.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
     <ClCompile Include="..\src\engine\settings.cpp" />
     <ClCompile Include="..\src\engine\ui\ui.cpp" />
     <ClCompile Include="..\src\entity.cpp" />
     <ClCompile Include="..\src\entity_helper.cpp" />
     <ClCompile Include="..\src\entity_makers.cpp" />
+    <ClCompile Include="..\src\entity_query.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
     <ClCompile Include="..\src\layers\settingslayer.cpp" />

@@ -6,6 +6,7 @@
 #include <mo_file/mo.h>
 
 #include <string>
+#include <memory>
 
 // https://stackoverflow.com/a/48896410
 template<typename Str>
