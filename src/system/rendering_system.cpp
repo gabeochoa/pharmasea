@@ -1114,6 +1114,8 @@ void render_floor_attribute(const Entity& entity, float) {
     if (entity.is_missing<IsFloorAttributeManager>()) return;
     // TODO spelling?
     Color transleucent_green = Color{0, 250, 50, 50};
+    Color transleucent_green2 = Color{0, 250, 50, 150};
+    Color transleucent_green3 = Color{0, 250, 50, 250};
     Color transleucent_red = Color{250, 0, 50, 50};
 
     const IsFloorAttributeManager& ifam = entity.get<IsFloorAttributeManager>();
@@ -1122,14 +1124,33 @@ void render_floor_attribute(const Entity& entity, float) {
 
     for (const auto& kv : ifam.all_flags()) {
         auto& [position, flag] = kv;
-        auto pos = vec::to3(position);
+        auto pos = vec::to3(position.pos);
 
-        bool not_dirty = static_cast<int>(flag & AttributeFlags::CleanShiny);
+        auto color = transleucent_green;
+
+        switch (flag) {
+            case AttributeFlags::None:
+                break;
+            case AttributeFlags::Dirty:
+                color = transleucent_red;
+                break;
+            case AttributeFlags::CleanShiny:
+                color = transleucent_green;
+                break;
+            case AttributeFlags::CleanShiny2:
+                color = transleucent_green2;
+                break;
+            case AttributeFlags::CleanShiny3:
+                color = transleucent_green3;
+                break;
+        }
 
         DrawCubeCustom({pos.x, pos.y - (TILESIZE * 0.5f), pos.z}, size.x,
-                       size.y, size.z, 0,
-                       not_dirty ? transleucent_green : transleucent_red,
-                       not_dirty ? transleucent_green : transleucent_red);
+                       size.y, size.z, 0, color, color);
+
+        auto content = fmt::format("attr {}", (int) flag);
+        DrawFloatingText(vec::raise(pos, 1.f), Preload::get().font,
+                         content.c_str());
     }
 }
 

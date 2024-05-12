@@ -508,25 +508,25 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     // We are now in line, so start the floor timer
     bool floor_complete = aibathroom.floor_timer.pass_time(dt);
     if (floor_complete) {
-        const IsFloorAttributeManager& ifam =
-            sophie.get<IsFloorAttributeManager>();
+        IsFloorAttributeManager& ifam = sophie.get<IsFloorAttributeManager>();
         vec2 pos = vec::to2(entity.get<Transform>().snap_position());
-        if (!static_cast<int>(ifam.get_flags(pos) &
-                              AttributeFlags::CleanShiny)) {
-            log_info(
-                "i was gonna piss on the floor but the floor is too clean");
+        ifam.make_spot_dirtier(pos);
+        if (!ifam.is_spot_too_clean(pos)) {
             // ive been in line so long, im just gonna pee on the ground
             auto& vom = EntityHelper::createEntity();
 
             // TODO :BETTER_FLOOR_ATTR_VALID:
-            furniture::make_vomit(vom,
-                                  SpawnInfo{
-                                      .location = entity.get<Transform>().as2(),
-                                      .is_first_this_round = false,
-                                  });
+            furniture::make_vomit(vom, SpawnInfo{
+                                           .location = pos,
+                                           .is_first_this_round = false,
+                                       });
             // then empty bladder and end job
             _onFinishedGoing();
             return;
+        } else {
+            // reset the timer
+            float totalTime = aibathroom.floor_timer.totalTime;
+            (void) aibathroom.floor_timer.set_time(totalTime);
         }
     }
 

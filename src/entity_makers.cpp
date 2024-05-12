@@ -877,8 +877,9 @@ void make_sophie(Entity& sophie, vec3 pos) {
 void make_vomit(Entity& vomit, const SpawnInfo& info) {
     make_entity(vomit, {.type = EntityType::Vomit});
 
-    vomit.get<Transform>().init({info.location.x, 0, info.location.y},
-                                {TILESIZE, TILESIZE, TILESIZE});
+    vomit.get<Transform>().init(
+        vec::snap({info.location.x, 0, info.location.y}),
+        {TILESIZE, TILESIZE, TILESIZE});
     if (ENABLE_MODELS) {
         vomit.addComponent<ModelRenderer>(EntityType::Vomit);
     }
@@ -1356,22 +1357,24 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
             if (cod.num_drinks_drank() <= 0) return false;
             if (cod.num_alcoholic_drinks_drank() <= 0) return false;
 
-            const Entity& sophie =
-                EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const IsRoundSettingsManager& irsm =
                 sophie.get<IsRoundSettingsManager>();
 
-            float vomit_amount_multiplier =
-                irsm.get<float>(ConfigKey::VomitAmountMultiplier);
-            float vomit_freq_multiplier =
-                irsm.get<float>(ConfigKey::VomitFreqMultiplier);
-
             IsSpawner& vom_spewer = entity.get<IsSpawner>();
-            vom_spewer.set_total(static_cast<int>(
-                cod.num_alcoholic_drinks_drank() * vomit_amount_multiplier));
-            vom_spewer.set_time_between(5.f * vomit_freq_multiplier);
 
-            bool should_vomit = true;
+            // update settings
+            {
+                float vomit_amount_multiplier =
+                    irsm.get<float>(ConfigKey::VomitAmountMultiplier);
+                float vomit_freq_multiplier =
+                    irsm.get<float>(ConfigKey::VomitFreqMultiplier);
+
+                vom_spewer.set_total(
+                    static_cast<int>(cod.num_alcoholic_drinks_drank() *
+                                     vomit_amount_multiplier));
+                vom_spewer.set_time_between(5.f * vomit_freq_multiplier);
+            }
 
             // TODO :BETTER_FLOOR_ATTR_VALID: We dont have a good way
             // to validate that vomit can go here on the vomit side
@@ -1379,13 +1382,14 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
             // - today - just have the spawners check individually (brittle)
             // - have the make_vomit function handle it (breaks spawner counts)
 
-            const IsFloorAttributeManager& ifam =
+            IsFloorAttributeManager& ifam =
                 sophie.get<IsFloorAttributeManager>();
             vec2 pos = vec::to2(entity.get<Transform>().snap_position());
-            if (static_cast<int>(ifam.get_flags(pos) &
-                                 AttributeFlags::CleanShiny)) {
+            ifam.make_spot_dirtier(pos);
+            if (ifam.is_spot_too_clean(pos)) {
                 log_info("was gonna vomit but the floor is too clean");
-                should_vomit = false;
+                vom_spewer.post_spawn_reset();
+                return false;
             }
 
             // Before we return true, should we vomit in a toilet
@@ -1407,7 +1411,6 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
                     vom_spewer.post_spawn_reset();
                     // TODO probably also lower max?
 
-                    should_vomit = false;
                     // TODO make the person go to the bathroom isntead
                     //
                     // not really a TODO but if the person is outside at the
@@ -1419,9 +1422,10 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
                     log_warn(
                         "I was gonna vomit but seeing that the bathroom is "
                         "empty, actually ive decided against it PLS FIX");
+                    return false;
                 }
             }
-            return should_vomit;
+            return true;
         })
         // check if there is already vomit in that spot
         .enable_prevent_duplicates()
