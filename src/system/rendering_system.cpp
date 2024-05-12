@@ -1124,7 +1124,7 @@ void render_floor_attribute(const Entity& entity, float) {
         auto& [position, flag] = kv;
         auto pos = vec::to3(position);
 
-        bool not_dirty = !static_cast<int>(flag & AttributeFlags::Dirty);
+        bool not_dirty = static_cast<int>(flag & AttributeFlags::CleanShiny);
 
         DrawCubeCustom({pos.x, pos.y - (TILESIZE * 0.5f), pos.z}, size.x,
                        size.y, size.z, 0,

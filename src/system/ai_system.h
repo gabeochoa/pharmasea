@@ -16,7 +16,9 @@
 #include "../components/has_speech_bubble.h"
 #include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
+#include "../components/indexer.h"
 #include "../components/is_bank.h"
+#include "../components/is_floor_attribute_manager.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
 #include "../components/is_toilet.h"
@@ -422,6 +424,16 @@ inline void process_ai_clean_vomit(Entity& entity, float dt) {
         return;
     }
 
+    // TODO better if statement
+    if (entity.has<HasSubtype>() &&
+        entity.get<HasSubtype>().get_type_index() == 1 &&
+        entity.has<CanAffectFloorAttributes>()) {
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        IsFloorAttributeManager& ifam = sophie.get<IsFloorAttributeManager>();
+        ifam.set_flags(vec::to2(entity.get<Transform>().snap_position()),
+                       AttributeFlags::CleanShiny);
+    }
+
     bool reached = entity.get<CanPathfind>().travel_toward(
         vomit->get<Transform>().as2(), get_speed_for_entity(entity) * dt);
     if (!reached) return;
@@ -496,16 +508,26 @@ inline void process_ai_use_bathroom(Entity& entity, float dt) {
     // We are now in line, so start the floor timer
     bool floor_complete = aibathroom.floor_timer.pass_time(dt);
     if (floor_complete) {
-        // ive been in line so long, im just gonna pee on the ground
-        auto& vom = EntityHelper::createEntity();
-        furniture::make_vomit(vom,
-                              SpawnInfo{
-                                  .location = entity.get<Transform>().as2(),
-                                  .is_first_this_round = false,
-                              });
-        // then empty bladder and end job
-        _onFinishedGoing();
-        return;
+        const IsFloorAttributeManager& ifam =
+            sophie.get<IsFloorAttributeManager>();
+        vec2 pos = vec::to2(entity.get<Transform>().snap_position());
+        if (!static_cast<int>(ifam.get_flags(pos) &
+                              AttributeFlags::CleanShiny)) {
+            log_info(
+                "i was gonna piss on the floor but the floor is too clean");
+            // ive been in line so long, im just gonna pee on the ground
+            auto& vom = EntityHelper::createEntity();
+
+            // TODO :BETTER_FLOOR_ATTR_VALID:
+            furniture::make_vomit(vom,
+                                  SpawnInfo{
+                                      .location = entity.get<Transform>().as2(),
+                                      .is_first_this_round = false,
+                                  });
+            // then empty bladder and end job
+            _onFinishedGoing();
+            return;
+        }
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(

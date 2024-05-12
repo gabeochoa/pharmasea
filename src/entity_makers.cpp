@@ -1373,6 +1373,21 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
 
             bool should_vomit = true;
 
+            // TODO :BETTER_FLOOR_ATTR_VALID: We dont have a good way
+            // to validate that vomit can go here on the vomit side
+            // theres a couple options
+            // - today - just have the spawners check individually (brittle)
+            // - have the make_vomit function handle it (breaks spawner counts)
+
+            const IsFloorAttributeManager& ifam =
+                sophie.get<IsFloorAttributeManager>();
+            vec2 pos = vec::to2(entity.get<Transform>().snap_position());
+            if (static_cast<int>(ifam.get_flags(pos) &
+                                 AttributeFlags::CleanShiny)) {
+                log_info("was gonna vomit but the floor is too clean");
+                should_vomit = false;
+            }
+
             // Before we return true, should we vomit in a toilet
             if (irsm.has_upgrade_unlocked(UpgradeClass::PottyProtocol)) {
                 // Are there any toilets?
