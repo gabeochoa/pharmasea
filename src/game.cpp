@@ -19,11 +19,7 @@ std::shared_ptr<network::Info> network_info;
 int main(int argc, char* argv[]) {
     process_dev_flags(argv);
 
-    // log nothing during the test
-    LOG_LEVEL = 6;
     tests::run_all();
-    // back to default , preload will set it right
-    LOG_LEVEL = 2;
 
     if (TESTS_ONLY) {
         log_info("All tests ran ");

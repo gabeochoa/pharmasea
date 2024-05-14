@@ -19,7 +19,11 @@
 
 namespace tests {
 
-void run_all() {
+inline void run_all() {
+    // log nothing during the test
+    auto old_level = LOG_LEVEL;
+    LOG_LEVEL = 6;
+
     test_ui_widget();
     all_tests();
 
@@ -28,6 +32,9 @@ void run_all() {
 
     size_test();
     test_rect_split();
+
+    // back to default , preload will set it as well
+    LOG_LEVEL = old_level;
 }
 
 }  // namespace tests
