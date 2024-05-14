@@ -4,10 +4,13 @@
 #include <string>
 #include <variant>
 
+#include "../components/is_progression_manager.h"
 #include "../engine/bitset_utils.h"
 #include "../engine/type_name.h"
 #include "settings.h"
 #include "upgrade_class.h"
+
+struct UpgradeImpl;
 
 struct ConfigData {
     std::vector<EntityType> forever_required;
@@ -79,6 +82,11 @@ struct ConfigData {
         data[key] = value;
     }
 
+    [[nodiscard]] bool meets_prereq(const UpgradeClass& uc,
+                                    const IsProgressionManager& ipm);
+
+    [[nodiscard]] size_t count_missing_prereqs(const IsProgressionManager& ipm);
+
    public:
     template<typename T>
     [[nodiscard]] bool contains(const ConfigKey& key) const {
@@ -112,35 +120,12 @@ struct ConfigData {
         return bitset_utils::test(unlocked_upgrades, uc);
     }
 
-    void mark_upgrade_unlocked(const UpgradeClass& uc) {
-        if (!bitset_utils::test(unlocked_upgrades, uc)) {
-            bitset_utils::set(unlocked_upgrades, uc);
-            return;
-        }
-
-        // if it was already unlocked is this something reusable?
-        if (!upgrade_class_is_reusable(uc)) {
-            log_warn(
-                "You are unlocking {} again but its not marked reusable...",
-                magic_enum::enum_name<UpgradeClass>(uc));
-            return;
-        }
-
-        // it was reusable, so increment the count
-        if (!reusable_counts.contains(uc)) {
-            reusable_counts[uc] = 0;
-        }
-        reusable_counts[uc]++;
-    }
-
+    void mark_upgrade_unlocked(const UpgradeClass& uc);
     void for_each_unlocked(
-        const std::function<bitset_utils::ForEachFlow(UpgradeClass)> cb) const {
-        bitset_utils::for_each_enabled_bit(
-            unlocked_upgrades, [&](size_t index) {
-                UpgradeClass uc = magic_enum::enum_value<UpgradeClass>(index);
-                return cb(uc);
-            });
-    }
+        const std::function<bitset_utils::ForEachFlow(UpgradeClass)> cb) const;
+
+    std::vector<std::shared_ptr<UpgradeImpl>> get_possible_upgrades(
+        const IsProgressionManager&);
 
     friend bitsery::Access;
     template<typename S>
