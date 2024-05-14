@@ -219,8 +219,9 @@ struct EntityQuery {
         const std::function<bool(const Component&)>& fn) {
         return add_mod(new WhereHasComponentAndLambda<Component>(fn));
     }
-
     /////////
+
+    // TODO add support for converting Entities to other Entities
 
     using OrderByFn = std::function<bool(const Entity&, const Entity&)>;
     struct OrderBy {

@@ -5,7 +5,7 @@
 #include "engine/ui/svg.h"
 #include "map_generation.h"
 
-// TODO add more cleaning bots in the store
+// TODO when spending money the animation is weird and stays after leaving store
 // TODO cleaning bots place some shiny on the floor so its harder to get dirtyu
 // TODO fix bug where "place ghost" green box kept showing
 
