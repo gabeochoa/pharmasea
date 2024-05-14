@@ -25,6 +25,12 @@ TODO Variables to control?
    - conveyer belt stuff
    - store price
    -
+
+TODO upgrades?
+    - Store Reroll reset? One free reroll every X days?
+    -
+
+
  * */
 enum struct ConfigKey {
     Test,

@@ -115,11 +115,12 @@ inline bool collect_upgrade_options(Entity& entity) {
     magic_enum::enum_for_each<UpgradeClass>([&](auto val) {
         constexpr UpgradeClass upgrade = val;
 
-        if (bitset_utils::test(irsm.config.unlocked_upgrades, upgrade)) {
-            // By default we just assume you can only have each upgrade once...
-            // TODO do we need to support multiple?
-            return;
-        }
+        // Skip the reusables until we are fully unlocked
+        bool reusable = upgrade_class_is_reusable(upgrade);
+        bool already_unlocked = irsm.config.has_upgrade_unlocked(upgrade);
+
+        // skip it
+        if (already_unlocked && !reusable) return;
 
         auto impl = make_upgrade(upgrade);
         bool meets = impl->meetsPrereqs(irsm.config, ipm);

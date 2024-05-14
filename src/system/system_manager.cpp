@@ -917,7 +917,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
                     // TODO why does this not show up in the pause menu?
                     irsm.selected_upgrades.push_back(optionImpl);
-                    bitset_utils::set(irsm.config.unlocked_upgrades, option);
+                    irsm.config.mark_upgrade_unlocked(option);
 
                     // They will be spawned in upgrade_system at Unlock time
 

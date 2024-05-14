@@ -56,9 +56,9 @@ struct BasePauseLayer : public Layer {
             sophie->get<IsRoundSettingsManager>();
         const ConfigData& config = irsm.config;
 
-        if (config.unlocked_upgrades.count() == 0) return;
+        if (config.num_unique_upgrades_unlocked() == 0) return;
 
-        if (config.unlocked_upgrades.count() > 100) {
+        if (config.num_unique_upgrades_unlocked() > 100) {
             log_warn("More upgrades than we can display");
         }
 
@@ -77,30 +77,28 @@ struct BasePauseLayer : public Layer {
 
         int i = 0;
 
+        // TODO when an upgrade is unlocked multiple times, display a 2x or
+        // whatever on the icon
         std::shared_ptr<UpgradeImpl> hovered_upgrade = nullptr;
 
-        bitset_utils::for_each_enabled_bit(
-            config.unlocked_upgrades, [&](size_t index) {
-                UpgradeClass uc = magic_enum::enum_value<UpgradeClass>(index);
+        config.for_each_unlocked([&](UpgradeClass uc) {
+            if (i > (int) rects.size()) return bitset_utils::ForEachFlow::Break;
 
-                if (i > (int) rects.size())
-                    return bitset_utils::ForEachFlow::Break;
+            Widget icon = Widget{rects[i]};
 
-                Widget icon = Widget{rects[i]};
+            auto upgradeImpl = make_upgrade(uc);
 
-                auto upgradeImpl = make_upgrade(uc);
+            if (irsm.is_upgrade_active(upgradeImpl->type)) {
+                div(icon, ui::theme::Usage::Primary);
+            }
 
-                if (irsm.is_upgrade_active(upgradeImpl->type)) {
-                    div(icon, ui::theme::Usage::Primary);
-                }
-
-                image(icon, upgradeImpl->icon_name);
-                if (hoverable(icon)) {
-                    hovered_upgrade = upgradeImpl;
-                }
-                i++;
-                return bitset_utils::ForEachFlow::NormalFlow;
-            });
+            image(icon, upgradeImpl->icon_name);
+            if (hoverable(icon)) {
+                hovered_upgrade = upgradeImpl;
+            }
+            i++;
+            return bitset_utils::ForEachFlow::NormalFlow;
+        });
 
         if (hovered_upgrade) {
             div(rect, ui::theme::Usage::Background);

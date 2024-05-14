@@ -15,9 +15,10 @@ struct ConfigData {
 
     Mods this_hours_mods;
 
-    UpgradeClassBitSet unlocked_upgrades = UpgradeClassBitSet().reset();
-
    private:
+    UpgradeClassBitSet unlocked_upgrades = UpgradeClassBitSet().reset();
+    std::map<UpgradeClass, int> reusable_counts;
+
     using ConfigValueType = std::variant<int, bool, float>;
     std::map<ConfigKey, ConfigValueType> data;
 
@@ -103,8 +104,42 @@ struct ConfigData {
         permanent_set<T>(key, new_value);
     }
 
+    [[nodiscard]] size_t num_unique_upgrades_unlocked() const {
+        return unlocked_upgrades.count();
+    }
+
     [[nodiscard]] bool has_upgrade_unlocked(const UpgradeClass& uc) const {
         return bitset_utils::test(unlocked_upgrades, uc);
+    }
+
+    void mark_upgrade_unlocked(const UpgradeClass& uc) {
+        if (!bitset_utils::test(unlocked_upgrades, uc)) {
+            bitset_utils::set(unlocked_upgrades, uc);
+            return;
+        }
+
+        // if it was already unlocked is this something reusable?
+        if (!upgrade_class_is_reusable(uc)) {
+            log_warn(
+                "You are unlocking {} again but its not marked reusable...",
+                magic_enum::enum_name<UpgradeClass>(uc));
+            return;
+        }
+
+        // it was reusable, so increment the count
+        if (!reusable_counts.contains(uc)) {
+            reusable_counts[uc] = 0;
+        }
+        reusable_counts[uc]++;
+    }
+
+    void for_each_unlocked(
+        const std::function<bitset_utils::ForEachFlow(UpgradeClass)> cb) const {
+        bitset_utils::for_each_enabled_bit(
+            unlocked_upgrades, [&](size_t index) {
+                UpgradeClass uc = magic_enum::enum_value<UpgradeClass>(index);
+                return cb(uc);
+            });
     }
 
     friend bitsery::Access;
