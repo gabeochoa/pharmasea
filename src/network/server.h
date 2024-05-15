@@ -52,6 +52,7 @@ struct Server {
     std::thread::id thread_id;
     menu::State current_menu_state;
     game::State current_game_state;
+    std::thread pathfinding_thread;
 
 #if 0
     std::array<size_t, 10000> last_frames;

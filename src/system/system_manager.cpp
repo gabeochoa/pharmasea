@@ -2539,6 +2539,8 @@ void SystemManager::process_state_change(
 }
 
 void SystemManager::always_update(const Entities& entity_list, float dt) {
+    PathRequestManager::process_responses(entity_list);
+
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::clear_all_floor_markers(entity, dt);
         system_manager::mark_item_in_floor_area(entity, dt);

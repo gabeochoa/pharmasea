@@ -3,6 +3,7 @@
 
 #include "astar.h"
 #include "bfs.h"
+#include "path_request_manager.h"
 
 namespace pathfinder {
 

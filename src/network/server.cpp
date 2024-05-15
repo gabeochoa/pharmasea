@@ -96,6 +96,9 @@ void Server::run() {
     auto previousTime = std::chrono::high_resolution_clock::now();
     auto currentTime = previousTime;
 
+    // Turn on pathfinding
+    pathfinding_thread = PathRequestManager::start();
+
     while (running) {
         currentTime = std::chrono::high_resolution_clock::now();
         float duration =
