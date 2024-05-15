@@ -281,7 +281,13 @@ struct EntityQuery {
     }
 
     [[nodiscard]] OptEntity gen_first() const {
-        if (has_values()) return (gen_with_options({.stop_on_first = true})[0]);
+        if (has_values()) {
+            auto values = gen_with_options({.stop_on_first = true});
+            if (values.empty()) {
+                log_error("we expected to find a value but didnt...");
+            }
+            return values[0];
+        }
         return {};
     }
 
@@ -349,32 +355,7 @@ struct EntityQuery {
         return *this;
     }
 
-    [[nodiscard]] RefEntities run_query(UnderlyingOptions options) const {
-        RefEntities out;
-        for (const auto& e_ptr : entities) {
-            if (!e_ptr) continue;
-            Entity& e = *e_ptr;
-
-            bool passed_all_mods = std::ranges::all_of(
-                mods, [&](const std::unique_ptr<Modification>& mod) -> bool {
-                    return (*mod)(e);
-                });
-
-            if (passed_all_mods) out.push_back(e);
-            if (options.stop_on_first && !out.empty()) return out;
-        }
-
-        // TODO :SPEED: if there is only one item no need to sort
-        // TODO :SPEED: if we are doing gen_first() then partial sort?
-        // Now run any order bys
-        if (orderby) {
-            std::sort(out.begin(), out.end(),
-                      [&](const Entity& a, const Entity& b) {
-                          return (*orderby)(a, b);
-                      });
-        }
-
-        ran_query = true;
-        return out;
-    }
+    RefEntities filter_mod(const RefEntities& in,
+                           const std::unique_ptr<Modification>& mod) const;
+    [[nodiscard]] RefEntities run_query(UnderlyingOptions options) const;
 };
