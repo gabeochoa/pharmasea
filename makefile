@@ -30,17 +30,23 @@ cxx := clang++
 OUTPUT_LOG = $(OBJ_DIR)/build.log
 GAME_LOG = $(OBJ_DIR)/game.log
 
-.PHONY: all clean
-
-
 # For tracing you have to run the game, and then connect from Tracy-release
 
+.PHONY: all clean
 
-all: $(OUTPUT_EXE)
+all: post-build
+
+pre-build:
+	python3 scripts/check_network_polymorphs.py
+
+main-build: pre-build $(OUTPUT_EXE) 
+
+post-build: main-build
 	install_name_tool -change @rpath/libGameNetworkingSockets.dylib @executable_path/vendor/libGameNetworkingSockets.dylib $(OUTPUT_EXE)
 	./$(OUTPUT_EXE) 2>&1 $(GAME_LOG)
 # -g disables sounds 
 # ./$(OUTPUT_EXE) -g 2>&1 $(GAME_LOG)
+
 
 $(OUTPUT_EXE): $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) 
