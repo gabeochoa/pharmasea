@@ -626,6 +626,7 @@ inline void process_ai_paying(Entity& entity, float dt) {
             aiclosetab.line_wait.add_to_queue(best_register, entity);
         });
     if (!found_target) {
+        next_job(entity, JobType::Wandering);
         return;
     }
 
