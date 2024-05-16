@@ -172,9 +172,6 @@ inline void next_job(Entity& entity, JobType suggestion) {
         entity.get<AIWandering>().next_job =
             entity.get<CanPerformJob>().current;
     }
-    if (entity.get<CanPerformJob>().current == JobType::Wandering) {
-        reset_job_component<AIWandering>(entity);
-    }
 
     entity.get<CanPerformJob>().current = suggestion;
 }
@@ -366,6 +363,7 @@ inline void process_wandering(Entity& entity, float dt) {
 
     // Set it back to what we were doing before we started wandering
     next_job(entity, aiwandering.next_job);
+    reset_job_component<AIWandering>(entity);
 }
 
 inline void process_ai_drinking(Entity& entity, float dt) {
