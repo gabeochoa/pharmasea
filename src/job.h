@@ -19,9 +19,9 @@ enum JobType {
     Mopping,
     Bathroom,
     PlayJukebox,
+    Wandering,
 
     // Not used yet
-    Wandering,
     EnterStore,
     WaitInQueueForPickup,
     Leaving,

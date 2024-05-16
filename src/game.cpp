@@ -8,6 +8,8 @@
 // TODO when spending money the animation is weird and stays after leaving store
 // TODO cleaning bots place some shiny on the floor so its harder to get dirtyu
 // TODO fix bug where "place ghost" green box kept showing
+// TODO conveyerbelt speed
+// TODO if line is full, idle instead
 
 namespace network {
 long long total_ping = 0;

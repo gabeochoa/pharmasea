@@ -9,6 +9,7 @@
 #include "components/ai_play_jukebox.h"
 #include "components/ai_use_bathroom.h"
 #include "components/ai_wait_in_queue.h"
+#include "components/ai_wandering.h"
 #include "components/can_change_settings_interactively.h"
 #include "components/can_pathfind.h"
 #include "components/has_fishing_game.h"
@@ -137,7 +138,7 @@ void register_all_components() {
         Transform, HasName,
         //
         AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AICloseTab,
-        AIPlayJukebox,
+        AIPlayJukebox, AIWandering,
         // Is
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
@@ -1285,6 +1286,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
             cod.set_first_order(ipp.get_last_unlocked());
         }
     }
+
+    customer.addComponent<AIWandering>();
 
     bool bathroom_unlocked =
         irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet);

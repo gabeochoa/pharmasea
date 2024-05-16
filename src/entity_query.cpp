@@ -64,43 +64,27 @@ RefEntities EntityQuery::filter_mod(
     return out;
 }
 
-RefEntities EntityQuery::run_query(UnderlyingOptions options) const {
+RefEntities EntityQuery::run_query(UnderlyingOptions) const {
     RefEntities out;
     out.reserve(entities.size());
 
-    if (1) {
-        for (const auto& e_ptr : entities) {
-            if (!e_ptr) continue;
-            Entity& e = *e_ptr;
-            out.push_back(e);
-        }
+    for (const auto& e_ptr : entities) {
+        if (!e_ptr) continue;
+        Entity& e = *e_ptr;
+        out.push_back(e);
+    }
 
-        auto it = out.end();
-        for (auto& mod : mods) {
-            it = std::partition(out.begin(), it, [&mod](const auto& entity) {
-                return (*mod)(entity);
-            });
-        }
+    auto it = out.end();
+    for (auto& mod : mods) {
+        it = std::partition(out.begin(), it, [&mod](const auto& entity) {
+            return (*mod)(entity);
+        });
+    }
 
-        out.erase(it, out.end());
+    out.erase(it, out.end());
 
-        if (out.size() == 1) {
-            return out;
-        }
-    } else {
-        for (const auto& e_ptr : entities) {
-            if (!e_ptr) continue;
-            Entity& e = *e_ptr;
-            out.push_back(e);
-
-            bool passed_all_mods = std::ranges::all_of(
-                mods, [&](const std::unique_ptr<Modification>& mod) -> bool {
-                    return (*mod)(e);
-                });
-
-            if (passed_all_mods) out.push_back(e);
-            if (options.stop_on_first && !out.empty()) return out;
-        }
+    if (out.size() == 1) {
+        return out;
     }
 
     // TODO :SPEED: if there is only one item no need to sort

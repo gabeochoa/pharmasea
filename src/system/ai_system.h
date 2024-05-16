@@ -7,6 +7,7 @@
 #include "../components/ai_play_jukebox.h"
 #include "../components/ai_use_bathroom.h"
 #include "../components/ai_wait_in_queue.h"
+#include "../components/ai_wandering.h"
 #include "../components/can_order_drink.h"
 #include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
@@ -166,6 +167,15 @@ inline void next_job(Entity& entity, JobType suggestion) {
             return;
         }
     }
+
+    if (suggestion == JobType::Wandering) {
+        entity.get<AIWandering>().next_job =
+            entity.get<CanPerformJob>().current;
+    }
+    if (entity.get<CanPerformJob>().current == JobType::Wandering) {
+        reset_job_component<AIWandering>(entity);
+    }
+
     entity.get<CanPerformJob>().current = suggestion;
 }
 
@@ -177,13 +187,15 @@ inline void process_ai_waitinqueue(Entity& entity, float dt) {
 
     bool found = aiwait.target.find_if_missing(
         entity,
-        [](const Entity& toilet) {
-            return toilet.get<HasWaitingQueue>().has_space();
+        [](const Entity& reg) {
+            return reg.get<HasWaitingQueue>().has_space();
         },
         [&](Entity& best_register) {
             aiwait.line_wait.add_to_queue(best_register, entity);
         });
+
     if (!found) {
+        next_job(entity, JobType::Wandering);
         return;
     }
 
@@ -318,6 +330,42 @@ inline void _set_customer_next_order(Entity& entity) {
 
     reset_job_component<AIDrinking>(entity);
     next_job(entity, JobType::WaitInQueue);
+}
+
+inline void process_wandering(Entity& entity, float dt) {
+    if (entity.is_missing<AIWandering>()) return;
+
+    AIWandering& aiwandering = entity.get<AIWandering>();
+    aiwandering.pass_time(dt);
+    if (!aiwandering.ready()) return;
+
+    bool found =
+        aiwandering.target.find_if_missing(entity, nullptr, [&](Entity&) {
+            // TODO make dwell time a variable
+            // float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
+            float dwell_time = randfIn(1.f, 5.f);
+            aiwandering.timer.set_time(dwell_time);
+        });
+    if (!found) {
+        return;
+    }
+
+    // We have a target
+    OptEntity opt_target_pos =
+        EntityHelper::getEntityForID(aiwandering.target.id());
+
+    bool reached = entity.get<CanPathfind>().travel_toward(
+        opt_target_pos.asE().get<Transform>().as2(),
+        get_speed_for_entity(entity) * dt);
+    if (!reached) return;
+
+    bool completed = aiwandering.timer.pass_time(dt);
+    if (!completed) {
+        return;
+    }
+
+    // Set it back to what we were doing before we started wandering
+    next_job(entity, aiwandering.next_job);
 }
 
 inline void process_ai_drinking(Entity& entity, float dt) {
@@ -745,9 +793,11 @@ inline void process_(Entity& entity, float dt) {
         case PlayJukebox:
             process_jukebox_play(entity, dt);
             break;
+        case Wandering:
+            process_wandering(entity, dt);
+            break;
         case NoJob:
         case Wait:
-        case Wandering:
         case EnterStore:
         case WaitInQueueForPickup:
         case MAX_JOB_TYPE:

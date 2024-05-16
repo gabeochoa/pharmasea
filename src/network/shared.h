@@ -9,6 +9,7 @@
 #include "../components/ai_play_jukebox.h"
 #include "../components/ai_use_bathroom.h"
 #include "../components/ai_wait_in_queue.h"
+#include "../components/ai_wandering.h"
 #include "../components/base_component.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_be_held.h"
@@ -94,7 +95,7 @@ struct PolymorphicBaseClass<BaseComponent>
           IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
           AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
           AIPlayJukebox, HasLastInteractedCustomer,
-          CanChangeSettingsInteractively, IsNuxManager, IsNux,
+          CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
 
           // This one i didnt find before cause its not serialzed generally
           CollectsUserInput> {};
