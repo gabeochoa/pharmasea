@@ -228,8 +228,9 @@ void draw_valid_colored_box(const Transform& transform,
         b = ui::color::getHighlighted(b);
     }
 
-    DrawCubeCustom(transform.raw(), transform.sizex(), transform.sizey(),
-                   transform.sizez(), transform.facing, f, b);
+    DrawCubeCustom(transform.raw() + transform.viz_offset(), transform.sizex(),
+                   transform.sizey(), transform.sizez(), transform.facing, f,
+                   b);
 }
 
 bool draw_transform_with_model(const Transform& transform,
@@ -241,9 +242,12 @@ bool draw_transform_with_model(const Transform& transform,
 
     DrawModelEx(renderer.model(),
                 {
-                    transform.pos().x + model_info.position_offset.x,
-                    transform.pos().y + model_info.position_offset.y,
-                    transform.pos().z + model_info.position_offset.z,
+                    transform.pos().x + transform.viz_x() +
+                        model_info.position_offset.x,
+                    transform.pos().y + transform.viz_y() +
+                        model_info.position_offset.y,
+                    transform.pos().z + transform.viz_z() +
+                        model_info.position_offset.z,
                 },
                 vec3{0.f, 1.f, 0.f}, model_info.rotation_angle + rotation_angle,
                 transform.size() * model_info.size_scale, color);

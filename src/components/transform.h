@@ -57,28 +57,39 @@ struct Transform : public BaseComponent {
 
     virtual ~Transform() {}
 
-    void init(vec3 pos, vec3 sz) {
+    auto& init(vec3 pos, vec3 sz) {
         raw_position = pos;
         position = pos;
 
         _size = sz;
+        return *this;
     }
 
-    void update(vec3 npos) {
+    auto& update(vec3 npos) {
         this->raw_position = npos;
         sync();
+        return *this;
     }
-    void update_x(float x) {
+    auto& update_x(float x) {
         this->raw_position.x = x;
         sync();
+        return *this;
     }
-    void update_y(float y) {
+    auto& update_y(float y) {
         this->raw_position.y = y;
         sync();
+        return *this;
     }
-    void update_z(float z) {
+    auto& update_z(float z) {
         this->raw_position.z = z;
         sync();
+        return *this;
+    }
+
+    auto& update_visual_offset(vec3 pos) {
+        this->visual_offset = pos;
+        sync();
+        return *this;
     }
 
     void update_face_direction(float ang) { facing = ang; }
@@ -93,7 +104,15 @@ struct Transform : public BaseComponent {
     [[nodiscard]] float sizey() const { return this->size().y; }
     [[nodiscard]] float sizez() const { return this->size().z; }
 
-    void update_size(vec3 sze) { this->_size = sze; }
+    [[nodiscard]] vec3 viz_offset() const { return this->visual_offset; }
+    [[nodiscard]] float viz_x() const { return this->visual_offset.x; }
+    [[nodiscard]] float viz_y() const { return this->visual_offset.y; }
+    [[nodiscard]] float viz_z() const { return this->visual_offset.z; }
+
+    auto& update_size(vec3 sze) {
+        this->_size = sze;
+        return *this;
+    }
 
     [[nodiscard]] BoundingBox raw_bounds() const {
         return get_bounds(this->raw_position, this->size());
@@ -263,11 +282,13 @@ struct Transform : public BaseComponent {
     vec3 _size = {TILESIZE, TILESIZE, TILESIZE};
     vec3 position = {0, 0, 0};
     vec3 raw_position = {0, 0, 0};
+    vec3 visual_offset = {0, 0, 0};
 
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+        s.object(visual_offset);
         s.object(raw_position);
         s.object(position);
         s.value4b(facing);

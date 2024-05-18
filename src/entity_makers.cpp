@@ -349,7 +349,7 @@ void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
     }
 
     if (furniture.is_missing<ModelRenderer>()) {
-        furniture.get<Transform>().update_y(-0.25f);
+        furniture.get<Transform>().update_visual_offset({0, -0.25f, 0});
         furniture.get<Transform>().update_size(
             {TILESIZE, TILESIZE * 0.5f, TILESIZE});
     }
