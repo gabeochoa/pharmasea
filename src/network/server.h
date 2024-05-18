@@ -50,8 +50,6 @@ struct Server {
     std::shared_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
-    menu::State current_menu_state;
-    game::State current_game_state;
     std::thread pathfinding_thread;
 
 #if 0
@@ -87,6 +85,7 @@ struct Server {
 
     void send_map_state();
     void send_player_rare_data();
+    void send_game_state_update();
     void run();
     void tick(float dt);
     void process_incoming_messages();
@@ -126,7 +125,7 @@ struct Server {
 
     void send_client_packet_to_all(
         const ClientPacket& packet,
-        std::function<bool(internal::Client_t&)> exclude = nullptr);
+        const std::function<bool(internal::Client_t&)>& exclude = nullptr);
 };
 
 }  // namespace network

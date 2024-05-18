@@ -2416,7 +2416,7 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
     // any changes will get overwritten by server every frame
     // but maybe itll matter
     //
-    // if (!is_server()) return;
+    if (!is_server()) return;
 
     // actual update
     {

@@ -155,14 +155,15 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
         client->send_updated_seed(seed);
     }
 
+    void send_current_menu_state() {
+        if (is_host()) {
+            client->send_current_menu_state();
+        }
+    }
+
     void tick(float dt) {
         if (missing_role()) return;
         if (has_not_set_ip()) return;
-
-        if (is_host()) {
-            bool run = menu_state_tick_trigger.test(dt);
-            if (run) client->send_current_menu_state();
-        }
 
         client->tick(dt);
     }

@@ -255,6 +255,7 @@ struct NetworkLayer : public Layer {
                         TranslatableString(strings::i18n::START))) {
                     MenuState::get().set(menu::State::Game);
                     GameState::get().set(game::State::Lobby);
+                    network_info->send_current_menu_state();
                 }
             }
 
