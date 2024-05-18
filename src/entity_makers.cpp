@@ -340,8 +340,18 @@ void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
     furniture.addComponent<SimpleColoredBoxRenderer>()
         .update_face(face)
         .update_base(base);
+
     if (ENABLE_MODELS) {
-        furniture.addComponent<ModelRenderer>(options.type);
+        auto model_name = util::convertToSnakeCase<EntityType>(options.type);
+        if (ModelInfoLibrary::get().has(model_name)) {
+            furniture.addComponent<ModelRenderer>(options.type);
+        }
+    }
+
+    if (furniture.is_missing<ModelRenderer>()) {
+        furniture.get<Transform>().update_y(-0.25f);
+        furniture.get<Transform>().update_size(
+            {TILESIZE, TILESIZE * 0.5f, TILESIZE});
     }
 
     // we need to add it to set a default, so its here
