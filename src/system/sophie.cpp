@@ -325,18 +325,22 @@ void deleting_item_needed_for_recipe(Entity& entity) {
 }  // namespace sophie
 
 // TODO this function is 75% of our game update time spent
-void update_sophie(Entity& entity, float) {
+void update_sophie(Entity& entity, float dt) {
     if (!check_type(entity, EntityType::Sophie)) return;
     if (entity.is_missing<HasTimer>()) return;
 
     const auto debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    const HasTimer& ht = entity.get<HasTimer>();
+    HasTimer& ht = entity.get<HasTimer>();
 
     // TODO i dont like that this is copy paste from layers/round_end
     if (GameState::get().is_not(game::State::Planning) &&
         ht.get_current_round_time() > 0 && !debug_mode_on)
         return;
+
+    if (!ht.waiting_time_pass(dt)) {
+        return;
+    }
 
     // doing it this way so that if we wanna make them return bool itll be
     // easy
