@@ -216,21 +216,21 @@ void collect_user_input(Entity& entity, float dt) {
     down = key_down;
     up = key_up;
 
-    if (left > 0) cui.write(InputName::PlayerLeft);
-    if (right > 0) cui.write(InputName::PlayerRight);
-    if (up > 0) cui.write(InputName::PlayerForward);
-    if (down > 0) cui.write(InputName::PlayerBack);
+    if (left > 0) cui.write(InputName::PlayerLeft, left);
+    if (right > 0) cui.write(InputName::PlayerRight, right);
+    if (up > 0) cui.write(InputName::PlayerForward, up);
+    if (down > 0) cui.write(InputName::PlayerBack, down);
 
     bool pickup =
         KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
-    if (pickup) cui.write(InputName::PlayerPickup);
+    if (pickup) cui.write(InputName::PlayerPickup, 1.f);
 
     bool rotate = KeyMap::is_event_once_DO_NOT_USE(
         state, InputName::PlayerRotateFurniture);
-    if (rotate) cui.write(InputName::PlayerRotateFurniture);
+    if (rotate) cui.write(InputName::PlayerRotateFurniture, 1.f);
 
     float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
-    if (do_work > 0) cui.write(InputName::PlayerDoWork);
+    if (do_work > 0) cui.write(InputName::PlayerDoWork, 1.f);
 
     // run the input on the local client
     system_manager::input_process_manager::process_input(
