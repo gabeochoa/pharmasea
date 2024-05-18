@@ -117,7 +117,7 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::Trash:
         case EntityType::Table:
         case EntityType::Register:
-            return 10;
+            return 5;
         case EntityType::ChampagneHolder:
         case EntityType::DraftTap:
         case EntityType::SodaMachine:
@@ -127,19 +127,19 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::IceMachine:
         case EntityType::SimpleSyrupHolder:
         case EntityType::MopHolder:
-            return 20;
+            return 10;
         case EntityType::AlcoholCabinet:
         case EntityType::FruitBasket:
         case EntityType::Conveyer:
         case EntityType::Toilet:
-            return 100;
+            return 50;
         case EntityType::Grabber:
         case EntityType::MopBuddyHolder:
-            return 200;
+            return 100;
         case EntityType::Squirter:
         case EntityType::FilteredGrabber:
         case EntityType::PnumaticPipe:
-            return 500;
+            return 200;
             // Non buyables
         case EntityType::FastForward:
             // TODO see todo above...
