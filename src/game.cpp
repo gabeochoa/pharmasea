@@ -12,6 +12,7 @@
 // TODO change beer to work more like ice machine, why do i have to drop the cup
 // inside
 // TODO tutorial should only apply when host has it on
+// TODO save tutorial in save file
 
 namespace network {
 long long total_ping = 0;
