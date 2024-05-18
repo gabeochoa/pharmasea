@@ -39,7 +39,10 @@ struct AITarget {
 
         if (validate) {
             bool success = validate(closest.asE());
-            if (!success) return false;
+            if (!success) {
+                reset();
+                return false;
+            }
         }
 
         set(closest->id);
