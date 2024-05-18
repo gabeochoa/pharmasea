@@ -2416,6 +2416,10 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
     // any changes will get overwritten by server every frame
     // but maybe itll matter
     //
+    // TODO maybe this should only NOT run for the host? since the latency
+    // is decent
+    //
+    // This check might cause lots of issues when high latency
     if (!is_server()) return;
 
     // actual update

@@ -9,6 +9,9 @@
 // TODO cleaning bots place some shiny on the floor so its harder to get dirtyu
 // TODO fix bug where "place ghost" green box kept showing
 // TODO conveyerbelt speed
+// TODO change beer to work more like ice machine, why do i have to drop the cup
+// inside
+// TODO sophie map validation only needs to run on pick/place
 
 namespace network {
 long long total_ping = 0;

@@ -49,10 +49,10 @@ std::thread PathRequestManager::start() {
 
 bool PathRequestManager::is_walkable(const vec2& pos) {
     bool hit_impassable = false;
+    std::lock_guard<std::mutex> lock(g_path_request_manager->entities_mutex_);
     for (const auto& e : entities_storage_) {
         if (!e) continue;
         Entity& entity = *e;
-        if (entity.is_missing<Transform>()) continue;
 
         // Ignore non colliable objects
         if (!system_manager::input_process_manager::is_collidable(entity))
