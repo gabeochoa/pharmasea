@@ -203,7 +203,10 @@ vec3 get_new_held_position_custom(Entity& entity) {
 
     switch (custom_item_position.positioner) {
         case CustomHeldItemPosition::Positioner::Table:
-            new_pos.y += TILESIZE / 2;
+            if (entity.has<ModelRenderer>()) {
+                new_pos.y += TILESIZE / 2.f;
+            }
+            new_pos.y += 0.f;
             break;
         case CustomHeldItemPosition::Positioner::ItemHoldingItem:
             new_pos.x += 0;
