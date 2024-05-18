@@ -778,59 +778,60 @@ void handle_grab_or_drop(Entity& player) {
 }  // namespace inround
 
 void process_input(Entity& entity, const UserInput& input) {
-    const auto _proc_single_input_name = [](Entity& entity,
-                                            const InputName& input_name,
-                                            float frame_dt, float cam_angle) {
-        switch (input_name) {
-            case InputName::PlayerLeft:
-            case InputName::PlayerRight:
-            case InputName::PlayerForward:
-            case InputName::PlayerBack:
-                return process_player_movement_input(
-                    entity, frame_dt, cam_angle, input_name, 1.f);
-            default:
-                break;
-        }
+    const auto _proc_single_input_name =
+        [](Entity& entity, const InputName& input_name, float input_amount,
+           float frame_dt, float cam_angle) {
+            switch (input_name) {
+                case InputName::PlayerLeft:
+                case InputName::PlayerRight:
+                case InputName::PlayerForward:
+                case InputName::PlayerBack:
+                    return process_player_movement_input(
+                        entity, frame_dt, cam_angle, input_name, input_amount);
+                default:
+                    break;
+            }
 
-        // Because of predictive input, we run this _proc_single as the client
-        // and as the server
-        //
-        // For the client we only care about player movement, so if we are not
-        // the server then just skip the rest
+            // Because of predictive input, we run this _proc_single as the
+            // client and as the server
+            //
+            // For the client we only care about player movement, so if we are
+            // not the server then just skip the rest
 
-        // TODO we would like to disable this so placing preview works
-        // however it breaks all pickup/drop on non host client...
-        // if (!is_server()) return;
-        //
-        // ^^^ This breaks clientside held furniture, which means the preview
-        // wont work with this
+            // TODO we would like to disable this so placing preview works
+            // however it breaks all pickup/drop on non host client...
+            // if (!is_server()) return;
+            //
+            // ^^^ This breaks clientside held furniture, which means the
+            // preview wont work with this
 
-        switch (input_name) {
-            case InputName::PlayerRotateFurniture:
-                planning::rotate_furniture(entity);
-                break;
-            case InputName::PlayerPickup:
-                // grab_or_drop(entity);
-                {
-                    if (GameState::get().in_round()) {
-                        inround::handle_grab_or_drop(entity);
-                    } else if (GameState::get().is(game::State::Planning)) {
-                        planning::handle_grab_or_drop(entity);
-                    } else if (GameState::get().is(game::State::Store)) {
-                        planning::handle_grab_or_drop(entity);
-                    } else {
-                        // probably want to handle messing around in the lobby?
+            switch (input_name) {
+                case InputName::PlayerRotateFurniture:
+                    planning::rotate_furniture(entity);
+                    break;
+                case InputName::PlayerPickup:
+                    // grab_or_drop(entity);
+                    {
+                        if (GameState::get().in_round()) {
+                            inround::handle_grab_or_drop(entity);
+                        } else if (GameState::get().is(game::State::Planning)) {
+                            planning::handle_grab_or_drop(entity);
+                        } else if (GameState::get().is(game::State::Store)) {
+                            planning::handle_grab_or_drop(entity);
+                        } else {
+                            // probably want to handle messing around in the
+                            // lobby?
+                        }
                     }
-                }
-                break;
-            case InputName::PlayerDoWork: {
-                work_furniture(entity, frame_dt);
-                fishing_game(entity, frame_dt);
-            } break;
-            default:
-                break;
-        }
-    };
+                    break;
+                case InputName::PlayerDoWork: {
+                    work_furniture(entity, frame_dt);
+                    fishing_game(entity, frame_dt);
+                } break;
+                default:
+                    break;
+            }
+        };
 
     const InputSet input_set = std::get<0>(input);
     const float frame_dt = std::get<1>(input);
@@ -839,9 +840,10 @@ void process_input(Entity& entity, const UserInput& input) {
     size_t i = 0;
     while (i < magic_enum::enum_count<InputName>()) {
         auto input_name = magic_enum::enum_value<InputName>(i);
-        bool was_pressed = input_set.test(i);
-        if (was_pressed) {
-            _proc_single_input_name(entity, input_name, frame_dt, cam_angle);
+        float input_amount = input_set[i];
+        if (input_amount > 0.f) {
+            _proc_single_input_name(entity, input_name, input_amount, frame_dt,
+                                    cam_angle);
         }
         i++;
     }

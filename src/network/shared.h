@@ -215,7 +215,10 @@ void serialize(S& s, ClientPacket& packet) {
                                   [](auto& s, game::State& o) { s.value4b(o); },
                                   [](auto& s, InputName& o) { s.value4b(o); },
                                   [](auto& s, InputSet& o) {
-                                      s.ext(o, bitsery::ext::StdBitset{});
+                                      s.container(
+                                          o, [](S& sv2, InputAmount& amount) {
+                                              sv2.value4b(amount);
+                                          });
                                   },
                                   [](auto& s, float& o) { s.value4b(o); }});
                       });

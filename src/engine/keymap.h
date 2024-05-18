@@ -67,7 +67,8 @@ enum InputName {
     SkipIngredientMatch,
 };
 
-using InputSet = std::bitset<magic_enum::enum_count<InputName>()>;
+using InputAmount = float;
+using InputSet = std::array<InputAmount, magic_enum::enum_count<InputName>()>;
 using UserInput = std::tuple<InputSet, float, float>;
 using UserInputs = std::vector<UserInput>;
 
