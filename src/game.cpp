@@ -11,7 +11,7 @@
 // TODO conveyerbelt speed
 // TODO change beer to work more like ice machine, why do i have to drop the cup
 // inside
-// TODO sophie map validation only needs to run on pick/place
+// TODO tutorial should only apply when host has it on
 
 namespace network {
 long long total_ping = 0;
