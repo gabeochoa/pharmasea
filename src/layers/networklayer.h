@@ -275,9 +275,9 @@ struct NetworkLayer : public Layer {
                                           : "***.***.***.***";
             lobby_screen.text("IPAddrValueText", NO_TRANSLATE(ip));
 
-            std::string show_hide_host_ip_text = should_show_host_ip
-                                                     ? strings::i18n::HIDE_IP
-                                                     : strings::i18n::SHOW_IP;
+            strings::i18n show_hide_host_ip_text = should_show_host_ip
+                                                       ? strings::i18n::HIDE_IP
+                                                       : strings::i18n::SHOW_IP;
             if (lobby_screen.checkbox(
                     "ShowHideButton",
                     ui::CheckboxData{

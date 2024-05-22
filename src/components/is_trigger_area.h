@@ -8,7 +8,7 @@ struct IsTriggerArea;
 
 // This is not a translated string because we serialize it and it needs to be in
 // the local language of the client
-using ValidationResult = std::pair<bool, std::string>;
+using ValidationResult = std::pair<bool, strings::i18n>;
 using ValidationFn = std::function<ValidationResult(const IsTriggerArea&)>;
 
 struct IsTriggerArea : public BaseComponent {
@@ -134,14 +134,15 @@ struct IsTriggerArea : public BaseComponent {
         }
         if (is_server()) {
             last_validation_result =
-                validation_cb ? validation_cb(*this) : std::pair{true, ""};
+                validation_cb ? validation_cb(*this)
+                              : std::pair{true, strings::i18n::Empty};
         }
         // If we are the client, then just use the serialized value
         // since we cant run the validation cb
         return last_validation_result.first;
     }
 
-    [[nodiscard]] const std::string& validation_msg() const {
+    [[nodiscard]] const strings::i18n& validation_msg() const {
         return last_validation_result.second;
     }
 
@@ -149,7 +150,8 @@ struct IsTriggerArea : public BaseComponent {
     // This is mutable because we cant serialize std::funciton
     // and we need a way to send the values up.
     // it doesnt modify anything about the trigger area
-    mutable ValidationResult last_validation_result = std::pair{true, ""};
+    mutable ValidationResult last_validation_result =
+        std::pair{true, strings::i18n::Empty};
     ValidationFn validation_cb = nullptr;
 
     int wanted_entrants = 1;
@@ -170,7 +172,7 @@ struct IsTriggerArea : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.value1b(last_validation_result.first);
-        s.text1b(last_validation_result.second, 100);
+        s.value4b(last_validation_result.second);
 
         s.value4b(wanted_entrants);
         s.value4b(current_entrants);

@@ -401,7 +401,8 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
 
     // TODO add a wayt to let it know to translate
     character_switcher.addComponent<HasName>().update(
-        strings::i18n::CHARACTER_SWITCHER);
+        // TODO instead of HasName this should be HasI18nName
+        strings::pre_translation.at(strings::i18n::CHARACTER_SWITCHER));
 
     character_switcher.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity& person, float dt) {

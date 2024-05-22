@@ -376,14 +376,15 @@ void LevelInfo::generate_store_map() {
                     EntityQuery().whereType(EntityType::Sophie).gen_first();
 
                 // TODO translate these strings .
-                if (!sophie.valid()) return {false, "Internal Error"};
+                if (!sophie.valid())
+                    return {false, strings::i18n::InternalError};
 
                 // Do we have enough money?
                 const IsBank& bank = sophie->get<IsBank>();
                 int balance = bank.balance();
                 int cart = bank.cart();
                 if (balance < cart)
-                    return {false, strings::i18n::STORE_NOT_ENOUGH_COINS};
+                    return {false, strings::i18n::StoreNotEnoughCoins};
 
                 // Are all the required machines here?
                 OptEntity cart_area =
@@ -398,7 +399,8 @@ void LevelInfo::generate_store_map() {
                                    IsFloorMarker::Type::Store_PurchaseArea;
                         })
                         .gen_first();
-                if (!cart_area.valid()) return {false, "Internal Error"};
+                if (!cart_area.valid())
+                    return {false, strings::i18n::InternalError};
 
                 const auto ents =
                     EntityQuery().whereHasComponent<IsStoreSpawned>().gen();
@@ -407,7 +409,7 @@ void LevelInfo::generate_store_map() {
                 for (const Entity& ent : ents) {
                     if (ent.is_missing<IsFreeInStore>()) continue;
                     if (!cart_area->get<IsFloorMarker>().is_marked(ent.id)) {
-                        return {false, strings::i18n::STORE_MISSING_REQUIRED};
+                        return {false, strings::i18n::StoreMissingRequired};
                     }
                 }
 
@@ -424,10 +426,10 @@ void LevelInfo::generate_store_map() {
                         }
                     }
                     if (!all_empty)
-                        return {false, strings::i18n::STORE_STEALING_MACHINE};
+                        return {false, strings::i18n::StoreStealingMachine};
                 }
 
-                return {true, ""};
+                return {true, strings::i18n::Empty};
             });
     }
     {
@@ -458,7 +460,8 @@ void LevelInfo::generate_store_map() {
                     EntityQuery().whereType(EntityType::Sophie).gen_first();
 
                 // TODO translate these strings .
-                if (!sophie.valid()) return {false, "Internal Error"};
+                if (!sophie.valid())
+                    return {false, strings::i18n::InternalError};
 
                 // Do we have enough money?
                 const IsBank& bank = sophie->get<IsBank>();
@@ -469,11 +472,11 @@ void LevelInfo::generate_store_map() {
 
                 if (balance < isrm.get<int>(ConfigKey::StoreRerollPrice))
                     // TODO more accurate string?
-                    return {false, strings::i18n::STORE_NOT_ENOUGH_COINS};
+                    return {false, strings::i18n::StoreNotEnoughCoins};
 
                 // TODO only run if everyone is on this?
 
-                return {true, ""};
+                return {true, strings::i18n::Empty};
             });
     }
 }

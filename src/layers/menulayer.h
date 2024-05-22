@@ -63,21 +63,21 @@ struct MenuLayer : public Layer {
 
         svg.text("Title", TranslatableString(strings::GAME_NAME));
 
-        if (svg.button("PlayButton", TranslatableString(strings::i18n::PLAY))) {
+        if (svg.button("PlayButton", TranslatableString(strings::i18n::Play))) {
             MenuState::get().set(menu::State::Network);
         }
 
         if (svg.button("SettingsButton",
-                       TranslatableString(strings::i18n::SETTINGS))) {
+                       TranslatableString(strings::i18n::Settings))) {
             MenuState::get().set(menu::State::Settings);
         }
 
         if (svg.button("AboutButton",
-                       TranslatableString(strings::i18n::ABOUT))) {
+                       TranslatableString(strings::i18n::About))) {
             MenuState::get().set(menu::State::About);
         }
 
-        if (svg.button("ExitButton", TranslatableString(strings::i18n::EXIT))) {
+        if (svg.button("ExitButton", TranslatableString(strings::i18n::Exit))) {
             App::get().close();
         }
 

@@ -149,7 +149,7 @@ struct BasePauseLayer : public Layer {
             GameState::get().go_back();
         }
         if (button(Widget{settings},
-                   TranslatableString(strings::i18n::SETTINGS))) {
+                   TranslatableString(strings::i18n::Settings))) {
             MenuState::get().set(menu::State::Settings);
         }
 

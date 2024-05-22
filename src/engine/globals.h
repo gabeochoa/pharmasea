@@ -2,11 +2,8 @@
 
 #pragma once
 
-// TODO should be in vendor but we'd like it here
-#include <mo_file/mo.h>
-
-#include <string>
 #include <memory>
+#include <string>
 
 // https://stackoverflow.com/a/48896410
 template<typename Str>
@@ -42,7 +39,6 @@ static int __WIN_H = 720;
 static int __WIN_W = 1280;
 
 // Stored in preload.cpp
-extern std::unique_ptr<i18n::LocalizationText> localization;
 extern int LOG_LEVEL;
 
 [[nodiscard]] inline int WIN_W() { return __WIN_W; }

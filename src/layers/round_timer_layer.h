@@ -65,7 +65,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
 
         const auto tip_string = fmt::format(
             "{} {}", transaction.extra,
-            translation_lookup(TranslatableString(strings::i18n::STORE_TIP)));
+            translation_lookup(TranslatableString(strings::i18n::StoreTip)));
 
         colored_text(
             ui::Widget{spawn_count},
@@ -137,7 +137,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
                      TODO_TRANSLATE(
                          fmt::format("{}: {}",
                                      translation_lookup(TranslatableString(
-                                         strings::i18n::STORE_BALANCE)),
+                                         strings::i18n::StoreBalance)),
                                      bank.balance()),
                          TodoReason::Format));
 

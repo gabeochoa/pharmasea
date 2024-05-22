@@ -12,6 +12,7 @@
 #include "magic_enum/magic_enum.hpp"
 #include "map_generation.h"
 #include "recipe_library.h"
+#include "strings.h"
 
 // TODO move to a config?
 // dataclass/settings.h
@@ -28,7 +29,15 @@ std::vector<UpgradeType> upgrade_rounds = {{
 float DEADZONE = 0.25f;
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;
-std::unique_ptr<i18n::LocalizationText> localization;
+
+namespace strings {
+std::map<i18n, std::string> pre_translation;
+}  // end namespace strings
+
+#include "translation_en_rev.h"
+#include "translation_en_us.h"
+#include "translation_es_la.h"
+#include "translation_ko_kr.h"
 
 namespace wfc {
 MapGenerationInformation MAP_GEN_INFO;
@@ -129,8 +138,32 @@ void Preload::load_fonts(const nlohmann::json& fonts) {
 }
 
 void Preload::on_language_change(const char* lang_name, const char* fn) {
-    // Reset localization and reload from file...
-    localization.reset(new i18n::LocalizationText(fn));
+    // TODO Reset localization and reload from file...
+    (void) fn;
+
+    if (std::string(lang_name) == std::string("en_us")) {
+        for (auto& kv : strings::en_us::pre_translation) {
+            strings::pre_translation[kv.first] = kv.second;
+        }
+    }
+
+    if (std::string(lang_name) == std::string("en_rev")) {
+        for (auto& kv : strings::en_rev::pre_translation) {
+            strings::pre_translation[kv.first] = kv.second;
+        }
+    }
+
+    if (std::string(lang_name) == std::string("ko_kr")) {
+        for (auto& kv : strings::ko_kr::pre_translation) {
+            strings::pre_translation[kv.first] = kv.second;
+        }
+    }
+
+    if (std::string(lang_name) == std::string("es_la")) {
+        for (auto& kv : strings::es_la::pre_translation) {
+            strings::pre_translation[kv.first] = kv.second;
+        }
+    }
 
     // During startup we load settings before preload, but that means that
     // the fonts arent loaded yet.
