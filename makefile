@@ -119,7 +119,7 @@ leak:
 	xctrace record --template 'Leaks' --output 'recording.trace' --launch $(OUTPUT_EXE)
 
 translate:
-	perl -pe 'unless (/^#include/) { s/("[^"]*")/reverse($1)/ge }' src/translation_en_us.h > src/translation_en_rev.h
+	python3 scripts/reverse_translation.py > src/translation_en_rev.h
 
 findstr:
 	grep -r "\"" src/ | grep -v "preload"  | grep -v "game.cpp" | grep -v "src//strings.h" | grep -v "include" | grep -v "src//test" | grep -v "src//engine" | grep -v "src//dataclass" | grep -v "log" | grep -v "TODO" | grep -v "VALIDATE" 

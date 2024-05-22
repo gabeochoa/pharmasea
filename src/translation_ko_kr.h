@@ -47,7 +47,6 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::CHARACTER_SWITCHER, "캐릭터 스위처"},
 
         {i18n::PLANNING_CUSTOMERS_COMING, "고객이 오고 있습니다"},
-        {i18n::ROUND_DAY, "일일"},
 
         {i18n::TRIGGERAREA_PURCHASE_FINISH, "제출 및 반환"},
 

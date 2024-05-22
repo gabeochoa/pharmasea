@@ -47,7 +47,6 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::NEXT_ROUND_COUNTDOWN, "Siguiente ronda comenzando en"},
         {i18n::CHARACTER_SWITCHER, "Selector de personajes"},
         {i18n::PLANNING_CUSTOMERS_COMING, "Clientes llegando"},
-        {i18n::ROUND_DAY, "Día"},
         {i18n::TRIGGERAREA_PURCHASE_FINISH, "Enviar y regresar"},
         {i18n::FLOORMARKER_TRASH, "Basura"},
         {i18n::FLOORMARKER_NEW_ITEMS, "Artículos nuevos"},

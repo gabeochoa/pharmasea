@@ -207,10 +207,24 @@ constexpr const char* ITCH = "https://ochoag.com/pp-download.html";
 enum struct i18nParam {
     ExampleFormattedParam,
     TimeRemaining,
+    TransactionExtra,
+    DayCount,
+    OpeningStatus,
+    CustomerCount,
+    CartAmount,
+    BalanceAmount,
+    RerollCost,
 };
 const std::map<i18nParam, std::string> translation_param = {{
     {i18nParam::ExampleFormattedParam, "username"},
     {i18nParam::TimeRemaining, "time_left"},
+    {i18nParam::TransactionExtra, "transaction_extra"},
+    {i18nParam::DayCount, "day_count"},
+    {i18nParam::OpeningStatus, "opening_status"},
+    {i18nParam::CustomerCount, "customer_count"},
+    {i18nParam::BalanceAmount, "balance_amount"},
+    {i18nParam::CartAmount, "cart_amount"},
+    {i18nParam::RerollCost, "reroll_cost"},
 }};
 
 enum struct i18n {
@@ -228,6 +242,8 @@ enum struct i18n {
     StoreStealingMachine,
     StoreBalance,
     StoreTip,
+    StoreInCart,
+    StoreReroll,
 
     //
     START_GAME,
@@ -245,11 +261,12 @@ enum struct i18n {
     NEXT_ROUND_COUNTDOWN,
     CHARACTER_SWITCHER,
     PLANNING_CUSTOMERS_COMING,
-    ROUND_DAY,
     TRIGGERAREA_PURCHASE_FINISH,
     FLOORMARKER_TRASH,
     FLOORMARKER_NEW_ITEMS,
     FLOORMARKER_STORE_PURCHASE,
+
+    RoundDayWithStatusText,
 
     BACK_BUTTON,
 
@@ -390,6 +407,17 @@ struct TranslatableString {
         if (!formatted) formatted = true;
         params[param] = arg;
         return *this;
+    }
+
+    template<typename T>
+    auto& set_param(const strings::i18nParam& param, const T& arg) {
+        return set_param(param, fmt::format("{}", arg));
+    }
+
+    template<>
+    auto& set_param(const strings::i18nParam& param,
+                    const TranslatableString& arg) {
+        return set_param(param, fmt::format("{}", arg.underlying_TL_ONLY()));
     }
 
     [[nodiscard]] bool is_formatted() const { return formatted; }

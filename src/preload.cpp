@@ -141,28 +141,29 @@ void Preload::on_language_change(const char* lang_name, const char* fn) {
     // TODO Reset localization and reload from file...
     (void) fn;
 
+    log_info("loading language {}", lang_name);
+
+    const auto _load_language = [lang_name](const auto& pt) {
+        for (auto& key : magic_enum::enum_values<strings::i18n>()) {
+            if (!pt.contains(key)) {
+                log_warn("{} is missing {}", lang_name,
+                         magic_enum::enum_name<strings::i18n>(key));
+                continue;
+            }
+
+            auto value = pt.at(key);
+            strings::pre_translation[key] = value;
+        }
+    };
+
     if (std::string(lang_name) == std::string("en_us")) {
-        for (auto& kv : strings::en_us::pre_translation) {
-            strings::pre_translation[kv.first] = kv.second;
-        }
-    }
-
-    if (std::string(lang_name) == std::string("en_rev")) {
-        for (auto& kv : strings::en_rev::pre_translation) {
-            strings::pre_translation[kv.first] = kv.second;
-        }
-    }
-
-    if (std::string(lang_name) == std::string("ko_kr")) {
-        for (auto& kv : strings::ko_kr::pre_translation) {
-            strings::pre_translation[kv.first] = kv.second;
-        }
-    }
-
-    if (std::string(lang_name) == std::string("es_la")) {
-        for (auto& kv : strings::es_la::pre_translation) {
-            strings::pre_translation[kv.first] = kv.second;
-        }
+        _load_language(strings::en_us::pre_translation);
+    } else if (std::string(lang_name) == std::string("en_rev")) {
+        _load_language(strings::en_rev::pre_translation);
+    } else if (std::string(lang_name) == std::string("ko_kr")) {
+        _load_language(strings::ko_kr::pre_translation);
+    } else if (std::string(lang_name) == std::string("es_la")) {
+        _load_language(strings::es_la::pre_translation);
     }
 
     // During startup we load settings before preload, but that means that

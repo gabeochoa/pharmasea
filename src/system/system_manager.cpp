@@ -1085,10 +1085,12 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             const IsRoundSettingsManager& irsm =
                 sophie.get<IsRoundSettingsManager>();
             int reroll_cost = irsm.get<int>(ConfigKey::StoreRerollPrice);
-            auto str = fmt::format("Reroll shop for {} coins", reroll_cost);
+            auto str =
+                TranslatableString(strings::i18n::StoreReroll)
+                    .set_param(strings::i18nParam::RerollCost, reroll_cost);
 
-            ita.update_title(TODO_TRANSLATE(str, TodoReason::Format));
-            ita.update_subtitle(TODO_TRANSLATE(str, TodoReason::Format));
+            ita.update_title(str);
+            ita.update_subtitle(str);
             return;
         } break;
         case IsTriggerArea::Unset:

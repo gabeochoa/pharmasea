@@ -1,6 +1,7 @@
 
 
 #pragma once
+
 #include "engine/constexpr_containers.h"
 #include "strings.h"
 
@@ -21,8 +22,10 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::StoreNotEnoughCoins, "Not enough coins"},
         {i18n::StoreMissingRequired, "Missing required machine"},
         {i18n::StoreStealingMachine, "Please put that machine back"},
-        {i18n::StoreBalance, "Balance"},
-        {i18n::StoreTip, "tip"},
+        {i18n::StoreTip, "{transaction_extra} tip"},
+        {i18n::StoreBalance, "Balance: {balance_amount}"},
+        {i18n::StoreInCart, "In Cart: {cart_amount}"},
+        {i18n::StoreReroll, "Reroll shop for {reroll_cost} coins"},
 
         // In Game
         {i18n::START_GAME, "Start Game"},
@@ -39,14 +42,16 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::DELETING_NEEDED_ITEM,
          "Can't trash machines you need for recipies..."},
         {i18n::LOADING, "Loading..."},
-        {i18n::OPEN, "OPEN"},
-        {i18n::CLOSING, "CLOSING"},
-        {i18n::CLOSED, "CLOSED"},
         {i18n::NEXT_ROUND_COUNTDOWN, "Next Round Starting In"},
         {i18n::CHARACTER_SWITCHER, "Character Switcher"},
 
-        {i18n::PLANNING_CUSTOMERS_COMING, "Customers Coming"},
-        {i18n::ROUND_DAY, "Day"},
+        {i18n::PLANNING_CUSTOMERS_COMING, "Customers Coming: {customer_count}"},
+
+        //
+        {i18n::OPEN, "OPEN"},
+        {i18n::CLOSING, "CLOSING"},
+        {i18n::CLOSED, "CLOSED"},
+        {i18n::RoundDayWithStatusText, "{opening_status} Day {day_count}"},
 
         {i18n::TRIGGERAREA_PURCHASE_FINISH, "Submit and Return"},
 

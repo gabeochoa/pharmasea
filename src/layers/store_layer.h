@@ -35,8 +35,8 @@ struct StoreLayer : public BaseGameRendererLayer {
             spawn_count.y += 60;
 
             text(Widget{spawn_count},
-                 TODO_TRANSLATE(fmt::format("Balance: {}", balance),
-                                TodoReason::Format));
+                 TranslatableString(strings::i18n::StoreBalance)
+                     .set_param(strings::i18nParam::BalanceAmount, balance));
         }
 
         {
@@ -44,8 +44,8 @@ struct StoreLayer : public BaseGameRendererLayer {
             spawn_count.y += 120;
 
             text(Widget{spawn_count},
-                 TODO_TRANSLATE(fmt::format("In Cart: {}", cart),
-                                TodoReason::Format),
+                 TranslatableString(strings::i18n::StoreInCart)
+                     .set_param(strings::i18nParam::CartAmount, cart),
                  cart <= balance ? ui::theme::Usage::Font
                                  : ui::theme::Usage::Error);
         }

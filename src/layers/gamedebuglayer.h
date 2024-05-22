@@ -110,12 +110,11 @@ struct GameDebugLayer : public Layer {
                 auto [round_time_div, round_spawn_div, drinks_div,
                       ingredients_div] = rect::hsplit<4>(round_info, 10);
 
-                text(Widget{round_time_div},
-                     TODO_TRANSLATE(
-                         fmt::format("Round Length: {:.0f}/{}",
-                                     hasTimer.get_current_round_time(),
-                                     hasTimer.get_total_round_time()),
-                         TodoReason::Format));
+                text(
+                    Widget{round_time_div},
+                    NO_TRANSLATE(fmt::format("Round Length: {:.0f}/{}",
+                                             hasTimer.get_current_round_time(),
+                                             hasTimer.get_total_round_time())));
 
                 {
                     auto [num_spawned, countdown] =
@@ -130,10 +129,9 @@ struct GameDebugLayer : public Layer {
 
                     const IsSpawner& iss = spawner.get<IsSpawner>();
                     text(Widget{num_spawned},
-                         TODO_TRANSLATE(fmt::format("Num Spawned: {} / {}",
-                                                    iss.get_num_spawned(),
-                                                    iss.get_max_spawned()),
-                                        TodoReason::Format));
+                         NO_TRANSLATE(fmt::format("Num Spawned: {} / {}",
+                                                  iss.get_num_spawned(),
+                                                  iss.get_max_spawned())));
                 }
             } else {
                 text(Widget{round_info}, NO_TRANSLATE("Map not valid"));
