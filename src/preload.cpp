@@ -26,6 +26,8 @@ std::vector<UpgradeType> upgrade_rounds = {{
     UpgradeType::Upgrade,
 }};
 
+int __WIN_H = 720;
+int __WIN_W = 1280;
 float DEADZONE = 0.25f;
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;

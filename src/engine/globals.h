@@ -35,11 +35,10 @@ template<typename Str>
     return result;
 }
 
-static int __WIN_H = 720;
-static int __WIN_W = 1280;
-
 // Stored in preload.cpp
 extern int LOG_LEVEL;
+extern int __WIN_H;
+extern int __WIN_W;
 
 [[nodiscard]] inline int WIN_W() { return __WIN_W; }
 [[nodiscard]] inline float WIN_WF() { return static_cast<float>(__WIN_W); }

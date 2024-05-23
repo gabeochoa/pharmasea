@@ -4,6 +4,10 @@
 #include "engine/constexpr_containers.h"
 #include "strings.h"
 
+// TODO this was all AI generated and most of it isnt usable/correct
+// this is just for a way to test languages with other word orders
+// and non latin text
+
 namespace strings {
 namespace ko_kr {
 constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>

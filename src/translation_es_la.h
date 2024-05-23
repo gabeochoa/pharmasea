@@ -3,6 +3,9 @@
 #include "engine/constexpr_containers.h"
 #include "strings.h"
 
+// TODO this was all AI generated and most of it isnt usable
+// this is just for a way to test other languages similar to the korean one
+
 namespace strings {
 namespace es_la {
 constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
