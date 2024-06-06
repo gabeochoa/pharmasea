@@ -14,7 +14,8 @@
 // TODO save tutorial in save file
 // TODO fastforward should not work in shop mode
 //  => this is not a problem except when the state gets messed up
-//
+// TODO affect tip based on how much vomit is around?
+// => how can we communicate this to the player
 
 namespace network {
 long long total_ping = 0;

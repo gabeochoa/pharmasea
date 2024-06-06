@@ -38,7 +38,6 @@ kanban-plugin: basic
 ## no repro
 
 - [ ] cosmopolitan model is invisible
-- [ ] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
 - [ ] PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way
 
 
@@ -56,7 +55,6 @@ kanban-plugin: basic
 - [ ] warn player when they are deleting something that we need
 - [ ] need to add some ui to saw how many or when more people will spawn as its not clear
 - [ ] should customers be able to look like players?
-- [ ] add reroll to shop
 - [ ] add an are you sure? when switching resolution and languages
 - [ ] settings dropdown doesnt respect selected language
 - [ ] - more likely to vomit if they waited longer for their drink ?
@@ -65,26 +63,27 @@ kanban-plugin: basic
 - [ ] - should alcohols be multi-use and then you throw out the empty bottle
 - [ ] - patience for first round should be double or triple?
 - [ ] - not enough customers to need automation?
-- [ ] remove job system and switch to just tons of components HasPath, CanWaitInQueue, CanIdle, CanMop, etc
 
 
 ## broke
 
-- [ ] - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
 - [ ] mojito model is big square
 - [ ] mai tai has no model
 - [ ] having pathfinding crashes when rendering the waiting queue (disabled it for now )
-- [ ] drop preview box sometimes has the wrong color
 - [ ] lime doesnt want to go into drink when cup is in register
 - [ ] lime wont go in unless i add lime juice first?
-- [ ] joining twice from a remote computer crashes the host
 - [ ] toilet hitbox is messed up
 - [ ] - vomit hitbox is hard especially without mop
-
 
 ## complete
 
 **Complete**
+- [x] joining twice from a remote computer crashes the host
+- [x] drop preview box sometimes has the wrong color
+- [x - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
+- [x] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
+- [x] remove job system and switch to just tons of components HasPath, CanWaitInQueue, CanIdle, CanMop, etc
+- [x] add reroll to shop
 - [x] need preview for where item will go
 - [x] Tell the player how many customers are coming this round
 - [x] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
