@@ -834,6 +834,34 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
 void make_draft(Entity& draft, vec2 pos) {
     furniture::make_furniture(draft, DebugOptions{.type = EntityType::DraftTap},
                               pos, ui::color::red, ui::color::yellow);
+
+    draft.addComponent<HasWork>().init(
+        [](Entity&, HasWork& hasWork, Entity& player, float dt) {
+            // TODO this logic is duplicated with _process_if_beer_tap
+            CanHoldItem& chi = player.get<CanHoldItem>();
+            if (chi.empty()) return;
+            Item& item = chi.item();
+            if (!check_if_drink(item)) return;
+
+            Ingredient ing = Ingredient::Beer;
+
+            IsDrink& isdrink = item.get<IsDrink>();
+            if (isdrink.has_ingredient(ing)) {
+                if (!isdrink.supports_multiple()) return;
+            }
+
+            const float amt = 0.75f;
+            hasWork.increase_pct(amt * dt);
+
+            network::Server::play_sound(item.get<Transform>().as2(),
+                                        // TODO replace with draft tap sound
+                                        strings::sounds::BLENDER);
+
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+                items::_add_ingredient_to_drink_NO_VALIDATION(item, ing);
+            }
+        });
 }
 
 void make_blender(Entity& blender, vec2 pos) {
@@ -961,6 +989,8 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
     }
 
     const auto _process_if_beer_tap = [&]() {
+        // TODO this logic is duplicated with make_draft hasWork
+        //
         // TODO reset progress when taking out if not done
         if (!ii.is_held_by(EntityType::DraftTap)) return;
 

@@ -10,11 +10,10 @@
 // TODO cleaning bots place some shiny on the floor so its harder to get dirtyu
 // TODO fix bug where "place ghost" green box kept showing
 // TODO conveyerbelt speed
-// TODO change beer to work more like ice machine, why do i have to drop the cup
-// inside
 // TODO tutorial should only apply when host has it on
 // TODO save tutorial in save file
 // TODO fastforward should not work in shop mode
+//  => this is not a problem except when the state gets messed up
 //
 
 namespace network {
