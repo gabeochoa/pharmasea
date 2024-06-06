@@ -864,32 +864,6 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
     });
 }
 
-// TODO look at the blame for this and clean it up if we no longer need it
-inline void spawn_machines_for_new_unlock_DONOTCALL(IsRoundSettingsManager&) {
-    // We already spawn these in upgrade_system.h
-    //
-    /*
-    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
-        // Note we spawn free items in the purchase area so its more obvious
-        // that they are free
-        IsFloorMarker::Type::Store_PurchaseArea);
-
-    if (!spawn_area) {
-        // TODO need to guarantee this exists long before we get here
-        log_error("Could not find spawn area entity");
-    }
-
-    for (const auto& entity_to_spawn : irsm.entities_to_spawn) {
-        auto& entity = EntityHelper::createEntity();
-        if (entity_to_spawn.free) entity.addComponent<IsFreeInStore>();
-        convert_to_type(entity_to_spawn.type, entity,
-                        spawn_area->get<Transform>().as2());
-    }
-
-    irsm.entities_to_spawn.clear();
-    */
-}
-
 void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
