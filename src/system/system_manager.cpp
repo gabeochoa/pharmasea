@@ -167,6 +167,11 @@ void mark_item_in_floor_area(Entity& entity, float) {
     ifm.mark_all(std::move(ids));
 }
 
+void process_floor_markers(Entity& entity, float dt) {
+    clear_all_floor_markers(entity, dt);
+    mark_item_in_floor_area(entity, dt);
+}
+
 void update_held_furniture_position(Entity& entity, float) {
     if (entity.is_missing_any<Transform, CanHoldFurniture>()) return;
 
@@ -2551,8 +2556,7 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
     PathRequestManager::process_responses(entity_list);
 
     for_each(entity_list, dt, [](Entity& entity, float dt) {
-        system_manager::clear_all_floor_markers(entity, dt);
-        system_manager::mark_item_in_floor_area(entity, dt);
+        system_manager::process_floor_markers(entity, dt);
         system_manager::reset_highlighted(entity, dt);
 
         // TODO should be just planning + lobby?

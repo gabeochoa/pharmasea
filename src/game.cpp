@@ -14,6 +14,8 @@
 // inside
 // TODO tutorial should only apply when host has it on
 // TODO save tutorial in save file
+// TODO fastforward should not work in shop mode
+//
 
 namespace network {
 long long total_ping = 0;
