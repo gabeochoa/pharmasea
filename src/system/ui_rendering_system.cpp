@@ -181,17 +181,23 @@ void render_networked_players(const Entities& entities, float dt) {
     }
 }
 
-void render_animated_transactions(const Entity& entity, float) {
-    if (!check_type(entity, EntityType::Sophie)) return;
+struct RoundTimerLocation {
+    vec2 center;
+    float radius;
+    float r10;
+    vec2 start;
+    vec2 end;
+    Rectangle rounded_rect;
+};
 
-    // TODO :DUPE: move round timer location logic somewhere
+RoundTimerLocation get_round_timer_location() {
     auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
     window = rect::tpad(window, 10);
     window = rect::rpad(window, 20);
     window = rect::lpad(window, 10);
     window = rect::bpad(window, 20);
 
-    const vec2 center = {
+    const auto center = vec2{
         window.x + (window.width / 2.f),
         window.y + (window.height / 2.f),
     };
@@ -200,12 +206,82 @@ void render_animated_transactions(const Entity& entity, float) {
     const float r10 = radius * 6;
     const vec2 start = {center.x - r10 - (radius), center.y};
     const vec2 end = {center.x + r10 + (radius), center.y};
+
     Rectangle rounded_rect = {start.x,          //
                               start.y - 10,     //
                               end.x - start.x,  //
                               radius * 2.f};
 
-    Rectangle spawn_count(rounded_rect);
+    return RoundTimerLocation{
+        .center = center,
+        .radius = radius,
+        .r10 = r10,
+        .rounded_rect = rounded_rect,
+    };
+}
+
+TranslatableString get_status_text(const HasTimer& ht) {
+    const bool is_closing = ht.store_is_closed();
+    const bool is_day = GameState::get().in_round() && !is_closing;
+    const int dayCount = ht.dayCount;
+
+    auto status_text =
+        is_day ? TranslatableString(strings::i18n::OPEN)
+               : (is_closing ? TranslatableString(strings::i18n::CLOSING)
+                             : TranslatableString(strings::i18n::CLOSED));
+
+    return TranslatableString(strings::i18n::RoundDayWithStatusText)
+        .set_param(strings::i18nParam::OpeningStatus, status_text)
+        .set_param(strings::i18nParam::DayCount, dayCount);
+}
+
+void render_round_timer(const Entity& entity, float) {
+    if (entity.is_missing<HasTimer>()) return;
+
+    const HasTimer& ht = entity.get<HasTimer>();
+    if (ht.type != HasTimer::Renderer::Round) return;
+
+    const auto rtl = get_round_timer_location();
+
+    const bool is_closing = ht.store_is_closed();
+    const bool is_day = GameState::get().in_round() && !is_closing;
+    const float pct = ht.pct();
+    const float angle = util::deg2rad(util::lerp(170, 365, 1 - pct));
+
+    const vec2 pos = {
+        rtl.center.x + std::cos(angle) * (rtl.r10),
+        rtl.center.y + std::sin(angle) * (rtl.r10),
+    };
+
+    // Hide it when its below the rect
+    if (angle >= M_PI)
+        raylib::DrawCircle((int) pos.x, (int) pos.y, rtl.radius,
+                           is_day ? YELLOW : GRAY);
+
+    div(::ui::Widget{rtl.rounded_rect},
+        is_day ? ::ui::theme::Primary : ::ui::theme::Background);
+    text(::ui::Widget{rtl.rounded_rect}, get_status_text(ht));
+
+    // Only show the customer count during planning
+    if (GameState::get().is(game::State::Planning)) {
+        Rectangle spawn_count{rtl.rounded_rect};
+        spawn_count.y += 160;
+
+        Entity& spawner =
+            (EntityQuery().whereType(EntityType::CustomerSpawner).gen_first())
+                .asE();
+        const IsSpawner& iss = spawner.get<IsSpawner>();
+        text(::ui::Widget{spawn_count},
+             TranslatableString(strings::i18n::PLANNING_CUSTOMERS_COMING)
+                 .set_param(strings::i18nParam::CustomerCount,
+                            iss.get_max_spawned()));
+    }
+}
+
+void render_animated_transactions(const Entity& entity, float) {
+    if (!check_type(entity, EntityType::Sophie)) return;
+
+    Rectangle spawn_count(get_round_timer_location().rounded_rect);
     spawn_count.y += 80;
 
     const IsBank& bank = entity.get<IsBank>();
@@ -253,13 +329,19 @@ void render_animated_transactions(const Entity& entity, float) {
 void render_normal(const Entities& entities, float dt) {
     // In game only
     if (GameState::get().should_render_timer()) {
+        // Grab the global ui context,
+        ::ui::begin(::ui::context, dt);
+
         for (const auto& entity_ptr : entities) {
             if (!entity_ptr) continue;
             const Entity& entity = *entity_ptr;
             render_timer(entity, dt);
             render_animated_transactions(entity, dt);
+            render_round_timer(entity, dt);
         }
         render_current_register_queue(dt);
+        //
+        ::ui::end();
     }
 
     // always
