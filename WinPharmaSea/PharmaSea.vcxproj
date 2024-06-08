@@ -227,12 +227,14 @@
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\components\has_waiting_queue.cpp" />
     <ClCompile Include="..\src\components\is_progression_manager.cpp" />
+    <ClCompile Include="..\src\dataclass\configdata.cpp" />
     <ClCompile Include="..\src\dataclass\upgrades.cpp" />
     <ClCompile Include="..\src\engine\app.cpp" />
     <ClCompile Include="..\src\engine\files.cpp" />
     <ClCompile Include="..\src\engine\globals_register.cpp" />
     <ClCompile Include="..\src\engine\keymap.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
+    <ClCompile Include="..\src\engine\path_request_manager.cpp" />
     <ClCompile Include="..\src\engine\settings.cpp" />
     <ClCompile Include="..\src\engine\ui\ui.cpp" />
     <ClCompile Include="..\src\entity.cpp" />
@@ -246,6 +248,7 @@
     <ClCompile Include="..\src\network\client.cpp" />
     <ClCompile Include="..\src\network\server.cpp" />
     <ClCompile Include="..\src\preload.cpp" />
+    <ClCompile Include="..\src\system\ai_system.cpp" />
     <ClCompile Include="..\src\system\ingredient_helper.cpp" />
     <ClCompile Include="..\src\system\input_process_manager.cpp" />
     <ClCompile Include="..\src\system\rendering_system.cpp" />

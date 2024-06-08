@@ -2,6 +2,7 @@
 #pragma once
 
 #include <array>
+#include <algorithm>
 #include <functional>
 #include <stdexcept>
 #include <utility>  // for pair
