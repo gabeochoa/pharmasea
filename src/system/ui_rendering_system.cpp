@@ -326,6 +326,67 @@ void render_animated_transactions(const Entity& entity, float) {
     }
 }
 
+void render_store(const Entity& entity, float) {
+    if (!check_type(entity, EntityType::Sophie)) return;
+
+    const auto render_validation = [](Rectangle content) {
+        OptEntity purchase_area = EntityHelper::getMatchingTriggerArea(
+            IsTriggerArea::Type::Store_BackToPlanning);
+
+        if (!purchase_area.valid()) return;
+
+        const IsTriggerArea& ita = purchase_area->get<IsTriggerArea>();
+        if (ita.should_progress()) return;
+
+        text(::ui::Widget{content}, TranslatableString(ita.validation_msg()));
+    };
+
+    const auto render_balances = [](Rectangle left_col) {
+        OptEntity sophie =
+            EntityQuery().whereType(EntityType::Sophie).gen_first();
+        if (!sophie.valid()) return;
+
+        const IsBank& bank = sophie->get<IsBank>();
+        int balance = bank.balance();
+        int cart = bank.cart();
+
+        {
+            Rectangle spawn_count(left_col);
+            spawn_count.y += 60;
+
+            text(::ui::Widget{spawn_count},
+                 TranslatableString(strings::i18n::StoreBalance)
+                     .set_param(strings::i18nParam::BalanceAmount, balance));
+        }
+
+        {
+            Rectangle spawn_count(left_col);
+            spawn_count.y += 120;
+
+            text(::ui::Widget{spawn_count},
+                 TranslatableString(strings::i18n::StoreInCart)
+                     .set_param(strings::i18nParam::CartAmount, cart),
+                 cart <= balance ? ::ui::theme::Usage::Font
+                                 : ::ui::theme::Usage::Error);
+        }
+    };
+
+    auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
+    auto left_col = rect::tpad(window, 10);
+    left_col = rect::rpad(left_col, 20);
+    left_col = rect::lpad(left_col, 10);
+    left_col = rect::bpad(left_col, 20);
+
+    render_balances(left_col);
+
+    auto content = rect::tpad(window, 30);
+    content = rect::lpad(content, 20);
+    content = rect::rpad(content, 75);
+    content = rect::bpad(content, 80);
+
+    render_validation(content);
+}
+
 void render_normal(const Entities& entities, float dt) {
     // In game only
     if (GameState::get().should_render_timer()) {
@@ -340,6 +401,19 @@ void render_normal(const Entities& entities, float dt) {
             render_round_timer(entity, dt);
         }
         render_current_register_queue(dt);
+        //
+        ::ui::end();
+    }
+
+    if (GameState::get().is(game::State::Store)) {
+        // Grab the global ui context,
+        ::ui::begin(::ui::context, dt);
+
+        for (const auto& entity_ptr : entities) {
+            if (!entity_ptr) continue;
+            const Entity& entity = *entity_ptr;
+            render_store(entity, dt);
+        }
         //
         ::ui::end();
     }
