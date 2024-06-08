@@ -2564,6 +2564,7 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
 
         system_manager::process_is_container_and_should_backfill_item(entity,
                                                                       dt);
+        system_manager::pass_time_for_transaction_animation(entity, dt);
 
         // this function also handles the map validation code
         // rename it
@@ -2611,7 +2612,6 @@ void SystemManager::in_round_update(
         system_manager::reduce_impatient_customers(entity, dt);
 
         system_manager::pass_time_for_active_fishing_games(entity, dt);
-        system_manager::pass_time_for_transaction_animation(entity, dt);
 
         system_manager::upgrade::in_round_update(entity, dt);
     });
