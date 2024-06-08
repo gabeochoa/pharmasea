@@ -48,32 +48,6 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
             .set_param(strings::i18nParam::DayCount, dayCount);
     }
 
-    void animate_new_transaction(const IsBank::Transaction& transaction,
-                                 Rectangle spawn_count) {
-        if (transaction.amount == 0 && transaction.extra == 0) return;
-
-        spawn_count.y += static_cast<int>(60 * transaction.pct());
-
-        bool positive = transaction.amount >= 0;
-        unsigned char alpha =
-            static_cast<unsigned char>(255 * transaction.pct());
-
-        auto tip_string = translation_lookup(
-            TranslatableString(strings::i18n::StoreTip)
-                .set_param(strings::i18nParam::TransactionExtra,
-                           transaction.extra));
-
-        colored_text(
-            ui::Widget{spawn_count},
-            TODO_TRANSLATE(fmt::format("          {}{} {}",
-                                       positive ? "+" : "-",  //
-                                       transaction.amount,
-                                       transaction.extra ? tip_string : ""),
-                           TodoReason::Format),
-            positive ? Color{0, 255, 0, alpha} : Color{255, 0, 0, alpha}  //
-        );
-    }
-
     virtual void onDrawUI(float) override {
         using namespace ui;
         // not putting these in shouldSkip since we expect this to exist like
@@ -83,6 +57,7 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
         const HasTimer& ht = entity->get<HasTimer>();
         if (ht.type != HasTimer::Renderer::Round) return;
 
+        // TODO :DUPE: move round timer location logic somewhere
         auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
         window = rect::tpad(window, 10);
         window = rect::rpad(window, 20);
@@ -120,29 +95,6 @@ struct RoundTimerLayer : public BaseGameRendererLayer {
 
         div(Widget{rounded_rect}, is_day ? theme::Primary : theme::Background);
         text(Widget{rounded_rect}, get_status_text(ht));
-
-        OptEntity sophie =
-            EntityQuery().whereType(EntityType::Sophie).gen_first();
-        {
-            Rectangle spawn_count(rounded_rect);
-            spawn_count.y += 80;
-
-            if (sophie.valid()) {
-                const IsBank& bank = sophie->get<IsBank>();
-                text(Widget{spawn_count},
-                     TranslatableString(strings::i18n::StoreBalance)
-                         .set_param(strings::i18nParam::BalanceAmount,
-                                    bank.balance()));
-
-                const std::vector<IsBank::Transaction>& transactions =
-                    bank.get_transactions();
-                if (!transactions.empty()) {
-                    const IsBank::Transaction& transaction =
-                        transactions.front();
-                    animate_new_transaction(transaction, spawn_count);
-                }
-            }
-        }
 
         // Only show the customer count during planning
         if (GameState::get().is(game::State::Planning)) {
