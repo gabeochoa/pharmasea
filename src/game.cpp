@@ -23,7 +23,7 @@ long long return_ping = 0;
 }  // namespace network
 std::shared_ptr<network::Info> network_info;
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
     process_dev_flags(argv);
 
     tests::run_all();
@@ -41,17 +41,6 @@ int main(int argc, char* argv[]) {
     // wfc::WaveCollapse wc(static_cast<unsigned
     // int>(hashString("WVZ_ORYYVAV"))); wc.run(); wc.get_lines(); return 0;
     //
-    if (argc > 1) {
-        bool is_test = strcmp(argv[1], "test") == 0;
-        if (is_test) {
-            bool is_host = strcmp(argv[2], "host") == 0;
-            int a = setup_multiplayer_test(is_host);
-            if (a < 0) {
-                return -1;
-            }
-        }
-    }
-
     try {
         App::get().run();
     } catch (const std::exception& e) {
