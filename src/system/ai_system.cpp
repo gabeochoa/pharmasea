@@ -21,8 +21,7 @@
 #include "../components/is_round_settings_manager.h"
 #include "../components/is_toilet.h"
 
-namespace system_manager {
-namespace ai {
+namespace system_manager::ai {
 
 bool validate_drink_order(const Entity& customer, Drink orderedDrink,
                           Item& madeDrink) {
@@ -757,5 +756,4 @@ void process_jukebox_play(Entity& entity, float dt) {
     reset_job_component<AIPlayJukebox>(entity);
 }
 
-}  // namespace ai
-}  // namespace system_manager
+}  // namespace system_manager::ai

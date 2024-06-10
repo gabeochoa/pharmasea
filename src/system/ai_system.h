@@ -7,8 +7,7 @@
 #include "../entity_query.h"
 #include "../job.h"
 
-namespace system_manager {
-namespace ai {
+namespace system_manager::ai {
 
 bool validate_drink_order(const Entity& customer, Drink orderedDrink,
                           Item& madeDrink);
@@ -67,5 +66,4 @@ inline void process_(Entity& entity, float dt) {
     }
 }
 
-}  // namespace ai
-}  // namespace system_manager
+}  // namespace system_manager::ai
