@@ -23,7 +23,9 @@ struct App {
 
     template<size_t N>
     void pushAllLayers(const std::array<Layer*, N>& layers) {
-        layerstack.pushAllLayers<N>(layers);
+        for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
+            layerstack[++max_layer] = *it;
+        }
     }
 
     void run();
@@ -31,14 +33,14 @@ struct App {
     void processEvent(Event& e);
 
    private:
-    void pushLayer(Layer* layer);
-    void pushOverlay(Layer* layer);
     void onEvent(Event& event);
     bool onWindowResize(WindowResizeEvent event);
     bool onWindowFullscreen(WindowFullscreenEvent& event);
     void loop(float dt);
 
-    LayerStack layerstack;
+    std::array<Layer*, 32> layerstack;
+    int max_layer = -1;
+
     // TODO create a render texture library?
     raylib::RenderTexture2D mainRT;
 

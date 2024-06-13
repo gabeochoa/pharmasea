@@ -68,9 +68,6 @@ App::~App() {
     // TODO do we need to / can we remove mainRT from globals
 }
 
-void App::pushLayer(Layer* layer) { layerstack.push(layer); }
-void App::pushOverlay(Layer* layer) { layerstack.pushOverlay(layer); }
-
 void App::onEvent(Event& event) {
     EventDispatcher dispatcher(event);
     dispatcher.dispatch<WindowResizeEvent>(
@@ -154,11 +151,15 @@ void App::processEvent(Event& e) {
     // if they handle it then no need for the lower ones to get the rest
     // eg imagine UI pause menu blocking game UI elements
     //    we wouldnt want the player to click pass the pause menu
-    for (auto it = layerstack.end(); it != layerstack.begin();) {
-        (*--it)->onEvent(e);
+
+    int i = max_layer;
+    while (i >= 0) {
+        Layer* layer = layerstack[i];
+        if (layer) layer->onEvent(e);
         if (e.handled) {
             break;
         }
+        i--;
     }
 }
 
@@ -170,6 +171,11 @@ void App::run() {
 #else
     log_info("Tracing is not enabled");
 #endif
+
+    for (Layer* layer : layerstack) {
+        if (layer) layer->onStartup();
+    }
+
     running = true;
     while (running && !raylib::WindowShouldClose()) {
         float dt = raylib::GetFrameTime();
@@ -182,7 +188,7 @@ void App::loop(float dt) {
     TRACY_ZONE_SCOPED;
 
     for (Layer* layer : layerstack) {
-        layer->onUpdate(dt);
+        if (layer) layer->onUpdate(dt);
     }
 
     draw_all_to_texture(dt);
@@ -207,7 +213,7 @@ void App::draw_all_to_texture(float dt) {
 
     raylib::BeginTextureMode(mainRT);
     for (Layer* layer : layerstack) {
-        layer->onDraw(dt);
+        if (layer) layer->onDraw(dt);
     }
     raylib::EndTextureMode();
 }

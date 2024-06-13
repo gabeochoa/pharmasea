@@ -41,6 +41,32 @@ void startup() {
         raylib::LOG_ERROR,
     });
 
+    App::get().pushAllLayers<16>({{
+        //
+        new FPSLayer(),
+        new StreamerSafeLayer(),
+        new VersionLayer(),
+        //
+        new HandLayer(),
+        new ToastLayer(),
+        new SettingsLayer(),
+        //
+        new PauseLayer(),
+        //
+        //
+        new DebugSettingsLayer(),
+        new RecipeBookLayer(),
+        new RoundEndReasonLayer(),
+        new SeedManagerLayer(),
+        new GameDebugLayer(),  // putting below seed manager since typing
+                               // 'o' switches modes
+        //
+        new NetworkLayer(),
+        new GameLayer(),
+        new AboutLayer(),
+        new MenuLayer(),
+    }});
+
     // -------- Its unlikely anything should go above this line ----- //
 
     // Doesnt strictly need to be before preload but just to be safe
@@ -80,31 +106,6 @@ void startup() {
 
     MenuState::get().reset();
     GameState::get().reset();
-
-    App::get().pushAllLayers<16>({{
-        //
-        new FPSLayer(),
-        new StreamerSafeLayer(),
-        new VersionLayer(),
-        //
-        new HandLayer(),
-        new ToastLayer(),
-        new SettingsLayer(),
-        //
-        new PauseLayer(),
-        //
-        new DebugSettingsLayer(),
-        new RecipeBookLayer(),
-        new RoundEndReasonLayer(),
-        new SeedManagerLayer(),
-        new GameDebugLayer(),  // putting below seed manager since typing
-                               // 'o' switches modes
-        //
-        new NetworkLayer(),
-        new GameLayer(),
-        new AboutLayer(),
-        new MenuLayer(),
-    }});
 }
 
 void process_dev_flags(char* argv[]) {
