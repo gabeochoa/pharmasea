@@ -44,7 +44,9 @@ struct NetworkLayer : public Layer {
           lobby_screen("lobby_screen"),
           join_lobby_screen("join_lobby_screen"),
           username_screen("username_screen"),
-          network_selection_screen("network_selection_screen") {
+          network_selection_screen("network_selection_screen") {}
+
+    virtual void onStartup() override {
         if (network_info) {
             if (!Settings::get().data.username.empty()) {
                 network_info->lock_in_username();
