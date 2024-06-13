@@ -18,17 +18,6 @@ struct App {
     static void create(const AppSettings& pt);
     [[nodiscard]] static App& get();
 
-    bool running = false;
-    LayerStack layerstack;
-    int width;
-    int height;
-
-    int prev_width = -1;
-    int prev_height = -1;
-
-    // TODO create a render texture library?
-    raylib::RenderTexture2D mainRT;
-
     explicit App(const AppSettings&);
     ~App();
 
@@ -36,17 +25,30 @@ struct App {
     void pushAllLayers(const std::array<Layer*, N>& layers) {
         layerstack.pushAllLayers<N>(layers);
     }
+
+    void run();
+    void close();
+    void processEvent(Event& e);
+
+   private:
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* layer);
     void onEvent(Event& event);
     bool onWindowResize(WindowResizeEvent event);
     bool onWindowFullscreen(WindowFullscreenEvent& event);
-    void processEvent(Event& e);
-    void close();
-    void run();
     void loop(float dt);
 
-   private:
+    LayerStack layerstack;
+    // TODO create a render texture library?
+    raylib::RenderTexture2D mainRT;
+
+    bool running = false;
+    int width;
+    int height;
+
+    int prev_width = -1;
+    int prev_height = -1;
+
     App() {}
     // disable copying
     App(const App&);
