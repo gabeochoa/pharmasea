@@ -118,6 +118,11 @@ leak:
 	codesign -s - -f --verbose --entitlements ent_pharmasea.plist $(OUTPUT_EXE)
 	xctrace record --template 'Leaks' --output 'recording.trace' --launch $(OUTPUT_EXE)
 
+alloc: 
+	rm -rf recording.trace/
+	codesign -s - -f --verbose --entitlements ent_pharmasea.plist $(OUTPUT_EXE)
+	xctrace record --template 'Allocations' --output 'recording.trace' --launch $(OUTPUT_EXE)
+
 translate:
 	python3 scripts/reverse_translation.py > src/translation_en_rev.h
 
