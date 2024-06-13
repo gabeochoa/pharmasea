@@ -114,17 +114,7 @@ inline void startup() {
     MenuState::get().reset();
     GameState::get().reset();
 
-    if (ENABLE_UI_TEST) {
-        MenuState::get().set(menu::State::UI);
-        Layer* layers[] = {
-            //
-            new UITestLayer(),
-        };
-        for (auto& layer : layers) App::get().pushLayer(layer);
-        return;
-    }
-
-    Layer* layers[] = {
+    App::get().pushAllLayers<16>({{
         //
         new FPSLayer(),
         new StreamerSafeLayer(),
@@ -140,15 +130,14 @@ inline void startup() {
         new RecipeBookLayer(),
         new RoundEndReasonLayer(),
         new SeedManagerLayer(),
-        new GameDebugLayer(),  // putting below seed manager since typing 'o'
-                               // switches modes
+        new GameDebugLayer(),  // putting below seed manager since typing
+                               // 'o' switches modes
         //
         new NetworkLayer(),
         new GameLayer(),
         new AboutLayer(),
         new MenuLayer(),
-    };
-    for (auto& layer : layers) App::get().pushLayer(layer);
+    }});
 }
 
 void process_dev_flags(char* argv[]) {

@@ -41,6 +41,10 @@ struct App {
     explicit App(const AppSettings&);
     ~App();
 
+    template<size_t N>
+    void pushAllLayers(const std::array<Layer*, N>& layers) {
+        layerstack.pushAllLayers<N>(layers);
+    }
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* layer);
     void onEvent(Event& event);

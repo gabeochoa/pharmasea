@@ -101,6 +101,13 @@ struct LayerStack {
         }
     }
 
+    template<size_t N>
+    void pushAllLayers(const std::array<Layer*, N>& new_layers) {
+        for (auto& layer : new_layers) {
+            push(layer);
+        }
+    }
+
     void push(Layer* layer) {
         if (layers.empty()) {
             layers.push_back(layer);
@@ -109,6 +116,7 @@ struct LayerStack {
             insert = layers.emplace(insert, layer);
         }
     }
+
     void pop(Layer* layer) {
         auto it = std::find(layers.begin(), layers.end(), layer);
         if (it != layers.end()) {
