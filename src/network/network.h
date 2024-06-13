@@ -17,7 +17,7 @@
 namespace network {
 struct Info;
 }
-extern std::shared_ptr<network::Info> network_info;
+extern std::unique_ptr<network::Info> network_info;
 
 namespace network {
 
@@ -133,7 +133,7 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
     }
 
     static void reset_connections() {
-        network_info = std::make_shared<network::Info>();
+        network_info = std::make_unique<network::Info>();
         if (network::ENABLE_REMOTE_IP) {
             my_remote_ip_address = get_remote_ip_address().value_or("");
         } else {

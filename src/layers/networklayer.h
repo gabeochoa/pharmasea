@@ -14,7 +14,7 @@
 #include "../local_ui.h"
 #include "../network/network.h"
 
-extern std::shared_ptr<network::Info> network_info;
+extern std::unique_ptr<network::Info> network_info;
 
 using namespace ui;
 

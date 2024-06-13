@@ -21,7 +21,7 @@ long long total_ping = 0;
 long long there_ping = 0;
 long long return_ping = 0;
 }  // namespace network
-std::shared_ptr<network::Info> network_info;
+std::unique_ptr<network::Info> network_info;
 
 void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues

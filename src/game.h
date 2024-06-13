@@ -50,7 +50,7 @@ extern float DEADZONE;
 extern ui::UITheme UI_THEME;
 extern std::vector<std::string> theme_keys;
 extern std::map<std::string, ui::UITheme> themes;
-extern std::shared_ptr<network::Info> network_info;
+extern std::unique_ptr<network::Info> network_info;
 
 //
 // This one should be last
