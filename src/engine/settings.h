@@ -119,9 +119,11 @@ struct LanguageInfo {
 
 }  // namespace settings
 
-SINGLETON_FWD(Settings)
 struct Settings {
-    SINGLETON(Settings)
+    static bool created;
+    static Settings instance;
+    static void create();
+    [[nodiscard]] static Settings& get();
 
     settings::Data data;
 

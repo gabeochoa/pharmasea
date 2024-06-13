@@ -3,6 +3,19 @@
 
 #include "../preload.h"
 
+Settings Settings::instance;
+bool Settings::created = false;
+
+void Settings::create() {
+    if (created) {
+        log_error("Trying to create settings twice");
+    }
+    new (&instance) Settings();
+    created = true;
+}
+
+Settings& Settings::get() { return instance; }
+
 void Settings::update_language_from_index(int index) {
     // TODO handle exception
     auto li = lang_options[index];
