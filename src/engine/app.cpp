@@ -17,7 +17,24 @@
 #include "settings.h"
 #include "shader_library.h"
 
-std::shared_ptr<App> App_single;
+App App::instance;
+bool App::created = false;
+
+void App::create(const AppSettings& pt) {
+    if (created) {
+        log_error("Trying to create App twice");
+        return;
+    }
+    new (&instance) App(pt);
+    created = true;
+}
+
+App& App::get() {
+    if (!created) {
+        log_error("trying to fetch app but none was created");
+    }
+    return instance;
+}
 
 void App::start_post_processing() {
     if (!Settings::get().data.enable_postprocessing) return;
