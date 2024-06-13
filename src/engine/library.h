@@ -21,11 +21,11 @@ struct Library {
 
     Storage storage;
 
-    [[nodiscard]] auto size() { return storage.size(); }
-    [[nodiscard]] auto begin() { return storage.begin(); }
-    [[nodiscard]] auto end() { return storage.end(); }
+    [[nodiscard]] auto size() const { return storage.size(); }
     [[nodiscard]] auto begin() const { return storage.begin(); }
     [[nodiscard]] auto end() const { return storage.end(); }
+    [[nodiscard]] auto begin() { return storage.begin(); }
+    [[nodiscard]] auto end() { return storage.end(); }
     [[nodiscard]] auto rbegin() const { return storage.rbegin(); }
     [[nodiscard]] auto rend() const { return storage.rend(); }
     [[nodiscard]] auto rbegin() { return storage.rbegin(); }

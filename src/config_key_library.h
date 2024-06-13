@@ -9,7 +9,7 @@ SINGLETON_FWD(ConfigValueLibrary)
 struct ConfigValueLibrary {
     SINGLETON(ConfigValueLibrary)
 
-    [[nodiscard]] auto size() { return impl.size(); }
+    [[nodiscard]] auto size() const { return impl.size(); }
 
     [[nodiscard]] const ConfigValue& get(const std::string& name) const {
         return impl.get(name);

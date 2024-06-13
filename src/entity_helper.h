@@ -42,7 +42,8 @@ struct EntityHelper {
         bool is_permanent;
     };
 
-    static Entities& get_entities();
+    static const Entities& get_entities();
+    static Entities& get_entities_for_mod();
     static RefEntities get_ref_entities();
 
     static Entity& createEntity();

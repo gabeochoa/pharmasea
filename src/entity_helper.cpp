@@ -52,7 +52,7 @@ Entity& EntityHelper::getNamedEntity(const NamedEntity& name) {
     return *(e_ptr);
 }
 
-Entities& EntityHelper::get_entities() {
+Entities& EntityHelper::get_entities_for_mod() {
     if (is_server()) {
         return server_entities_DO_NOT_USE;
     }
@@ -63,6 +63,8 @@ Entities& EntityHelper::get_entities() {
     // GLOBALS.get_or_default("client_thread_id", std::thread::id());
     return client_entities_DO_NOT_USE;
 }
+
+const Entities& EntityHelper::get_entities() { return get_entities_for_mod(); }
 
 RefEntities EntityHelper::get_ref_entities() {
     RefEntities matching;
@@ -87,7 +89,7 @@ Entity& EntityHelper::createPermanentEntity() {
 
 Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
     std::shared_ptr<Entity> e(new Entity());
-    get_entities().push_back(e);
+    get_entities_for_mod().push_back(e);
     // log_info("created a new entity {}", e->id);
 
     invalidatePathCache();
@@ -129,7 +131,7 @@ void EntityHelper::removeEntity(int e_id) {
     // cache_is_walkable.clear();
     // }
 
-    auto& entities = get_entities();
+    auto& entities = get_entities_for_mod();
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
@@ -151,7 +153,7 @@ void EntityHelper::removeEntity(int e_id) {
 
 void EntityHelper::cleanup() {
     // Cleanup entities marked cleanup
-    Entities& entities = get_entities();
+    Entities& entities = get_entities_for_mod();
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
@@ -161,7 +163,7 @@ void EntityHelper::cleanup() {
 }
 
 void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
-    Entities& entities = get_entities();
+    Entities& entities = get_entities_for_mod();
     // just clear the whole thing
     entities.clear();
 }
@@ -173,7 +175,7 @@ void EntityHelper::delete_all_entities(bool include_permanent) {
     }
 
     // Only delete non perms
-    Entities& entities = get_entities();
+    Entities& entities = get_entities_for_mod();
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
