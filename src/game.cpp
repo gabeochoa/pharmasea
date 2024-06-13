@@ -23,6 +23,135 @@ long long return_ping = 0;
 }  // namespace network
 std::shared_ptr<network::Info> network_info;
 
+void startup() {
+    // TODO :INFRA: need to test on lower framerates, there seems to be issues
+    // with network initlization
+
+    // Force the app to be created.
+    // This unlocks GPU access so we can load textures
+    App::create(AppSettings{
+        //
+        240,
+        //
+        WIN_W(),
+        WIN_H(),
+        //
+        strings::GAME_NAME,
+        //
+        raylib::LOG_ERROR,
+    });
+
+    // -------- Its unlikely anything should go above this line ----- //
+
+    // Doesnt strictly need to be before preload but just to be safe
+    Files::create(FilesConfig{
+        strings::GAME_FOLDER,
+        SETTINGS_FILE_NAME,
+    });
+
+    // Load save file so username is ready for when network starts
+    // Load before preload incase we need to read file names or fonts from files
+    Settings::get().load_save_file();
+
+    // Has to happen after init window due
+    // to font requirements
+    Preload::create();
+
+    // Note: there was an issue where the master volume wasnt being respected
+    // until you open the settings page.
+    //
+    // Having this line here fixes that
+    Settings::get().refresh_settings();
+
+    // What i realized is that somehow every time i write a test
+    // it fixes the component bug im investigating
+    //
+    // And so im thinking wait maybe theres some bug where if the host has a
+    // component but the client doesnt have it registered yet, or the order is
+    // different it doesnt deserialize the data correctly (size / color w/e)
+    //
+    // okay well i can fix that by just forcing the order to remain the same by
+    // creating an entity that just adds all the components in order
+    //
+    // and thats this
+    register_all_components();
+
+    network::Info::init_connections();
+
+    MenuState::get().reset();
+    GameState::get().reset();
+
+    App::get().pushAllLayers<16>({{
+        //
+        new FPSLayer(),
+        new StreamerSafeLayer(),
+        new VersionLayer(),
+        //
+        new HandLayer(),
+        new ToastLayer(),
+        new SettingsLayer(),
+        //
+        new PauseLayer(),
+        //
+        new DebugSettingsLayer(),
+        new RecipeBookLayer(),
+        new RoundEndReasonLayer(),
+        new SeedManagerLayer(),
+        new GameDebugLayer(),  // putting below seed manager since typing
+                               // 'o' switches modes
+        //
+        new NetworkLayer(),
+        new GameLayer(),
+        new AboutLayer(),
+        new MenuLayer(),
+    }});
+}
+
+void process_dev_flags(char* argv[]) {
+#if ENABLE_DEV_FLAGS
+    argh::parser cmdl(argv);
+
+    network::ENABLE_REMOTE_IP = true;
+
+    if (cmdl[{"--gabe", "-g"}]) {
+        ENABLE_MODELS = true;
+        ENABLE_SOUND = false;
+        network::ENABLE_REMOTE_IP = false;
+        // ENABLE_UI_TEST = true;
+        return;
+    }
+
+    if (cmdl[{"--tests-only", "-t"}]) {
+        TESTS_ONLY = true;
+        ENABLE_MODELS = false;
+        ENABLE_SOUND = false;
+        network::ENABLE_REMOTE_IP = false;
+    }
+
+    if (cmdl[{"--disable-all", "-d"}]) {
+        ENABLE_MODELS = false;
+        ENABLE_SOUND = false;
+        network::ENABLE_REMOTE_IP = false;
+    }
+
+    if (cmdl[{"--models", "-m"}]) {
+        ENABLE_MODELS = true;
+    }
+
+    if (cmdl[{"--disable-models", "-M"}]) {
+        ENABLE_MODELS = true;
+    }
+    if (cmdl[{"--sound", "-s"}]) {
+        ENABLE_SOUND = true;
+    }
+
+    if (cmdl[{"--disable-sound", "-S"}]) {
+        ENABLE_SOUND = false;
+    }
+
+#endif
+}
+
 int main(int, char* argv[]) {
     process_dev_flags(argv);
 
