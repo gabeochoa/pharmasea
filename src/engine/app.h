@@ -6,31 +6,26 @@
 #include "layer.h"
 #include "singleton.h"
 
-struct AppSettings {
-    int fps;
-    int width;
-    int height;
-    const char* title;
-    raylib::TraceLogLevel logLevel = raylib::LOG_ERROR;
-};
-
 struct App {
+    struct AppSettings {
+        int fps;
+        int width;
+        int height;
+        const char* title;
+        raylib::TraceLogLevel logLevel = raylib::LOG_ERROR;
+    };
+
     static void create(const AppSettings& pt);
     [[nodiscard]] static App& get();
 
     explicit App(const AppSettings&);
     ~App();
 
-    template<size_t N>
-    void pushAllLayers(const std::array<Layer*, N>& layers) {
-        for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
-            layerstack[++max_layer] = *it;
-        }
-    }
-
     void run();
     void close();
     void processEvent(Event& e);
+
+    void loadLayers(const std::vector<Layer*>& layers);
 
    private:
     void onEvent(Event& event);

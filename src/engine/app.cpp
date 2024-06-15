@@ -63,6 +63,13 @@ App::App(const AppSettings& settings) {
     GLOBALS.set("mainRT", &mainRT);
 }
 
+void App::loadLayers(const std::vector<Layer*>& layers) {
+    for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
+        layerstack[++max_layer] = *it;
+    }
+    log_info("Loaded {} layers", max_layer);
+}
+
 App::~App() {
     UnloadRenderTexture(mainRT);
     // TODO do we need to / can we remove mainRT from globals
