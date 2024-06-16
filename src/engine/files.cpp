@@ -25,7 +25,19 @@
 #pragma GCC diagnostic pop
 #endif
 
-std::shared_ptr<Files> Files_single;
+Files Files::instance;
+bool Files::created = false;
+
+void Files::create(const FilesConfig& config) {
+    if (created) {
+        log_error("Tryin to create Files twice");
+        return;
+    }
+    new (&instance) Files(config);
+    created = true;
+}
+
+Files& Files::get() { return instance; }
 
 Files::Files(const FilesConfig& config)
     : root(config.root_folder), settings_file(config.settings_file_name) {
@@ -42,8 +54,8 @@ bool Files::ensure_game_folder_exists() {
     if (fs::exists(fld)) {
         return true;
     }
-    bool created = fs::create_directories(fld);
-    if (created) {
+    bool was_created = fs::create_directories(fld);
+    if (was_created) {
         log_info("Created Game Folder: {}", fld);
         return true;
     }
