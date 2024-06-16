@@ -8,7 +8,7 @@
 namespace pathfinder {
 
 inline std::vector<vec2> get_neighbors(
-    vec2 start, std::function<bool(vec2 pos)> is_walkable) {
+    vec2 start, const std::function<bool(vec2 pos)>& is_walkable) {
     std::vector<vec2> output;
     int step = static_cast<int>(floor(TILESIZE));
     vec::forEachNeighbor(

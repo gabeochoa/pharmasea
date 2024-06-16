@@ -3,7 +3,7 @@
 
 #include "graphics.h"
 
-void KeyMap::forEachCharTyped(std::function<void(Event&)> cb) {
+void KeyMap::forEachCharTyped(const std::function<void(Event&)>& cb) {
     int character = raylib::GetCharPressed();
     while (character) {
         CharPressedEvent* event = new CharPressedEvent(character, 0);
@@ -13,7 +13,7 @@ void KeyMap::forEachCharTyped(std::function<void(Event&)> cb) {
     }
 }
 
-void KeyMap::forEachInputInMap(std::function<void(Event&)> cb) const {
+void KeyMap::forEachInputInMap(const std::function<void(Event&)>& cb) const {
     for (const auto& fm_kv : mapping) {
         for (const auto& lm_kv : fm_kv.second) {
             for (const auto& input : lm_kv.second) {

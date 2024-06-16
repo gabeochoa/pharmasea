@@ -133,8 +133,8 @@ SINGLETON_FWD(KeyMap)
 struct KeyMap {
     SINGLETON(KeyMap)
 
-    static void forEachCharTyped(std::function<void(Event&)> cb);
-    void forEachInputInMap(std::function<void(Event&)> cb) const;
+    static void forEachCharTyped(const std::function<void(Event&)>& cb);
+    void forEachInputInMap(const std::function<void(Event&)>& cb) const;
     [[nodiscard]] static float is_event(const menu::State& state,
                                         const InputName& name);
     [[nodiscard]] static bool is_event_once_DO_NOT_USE(const menu::State& state,

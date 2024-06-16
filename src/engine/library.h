@@ -16,8 +16,8 @@ struct Library {
     };
 
     using Storage = std::map<std::string, T>;
-    typedef typename Storage::iterator iterator;
-    typedef typename Storage::const_iterator const_iterator;
+    using iterator = typename Storage::iterator;
+    using const_iterator = typename Storage::const_iterator;
 
     Storage storage;
 
@@ -32,8 +32,7 @@ struct Library {
     [[nodiscard]] auto rend() { return storage.rend(); }
     [[nodiscard]] auto empty() const { return storage.empty(); }
 
-    const tl::expected<std::string, Error> add(const char* name,
-                                               const T& item) {
+    tl::expected<std::string, Error> add(const char* name, const T& item) {
         log_trace("adding {} to the library", name);
         if (storage.find(name) != storage.end()) {
             return tl::unexpected(Error::DUPLICATE_NAME);
