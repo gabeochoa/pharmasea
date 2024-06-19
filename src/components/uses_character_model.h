@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../engine/random.h"
+#include "../engine/random_engine.h"
 #include "../strings.h"
 #include "base_component.h"
 
@@ -12,7 +12,7 @@ struct UsesCharacterModel : public BaseComponent {
     virtual ~UsesCharacterModel() {}
 
     auto& switch_to_random_model() {
-        index = randIn(0, strings::character_models.size() - 1);
+        index = RandomEngine::get().get_index(strings::character_models);
         changed = true;
         return *this;
     }

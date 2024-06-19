@@ -131,7 +131,8 @@ float get_speed_for_entity(Entity& entity) {
         // float stagger_multiplier = cha.ailment().stagger(); if
         // (stagger_multiplier != 0) base_speed *= stagger_multiplier;
 
-        int denom = randIn(1, std::max(1, cha.num_alcoholic_drinks_drank()));
+        int denom = RandomEngine::get().get_int(
+            1, std::max(1, cha.num_alcoholic_drinks_drank()));
         base_speed *= 1.f / denom;
 
         base_speed = fmaxf(1.f, base_speed);
@@ -329,7 +330,7 @@ void process_wandering(Entity& entity, float dt) {
         aiwandering.target.find_if_missing(entity, nullptr, [&](Entity&) {
             // TODO make dwell time a variable
             // float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
-            float dwell_time = randfIn(1.f, 5.f);
+            float dwell_time = RandomEngine::get().get_float(1.f, 5.f);
             aiwandering.timer.set_time(dwell_time);
         });
     if (!found) {
@@ -374,7 +375,7 @@ void process_ai_drinking(Entity& entity, float dt) {
     bool found =
         aidrinking.target.find_if_missing(entity, nullptr, [&](Entity&) {
             float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
-            drink_time += randfIn(0.1f, 1.f);
+            drink_time += RandomEngine::get().get_float(0.1f, 1.f);
             aidrinking.timer.set_time(drink_time);
         });
     if (!found) {
@@ -429,7 +430,7 @@ void process_ai_drinking(Entity& entity, float dt) {
     // they are annoyed) for now just random
     bool jukebox_unlocked = irsm.has_upgrade_unlocked(UpgradeClass::Jukebox);
     if (jukebox_unlocked) {
-        if (randBool()) {
+        if (RandomEngine::get().get_bool()) {
             next_job(entity, JobType::PlayJukebox);
             return;
         }

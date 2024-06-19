@@ -4,7 +4,7 @@
 
 #include "../vendor_include.h"
 //
-#include "../engine/random.h"
+#include "../engine/random_engine.h"
 #include "base_component.h"
 
 enum Subtype {
@@ -30,7 +30,7 @@ struct HasSubtype : public BaseComponent {
 
     [[nodiscard]] int get_num_types() const { return end - start; }
     [[nodiscard]] int get_random_index() const {
-        int index = randIn(0, get_num_types());
+        int index = RandomEngine::get().get_int(0, get_num_types());
         return start + index;
     }
     [[nodiscard]] Subtype get_type() const {

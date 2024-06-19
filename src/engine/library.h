@@ -5,7 +5,7 @@
 #include "../external_include.h"
 #include "expected.hpp"
 #include "log.h"
-#include "random.h"
+#include "random_engine.h"
 #include "type_name.h"
 //
 template<typename T>
@@ -90,7 +90,8 @@ struct Library {
             return tl::unexpected(Error::NO_MATCH);
         }
 
-        int idx = randIn(0, static_cast<int>(num_matches) - 1);
+        int idx =
+            RandomEngine::get().get_int(0, static_cast<int>(num_matches) - 1);
         const_iterator start(matches.first);
         std::advance(start, idx);
         return start->second;

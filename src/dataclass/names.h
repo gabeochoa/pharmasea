@@ -1,7 +1,9 @@
 #pragma once
 // a list of names to pull from name generator
 
-#include "../engine/random.h"
+#include <string>
+
+#include "../engine/random_engine.h"
 #include "../external_include.h"
 
 constexpr std::array<const char*, 39> alcohol_names = {
@@ -35,8 +37,8 @@ constexpr std::array<const char*, 8> last_names = {
     "Fischer", "Flipper", "Amore",   "Fishman"};
 
 static std::string get_random_name() {
-    int first = randIn(0, (int) alcy_firsts.size() - 1);
-    int last = randIn(0, (int) alcohol_names.size() - 1);
+    int first = RandomEngine::get().get_index(alcy_firsts);
+    int last = RandomEngine::get().get_index(alcohol_names);
     return fmt::format("{} {}", alcy_firsts[first], alcohol_names[last]);
 }
 
@@ -62,8 +64,8 @@ static const char* rot13(const char* input) {
 }
 
 static std::string get_random_name_rot13() {
-    int first = randIn(0, (int) alcy_firsts.size() - 1);
-    int last = randIn(0, (int) alcohol_names.size() - 1);
+    int first = RandomEngine::get().get_index(alcy_firsts);
+    int last = RandomEngine::get().get_index(alcohol_names);
     return fmt::format("{}_{}", rot13(alcy_firsts[first]),
                        rot13(alcohol_names[last]));
 }

@@ -19,10 +19,7 @@ struct AIDrinking : public AIComponent {
             while (attempts_rem > 0) {
                 attempts_rem--;
 
-                vec2 new_pos = vec2{
-                    randfIn(-10, 10),
-                    randfIn(-10, 10),
-                };
+                vec2 new_pos = RandomEngine::get().get_vec(-10, 10);
 
                 const auto walkable = EntityHelper::isWalkable(new_pos);
 

@@ -1,7 +1,7 @@
 
 #pragma once
+#include <string>
 
-#include "engine/random.h"
 #include "entity.h"
 #include "entity_helper.h"
 #include "entity_makers.h"
@@ -39,12 +39,7 @@ struct LevelInfo {
     Entities::size_type num_entities;
 
     std::string seed;
-
-    //
     size_t hashed_seed;
-    std::mt19937 generator;
-    std::uniform_int_distribution<> dist;
-    //
 
     void update_seed(const std::string& s);
     void onUpdate(const Entities& players, float dt);
@@ -66,10 +61,6 @@ struct LevelInfo {
     void generate_progression_map();
     void generate_store_map();
     void generate_default_seed();
-
-    [[nodiscard]] int gen_rand(int a, int b) {
-        return a + (generator() % (b - a));
-    }
 
     void generate_in_game_map();
     auto get_rand_walkable();

@@ -11,6 +11,7 @@
 #include "dataclass/ingredient.h"
 #include "engine/bitset_utils.h"
 #include "engine/globals.h"
+#include "engine/random_engine.h"
 #include "engine/texture_library.h"
 #include "entity_helper.h"
 #include "entity_makers.h"
@@ -36,10 +37,7 @@ void LevelInfo::update_seed(const std::string& s) {
 
     log_info("level info update seed {}", s);
     seed = s;
-    hashed_seed = hashString(seed);
-    generator = make_engine(hashed_seed);
-    // TODO leaving at 1 because we dont have a door to block the entrance
-    dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
+    RandomEngine::set_seed(seed);
 
     was_generated = false;
 }
@@ -597,8 +595,8 @@ void LevelInfo::generate_in_game_map() {
 
     std::vector<std::string> lines;
 
-    int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
-    int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
+    int rows = RandomEngine::get().get_int(MIN_MAP_SIZE, MAX_MAP_SIZE);
+    int cols = RandomEngine::get().get_int(MIN_MAP_SIZE, MAX_MAP_SIZE);
 
     const auto _is_inside = [lines](int i, int j) -> bool {
         if (i < 0 || j < 0 || i >= (int) lines.size() ||
@@ -617,14 +615,14 @@ void LevelInfo::generate_in_game_map() {
         return get_char(i, j) == '.';
     };
 
-    const auto _get_random_empty = [_is_empty, rows, cols,
-                                    this]() -> std::pair<int, int> {
+    const auto _get_random_empty = [_is_empty, rows,
+                                    cols]() -> std::pair<int, int> {
         int tries = 0;
         int x;
         int y;
         do {
-            x = gen_rand(1, rows - 1);
-            y = gen_rand(1, cols - 1);
+            x = RandomEngine::get().get_int(1, rows - 1);
+            y = RandomEngine::get().get_int(1, cols - 1);
             if (tries++ > 100) {
                 x = 0;
                 y = 0;
@@ -635,10 +633,10 @@ void LevelInfo::generate_in_game_map() {
         return {x, y};
     };
 
-    const auto _get_empty_neighbor = [_is_empty, this](
-                                         int i, int j) -> std::pair<int, int> {
+    const auto _get_empty_neighbor = [_is_empty](int i,
+                                                 int j) -> std::pair<int, int> {
         auto ns = vec::get_neighbors_i(i, j);
-        std::shuffle(std::begin(ns), std::end(ns), generator);
+        std::shuffle(std::begin(ns), std::end(ns), RandomEngine::generator());
 
         for (auto n : ns) {
             if (_is_empty(n.first, n.second)) {
@@ -648,14 +646,14 @@ void LevelInfo::generate_in_game_map() {
         return ns[0];
     };
 
-    const auto _get_valid_register_location = [_is_empty, rows, cols,
-                                               this]() -> std::pair<int, int> {
+    const auto _get_valid_register_location = [_is_empty, rows,
+                                               cols]() -> std::pair<int, int> {
         int tries = 0;
         int x;
         int y;
         do {
-            x = gen_rand(1, rows - 1);
-            y = gen_rand(1, cols - 1);
+            x = RandomEngine::get().get_int(1, rows - 1);
+            y = RandomEngine::get().get_int(1, cols - 1);
             if (tries++ > 100) {
                 x = 0;
                 y = 0;
@@ -686,7 +684,7 @@ void LevelInfo::generate_in_game_map() {
         }
 
         // Add one empty spot so that we can get into the box
-        int y = gen_rand(1, rows - 1);
+        int y = RandomEngine::get().get_int(1, rows - 1);
         lines[y][cols] = '.';
     }
 
@@ -748,7 +746,8 @@ void LevelInfo::generate_in_game_map() {
 auto LevelInfo::get_rand_walkable() {
     vec2 location;
     do {
-        location = vec2{dist(generator) * TILESIZE, dist(generator) * TILESIZE};
+        location = vec2{RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1),
+                        RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1)};
     } while (!EntityHelper::isWalkable(location));
     return location;
 }
@@ -756,7 +755,8 @@ auto LevelInfo::get_rand_walkable() {
 auto LevelInfo::get_rand_walkable_register() {
     vec2 location;
     do {
-        location = vec2{dist(generator) * TILESIZE, dist(generator) * TILESIZE};
+        location = vec2{RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1),
+                        RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1)};
     } while (
         !EntityHelper::isWalkable(location) &&
         !EntityHelper::isWalkable(vec2{location.x, location.y + 1 * TILESIZE}));

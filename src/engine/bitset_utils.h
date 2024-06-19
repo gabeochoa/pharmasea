@@ -5,7 +5,7 @@
 #include <functional>
 #include <random>
 
-#include "random.h"
+#include "random_engine.h"
 //
 #include "log.h"
 
@@ -71,7 +71,7 @@ int get_random_enabled_bit(const std::bitset<N>& bitset) {
         // No bits are enabled, return -1 or handle the error as needed.
         return -1;
     }
-    int random_index = randIn(0, static_cast<int>(enabled_indices.size()) - 1);
+    int random_index = RandomEngine::get().get_index(enabled_indices);
     return enabled_indices[random_index];
 }
 

@@ -6,7 +6,7 @@
 //
 #include "../dataclass/ingredient.h"
 #include "../engine/bitset_utils.h"
-#include "../engine/random.h"
+#include "../engine/random_engine.h"
 #include "../recipe_library.h"
 #include "base_component.h"
 
@@ -83,7 +83,7 @@ struct CanOrderDrink : public BaseComponent {
     }
 
     void reset_customer(int max_num_orders, Drink randomNextDrink) {
-        num_orders_rem = randIn(1, max_num_orders);
+        num_orders_rem = RandomEngine::get().get_int(1, max_num_orders);
 
         num_orders_had = 0;
         // If we have a forced order use that otherwise grab a random unlocked

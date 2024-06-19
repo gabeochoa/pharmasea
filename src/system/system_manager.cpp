@@ -2187,12 +2187,10 @@ void generate_store_options() {
 
         auto& entity = EntityHelper::createEntity();
         entity.addComponent<IsStoreSpawned>();
-        bool success = convert_to_type(
-            etype, entity,
-            spawn_area->get<Transform>().as2() + vec2{
-                                                     1.f * randIn(-3, 3),
-                                                     1.f * randIn(-3, 3),
-                                                 });
+        bool success =
+            convert_to_type(etype, entity,
+                            spawn_area->get<Transform>().as2() +
+                                RandomEngine::get().get_vec(-3.f, 3.f));
         if (success) {
             num_to_spawn--;
         } else {
