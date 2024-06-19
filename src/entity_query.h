@@ -291,6 +291,17 @@ struct EntityQuery {
         return {};
     }
 
+    [[nodiscard]] Entity& gen_first_enforce() const {
+        if (!has_values()) {
+            log_error("tried to use gen enforce, but found no values");
+        }
+        auto values = gen_with_options({.stop_on_first = true});
+        if (values.empty()) {
+            log_error("we expected to find a value but didnt...");
+        }
+        return values[0];
+    }
+
     [[nodiscard]] std::optional<int> gen_first_id() const {
         if (!has_values()) return {};
         return gen_with_options({.stop_on_first = true})[0].get().id;
