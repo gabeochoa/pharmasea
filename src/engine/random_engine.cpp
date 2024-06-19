@@ -67,3 +67,9 @@ vec2 RandomEngine::get_vec(float mn, float mx) {
     float b = get_float(mn, mx);
     return vec2{a, b};
 }
+
+vec2 RandomEngine::get_vec(float mn_a, float mx_a, float mn_b, float mx_b) {
+    float a = get_float(mn_a, mx_a);
+    float b = get_float(mn_b, mx_b);
+    return vec2{a, b};
+}

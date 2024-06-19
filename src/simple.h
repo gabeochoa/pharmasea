@@ -292,10 +292,7 @@ inline std::vector<char> something(int width, int height) {
     int num_seeds = (int) ((width * height) / 100);
     seeds.reserve(num_seeds);
     for (int i = 0; i < num_seeds; i++) {
-        seeds.push_back(vec2{
-            (float) RandomEngine::get().get_int(0, width),
-            (float) RandomEngine::get().get_int(0, height),
-        });
+        seeds.push_back(RandomEngine::get().get_vec(0, width, 0, height));
     }
     // std::vector<vec2> seeds = {{vec2{8, 8}, vec2{2, 2}}};
 

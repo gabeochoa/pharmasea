@@ -47,6 +47,7 @@ struct RandomEngine {
     [[nodiscard]] int get_int(int a, int b);
     [[nodiscard]] float get_float(float a, float b);
     [[nodiscard]] vec2 get_vec(float mn, float mx);
+    [[nodiscard]] vec2 get_vec(float mn_a, float mx_a, float mn_b, float mx_b);
 
     template<typename T>
     [[nodiscard]] int get_index(const T& list) {
