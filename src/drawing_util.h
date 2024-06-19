@@ -204,14 +204,18 @@ static void DrawFloatingText(const vec3& position, Font font, const char* text,
         -1.05f * TILESIZE  // this is Y
     );
 
-    DrawText3D(      //
-        font, text,  //
-        {0.f},       //
-        size,        // font size
-        4,           // font spacing
-        4,           // line spacing
-        backface,    // backface
-        color);
+    raylib::DrawTextConfig titleConfig = {
+        .font = font,
+        .text = text,
+        .position = {0.f},
+        .fontSize = size * 1.f,
+        .fontSpacing = 4,
+        .lineSpacing = 4,
+        .backface = backface,
+        .color = color,
+    };
+
+    DrawText3D(titleConfig);
 
     rlPopMatrix();
 }
