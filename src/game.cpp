@@ -3,6 +3,7 @@
 #include "game.h"
 
 #include "engine/assert.h"
+#include "engine/random_engine.h"
 #include "engine/ui/svg.h"
 #include "map_generation.h"
 
@@ -154,6 +155,8 @@ void process_dev_flags(char* argv[]) {
 
 #endif
 }
+
+#include "engine/util.h"
 
 int main(int, char* argv[]) {
     process_dev_flags(argv);
