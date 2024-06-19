@@ -169,6 +169,8 @@ struct EntityHelper {
     // }
     // return true;
     // }
+    //
+    static void invalidateCaches();
 
     static void invalidatePathCacheLocation(vec2 pos);
     static void invalidatePathCache();

@@ -483,7 +483,7 @@ void LevelInfo::generate_default_seed() {
     generation::helper helper(EXAMPLE_MAP);
     helper.generate();
     helper.validate();
-    EntityHelper::invalidatePathCache();
+    EntityHelper::invalidateCaches();
 }
 
 vec2 generate_in_game_map_wfc(const std::string&) {
@@ -543,7 +543,8 @@ vec2 generate_in_game_map_wfc(const std::string&) {
     generation::helper helper(lines);
     vec2 max_location = helper.generate();
     helper.validate();
-    EntityHelper::invalidatePathCache();
+    EntityHelper::invalidateCaches();
+
     log_info("max location {}", max_location);
 
     return max_location;
@@ -740,7 +741,7 @@ void LevelInfo::generate_in_game_map() {
     generation::helper helper(lines);
     helper.generate();
     helper.validate();
-    EntityHelper::invalidatePathCache();
+    EntityHelper::invalidateCaches();
 }
 
 auto LevelInfo::get_rand_walkable() {

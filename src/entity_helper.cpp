@@ -361,6 +361,11 @@ OptEntity EntityHelper::getOverlappingEntityIfExists(
 // }
 // return true;
 // }
+//
+void EntityHelper::invalidateCaches() {
+    named_entities_DO_NOT_USE.clear();
+    invalidatePathCache();
+}
 
 // TODO :PBUG: need to invalidate any current valid paths
 void EntityHelper::invalidatePathCacheLocation(vec2 pos) {
