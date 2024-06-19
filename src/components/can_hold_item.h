@@ -21,7 +21,9 @@ struct CanHoldItem : public BaseComponent {
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
-    // TODO add a comment for why we are storing the item as a shared_ptr
+    // Note, this is a shared_ptr, because I'm having issues serializing
+    // OptEntity
+    // i dont really want to look up how to use bitsery ExtensionTraits
     CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
         if (held_item != nullptr && !held_item->cleanup &&
             //
