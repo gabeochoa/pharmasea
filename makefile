@@ -85,7 +85,7 @@ clean:
 	mkdir -p $(OBJ_DIR)/vendor/backward/
 
 count: 
-	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor" | grep -v "resources" | grep -v "color.h" | xargs wc -l | sort -rn
+	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor" | grep -v "resources" | grep -v "color.h" | xargs wc -l | sort -rn | pr -2 -t -w 100
 
 countall: 
 	git ls-files | xargs wc -l | sort -rn
