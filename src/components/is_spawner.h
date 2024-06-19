@@ -84,6 +84,8 @@ struct IsSpawner : public BaseComponent {
         countdown += spread;
     }
 
+    [[nodiscard]] float get_pct() const { return countdown / (spread * 1.f); }
+
     void spawn(Entity& entity, SpawnInfo info) {
         spawn_fn(entity, info);
         num_spawned++;
@@ -106,7 +108,14 @@ struct IsSpawner : public BaseComponent {
         return spawn_sound;
     }
 
+    auto& enable_show_progress() {
+        showsProgressBar = true;
+        return *this;
+    }
+    [[nodiscard]] bool show_progress() const { return showsProgressBar; }
+
    private:
+    bool showsProgressBar = false;
     bool prevent_duplicate_spawns = false;
     int max_spawned = 0;
     float spread = 0;
@@ -128,6 +137,10 @@ struct IsSpawner : public BaseComponent {
 
         // TODO add macro to only show these for debug builds
         // Debug only
+
+        s.value1b(showsProgressBar);
+        s.value4b(countdown);
+        s.value4b(spread);
 
         s.value4b(num_spawned);
         s.value4b(max_spawned);

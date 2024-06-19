@@ -464,6 +464,8 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
 }
 
 void make_fast_forward(Entity& fast_forward, vec2 pos) {
+    // TODO only show when you are nearby, hide the progress bar otherwise
+    //
     furniture::make_furniture(fast_forward,
                               DebugOptions{.type = EntityType::FastForward},
                               pos, ui::color::apricot, ui::color::apricot);
@@ -1426,19 +1428,14 @@ namespace furniture {
 void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     make_entity(customer_spawner, {EntityType::CustomerSpawner}, pos);
 
-    // TODO maybe one day add some kind of ui that shows when the next
-    // person is coming? that migth be good to be part of the round
-    // timer ui?
-    customer_spawner.addComponent<SimpleColoredBoxRenderer>()
-        .update_face(PINK)
-        .update_base(PINK);
     const auto sfn = std::bind(&make_customer, std::placeholders::_1,
                                std::placeholders::_2, true);
 
     customer_spawner.addComponent<IsSpawner>()
         .set_fn(sfn)
         .set_total(2)
-        .set_time_between(1.f);
+        .set_time_between(1.f)
+        .enable_show_progress();
 
     customer_spawner.addComponent<HasProgression>();
 }
