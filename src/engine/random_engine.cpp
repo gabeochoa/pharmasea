@@ -47,11 +47,9 @@ void RandomEngine::_set_seed(const std::string& new_seed) {
 bool RandomEngine::get_bool() { return get_int(0, 1) == 1; }
 int RandomEngine::get_sign() { return get_bool() ? -1 : 1; }
 std::string RandomEngine::get_string(int length) {
-    // TODO research better ways to do this
-    std::string out;
-
+    std::string out(length, '\0');
     for (int i = 0; i < length; i++) {
-        out += (char) (get_int('a', 'z'));
+        out[i] = (char) (get_int('a', 'z'));
     }
     return out;
 }
