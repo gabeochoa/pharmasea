@@ -39,15 +39,15 @@ struct Server {
         return -1;
     }
 
-    std::shared_ptr<Map> get_map_SERVER_ONLY() { return pharmacy_map; }
+    std::unique_ptr<Map>& get_map_SERVER_ONLY() { return pharmacy_map; }
 
    private:
     AtomicQueue<ClientMessage> incoming_message_queue;
     AtomicQueue<ClientPacket> incoming_packet_queue;
     AtomicQueue<ClientPacket> packet_queue;
-    std::shared_ptr<internal::Server> server_p;
+    std::unique_ptr<internal::Server> server_p;
     std::map<int, std::shared_ptr<Entity>> players;
-    std::shared_ptr<Map> pharmacy_map;
+    std::unique_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
     std::thread pathfinding_thread;
@@ -77,7 +77,7 @@ struct Server {
         server_p->startup();
 
         // TODO add some kind of seed selection screen
-        pharmacy_map.reset(new Map("default_seed"));
+        pharmacy_map = std::make_unique<Map>("default_seed");
         GLOBALS.set("server_map", pharmacy_map.get());
         GLOBALS.set("server_players", &players);
         GLOBALS.set("server", this);

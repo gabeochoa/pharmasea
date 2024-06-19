@@ -14,7 +14,7 @@ Client::Client() {
     client_p->set_process_message(std::bind(
         &Client::client_process_message_string, this, std::placeholders::_1));
 
-    map = std::make_shared<Map>("default_seed");
+    map = std::make_unique<Map>("default_seed");
     GLOBALS.set("map", map.get());
 }
 

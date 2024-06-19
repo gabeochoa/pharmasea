@@ -16,7 +16,7 @@
 
 namespace network {
 struct Info;
-}
+}  // namespace network
 extern std::unique_ptr<network::Info> network_info;
 
 namespace network {
@@ -45,7 +45,7 @@ struct RoleInfoMixin {
     };
 
     Role desired_role = Role::s_None;
-    std::shared_ptr<Client> client;
+    std::unique_ptr<Client> client;
     std::thread::id client_thread_id;
     std::thread::id server_thread_id;
     std::thread server_thread;
@@ -57,7 +57,7 @@ struct RoleInfoMixin {
 
     void set_role(Role role) {
         const auto _setup_client = [&]() {
-            client = std::make_shared<Client>();
+            client = std::make_unique<Client>();
             client->update_username(Settings::get().data.username);
         };
 

@@ -17,7 +17,7 @@
 #include "raylib.h"
 
 struct SeedManagerLayer : public Layer {
-    std::shared_ptr<GameCam> cam;
+    std::unique_ptr<GameCam> cam;
     std::shared_ptr<ui::UIContext> ui_context;
     Map* map_ptr = nullptr;
     // We use a temp string because we dont want to touch the real one until the
@@ -26,7 +26,7 @@ struct SeedManagerLayer : public Layer {
 
     SeedManagerLayer()
         : Layer(strings::menu::GAME),
-          cam(std::make_shared<GameCam>()),
+          cam(std::make_unique<GameCam>()),
           ui_context(std::make_shared<ui::UIContext>()) {
         cam->updateToTarget({0, -90, 0});
         cam->free_distance_min_clamp = -10.0f;

@@ -8,7 +8,7 @@
 
 namespace network {
 
-static std::shared_ptr<Server> g_server;
+static std::unique_ptr<Server> g_server;
 
 // TODO once clang supports jthread replace with jthread and remove "running
 // = true" to use stop_token
