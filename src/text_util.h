@@ -15,6 +15,14 @@ const bool SHOW_LETTER_BOUNDRY = false;
 const bool SHOW_TEXT_BOUNDRY = false;
 
 using WaveTextConfig = struct WaveTextConfig {
+    Font font;
+    std::string text;
+    vec3 position;
+    float fontSize;
+    float fontSpacing;
+    float lineSpacing;
+    bool backface;
+
     vec3 waveRange;
     vec3 waveSpeed;
     vec3 waveOffset;
@@ -221,25 +229,23 @@ static vec3 MeasureText3D(Font font, const char* text, float fontSize,
 // Draw a 2D text in 3D space and wave the parts that start with `~~` and end
 // with `~~`. This is a modified version of the original code by @Nighten found
 // here https://github.com/NightenDushi/Raylib_DrawTextStyle
-static void DrawTextWave3D(Font font, const char* text, vec3 position,
-                           float fontSize, float fontSpacing, float lineSpacing,
-                           bool backface, WaveTextConfig* config, float time,
-                           Color tint) {
-    int length = TextLength(text);  // Total length in bytes of the text,
-                                    // scanned by codepoints in loop
+static void DrawTextWave3D(WaveTextConfig* config, float time, Color tint) {
+    int length =
+        TextLength(config->text.c_str());  // Total length in bytes of the text,
+                                           // scanned by codepoints in loop
 
     float textOffsetY = 0.0f;  // Offset between lines (on line break '\n')
     float textOffsetX = 0.0f;  // Offset X to next character to draw
 
-    float scale = fontSize / (float) font.baseSize;
+    float scale = config->fontSize / (float) config->font.baseSize;
 
     bool wave = false;
 
     for (int i = 0, k = 0; i < length; ++k) {
         // Get next codepoint from byte string and glyph index in font
         int codepointByteCount = 0;
-        int codepoint = GetCodepoint(&text[i], &codepointByteCount);
-        int index = GetGlyphIndex(font, codepoint);
+        int codepoint = GetCodepoint(&config->text[i], &codepointByteCount);
+        int index = GetGlyphIndex(config->font, codepoint);
 
         // NOTE: Normally we exit the decoding sequence as soon as a bad byte is
         // found (and return 0x3f) but we need to draw all of the bad bytes
@@ -249,17 +255,19 @@ static void DrawTextWave3D(Font font, const char* text, vec3 position,
         if (codepoint == '\n') {
             // NOTE: Fixed line spacing of 1.5 line-height
             // TODO :INFRA: Support custom line spacing defined by user
-            textOffsetY += scale + lineSpacing / (float) font.baseSize * scale;
+            textOffsetY += scale + config->lineSpacing /
+                                       (float) config->font.baseSize * scale;
             textOffsetX = 0.0f;
             k = 0;
         } else if (codepoint == '~') {
-            if (GetCodepoint(&text[i + 1], &codepointByteCount) == '~') {
+            if (GetCodepoint(&config->text[i + 1], &codepointByteCount) ==
+                '~') {
                 codepointByteCount += 1;
                 wave = !wave;
             }
         } else {
             if ((codepoint != ' ') && (codepoint != '\t')) {
-                vec3 pos = position;
+                vec3 pos = config->position;
                 if (wave)  // Apply the wave effect
                 {
                     pos.x += sinf(time * config->waveSpeed.x -
@@ -274,18 +282,19 @@ static void DrawTextWave3D(Font font, const char* text, vec3 position,
                 }
 
                 DrawTextCodepoint3D(
-                    font, codepoint,
+                    config->font, codepoint,
                     (vec3){pos.x + textOffsetX, pos.y, pos.z + textOffsetY},
-                    fontSize, backface, tint);
+                    config->fontSize, config->backface, tint);
             }
 
-            if (font.glyphs[index].advanceX == 0)
-                textOffsetX += (float) (font.recs[index].width + fontSpacing) /
-                               (float) font.baseSize * scale;
+            if (config->font.glyphs[index].advanceX == 0)
+                textOffsetX += (float) (config->font.recs[index].width +
+                                        config->fontSpacing) /
+                               (float) config->font.baseSize * scale;
             else
-                textOffsetX +=
-                    (float) (font.glyphs[index].advanceX + fontSpacing) /
-                    (float) font.baseSize * scale;
+                textOffsetX += (float) (config->font.glyphs[index].advanceX +
+                                        config->fontSpacing) /
+                               (float) config->font.baseSize * scale;
         }
 
         i += codepointByteCount;  // Move text bytes counter to next codepoint

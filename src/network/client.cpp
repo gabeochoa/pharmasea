@@ -219,7 +219,6 @@ void Client::client_process_message_string(const std::string& msg) {
                 log_info("my id is {}", id);
                 add_new_player(id, client_p->username);
                 GLOBALS.set("active_camera_target", remote_players[id].get());
-                // TODO make shared doesnt work here
                 map->local_players_NOT_SERIALIZED.push_back(remote_players[id]);
                 (*(map->local_players_NOT_SERIALIZED.rbegin()))
                     ->addComponent<CollectsUserInput>();

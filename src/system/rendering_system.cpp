@@ -626,24 +626,23 @@ void render_trigger_area(const Entity& entity, float dt) {
             entity.id, pos);
 
     if (ita.should_wave()) {
-        raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, 1},
-                                             .waveSpeed = {0.0f, 0.0f, 0.01f},
-                                             .waveOffset = {0.f, 0.f, 0.2f}};
-        // TODO we probably should have all of this kind of thing in the
-        // config for the components
-        //
-        raylib::DrawTextWave3D(
-            font,
-            fmt::format("~~{}~~",
-                        translation_lookup(TranslatableString(ita.subtitle())))
-                .c_str(),
-            text_position, fsize,
-            4,                      // font spacing
-            4,                      // line spacing
-            false,                  // backface
-            &waveConfig,            //
-            now::current_hrc_ms(),  //
-            WHITE);
+        raylib::WaveTextConfig waveConfig = {
+            .font = font,
+            .text = fmt::format("~~{}~~", translation_lookup(TranslatableString(
+                                              ita.subtitle()))),
+            .position = text_position,
+            .fontSize = fsize,
+            .fontSpacing = 4,
+            .lineSpacing = 4,
+            .backface = false,
+            //
+            .waveRange = {0, 0, 1},
+            .waveSpeed = {0.0f, 0.0f, 0.01f},
+            .waveOffset = {0.f, 0.f, 0.2f}};
+
+        raylib::DrawTextWave3D(&waveConfig,            //
+                               now::current_hrc_ms(),  //
+                               WHITE);
 
     } else {
         raylib::DrawText3D(font, translation_lookup(title).c_str(),
