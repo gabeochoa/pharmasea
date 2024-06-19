@@ -10,7 +10,7 @@
 namespace network {
 
 Client::Client() {
-    client_p = std::make_shared<internal::Client>();
+    client_p = std::make_unique<internal::Client>();
     client_p->set_process_message(std::bind(
         &Client::client_process_message_string, this, std::placeholders::_1));
 
