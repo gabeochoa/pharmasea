@@ -84,6 +84,7 @@ struct CanPathfind : public BaseComponent {
 
         // TODO do we need to unr the whole person_update...() function with
         // collision?
+        // // TODO what does "unr" mean ?
 
         transform.update(vec::to3(new_pos));
     }

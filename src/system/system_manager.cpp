@@ -617,7 +617,13 @@ void handle_autodrop_furniture_when_exiting_planning(Entity& entity) {
     const CanHoldFurniture& ourCHF = entity.get<CanHoldFurniture>();
     if (ourCHF.empty()) return;
 
-    // TODO need to find a spot it can go in using EntityHelper::isWalkable
+    // This code never runs at the moment, because we require
+    // that everything is dropped before we continue,
+    // this exists just to double check in case you can time it
+    // correclty to grab at the wrong time
+
+    // in a world where we need to drop for them live, we would need to find a
+    // spot it can go in using EntityHelper::isWalkable
     input_process_manager::planning::drop_held_furniture(entity);
 }
 
@@ -2283,11 +2289,8 @@ namespace upgrade {
 inline void in_round_update(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
-
-    // TODO can i just use entity here? irsm should be on the same ent
-    // as ipm?
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    const IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+    if (entity.is_missing<IsProgressionManager>()) return;
+    const IsProgressionManager& ipm = entity.get<IsProgressionManager>();
 
     HasTimer& hasTimer = entity.get<HasTimer>();
     int hour = 100 - static_cast<int>(hasTimer.pct() * 100.f);

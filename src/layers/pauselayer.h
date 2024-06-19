@@ -153,13 +153,16 @@ struct BasePauseLayer : public Layer {
             MenuState::get().set(menu::State::Settings);
         }
 
-        // TODO add debug check
-        if (button(Widget{config}, NO_TRANSLATE("RELOAD CONFIGS"))) {
-            Preload::get().reload_config();
-        }
-        if (button(Widget{quit}, TranslatableString(strings::i18n::QUIT))) {
+        if (button(Widget{config}, TranslatableString(strings::i18n::QUIT))) {
             network::Info::reset_connections();
             return;
+        }
+
+        const auto debug_mode_on =
+            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        if (debug_mode_on &&
+            button(Widget{quit}, NO_TRANSLATE("RELOAD CONFIGS"))) {
+            Preload::get().reload_config();
         }
         end();
     }
