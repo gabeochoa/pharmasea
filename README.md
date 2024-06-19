@@ -17,6 +17,7 @@ libraries used:
 - mo for translations http://number-none.com/blow/code/mo_file/index.html
 - nlomann json for JSON reading / writing https://github.com/nlohmann/json
 - reasings (some easing functions) https://github.com/raylib-extras/reasings
+- PCG Random (faster more repreducible random) https://www.pcg-random.org/ 
 
 Models from 
 - https://www.kenney.nl/assets?q=3d 
