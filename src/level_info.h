@@ -13,23 +13,6 @@ constexpr int MAX_SEED_LENGTH = 20;
 
 extern std::vector<std::string> EXAMPLE_MAP;
 
-static void generate_and_insert_walls(std::string /* seed */) {
-    // TODO :BE: i dont think we use this anymore
-    // TODO :IMPACT: generate walls based on seed
-    const auto d_color = (Color){155, 75, 0, 255};
-    for (int i = 0; i < MAX_MAP_SIZE; i++) {
-        for (int j = 0; j < MAX_MAP_SIZE; j++) {
-            if ((i == 0 && j == 0) || (i == 0 && j == 1)) continue;
-            if (i == 0 || j == 0 || i == MAX_MAP_SIZE - 1 ||
-                j == MAX_MAP_SIZE - 1) {
-                vec2 location = vec2{i * TILESIZE, j * TILESIZE};
-                furniture::make_wall(EntityHelper::createEntity(), location,
-                                     d_color);
-            }
-        }
-    }
-}
-
 struct LevelInfo {
     bool was_generated = false;
 
@@ -67,7 +50,6 @@ struct LevelInfo {
     auto get_rand_walkable_register();
     void add_outside_triggers(vec2 origin);
 
-   private:
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
@@ -80,8 +62,5 @@ struct LevelInfo {
         s.text1b(seed, MAX_SEED_LENGTH);
 
         s.value8b(hashed_seed);
-        // TODO :INFRA: these arent serializable...
-        // s.object(generator);
-        // s.object(dist);
     }
 };
