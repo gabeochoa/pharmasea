@@ -1438,7 +1438,7 @@ void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     customer_spawner.addComponent<IsSpawner>()
         .set_fn(sfn)
         .set_total(2)
-        .set_time_between(1.f)
+        .set_time_between(5.f)
         .enable_show_progress();
 
     customer_spawner.addComponent<HasProgression>();
