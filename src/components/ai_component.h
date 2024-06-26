@@ -144,7 +144,7 @@ struct AILineWait {
             return false;
         }
 
-        position = reg.get<Transform>().tile_infront(1);
+        position = reg.get<Transform>().tile_directly_infront();
         if (onReachedFront) onReachedFront();
         return true;
     }

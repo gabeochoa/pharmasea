@@ -164,6 +164,8 @@ struct Transform : public BaseComponent {
      * */
     void rotate_facing_clockwise(int angle = 90) { facing += angle; }
 
+    vec2 tile_directly_infront() const { return tile_infront(1); }
+
     /*
      * Returns the location of the tile `distance` distance in front of the
      * entity
@@ -177,6 +179,7 @@ struct Transform : public BaseComponent {
         vec2 tile = vec::to2(snap_position());
         return tile_infront_given_pos(tile, distance, face_direction());
     }
+
     vec2 tile_behind(int distance) const {
         vec2 tile = vec::to2(snap_position());
         return tile_infront_given_pos(
@@ -255,8 +258,7 @@ struct Transform : public BaseComponent {
     // This exists so that its easy to make sure the real location
     // matches the preview location
     [[nodiscard]] vec3 drop_location() const {
-        vec2 drop_1 = (tile_infront(1));
-        return vec::snap(vec::to3(drop_1));
+        return vec::snap(vec::to3(tile_directly_infront()));
     }
 
     // TODO private

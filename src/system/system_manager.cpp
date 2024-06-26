@@ -2003,7 +2003,7 @@ void update_new_max_customers(Entity& entity, float) {
         float customer_spawn_multiplier =
             irsm.get<float>(ConfigKey::CustomerSpawnMultiplier);
         float round_length = irsm.get<float>(ConfigKey::RoundLength);
-        // TODO come up with a function to use here
+
         const int new_total =
             (int) fmax(2.f,  // force 2 at the beginning of the game
                              //

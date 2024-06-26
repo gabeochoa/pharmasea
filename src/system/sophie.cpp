@@ -183,10 +183,7 @@ void lightweight_map_validation(Entity& entity) {
 
         auto new_path = pathfinder::find_path(
             customer.get<Transform>().as2(),
-            // TODO need a better way to do this
-            // 0 makes sense but is the position of the entity, when its
-            // infront?
-            r.get<Transform>().tile_infront(1),
+            r.get<Transform>().tile_directly_infront(),
             std::bind(EntityHelper::isWalkable, std::placeholders::_1));
 
         if (new_path.empty()) {

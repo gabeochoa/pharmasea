@@ -270,20 +270,18 @@ struct helper {
             VALIDATE(customer,
                      "map needs to have at least one customer spawn point");
 
-            OptEntity reg = EntityQuery()
-                                .whereType(EntityType::Register)
-                                .whereLambda([&customer](const Entity& e) {
-                                    // TODO :INFRA: need a better way to do this
-                                    // 0 makes sense but is the position of the
-                                    // entity, when its infront?
-                                    auto new_path = pathfinder::find_path(
-                                        customer->get<Transform>().as2(),
-                                        e.get<Transform>().tile_infront(1),
-                                        std::bind(EntityHelper::isWalkable,
-                                                  std::placeholders::_1));
-                                    return !new_path.empty();
-                                })
-                                .gen_first();
+            OptEntity reg =
+                EntityQuery()
+                    .whereType(EntityType::Register)
+                    .whereLambda([&customer](const Entity& e) {
+                        auto new_path = pathfinder::find_path(
+                            customer->get<Transform>().as2(),
+                            e.get<Transform>().tile_directly_infront(),
+                            std::bind(EntityHelper::isWalkable,
+                                      std::placeholders::_1));
+                        return !new_path.empty();
+                    })
+                    .gen_first();
 
             VALIDATE(
                 reg,
