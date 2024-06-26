@@ -1431,6 +1431,10 @@ void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     const auto sfn = std::bind(&make_customer, std::placeholders::_1,
                                std::placeholders::_2, true);
 
+    customer_spawner.addComponent<SimpleColoredBoxRenderer>()
+        .update_face(PINK)
+        .update_base(PINK);
+
     customer_spawner.addComponent<IsSpawner>()
         .set_fn(sfn)
         .set_total(2)

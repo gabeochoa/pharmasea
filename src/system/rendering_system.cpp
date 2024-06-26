@@ -894,7 +894,7 @@ void render_spawner_next_customer(const Entity& entity, float) {
 
     DrawProgressBar(ProgressBarConfig{
         .type = ProgressBarConfig::Vertical,
-        .position = transform.pos(),
+        .position = transform.pos() + vec3{0, 0.5f, 0},
         .scale = {0.75f, 0.75f, 0.75f},
         .pct_full = pct,
         .y_offset = 0.f * TILESIZE,
