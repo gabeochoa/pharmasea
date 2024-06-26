@@ -10,7 +10,7 @@ struct HasWork : public BaseComponent {
     HasWork()
         :  // Start with 0% progress
           pct_work_complete(0.f),
-          //  TODO is this a reasonable default
+          //  this forces the 'has more' to run by default
           more_to_do(true),
           // TODO what breaks if we turn this on?
           reset_on_empty(false),

@@ -75,6 +75,11 @@ ElementResult div(const Widget& widget, theme::Usage theme, bool rounded) {
     return div(widget, UI_THEME.from_usage(theme), rounded);
 }
 
+ElementResult window(const Widget& widget) {
+    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Secondary);
+    return ElementResult{true, widget.z_index - 1};
+}
+
 // TODO merge with text()
 ElementResult colored_text(const Widget& widget,
                            const TranslatableString& content, Color c) {
@@ -86,11 +91,6 @@ ElementResult colored_text(const Widget& widget,
     internal::draw_colored_text(content, rect, widget.z_index, c);
 
     return true;
-}
-
-ElementResult window(const Widget& widget) {
-    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Secondary);
-    return ElementResult{true, widget.z_index - 1};
 }
 
 ElementResult text(const Widget& widget, const TranslatableString& content,
@@ -503,7 +503,7 @@ ElementResult control_input_field(const Widget& widget,
     if (data.content_is_icon) {
         image(widget, data.content);
     } else {
-        text(widget, TODO_TRANSLATE(data.content, TodoReason::Recursion));
+        text(widget, NO_TRANSLATE(data.content));
     }
 
     return ElementResult{valid, ai};
