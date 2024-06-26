@@ -30,10 +30,6 @@ void person_update_given_new_pos(
     // this could be const but is_collidable has no way to convert
     // between const entity& and OptEntity
     Entity& person, float, vec3 new_pos_x, vec3 new_pos_z) {
-    // TODO if anything spawns in anything else then it cant move,
-    // we need some way to handle popping people back to spawn or something if
-    // they get stuck
-
     // TODO this should be a component?
     {
         // horizontal check
@@ -84,63 +80,6 @@ void person_update_given_new_pos(
         if (!collided_entity_z) {
             transform.update_z(new_pos_z.z);
         }
-
-        /*
-         * TODO we arent using this anyway
-
-        // This value determines how "far" to impart a push force on the
-        // collided entity
-        const float directional_push_modifier = 1.0f;
-
-        // Figure out if there's a more graceful way to "jitter" things
-        // around each other
-        const float tile_div_push_mod = TILESIZE / directional_push_modifier;
-
-        if (collided_entity_x || collided_entity_z) {
-            if (collided_entity_x) {
-                Entity& entity_x = collided_entity_x.asE();
-                if (entity_x.has<CanBePushed>()) {
-                    CanBePushed& cbp = entity_x.get<CanBePushed>();
-                    const float random_jitter = randSign() * TILESIZE / 2.0f;
-                    if (facedir_x & Transform::FrontFaceDirection::LEFT) {
-                        cbp.update({
-                            cbp.pushed_force().x + tile_div_push_mod,
-                            cbp.pushed_force().y,
-                            cbp.pushed_force().z + random_jitter,
-                        });
-                    }
-                    if (facedir_x & Transform::FrontFaceDirection::RIGHT) {
-                        cbp.update({
-                            cbp.pushed_force().x - tile_div_push_mod,
-                            cbp.pushed_force().y,
-                            cbp.pushed_force().z + random_jitter,
-                        });
-                    }
-                }
-            }
-            if (collided_entity_z) {
-                Entity& entity_z = collided_entity_z.asE();
-                if (entity_z.has<CanBePushed>()) {
-                    CanBePushed& cbp = entity_z.get<CanBePushed>();
-                    const float random_jitter = randSign() * TILESIZE / 2.0f;
-                    if (facedir_z & Transform::FrontFaceDirection::FORWARD) {
-                        cbp.update({
-                            cbp.pushed_force().x + random_jitter,
-                            cbp.pushed_force().y,
-                            cbp.pushed_force().z + tile_div_push_mod,
-                        });
-                    }
-                    if (facedir_z & Transform::FrontFaceDirection::BACK) {
-                        cbp.update({
-                            cbp.pushed_force().x + random_jitter,
-                            cbp.pushed_force().y,
-                            cbp.pushed_force().z - tile_div_push_mod,
-                        });
-                    }
-                }
-            }
-        }
-        */
     }
 }
 
@@ -301,7 +240,6 @@ void process_player_movement_input(Entity& entity, float dt,
 };
 
 void work_furniture(Entity& player, float frame_dt) {
-    // TODO need to figure out if this should be separate from highlighting
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
     OptEntity match = EntityHelper::getClosestMatchingFurniture(
@@ -468,7 +406,7 @@ void handle_drop(Entity& player) {
 
         CanHoldItem& item_chi = item->get<CanHoldItem>();
 
-        // TODO replace !empty() with full()
+        // T.ODO replace !empty() with full()
         // our item is already full
         if (!item_chi.empty()) {
             return tl::unexpected(
@@ -492,14 +430,14 @@ void handle_drop(Entity& player) {
         std::shared_ptr<Item> item_to_merge =
             closest_furniture->get<CanHoldItem>().item();
 
-        // TODO this check should be probably be int he furniture check
+        // T.ODO this check should be probably be int he furniture check
         if (!item_chi.can_hold(*item_to_merge, RespectFilter::All)) {
             return tl::unexpected(
                 "trying to merge from furniture, but we cant hold"
                 "that kind of item ");
         }
 
-        // TODO probably need to have heldby updated here
+        // T.ODO probably need to have heldby updated here
 
         // Our item takes ownership of the item
         item_chi.update(item_to_merge, item->id);
@@ -515,7 +453,7 @@ void handle_drop(Entity& player) {
     // containg something shouldnt go back
     //
     /*
-     * TODO since this exists as a way to handle containers
+     * T.ODO since this exists as a way to handle containers
      * maybe short circuit earlier by doing?
         static bool is_an_item_container(Entity* e) {
             return e->has_any<                //
@@ -544,7 +482,7 @@ void handle_drop(Entity& player) {
                 if (f.is_missing<CanHoldItem>()) return false;
                 const auto& chi = f.get<CanHoldItem>();
                 if (chi.empty()) return false;
-                // TODO we are using const_item() but this doesnt
+                // T.ODO we are using const_item() but this doesnt
                 // enforce const and is just for us to understand
                 const std::shared_ptr<Entity> item = chi.const_item();
 
@@ -572,7 +510,7 @@ void handle_drop(Entity& player) {
 
         CanHoldItem& merge_chi = item_to_merge->get<CanHoldItem>();
 
-        // TODO probably need to have heldby updated here
+        // T.ODO probably need to have heldby updated here
         // Their item takes ownership of the item
         merge_chi.update(playerCHI.item(), player.id);
 
