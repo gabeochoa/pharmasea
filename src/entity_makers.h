@@ -61,7 +61,7 @@ namespace items {
 void make_juice(Item& juice, vec2 pos, Ingredient fruit);
 void make_drink(Item& drink, vec2 pos);
 
-void make_item_type(Item& item, EntityType type_name, vec2 pos, int index = -1);
+void make_item_type(Item& item, EntityType type_name, vec3 pos, int index = -1);
 
 // Returns true if item was cleaned up
 bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd);

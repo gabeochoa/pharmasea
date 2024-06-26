@@ -1268,9 +1268,12 @@ void make_pitcher(Item& pitcher, vec2 pos) {
         });
 }
 
-void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
+void make_item_type(Item& item, EntityType type, vec3 location, int index) {
     // log_info("generating new item {} of type {} at {} subtype{}", item.id,
     // type_name, pos, index);
+
+    // TODO change the funcs below to take vec3
+    vec2 pos = vec::to2(location);
 
     // TODO make exhaustive
     switch (type) {

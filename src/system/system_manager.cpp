@@ -507,7 +507,7 @@ void process_grabber_filter(Entity& entity, float) {
 
 template<typename... TArgs>
 void backfill_empty_container(const EntityType& match_type, Entity& entity,
-                              TArgs&&... args) {
+                              vec3 pos, TArgs&&... args) {
     if (entity.is_missing<IsItemContainer>()) return;
     IsItemContainer& iic = entity.get<IsItemContainer>();
     if (iic.type() != match_type) return;
@@ -519,7 +519,7 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
 
     // create item
     Entity& item =
-        EntityHelper::createItem(iic.type(), std::forward<TArgs>(args)...);
+        EntityHelper::createItem(iic.type(), pos, std::forward<TArgs>(args)...);
     // ^ cannot be const because converting to SharedPtr v
 
     // TODO do we need shared pointer here? (vs just id?)
@@ -534,7 +534,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
     const CanHoldItem& canHold = entity.get<CanHoldItem>();
     if (canHold.is_holding_item()) return;
 
-    auto pos = entity.get<Transform>().as2();
+    auto pos = entity.get<Transform>().pos();
 
     if (iic.should_use_indexer() && entity.has<Indexer>()) {
         Indexer& indexer = entity.get<Indexer>();
@@ -582,7 +582,7 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
         canHold.update(nullptr, -1);
     }
 
-    auto pos = entity.get<Transform>().as2();
+    auto pos = entity.get<Transform>().pos();
     backfill_empty_container(iic.type(), entity, pos, indexer.value());
     indexer.mark_change_completed();
 }
@@ -1833,7 +1833,8 @@ void process_has_rope(Entity& entity, float) {
     }
 
     for (auto p : extended_path) {
-        Entity& item = EntityHelper::createItem(EntityType::SodaSpout, p);
+        Entity& item =
+            EntityHelper::createItem(EntityType::SodaSpout, vec::to3(p));
         item.get<IsItem>().set_held_by(EntityType::Player, player->id);
         item.addComponent<IsSolid>();
         hrti.add(item);
