@@ -42,14 +42,13 @@ struct Server {
         onSendClientAnnouncement;
 
     void set_process_message(
-        std::function<void(Client_t &client, std::string)> cb) {
+        const std::function<void(Client_t &client, std::string)> &cb) {
         process_message_cb = cb;
     }
 
     void set_announcement_cb(
-        std::function<void(HSteamNetConnection, std::string,
-                           InternalServerAnnouncement)>
-            cb) {
+        const std::function<void(HSteamNetConnection, std::string,
+                                 InternalServerAnnouncement)> &cb) {
         onSendClientAnnouncement = cb;
     }
 
@@ -75,7 +74,8 @@ struct Server {
         poll_group = k_HSteamNetPollGroup_Invalid;
     }
 
-    void send_announcement_to_client(HSteamNetConnection conn, std::string msg,
+    void send_announcement_to_client(HSteamNetConnection conn,
+                                     const std::string &msg,
                                      InternalServerAnnouncement type) {
         if (onSendClientAnnouncement) onSendClientAnnouncement(conn, msg, type);
     }
@@ -148,7 +148,6 @@ struct Server {
         return true;
     }
 
-    // TODO replace with tl::expected
     void startup() {
         interface = SteamNetworkingSockets();
 
