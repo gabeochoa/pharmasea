@@ -37,13 +37,13 @@ inline Rectangle make_size(const Rectangle r, const Size& size) {
 
 }  // namespace internal
 
-bool button(const ui::Widget& w, const TranslatableString& trstring,
-            const Size& size = Size::Medium) {
+inline bool button(const ui::Widget& w, const TranslatableString& trstring,
+                   const Size& size = Size::Medium) {
     return ui::button(ui::Widget{internal::make_size(w.rect, size)}, trstring);
 }
 
-bool checkbox(const ui::Widget& w, const ui::CheckboxData& data,
-              const Size& size = Size::Medium) {
+inline bool checkbox(const ui::Widget& w, const ui::CheckboxData& data,
+                     const Size& size = Size::Medium) {
     ui::Widget w2{internal::make_size(w.rect, size)};
     return ui::checkbox(w2, data);
 }

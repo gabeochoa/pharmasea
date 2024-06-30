@@ -1,4 +1,6 @@
 
+#include "external_include.h"
+
 // Global Defines
 
 // steam networking uses an "app id" that we dont have
@@ -17,7 +19,6 @@
 
 #define ENABLE_DEV_FLAGS 1
 
-#include "external_include.h"
 #if ENABLE_DEV_FLAGS
 #include <argh.h>
 #endif
@@ -27,6 +28,8 @@
 ///
 
 #include "engine.h"
+//
+#include "strings.h"
 //
 #include "layers/aboutlayer.h"
 #include "layers/debug_settings.h"
@@ -50,10 +53,10 @@ extern float DEADZONE;
 extern ui::UITheme UI_THEME;
 extern std::vector<std::string> theme_keys;
 extern std::map<std::string, ui::UITheme> themes;
-extern std::unique_ptr<network::Info> network_info;
 
-//
+#if ENABLE_TESTS
 // This one should be last
 #include "./tests/all_tests.h"
+#endif
 
 int main(int argc, char* argv[]);

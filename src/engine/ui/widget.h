@@ -11,7 +11,7 @@ namespace ui {
 
 // TODO add mode for Percent of window size?
 enum SizeMode { Null, Pixels, Text, Percent, Children };
-enum GrowFlags { None = (1 << 0), Row = (1 << 1), Column = (1 << 2) };
+enum struct GrowFlags { None = (1 << 0), Row = (1 << 1), Column = (1 << 2) };
 
 struct SizeExpectation {
     SizeMode mode = Pixels;

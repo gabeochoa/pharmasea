@@ -130,6 +130,7 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
             k_ESteamNetworkingSocketsDebugOutputType_Msg, log_debug);
 
         reset_connections();
+        log_info("Initializing GNS Network Connections");
     }
 
     static void reset_connections() {

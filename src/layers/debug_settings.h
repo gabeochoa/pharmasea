@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../engine/constexpr_containers.h"
-#include "../entity_helper.h"
 #include "base_game_renderer.h"
 
 constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //

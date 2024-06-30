@@ -7,6 +7,11 @@
 #include "engine/ui/svg.h"
 #include "map_generation.h"
 
+// TODO removing this include would speed up
+// compilation times of this file by probably 1.6 seconds
+// (this is due to all the template code thats in network/shared
+#include "network/network.h"
+
 // TODO cleaning bots place some shiny on the floor so its harder to get dirtyu
 // TODO fix bug where "place ghost" green box kept showing
 // TODO conveyerbelt speed
@@ -22,7 +27,6 @@ long long total_ping = 0;
 long long there_ping = 0;
 long long return_ping = 0;
 }  // namespace network
-std::unique_ptr<network::Info> network_info;
 
 void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues
@@ -161,12 +165,15 @@ void process_dev_flags(char* argv[]) {
 int main(int, char* argv[]) {
     process_dev_flags(argv);
 
+#if ENABLE_TESTS
     tests::run_all();
 
     if (TESTS_ONLY) {
         log_info("All tests ran ");
         return 0;
     }
+
+#endif
 
     log_info("Executable Path: {}", fs::current_path());
     log_info("Canon Path: {}", fs::canonical(fs::current_path()));
