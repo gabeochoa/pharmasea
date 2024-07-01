@@ -20,6 +20,7 @@ namespace reasings {
 #endif
 
 #define FMT_HEADER_ONLY
+#include <fmt/args.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 // this is needed for wstring printing

@@ -25,6 +25,12 @@ TODO Variables to control?
    - conveyer belt stuff
    - store price
    -
+
+TODO upgrades?
+    - Store Reroll reset? One free reroll every X days?
+    -
+
+
  * */
 enum struct ConfigKey {
     Test,
@@ -36,6 +42,7 @@ enum struct ConfigKey {
     CustomerSpawnMultiplier,
     //
     NumStoreSpawns,
+    StoreRerollPrice,
     //
     PissTimer,
     BladderSize,
@@ -46,6 +53,7 @@ enum struct ConfigKey {
     VomitAmountMultiplier,  // max vomit amount
     //
     MaxDrinkTime,  // how long it takes to drink
+    //
 };
 
 struct ConfigValue {
@@ -70,6 +78,7 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::MaxNumOrders:
         case ConfigKey::NumStoreSpawns:
         case ConfigKey::BladderSize:
+        case ConfigKey::StoreRerollPrice:
             return ConfigKeyType::Int;
     }
     return ConfigKeyType::Float;
@@ -85,7 +94,7 @@ inline ConfigKey to_configkey(const std::string& str) {
     return op.value();
 }
 
-enum struct Operation { Multiplier, Divide, Set, Custom };
+enum struct Operation { Add, Multiplier, Divide, Set, Custom };
 
 inline Operation to_operation(const std::string& str) {
     const auto converted_str = util::remove_underscores(str);

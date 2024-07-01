@@ -5,8 +5,11 @@ RAYLIB_LIB := `pkg-config --libs raylib`
 
 RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) 
 
+TIMEFLAG = -ftime-trace
+
 FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
-		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE 
+		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TIMEFLAG)
+
 # LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
@@ -30,18 +33,23 @@ cxx := clang++
 OUTPUT_LOG = $(OBJ_DIR)/build.log
 GAME_LOG = $(OBJ_DIR)/game.log
 
-.PHONY: all clean
-
-
 # For tracing you have to run the game, and then connect from Tracy-release
 
+.PHONY: all clean
 
-all: $(OUTPUT_EXE)
+all: post-build
+
+pre-build:
+	python3 scripts/check_network_polymorphs.py
+
+main-build: pre-build $(OUTPUT_EXE) 
+
+post-build: main-build
 	install_name_tool -change @rpath/libGameNetworkingSockets.dylib @executable_path/vendor/libGameNetworkingSockets.dylib $(OUTPUT_EXE)
 	./$(OUTPUT_EXE) 2>&1 $(GAME_LOG)
-
 # -g disables sounds 
 # ./$(OUTPUT_EXE) -g 2>&1 $(GAME_LOG)
+
 
 $(OUTPUT_EXE): $(H_FILES) $(OBJ_FILES) 
 	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) 
@@ -80,7 +88,7 @@ clean:
 	mkdir -p $(OBJ_DIR)/vendor/backward/
 
 count: 
-	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor" | grep -v "resources" | grep -v "color.h" | xargs wc -l | sort -rn
+	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor" | grep -v "resources" | grep -v "color.h" | xargs wc -l | sort -rn | pr -2 -t -w 100
 
 countall: 
 	git ls-files | xargs wc -l | sort -rn
@@ -113,10 +121,13 @@ leak:
 	codesign -s - -f --verbose --entitlements ent_pharmasea.plist $(OUTPUT_EXE)
 	xctrace record --template 'Leaks' --output 'recording.trace' --launch $(OUTPUT_EXE)
 
+alloc: 
+	rm -rf recording.trace/
+	codesign -s - -f --verbose --entitlements ent_pharmasea.plist $(OUTPUT_EXE)
+	xctrace record --template 'Allocations' --output 'recording.trace' --launch $(OUTPUT_EXE)
+
 translate:
-	python3 scripts/extract_strings.py
-	msgfmt -o resources/translations/en_us.mo resources/translations/en_us.po
-	msgfmt -o resources/translations/en_rev.mo resources/translations/en_rev.po
+	python3 scripts/reverse_translation.py > src/translation_en_rev.h
 
 findstr:
 	grep -r "\"" src/ | grep -v "preload"  | grep -v "game.cpp" | grep -v "src//strings.h" | grep -v "include" | grep -v "src//test" | grep -v "src//engine" | grep -v "src//dataclass" | grep -v "log" | grep -v "TODO" | grep -v "VALIDATE" 
@@ -127,6 +138,8 @@ cleansave:
 bring:
 	cp ~/p/GameNetworkingSockets/build/bin/libGameNetworkingSockets.dylib .
 	cp ~/p/GameNetworkingSockets/build/bin/libGameNetworkingSockets.dylib vendor/
+	git update-index --assume-unchanged libGameNetworkingSockets.dylib 
+	git update-index --assume-unchanged vendor/libGameNetworkingSockets.dylib 
 
 # When using lldb, you have to run these commands:
 # 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION

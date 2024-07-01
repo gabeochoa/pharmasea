@@ -39,19 +39,24 @@ struct Server {
         return -1;
     }
 
-    std::shared_ptr<Map> get_map_SERVER_ONLY() { return pharmacy_map; }
+    std::unique_ptr<Map>& get_map_SERVER_ONLY() { return pharmacy_map; }
 
    private:
     AtomicQueue<ClientMessage> incoming_message_queue;
     AtomicQueue<ClientPacket> incoming_packet_queue;
     AtomicQueue<ClientPacket> packet_queue;
-    std::shared_ptr<internal::Server> server_p;
+    std::unique_ptr<internal::Server> server_p;
     std::map<int, std::shared_ptr<Entity>> players;
-    std::shared_ptr<Map> pharmacy_map;
+    std::unique_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
-    menu::State current_menu_state;
-    game::State current_game_state;
+    std::thread pathfinding_thread;
+
+#if 0
+    std::array<size_t, 10000> last_frames;
+    size_t last_frames_index = 0;
+    bool has_looped = false;
+#endif
 
     float next_map_tick_reset = 1.f / 30;  // 60fps
     float next_map_tick = 0;
@@ -72,7 +77,7 @@ struct Server {
         server_p->startup();
 
         // TODO add some kind of seed selection screen
-        pharmacy_map.reset(new Map("default_seed"));
+        pharmacy_map = std::make_unique<Map>("default_seed");
         GLOBALS.set("server_map", pharmacy_map.get());
         GLOBALS.set("server_players", &players);
         GLOBALS.set("server", this);
@@ -80,6 +85,7 @@ struct Server {
 
     void send_map_state();
     void send_player_rare_data();
+    void send_game_state_update();
     void run();
     void tick(float dt);
     void process_incoming_messages();
@@ -119,7 +125,7 @@ struct Server {
 
     void send_client_packet_to_all(
         const ClientPacket& packet,
-        std::function<bool(internal::Client_t&)> exclude = nullptr);
+        const std::function<bool(internal::Client_t&)>& exclude = nullptr);
 };
 
 }  // namespace network

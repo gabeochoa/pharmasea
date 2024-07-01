@@ -8,7 +8,7 @@ struct IsTriggerArea;
 
 // This is not a translated string because we serialize it and it needs to be in
 // the local language of the client
-using ValidationResult = std::pair<bool, std::string>;
+using ValidationResult = std::pair<bool, strings::i18n>;
 using ValidationFn = std::function<ValidationResult(const IsTriggerArea&)>;
 
 struct IsTriggerArea : public BaseComponent {
@@ -19,11 +19,15 @@ struct IsTriggerArea : public BaseComponent {
         Progression_Option1,
         Progression_Option2,
         Store_BackToPlanning,
+        Store_Reroll,
         ModelTest_BackToLobby,
     } type = Unset;
 
     explicit IsTriggerArea(Type type)
-        : type(type), wanted_entrants(1), completion_time_max(2.f) {}
+        : type(type),
+          wanted_entrants(1),
+          completion_time_max(2.f),
+          cooldown_time_max(0.f) {}
 
     IsTriggerArea() : IsTriggerArea(Unset) {}
 
@@ -67,6 +71,26 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
+    auto& update_cooldown_max(float amt) {
+        cooldown_time_max = amt;
+        return *this;
+    }
+
+    void reset_cooldown() { cooldown_time_passed = cooldown_time_max; }
+
+    void increase_cooldown(float dt) {
+        cooldown_time_passed =
+            fminf(cooldown_time_max, cooldown_time_passed + dt);
+    }
+
+    void decrease_cooldown(float dt) {
+        cooldown_time_passed = fmaxf(0, cooldown_time_passed - dt);
+    }
+
+    [[nodiscard]] bool is_on_cooldown() const {
+        return cooldown_time_passed > 0.f;
+    }
+
     auto& update_title(const TranslatableString& nt) {
         _title = nt;
         if ((int) _title.size() > max_title_length) {
@@ -105,16 +129,20 @@ struct IsTriggerArea : public BaseComponent {
     void set_validation_fn(const ValidationFn& cb) { validation_cb = cb; }
 
     [[nodiscard]] bool should_progress() const {
+        if (is_on_cooldown()) {
+            return false;
+        }
         if (is_server()) {
             last_validation_result =
-                validation_cb ? validation_cb(*this) : std::pair{true, ""};
+                validation_cb ? validation_cb(*this)
+                              : std::pair{true, strings::i18n::Empty};
         }
         // If we are the client, then just use the serialized value
         // since we cant run the validation cb
         return last_validation_result.first;
     }
 
-    [[nodiscard]] const std::string& validation_msg() const {
+    [[nodiscard]] const strings::i18n& validation_msg() const {
         return last_validation_result.second;
     }
 
@@ -122,7 +150,8 @@ struct IsTriggerArea : public BaseComponent {
     // This is mutable because we cant serialize std::funciton
     // and we need a way to send the values up.
     // it doesnt modify anything about the trigger area
-    mutable ValidationResult last_validation_result = std::pair{true, ""};
+    mutable ValidationResult last_validation_result =
+        std::pair{true, strings::i18n::Empty};
     ValidationFn validation_cb = nullptr;
 
     int wanted_entrants = 1;
@@ -134,13 +163,16 @@ struct IsTriggerArea : public BaseComponent {
     float completion_time_max = 0.f;
     float completion_time_passed = 0.f;
 
+    float cooldown_time_max = 0.f;
+    float cooldown_time_passed = 0.f;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.value1b(last_validation_result.first);
-        s.text1b(last_validation_result.second, 100);
+        s.value4b(last_validation_result.second);
 
         s.value4b(wanted_entrants);
         s.value4b(current_entrants);

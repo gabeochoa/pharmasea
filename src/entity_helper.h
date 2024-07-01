@@ -42,7 +42,8 @@ struct EntityHelper {
         bool is_permanent;
     };
 
-    static Entities& get_entities();
+    static const Entities& get_entities();
+    static Entities& get_entities_for_mod();
     static RefEntities get_ref_entities();
 
     static Entity& createEntity();
@@ -54,15 +55,16 @@ struct EntityHelper {
 
     // TODO :BE: maybe return the entity id or something
     template<typename... TArgs>
-    static RefEntity createItem(TArgs... args) {
-        items::make_item_type(createEntity(), std::forward<TArgs>(args)...);
+    static RefEntity createItem(EntityType type, vec3 pos, TArgs... args) {
+        items::make_item_type(createEntity(), type, pos,
+                              std::forward<TArgs>(args)...);
         // log_info("created a new item {} {} ", e.id, e.name());
         return *(get_entities().back());
     }
 
     template<typename... TArgs>
-    static RefEntity createPermanentItem(TArgs... args) {
-        items::make_item_type(createPermanentEntity(),
+    static RefEntity createPermanentItem(vec3 pos, TArgs... args) {
+        items::make_item_type(createPermanentEntity(), pos,
                               std::forward<TArgs>(args)...);
         // log_info("created a new item {} {} ", e.id, e.name());
         return *(get_entities().back());
@@ -93,12 +95,17 @@ struct EntityHelper {
     }
 
     // TODO exists as a conversion for things that need shared_ptr right now
-    static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity) {
-        if (!entity) return {};
+    static std::shared_ptr<Entity> getEntityAsSharedPtr(const Entity& entity) {
         for (std::shared_ptr<Entity> current_entity : get_entities()) {
-            if (entity->id == current_entity->id) return current_entity;
+            if (entity.id == current_entity->id) return current_entity;
         }
         return {};
+    }
+
+    static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity) {
+        if (!entity) return {};
+        const Entity& e = entity.asE();
+        return getEntityAsSharedPtr(e);
     }
 
     static OptEntity getClosestMatchingFurniture(
@@ -140,13 +147,6 @@ struct EntityHelper {
         vec2 range_min, vec2 range_max,
         const std::function<bool(const Entity&)>& filter);
 
-    static OptEntity getOverlappingSolidEntityInRange(
-        vec2 range_min, vec2 range_max,
-        const std::function<bool(const Entity&)>& = {});
-
-    static bool hasOverlappingSolidEntitiesInRange(vec2 range_min,
-                                                   vec2 range_max);
-
     static OptEntity getOverlappingEntityIfExists(
         const Entity& entity, float range,
         const std::function<bool(const Entity&)>& filter = {});
@@ -170,6 +170,8 @@ struct EntityHelper {
     // }
     // return true;
     // }
+    //
+    static void invalidateCaches();
 
     static void invalidatePathCacheLocation(vec2 pos);
     static void invalidatePathCache();

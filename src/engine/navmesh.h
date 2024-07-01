@@ -14,7 +14,6 @@ struct NavMesh {
     void removeEntity(int e_id) {
         auto it = entityShapes.find(e_id);
         if (it != entityShapes.end()) entityShapes.erase(it);
-        return;
     }
 
     void addShape(Polygon p, bool merge = true) {
@@ -60,4 +59,4 @@ struct NavMesh {
         return false;
     }
 };
-static NavMesh __navmesh___DO_NOT_USE_DIRECTLY;
+static NavMesh navmesh___DO_NOT_USE_DIRECTLY;

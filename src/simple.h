@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cstddef>
 #include <queue>
 #include <vector>
 
+#include "engine/random_engine.h"
 #include "map_generation.h"
 
 struct Room {
@@ -270,16 +272,17 @@ void makeEntrance(std::vector<char>& grid, int width, int height) {
     }
 }
 
-void addOrigin(std::vector<char>& grid, int width, int height) {
+inline void addOrigin(std::vector<char>& grid, int width, int height) {
     int midx = (int) (width / 2);
     int midy = (int) (height / 2);
     grid[midx * width + midy] = generation::ORIGIN;
 }
 
-std::vector<char> something(int width, int height) {
+inline std::vector<char> something(int width, int height) {
     char a = 48;
 
     std::vector<char> grid;
+    grid.reserve(width * height);
     for (int i = 0; i < width * height; i++) {
         grid.push_back(generation::EMPTY);
     }
@@ -287,11 +290,9 @@ std::vector<char> something(int width, int height) {
     // get seeds
     std::vector<vec2> seeds;
     int num_seeds = (int) ((width * height) / 100);
+    seeds.reserve(num_seeds);
     for (int i = 0; i < num_seeds; i++) {
-        seeds.push_back(vec2{
-            (float) randIn(0, width),
-            (float) randIn(0, height),
-        });
+        seeds.push_back(RandomEngine::get().get_vec(0, width, 0, height));
     }
     // std::vector<vec2> seeds = {{vec2{8, 8}, vec2{2, 2}}};
 

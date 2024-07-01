@@ -84,15 +84,74 @@ inline void draw_text(const TranslatableString& content, Rectangle parent,
                       active_theme().from_usage(color_usage));
 }
 
-inline void draw_rect_color(Rectangle rect, int z_index, Color c) {
+struct RectRenderInfo {
+    struct RoundedInfo {
+        bool rounded = false;
+        float roundness = 0.25f;
+        int segments = 4;
+    } roundedInfo;
+
+    struct OutlineInfo {
+        float thickness = 5.f;
+        bool outlineOnly = false;
+    } outlineInfo;
+
+    // non defaulted params
+
+    Rectangle rect;
+    int z_index;
+    Color color;
+};
+
+inline void draw_any_rect(const RectRenderInfo& info) {
     callback_registry.register_call(
-        context, [=]() { DrawRectangleRounded(rect, 0.25f, 4, c); }, z_index);
+        context,
+        [=]() {
+            if (info.roundedInfo.rounded) {
+                if (info.outlineInfo.outlineOnly) {
+                    DrawRectangleRoundedLines(
+                        info.rect, info.roundedInfo.roundness,
+                        info.roundedInfo.segments, info.outlineInfo.thickness,
+                        info.color);
+                } else {
+                    DrawRectangleRounded(info.rect, info.roundedInfo.roundness,
+                                         info.roundedInfo.segments, info.color);
+                }
+            } else {
+                if (info.outlineInfo.outlineOnly) {
+                    DrawRectangleLinesEx(info.rect, info.outlineInfo.thickness,
+                                         info.color);
+                } else {
+                    DrawRectangleRec(info.rect, info.color);
+                }
+            }
+        },
+        info.z_index);
 }
 
-inline void draw_rect(
-    Rectangle rect, int z_index,
-    ui::theme::Usage color_usage = ui::theme::Usage::Primary) {
-    draw_rect_color(rect, z_index, active_theme().from_usage(color_usage));
+inline void draw_rect_color(Rectangle rect, int z_index, Color color,
+                            bool rounded = false, bool outlineOnly = false) {
+    draw_any_rect(RectRenderInfo{
+        .roundedInfo =
+            RectRenderInfo::RoundedInfo{
+                .rounded = rounded,
+            },
+        .outlineInfo =
+            RectRenderInfo::OutlineInfo{
+                .outlineOnly = outlineOnly,
+            },
+        //
+        .rect = rect,
+        .z_index = z_index,
+        .color = color,
+    });
+}
+
+inline void draw_rect(Rectangle rect, int z_index,
+                      ui::theme::Usage color_usage = ui::theme::Usage::Primary,
+                      bool rounded = false, bool outlineOnly = false) {
+    draw_rect_color(rect, z_index, active_theme().from_usage(color_usage),
+                    rounded, outlineOnly);
 }
 
 inline void draw_image(vec2 pos, raylib::Texture texture, float scale,
@@ -106,12 +165,13 @@ inline void draw_image(vec2 pos, raylib::Texture texture, float scale,
         z_index);
 }
 
-inline void draw_focus_ring(const Widget& widget) {
+inline void draw_focus_ring(const Widget& widget, bool rounded = false) {
     if (!focus::matches(widget.id)) return;
     Rectangle rect = widget.get_rect();
     float pixels = WIN_HF() * 0.003f;
     rect = rect::expand(rect, {pixels, pixels, pixels, pixels});
-    internal::draw_rect(rect, widget.z_index + 1, ui::theme::Usage::Accent);
+    internal::draw_rect(rect, widget.z_index, ui::theme::Usage::Accent, rounded,
+                        true /* outline only */);
 }
 
 }  // namespace internal

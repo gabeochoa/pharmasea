@@ -116,6 +116,7 @@ IngredientHelper::get_machines_req_for_recipe(Drink drink) {
         get_req_ingredients_for_drink(drink), [&needed](size_t index) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(index);
             needed[ig] = IngredientHelper::get_machines_for_ingredient(ig);
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
 
     return needed;

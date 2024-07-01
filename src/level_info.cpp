@@ -2,13 +2,16 @@
 #include "level_info.h"
 
 #include "camera.h"
+#include "components/can_change_settings_interactively.h"
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
 #include "components/is_progression_manager.h"
+#include "components/is_round_settings_manager.h"
 #include "components/is_trigger_area.h"
 #include "dataclass/ingredient.h"
 #include "engine/bitset_utils.h"
 #include "engine/globals.h"
+#include "engine/random_engine.h"
 #include "engine/texture_library.h"
 #include "entity_helper.h"
 #include "entity_makers.h"
@@ -34,10 +37,7 @@ void LevelInfo::update_seed(const std::string& s) {
 
     log_info("level info update seed {}", s);
     seed = s;
-    hashed_seed = hashString(seed);
-    generator = make_engine(hashed_seed);
-    // TODO leaving at 1 because we dont have a door to block the entrance
-    dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
+    RandomEngine::set_seed(seed);
 
     was_generated = false;
 }
@@ -70,6 +70,13 @@ void LevelInfo::generate_lobby_map() {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_character_switcher(
             entity, vec::to2(lobby_origin) + vec2{4.f, -2.f});
+    }
+
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_interactive_settings_changet(
+            entity, vec::to2(lobby_origin) + vec2{6.f, -2.f},
+            CanChangeSettingsInteractively::ToggleIsTutorial);
     }
 
     {
@@ -155,6 +162,7 @@ void LevelInfo::generate_model_test_map() {
                                 Ingredient ig =
                                     magic_enum::enum_value<Ingredient>(index);
                                 item.get<IsDrink>().add_ingredient(ig);
+                                return bitset_utils::ForEachFlow::NormalFlow;
                             });
 
                         canHold.update(EntityHelper::getEntityAsSharedPtr(item),
@@ -366,14 +374,15 @@ void LevelInfo::generate_store_map() {
                     EntityQuery().whereType(EntityType::Sophie).gen_first();
 
                 // TODO translate these strings .
-                if (!sophie.valid()) return {false, "Internal Error"};
+                if (!sophie.valid())
+                    return {false, strings::i18n::InternalError};
 
                 // Do we have enough money?
                 const IsBank& bank = sophie->get<IsBank>();
                 int balance = bank.balance();
                 int cart = bank.cart();
                 if (balance < cart)
-                    return {false, strings::i18n::STORE_NOT_ENOUGH_COINS};
+                    return {false, strings::i18n::StoreNotEnoughCoins};
 
                 // Are all the required machines here?
                 OptEntity cart_area =
@@ -388,7 +397,8 @@ void LevelInfo::generate_store_map() {
                                    IsFloorMarker::Type::Store_PurchaseArea;
                         })
                         .gen_first();
-                if (!cart_area.valid()) return {false, "Internal Error"};
+                if (!cart_area.valid())
+                    return {false, strings::i18n::InternalError};
 
                 const auto ents =
                     EntityQuery().whereHasComponent<IsStoreSpawned>().gen();
@@ -397,7 +407,7 @@ void LevelInfo::generate_store_map() {
                 for (const Entity& ent : ents) {
                     if (ent.is_missing<IsFreeInStore>()) continue;
                     if (!cart_area->get<IsFloorMarker>().is_marked(ent.id)) {
-                        return {false, strings::i18n::STORE_MISSING_REQUIRED};
+                        return {false, strings::i18n::StoreMissingRequired};
                     }
                 }
 
@@ -414,10 +424,10 @@ void LevelInfo::generate_store_map() {
                         }
                     }
                     if (!all_empty)
-                        return {false, strings::i18n::STORE_STEALING_MACHINE};
+                        return {false, strings::i18n::StoreStealingMachine};
                 }
 
-                return {true, ""};
+                return {true, strings::i18n::Empty};
             });
     }
     {
@@ -432,13 +442,48 @@ void LevelInfo::generate_store_map() {
             entity, store_origin + vec3{-5, TILESIZE / -2.f, 0}, 8, 3,
             IsFloorMarker::Type::Store_SpawnArea);
     }
+
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_trigger_area(entity,
+                                     store_origin + vec3{5, TILESIZE / -2.f, 0},
+                                     8, 3, IsTriggerArea::Store_Reroll);
+
+        entity.get<IsTriggerArea>().update_cooldown_max(2.f).set_validation_fn(
+            [](const IsTriggerArea&) -> ValidationResult {
+                // TODO should we only run the below when there is at least one
+                // person standing on it?
+
+                OptEntity sophie =
+                    EntityQuery().whereType(EntityType::Sophie).gen_first();
+
+                // TODO translate these strings .
+                if (!sophie.valid())
+                    return {false, strings::i18n::InternalError};
+
+                // Do we have enough money?
+                const IsBank& bank = sophie->get<IsBank>();
+                int balance = bank.balance();
+
+                const IsRoundSettingsManager& isrm =
+                    sophie->get<IsRoundSettingsManager>();
+
+                if (balance < isrm.get<int>(ConfigKey::StoreRerollPrice))
+                    // TODO more accurate string?
+                    return {false, strings::i18n::StoreNotEnoughCoins};
+
+                // TODO only run if everyone is on this?
+
+                return {true, strings::i18n::Empty};
+            });
+    }
 }
 
 void LevelInfo::generate_default_seed() {
     generation::helper helper(EXAMPLE_MAP);
     helper.generate();
     helper.validate();
-    EntityHelper::invalidatePathCache();
+    EntityHelper::invalidateCaches();
 }
 
 vec2 generate_in_game_map_wfc(const std::string&) {
@@ -498,7 +543,8 @@ vec2 generate_in_game_map_wfc(const std::string&) {
     generation::helper helper(lines);
     vec2 max_location = helper.generate();
     helper.validate();
-    EntityHelper::invalidatePathCache();
+    EntityHelper::invalidateCaches();
+
     log_info("max location {}", max_location);
 
     return max_location;
@@ -550,8 +596,8 @@ void LevelInfo::generate_in_game_map() {
 
     std::vector<std::string> lines;
 
-    int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
-    int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
+    int rows = RandomEngine::get().get_int(MIN_MAP_SIZE, MAX_MAP_SIZE);
+    int cols = RandomEngine::get().get_int(MIN_MAP_SIZE, MAX_MAP_SIZE);
 
     const auto _is_inside = [lines](int i, int j) -> bool {
         if (i < 0 || j < 0 || i >= (int) lines.size() ||
@@ -570,14 +616,14 @@ void LevelInfo::generate_in_game_map() {
         return get_char(i, j) == '.';
     };
 
-    const auto _get_random_empty = [_is_empty, rows, cols,
-                                    this]() -> std::pair<int, int> {
+    const auto _get_random_empty = [_is_empty, rows,
+                                    cols]() -> std::pair<int, int> {
         int tries = 0;
         int x;
         int y;
         do {
-            x = gen_rand(1, rows - 1);
-            y = gen_rand(1, cols - 1);
+            x = RandomEngine::get().get_int(1, rows - 1);
+            y = RandomEngine::get().get_int(1, cols - 1);
             if (tries++ > 100) {
                 x = 0;
                 y = 0;
@@ -588,10 +634,10 @@ void LevelInfo::generate_in_game_map() {
         return {x, y};
     };
 
-    const auto _get_empty_neighbor = [_is_empty, this](
-                                         int i, int j) -> std::pair<int, int> {
+    const auto _get_empty_neighbor = [_is_empty](int i,
+                                                 int j) -> std::pair<int, int> {
         auto ns = vec::get_neighbors_i(i, j);
-        std::shuffle(std::begin(ns), std::end(ns), generator);
+        std::shuffle(std::begin(ns), std::end(ns), RandomEngine::generator());
 
         for (auto n : ns) {
             if (_is_empty(n.first, n.second)) {
@@ -601,14 +647,14 @@ void LevelInfo::generate_in_game_map() {
         return ns[0];
     };
 
-    const auto _get_valid_register_location = [_is_empty, rows, cols,
-                                               this]() -> std::pair<int, int> {
+    const auto _get_valid_register_location = [_is_empty, rows,
+                                               cols]() -> std::pair<int, int> {
         int tries = 0;
         int x;
         int y;
         do {
-            x = gen_rand(1, rows - 1);
-            y = gen_rand(1, cols - 1);
+            x = RandomEngine::get().get_int(1, rows - 1);
+            y = RandomEngine::get().get_int(1, cols - 1);
             if (tries++ > 100) {
                 x = 0;
                 y = 0;
@@ -639,7 +685,7 @@ void LevelInfo::generate_in_game_map() {
         }
 
         // Add one empty spot so that we can get into the box
-        int y = gen_rand(1, rows - 1);
+        int y = RandomEngine::get().get_int(1, rows - 1);
         lines[y][cols] = '.';
     }
 
@@ -695,13 +741,14 @@ void LevelInfo::generate_in_game_map() {
     generation::helper helper(lines);
     helper.generate();
     helper.validate();
-    EntityHelper::invalidatePathCache();
+    EntityHelper::invalidateCaches();
 }
 
 auto LevelInfo::get_rand_walkable() {
     vec2 location;
     do {
-        location = vec2{dist(generator) * TILESIZE, dist(generator) * TILESIZE};
+        location = vec2{RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1),
+                        RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1)};
     } while (!EntityHelper::isWalkable(location));
     return location;
 }
@@ -709,7 +756,8 @@ auto LevelInfo::get_rand_walkable() {
 auto LevelInfo::get_rand_walkable_register() {
     vec2 location;
     do {
-        location = vec2{dist(generator) * TILESIZE, dist(generator) * TILESIZE};
+        location = vec2{RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1),
+                        RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1)};
     } while (
         !EntityHelper::isWalkable(location) &&
         !EntityHelper::isWalkable(vec2{location.x, location.y + 1 * TILESIZE}));

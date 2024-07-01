@@ -29,6 +29,7 @@ struct Polygon {
 
     std::vector<vec3> as_3d() {
         std::vector<vec3> three_d;
+        three_d.reserve(hull.size());
         for (auto p : hull) {
             three_d.push_back(vec::to3(p));
         }

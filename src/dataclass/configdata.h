@@ -4,9 +4,13 @@
 #include <string>
 #include <variant>
 
+#include "../components/is_progression_manager.h"
 #include "../engine/bitset_utils.h"
+#include "../engine/type_name.h"
 #include "settings.h"
 #include "upgrade_class.h"
+
+struct UpgradeImpl;
 
 struct ConfigData {
     std::vector<EntityType> forever_required;
@@ -14,15 +18,19 @@ struct ConfigData {
 
     Mods this_hours_mods;
 
-    UpgradeClassBitSet unlocked_upgrades = UpgradeClassBitSet().reset();
-
    private:
+    UpgradeClassBitSet unlocked_upgrades = UpgradeClassBitSet().reset();
+    std::map<UpgradeClass, int> reusable_counts;
+
     using ConfigValueType = std::variant<int, bool, float>;
     std::map<ConfigKey, ConfigValueType> data;
 
     template<typename T>
     T modify(ConfigKey key, T input, Operation op, T value) const {
         switch (op) {
+            case Operation::Add:
+                return input + value;
+                break;
             case Operation::Multiplier:
                 return input * value;
                 break;
@@ -74,6 +82,11 @@ struct ConfigData {
         data[key] = value;
     }
 
+    [[nodiscard]] bool meets_prereq(const UpgradeClass& uc,
+                                    const IsProgressionManager& ipm);
+
+    [[nodiscard]] size_t count_missing_prereqs(const IsProgressionManager& ipm);
+
    public:
     template<typename T>
     [[nodiscard]] bool contains(const ConfigKey& key) const {
@@ -99,9 +112,20 @@ struct ConfigData {
         permanent_set<T>(key, new_value);
     }
 
+    [[nodiscard]] size_t num_unique_upgrades_unlocked() const {
+        return unlocked_upgrades.count();
+    }
+
     [[nodiscard]] bool has_upgrade_unlocked(const UpgradeClass& uc) const {
         return bitset_utils::test(unlocked_upgrades, uc);
     }
+
+    void mark_upgrade_unlocked(const UpgradeClass& uc);
+    void for_each_unlocked(
+        const std::function<bitset_utils::ForEachFlow(UpgradeClass)> cb) const;
+
+    std::vector<std::shared_ptr<UpgradeImpl>> get_possible_upgrades(
+        const IsProgressionManager&);
 
     friend bitsery::Access;
     template<typename S>

@@ -22,9 +22,9 @@ struct Client {
     } conn_info;
 
     int id = 0;
-    std::shared_ptr<internal::Client> client_p;
+    std::unique_ptr<internal::Client> client_p;
     std::map<int, std::shared_ptr<Entity>> remote_players;
-    std::shared_ptr<Map> map;
+    std::unique_ptr<Map> map;
     std::vector<ClientPacket::AnnouncementInfo> announcements;
 
     float next_tick_reset = 0.04f;

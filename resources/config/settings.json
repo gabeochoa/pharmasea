@@ -2,6 +2,11 @@
   "LOG_LEVEL": 2,
   "DEADZONE": 0.25,
   "theme": "default",
+  "fonts": {
+      "en_rev": "constan.ttf",
+      "en_us": "Gaegu-bold.ttf",
+      "ko_kr": "NotoSansKR.ttf"
+  },
   "themes" : {
       "grayscale": {
           "font": [255, 255, 255, 255], 
@@ -21,7 +26,7 @@
           "accent": [8, 39, 245, 255],
           "error": [255, 255, 0, 255]
       },
-      "default": {
+      "pharmasea": {
           "font": [237, 230, 227, 255], // isabelline
           "darkfont": [12, 27, 51, 255], // oxford blue
           "background": [12, 27, 51, 255],  // oxford_blue
@@ -30,6 +35,15 @@
           "accent": [240, 100, 73, 255], // orange soda
           // TODO find a better error color
           "error": [255, 0, 0, 255] // red
+      },
+      "default": {
+          "font": [237, 230, 227, 255], 
+          "darkfont": [12, 27, 51, 255], 
+          "background": [29, 11, 0, 255],  
+          "primary": [184, 152, 157, 255], 
+          "secondary": [76, 54, 58, 255], 
+          "accent": [232, 209, 128, 255], 
+          "error": [255, 0, 0, 255] 
       }
   },
   "DEFAULT_MAP": [
@@ -37,7 +51,7 @@
     "#..............#",
     "#S....t........#",
     "#d....t........#",
-    "#g....R........#",
+    "#g....,........#",
     "#B....t...0....#",
     "#.....t........#",
     "#.....t........#",
@@ -46,7 +60,7 @@
     "#..............#",
     "#..............#",
     "#######..#######",
-    ".........C.f...s"
+    ".....R...C.f...s"
   ],
   "DEFAULT_MAP2": [
     "#####################",

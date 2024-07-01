@@ -17,6 +17,7 @@ libraries used:
 - mo for translations http://number-none.com/blow/code/mo_file/index.html
 - nlomann json for JSON reading / writing https://github.com/nlohmann/json
 - reasings (some easing functions) https://github.com/raylib-extras/reasings
+- PCG Random (faster more repreducible random) https://www.pcg-random.org/ 
 
 Models from 
 - https://www.kenney.nl/assets?q=3d 
@@ -60,6 +61,74 @@ and then just checkout that hash (sorry im not doing releases / tags atm)
 
 I am publishing some releases on itch, you can find the url in the code or build the game and click the itch.io icon. 
 if you need the password join the discord and say hi!
+
+
+### alpha_0.24.05.11
+
+design changes
+
+impact 
+- Added a tutorial for the first two rounds (toggle it in the lobby) 
+- Controls now have icons instead of the underlying name (see settings page or tutorial)
+- better mouse hover graphics 
+- customers will now show a "dollar" icon when paying 
+- shop
+    - increase number of items in shop from 5 to 10
+    - add way to reroll, starts at 50 coins and goes up by 25 each use
+- toilet 
+    - needs to be cleaned at end of day 
+    - has a queue and those waiting in line to the bathroom will eventually go on the floor if they wait too long 
+    - customer patience will increase when they move up in line 
+
+bug fix 
+- fix bug where customers always thought they were second in line 
+- hide names for walls when in planning phase 
+- fix a crash that would happen when you close the game
+- fix issue where only UI keys were visible in the settings
+
+better eng
+- switch from bind to lambda to save 3 seconds on full build :) (120.3s -> 117.30s on m1 air) 
+- Query builder upgrades and new features 
+- move all components to unique_ptr instead of raw points
+- added the ablity to draw ghost blocks
+- better dylib commands 
+- more color utils 
+- eliminate a class of auto conversion make_entity bugs 
+- onboard onto sonar cloud: https://sonarcloud.io/summary/new_code?id=gabeochoa_pharmasea 
+
+
+### alpha_0.24.04.25
+
+New Upgrades
+- Jukebox: Customers will pay money to use and keeps their patience from draining (no actual music yet tho) 
+- Cant Event Tell: The more customers drink the less they care about the recipe's accuracy 
+
+impact
+- Menu UI fully redesigned (#thanks @steven for the design feedback) 
+- new icons for existing Upgrades that were using the default before 
+- customers now take time to pay (though no ui to show yet) 
+- customers will now walk somewhere to drink their drink (instead of standing at 0,0)
+- customers will now show a "need to pee" icon when they gotta go 
+- players now spawn outside near the delivery zone instead of at 0,0 
+- furniture names are now shown during design mode (more obvious what mode you are in and better tell what anything is) 
+- New map generator (should crash less often but i cant promise no inifinite loops :$) 
+
+
+bug fix
+- Players should get stuck in dropped furniture way less often (might i say solved?) 
+- fix issue where adding syrup to a drink would add salt and mint instead 
+- fix a crash that happened sometimes when adding solid fruits to a drink 
+- Progress bars will now dissapear if the drink was removed before complete
+- Fast Forward Box can no longer be used as a table 
+
+better eng
+- translations support for trigger areas
+- add more validation for missing items from model test 
+- deleted unused code & ran some fixes to avoid undefined behavior 
+- speed up entity overlapping check by 1000x
+- Rewrote AI system to be much more ergonomic and easier to read/develop for 
+- More debug ui for ai system 
+- Address a ton of floating todos that were mostly tech debt (still 630 in the codebase though) 
 
 
 ### alpha_0.24.04.06
