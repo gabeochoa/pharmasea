@@ -34,8 +34,8 @@
 #include "engine/util.h"
 #include "entity.h"
 #include "entity_type.h"
-#include "network/server.h"
 //
+#include "client_server_comm.h"
 #include "components/adds_ingredient.h"
 #include "components/can_be_ghost_player.h"
 #include "components/can_be_held.h"
@@ -85,22 +85,23 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient ing) {
 
     IngredientSoundType sound_type = ingredient::IngredientSoundType.at(ing);
 
+    std::string sound;
     switch (sound_type) {
         case Viscous:
             // TODO add new sounds for other ingredient types
         case Solid:
-            network::Server::play_sound(drink.get<Transform>().as2(),
-                                        strings::sounds::SOLID);
+            sound = strings::sounds::SOLID;
             break;
         case Ice:
-            network::Server::play_sound(drink.get<Transform>().as2(),
-                                        strings::sounds::ICE);
+            sound = strings::sounds::ICE;
             break;
         case Liquid:
-            network::Server::play_sound(drink.get<Transform>().as2(),
-                                        strings::sounds::WATER);
+            sound = strings::sounds::WATER;
             break;
+        default:
+            return false;
     }
+    server_only::play_sound(drink.get<Transform>().as2(), sound);
     return true;
 }
 
@@ -429,37 +430,24 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
 
     map_randomizer.get<CanBeHighlighted>().set_on_change(
         [](Entity&, bool is_highlighted) {
-            if (!is_server()) {
-                log_warn(
-                    "you are calling a server only function from a client "
-                    "context, this is probably gonna crash");
+            if (is_highlighted) {
+                server_only::set_show_minimap();
+            } else {
+                server_only::set_hide_minimap();
             }
-            network::Server* server =
-                GLOBALS.get_ptr<network::Server>("server");
-            server->get_map_SERVER_ONLY()->showMinimap = is_highlighted;
         });
 
     map_randomizer.addComponent<HasWork>().init(
         [](Entity& randomizer, HasWork& hasWork, Entity&, float dt) {
             if (GameState::get().is_not(game::State::Lobby)) return;
-            if (!is_server()) {
-                log_warn(
-                    "you are calling a server only function from a client "
-                    "context, this is probably gonna crash");
-            }
-            network::Server* server =
-                GLOBALS.get_ptr<network::Server>("server");
-
             const float amt = 1.5f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
-
-                const auto name = get_random_name_rot13();
-                server->get_map_SERVER_ONLY()->update_seed(name);
+                server_only::update_seed(get_random_name_rot13());
             }
             HasName& hasName = randomizer.get<HasName>();
-            hasName.update(server->get_map_SERVER_ONLY()->seed);
+            hasName.update(server_only::get_current_seed());
         });
 }
 
@@ -855,9 +843,9 @@ void make_draft(Entity& draft, vec2 pos) {
             const float amt = 0.75f;
             hasWork.increase_pct(amt * dt);
 
-            network::Server::play_sound(item.get<Transform>().as2(),
-                                        // TODO replace with draft tap sound
-                                        strings::sounds::BLENDER);
+            server_only::play_sound(item.get<Transform>().as2(),
+                                    // TODO replace with draft tap sound
+                                    strings::sounds::BLENDER);
 
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
@@ -1004,9 +992,9 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
 
         const float amt = 0.75f;
         hasWork.increase_pct(amt * dt);
-        network::Server::play_sound(drink.get<Transform>().as2(),
-                                    // TODO replace with draft tap sound
-                                    strings::sounds::BLENDER);
+        server_only::play_sound(drink.get<Transform>().as2(),
+                                // TODO replace with draft tap sound
+                                strings::sounds::BLENDER);
 
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
@@ -1174,8 +1162,8 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
             return;
         }
 
-        network::Server::play_sound(owner.get<Transform>().as2(),
-                                    strings::sounds::BLENDER);
+        server_only::play_sound(owner.get<Transform>().as2(),
+                                strings::sounds::BLENDER);
 
         const float amt = 0.75f;
         hasWork.increase_pct(amt * dt);
