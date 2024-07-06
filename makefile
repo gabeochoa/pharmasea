@@ -141,6 +141,9 @@ bring:
 	git update-index --assume-unchanged libGameNetworkingSockets.dylib 
 	git update-index --assume-unchanged vendor/libGameNetworkingSockets.dylib 
 
+heavycompile:
+	ls output/src | grep json | xargs -n1 -I {} wc -c output/src/{} | sort -r
+
 # When using lldb, you have to run these commands:
 # 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION
 # 	c

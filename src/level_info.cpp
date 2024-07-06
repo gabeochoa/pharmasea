@@ -3,10 +3,13 @@
 
 #include "camera.h"
 #include "components/can_change_settings_interactively.h"
+#include "components/can_hold_furniture.h"
+#include "components/is_bank.h"
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
 #include "components/is_progression_manager.h"
 #include "components/is_round_settings_manager.h"
+#include "components/is_store_spawned.h"
 #include "components/is_trigger_area.h"
 #include "dataclass/ingredient.h"
 #include "engine/bitset_utils.h"
@@ -18,7 +21,6 @@
 #include "entity_query.h"
 #include "entity_type.h"
 #include "map_generation.h"
-#include "network/server.h"
 #include "recipe_library.h"
 #include "simple.h"
 #include "strings.h"
@@ -32,9 +34,6 @@ extern Rectangle TRASH_AREA;
 }  // namespace wfc
 
 void LevelInfo::update_seed(const std::string& s) {
-    // TODO implement this
-    // randomizer.get<HasName>().update(server->get_map_SERVER_ONLY()->seed);
-
     log_info("level info update seed {}", s);
     seed = s;
     RandomEngine::set_seed(seed);
