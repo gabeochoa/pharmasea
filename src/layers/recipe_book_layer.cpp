@@ -50,6 +50,13 @@ bool RecipeBookLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
     // TODO add game buttons for this
     if (!baseShouldRender()) return false;
 
+    // If theres no unlocked recipies (should not happen lol)
+    // then no need to process buttons anyway
+    // but it avoids a possible div-by-zero later
+    if (num_recipes() == 0) {
+        return true;
+    }
+
     if (selected_recipe_debounce <= 0 &&
         KeyMap::get_button(menu::State::Game, InputName::RecipeNext) ==
             event.button) {
