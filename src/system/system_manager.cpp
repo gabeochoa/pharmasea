@@ -307,10 +307,10 @@ void highlight_facing_furniture(Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
     const CanHighlightOthers& cho = entity.get<CanHighlightOthers>();
 
-    // TODO convert to query?
-    OptEntity match = EntityHelper::getClosestMatchingFurniture(
-        transform, cho.reach(),
-        [](const Entity& e) { return e.template has<CanBeHighlighted>(); });
+    OptEntity match = EntityQuery()
+                          .whereInRange(transform.as2(), cho.reach())
+                          .whereHasComponent<CanBeHighlighted>()
+                          .gen_first();
     if (!match) return;
 
     match->get<CanBeHighlighted>().update(entity, true);
