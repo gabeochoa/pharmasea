@@ -772,7 +772,7 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
         IsFloorMarker::Type::Store_PurchaseArea);
 
     if (!spawn_area) {
-        // TODO need to guarantee this exists long before we get here
+        // need to guarantee this exists long before we get here
         log_error("Could not find spawn area entity");
     }
 
