@@ -17,17 +17,24 @@
 #include "settings.h"
 #include "shader_library.h"
 
-std::shared_ptr<App> App_single;
+App App::instance;
+bool App::created = false;
 
-/*
- * TODO was for model testing
-void App::start_remove_invisible() {
-    auto discard_alpha_shader = ShaderLibrary::get().get("discard_alpha");
-    raylib::BeginShaderMode(discard_alpha_shader);
+void App::create(const AppSettings& pt) {
+    if (created) {
+        log_error("Trying to create App twice");
+        return;
+    }
+    new (&instance) App(pt);
+    created = true;
 }
 
-void App::end_remove_invisible() { raylib::EndShaderMode(); }
-*/
+App& App::get() {
+    if (!created) {
+        log_error("trying to fetch app but none was created");
+    }
+    return instance;
+}
 
 void App::start_post_processing() {
     if (!Settings::get().data.enable_postprocessing) return;
@@ -56,13 +63,17 @@ App::App(const AppSettings& settings) {
     GLOBALS.set("mainRT", &mainRT);
 }
 
+void App::loadLayers(const std::vector<Layer*>& layers) {
+    for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
+        layerstack[++max_layer] = *it;
+    }
+    log_info("Loaded {} layers", max_layer);
+}
+
 App::~App() {
     UnloadRenderTexture(mainRT);
     // TODO do we need to / can we remove mainRT from globals
 }
-
-void App::pushLayer(Layer* layer) { layerstack.push(layer); }
-void App::pushOverlay(Layer* layer) { layerstack.pushOverlay(layer); }
 
 void App::onEvent(Event& event) {
     EventDispatcher dispatcher(event);
@@ -147,11 +158,15 @@ void App::processEvent(Event& e) {
     // if they handle it then no need for the lower ones to get the rest
     // eg imagine UI pause menu blocking game UI elements
     //    we wouldnt want the player to click pass the pause menu
-    for (auto it = layerstack.end(); it != layerstack.begin();) {
-        (*--it)->onEvent(e);
+
+    int i = max_layer;
+    while (i >= 0) {
+        Layer* layer = layerstack[i];
+        if (layer) layer->onEvent(e);
         if (e.handled) {
             break;
         }
+        i--;
     }
 }
 
@@ -163,6 +178,11 @@ void App::run() {
 #else
     log_info("Tracing is not enabled");
 #endif
+
+    for (Layer* layer : layerstack) {
+        if (layer) layer->onStartup();
+    }
+
     running = true;
     while (running && !raylib::WindowShouldClose()) {
         float dt = raylib::GetFrameTime();
@@ -175,7 +195,7 @@ void App::loop(float dt) {
     TRACY_ZONE_SCOPED;
 
     for (Layer* layer : layerstack) {
-        layer->onUpdate(dt);
+        if (layer) layer->onUpdate(dt);
     }
 
     draw_all_to_texture(dt);
@@ -200,7 +220,7 @@ void App::draw_all_to_texture(float dt) {
 
     raylib::BeginTextureMode(mainRT);
     for (Layer* layer : layerstack) {
-        layer->onDraw(dt);
+        if (layer) layer->onDraw(dt);
     }
     raylib::EndTextureMode();
 }

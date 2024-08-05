@@ -80,6 +80,7 @@ struct IsDrink : public BaseComponent {
         bitset_utils::for_each_enabled_bit(recipe, [&](size_t bit) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
             ingredients[ig]--;
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
 
         underlying = calc_underlying();
@@ -108,6 +109,7 @@ struct IsDrink : public BaseComponent {
         bitset_utils::for_each_enabled_bit(recipe, [&](size_t bit) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
             min_igs = std::min(min_igs, count_of_ingredient(ig));
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
         return min_igs;
     }

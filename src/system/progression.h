@@ -77,9 +77,8 @@ inline bool collect_drink_options(IsProgressionManager& ipm) {
         }
     }
     // TODO add a little randomness
-    // TODO grab the rng engine from map
-    // auto rng = std::default_random_engine{};
-    // std::shuffle(std::begin(options), std::end(options), rng);
+    // std::shuffle(std::begin(options), std::end(options),
+    // RandomEngine()::generator());
 
     if (options.size() < 2) {
         // No more options so just go direct to the store
@@ -104,29 +103,14 @@ inline bool collect_upgrade_options(Entity& entity) {
     IsProgressionManager& ipm = entity.get<IsProgressionManager>();
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
-    std::vector<std::shared_ptr<UpgradeImpl>> possible_upgrades;
+    std::vector<std::shared_ptr<UpgradeImpl>> possible_upgrades =
+        irsm.config.get_possible_upgrades(ipm);
 
     log_info("num upgrades without filters : {}",
              magic_enum::enum_count<UpgradeClass>());
 
     // possible_upgrades.push_back(make_upgrade(UpgradeClass::CantEvenTell));
     // possible_upgrades.push_back(make_upgrade(UpgradeClass::UnlockToilet));
-
-    magic_enum::enum_for_each<UpgradeClass>([&](auto val) {
-        constexpr UpgradeClass upgrade = val;
-
-        if (bitset_utils::test(irsm.config.unlocked_upgrades, upgrade)) {
-            // By default we just assume you can only have each upgrade once...
-            // TODO do we need to support multiple?
-            return;
-        }
-
-        auto impl = make_upgrade(upgrade);
-        bool meets = impl->meetsPrereqs(irsm.config, ipm);
-        if (meets) {
-            possible_upgrades.push_back(impl);
-        }
-    });
 
     log_info("num upgrades with filters : {}", possible_upgrades.size());
 
@@ -210,6 +194,7 @@ inline void update_upgrade_variables() {
 
             } break;
             case ConfigKey::Test:
+            case ConfigKey::StoreRerollPrice:
             case ConfigKey::MaxNumOrders:
             case ConfigKey::PatienceMultiplier:
             case ConfigKey::CustomerSpawnMultiplier:

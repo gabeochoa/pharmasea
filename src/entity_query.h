@@ -1,23 +1,24 @@
 
 #pragma once
 
+#include <iterator>
+
 #include "entity.h"
 #include "entity_helper.h"
 #include "entity_type.h"
 
 struct EntityQuery {
     struct Modification {
-        virtual ~Modification() {}
+        virtual ~Modification() = default;
         virtual bool operator()(const Entity&) const = 0;
     };
 
-    // TODO add predicates
     struct Not : Modification {
         std::unique_ptr<Modification> mod;
 
         explicit Not(Modification* m) : mod(m) {}
 
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return !((*mod)(entity));
         }
     };
@@ -27,7 +28,7 @@ struct EntityQuery {
         mutable int amount_taken;
         explicit Limit(int amt) : amount(amt), amount_taken(0) {}
 
-        virtual bool operator()(const Entity&) const override {
+        bool operator()(const Entity&) const override {
             if (amount_taken > amount) return false;
             amount_taken++;
             return true;
@@ -39,7 +40,7 @@ struct EntityQuery {
     struct WhereID : Modification {
         int id;
         explicit WhereID(int id) : id(id) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return entity.id == id;
         }
     };
@@ -49,7 +50,7 @@ struct EntityQuery {
     struct WhereType : Modification {
         EntityType type;
         explicit WhereType(const EntityType& t) : type(t) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return check_type(entity, type);
         }
     };
@@ -58,9 +59,22 @@ struct EntityQuery {
         return add_mod(new Not(new WhereType(t)));
     }
 
+    struct WhereMarkedForCleanup : Modification {
+        bool operator()(const Entity& entity) const override {
+            return entity.cleanup;
+        }
+    };
+
+    auto& whereMarkedForCleanup() {
+        return add_mod(new WhereMarkedForCleanup());
+    }
+    auto& whereNotMarkedForCleanup() {
+        return add_mod(new Not(new WhereMarkedForCleanup()));
+    }
+
     template<typename T>
     struct WhereHasComponent : Modification {
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return entity.has<T>();
         }
     };
@@ -77,7 +91,7 @@ struct EntityQuery {
         std::function<bool(const Entity&)> filter;
         explicit WhereLambda(const std::function<bool(const Entity&)>& cb)
             : filter(cb) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return filter(entity);
         }
     };
@@ -98,7 +112,7 @@ struct EntityQuery {
         // TODO mess around with the right epsilon here
         explicit WhereInRange(vec2 pos, float r = 0.01f, bool snap = false)
             : position(pos), range(r), should_snap(snap) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             vec2 pos = entity.get<Transform>().as2();
             if (should_snap) pos = vec::snap(pos);
             return vec::distance(position, pos) < range;
@@ -126,7 +140,7 @@ struct EntityQuery {
         float range;
 
         explicit WhereInFront(vec2 pos, float r) : position(pos), range(r) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             float dist = vec::distance(entity.get<Transform>().as2(), position);
             if (abs(dist) > range) return false;
             if (dist < 0) return false;
@@ -148,7 +162,7 @@ struct EntityQuery {
 
         explicit WhereInside(vec2 mn, vec2 mx) : min(mn), max(mx) {}
 
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             const auto pos = entity.get<Transform>().as2();
             if (pos.x > max.x || pos.x < min.x) return false;
             if (pos.y > max.y || pos.y < min.y) return false;
@@ -164,7 +178,7 @@ struct EntityQuery {
 
         explicit WhereCollides(BoundingBox box) : bounds(box) {}
 
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return CheckCollisionBoxes(entity.get<Transform>().bounds(),
                                        bounds);
         }
@@ -172,7 +186,42 @@ struct EntityQuery {
     auto& whereCollides(BoundingBox box) {
         return add_mod(new WhereCollides(box));
     }
+
+    auto& whereIsNotBeingHeld() {
+        return add_mod(new WhereHasComponent<CanBeHeld>())
+            .add_mod(new WhereLambda([](const Entity& entity) {
+                return entity.get<CanBeHeld>().is_not_held();
+            }));
+    }
+
+    EntityQuery& whereIsHoldingAnyFurniture();
+    EntityQuery& whereIsHoldingFurnitureID(EntityID entityID);
+    EntityQuery& whereIsHoldingItemOfType(EntityType type);
+    EntityQuery& whereIsDrinkAndMatches(Drink recipe);
+
+    EntityQuery& whereHeldItemMatches(
+        const std::function<bool(const Entity&)>& fn);
+
+    template<typename Component>
+    struct WhereHasComponentAndLambda : Modification {
+        std::function<bool(const Component&)> fn;
+        explicit WhereHasComponentAndLambda(
+            const std::function<bool(const Component&)>& fn)
+            : fn(fn) {}
+
+        bool operator()(const Entity& entity) const override {
+            return entity.has<Component>() && fn(entity.get<Component>());
+        }
+    };
+
+    template<typename Component>
+    auto& whereHasComponentAndLambda(
+        const std::function<bool(const Component&)>& fn) {
+        return add_mod(new WhereHasComponentAndLambda<Component>(fn));
+    }
     /////////
+
+    // TODO add support for converting Entities to other Entities
 
     using OrderByFn = std::function<bool(const Entity&, const Entity&)>;
     struct OrderBy {
@@ -184,7 +233,7 @@ struct EntityQuery {
         OrderByFn sortFn;
         explicit OrderByLambda(const OrderByFn& sortFn) : sortFn(sortFn) {}
 
-        virtual bool operator()(const Entity& a, const Entity& b) override {
+        bool operator()(const Entity& a, const Entity& b) override {
             return sortFn(a, b);
         }
     };
@@ -210,6 +259,10 @@ struct EntityQuery {
         return !run_query({.stop_on_first = true}).empty();
     }
 
+    [[nodiscard]] bool is_empty() const {
+        return run_query({.stop_on_first = true}).empty();
+    }
+
     [[nodiscard]] RefEntities values_ignore_cache(
         UnderlyingOptions options) const {
         ents = run_query(options);
@@ -228,8 +281,38 @@ struct EntityQuery {
     }
 
     [[nodiscard]] OptEntity gen_first() const {
-        if (has_values()) return (gen_with_options({.stop_on_first = true})[0]);
+        if (has_values()) {
+            auto values = gen_with_options({.stop_on_first = true});
+            if (values.empty()) {
+                log_error("we expected to find a value but didnt...");
+            }
+            return values[0];
+        }
         return {};
+    }
+
+    [[nodiscard]] Entity& gen_first_enforce() const {
+        if (!has_values()) {
+            log_error("tried to use gen enforce, but found no values");
+        }
+        auto values = gen_with_options({.stop_on_first = true});
+        if (values.empty()) {
+            log_error("we expected to find a value but didnt...");
+        }
+        return values[0];
+    }
+
+    [[nodiscard]] std::optional<int> gen_first_id() const {
+        if (!has_values()) return {};
+        return gen_with_options({.stop_on_first = true})[0].get().id;
+    }
+
+    [[nodiscard]] std::optional<std::pair<int, vec3>> gen_first_position()
+        const {
+        if (!has_values()) return {};
+        auto ent_ = gen_with_options({.stop_on_first = true})[0];
+        auto& ent = ent_.get();
+        return std::pair{ent.id, ent.get<Transform>().pos()};
     }
 
     [[nodiscard]] size_t gen_count() const {
@@ -240,9 +323,18 @@ struct EntityQuery {
     [[nodiscard]] std::vector<int> gen_ids() const {
         const auto results = ran_query ? ents : values_ignore_cache({});
         std::vector<int> ids;
-        for (const Entity& ent : results) {
-            ids.push_back(ent.id);
-        }
+        std::transform(results.begin(), results.end(), std::back_inserter(ids),
+                       [](const Entity& ent) -> int { return ent.id; });
+        return ids;
+    }
+
+    [[nodiscard]] std::vector<std::pair<EntityID, vec3>> gen_positions() const {
+        const auto results = ran_query ? ents : values_ignore_cache({});
+        std::vector<std::pair<EntityID, vec3>> ids;
+        std::transform(results.begin(), results.end(), std::back_inserter(ids),
+                       [](const Entity& ent) -> std::pair<EntityID, vec3> {
+                           return {ent.id, ent.get<Transform>().pos()};
+                       });
         return ids;
     }
 
@@ -274,34 +366,7 @@ struct EntityQuery {
         return *this;
     }
 
-    [[nodiscard]] RefEntities run_query(UnderlyingOptions options) const {
-        RefEntities out;
-        for (const auto& e_ptr : entities) {
-            if (!e_ptr) continue;
-            Entity& e = *e_ptr;
-
-            bool passed_all_mods = std::all_of(
-                mods.begin(), mods.end(),
-                [&](const std::unique_ptr<Modification>& mod) -> bool {
-                    return (*mod)(e);
-                });
-
-            if (passed_all_mods) out.push_back(e);
-            if (options.stop_on_first && !out.empty()) return out;
-        }
-
-        // TODO :SPEED: if there is only one item no need to sort
-        // TODO :SPEED: if we are doing gen_first() then partial sort?
-        // Now run any order bys
-        if (orderby) {
-            std::sort(out.begin(), out.end(),
-                      [&](const Entity& a, const Entity& b) {
-                          return (*orderby)(a, b);
-                      });
-        }
-
-        // TODO turn off cache for now
-        // ran_query = true;
-        return out;
-    }
+    RefEntities filter_mod(const RefEntities& in,
+                           const std::unique_ptr<Modification>& mod) const;
+    [[nodiscard]] RefEntities run_query(UnderlyingOptions options) const;
 };

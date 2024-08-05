@@ -74,11 +74,12 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
             0;  // this should never be more than reason_spots.size()
 
         if (ht.block_state_change_reasons.none()) {
-            TranslatableString countdown_ts = TODO_TRANSLATE(
-                fmt::format(
-                    "{}: {}", strings::i18n::NEXT_ROUND_COUNTDOWN,
-                    (int) ceil(util::trunc(ht.roundSwitchCountdown, 1))),
-                TodoReason::Format);
+            auto time_remaining = fmt::format(
+                "{}", (int) ceil(util::trunc(ht.roundSwitchCountdown, 1)));
+            TranslatableString countdown_ts =
+                TranslatableString(strings::i18n::RoundEndLayer_Countdown)
+                    .set_param(strings::i18nParam::TimeRemaining,
+                               time_remaining);
             text(Widget{reason_spots[0]}, countdown_ts, theme::Usage::Font,
                  true);
             return;

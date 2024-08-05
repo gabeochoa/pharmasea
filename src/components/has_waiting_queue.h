@@ -45,7 +45,8 @@ struct HasWaitingQueue : public BaseComponent {
 
     // These impl are in job.cpp
     [[nodiscard]] bool matching_id(int id, int i) const;
-    [[nodiscard]] int has_matching_person(int id) const;
+    [[nodiscard]] bool has_matching_person(int id) const;
+    [[nodiscard]] int get_customer_position(int id) const;
     HasWaitingQueue& add_customer(const Entity& customer);
 
    private:

@@ -64,9 +64,14 @@
 #include "rendering_system.h"
 #include "ui_rendering_system.h"
 
-extern ui::UITheme UI_THEME;
-
 namespace system_manager {
+
+namespace store {
+void cart_management(Entity&, float);
+void cleanup_old_store_options();
+void generate_store_options();
+void move_purchased_furniture();
+}  // namespace store
 
 void move_player_SERVER_ONLY(Entity& entity, game::State location) {
     if (!is_server()) {
@@ -160,6 +165,11 @@ void mark_item_in_floor_area(Entity& entity, float) {
     ifm.mark_all(std::move(ids));
 }
 
+void process_floor_markers(Entity& entity, float dt) {
+    clear_all_floor_markers(entity, dt);
+    mark_item_in_floor_area(entity, dt);
+}
+
 void update_held_furniture_position(Entity& entity, float) {
     if (entity.is_missing_any<Transform, CanHoldFurniture>()) return;
 
@@ -196,7 +206,10 @@ vec3 get_new_held_position_custom(Entity& entity) {
 
     switch (custom_item_position.positioner) {
         case CustomHeldItemPosition::Positioner::Table:
-            new_pos.y += TILESIZE / 2;
+            if (entity.has<ModelRenderer>()) {
+                new_pos.y += TILESIZE / 2.f;
+            }
+            new_pos.y += 0.f;
             break;
         case CustomHeldItemPosition::Positioner::ItemHoldingItem:
             new_pos.x += 0;
@@ -280,7 +293,7 @@ void update_held_item_position(Entity& entity, float) {
                        ? get_new_held_position_custom(entity)
                        : get_new_held_position_default(entity);
 
-    can_hold_item.item()->get<Transform>().update(new_pos);
+    can_hold_item.item().get<Transform>().update(new_pos);
 }
 
 void reset_highlighted(Entity& entity, float) {
@@ -294,10 +307,10 @@ void highlight_facing_furniture(Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
     const CanHighlightOthers& cho = entity.get<CanHighlightOthers>();
 
-    // TODO convert to query?
-    OptEntity match = EntityHelper::getClosestMatchingFurniture(
-        transform, cho.reach(),
-        [](const Entity& e) { return e.template has<CanBeHighlighted>(); });
+    OptEntity match = EntityQuery()
+                          .whereInRange(transform.as2(), cho.reach())
+                          .whereHasComponent<CanBeHighlighted>()
+                          .gen_first();
     if (!match) return;
 
     match->get<CanBeHighlighted>().update(entity, true);
@@ -352,7 +365,7 @@ void process_conveyer_items(Entity& entity, float dt) {
         // can this furniture hold the item we are passing?
         // some have filters
         bool can_hold =
-            furnCHI.can_hold(*(canHold.item()), RespectFilter::ReqOnly);
+            furnCHI.can_hold(canHold.const_item(), RespectFilter::ReqOnly);
 
         return can_hold;
     };
@@ -398,7 +411,8 @@ void process_conveyer_items(Entity& entity, float dt) {
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
-    matchCHI.update(ourCHI.item(), entity.id);
+    matchCHI.update(EntityHelper::getEntityAsSharedPtr(ourCHI.item()),
+                    entity.id);
 
     ourCHI.update(nullptr, -1);
 
@@ -452,7 +466,7 @@ void process_grabber_items(Entity& entity, float) {
 
             // Can we hold the item it has?
             bool can_hold = entity.get<CanHoldItem>().can_hold(
-                *(furnCHI.const_item()), RespectFilter::All);
+                (furnCHI.const_item()), RespectFilter::All);
 
             // we cant
             if (!can_hold) return false;
@@ -470,7 +484,8 @@ void process_grabber_items(Entity& entity, float) {
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
-    ourCHI.update(matchCHI.item(), entity.id);
+    ourCHI.update(EntityHelper::getEntityAsSharedPtr(matchCHI.item()),
+                  entity.id);
     matchCHI.update(nullptr, -1);
 
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
@@ -487,12 +502,12 @@ void process_grabber_filter(Entity& entity, float) {
     // - or we should set the filter
 
     EntityFilter& ef = canHold.get_filter();
-    ef.set_filter_with_entity(*(canHold.const_item()));
+    ef.set_filter_with_entity(canHold.const_item());
 }
 
 template<typename... TArgs>
 void backfill_empty_container(const EntityType& match_type, Entity& entity,
-                              TArgs&&... args) {
+                              vec3 pos, TArgs&&... args) {
     if (entity.is_missing<IsItemContainer>()) return;
     IsItemContainer& iic = entity.get<IsItemContainer>();
     if (iic.type() != match_type) return;
@@ -504,7 +519,7 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
 
     // create item
     Entity& item =
-        EntityHelper::createItem(iic.type(), std::forward<TArgs>(args)...);
+        EntityHelper::createItem(iic.type(), pos, std::forward<TArgs>(args)...);
     // ^ cannot be const because converting to SharedPtr v
 
     // TODO do we need shared pointer here? (vs just id?)
@@ -519,7 +534,7 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
     const CanHoldItem& canHold = entity.get<CanHoldItem>();
     if (canHold.is_holding_item()) return;
 
-    auto pos = entity.get<Transform>().as2();
+    auto pos = entity.get<Transform>().pos();
 
     if (iic.should_use_indexer() && entity.has<Indexer>()) {
         Indexer& indexer = entity.get<Indexer>();
@@ -563,11 +578,11 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
 
     // Delete the currently held item
     if (canHold.is_holding_item()) {
-        canHold.item()->cleanup = true;
+        canHold.item().cleanup = true;
         canHold.update(nullptr, -1);
     }
 
-    auto pos = entity.get<Transform>().as2();
+    auto pos = entity.get<Transform>().pos();
     backfill_empty_container(iic.type(), entity, pos, indexer.value());
     indexer.mark_change_completed();
 }
@@ -589,10 +604,10 @@ void process_is_indexed_container_holding_incorrect_item(Entity& entity,
     if (canHold.empty()) return;
 
     int current_value = indexer.value();
-    int item_value = canHold.item()->get<HasSubtype>().get_type_index();
+    int item_value = canHold.item().get<HasSubtype>().get_type_index();
 
     if (current_value != item_value) {
-        canHold.item()->cleanup = true;
+        canHold.item().cleanup = true;
         canHold.update(nullptr, -1);
     }
 }
@@ -602,7 +617,13 @@ void handle_autodrop_furniture_when_exiting_planning(Entity& entity) {
     const CanHoldFurniture& ourCHF = entity.get<CanHoldFurniture>();
     if (ourCHF.empty()) return;
 
-    // TODO need to find a spot it can go in using EntityHelper::isWalkable
+    // This code never runs at the moment, because we require
+    // that everything is dropped before we continue,
+    // this exists just to double check in case you can time it
+    // correclty to grab at the wrong time
+
+    // in a world where we need to drop for them live, we would need to find a
+    // spot it can go in using EntityHelper::isWalkable
     input_process_manager::planning::drop_held_furniture(entity);
 }
 
@@ -613,10 +634,10 @@ void release_mop_buddy_at_start_of_day(Entity& entity) {
     if (chi.empty()) return;
 
     // grab yaboi
-    std::shared_ptr<Item> item = chi.item();
+    Item& item = chi.item();
 
     // let go of the item
-    item->get<IsItem>().set_held_by(EntityType::Unknown, -1);
+    item.get<IsItem>().set_held_by(EntityType::Unknown, -1);
     chi.update(nullptr, -1);
 }
 
@@ -635,7 +656,7 @@ void delete_trash_when_leaving_planning(Entity& entity) {
         // Also delete the held item
         CanHoldItem& markedCHI = marked_entity->get<CanHoldItem>();
         if (!markedCHI.empty()) {
-            markedCHI.item()->cleanup = true;
+            markedCHI.item().cleanup = true;
             markedCHI.update(nullptr, -1);
         }
     }
@@ -675,10 +696,9 @@ void delete_held_items_when_leaving_inround(Entity& entity) {
     if (canHold.empty()) return;
 
     // Mark it as deletable
-    const std::shared_ptr<Item>& item = canHold.item();
-
     // let go of the item
-    item->cleanup = true;
+    Item& item = canHold.item();
+    item.cleanup = true;
     canHold.update(nullptr, -1);
 }
 
@@ -731,6 +751,10 @@ void update_trigger_area_percent(Entity& entity, float dt) {
     ita.should_wave()  //
         ? ita.increase_progress(dt)
         : ita.decrease_progress(dt);
+
+    // If no one is currently standing on it or whatever
+    // then decrease the cooldown
+    if (!ita.should_progress()) ita.decrease_cooldown(dt);
 }
 
 void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
@@ -748,7 +772,7 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
         IsFloorMarker::Type::Store_PurchaseArea);
 
     if (!spawn_area) {
-        // TODO need to guarantee this exists long before we get here
+        // need to guarantee this exists long before we get here
         log_error("Could not find spawn area entity");
     }
 
@@ -763,7 +787,8 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
         };
 
         // Already has the machine so we good
-        if (IngredientHelper::has_machines_required_for_ingredient(ig)) return;
+        if (IngredientHelper::has_machines_required_for_ingredient(ig))
+            return bitset_utils::ForEachFlow::Continue;
 
         switch (ig) {
             case Soda: {
@@ -839,39 +864,16 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
             case Invalid:
                 break;
         }
+        return bitset_utils::ForEachFlow::NormalFlow;
     });
-}
-
-// TODO look at the blame for this and clean it up if we no longer need it
-inline void spawn_machines_for_new_unlock_DONOTCALL(IsRoundSettingsManager&) {
-    // We already spawn these in upgrade_system.h
-    //
-    /*
-    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
-        // Note we spawn free items in the purchase area so its more obvious
-        // that they are free
-        IsFloorMarker::Type::Store_PurchaseArea);
-
-    if (!spawn_area) {
-        // TODO need to guarantee this exists long before we get here
-        log_error("Could not find spawn area entity");
-    }
-
-    for (const auto& entity_to_spawn : irsm.entities_to_spawn) {
-        auto& entity = EntityHelper::createEntity();
-        if (entity_to_spawn.free) entity.addComponent<IsFreeInStore>();
-        convert_to_type(entity_to_spawn.type, entity,
-                        spawn_area->get<Transform>().as2());
-    }
-
-    irsm.entities_to_spawn.clear();
-    */
 }
 
 void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
-    const IsTriggerArea& ita = entity.get<IsTriggerArea>();
+    IsTriggerArea& ita = entity.get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
+
+    ita.reset_cooldown();
 
     const auto _choose_option = [](int option_chosen) {
         GameState::get().transition_to_store();
@@ -901,7 +903,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
                     // TODO why does this not show up in the pause menu?
                     irsm.selected_upgrades.push_back(optionImpl);
-                    bitset_utils::set(irsm.config.unlocked_upgrades, option);
+                    irsm.config.mark_upgrade_unlocked(option);
 
                     // They will be spawned in upgrade_system at Unlock time
 
@@ -924,6 +926,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                             Ingredient ig =
                                 magic_enum::enum_value<Ingredient>(index);
                             ipm.unlock_ingredient(ig);
+                            return bitset_utils::ForEachFlow::NormalFlow;
                         });
 
                     spawn_machines_for_newly_unlocked_drink_DONOTCALL(ipm,
@@ -937,22 +940,38 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     };
 
     switch (ita.type) {
+        case IsTriggerArea::Store_Reroll: {
+            system_manager::store::cleanup_old_store_options();
+            system_manager::store::generate_store_options();
+            {
+                OptEntity sophie =
+                    EntityQuery().whereType(EntityType::Sophie).gen_first();
+                IsBank& bank = sophie->get<IsBank>();
+
+                IsRoundSettingsManager& irsm =
+                    sophie->get<IsRoundSettingsManager>();
+                int reroll_price = irsm.get<int>(ConfigKey::StoreRerollPrice);
+                bank.withdraw(reroll_price);
+                irsm.config.permanently_modify(ConfigKey::StoreRerollPrice,
+                                               Operation::Add, 25);
+            }
+
+        } break;
         case IsTriggerArea::Unset:
             log_warn("Completed trigger area wait time but was Unset type");
             break;
         case IsTriggerArea::ModelTest_BackToLobby: {
             GameState::get().transition_to_lobby();
             {
-                // TODO add a tagging system so we can delete certain sets of
-                // ents
-                // ^ okay so i tried adding a CreationOptions component
-                // this worked great for any furniture, but all the
-                // items stayed floating
+                // TODO add a tagging system so we can delete certain sets
+                // of ents ^ okay so i tried adding a CreationOptions
+                // component this worked great for any furniture, but all
+                // the items stayed floating
                 //
                 // I think it could work but you would need to have items
-                // inherit the creation options of the parent? which might cause
-                // issues for permanant, when this is a simple brute force
-                // solution for now
+                // inherit the creation options of the parent? which might
+                // cause issues for permanant, when this is a simple brute
+                // force solution for now
                 float rad = 30;
                 const auto ents = EntityHelper::getAllInRange(
                     {MODEL_TEST_ORIGIN - rad, -1.f * rad},
@@ -971,7 +990,6 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         } break;
         case IsTriggerArea::Lobby_ModelTest: {
             GameState::get().transition_to_model_test();
-
             if (is_server()) {
                 network::Server* server =
                     GLOBALS.get_ptr<network::Server>("server");
@@ -1045,6 +1063,19 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
                 TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
             return;
         } break;
+        case IsTriggerArea::Store_Reroll: {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const IsRoundSettingsManager& irsm =
+                sophie.get<IsRoundSettingsManager>();
+            int reroll_cost = irsm.get<int>(ConfigKey::StoreRerollPrice);
+            auto str =
+                TranslatableString(strings::i18n::StoreReroll)
+                    .set_param(strings::i18nParam::RerollCost, reroll_cost);
+
+            ita.update_title(str);
+            ita.update_subtitle(str);
+            return;
+        } break;
         case IsTriggerArea::Unset:
         case IsTriggerArea::Progression_Option1:
         case IsTriggerArea::Progression_Option2:
@@ -1101,6 +1132,548 @@ void process_trigger_area(Entity& entity, float dt) {
     count_trigger_area_entrants(entity, dt);
     update_trigger_area_percent(entity, dt);
     trigger_cb_on_full_progress(entity, dt);
+}
+
+void update_visuals_for_settings_changer(Entity& entity, float) {
+    if (entity.is_missing<CanChangeSettingsInteractively>()) return;
+
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+    auto get_name = [](CanChangeSettingsInteractively::Style style,
+                       bool bool_value) {
+        auto bool_str = bool_value ? "Enabled" : "Disabled";
+
+        switch (style) {
+            case CanChangeSettingsInteractively::ToggleIsTutorial:
+                return fmt::format("Tutorial: {}", bool_str);
+                break;
+            case CanChangeSettingsInteractively::Unknown:
+                break;
+        }
+        log_warn(
+            "Tried to get_name for Interactive Setting Style {} but it was "
+            "not "
+            "handled",
+            magic_enum::enum_name<CanChangeSettingsInteractively::Style>(
+                style));
+        return std::string("");
+    };
+
+    auto update_color_for_bool = [](Entity& isc, bool value) {
+        // TODO eventually read from theme... (imports)
+        // auto color = value ? UI_THEME.from_usage(theme::Usage::Primary)
+        // : UI_THEME.from_usage(theme::Usage::Error);
+
+        auto color = value ?  //
+                         ::ui::color::green_apple
+                           : ::ui::color::red;
+
+        isc.get<SimpleColoredBoxRenderer>()  //
+            .update_face(color)
+            .update_base(color);
+    };
+
+    auto style = entity.get<CanChangeSettingsInteractively>().style;
+
+    switch (style) {
+        case CanChangeSettingsInteractively::ToggleIsTutorial: {
+            entity.get<HasName>().update(
+                get_name(style, irsm.interactive_settings.is_tutorial_active));
+            update_color_for_bool(entity,
+                                  irsm.interactive_settings.is_tutorial_active);
+        } break;
+        case CanChangeSettingsInteractively::Unknown:
+            break;
+    }
+}
+
+bool _create_nuxes(Entity&) {
+    if (GameState::get().read() != game::State::Planning) return false;
+
+    OptEntity player = EntityQuery(SystemManager::get().oldAll)
+                           .whereType(EntityType::Player)
+                           .gen_first();
+    if (!player.has_value()) return false;
+    OptEntity reg = EntityQuery().whereType(EntityType::Register).gen_first();
+    if (!reg.has_value()) return false;
+
+    int player_id = player->id;
+    int register_id = reg->id;
+
+    // Planning mode tutorial
+    if (1) {
+        // Find register
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .should_attach_to(player_id)
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn([register_id](const IsNux& inux) -> bool {
+                    OptEntity reg =
+                        EntityQuery().whereID(register_id).gen_first();
+                    if (!reg.has_value()) return false;
+
+                    // We have to do oldAll because players
+                    // are not in the normal entity list
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(inux.entityID)
+                        .whereInRange(reg->get<Transform>().as2(), 2.f)
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE("Look for the Register",
+                                            TodoReason::SubjectToChange));
+        }
+
+        // Grab register
+        {
+            const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
+                menu::State::Game, InputName::PlayerPickup);
+            const auto tex_name = KeyMap::get().icon_for_input(valid_inputs[0]);
+
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .should_attach_to(player_id)
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn([register_id](const IsNux& inux) -> bool {
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(inux.entityID)
+                        .whereIsHoldingFurnitureID(register_id)
+                        .has_values();
+                })
+                // TODO replace playerpickup with the actual control
+                .set_content(
+                    TODO_TRANSLATE(fmt::format("Grab it with [{}]", tex_name),
+                                   TodoReason::SubjectToChange));
+        }
+
+        // Place register
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn(
+                    [register_id, &entity](const IsNux&) -> bool {
+                        return EntityQuery()
+                            .whereID(register_id)
+                            .whereIsNotBeingHeld()
+                            .whereSnappedPositionMatches(entity)
+                            .has_values();
+                    })
+                .set_ghost(EntityType::Register)
+                .set_content(
+                    TODO_TRANSLATE("Place it on the highlighted square",
+                                   TodoReason::SubjectToChange));
+        }
+
+        // Find FFD
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+            OptEntity ffd =
+                EntityQuery().whereType(EntityType::FastForward).gen_first();
+            int ffd_id = ffd->id;
+
+            entity.addComponent<IsNux>()
+                .should_attach_to(ffd_id)
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn([ffd_id, player_id](const IsNux&) -> bool {
+                    OptEntity ffd = EntityQuery().whereID(ffd_id).gen_first();
+                    if (!ffd.has_value()) return false;
+
+                    // We have to do oldAll because players
+                    // are not in the normal entity list
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(player_id)
+                        .whereInRange(ffd->get<Transform>().as2(), 2.f)
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE(
+                    "You get all night to setup your pub.\nYou can "
+                    "use the FastForward Box to skip ahead",
+                    TodoReason::SubjectToChange));
+        }
+
+        // Use FFD
+        {
+            const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
+                menu::State::Game, InputName::PlayerDoWork);
+            const auto tex_name = KeyMap::get().icon_for_input(valid_inputs[0]);
+
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+            OptEntity ffd =
+                EntityQuery().whereType(EntityType::FastForward).gen_first();
+            int ffd_id = ffd->id;
+
+            entity.addComponent<IsNux>()
+                .should_attach_to(ffd_id)
+                .set_eligibility_fn([](const IsNux&) -> bool { return true; })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    auto e_ht =
+                        EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                    if (!e_ht.has_value()) return false;
+                    const HasTimer& timer = e_ht->get<HasTimer>();
+                    return timer.remaining_time_in_round() >= 50.f;
+                })
+                .set_content(TODO_TRANSLATE(
+                    fmt::format("Use [{}] to skip time", tex_name),
+                    TodoReason::SubjectToChange));
+        }
+    }
+
+    // During round tutorial
+    if (1) {
+        // Explain customer
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
+
+            entity.addComponent<IsNux>()
+                .should_cleanup_on_parent_death()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    // Now that the customer exists, we can attach to it
+                    auto customer = EntityQuery()
+                                        .whereType(EntityType::Customer)
+                                        .gen_first();
+                    inux.should_attach_to(customer->id);
+                })
+                .set_completion_fn([](const IsNux& inux) -> bool {
+                    if (inux.time_shown < 5.f) return false;
+
+                    auto customer = EntityHelper::getEntityForID(inux.entityID);
+                    if (!customer) return false;
+
+                    AIWaitInQueue& ai_wiq = customer->get<AIWaitInQueue>();
+                    return ai_wiq.line_wait.last_line_position == 0;
+                })
+                .set_content(TODO_TRANSLATE("This is a customer, they will "
+                                            "wait in line, \nand once at "
+                                            "the front will order a drink",
+                                            TodoReason::SubjectToChange));
+        }
+
+        // Grab a cup
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto cups = EntityQuery()
+                                    .whereType(EntityType::Cupboard)
+                                    .gen_first();
+                    inux.should_attach_to(cups->id);
+                })
+                .set_completion_fn([player_id](const IsNux&) -> bool {
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(player_id)
+                        .whereIsHoldingItemOfType(EntityType::Drink)
+                        .has_values();
+                })
+                .set_content(
+                    TODO_TRANSLATE("Grab a cup", TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto table =
+                        EntityQuery().whereType(EntityType::Table).gen_first();
+                    inux.should_attach_to(table->id);
+                })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    return EntityQuery()
+                        // Instead of finding the exact table we marked,
+                        // just find any table with a cup
+                        .whereType(EntityType::Table)
+                        .whereIsHoldingItemOfType(EntityType::Drink)
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE("Place it down on a table",
+                                            TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto sodamach = EntityQuery()
+                                        .whereType(EntityType::SodaMachine)
+                                        .gen_first();
+                    inux.should_attach_to(sodamach->id);
+                })
+                .set_completion_fn([player_id](const IsNux&) -> bool {
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereID(player_id)
+                        .whereIsHoldingItemOfType(EntityType::SodaSpout)
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE("Grab the soda wand",
+                                            TodoReason::SubjectToChange));
+        }
+
+        {
+            const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
+                menu::State::Game, InputName::PlayerDoWork);
+            const auto tex_name = KeyMap::get().icon_for_input(valid_inputs[0]);
+
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto drink =
+                        EntityQuery().whereType(EntityType::Drink).gen_first();
+                    inux.should_attach_to(drink->id);
+                })
+                .set_completion_fn([](const IsNux& inux) -> bool {
+                    return EntityQuery()
+                        .whereID(inux.entityID)
+                        .whereIsDrinkAndMatches(Drink::coke)
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE(
+                    fmt::format("Use [{}] to fill the cup with soda", tex_name),
+                    TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    bool filled_cup_exists =
+                        EntityQuery()
+                            .whereIsDrinkAndMatches(Drink::coke)
+                            .has_values();
+
+                    bool player_holding_spout =
+                        EntityQuery(SystemManager::get().oldAll)
+                            .whereType(EntityType::Player)
+                            .whereHasComponent<CanHoldItem>()
+                            .whereIsHoldingItemOfType(EntityType::SodaSpout)
+                            .has_values();
+                    return filled_cup_exists && player_holding_spout;
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto sodamach = EntityQuery()
+                                        .whereType(EntityType::SodaMachine)
+                                        .gen_first();
+                    inux.should_attach_to(sodamach->id);
+                })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    // No players holding spouts anymore
+                    return EntityQuery(SystemManager::get().oldAll)
+                        .whereType(EntityType::Player)
+                        .whereIsHoldingItemOfType(EntityType::SodaSpout)
+                        .is_empty();
+                })
+                .set_content(TODO_TRANSLATE("Place the soda wand back down",
+                                            TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            entity.addComponent<IsNux>()
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    // Wait until theres at least one customer
+                    return EntityQuery()
+                        .whereType(EntityType::Customer)
+                        .has_values();
+                })
+                .set_on_trigger([](IsNux& inux) {
+                    auto reg = EntityQuery()
+                                   .whereType(EntityType::Register)
+                                   .gen_first();
+                    inux.should_attach_to(reg->id);
+                })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    return EntityQuery()
+                        .whereType(EntityType::Register)
+                        .whereIsHoldingItemOfType(EntityType::Drink)
+                        .whereHeldItemMatches([](const Entity& item) {
+                            if (item.type != EntityType::Drink) return false;
+                            return item.get<IsDrink>().matches_drink(
+                                Drink::coke);
+                        })
+                        .has_values();
+                })
+                .set_content(TODO_TRANSLATE(
+                    "Place it on the register to serve the customer",
+                    TodoReason::SubjectToChange));
+        }
+
+        {
+            auto& entity = EntityHelper::createEntity();
+            make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
+
+            OptEntity ffd =
+                EntityQuery().whereType(EntityType::FastForward).gen_first();
+            int ffd_id = ffd->id;
+
+            entity.addComponent<IsNux>()
+                .should_attach_to(ffd_id)
+                .set_eligibility_fn([](const IsNux&) -> bool {
+                    if (!GameState::get().in_round()) return false;
+
+                    bool has_customers = EntityQuery()
+                                             .whereType(EntityType::Customer)
+                                             .has_values();
+                    if (!has_customers) return false;
+
+                    // TODO :DUPE: used as well for sophie checks
+                    const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
+                    bool all_customers_at_gather =
+                        EntityQuery()
+                            .whereType(EntityType::Customer)
+                            .whereNotInRange(endpos, TILESIZE * 2.f)
+                            .is_empty();
+
+                    auto e_ht =
+                        EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                    if (!e_ht.has_value()) return false;
+                    const HasTimer& timer = e_ht->get<HasTimer>();
+                    bool lt_halfway_through_day =
+                        timer.remaining_time_in_round() <= 50.f;
+
+                    return all_customers_at_gather && lt_halfway_through_day;
+                })
+                .set_completion_fn([](const IsNux&) -> bool {
+                    // hide when 80% through the day
+                    auto e_ht =
+                        EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                    if (!e_ht.has_value()) return false;
+                    const HasTimer& timer = e_ht->get<HasTimer>();
+                    return timer.remaining_time_in_round() >= 80.f;
+                })
+                .set_content(TODO_TRANSLATE("Since customers are all gone, \n"
+                                            "Fast Forward to the next day",
+                                            TodoReason::SubjectToChange));
+        }
+
+        // this is the upgrade room, you will either get a new recipe or a
+        // new gimmic for your restaurant
+        //
+        // often new upgrades, unlock new furniture. for the ones that are
+        // required, you will get one for free
+        //
+        // why is the "cant start until" showing so early in the day
+    }
+
+    log_info("created nuxes");
+    return true;
+}
+
+void process_nux_updates(Entity& entity, float dt) {
+    if (entity.is_missing<IsNuxManager>()) return;
+
+    // Tutorial isnt on so dont do any nuxes
+    if (!entity.get<IsRoundSettingsManager>()
+             .interactive_settings.is_tutorial_active)
+        return;
+
+    IsNuxManager& inm = entity.get<IsNuxManager>();
+    if (!inm.initialized) {
+        bool init = _create_nuxes(entity);
+        if (!init) return;
+        inm.initialized = init;
+    }
+
+    OptEntity active_nux = EntityQuery()
+                               .whereHasComponent<IsNux>()
+                               .whereLambda([](const Entity& entity) {
+                                   return entity.get<IsNux>().is_active;
+                               })
+                               // there should only ever be one
+                               .gen_first();
+
+    // Process updates for current showing nux
+    if (active_nux.has_value()) {
+        Entity& nux = active_nux.asE();
+        IsNux& inux = nux.get<IsNux>();
+
+        inux.pass_time(dt);
+
+        if (inux.whileShowing) inux.whileShowing(inux, dt);
+
+        bool parent_died = false;
+        if (inux.cleanup_on_parent_death && inux.entityID != -1) {
+            auto exi = EntityHelper::getEntityForID(inux.entityID);
+            parent_died = !exi.has_value();
+        }
+
+        if (parent_died || inux.isComplete(inux)) {
+            nux.cleanup = true;
+            inux.is_active = false;
+            active_nux = {};
+        }
+    }
+
+    // if that one is still active, nothing else to do
+    if (active_nux.has_value() && active_nux->get<IsNux>().is_active) return;
+
+    // find next active nux
+    OptEntity next_active = EntityQuery()
+                                .whereHasComponent<IsNux>()
+                                .whereLambda([](const Entity& entity) {
+                                    const IsNux& inux = entity.get<IsNux>();
+                                    return inux.shouldTrigger(inux);
+                                })
+                                .gen_first();
+
+    // if we found one, then make it active
+    if (next_active.has_value()) {
+        IsNux& inux = next_active->get<IsNux>();
+        if (inux.onTrigger) inux.onTrigger(inux);
+        inux.is_active = true;
+    }
 }
 
 void process_spawner(Entity& entity, float dt) {
@@ -1223,12 +1796,13 @@ void process_has_rope(Entity& entity, float) {
         if (!e) continue;
         // only route to players
         if (!check_type(*e, EntityType::Player)) continue;
-        auto i = e->get<CanHoldItem>().item();
-        if (!i) continue;
+        const CanHoldItem& e_chi = e->get<CanHoldItem>();
+        if (!e_chi.is_holding_item()) continue;
+        const Item& i = e_chi.item();
         // that are holding spouts
-        if (!check_type(*i, EntityType::SodaSpout)) continue;
+        if (!check_type(i, EntityType::SodaSpout)) continue;
         // that match the one we were holding
-        if (i->id != chi.last_id()) continue;
+        if (i.id != chi.last_id()) continue;
         player = *e;
     }
     if (!player) return;
@@ -1259,7 +1833,8 @@ void process_has_rope(Entity& entity, float) {
     }
 
     for (auto p : extended_path) {
-        Entity& item = EntityHelper::createItem(EntityType::SodaSpout, p);
+        Entity& item =
+            EntityHelper::createItem(EntityType::SodaSpout, vec::to3(p));
         item.get<IsItem>().set_held_by(EntityType::Player, player->id);
         item.addComponent<IsSolid>();
         hrti.add(item);
@@ -1279,10 +1854,10 @@ void process_squirter(Entity& entity, float) {
     if (sqCHI.empty()) return;
 
     // cant squirt into this !
-    if (sqCHI.item()->is_missing<IsDrink>()) return;
+    if (sqCHI.item().is_missing<IsDrink>()) return;
 
-    // so we got something, lets see if anyone around can give us something
-    // to use
+    // so we got something, lets see if anyone around can give us
+    // something to use
 
     OptEntity closest_furniture = EntityHelper::getClosestMatchingEntity(
         entity.get<Transform>().as2(), 1.25f, [](const Entity& f) {
@@ -1290,18 +1865,18 @@ void process_squirter(Entity& entity, float) {
             const CanHoldItem& fchi = f.get<CanHoldItem>();
             if (fchi.empty()) return false;
 
-            std::shared_ptr<Item> item = fchi.const_item();
+            const Item& item = fchi.const_item();
 
             // TODO should we instead check for <AddsIngredient>?
-            if (!check_type(*item, EntityType::Alcohol)) return false;
+            if (!check_type(item, EntityType::Alcohol)) return false;
             return true;
         });
     if (!closest_furniture) return;
 
-    std::shared_ptr<Entity> drink = sqCHI.item();
-    std::shared_ptr<Item> item = closest_furniture->get<CanHoldItem>().item();
+    Entity& drink = sqCHI.item();
+    Item& item = closest_furniture->get<CanHoldItem>().item();
 
-    bool cleanup = items::_add_item_to_drink_NO_VALIDATION(*drink, *item);
+    bool cleanup = items::_add_item_to_drink_NO_VALIDATION(drink, item);
     if (cleanup) {
         closest_furniture->get<CanHoldItem>().update(nullptr, -1);
     }
@@ -1315,7 +1890,7 @@ void process_trash(Entity& entity, float) {
     // If we arent holding anything, nothing to delete
     if (trashCHI.empty()) return;
 
-    trashCHI.item()->cleanup = true;
+    trashCHI.item().cleanup = true;
     trashCHI.update(nullptr, -1);
 }
 
@@ -1326,17 +1901,25 @@ void process_pnumatic_pipe_pairing(Entity& entity, float) {
 
     if (ipp.has_pair()) return;
 
-    for (Entity& other :
-         EntityQuery().whereHasComponent<IsPnumaticPipe>().gen()) {
-        if (other.cleanup) continue;
-        if (other.id == entity.id) continue;
-        IsPnumaticPipe& otherpp = other.get<IsPnumaticPipe>();
-        if (otherpp.has_pair()) continue;
+    OptEntity other_pipe = EntityQuery()  //
+                               .whereNotMarkedForCleanup()
+                               .whereNotID(entity.id)
+                               .whereHasComponent<IsPnumaticPipe>()
+                               .whereLambda([](const Entity& pipe) {
+                                   const IsPnumaticPipe& otherpp =
+                                       pipe.get<IsPnumaticPipe>();
+                                   // Find only the ones that dont have a
+                                   // pair
+                                   return !otherpp.has_pair();
+                               })
+                               .gen_first();
 
+    if (other_pipe.has_value()) {
+        IsPnumaticPipe& otherpp = other_pipe->get<IsPnumaticPipe>();
         otherpp.paired_id = entity.id;
-        ipp.paired_id = other.id;
-        break;
+        ipp.paired_id = other_pipe->id;
     }
+
     // still dont have a pair, we probably just have an odd number
     if (!ipp.has_pair()) return;
 }
@@ -1352,7 +1935,7 @@ void process_pnumatic_pipe_movement(Entity& entity, float) {
         return;
     }
 
-    int cur_id = chi.const_item()->id;
+    int cur_id = chi.const_item().id;
     ipp.item_id = cur_id;
 }
 
@@ -1386,24 +1969,20 @@ void reset_customers_that_need_resetting(Entity& entity) {
 
     {
         int max_num_orders =
-            // max() here to avoid a situation where we get 0 after an upgrade
+            // max() here to avoid a situation where we get 0 after an
+            // upgrade
             (int) fmax(1, irsm.get<int>(ConfigKey::MaxNumOrders));
-        cod.num_orders_rem = randIn(1, max_num_orders);
 
-        cod.num_orders_had = 0;
-        // If we have a forced order use that otherwise grab a random unlocked
-        // drink
-        cod.current_order = cod.forced_first_order.value_or(
-            progressionManager.get_random_unlocked_drink());
-        cod.forced_first_order = {};
-        cod.order_state = CanOrderDrink::OrderState::Ordering;
+        cod.reset_customer(max_num_orders,
+                           progressionManager.get_random_unlocked_drink());
     }
 
     {
         // Set the patience based on how many ingredients there are
-        // TODO add a map of ingredient to how long it probably takes to make
+        // TODO add a map of ingredient to how long it probably takes to
+        // make
 
-        auto ingredients = get_req_ingredients_for_drink(cod.current_order);
+        auto ingredients = get_req_ingredients_for_drink(cod.get_order());
         float patience_multiplier =
             irsm.get<float>(ConfigKey::PatienceMultiplier);
         entity.get<HasPatience>().update_max(ingredients.count() * 30.f *
@@ -1425,7 +2004,7 @@ void update_new_max_customers(Entity& entity, float) {
         float customer_spawn_multiplier =
             irsm.get<float>(ConfigKey::CustomerSpawnMultiplier);
         float round_length = irsm.get<float>(ConfigKey::RoundLength);
-        // TODO come up with a function to use here
+
         const int new_total =
             (int) fmax(2.f,  // force 2 at the beginning of the game
                              //
@@ -1451,9 +2030,10 @@ void reduce_impatient_customers(Entity& entity, float dt) {
     hp.pass_time(dt);
 
     // TODO actually do something when they get mad
-    if (hp.pct() <= 0) hp.reset();
-
-    log_warn("You wont like me when im angry");
+    if (hp.pct() <= 0) {
+        hp.reset();
+        log_warn("You wont like me when im angry");
+    }
 }
 
 void pass_time_for_active_fishing_games(Entity& entity, float dt) {
@@ -1556,24 +2136,40 @@ void cart_management(Entity& entity, float) {
 }
 
 void cleanup_old_store_options() {
+    OptEntity cart_area =
+        EntityQuery()
+            .whereHasComponent<IsFloorMarker>()
+            .whereLambda([](const Entity& entity) {
+                if (entity.is_missing<IsFloorMarker>()) return false;
+                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
+            })
+            .gen_first();
+
     for (Entity& entity :
          EntityQuery().whereHasComponent<IsStoreSpawned>().gen()) {
+        // ignore antyhing in the cart
+        if (cart_area) {
+            if (cart_area->get<IsFloorMarker>().is_marked(entity.id)) {
+                continue;
+            }
+        }
+
         entity.cleanup = true;
 
         // Also cleanup the item its holding if it has one
         if (entity.is_missing<CanHoldItem>()) continue;
         CanHoldItem& chi = entity.get<CanHoldItem>();
         if (!chi.is_holding_item()) continue;
-        if (!chi.item()) continue;
-        chi.item()->cleanup = true;
+        chi.item().cleanup = true;
     }
 }
 
 void generate_store_options() {
     // Figure out what kinds of things we can spawn generally
     // - what is spawnable?
-    // - are they capped by progression? (alcohol / fruits for sure right?)
-    // choose a couple options to spawn
+    // - are they capped by progression? (alcohol / fruits for sure
+    // right?) choose a couple options to spawn
     // - how many?
     // spawn them
     // - use the place machine thing
@@ -1598,12 +2194,10 @@ void generate_store_options() {
 
         auto& entity = EntityHelper::createEntity();
         entity.addComponent<IsStoreSpawned>();
+        vec2 random_spot = RandomEngine::get().get_vec(-3.f, 3.f);
+        log_info("random spot: {}", random_spot);
         bool success = convert_to_type(
-            etype, entity,
-            spawn_area->get<Transform>().as2() + vec2{
-                                                     1.f * randIn(-3, 3),
-                                                     1.f * randIn(-3, 3),
-                                                 });
+            etype, entity, spawn_area->get<Transform>().as2() + random_spot);
         if (success) {
             num_to_spawn--;
         } else {
@@ -1628,7 +2222,9 @@ void generate_store_options() {
 
         if (!success) {
             entity.cleanup = true;
-            log_error("Store spawn of newly unlocked item failed to generate");
+            log_error(
+                "Store spawn of newly unlocked item failed to "
+                "generate");
         }
     }
     irsm.config.store_to_spawn.clear();
@@ -1668,7 +2264,8 @@ void move_purchased_furniture() {
         }
 
         // Some items can hold other items, we should move that item too
-        // they arent being caught by the marker since we only mark solid items
+        // they arent being caught by the marker since we only mark
+        // solid items
         system_manager::update_held_item_position(marked_entity.asE(), 0.f);
 
         // Its not free!
@@ -1693,10 +2290,8 @@ namespace upgrade {
 inline void in_round_update(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
-
-    // TODO can i just use entity here? irsm should be on the same ent as ipm?
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    const IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+    if (entity.is_missing<IsProgressionManager>()) return;
+    const IsProgressionManager& ipm = entity.get<IsProgressionManager>();
 
     HasTimer& hasTimer = entity.get<HasTimer>();
     int hour = 100 - static_cast<int>(hasTimer.pct() * 100.f);
@@ -1746,7 +2341,8 @@ inline void in_round_update(Entity& entity, float) {
     for (const auto& upgrade : irsm.selected_upgrades) {
         if (!upgrade->onHourActions) continue;
 
-        // We start at 1 since its normal to have 1 hour missed ^^ see above
+        // We start at 1 since its normal to have 1 hour missed ^^ see
+        // above
         int i = 1;
         while (i < hours_missed) {
             log_info("running actions for {} for hour {} (currently {})",
@@ -1804,7 +2400,11 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
     // any changes will get overwritten by server every frame
     // but maybe itll matter
     //
-    // if (!is_server()) return;
+    // TODO maybe this should only NOT run for the host? since the latency
+    // is decent
+    //
+    // This check might cause lots of issues when high latency
+    if (!is_server()) return;
 
     // actual update
     {
@@ -1868,8 +2468,9 @@ void SystemManager::process_state_change(
             // Handle updating all the things that rely on progression
             system_manager::update_new_max_customers(entity, dt);
 
-            // I think this will only happen when you debug change round while
-            // customers are already in line, but doesnt hurt to reset
+            // I think this will only happen when you debug change round
+            // while customers are already in line, but doesnt hurt to
+            // reset
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
             system_manager::upgrade::on_round_finished(entity, dt);
@@ -1926,9 +2527,10 @@ void SystemManager::process_state_change(
 }
 
 void SystemManager::always_update(const Entities& entity_list, float dt) {
+    PathRequestManager::process_responses(entity_list);
+
     for_each(entity_list, dt, [](Entity& entity, float dt) {
-        system_manager::clear_all_floor_markers(entity, dt);
-        system_manager::mark_item_in_floor_area(entity, dt);
+        system_manager::process_floor_markers(entity, dt);
         system_manager::reset_highlighted(entity, dt);
 
         // TODO should be just planning + lobby?
@@ -1938,14 +2540,16 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
         system_manager::update_held_item_position(entity, dt);
 
         system_manager::process_trigger_area(entity, dt);
+        system_manager::update_visuals_for_settings_changer(entity, dt);
+        system_manager::process_nux_updates(entity, dt);
 
         system_manager::render_manager::update_character_model_from_index(
             entity, dt);
 
-        // TODO :SPEED: originally this was running in "process_game_state"
-        // and only supposed to run on transitions but
-        // when i fixed it to actually run only on transitions
-        // it broke the model for vodka (just different one) and lime
+        // TODO :SPEED: originally this was running in
+        // "process_game_state" and only supposed to run on transitions
+        // but when i fixed it to actually run only on transitions it
+        // broke the model for vodka (just different one) and lime
         // (invisible)
         //
         // For now its okay to stay here its just a perf thing
@@ -1960,6 +2564,7 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
 
         system_manager::process_is_container_and_should_backfill_item(entity,
                                                                       dt);
+        system_manager::pass_time_for_transaction_animation(entity, dt);
 
         // this function also handles the map validation code
         // rename it
@@ -2007,7 +2612,6 @@ void SystemManager::in_round_update(
         system_manager::reduce_impatient_customers(entity, dt);
 
         system_manager::pass_time_for_active_fishing_games(entity, dt);
-        system_manager::pass_time_for_transaction_animation(entity, dt);
 
         system_manager::upgrade::in_round_update(entity, dt);
     });
@@ -2015,7 +2619,8 @@ void SystemManager::in_round_update(
 
 void SystemManager::store_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // If you add something here think should it also go in planning?
+        // If you add something here think should it also go in
+        // planning?
         system_manager::update_held_furniture_position(entity, dt);
         system_manager::store::cart_management(entity, dt);
         system_manager::pop_out_when_colliding(entity, dt);
@@ -2037,8 +2642,8 @@ void SystemManager::planning_update(
 
 void SystemManager::progression_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // TODO this runs every progression frame when it probably just needs to
-        // run on transition
+        // TODO this runs every progression frame when it probably just
+        // needs to run on transition
         system_manager::progression::collect_progression_options(entity, dt);
     });
 }
@@ -2050,15 +2655,15 @@ void SystemManager::render_entities(const Entities& entities, float dt) const {
     // debug only
     system_manager::render_manager::render_walkable_spots(dt);
 
-    // TODO do measurements on if the game actually runs faster with camera
-    // culling
+    // TODO do measurements on if the game actually runs faster with
+    // camera culling
     //
     // GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
 
     for_each(entities, dt, [debug_mode_on](const Entity& entity, float dt) {
         // vec2 e_pos = entity.get<Transform>().as2();
-        // if (vec::distance(e_pos, vec::to2(cam.camera.position)) > 50.f) {
-        // return;
+        // if (vec::distance(e_pos,
+        // vec::to2(cam.camera.position)) > 50.f) { return;
         // }
 
         system_manager::render_manager::render(entity, dt, debug_mode_on);

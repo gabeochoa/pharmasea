@@ -16,8 +16,8 @@
 
 namespace network {
 struct Info;
-}
-extern std::shared_ptr<network::Info> network_info;
+}  // namespace network
+extern std::unique_ptr<network::Info> network_info;
 
 namespace network {
 
@@ -45,7 +45,7 @@ struct RoleInfoMixin {
     };
 
     Role desired_role = Role::s_None;
-    std::shared_ptr<Client> client;
+    std::unique_ptr<Client> client;
     std::thread::id client_thread_id;
     std::thread::id server_thread_id;
     std::thread server_thread;
@@ -57,7 +57,7 @@ struct RoleInfoMixin {
 
     void set_role(Role role) {
         const auto _setup_client = [&]() {
-            client = std::make_shared<Client>();
+            client = std::make_unique<Client>();
             client->update_username(Settings::get().data.username);
         };
 
@@ -130,10 +130,11 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
             k_ESteamNetworkingSocketsDebugOutputType_Msg, log_debug);
 
         reset_connections();
+        log_info("Initializing GNS Network Connections");
     }
 
     static void reset_connections() {
-        network_info = std::make_shared<network::Info>();
+        network_info = std::make_unique<network::Info>();
         if (network::ENABLE_REMOTE_IP) {
             my_remote_ip_address = get_remote_ip_address().value_or("");
         } else {
@@ -155,14 +156,15 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
         client->send_updated_seed(seed);
     }
 
+    void send_current_menu_state() {
+        if (is_host()) {
+            client->send_current_menu_state();
+        }
+    }
+
     void tick(float dt) {
         if (missing_role()) return;
         if (has_not_set_ip()) return;
-
-        if (is_host()) {
-            bool run = menu_state_tick_trigger.test(dt);
-            if (run) client->send_current_menu_state();
-        }
 
         client->tick(dt);
     }

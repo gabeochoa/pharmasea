@@ -32,7 +32,6 @@ struct AIWaitInQueue : public AIComponent {
                     return rpos1 < rpos2;
                 })
                 .gen_first();
-            // TODO Check to see if we can path to that spot
         }
     } target;
 
@@ -51,5 +50,6 @@ struct AIWaitInQueue : public AIComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<AIComponent>{});
+        s.object(target);
     }
 };

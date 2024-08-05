@@ -76,6 +76,18 @@ struct HasTimer : public BaseComponent {
     float roundSwitchCountdown = 5.f;
     int dayCount = 0;
 
+    float waitingTimer = 0.f;
+    float waitingTimerReset = 0.1f;
+    [[nodiscard]] bool waiting_time_pass(float dt) {
+        bool its_time = false;
+        waitingTimer -= dt;
+        if (waitingTimer < 0.f) {
+            its_time = true;
+            waitingTimer = waitingTimerReset;
+        }
+        return its_time;
+    }
+
     // TODO move into its own component
     enum WaitingReason {
         None,

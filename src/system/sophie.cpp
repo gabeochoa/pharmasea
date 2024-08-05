@@ -10,6 +10,7 @@
 #include "../components/has_waiting_queue.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
+#include "../components/is_toilet.h"
 #include "../components/transform.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/assert.h"
@@ -24,12 +25,14 @@
 namespace system_manager {
 
 namespace sophie {
+
 void customers_in_store(Entity& entity) {
     // Handle customers finally leaving the store
     // TODO with the others siwtch to something else... customer
     // spawner?
     const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
+    // TODO :DUPE: used as well for nux checks
     OptEntity any = EntityQuery()
                         .whereType(EntityType::Customer)
                         .whereNotInRange(endpos, TILESIZE * 2.f)
@@ -43,22 +46,10 @@ void customers_in_store(Entity& entity) {
 
 // Handle some player is holding furniture
 void player_holding_furniture(Entity& entity) {
-    bool all_empty = true;
-    // TODO i want to to do it this way: but players are not in
-    // entities, so its not possible
-    //
-    // auto players =
-    // EntityHelper::getAllWithComponent<CanHoldFurniture>();
+    bool all_empty = EntityQuery(SystemManager::get().oldAll)
+                         .whereIsHoldingAnyFurniture()
+                         .is_empty();
 
-    // TODO need support for 'break' to use for_each_old
-    for (std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
-        if (!e) continue;
-        if (e->is_missing<CanHoldFurniture>()) continue;
-        if (e->get<CanHoldFurniture>().is_holding_furniture()) {
-            all_empty = false;
-            break;
-        }
-    }
     entity.get<HasTimer>().write_reason(
         HasTimer::WaitingReason::HoldingFurniture, !all_empty,
         // players can figure it out on their own
@@ -66,8 +57,22 @@ void player_holding_furniture(Entity& entity) {
 }
 
 void bar_not_clean(Entity& entity) {
-    OptEntity any = EntityQuery().whereType(EntityType::Vomit).gen_first();
-    vec2 pos = any.has_value() ? any->get<Transform>().as2() : vec2{0, 0};
+    // are there any vomit anywhere?
+    auto any = EntityQuery().whereType(EntityType::Vomit).gen_first_position();
+
+    // is the toilet clean?
+    if (!any.has_value()) {
+        any =
+            EntityQuery()
+                .whereHasComponentAndLambda<IsToilet>(
+                    [](const IsToilet& istoilet) {
+                        return istoilet.state == IsToilet::State::NeedsCleaning;
+                    })
+                .gen_first_position();
+    }
+
+    vec2 pos = any.has_value() ? vec::to2(any->second) : vec2{0, 0};
+
     entity.get<HasTimer>().write_reason(HasTimer::WaitingReason::BarNotClean,
                                         any.has_value(), pos);
 }
@@ -81,7 +86,7 @@ void overlapping_furniture(Entity& entity) {
     vec2 range_min = {-50, -50};
     vec2 range_max = {50, 50};
 
-    auto solid_ents =
+    auto solid_ids =
         EntityQuery()                      //
             .whereHasComponent<IsSolid>()  //
                                            // Skip the soda rope because the
@@ -89,15 +94,8 @@ void overlapping_furniture(Entity& entity) {
                                            // are okay with that
             .whereNotType(EntityType::SodaSpout)  //
             .whereInside(range_min, range_max)    //
-            .gen();
-
-    // Convert them all to just ids and position
-    std::vector<std::pair<EntityID, vec3>> solid_ids;
-    std::transform(
-        solid_ents.begin(), solid_ents.end(), std::back_inserter(solid_ids),
-        [](Entity& ent) -> std::pair<EntityID, vec3> {
-            return std::make_pair(ent.id, ent.get<Transform>().pos());
-        });
+            // Convert them all to just ids and position
+            .gen_positions();
 
     const auto _hasDuplicates =
         [](const std::vector<std::pair<EntityID, vec3>>& arr) -> EntityID {
@@ -185,10 +183,7 @@ void lightweight_map_validation(Entity& entity) {
 
         auto new_path = pathfinder::find_path(
             customer.get<Transform>().as2(),
-            // TODO need a better way to do this
-            // 0 makes sense but is the position of the entity, when its
-            // infront?
-            r.get<Transform>().tile_infront(1),
+            r.get<Transform>().tile_directly_infront(),
             std::bind(EntityHelper::isWalkable, std::placeholders::_1));
 
         if (new_path.empty()) {
@@ -301,6 +296,7 @@ void deleting_item_needed_for_recipe(Entity& entity) {
         has_req_machines =
             has_req_machines &&
             IngredientHelper::has_machines_required_for_ingredient(ents, ig);
+        return bitset_utils::ForEachFlow::NormalFlow;
         // log_info(
         // "hasMachines {} {}",
         // magic_enum::enum_name<Ingredient>(ig),
@@ -326,18 +322,22 @@ void deleting_item_needed_for_recipe(Entity& entity) {
 }  // namespace sophie
 
 // TODO this function is 75% of our game update time spent
-void update_sophie(Entity& entity, float) {
+void update_sophie(Entity& entity, float dt) {
     if (!check_type(entity, EntityType::Sophie)) return;
     if (entity.is_missing<HasTimer>()) return;
 
     const auto debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    const HasTimer& ht = entity.get<HasTimer>();
+    HasTimer& ht = entity.get<HasTimer>();
 
     // TODO i dont like that this is copy paste from layers/round_end
     if (GameState::get().is_not(game::State::Planning) &&
         ht.get_current_round_time() > 0 && !debug_mode_on)
         return;
+
+    if (!ht.waiting_time_pass(dt)) {
+        return;
+    }
 
     // doing it this way so that if we wanna make them return bool itll be
     // easy
