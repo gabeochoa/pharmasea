@@ -11,6 +11,7 @@
 #include "components/ai_wait_in_queue.h"
 #include "components/ai_wandering.h"
 #include "components/can_change_settings_interactively.h"
+#include "components/can_hold_handtruck.h"
 #include "components/can_pathfind.h"
 #include "components/has_fishing_game.h"
 #include "components/has_last_interacted_customer.h"
@@ -151,6 +152,7 @@ void register_all_components() {
         CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
         CanOrderDrink, CanPathfind, CanChangeSettingsInteractively,
+        CanHoldHandTruck,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
@@ -234,6 +236,7 @@ void make_entity(Entity& entity, const DebugOptions& options, vec2 p) {
 void add_player_components(Entity& player) {
     player.addComponent<CanHighlightOthers>();
     player.addComponent<CanHoldFurniture>();
+    player.addComponent<CanHoldHandTruck>();
     player.get<HasBaseSpeed>().update(7.5f);
     player.addComponent<HasName>();
     player.addComponent<HasClientID>();
@@ -928,6 +931,7 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
 void make_hand_truck(Entity& handtruck, vec2 pos) {
     furniture::make_furniture(handtruck, {EntityType::HandTruck}, pos, BLUE,
                               BLUE);
+    handtruck.addComponent<CanHoldFurniture>();
 }
 
 namespace items {

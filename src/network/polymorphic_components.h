@@ -21,6 +21,7 @@
 #include "../components/can_grab_from_other_furniture.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
+#include "../components/can_hold_handtruck.h"
 #include "../components/can_hold_item.h"
 #include "../components/can_order_drink.h"
 #include "../components/can_pathfind.h"
@@ -88,7 +89,8 @@ struct PolymorphicBaseClass<BaseComponent>
           AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
           AIPlayJukebox, HasLastInteractedCustomer,
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
-          CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput
+          CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
+          CanHoldHandTruck
           // END
           > {};
 // If you add anything here ^^ then you should add that component to
