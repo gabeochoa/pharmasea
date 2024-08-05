@@ -68,6 +68,7 @@ enum struct EntityType {
     FruitJuice,
     SimpleSyrup,
     Mop,
+    HandTruck,
 
     // NOTE: Every time you add something above, add a 1 on the right of the
     // number below
@@ -89,7 +90,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b0111111111111111111111111111111111111111111111111;
+    return 0b01111111111111111111111111111111111111111111111111;
 #endif
 }
 
@@ -139,6 +140,7 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::Squirter:
         case EntityType::FilteredGrabber:
         case EntityType::PnumaticPipe:
+        case EntityType::HandTruck:
             return 200;
             // Non buyables
         case EntityType::FastForward:
@@ -202,6 +204,7 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::Cupboard:
         case EntityType::SodaMachine:
         case EntityType::Trash:
+        case EntityType::HandTruck:
             return StoreEligibilityType::OnStart;
         case EntityType::Conveyer:
         case EntityType::DraftTap:

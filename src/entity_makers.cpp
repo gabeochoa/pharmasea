@@ -925,6 +925,11 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
 
 }  // namespace furniture
 
+void make_hand_truck(Entity& handtruck, vec2 pos) {
+    furniture::make_furniture(handtruck, {EntityType::HandTruck}, pos, BLUE,
+                              BLUE);
+}
+
 namespace items {
 
 void make_item(Item& item, const DebugOptions& options, vec2 p) {
@@ -1580,6 +1585,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::Jukebox: {
             furniture::make_jukebox(entity, location);
+        } break;
+        case EntityType::HandTruck: {
+            make_hand_truck(entity, location);
         } break;
 
         // These return false

@@ -70,6 +70,7 @@ bool check_if_drink(const Entity& entity) {
         case EntityType::Jukebox:
         case EntityType::AITargetLocation:
         case EntityType::InteractiveSettingChanger:
+        case EntityType::HandTruck:
             return false;
         case EntityType::Pitcher:
         case EntityType::Drink:

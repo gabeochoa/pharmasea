@@ -232,6 +232,8 @@ void LevelInfo::generate_model_test_map() {
         }
     };
 
+    // TODO i was hoping this could enforce any missing
+    // but it doesnt seem like it
     std::array<ModelTestMapInfo, magic_enum::enum_count<EntityType>() - 25>
         static_map_info = {{
             //
@@ -264,6 +266,7 @@ void LevelInfo::generate_model_test_map() {
                 .spawner_type = ModelTestMapInfo::Some,
             },
             {EntityType::Jukebox},
+            {EntityType::HandTruck},
         }};
 
     const auto _carraige_return = [&]() {

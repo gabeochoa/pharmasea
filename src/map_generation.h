@@ -44,6 +44,7 @@ const char PIPE = 'p';
 const char MOP_HOLDER = 'm';
 const char FAST_FORWARD = 'f';
 const char MOP_BUDDY = 'B';
+const char HAND_TRUCK = 'H';
 
 const char SOPHIE = 's';
 
@@ -171,6 +172,9 @@ struct helper {
             } break;
             case TOILET: {
                 return EntityType::Toilet;
+            } break;
+            case HAND_TRUCK: {
+                return EntityType::HandTruck;
             } break;
             case 32: {
                 // space
