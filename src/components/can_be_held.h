@@ -23,3 +23,5 @@ struct CanBeHeld : public BaseComponent {
         s.value1b(held);
     }
 };
+
+struct CanBeHeld_HT : public CanBeHeld {};

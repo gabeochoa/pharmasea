@@ -23,6 +23,7 @@
 // => how can we communicate this to the player
 // TODO can you check if the tutorial buttons work for gameoad, its not
 // switching
+// TODO check polymorphic_components script should check entity_makers too
 
 namespace network {
 long long total_ping = 0;

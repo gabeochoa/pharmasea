@@ -105,6 +105,13 @@ struct PolymorphicBaseClass<AIComponent>
           // END
           > {};
 
+template<>
+struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
+                                             // BEGIN
+                                             CanBeHeld_HT
+                                             // END
+                                             > {};
+
 }  // namespace ext
 }  // namespace bitsery
 

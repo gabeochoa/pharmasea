@@ -93,6 +93,10 @@ bool is_collidable(const Entity& entity, OptEntity other) {
         return false;
     }
 
+    if (entity.has<CanBeHeld_HT>() && entity.get<CanBeHeld_HT>().is_held()) {
+        return false;
+    }
+
     if (check_type(entity, EntityType::MopBuddy)) {
         if (other && check_type(other.asE(), EntityType::MopBuddyHolder)) {
             return false;
@@ -333,6 +337,7 @@ void drop_held_furniture(Entity& player) {
 }
 
 void handle_grab_or_drop(Entity& player) {
+    log_info("Handle grab or drop, player is {}", player.type);
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
     CanHoldFurniture& ourCHF = player.get<CanHoldFurniture>();
 
@@ -796,9 +801,9 @@ bool handle_hand_truck(Entity& player) {
         chht.update(closest_handtruck->id,
                     closest_handtruck->get<Transform>().pos());
 
-        // OptEntity hand_truck =
-        // EntityHelper::getEntityForID(chht.hand_truck_id());
-        // hand_truck->get<CanBeHeld>().set_is_being_held(true);
+        OptEntity hand_truck =
+            EntityHelper::getEntityForID(chht.hand_truck_id());
+        hand_truck->get<CanBeHeld_HT>().set_is_being_held(true);
 
         // Note: we expect thatr since ^ set is held is true,
         // the previous position this furniture was at before you picked it up

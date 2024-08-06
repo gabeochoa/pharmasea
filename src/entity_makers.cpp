@@ -153,7 +153,7 @@ void register_all_components() {
         CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
         CanOrderDrink, CanPathfind, CanChangeSettingsInteractively,
-        CanHoldHandTruck,
+        CanHoldHandTruck, CanBeHeld_HT,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
@@ -957,7 +957,7 @@ void make_hand_truck(Entity& hand_truck, vec2 pos) {
     hand_truck.addComponent<CustomHeldItemPosition>().init(
         CustomHeldItemPosition::Positioner::Table);
 
-    // hand_truck.addComponent<CanBeHeld>();
+    hand_truck.addComponent<CanBeHeld_HT>();
 
     // TODO this is needed to process "reach" for pickup/drop
     hand_truck.addComponent<CanHighlightOthers>();
