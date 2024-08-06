@@ -496,6 +496,12 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
     });
 }
 
+void make_door(Entity& door, vec2 pos, Color c) {
+    furniture::make_furniture(door, DebugOptions{.type = EntityType::Door}, pos,
+                              c, c, true);
+    // TODO add open/close logic
+}
+
 void make_wall(Entity& wall, vec2 pos, Color c) {
     furniture::make_furniture(wall, DebugOptions{.type = EntityType::Wall}, pos,
                               c, c, true);
@@ -1542,6 +1548,10 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::MapRandomizer: {
             furniture::make_map_randomizer(entity, location);
+        } break;
+        case EntityType::Door: {
+            const auto d_color = Color{155, 75, 0, 255};
+            (furniture::make_door(entity, location, d_color));
         } break;
         case EntityType::Wall: {
             const auto d_color = Color{155, 75, 0, 255};

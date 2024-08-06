@@ -30,6 +30,7 @@
 
 // branch
 // - have store generate results
+// - store should lock while regenerating
 // - store should give one free reroll per day
 // - store should have a "locked" section so you can save things you might need
 // - add post office for free items from new recipies
