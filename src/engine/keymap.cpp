@@ -660,9 +660,14 @@ void KeyMap::load_game_keys() {
         raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
     };
 
+    game_map[InputName::PlayerHandTruckInteract] = {
+        raylib::KEY_C,
+        raylib::GAMEPAD_BUTTON_RIGHT_FACE_UP,
+    };
+
     game_map[InputName::ShowRecipeBook] = {
         raylib::KEY_TAB,
-        raylib::GAMEPAD_BUTTON_RIGHT_FACE_UP,
+        raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
     };
 
     game_map[InputName::Pause] = {
@@ -678,9 +683,9 @@ void KeyMap::load_game_keys() {
         raylib::KEY_BACKSLASH,
     };
 
+    // TODO remove this from the game
     game_map[InputName::ToggleNetworkView] = {
         raylib::KEY_EQUAL,
-        raylib::GAMEPAD_BUTTON_MIDDLE_LEFT,
     };
 
     game_map[InputName::ToggleDebugSettings] = {

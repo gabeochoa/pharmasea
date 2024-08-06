@@ -958,6 +958,10 @@ void make_hand_truck(Entity& hand_truck, vec2 pos) {
         CustomHeldItemPosition::Positioner::Table);
 
     // hand_truck.addComponent<CanBeHeld>();
+
+    // TODO this is needed to process "reach" for pickup/drop
+    hand_truck.addComponent<CanHighlightOthers>();
+
     hand_truck.addComponent<CanBeHighlighted>();
     hand_truck.addComponent<CanHoldFurniture>();
 }
