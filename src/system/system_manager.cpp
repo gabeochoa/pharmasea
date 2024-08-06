@@ -75,6 +75,32 @@ void generate_store_options();
 void move_purchased_furniture();
 }  // namespace store
 
+void move_player_out_of_building_SERVER_ONLY(Entity& entity,
+                                             const Building& building) {
+    if (!is_server()) {
+        log_warn(
+            "you are calling a server only function from a client context, "
+            "this is best case a no-op and worst case a visual desync");
+    }
+
+    vec3 position = vec::to3(building.vomit_location);
+    Transform& transform = entity.get<Transform>();
+    transform.update(position);
+
+    // TODO if we have multiple local players then we need to specify which here
+
+    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+
+    int client_id = server->get_client_id_for_entity(entity);
+    if (client_id == -1) {
+        log_warn("Tried to find a client id for entity but didnt find one");
+        return;
+    }
+
+    server->send_player_location_packet(client_id, position, transform.facing,
+                                        entity.get<HasName>().name());
+}
+
 void move_player_SERVER_ONLY(Entity& entity, game::State location) {
     if (!is_server()) {
         log_warn(
@@ -2445,7 +2471,7 @@ void close_buildings_when_night(Entity& entity) {
             if (!check_type(e, EntityType::Player)) return;
             if (CheckCollisionBoxes(e.get<Transform>().bounds(),
                                     building.bounds)) {
-                move_player_SERVER_ONLY(e, game::State::ModelTest);
+                move_player_out_of_building_SERVER_ONLY(e, building);
             }
         });
     }
