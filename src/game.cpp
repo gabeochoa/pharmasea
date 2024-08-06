@@ -29,7 +29,6 @@
 // change the resolution
 
 // branch
-// - move store closer
 // - have store generate results
 // - store should give one free reroll per day
 // - store should have a "locked" section so you can save things you might need
