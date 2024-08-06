@@ -29,10 +29,15 @@
 #include "vec_util.h"
 #include "wave_collapse.h"
 
-vec3 lobby_origin = {LOBBY_AREA[0], 0, 0};
-vec3 progression_origin = {PROGRESSION_AREA[0], 0, 0};
-vec3 model_test_origin = {MODEL_TEST_AREA[0], 0, 0};
-vec3 store_origin = {STORE_AREA[0], 0, 0};
+constexpr vec3 building_to_vec3(const std::array<float, 4> area) {
+    auto center = building::get_center(area);
+    return {center[0], 0, center[1]};
+}
+
+vec3 lobby_origin = building_to_vec3(LOBBY_AREA);
+vec3 progression_origin = building_to_vec3(PROGRESSION_AREA);
+vec3 model_test_origin = building_to_vec3(MODEL_TEST_AREA);
+vec3 store_origin = building_to_vec3(STORE_AREA);
 
 namespace wfc {
 extern Rectangle SPAWN_AREA;

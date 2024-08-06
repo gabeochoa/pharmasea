@@ -4,7 +4,7 @@
 
 #include <array>
 
-constexpr std::array<float, 4> MODEL_TEST_AREA = {100.f, 0.f, 30.f, 30.f};
+constexpr std::array<float, 4> MODEL_TEST_AREA = {100.f, -50.f, 30.f, 50.f};
 constexpr std::array<float, 4> LOBBY_AREA = {50.f, 0.f, 15.f, 15.f};
 constexpr std::array<float, 4> PROGRESSION_AREA = {-50.f, 0.f, 25.f, 25.f};
 constexpr std::array<float, 4> STORE_AREA = {-100.f, 0.f, 25.f, 25.f};
