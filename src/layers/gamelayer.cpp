@@ -100,14 +100,12 @@ void GameLayer::onUpdate(float dt) {
     }
 }
 
-void draw_building(const std::array<float, 4>& area) {
-    auto center = building::get_center(area);
-    vec3 position = {center[0], 0, center[1]};
-
+void draw_building(const Building& building) {
     Color f = Color{0, 250, 50, 15};
     Color b = Color{250, 0, 50, 15};
 
-    DrawCubeCustom(position, area[2], 1, area[3], 0, f, b);
+    DrawCubeCustom(building.to3(), building.area.width, 1, building.area.height,
+                   0, f, b);
 }
 
 void GameLayer::draw_world(float dt) {
@@ -125,11 +123,11 @@ void GameLayer::draw_world(float dt) {
         if (map_ptr) map_ptr->onDraw(dt);
 
         if (true || GLOBALS.get<bool>("debug_ui_enabled")) {
-            draw_building(LOBBY_AREA);
-            draw_building(MODEL_TEST_AREA);
-            draw_building(PROGRESSION_AREA);
-            draw_building(STORE_AREA);
-            draw_building(BAR_AREA);
+            draw_building(LOBBY_BUILDING);
+            draw_building(MODEL_TEST_BUILDING);
+            draw_building(PROGRESSION_BUILDING);
+            draw_building(STORE_BUILDING);
+            draw_building(BAR_BUILDING);
         }
 
         // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");

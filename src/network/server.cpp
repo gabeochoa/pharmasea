@@ -427,8 +427,7 @@ void Server::process_player_join_packet(
     int client_id = incoming_client.client_id;
 
     const auto get_position_for_current_state = [=]() -> vec3 {
-        const auto& center = building::get_center(LOBBY_AREA);
-        vec3 default_pos = {center[0], 0.f, center[1]};
+        vec3 default_pos = LOBBY_BUILDING.to3();
 
         auto current_game_state = GameState::get().read();
         // Not in game just spawn them in the lobby
@@ -443,16 +442,13 @@ void Server::process_player_join_packet(
             case game::Planning:
                 return {0.f, 0.f, 0.f};
             case game::Progression: {
-                const auto& prog = building::get_center(PROGRESSION_AREA);
-                return {prog[0], 0.f, prog[1]};
+                return PROGRESSION_BUILDING.to3();
             }
             case game::Store: {
-                const auto& store = building::get_center(STORE_AREA);
-                return {store[0], 0.f, store[1]};
+                return STORE_BUILDING.to3();
             }
             case game::ModelTest: {
-                const auto& model = building::get_center(MODEL_TEST_AREA);
-                return {model[0], 0.f, model[1]};
+                return MODEL_TEST_BUILDING.to3();
             }
         }
 

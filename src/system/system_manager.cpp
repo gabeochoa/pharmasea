@@ -49,6 +49,7 @@
 #include "../components/uses_character_model.h"
 #include "../dataclass/upgrades.h"
 #include "../engine/util.h"
+#include "raylib.h"
 #include "sophie.h"
 ///
 #include "../engine/pathfinder.h"
@@ -81,44 +82,41 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
             "this is best case a no-op and worst case a visual desync");
     }
 
-    std::array<float, 2> area_center;
+    vec3 position;
     switch (location) {
         case game::Paused:  // fall through
         case game::InMenu:
             return;
             break;
         case game::Lobby: {
-            area_center = building::get_center(LOBBY_AREA);
+            position = LOBBY_BUILDING.to3();
         } break;
         case game::InRound:  // fall through
         case game::Planning: {
             OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
                 IsFloorMarker::Planning_SpawnArea);
             if (!spawn_area) {
-                area_center[0] = 0;
-                area_center[1] = 0;
+                position = {0, 0, 0};
             } else {
                 // this is a guess based off the current size of the trigger
                 // area
                 // TODO read the actual size?
                 // TODO validate nothing is already there
                 vec2 pos = spawn_area.asE().get<Transform>().as2();
-                area_center[0] = pos.x;
-                area_center[1] = pos.y + 3;
+                position = {pos.x, 0, pos.y + 3};
             }
         } break;
         case game::Progression: {
-            area_center = building::get_center(PROGRESSION_AREA);
+            position = PROGRESSION_BUILDING.to3();
         } break;
         case game::Store: {
-            area_center = building::get_center(STORE_AREA);
+            position = STORE_BUILDING.to3();
         } break;
         case game::ModelTest: {
-            area_center = building::get_center(MODEL_TEST_AREA);
+            position = MODEL_TEST_BUILDING.to3();
         } break;
     }
 
-    vec3 position = {area_center[0], 0, area_center[1]};
     Transform& transform = entity.get<Transform>();
     transform.update(position);
 
@@ -1010,11 +1008,9 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 // this assumption changes the box we delete items in
                 // new: 100, 0 => 150, 50
                 // old: 70, -30 => 130, 30
-                auto model_min = building::get_min(MODEL_TEST_AREA);
-                auto model_max = building::get_max(MODEL_TEST_AREA);
 
                 const auto ents = EntityHelper::getAllInRange(
-                    {model_min[0], model_min[1]}, {model_max[0], model_max[1]});
+                    MODEL_TEST_BUILDING.min(), MODEL_TEST_BUILDING.max());
 
                 for (Entity& to_delete : ents) {
                     // TODO add a way to skip the permananent ones

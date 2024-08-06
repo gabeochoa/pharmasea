@@ -30,15 +30,10 @@
 #include "vec_util.h"
 #include "wave_collapse.h"
 
-constexpr vec3 building_to_vec3(const std::array<float, 4> area) {
-    auto center = building::get_center(area);
-    return {center[0], 0, center[1]};
-}
-
-vec3 lobby_origin = building_to_vec3(LOBBY_AREA);
-vec3 progression_origin = building_to_vec3(PROGRESSION_AREA);
-vec3 model_test_origin = building_to_vec3(MODEL_TEST_AREA);
-vec3 store_origin = building_to_vec3(STORE_AREA);
+vec3 lobby_origin = LOBBY_BUILDING.to3();
+vec3 progression_origin = PROGRESSION_BUILDING.to3();
+vec3 model_test_origin = MODEL_TEST_BUILDING.to3();
+vec3 store_origin = STORE_BUILDING.to3();
 
 namespace wfc {
 extern Rectangle SPAWN_AREA;
@@ -67,49 +62,50 @@ void LevelInfo::onDrawUI(float dt) {
     SystemManager::get().render_ui(entities, dt);
 }
 
-void generate_walls_for_building(const std::array<float, 4>& area,
-                                 const std::vector<vec2>& doors) {
+void generate_walls_for_building(const Building& building) {
     std::vector<RefEntity> walls;
-    walls.reserve((int) (area[2] + area[3]) * 2);
+    walls.reserve((int) (building.area.width + building.area.height) * 2);
 
-    for (int i = 0; i < (int) area[2]; i++) {
+    for (int i = 0; i < (int) building.area.width; i++) {
         // top
         {
             auto& entity = EntityHelper::createEntity();
-            convert_to_type(EntityType::Wall, entity,
-                            vec2{area[0], area[1]} + vec2{i * 1.f, 0});
+            convert_to_type(
+                EntityType::Wall, entity,
+                vec2{building.area.x, building.area.y} + vec2{i * 1.f, 0});
             walls.push_back(entity);
         }
         // bottom
         {
             auto& entity = EntityHelper::createEntity();
-            convert_to_type(
-                EntityType::Wall, entity,
-                vec2{area[0], area[1]} + vec2{i * 1.f, area[3] - 1});
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{building.area.x, building.area.y} +
+                                vec2{i * 1.f, building.area.height - 1});
             walls.push_back(entity);
         }
     }
 
-    for (int j = 1; j < (int) area[3] - 1; j++) {
+    for (int j = 1; j < (int) building.area.height - 1; j++) {
         // left
         {
             auto& entity = EntityHelper::createEntity();
-            convert_to_type(EntityType::Wall, entity,
-                            vec2{area[0], area[1]} + vec2{0, j * 1.f});
+            convert_to_type(
+                EntityType::Wall, entity,
+                vec2{building.area.x, building.area.y} + vec2{0, j * 1.f});
             walls.push_back(entity);
         }
         // right
         {
             auto& entity = EntityHelper::createEntity();
-            convert_to_type(
-                EntityType::Wall, entity,
-                vec2{area[0], area[1]} + vec2{area[2] - 1, j * 1.f});
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{building.area.x, building.area.y} +
+                                vec2{building.area.width - 1, j * 1.f});
             walls.push_back(entity);
         }
     }
 
     bool skip = false;
-    for (auto& door_pos : doors) {
+    for (auto& door_pos : building.doors) {
         for (RefEntity entityref : walls) {
             // we already deleted one wall,
             if (skip) continue;
@@ -422,16 +418,7 @@ void LevelInfo::generate_model_test_map() {
 }
 
 void LevelInfo::generate_progression_map() {
-    {
-        auto center = building::get_center(PROGRESSION_AREA);
-        generate_walls_for_building(
-            PROGRESSION_AREA,
-            {
-                {center[0], PROGRESSION_AREA[1] + PROGRESSION_AREA[3] - 1},
-                {center[0] - 1, PROGRESSION_AREA[1] + PROGRESSION_AREA[3] - 1},
-                {center[0] + 1, PROGRESSION_AREA[1] + PROGRESSION_AREA[3] - 1},
-            });
-    }
+    generate_walls_for_building(PROGRESSION_BUILDING);
 
     {
         auto& entity = EntityHelper::createPermanentEntity();
@@ -449,15 +436,7 @@ void LevelInfo::generate_progression_map() {
 }
 
 void LevelInfo::generate_store_map() {
-    {
-        auto center = building::get_center(STORE_AREA);
-        generate_walls_for_building(
-            STORE_AREA, {
-                            {center[0], STORE_AREA[1] + STORE_AREA[3] - 1},
-                            {center[0] - 1, STORE_AREA[1] + STORE_AREA[3] - 1},
-                            {center[0] + 1, STORE_AREA[1] + STORE_AREA[3] - 1},
-                        });
-    }
+    generate_walls_for_building(STORE_BUILDING);
 
     {
         auto& entity = EntityHelper::createPermanentEntity();
