@@ -25,6 +25,34 @@
 // switching
 // TODO check polymorphic_components script should check entity_makers too
 
+// branch
+// - move store closer
+// - have store generate results
+// - store should give one free reroll per day
+// - store should have a "locked" section so you can save things you might need
+// - add post office for free items from new recipies
+// -> mailbox upgrade which gives a closer place to pick up items
+// - school should give new recipies
+// - recycle / landfill for selling&destroying furniture you dont need
+// - add tutorial for using handtruck
+// - add upgraded handtruck for easier movement
+// - add a way to stop people from leaving a floor area to stop stealing
+// attempts
+//
+// open questions
+// - where do upgrades come in?
+// - how do you fail?
+// - do customers leave when its day time (without finishing ordering)
+//  -> punishment would be to lose the money
+// - what if the goal is to make enough money to pay off your landlord?
+// - can you manually close the bar?
+//   -> value would be to be able to move furniture around similar to planning
+//   mode
+// - how bad is it if other players can see items spawn in?
+//  -> maybe the upgrade just "mails" the items to the spawn area (eventually
+//  can add a parachute animation or something )
+//
+
 namespace network {
 long long total_ping = 0;
 long long there_ping = 0;
