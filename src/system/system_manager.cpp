@@ -170,6 +170,34 @@ void process_floor_markers(Entity& entity, float dt) {
     mark_item_in_floor_area(entity, dt);
 }
 
+void update_held_hand_truck_position(Entity& entity, float) {
+    if (entity.is_missing_any<Transform, CanHoldHandTruck>()) return;
+
+    const Transform& transform = entity.get<Transform>();
+    const CanHoldHandTruck& can_hold_hand_truck =
+        entity.get<CanHoldHandTruck>();
+
+    if (can_hold_hand_truck.empty()) return;
+
+    auto new_pos = transform.pos();
+    if (transform.face_direction() & Transform::FrontFaceDirection::FORWARD) {
+        new_pos.z += TILESIZE;
+    }
+    if (transform.face_direction() & Transform::FrontFaceDirection::RIGHT) {
+        new_pos.x += TILESIZE;
+    }
+    if (transform.face_direction() & Transform::FrontFaceDirection::BACK) {
+        new_pos.z -= TILESIZE;
+    }
+    if (transform.face_direction() & Transform::FrontFaceDirection::LEFT) {
+        new_pos.x -= TILESIZE;
+    }
+
+    OptEntity hand_truck =
+        EntityHelper::getEntityForID(can_hold_hand_truck.hand_truck_id());
+    hand_truck->get<Transform>().update(new_pos);
+}
+
 void update_held_furniture_position(Entity& entity, float) {
     if (entity.is_missing_any<Transform, CanHoldFurniture>()) return;
 
@@ -2545,6 +2573,7 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
 
         system_manager::render_manager::update_character_model_from_index(
             entity, dt);
+        system_manager::update_held_hand_truck_position(entity, dt);
 
         // TODO :SPEED: originally this was running in
         // "process_game_state" and only supposed to run on transitions

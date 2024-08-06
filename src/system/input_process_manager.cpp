@@ -706,7 +706,106 @@ void handle_grab(Entity& player) {
                                 strings::sounds::PICKUP);
 }
 
+bool handle_drop_hand_truck(Entity& player) {
+    log_info("Handle drop hand truck");
+
+    Transform& transform = player.get<Transform>();
+    CanHoldHandTruck& chht = player.get<CanHoldHandTruck>();
+    OptEntity hand_truck = EntityHelper::getEntityForID(chht.hand_truck_id());
+    if (!hand_truck) {
+        log_error(
+            "We are supposed to be holding a handtruck but the id is bad "
+            "{}",
+            chht.hand_truck_id());
+        return true;
+    }
+    vec3 drop_location = player.get<Transform>().drop_location();
+
+    // We have to use the non cached version because the pickup location
+    // is in the cache
+    bool can_place =
+        EntityHelper::isWalkableRawEntities(vec::to2(drop_location));
+
+    // need to make sure it doesnt place ontop of another one
+    // log_info("you cant place that here...");
+    if (!can_place) {
+        return true;
+    }
+
+    // hand_truck->get<CanBeHeld>().set_is_being_held(false);
+    Transform& hftrans = hand_truck->get<Transform>();
+    hftrans.update(drop_location);
+
+    chht.update(-1, vec3{});
+    log_info("we {} dropped the handtruck {} we were holding", player.id,
+             hand_truck->id);
+
+    EntityHelper::invalidatePathCache();
+
+    // TODO :PICKUP: i dont like that these are spread everywhere,
+    network::Server::play_sound(player.get<Transform>().as2(),
+                                strings::sounds::PLACE);
+
+    {
+        auto my_bounds = transform.bounds();
+        auto their_bounds = hftrans.bounds();
+
+        if (raylib::CheckCollisionBoxes(my_bounds, their_bounds)) {
+            // player is inside dropped object
+            transform.update(vec::to3(transform.tile_behind(0.15f)));
+        }
+    }
+    return false;
+}
+
+bool handle_hand_truck(Entity& player) {
+    log_info("Handle hand truck");
+    const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
+    const Transform& transform = player.get<Transform>();
+    CanHoldHandTruck& chht = player.get<CanHoldHandTruck>();
+
+    const auto handle_grab_hand_truck = [&]() -> bool {
+        log_info("Handle grab hand truck");
+
+        // TODO need a way to ignore ones that are held by someone else
+        OptEntity closest_handtruck =
+            EntityQuery()
+                .whereInRange(transform.as2(), cho.reach())
+                .whereType(EntityType::HandTruck)
+                .gen_first();
+        // no match
+        if (!closest_handtruck) return false;
+
+        chht.update(closest_handtruck->id,
+                    closest_handtruck->get<Transform>().pos());
+
+        // OptEntity hand_truck =
+        // EntityHelper::getEntityForID(chht.hand_truck_id());
+        // hand_truck->get<CanBeHeld>().set_is_being_held(true);
+
+        // Note: we expect thatr since ^ set is held is true,
+        // the previous position this furniture was at before you picked it up
+        // should now be walkable but for some reason the preview doesnt turn
+        // red
+        EntityHelper::invalidatePathCache();
+
+        // TODO :PICKUP: i dont like that these are spread everywhere,
+        network::Server::play_sound(player.get<Transform>().as2(),
+                                    strings::sounds::PICKUP);
+        return true;
+    };
+
+    // We dont have to check CanHoldFurniture because you cant hold anything
+    // without a handtruck during inround mode
+    return (chht.empty() ? handle_grab_hand_truck()
+                         : handle_drop_hand_truck(player));
+}
+
 void handle_grab_or_drop(Entity& player) {
+    // Handtruck takes precedence
+    bool holding = handle_hand_truck(player);
+    if (holding) return;
+
     // Do we already have something in our hands?
     // We must be trying to drop it
     player.get<CanHoldItem>().empty() ? handle_grab(player)

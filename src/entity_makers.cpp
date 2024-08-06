@@ -34,6 +34,7 @@
 #include "engine/ui/color.h"
 #include "engine/util.h"
 #include "entity.h"
+#include "entity_helper.h"
 #include "entity_type.h"
 //
 #include "client_server_comm.h"
@@ -928,10 +929,37 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
 
 }  // namespace furniture
 
-void make_hand_truck(Entity& handtruck, vec2 pos) {
-    furniture::make_furniture(handtruck, {EntityType::HandTruck}, pos, BLUE,
-                              BLUE);
-    handtruck.addComponent<CanHoldFurniture>();
+void make_hand_truck(Entity& hand_truck, vec2 pos) {
+    const DebugOptions options = {EntityType::HandTruck};
+    make_entity(hand_truck, options, pos);
+
+    hand_truck.get<Transform>().init({pos.x, 0, pos.y},
+                                     {TILESIZE, TILESIZE, TILESIZE});
+    hand_truck.addComponent<IsSolid>();
+    hand_truck.addComponent<SimpleColoredBoxRenderer>()
+        .update_face(BLUE)
+        .update_base(BLUE);
+
+    if (ENABLE_MODELS) {
+        auto model_name = util::convertToSnakeCase<EntityType>(options.type);
+        if (ModelInfoLibrary::get().has(model_name)) {
+            hand_truck.addComponent<ModelRenderer>(options.type);
+        }
+    }
+
+    if (hand_truck.is_missing<ModelRenderer>()) {
+        hand_truck.get<Transform>().update_visual_offset({0, -0.25f, 0});
+        hand_truck.get<Transform>().update_size(
+            {TILESIZE, TILESIZE * 0.5f, TILESIZE});
+    }
+
+    // we need to add it to set a default, so its here
+    hand_truck.addComponent<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Table);
+
+    // hand_truck.addComponent<CanBeHeld>();
+    hand_truck.addComponent<CanBeHighlighted>();
+    hand_truck.addComponent<CanHoldFurniture>();
 }
 
 namespace items {
