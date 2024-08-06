@@ -207,6 +207,21 @@ void process_player_movement_input(Entity& entity, float dt,
     auto new_position_z = transform.pos();
 
     const auto getSpeedMultiplier = [&]() {
+        if (entity.has<CanHoldHandTruck>()) {
+            const CanHoldHandTruck& chht = entity.get<CanHoldHandTruck>();
+            if (chht.is_holding()) {
+                OptEntity hand_truck =
+                    EntityHelper::getEntityForID(chht.hand_truck_id());
+                if (hand_truck) {
+                    const CanHoldFurniture& ht_chf =
+                        hand_truck->get<CanHoldFurniture>();
+                    if (ht_chf.is_holding_furniture()) {
+                        return 0.5f;
+                    }
+                }
+            }
+        }
+
         OptEntity overlap =
             EntityHelper::getOverlappingEntityIfExists(entity, 0.75f);
         if (!overlap.has_value()) return 1.f;
