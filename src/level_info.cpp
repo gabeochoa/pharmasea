@@ -83,13 +83,14 @@ void generate_walls_for_building(const std::array<float, 4>& area,
         // bottom
         {
             auto& entity = EntityHelper::createEntity();
-            convert_to_type(EntityType::Wall, entity,
-                            vec2{area[0], area[1]} + vec2{i * 1.f, area[3]});
+            convert_to_type(
+                EntityType::Wall, entity,
+                vec2{area[0], area[1]} + vec2{i * 1.f, area[3] - 1});
             walls.push_back(entity);
         }
     }
 
-    for (int j = 0; j < (int) area[3]; j++) {
+    for (int j = 1; j < (int) area[3] - 1; j++) {
         // left
         {
             auto& entity = EntityHelper::createEntity();
@@ -100,8 +101,9 @@ void generate_walls_for_building(const std::array<float, 4>& area,
         // right
         {
             auto& entity = EntityHelper::createEntity();
-            convert_to_type(EntityType::Wall, entity,
-                            vec2{area[0], area[1]} + vec2{area[2], j * 1.f});
+            convert_to_type(
+                EntityType::Wall, entity,
+                vec2{area[0], area[1]} + vec2{area[2] - 1, j * 1.f});
             walls.push_back(entity);
         }
     }
@@ -419,9 +421,9 @@ void LevelInfo::generate_progression_map() {
         generate_walls_for_building(
             PROGRESSION_AREA,
             {
-                {center[0], PROGRESSION_AREA[1] + PROGRESSION_AREA[3]},
-                {center[0] - 1, PROGRESSION_AREA[1] + PROGRESSION_AREA[3]},
-                {center[0] + 1, PROGRESSION_AREA[1] + PROGRESSION_AREA[3]},
+                {center[0], PROGRESSION_AREA[1] + PROGRESSION_AREA[3] - 1},
+                {center[0] - 1, PROGRESSION_AREA[1] + PROGRESSION_AREA[3] - 1},
+                {center[0] + 1, PROGRESSION_AREA[1] + PROGRESSION_AREA[3] - 1},
             });
     }
 
@@ -445,9 +447,9 @@ void LevelInfo::generate_store_map() {
         auto center = building::get_center(STORE_AREA);
         generate_walls_for_building(
             STORE_AREA, {
-                            {center[0], STORE_AREA[1] + STORE_AREA[3]},
-                            {center[0] - 1, STORE_AREA[1] + STORE_AREA[3]},
-                            {center[0] + 1, STORE_AREA[1] + STORE_AREA[3]},
+                            {center[0], STORE_AREA[1] + STORE_AREA[3] - 1},
+                            {center[0] - 1, STORE_AREA[1] + STORE_AREA[3] - 1},
+                            {center[0] + 1, STORE_AREA[1] + STORE_AREA[3] - 1},
                         });
     }
 
