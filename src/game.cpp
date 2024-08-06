@@ -24,6 +24,9 @@
 // TODO can you check if the tutorial buttons work for gameoad, its not
 // switching
 // TODO check polymorphic_components script should check entity_makers too
+// TODO when the resolution is larger than the monitor, pop up something to
+// suggest changing it, if the diff is too large, then itll be impossible to
+// change the resolution
 
 // branch
 // - move store closer

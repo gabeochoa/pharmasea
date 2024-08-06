@@ -1,6 +1,7 @@
 
 #include "level_info.h"
 
+#include "building_locations.h"
 #include "camera.h"
 #include "components/can_change_settings_interactively.h"
 #include "components/can_hold_furniture.h"
@@ -27,6 +28,11 @@
 #include "system/system_manager.h"
 #include "vec_util.h"
 #include "wave_collapse.h"
+
+vec3 lobby_origin = {LOBBY_AREA[0], 0, 0};
+vec3 progression_origin = {PROGRESSION_AREA[0], 0, 0};
+vec3 model_test_origin = {MODEL_TEST_AREA[0], 0, 0};
+vec3 store_origin = {STORE_AREA[0], 0, 0};
 
 namespace wfc {
 extern Rectangle SPAWN_AREA;

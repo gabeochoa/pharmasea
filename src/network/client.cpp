@@ -2,6 +2,7 @@
 
 #include "client.h"
 
+#include "../building_locations.h"
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
 #include "../engine/sound_library.h"
@@ -123,7 +124,8 @@ void Client::client_process_message_string(const std::string& msg) {
         // want this in the array that is serialized, this should only live
         // in remote_players
         Entity* entity = new Entity();
-        make_remote_player(*entity, {LOBBY_ORIGIN, 0, 0});
+        const auto& center = building::get_center(LOBBY_AREA);
+        make_remote_player(*entity, {center[0], 0, center[1]});
         remote_players[client_id] = std::shared_ptr<Entity>(entity);
         const auto& rp = remote_players[client_id];
         rp->get<HasClientID>().update(client_id);

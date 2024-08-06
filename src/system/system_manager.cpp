@@ -3,6 +3,7 @@
 #include "system_manager.h"
 
 ///
+#include "../building_locations.h"
 #include "../components/adds_ingredient.h"
 #include "../components/base_component.h"
 #include "../components/can_be_ghost_player.h"
@@ -80,41 +81,44 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
             "this is best case a no-op and worst case a visual desync");
     }
 
-    vec3 position;
+    std::array<float, 2> area_center;
     switch (location) {
         case game::Paused:  // fall through
         case game::InMenu:
             return;
             break;
         case game::Lobby: {
-            position = {LOBBY_ORIGIN, 0, 0};
+            area_center = building::get_center(LOBBY_AREA);
         } break;
         case game::InRound:  // fall through
         case game::Planning: {
             OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
                 IsFloorMarker::Planning_SpawnArea);
             if (!spawn_area) {
-                position = {0, 0, 0};
+                area_center[0] = 0;
+                area_center[1] = 0;
             } else {
                 // this is a guess based off the current size of the trigger
                 // area
                 // TODO read the actual size?
                 // TODO validate nothing is already there
                 vec2 pos = spawn_area.asE().get<Transform>().as2();
-                position = {pos.x, 0, pos.y + 3};
+                area_center[0] = pos.x;
+                area_center[1] = pos.y + 3;
             }
         } break;
         case game::Progression: {
-            position = {PROGRESSION_ORIGIN, 0, 0};
+            area_center = building::get_center(PROGRESSION_AREA);
         } break;
         case game::Store: {
-            position = {STORE_ORIGIN, 0, 0};
+            area_center = building::get_center(STORE_AREA);
         } break;
         case game::ModelTest: {
-            position = {MODEL_TEST_ORIGIN, 0, 0};
+            area_center = building::get_center(MODEL_TEST_AREA);
         } break;
     }
 
+    vec3 position = {area_center[0], 0, area_center[1]};
     Transform& transform = entity.get<Transform>();
     transform.update(position);
 
@@ -1000,10 +1004,17 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 // inherit the creation options of the parent? which might
                 // cause issues for permanant, when this is a simple brute
                 // force solution for now
-                float rad = 30;
+
+                // NOTE: pre-building code, we used to use the 100,0 positio
+                // as the origin and not the top left corner.
+                // this assumption changes the box we delete items in
+                // new: 100, 0 => 150, 50
+                // old: 70, -30 => 130, 30
+                auto model_min = building::get_min(MODEL_TEST_AREA);
+                auto model_max = building::get_max(MODEL_TEST_AREA);
+
                 const auto ents = EntityHelper::getAllInRange(
-                    {MODEL_TEST_ORIGIN - rad, -1.f * rad},
-                    {MODEL_TEST_ORIGIN + rad, rad});
+                    {model_min[0], model_min[1]}, {model_max[0], model_max[1]});
 
                 for (Entity& to_delete : ents) {
                     // TODO add a way to skip the permananent ones
