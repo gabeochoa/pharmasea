@@ -2565,7 +2565,10 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
         // maybe a second one for highlighting items?
         system_manager::highlight_facing_furniture(entity, dt);
         system_manager::transform_snapper(entity, dt);
+
         system_manager::update_held_item_position(entity, dt);
+        system_manager::update_held_furniture_position(entity, dt);
+        system_manager::update_held_hand_truck_position(entity, dt);
 
         system_manager::process_trigger_area(entity, dt);
         system_manager::update_visuals_for_settings_changer(entity, dt);
@@ -2573,7 +2576,6 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
 
         system_manager::render_manager::update_character_model_from_index(
             entity, dt);
-        system_manager::update_held_hand_truck_position(entity, dt);
 
         // TODO :SPEED: originally this was running in
         // "process_game_state" and only supposed to run on transitions
@@ -2650,7 +2652,6 @@ void SystemManager::store_update(const Entities& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         // If you add something here think should it also go in
         // planning?
-        system_manager::update_held_furniture_position(entity, dt);
         system_manager::store::cart_management(entity, dt);
         system_manager::pop_out_when_colliding(entity, dt);
 
