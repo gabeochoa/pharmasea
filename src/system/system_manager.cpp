@@ -2430,6 +2430,27 @@ void on_night_started(Entity& entity) {
 
 }  // namespace day_night
 
+void close_buildings_when_night(Entity& entity) {
+    // just choosing this since theres only one
+    if (!check_type(entity, EntityType::Sophie)) return;
+
+    const std::array<Building, 2> buildings_that_close = {
+        PROGRESSION_BUILDING,
+        STORE_BUILDING,
+    };
+
+    for (const Building& building : buildings_that_close) {
+        // Teleport anyone inside a store outside
+        SystemManager::get().for_each_old([&](Entity& e) {
+            if (!check_type(e, EntityType::Player)) return;
+            if (CheckCollisionBoxes(e.get<Transform>().bounds(),
+                                    building.bounds)) {
+                move_player_SERVER_ONLY(e, game::State::ModelTest);
+            }
+        });
+    }
+}
+
 }  // namespace system_manager
 
 void SystemManager::on_game_state_change(game::State new_state,
@@ -2545,6 +2566,8 @@ void SystemManager::process_state_change(
 
             system_manager::day_night::on_day_ended(entity);
             system_manager::day_night::on_night_started(entity);
+
+            system_manager::close_buildings_when_night(entity);
 
             // TODO
             // system_manager::upgrade::on_round_started(entity, dt);
