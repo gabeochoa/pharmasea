@@ -12,6 +12,7 @@
 #include "components/is_round_settings_manager.h"
 #include "components/is_store_spawned.h"
 #include "components/is_trigger_area.h"
+#include "components/transform.h"
 #include "dataclass/ingredient.h"
 #include "engine/bitset_utils.h"
 #include "engine/globals.h"
@@ -64,6 +65,63 @@ void LevelInfo::onDraw(float dt) const {
 
 void LevelInfo::onDrawUI(float dt) {
     SystemManager::get().render_ui(entities, dt);
+}
+
+void generate_walls_for_building(const std::array<float, 4>& area,
+                                 const std::vector<vec2>& doors) {
+    std::vector<RefEntity> walls;
+    walls.reserve((int) (area[2] + area[3]) * 2);
+
+    for (int i = 0; i < (int) area[2]; i++) {
+        // top
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{area[0], area[1]} + vec2{i * 1.f, 0});
+            walls.push_back(entity);
+        }
+        // bottom
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{area[0], area[1]} + vec2{i * 1.f, area[3]});
+            walls.push_back(entity);
+        }
+    }
+
+    for (int j = 0; j < (int) area[3]; j++) {
+        // left
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{area[0], area[1]} + vec2{0, j * 1.f});
+            walls.push_back(entity);
+        }
+        // right
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{area[0], area[1]} + vec2{area[2], j * 1.f});
+            walls.push_back(entity);
+        }
+    }
+
+    bool skip = false;
+    for (auto& door_pos : doors) {
+        for (RefEntity entityref : walls) {
+            // we already deleted one wall,
+            if (skip) continue;
+
+            Entity& entity = entityref;
+            if (entity.cleanup) continue;
+            const Transform& transform = entity.get<Transform>();
+            vec2 pos = transform.as2();
+            if (vec::distance(pos, door_pos) > 1.f) continue;
+            entity.cleanup = true;
+        }
+
+        skip = false;
+    }
 }
 
 void LevelInfo::grab_things() {
@@ -357,6 +415,17 @@ void LevelInfo::generate_model_test_map() {
 
 void LevelInfo::generate_progression_map() {
     {
+        auto center = building::get_center(PROGRESSION_AREA);
+        generate_walls_for_building(
+            PROGRESSION_AREA,
+            {
+                {center[0], PROGRESSION_AREA[1] + PROGRESSION_AREA[3]},
+                {center[0] - 1, PROGRESSION_AREA[1] + PROGRESSION_AREA[3]},
+                {center[0] + 1, PROGRESSION_AREA[1] + PROGRESSION_AREA[3]},
+            });
+    }
+
+    {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
             entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
@@ -372,6 +441,16 @@ void LevelInfo::generate_progression_map() {
 }
 
 void LevelInfo::generate_store_map() {
+    {
+        auto center = building::get_center(STORE_AREA);
+        generate_walls_for_building(
+            STORE_AREA, {
+                            {center[0], STORE_AREA[1] + STORE_AREA[3]},
+                            {center[0] - 1, STORE_AREA[1] + STORE_AREA[3]},
+                            {center[0] + 1, STORE_AREA[1] + STORE_AREA[3]},
+                        });
+    }
+
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
