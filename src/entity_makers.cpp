@@ -27,6 +27,7 @@
 #include "components/is_round_settings_manager.h"
 #include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
+#include "components/responds_to_day_night.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
 #include "engine/bitset_utils.h"
@@ -159,7 +160,9 @@ void register_all_components() {
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
         HasFishingGame, HasLastInteractedCustomer,
         // render
-        ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
+        ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer,
+        // responds to
+        RespondsToDayNight
         //
         >();
     // TODO now that we have removeComponent we could remove some instead
@@ -496,10 +499,21 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
     });
 }
 
-void make_door(Entity& door, vec2 pos, Color c) {
+void make_door(Entity& door, vec2 pos, Color) {
     furniture::make_furniture(door, DebugOptions{.type = EntityType::Door}, pos,
-                              c, c, true);
-    // TODO add open/close logic
+                              ui::color::ugly_yellow, ui::color::ugly_blue,
+                              true);
+
+    // we start at day
+    door.removeComponent<IsSolid>();
+
+    door.addComponent<RespondsToDayNight>()
+        .registerOnDayStarted([](Entity& door) {
+            // TODO kick everyone out of the store
+            door.removeComponent<IsSolid>();
+        })
+        .registerOnNightStarted(
+            [](Entity& door) { door.addComponent<IsSolid>(); });
 }
 
 void make_wall(Entity& wall, vec2 pos, Color c) {

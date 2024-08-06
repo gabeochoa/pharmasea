@@ -61,6 +61,7 @@
 #include "../components/is_toilet.h"
 #include "../components/is_trigger_area.h"
 #include "../components/model_renderer.h"
+#include "../components/responds_to_day_night.h"
 #include "../components/responds_to_user_input.h"
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
@@ -90,7 +91,7 @@ struct PolymorphicBaseClass<BaseComponent>
           AIPlayJukebox, HasLastInteractedCustomer,
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
-          CanHoldHandTruck
+          CanHoldHandTruck, RespondsToDayNight
           // END
           > {};
 // If you add anything here ^^ then you should add that component to

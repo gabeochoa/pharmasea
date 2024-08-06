@@ -118,11 +118,17 @@ void generate_walls_for_building(const std::array<float, 4>& area,
             if (entity.cleanup) continue;
             const Transform& transform = entity.get<Transform>();
             vec2 pos = transform.as2();
-            if (vec::distance(pos, door_pos) > 1.f) continue;
+            if (vec::distance(pos, door_pos) >= 1.f) continue;
             entity.cleanup = true;
         }
 
         skip = false;
+
+        // place door in that spot
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Door, entity, door_pos);
+        }
     }
 }
 

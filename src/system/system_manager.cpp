@@ -2413,6 +2413,27 @@ inline void on_round_finished(Entity& entity, float) {
 
 }  // namespace upgrade
 
+namespace day_night {
+void on_day_ended(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_day_ended();
+}
+
+void on_night_ended(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_night_ended();
+}
+void on_day_started(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_day_started();
+}
+void on_night_started(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_night_started();
+}
+
+}  // namespace day_night
+
 }  // namespace system_manager
 
 void SystemManager::on_game_state_change(game::State new_state,
@@ -2513,6 +2534,9 @@ void SystemManager::process_state_change(
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
             system_manager::upgrade::on_round_finished(entity, dt);
+
+            system_manager::day_night::on_night_ended(entity);
+            system_manager::day_night::on_day_started(entity);
         });
     };
 
@@ -2522,6 +2546,9 @@ void SystemManager::process_state_change(
                 entity);
             system_manager::release_mop_buddy_at_start_of_day(entity);
             system_manager::delete_trash_when_leaving_planning(entity);
+
+            system_manager::day_night::on_day_ended(entity);
+            system_manager::day_night::on_night_started(entity);
 
             // TODO
             // system_manager::upgrade::on_round_started(entity, dt);
