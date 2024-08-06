@@ -14,13 +14,18 @@ using Entities = std::vector<std::shared_ptr<Entity>>;
 using bitsery::ext::PointerObserver;
 
 struct BaseComponent;
-constexpr int max_num_components = 64;
+constexpr int max_num_components = 128;
 using ComponentID = int;
 
 namespace components {
 namespace internal {
 inline ComponentID get_unique_id() noexcept {
     static ComponentID lastID{0};
+    // TODO this doesnt work for some reason
+    // if (lastID + 1 > max_num_components)
+    // log_error(
+    // "You are trying to add a new component but you have used up all "
+    // "the space allocated, updated max_num");
     return lastID++;
 }
 
