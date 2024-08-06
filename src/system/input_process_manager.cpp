@@ -206,6 +206,9 @@ void process_player_movement_input(Entity& entity, float dt,
     auto new_position_x = transform.pos();
     auto new_position_z = transform.pos();
 
+    // TODO :DESIGN: this should be separate functions or something because
+    // at the moment the order really matters, but probably we want these
+    // to be additive? (like handtruck full & vomit is 25% speed??)
     const auto getSpeedMultiplier = [&]() {
         if (entity.has<CanHoldHandTruck>()) {
             const CanHoldHandTruck& chht = entity.get<CanHoldHandTruck>();
