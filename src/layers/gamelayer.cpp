@@ -129,6 +129,7 @@ void GameLayer::draw_world(float dt) {
             draw_building(MODEL_TEST_AREA);
             draw_building(PROGRESSION_AREA);
             draw_building(STORE_AREA);
+            draw_building(BAR_AREA);
         }
 
         // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
