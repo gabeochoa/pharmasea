@@ -108,6 +108,10 @@ constexpr float distance(const vec2 a, const vec2 b) {
     return ce_sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
+constexpr float distance_sq(const vec2 a, const vec2 b) {
+    return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+}
+
 inline float dot2(const vec2& a, const vec2& b) {
     return (a.x * b.x + a.y * b.y);
 }

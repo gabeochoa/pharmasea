@@ -25,7 +25,7 @@ struct PathRequestManager {
         OnCompleteFn onComplete;
     };
 
-    std::vector<std::shared_ptr<Entity>> entities_storage_;
+    std::vector<vec2> entities_storage_;
     std::mutex entities_mutex_;
     AtomicQueue<PathRequest> request_queue;
 

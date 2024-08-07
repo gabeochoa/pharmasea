@@ -13,6 +13,9 @@
 namespace bfs {
 const int MAX_PATH_LENGTH = 50;
 
+static constexpr int neigh_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+static constexpr int neigh_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
 struct bfs {
     struct node {
         vec2 pos;
@@ -33,20 +36,6 @@ struct bfs {
             delete all[i];
         }
         all.clear();
-    }
-
-    std::vector<vec2> get_neighbors(vec2 pos) {
-        std::vector<vec2> output;
-        vec::forEachNeighbor(
-            static_cast<int>(pos.x), static_cast<int>(pos.y),
-            [&](const vec2& v) {
-                auto neighbor = vec::snap(v);
-                if (is_walkable(neighbor)) {
-                    output.push_back(neighbor);
-                }
-            },
-            1);
-        return output;
     }
 
     std::deque<vec2> reconstruct(node* n) {
@@ -70,16 +59,30 @@ struct bfs {
         while (!queue.empty()) {
             node* n = queue.front();
             queue.pop_front();
-            if (vec::distance(n->pos, end) < 2.f) {
+            if (vec::distance_sq(n->pos, end) < 4.f) {
                 queue.clear();
                 return reconstruct(n);
             }
 
-            if (vec::distance(n->pos, end) > MAX_PATH_LENGTH) {
+            if (vec::distance_sq(n->pos, end) >
+                (MAX_PATH_LENGTH * MAX_PATH_LENGTH)) {
                 continue;
             }
 
-            const auto neighbors = get_neighbors(n->pos);
+            std::vector<vec2> neighbors;
+            {
+                neighbors.reserve(8);
+                int i = static_cast<int>(n->pos.x);
+                int j = static_cast<int>(n->pos.y);
+                for (int a = 0; a < 8; a++) {
+                    auto position = (vec2{(float) i + (neigh_x[a]),
+                                          (float) j + (neigh_y[a])});
+                    auto neighbor = vec::snap(position);
+                    if (is_walkable(neighbor)) {
+                        neighbors.push_back(neighbor);
+                    }
+                }
+            }
 
             for (const auto neighbor : neighbors) {
                 if (visited.contains(neighbor)) continue;

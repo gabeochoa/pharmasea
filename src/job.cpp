@@ -44,6 +44,5 @@
 //
 
 bool Job::is_at_position(const Entity& entity, vec2 position) {
-    return vec::distance(entity.get<Transform>().as2(), position) <
-           (TILESIZE / 2.f);
+    return vec::distance_sq(entity.get<Transform>().as2(), position) < (0.25f);
 }

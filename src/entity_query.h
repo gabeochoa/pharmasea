@@ -115,7 +115,7 @@ struct EntityQuery {
         bool operator()(const Entity& entity) const override {
             vec2 pos = entity.get<Transform>().as2();
             if (should_snap) pos = vec::snap(pos);
-            return vec::distance(position, pos) < range;
+            return vec::distance_sq(position, pos) < (range * range);
         }
     };
     auto& whereInRange(vec2 position, float range) {
@@ -244,8 +244,8 @@ struct EntityQuery {
 
     auto& orderByDist(vec2 position) {
         return orderByLambda([=](const Entity& a, const Entity& b) {
-            float a_dist = vec::distance(a.get<Transform>().as2(), position);
-            float b_dist = vec::distance(b.get<Transform>().as2(), position);
+            float a_dist = vec::distance_sq(a.get<Transform>().as2(), position);
+            float b_dist = vec::distance_sq(b.get<Transform>().as2(), position);
             return a_dist < b_dist;
         });
     }
