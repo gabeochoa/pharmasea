@@ -188,6 +188,8 @@ void mark_item_in_floor_area(Entity& entity, float) {
             .whereHasComponent<IsSolid>()
             .whereCollides(
                 entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))
+            // we want to include store items since it has many floor areas
+            .include_store_entities()
             .gen_ids();
 
     ifm.mark_all(std::move(ids));
@@ -366,6 +368,7 @@ void highlight_facing_furniture(Entity& entity, float) {
     OptEntity match = EntityQuery()
                           .whereInRange(transform.as2(), cho.reach())
                           .whereHasComponent<CanBeHighlighted>()
+                          .include_store_entities()
                           .gen_first();
     if (!match) return;
 
@@ -436,11 +439,18 @@ void process_conveyer_items(Entity& entity, float dt) {
         return _conveyer_filter(furn);
     };
 
-    OptEntity match = is_ipp
-                          ? EntityHelper::getClosestMatchingEntity(
-                                transform.as2(), MAX_SEARCH_RANGE, _ipp_filter)
-                          : EntityHelper::getClosestMatchingFurniture(
-                                transform, 1.f, _conveyer_filter);
+    OptEntity match;
+    if (is_ipp) {
+        auto pos = transform.as2();
+        match = EntityQuery()
+                    .whereLambda(_ipp_filter)
+                    .whereInRange(pos, MAX_SEARCH_RANGE)
+                    .orderByDist(pos)
+                    .gen_first();
+    } else {
+        match = EntityHelper::getMatchingEntityInFront(
+            transform.as2(), 1.f, transform.face_direction(), _conveyer_filter);
+    }
 
     // no match means we can't continue, stay in the middle
     if (!match) {
@@ -1757,7 +1767,8 @@ void process_spawner(Entity& entity, float dt) {
 
     bool should_prev_dupes = iss.prevent_dupes();
     if (should_prev_dupes) {
-        for (const Entity& e : EntityHelper::getEntitiesInPosition(pos)) {
+        for (const Entity& e :
+             EntityQuery().whereInRange(pos, TILESIZE).gen()) {
             if (e.id == entity.id) continue;
 
             // Other than invalid and Us, is there anything else there?
@@ -1920,18 +1931,21 @@ void process_squirter(Entity& entity, float) {
     // so we got something, lets see if anyone around can give us
     // something to use
 
-    OptEntity closest_furniture = EntityHelper::getClosestMatchingEntity(
-        entity.get<Transform>().as2(), 1.25f, [](const Entity& f) {
-            if (f.is_missing<CanHoldItem>()) return false;
-            const CanHoldItem& fchi = f.get<CanHoldItem>();
-            if (fchi.empty()) return false;
+    auto pos = entity.get<Transform>().as2();
+    OptEntity closest_furniture =
+        EntityQuery()
+            .whereHasComponentAndLambda<CanHoldItem>(
+                [](const CanHoldItem& chi) {
+                    if (chi.empty()) return false;
+                    const Item& item = chi.const_item();
+                    // TODO should we instead check for <AddsIngredient>?
+                    if (!check_type(item, EntityType::Alcohol)) return false;
+                    return true;
+                })
+            .whereInRange(pos, 1.25f)
+            .orderByDist(pos)
+            .gen_first();
 
-            const Item& item = fchi.const_item();
-
-            // TODO should we instead check for <AddsIngredient>?
-            if (!check_type(item, EntityType::Alcohol)) return false;
-            return true;
-        });
     if (!closest_furniture) return;
 
     Entity& drink = sqCHI.item();
@@ -2133,7 +2147,9 @@ void pop_out_when_colliding(Entity& entity, float) {
 
     OptEntity match = EntityHelper::getOverlappingEntityIfExists(
         entity, 0.75f,
-        [](const Entity& entity) { return entity.has<IsSolid>(); });
+        [](const Entity& entity) { return entity.has<IsSolid>(); },
+        true /* include store entities */
+    );
     if (!match) return;
 
     const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
@@ -2205,6 +2221,7 @@ void cleanup_old_store_options() {
                 const IsFloorMarker& fm = entity.get<IsFloorMarker>();
                 return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
             })
+            .include_store_entities()
             .gen_first();
 
     OptEntity locked_area =
@@ -2215,10 +2232,13 @@ void cleanup_old_store_options() {
                 const IsFloorMarker& fm = entity.get<IsFloorMarker>();
                 return fm.type == IsFloorMarker::Type::Store_LockedArea;
             })
+            .include_store_entities()
             .gen_first();
 
-    for (Entity& entity :
-         EntityQuery().whereHasComponent<IsStoreSpawned>().gen()) {
+    for (Entity& entity : EntityQuery()
+                              .whereHasComponent<IsStoreSpawned>()
+                              .include_store_entities()
+                              .gen()) {
         // ignore antyhing in the cart
         if (cart_area) {
             if (cart_area->get<IsFloorMarker>().is_marked(entity.id)) {

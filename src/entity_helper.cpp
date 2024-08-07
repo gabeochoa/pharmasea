@@ -221,9 +221,11 @@ OptEntity EntityHelper::getEntityForID(EntityID id) {
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,
                                          const EntityType& type, float range) {
     const Transform& transform = entity.get<Transform>();
-    return EntityHelper::getClosestMatchingEntity(
-        transform.as2(), range,
-        [type](const Entity& entity) { return check_type(entity, type); });
+    return EntityQuery()
+        .whereType(type)
+        .whereInRange(transform.as2(), range)
+        .orderByDist(transform.as2())
+        .gen_first();
 }
 
 OptEntity EntityHelper::getMatchingFloorMarker(IsFloorMarker::Type type) {
@@ -240,17 +242,10 @@ OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
         .gen_first();
 }
 
+// TODO: make this more explicit that we are ignoring store entities
+// (this was already the default but new callers should know)
 bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
     return EntityQuery().whereType(type).has_values();
-}
-
-std::vector<RefEntity> EntityHelper::getFilteredEntitiesInRange(
-    vec2 pos, float range, const std::function<bool(const Entity&)>& filter) {
-    return EntityQuery().whereLambda(filter).whereInRange(pos, range).gen();
-}
-
-std::vector<RefEntity> EntityHelper::getEntitiesInRange(vec2 pos, float range) {
-    return EntityQuery().whereInRange(pos, range).gen();
 }
 
 OptEntity EntityHelper::getMatchingEntityInFront(
@@ -309,38 +304,37 @@ OptEntity EntityHelper::getMatchingEntityInFront(
     return {};
 }
 
-OptEntity EntityHelper::getClosestMatchingEntity(
-    vec2 pos, float range, const std::function<bool(const Entity&)>& filter) {
-    return EntityQuery()
-        .whereLambda(filter)
-        .whereInRange(pos, range)
-        .orderByDist(pos)
-        .gen_first();
-}
-
 RefEntities EntityHelper::getAllInRangeFiltered(
     vec2 range_min, vec2 range_max,
     const std::function<bool(const Entity&)>& filter) {
     return EntityQuery()
         .whereInside(range_min, range_max)
+        // idk its called all
+        .include_store_entities()
         .whereLambda(filter)
         .gen();
 }
 
 RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
-    return EntityQuery().whereInside(range_min, range_max).gen();
+    return EntityQuery()
+        .whereInside(range_min, range_max)
+        // idk its called all
+        .include_store_entities()
+        .gen();
 }
 
 OptEntity EntityHelper::getOverlappingEntityIfExists(
     const Entity& entity, float range,
-    const std::function<bool(const Entity&)>& filter) {
+    const std::function<bool(const Entity&)>& filter,
+    bool include_store_entities) {
     const vec2 position = entity.get<Transform>().as2();
-    return EntityQuery()                   //
-        .whereNotID(entity.id)             //
-        .whereLambdaExistsAndTrue(filter)  //
-        .whereHasComponent<IsSolid>()      //
-        .whereInRange(position, range)     //
-        .wherePositionMatches(entity)      //
+    return EntityQuery()                                 //
+        .whereNotID(entity.id)                           //
+        .whereLambdaExistsAndTrue(filter)                //
+        .whereHasComponent<IsSolid>()                    //
+        .whereInRange(position, range)                   //
+        .wherePositionMatches(entity)                    //
+        .include_store_entities(include_store_entities)  //
         .gen_first();
 }
 

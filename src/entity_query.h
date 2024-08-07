@@ -358,8 +358,8 @@ struct EntityQuery {
         entities = ents;
     }
 
-    auto& ignore_default_selections() {
-        ignore_default_mods = true;
+    auto& include_store_entities(bool include = true) {
+        _include_store_entities = include;
         return *this;
     }
 
@@ -371,7 +371,7 @@ struct EntityQuery {
     mutable RefEntities ents;
     mutable bool ran_query = false;
 
-    bool ignore_default_mods = false;
+    bool _include_store_entities = false;
 
     EntityQuery& add_mod(Modification* mod) {
         mods.push_back(std::unique_ptr<Modification>(mod));

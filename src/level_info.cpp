@@ -475,12 +475,19 @@ void LevelInfo::generate_store_map() {
                             return fm.type ==
                                    IsFloorMarker::Type::Store_PurchaseArea;
                         })
+                        .include_store_entities()
                         .gen_first();
                 if (!cart_area.valid())
                     return {false, strings::i18n::InternalError};
 
                 const auto ents =
-                    EntityQuery().whereHasComponent<IsStoreSpawned>().gen();
+                    // TODO does there need ot be a better way to handle
+                    // this kind of query where its literally only asking for
+                    // store spawned stuff
+                    EntityQuery()
+                        .whereHasComponent<IsStoreSpawned>()
+                        .include_store_entities()
+                        .gen();
 
                 // If its free and not marked, then we cant continue
                 for (const Entity& ent : ents) {

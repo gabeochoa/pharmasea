@@ -86,22 +86,16 @@ RefEntities EntityQuery::run_query(UnderlyingOptions) const {
         out.push_back(e);
     }
 
-    if (!ignore_default_mods) {
-        std::vector<Modification*> defaults = {
-            // By default we want to ignore anything spawned in the store
-            new Not(new WhereHasComponent<IsStoreSpawned>()),
-        };
-
+    // By default we want to ignore anything spawned in the store
+    if (!_include_store_entities) {
         auto it = out.end();
-        for (auto& mod : defaults) {
-            it = std::partition(out.begin(), it, [&mod](const auto& entity) {
-                return (*mod)(entity);
-            });
-        }
+        Modification* mod = new Not(new WhereHasComponent<IsStoreSpawned>());
 
-        for (auto mod : defaults) {
-            delete mod;
-        }
+        it = std::partition(out.begin(), it, [&mod](const auto& entity) {
+            return (*mod)(entity);
+        });
+
+        delete mod;
     }
 
     auto it = out.end();

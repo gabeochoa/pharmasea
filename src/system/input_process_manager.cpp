@@ -714,13 +714,15 @@ void handle_grab(Entity& player) {
     // Handles the non-furniture grabbing case
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
-    OptEntity closest_item = EntityHelper::getClosestMatchingEntity(
-        player.get<Transform>().as2(), TILESIZE * cho.reach(),
-        [](const Entity& entity) {
-            if (entity.template is_missing<IsItem>()) return false;
-            if (entity.template get<IsItem>().is_held()) return false;
-            return true;
-        });
+    auto pos = player.get<Transform>().as2();
+
+    OptEntity closest_item =
+        EntityQuery()
+            .whereHasComponentAndLambda<IsItem>(
+                [](const IsItem& isitem) { return !isitem.is_held(); })
+            .whereInRange(pos, TILESIZE * cho.reach())
+            .orderByDist(pos)
+            .gen_first();
 
     // nothing found
     if (!closest_item) return;
