@@ -35,7 +35,6 @@
 // - have store generate results
 // -> cant do until we add ForSale see note in system
 // - store should give one free reroll per day
-// - store should have a "locked" section so you can save things you might need
 // - add post office for free items from new recipies
 // -> mailbox upgrade which gives a closer place to pick up items
 // - school should give new recipies

@@ -1,6 +1,8 @@
 
 #include "entity_query.h"
 
+#include <memory>
+
 //
 #include "engine/pathfinder.h"
 
@@ -82,6 +84,24 @@ RefEntities EntityQuery::run_query(UnderlyingOptions) const {
         if (!e_ptr) continue;
         Entity& e = *e_ptr;
         out.push_back(e);
+    }
+
+    if (!ignore_default_mods) {
+        std::vector<Modification*> defaults = {
+            // By default we want to ignore anything spawned in the store
+            new Not(new WhereHasComponent<IsStoreSpawned>()),
+        };
+
+        auto it = out.end();
+        for (auto& mod : defaults) {
+            it = std::partition(out.begin(), it, [&mod](const auto& entity) {
+                return (*mod)(entity);
+            });
+        }
+
+        for (auto mod : defaults) {
+            delete mod;
+        }
     }
 
     auto it = out.end();

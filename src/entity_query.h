@@ -3,6 +3,7 @@
 
 #include <iterator>
 
+#include "components/is_store_spawned.h"
 #include "entity.h"
 #include "entity_helper.h"
 #include "entity_type.h"
@@ -357,6 +358,11 @@ struct EntityQuery {
         entities = ents;
     }
 
+    auto& ignore_default_selections() {
+        ignore_default_mods = true;
+        return *this;
+    }
+
    private:
     Entities entities;
 
@@ -364,6 +370,8 @@ struct EntityQuery {
     std::vector<std::unique_ptr<Modification>> mods;
     mutable RefEntities ents;
     mutable bool ran_query = false;
+
+    bool ignore_default_mods = false;
 
     EntityQuery& add_mod(Modification* mod) {
         mods.push_back(std::unique_ptr<Modification>(mod));
