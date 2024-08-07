@@ -219,6 +219,20 @@ struct EntityQuery {
         const std::function<bool(const Component&)>& fn) {
         return add_mod(new WhereHasComponentAndLambda<Component>(fn));
     }
+
+    struct WhereCanPathfindTo : Modification {
+        vec2 start;
+
+        explicit WhereCanPathfindTo(vec2 starting_point)
+            : start(starting_point) {}
+
+        bool operator()(const Entity& entity) const override;
+    };
+
+    auto& whereCanPathfindTo(const vec2& start) {
+        return add_mod(new WhereCanPathfindTo(start));
+    }
+
     /////////
 
     // TODO add support for converting Entities to other Entities

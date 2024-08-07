@@ -2,6 +2,16 @@
 #include "entity_query.h"
 
 //
+#include "engine/pathfinder.h"
+
+bool EntityQuery::WhereCanPathfindTo::operator()(const Entity& entity) const {
+    return !pathfinder::find_path(
+                start, entity.get<Transform>().tile_directly_infront(),
+                std::bind(EntityHelper::isWalkable, std::placeholders::_1))
+                .empty();
+}
+
+//
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
 

@@ -29,6 +29,9 @@
 // change the resolution
 
 // branch
+// - TODO you can place a register in the store (or other lockable building)
+// which will soft lock you
+//
 // - have store generate results
 // - store should give one free reroll per day
 // - store should have a "locked" section so you can save things you might need
