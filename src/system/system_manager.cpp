@@ -2207,11 +2207,28 @@ void cleanup_old_store_options() {
             })
             .gen_first();
 
+    OptEntity locked_area =
+        EntityQuery()
+            .whereHasComponent<IsFloorMarker>()
+            .whereLambda([](const Entity& entity) {
+                if (entity.is_missing<IsFloorMarker>()) return false;
+                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                return fm.type == IsFloorMarker::Type::Store_LockedArea;
+            })
+            .gen_first();
+
     for (Entity& entity :
          EntityQuery().whereHasComponent<IsStoreSpawned>().gen()) {
         // ignore antyhing in the cart
         if (cart_area) {
             if (cart_area->get<IsFloorMarker>().is_marked(entity.id)) {
+                continue;
+            }
+        }
+
+        // ignore anything locked
+        if (locked_area) {
+            if (locked_area->get<IsFloorMarker>().is_marked(entity.id)) {
                 continue;
             }
         }

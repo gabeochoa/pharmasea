@@ -58,6 +58,7 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::FLOORMARKER_TRASH, "hsarT"},
         {i18n::FLOORMARKER_NEW_ITEMS, "weN smetI"},
         {i18n::FLOORMARKER_STORE_PURCHASE, "ecalP ot esahcruP"},
+        {i18n::FLOORMARKER_STORE_LOCK, "ecalP ot evaS litnu worromoT"},
 
         //
         {i18n::BACK_BUTTON, "kcaB"},

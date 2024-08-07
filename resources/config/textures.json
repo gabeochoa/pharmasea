@@ -126,6 +126,11 @@
             "library_name": "about_screen"
         },
         {
+            "folder": "images",
+            "filename": "lock.png",
+            "library_name": "lock"
+        },
+        {
             "folder": "ui",
             "filename": "network_selection_screen.png",
             "library_name": "network_selection_screen"

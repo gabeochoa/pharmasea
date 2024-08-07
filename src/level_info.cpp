@@ -523,6 +523,13 @@ void LevelInfo::generate_store_map() {
     }
 
     {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_floor_marker(
+            entity, store_origin + vec3{-5, TILESIZE / -2.f, 7}, 8, 3,
+            IsFloorMarker::Type::Store_LockedArea);
+    }
+
+    {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(entity,
                                      store_origin + vec3{5, TILESIZE / -2.f, 0},
