@@ -29,9 +29,6 @@
 // change the resolution
 
 // branch
-// - TODO you can place a register in the store (or other lockable building)
-// which will soft lock you (sophie should validate)
-//
 // - have store generate results
 // -> cant do until we add ForSale see note in system
 // - store should give one free reroll per day

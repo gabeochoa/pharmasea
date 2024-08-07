@@ -34,6 +34,8 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
          "Can't start game until all players drop furniture"},
         {i18n::NO_PATH_TO_REGISTER,
          "Can't start game until there is a path to a register"},
+        {i18n::REGISTER_NOT_INSIDE,
+         "Can't start game until you have a register inside the bar area"},
         {i18n::BAR_NOT_CLEAN, "Can't start game until your bar is all clean"},
         {i18n::FURNITURE_OVERLAPPING,
          "Can't start game if you have furniture overlapping"},

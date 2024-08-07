@@ -23,6 +23,12 @@ struct EntityQuery {
             return !((*mod)(entity));
         }
     };
+    // TODO i would love to just have an api like
+    // .not(whereHasComponent<Example>())
+    // but   ^ doesnt have a type we can pass
+    // we could do something like
+    // .not(new WhereHasComponent<Example>())
+    // but that would exclude most of the helper fns
 
     struct Limit : Modification {
         int amount;
@@ -172,6 +178,10 @@ struct EntityQuery {
     };
     auto& whereInside(vec2 range_min, vec2 range_max) {
         return add_mod(new WhereInside(range_min, range_max));
+    }
+
+    auto& whereNotInside(vec2 range_min, vec2 range_max) {
+        return add_mod(new Not(new WhereInside(range_min, range_max)));
     }
 
     struct WhereCollides : Modification {
