@@ -30,7 +30,7 @@
 
 // branch
 // - TODO you can place a register in the store (or other lockable building)
-// which will soft lock you
+// which will soft lock you (sophie should validate)
 //
 // - have store generate results
 // - store should give one free reroll per day
