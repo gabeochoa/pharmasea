@@ -337,11 +337,8 @@ void drop_held_furniture(Entity& player) {
     // somehow
     if (hf->has<IsStoreSpawned>()) {
         // TODO add a message or something to show you cant drop it
-        auto min = STORE_BUILDING.min();
-        auto max = STORE_BUILDING.max();
-
-        if (drop_location.x > max.x - 1 || drop_location.x < min.x) return;
-        if (drop_location.z > max.y - 1 || drop_location.z < min.y) return;
+        if (!STORE_BUILDING.is_inside({drop_location.x, drop_location.z}))
+            return;
     }
 
     hf->get<CanBeHeld>().set_is_being_held(false);

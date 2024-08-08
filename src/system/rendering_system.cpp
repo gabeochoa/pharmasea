@@ -1367,14 +1367,8 @@ void render_held_furniture_preview(const Entity& entity, float) {
         EntityID furn_id = chf.furniture_id();
         OptEntity hf = EntityHelper::getEntityForID(furn_id);
         if (hf->has<IsStoreSpawned>()) {
-            // TODO add a message or something to show you cant drop it
-            auto min = STORE_BUILDING.min();
-            auto max = STORE_BUILDING.max();
-
-            if (drop_location.x > max.x - 1 || drop_location.x < min.x) {
-                walkable = false;
-            }
-            if (drop_location.z > max.y - 1 || drop_location.z < min.y) {
+            if (!STORE_BUILDING.is_inside({drop_location.x, drop_location.z})) {
+                // TODO add a message or something to show you cant drop it
                 walkable = false;
             }
         }

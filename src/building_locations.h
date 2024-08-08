@@ -82,6 +82,12 @@ struct Building {
         }
         return *this;
     }
+
+    bool is_inside(const vec2 pos) const {
+        if (pos.x > max().x - 1 || pos.x < min().x) return false;
+        if (pos.y > max().y - 1 || pos.y < min().y) return false;
+        return true;
+    }
 };
 
 const Building MODEL_TEST_BUILDING =  //
