@@ -29,8 +29,6 @@
 // change the resolution
 
 // branch
-// - have store generate results
-// -> cant do until we add ForSale see note in system
 // - store should give one free reroll per day
 // - add post office for free items from new recipies
 // -> mailbox upgrade which gives a closer place to pick up items
