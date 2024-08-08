@@ -1,6 +1,7 @@
 
 #include "input_process_manager.h"
 
+#include "../building_locations.h"
 #include "../camera.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_be_pushed.h"
@@ -317,6 +318,10 @@ void drop_held_furniture(Entity& player) {
 
     vec3 drop_location = player.get<Transform>().drop_location();
 
+    // TODO :DUPE: this logic is also in rendering system
+    // they should match so we dont have weirdness with ui not matching
+    // the actual logic
+
     // We have to use the non cached version because the pickup location
     // is in the cache
     bool can_place =
@@ -326,6 +331,17 @@ void drop_held_furniture(Entity& player) {
     // log_info("you cant place that here...");
     if (!can_place) {
         return;
+    }
+
+    // For items in the store, we should make sure you dont take them outside
+    // somehow
+    if (hf->has<IsStoreSpawned>()) {
+        // TODO add a message or something to show you cant drop it
+        auto min = STORE_BUILDING.min();
+        auto max = STORE_BUILDING.max();
+
+        if (drop_location.x > max.x - 1 || drop_location.x < min.x) return;
+        if (drop_location.z > max.y - 1 || drop_location.z < min.y) return;
     }
 
     hf->get<CanBeHeld>().set_is_being_held(false);

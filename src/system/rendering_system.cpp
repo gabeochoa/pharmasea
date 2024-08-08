@@ -3,6 +3,7 @@
 
 #include <regex>
 
+#include "../building_locations.h"
 #include "../components/adds_ingredient.h"
 #include "../components/ai_clean_vomit.h"
 #include "../components/ai_close_tab.h"
@@ -1354,9 +1355,30 @@ void render_held_furniture_preview(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
 
     vec3 drop_location = entity.get<Transform>().drop_location();
-    bool walkable = EntityHelper::isWalkable(vec::to2(drop_location));
 
-    walkable = walkable || (drop_location == chf.picked_up_at());
+    // TODO :DUPE: this logic is also in input process manager,
+    // they should match so we dont have weirdness with ui not matching
+    // the actual logic
+    bool walkable =                                        //
+        EntityHelper::isWalkable(vec::to2(drop_location))  //
+        || (drop_location == chf.picked_up_at());
+
+    if (walkable) {
+        EntityID furn_id = chf.furniture_id();
+        OptEntity hf = EntityHelper::getEntityForID(furn_id);
+        if (hf->has<IsStoreSpawned>()) {
+            // TODO add a message or something to show you cant drop it
+            auto min = STORE_BUILDING.min();
+            auto max = STORE_BUILDING.max();
+
+            if (drop_location.x > max.x - 1 || drop_location.x < min.x) {
+                walkable = false;
+            }
+            if (drop_location.z > max.y - 1 || drop_location.z < min.y) {
+                walkable = false;
+            }
+        }
+    }
 
     // since the preview is just a box we can just use 0 for angle
     // but if we need in the future, then we can fetch the entity with:

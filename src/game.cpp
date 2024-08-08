@@ -29,6 +29,8 @@
 // change the resolution
 
 // branch
+// - TODO need message for when user is stealing
+//
 // - store should give one free reroll per day
 // - add post office for free items from new recipies
 // -> mailbox upgrade which gives a closer place to pick up items
@@ -36,8 +38,6 @@
 // - recycle / landfill for selling&destroying furniture you dont need
 // - add tutorial for using handtruck
 // - add upgraded handtruck for easier movement
-// - add a way to stop people from leaving a floor area to stop stealing
-// attempts
 //
 // open questions
 // - where do upgrades come in?
