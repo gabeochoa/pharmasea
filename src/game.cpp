@@ -39,6 +39,7 @@
 // - TODO right now all users have to stand to buy things in cart, we need a
 // better way or to ahve like "half" or something
 // - TODO should store teleport items or do you walk them over
+// - TODO handtruck broken?
 //
 // - store should give one free reroll per day
 // - add post office for free items from new recipies
