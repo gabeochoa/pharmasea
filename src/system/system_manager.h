@@ -38,8 +38,7 @@ SINGLETON_FWD(SystemManager)
 struct SystemManager {
     SINGLETON(SystemManager)
 
-    // TODO fix this if we have more than one local player
-    EntityID firstPlayerID = -1;
+    Entities local_players;
     Entities oldAll;
 
     SystemManager() {

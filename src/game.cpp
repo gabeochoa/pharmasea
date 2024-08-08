@@ -30,6 +30,8 @@
 
 // branch
 // - TODO need message for when user is stealing
+// - TODO you can drop your own furniture in the store ( does this soft lock
+// yourself?)
 //
 // - store should give one free reroll per day
 // - add post office for free items from new recipies

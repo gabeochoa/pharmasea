@@ -1230,7 +1230,8 @@ void render_normal(const Entity& entity, float dt) {
         render_machine_name(entity, 100);
     }
 
-    if (GameState::get().is(game::State::Store)) {
+    if (entity.has<IsStoreSpawned>() &&
+        STORE_BUILDING.is_inside(entity.get<Transform>().as2())) {
         render_machine_name(entity, 200);
         render_price(entity, dt);
     }
