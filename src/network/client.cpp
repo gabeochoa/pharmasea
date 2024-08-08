@@ -12,8 +12,9 @@ namespace network {
 
 Client::Client() {
     client_p = std::make_unique<internal::Client>();
-    client_p->set_process_message(std::bind(
-        &Client::client_process_message_string, this, std::placeholders::_1));
+    client_p->set_process_message([this](const std::string& msg) {
+        this->client_process_message_string(msg);
+    });
 
     map = std::make_unique<Map>("default_seed");
     GLOBALS.set("map", map.get());

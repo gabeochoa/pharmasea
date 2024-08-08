@@ -68,16 +68,22 @@ struct Server {
     explicit Server(int port) {
         server_p.reset(new internal::Server(port));
         server_p->set_process_message(
-            std::bind(&Server::server_enqueue_message_string, this,
-                      std::placeholders::_1, std::placeholders::_2));
-        server_p->onClientDisconnect = std::bind(&Server::process_player_leave,
-                                                 this, std::placeholders::_1);
+            [this](const internal::Client_t& incoming_client,
+                   const std::string& msg) {
+                this->server_enqueue_message_string(incoming_client, msg);
+            });
+        server_p->onClientDisconnect =
+            ([this](int client_id) { this->process_player_leave(client_id); });
+
         server_p->onSendClientAnnouncement =
-            std::bind(&Server::send_announcement, this, std::placeholders::_1,
-                      std::placeholders::_2, std::placeholders::_3);
+            [this](HSteamNetConnection conn, const std::string& msg,
+                   internal::InternalServerAnnouncement type) {
+                this->send_announcement(conn, msg, type);
+            };
         server_p->startup();
 
-        // TODO add some kind of seed selection screen
+        // TODO add some kind of seed
+        // selection screen
         pharmacy_map = std::make_unique<Map>("default_seed");
         GLOBALS.set("server_map", pharmacy_map.get());
         GLOBALS.set("server_players", &players);

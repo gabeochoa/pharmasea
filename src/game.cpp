@@ -27,6 +27,7 @@
 // TODO when the resolution is larger than the monitor, pop up something to
 // suggest changing it, if the diff is too large, then itll be impossible to
 // change the resolution
+// TODO move network polling to its own thread and use a message queue
 
 // branch
 // - TODO need message for when user is stealing
