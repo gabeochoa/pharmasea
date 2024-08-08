@@ -2312,6 +2312,13 @@ void generate_store_options() {
             spawn_position.x = reset_x;
             spawn_position.y += 2;
         }
+
+        if (spawn_position.y >
+            (area_transform.as2().y + area_transform.sizez() / 2)) {
+            reset_x += 1;
+            spawn_position.x = reset_x;
+            spawn_position.y = reset_y;
+        }
     }
 
     // Add any that came from upgrades
