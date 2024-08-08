@@ -119,7 +119,7 @@ void Server::run() {
             previousTime = currentTime;
         }
 
-#if 0
+#if MEASURE_SERVER_PERF
         last_frames[last_frames_index] = ms;
         last_frames_index = (last_frames_index + 1);
         if (!has_looped && last_frames_index >= last_frames.size())
@@ -143,22 +143,26 @@ void Server::run() {
     }
 }
 
-// float fps_timer = 1.f;
-// int frames = 0;
-//
-// void fps(float dt) {
-// fps_timer -= dt;
-// frames++;
-// if (fps_timer <= 0) {
-// fps_timer = 1.f;
-// log_info("{} {} imq{} fwq{}", dt, frames,
-// incoming_message_queue.size(), packet_queue.size());
-// frames = 0;
-// }
-// }
+#if MEASURE_SERVER_PERF
+float fps_timer = 1.f;
+int frames = 0;
+
+void Server::fps(float dt) {
+    fps_timer -= dt;
+    frames++;
+    if (fps_timer <= 0) {
+        fps_timer = 1.f;
+        log_info("{} {} imq{} fwq{}", dt, frames, incoming_message_queue.size(),
+                 packet_queue.size());
+        frames = 0;
+    }
+}
+#endif
 
 void Server::tick(float dt) {
-    // fps(dt);
+#if MEASURE_SERVER_PERF
+    fps(dt);
+#endif
 
     TRACY_ZONE_SCOPED;
     server_p->run();

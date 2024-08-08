@@ -52,7 +52,8 @@ struct Server {
     std::thread::id thread_id;
     std::thread pathfinding_thread;
 
-#if 0
+#if MEASURE_SERVER_PERF
+    void fps(float);
     std::array<size_t, 10000> last_frames;
     size_t last_frames_index = 0;
     bool has_looped = false;
