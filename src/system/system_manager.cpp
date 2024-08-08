@@ -135,9 +135,6 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
         case game::Progression: {
             position = PROGRESSION_BUILDING.to3();
         } break;
-        case game::Store: {
-            position = STORE_BUILDING.to3();
-        } break;
         case game::ModelTest: {
             position = MODEL_TEST_BUILDING.to3();
         } break;
@@ -942,11 +939,11 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     ita.reset_cooldown();
 
     const auto _choose_option = [](int option_chosen) {
-        GameState::get().transition_to_store();
+        GameState::get().transition_to_planning();
 
         SystemManager::get().for_each_old([](Entity& e) {
             if (check_type(e, EntityType::Player)) {
-                move_player_SERVER_ONLY(e, game::State::Store);
+                move_player_SERVER_ONLY(e, game::State::Planning);
                 return;
             }
         });
@@ -1007,7 +1004,6 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
     switch (ita.type) {
         case IsTriggerArea::Store_Reroll: {
-            system_manager::store::cleanup_old_store_options();
             system_manager::store::generate_store_options();
             {
                 OptEntity sophie =
@@ -1087,7 +1083,12 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::Progression_Option2:
             _choose_option(1);
             break;
+            // TODO rename this and change text to "order for delivery"
+            // or something  (maybe delivery is an upgrade?)
         case IsTriggerArea::Store_BackToPlanning: {
+            system_manager::store::move_purchased_furniture();
+            system_manager::store::cleanup_old_store_options();
+
             GameState::get().transition_to_planning();
             SystemManager::get().for_each_old([](Entity& e) {
                 if (!check_type(e, EntityType::Player)) return;
@@ -2264,6 +2265,7 @@ void cleanup_old_store_options() {
 }
 
 void generate_store_options() {
+    system_manager::store::cleanup_old_store_options();
     // Figure out what kinds of things we can spawn generally
     // - what is spawnable?
     // - are they capped by progression? (alcohol / fruits for sure
@@ -2653,15 +2655,6 @@ void SystemManager::process_state_change(
         });
     };
 
-    const auto onStoreEntered = [&]() {
-        system_manager::store::generate_store_options();
-    };
-
-    const auto onStoreLeave = [&]() {
-        system_manager::store::move_purchased_furniture();
-        system_manager::store::cleanup_old_store_options();
-    };
-
     for (const auto& transition : transitions) {
         const auto [old_state, new_state] = transition;
         // We just always ignore paused transitions since
@@ -2675,14 +2668,7 @@ void SystemManager::process_state_change(
         if (new_state == game::State::InRound) {
             onRoundStarted();
         }
-        if (new_state == game::State::Store) {
-            onStoreEntered();
-        }
-        if (old_state == game::State::Store) {
-            onStoreLeave();
-        }
-
-        if (old_state == game::State::Lobby) {
+        if (new_state == game::State::Planning) {
             system_manager::store::generate_store_options();
         }
 
@@ -2788,23 +2774,13 @@ void SystemManager::in_round_update(
     });
 }
 
-void SystemManager::store_update(const Entities& entity_list, float dt) {
-    for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // If you add something here think should it also go in
-        // planning?
-        system_manager::store::cart_management(entity, dt);
-        system_manager::pop_out_when_colliding(entity, dt);
-
-        // game like
-        system_manager::process_is_container_and_should_backfill_item(entity,
-                                                                      dt);
-    });
-}
-
 void SystemManager::planning_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // If you add something here think should it also go in store?
+        system_manager::store::cart_management(entity, dt);
+
+        system_manager::process_is_container_and_should_backfill_item(entity,
+                                                                      dt);
         system_manager::update_held_furniture_position(entity, dt);
         system_manager::pop_out_when_colliding(entity, dt);
     });

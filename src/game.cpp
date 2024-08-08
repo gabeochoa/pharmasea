@@ -33,6 +33,12 @@
 // - TODO need message for when user is stealing
 // - TODO you can drop your own furniture in the store ( does this soft lock
 // yourself?)
+// - TODO UI when inside store vs UI when outside (both have balance, maybe a
+// smaller outside one? how to handle overlapping ui when we forget to check)
+// - TODO user line wait progress bar is not movbing?
+// - TODO right now all users have to stand to buy things in cart, we need a
+// better way or to ahve like "half" or something
+// - TODO should store teleport items or do you walk them over
 //
 // - store should give one free reroll per day
 // - add post office for free items from new recipies

@@ -919,8 +919,6 @@ void process_input(Entity& entity, const UserInput& input) {
                             inround::handle_grab_or_drop(entity);
                         } else if (GameState::get().is(game::State::Planning)) {
                             planning::handle_grab_or_drop(entity);
-                        } else if (GameState::get().is(game::State::Store)) {
-                            planning::handle_grab_or_drop(entity);
                         } else {
                             // probably want to handle messing around in the
                             // lobby?

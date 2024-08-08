@@ -14,10 +14,10 @@ namespace system_manager {
 namespace progression {
 
 inline void skip_upgrade_visit() {
-    GameState::get().transition_to_store();
+    GameState::get().transition_to_planning();
     SystemManager::get().for_each_old([](Entity& e) {
         if (check_type(e, EntityType::Player)) {
-            move_player_SERVER_ONLY(e, game::State::Store);
+            move_player_SERVER_ONLY(e, game::State::Planning);
             return;
         }
     });

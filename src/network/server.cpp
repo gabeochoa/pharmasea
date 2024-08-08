@@ -448,9 +448,6 @@ void Server::process_player_join_packet(
             case game::Progression: {
                 return PROGRESSION_BUILDING.to3();
             }
-            case game::Store: {
-                return STORE_BUILDING.to3();
-            }
             case game::ModelTest: {
                 return MODEL_TEST_BUILDING.to3();
             }

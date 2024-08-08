@@ -1,6 +1,7 @@
 
 #include "ui_rendering_system.h"
 
+#include "../building_locations.h"
 #include "../components/can_order_drink.h"
 #include "../components/has_client_id.h"
 #include "../components/has_name.h"
@@ -12,6 +13,7 @@
 #include "../components/model_renderer.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
+#include "system_manager.h"
 
 namespace system_manager {
 namespace ui {
@@ -372,7 +374,7 @@ void render_store(const Entity& entity, float) {
     };
 
     auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-    auto left_col = rect::tpad(window, 10);
+    auto left_col = rect::tpad(window, 40);
     left_col = rect::rpad(left_col, 20);
     left_col = rect::lpad(left_col, 10);
     left_col = rect::bpad(left_col, 20);
@@ -390,32 +392,38 @@ void render_store(const Entity& entity, float) {
 void render_normal(const Entities& entities, float dt) {
     // In game only
     if (GameState::get().should_render_timer()) {
-        // Grab the global ui context,
-        ::ui::begin(::ui::context, dt);
+        // always
+        {
+            // Grab the global ui context,
+            ::ui::begin(::ui::context, dt);
 
-        for (const auto& entity_ptr : entities) {
-            if (!entity_ptr) continue;
-            const Entity& entity = *entity_ptr;
-            render_timer(entity, dt);
-            render_animated_transactions(entity, dt);
-            render_round_timer(entity, dt);
+            for (const auto& entity_ptr : entities) {
+                if (!entity_ptr) continue;
+                const Entity& entity = *entity_ptr;
+                render_timer(entity, dt);
+                render_animated_transactions(entity, dt);
+                render_round_timer(entity, dt);
+            }
+            render_current_register_queue(dt);
+            //
+            ::ui::end();
         }
-        render_current_register_queue(dt);
-        //
-        ::ui::end();
-    }
 
-    if (GameState::get().is(game::State::Store)) {
-        // Grab the global ui context,
-        ::ui::begin(::ui::context, dt);
+        if (STORE_BUILDING.is_inside(SystemManager::get()
+                                         .local_players[0]
+                                         ->get<Transform>()
+                                         .as2())) {
+            // Grab the global ui context,
+            ::ui::begin(::ui::context, dt);
 
-        for (const auto& entity_ptr : entities) {
-            if (!entity_ptr) continue;
-            const Entity& entity = *entity_ptr;
-            render_store(entity, dt);
+            for (const auto& entity_ptr : entities) {
+                if (!entity_ptr) continue;
+                const Entity& entity = *entity_ptr;
+                render_store(entity, dt);
+            }
+            //
+            ::ui::end();
         }
-        //
-        ::ui::end();
     }
 
     // always

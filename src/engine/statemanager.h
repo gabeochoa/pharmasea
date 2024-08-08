@@ -114,7 +114,6 @@ enum State {
     Planning = 3,
     Paused = 4,
     Progression = 5,
-    Store = 6,
     ModelTest = 7,
 };
 
@@ -190,6 +189,5 @@ struct GameState : public StateManager2<game::State> {
     void transition_to_lobby() { return set(game::State::Lobby); }
     void transition_to_model_test() { return set(game::State::ModelTest); }
     void transition_to_planning() { return set(game::State::Planning); }
-    void transition_to_store() { return set(game::State::Store); }
     void transition_to_inround() { return set(game::State::InRound); }
 };
