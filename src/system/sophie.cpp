@@ -5,6 +5,7 @@
 #include <iterator>
 #include <tuple>
 
+#include "../building_locations.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
@@ -161,7 +162,18 @@ void lightweight_map_validation(Entity& entity) {
     int reg_with_no_pathing = 0;
     int reg_with_bad_spots = 0;
     std::vector<RefEntity> all_registers =
-        EntityQuery().whereHasComponent<HasWaitingQueue>().gen();
+        EntityQuery()
+            .whereHasComponent<HasWaitingQueue>()
+            .whereInside(BAR_BUILDING.min(), BAR_BUILDING.max())
+            .gen();
+
+    if (all_registers.empty()) {
+        // because we require the map to spawn one, we know this is due to the
+        // bar building area check above
+        entity.get<HasTimer>().write_reason(
+            HasTimer::WaitingReason::RegisterNotInside, true, {});
+        return;
+    }
 
     const auto _has_blocked_spot = [](const Entity& r) {
         for (int i = 0; i < (int) HasWaitingQueue::max_queue_size; i++) {
@@ -236,6 +248,8 @@ void deleting_item_needed_for_recipe(Entity& entity) {
     if (ifm.num_marked() == 0) return result(false);
 
     // TODO this is not robust but itll work for a while
+    // TODO right now getAll will return store ents but we dont want that for
+    // this, the radius is saving us at the moment
     float rad = 25;
     const RefEntities ents = EntityHelper::getAllInRangeFiltered(
         {-1.f * rad, -1.f * rad}, {rad, rad}, [&ifm](const Entity& entity) {

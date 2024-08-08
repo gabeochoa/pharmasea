@@ -1,6 +1,7 @@
 
 #include "gamelayer.h"
 
+#include "../building_locations.h"
 #include "../components/can_be_ghost_player.h"
 #include "../drawing_util.h"
 #include "../engine/ui/color.h"
@@ -99,6 +100,14 @@ void GameLayer::onUpdate(float dt) {
     }
 }
 
+void draw_building(const Building& building) {
+    Color f = Color{0, 250, 50, 15};
+    Color b = Color{250, 0, 50, 15};
+
+    DrawCubeCustom(building.to3(), building.area.width, 1, building.area.height,
+                   0, f, b);
+}
+
 void GameLayer::draw_world(float dt) {
     auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
     const auto network_debug_mode_on =
@@ -112,6 +121,15 @@ void GameLayer::draw_world(float dt) {
         raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
                           DARKGRAY);
         if (map_ptr) map_ptr->onDraw(dt);
+
+        if (true || GLOBALS.get<bool>("debug_ui_enabled")) {
+            draw_building(LOBBY_BUILDING);
+            draw_building(MODEL_TEST_BUILDING);
+            draw_building(PROGRESSION_BUILDING);
+            draw_building(STORE_BUILDING);
+            draw_building(BAR_BUILDING);
+        }
+
         // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
         // if (nav) {
         // for (auto kv : nav->entityShapes) {

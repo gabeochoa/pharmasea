@@ -1,6 +1,7 @@
 
 #include "level_info.h"
 
+#include "building_locations.h"
 #include "camera.h"
 #include "components/can_change_settings_interactively.h"
 #include "components/can_hold_furniture.h"
@@ -11,6 +12,7 @@
 #include "components/is_round_settings_manager.h"
 #include "components/is_store_spawned.h"
 #include "components/is_trigger_area.h"
+#include "components/transform.h"
 #include "dataclass/ingredient.h"
 #include "engine/bitset_utils.h"
 #include "engine/globals.h"
@@ -27,6 +29,11 @@
 #include "system/system_manager.h"
 #include "vec_util.h"
 #include "wave_collapse.h"
+
+vec3 lobby_origin = LOBBY_BUILDING.to3();
+vec3 progression_origin = PROGRESSION_BUILDING.to3();
+vec3 model_test_origin = MODEL_TEST_BUILDING.to3();
+vec3 store_origin = STORE_BUILDING.to3();
 
 namespace wfc {
 extern Rectangle SPAWN_AREA;
@@ -53,6 +60,72 @@ void LevelInfo::onDraw(float dt) const {
 
 void LevelInfo::onDrawUI(float dt) {
     SystemManager::get().render_ui(entities, dt);
+}
+
+void generate_walls_for_building(const Building& building) {
+    std::vector<RefEntity> walls;
+    walls.reserve((int) (building.area.width + building.area.height) * 2);
+
+    for (int i = 0; i < (int) building.area.width; i++) {
+        // top
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(
+                EntityType::Wall, entity,
+                vec2{building.area.x, building.area.y} + vec2{i * 1.f, 0});
+            walls.push_back(entity);
+        }
+        // bottom
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{building.area.x, building.area.y} +
+                                vec2{i * 1.f, building.area.height - 1});
+            walls.push_back(entity);
+        }
+    }
+
+    for (int j = 1; j < (int) building.area.height - 1; j++) {
+        // left
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(
+                EntityType::Wall, entity,
+                vec2{building.area.x, building.area.y} + vec2{0, j * 1.f});
+            walls.push_back(entity);
+        }
+        // right
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{building.area.x, building.area.y} +
+                                vec2{building.area.width - 1, j * 1.f});
+            walls.push_back(entity);
+        }
+    }
+
+    bool skip = false;
+    for (auto& door_pos : building.doors) {
+        for (RefEntity entityref : walls) {
+            // we already deleted one wall,
+            if (skip) continue;
+
+            Entity& entity = entityref;
+            if (entity.cleanup) continue;
+            const Transform& transform = entity.get<Transform>();
+            vec2 pos = transform.as2();
+            if (vec::distance(pos, door_pos) >= 1.f) continue;
+            entity.cleanup = true;
+        }
+
+        skip = false;
+
+        // place door in that spot
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Door, entity, door_pos);
+        }
+    }
 }
 
 void LevelInfo::grab_things() {
@@ -232,6 +305,8 @@ void LevelInfo::generate_model_test_map() {
         }
     };
 
+    // TODO i was hoping this could enforce any missing
+    // but it doesnt seem like it
     std::array<ModelTestMapInfo, magic_enum::enum_count<EntityType>() - 25>
         static_map_info = {{
             //
@@ -264,6 +339,7 @@ void LevelInfo::generate_model_test_map() {
                 .spawner_type = ModelTestMapInfo::Some,
             },
             {EntityType::Jukebox},
+            {EntityType::HandTruck},
         }};
 
     const auto _carraige_return = [&]() {
@@ -342,6 +418,8 @@ void LevelInfo::generate_model_test_map() {
 }
 
 void LevelInfo::generate_progression_map() {
+    generate_walls_for_building(PROGRESSION_BUILDING);
+
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
@@ -358,6 +436,8 @@ void LevelInfo::generate_progression_map() {
 }
 
 void LevelInfo::generate_store_map() {
+    generate_walls_for_building(STORE_BUILDING);
+
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
@@ -395,12 +475,19 @@ void LevelInfo::generate_store_map() {
                             return fm.type ==
                                    IsFloorMarker::Type::Store_PurchaseArea;
                         })
+                        .include_store_entities()
                         .gen_first();
                 if (!cart_area.valid())
                     return {false, strings::i18n::InternalError};
 
                 const auto ents =
-                    EntityQuery().whereHasComponent<IsStoreSpawned>().gen();
+                    // TODO does there need ot be a better way to handle
+                    // this kind of query where its literally only asking for
+                    // store spawned stuff
+                    EntityQuery()
+                        .whereHasComponent<IsStoreSpawned>()
+                        .include_store_entities()
+                        .gen();
 
                 // If its free and not marked, then we cant continue
                 for (const Entity& ent : ents) {
@@ -440,6 +527,13 @@ void LevelInfo::generate_store_map() {
         furniture::make_floor_marker(
             entity, store_origin + vec3{-5, TILESIZE / -2.f, 0}, 8, 3,
             IsFloorMarker::Type::Store_SpawnArea);
+    }
+
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_floor_marker(
+            entity, store_origin + vec3{-5, TILESIZE / -2.f, 7}, 8, 3,
+            IsFloorMarker::Type::Store_LockedArea);
     }
 
     {

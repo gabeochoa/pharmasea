@@ -3,6 +3,7 @@
 
 #include <iterator>
 
+#include "components/is_store_spawned.h"
 #include "entity.h"
 #include "entity_helper.h"
 #include "entity_type.h"
@@ -22,6 +23,12 @@ struct EntityQuery {
             return !((*mod)(entity));
         }
     };
+    // TODO i would love to just have an api like
+    // .not(whereHasComponent<Example>())
+    // but   ^ doesnt have a type we can pass
+    // we could do something like
+    // .not(new WhereHasComponent<Example>())
+    // but that would exclude most of the helper fns
 
     struct Limit : Modification {
         int amount;
@@ -115,7 +122,7 @@ struct EntityQuery {
         bool operator()(const Entity& entity) const override {
             vec2 pos = entity.get<Transform>().as2();
             if (should_snap) pos = vec::snap(pos);
-            return vec::distance(position, pos) < range;
+            return vec::distance_sq(position, pos) < (range * range);
         }
     };
     auto& whereInRange(vec2 position, float range) {
@@ -173,6 +180,10 @@ struct EntityQuery {
         return add_mod(new WhereInside(range_min, range_max));
     }
 
+    auto& whereNotInside(vec2 range_min, vec2 range_max) {
+        return add_mod(new Not(new WhereInside(range_min, range_max)));
+    }
+
     struct WhereCollides : Modification {
         BoundingBox bounds;
 
@@ -219,6 +230,20 @@ struct EntityQuery {
         const std::function<bool(const Component&)>& fn) {
         return add_mod(new WhereHasComponentAndLambda<Component>(fn));
     }
+
+    struct WhereCanPathfindTo : Modification {
+        vec2 start;
+
+        explicit WhereCanPathfindTo(vec2 starting_point)
+            : start(starting_point) {}
+
+        bool operator()(const Entity& entity) const override;
+    };
+
+    auto& whereCanPathfindTo(const vec2& start) {
+        return add_mod(new WhereCanPathfindTo(start));
+    }
+
     /////////
 
     // TODO add support for converting Entities to other Entities
@@ -244,8 +269,8 @@ struct EntityQuery {
 
     auto& orderByDist(vec2 position) {
         return orderByLambda([=](const Entity& a, const Entity& b) {
-            float a_dist = vec::distance(a.get<Transform>().as2(), position);
-            float b_dist = vec::distance(b.get<Transform>().as2(), position);
+            float a_dist = vec::distance_sq(a.get<Transform>().as2(), position);
+            float b_dist = vec::distance_sq(b.get<Transform>().as2(), position);
             return a_dist < b_dist;
         });
     }
@@ -343,6 +368,11 @@ struct EntityQuery {
         entities = ents;
     }
 
+    auto& include_store_entities(bool include = true) {
+        _include_store_entities = include;
+        return *this;
+    }
+
    private:
     Entities entities;
 
@@ -350,6 +380,8 @@ struct EntityQuery {
     std::vector<std::unique_ptr<Modification>> mods;
     mutable RefEntities ents;
     mutable bool ran_query = false;
+
+    bool _include_store_entities = false;
 
     EntityQuery& add_mod(Modification* mod) {
         mods.push_back(std::unique_ptr<Modification>(mod));

@@ -11,7 +11,7 @@ struct AICloseTab : public AIComponent {
     struct AICloseTabTarget : AITarget {
         explicit AICloseTabTarget(const ResetFn& resetFn) : AITarget(resetFn) {}
 
-        virtual OptEntity find_target(const Entity&) override {
+        virtual OptEntity find_target(const Entity& ai_entity) override {
             return EntityQuery()
                 .whereType(EntityType::Register)
                 .whereHasComponent<HasWaitingQueue>()
@@ -21,6 +21,7 @@ struct AICloseTab : public AIComponent {
                     if (hwq.is_full()) return false;
                     return true;
                 })
+                .whereCanPathfindTo(ai_entity.get<Transform>().as2())
                 // Find the register with the least people on it
                 .orderByLambda([](const Entity& r1, const Entity& r2) {
                     const HasWaitingQueue& hwq1 = r1.get<HasWaitingQueue>();

@@ -21,6 +21,47 @@
 //  => this is not a problem except when the state gets messed up
 // TODO affect tip based on how much vomit is around?
 // => how can we communicate this to the player
+// TODO can you check if the tutorial buttons work for gameoad, its not
+// switching
+// TODO check polymorphic_components script should check entity_makers too
+// TODO when the resolution is larger than the monitor, pop up something to
+// suggest changing it, if the diff is too large, then itll be impossible to
+// change the resolution
+// TODO move network polling to its own thread and use a message queue
+
+// branch
+// - TODO need message for when user is stealing
+// - TODO you can drop your own furniture in the store ( does this soft lock
+// yourself?)
+// - TODO UI when inside store vs UI when outside (both have balance, maybe a
+// smaller outside one? how to handle overlapping ui when we forget to check)
+// - TODO user line wait progress bar is not movbing?
+// - TODO right now all users have to stand to buy things in cart, we need a
+// better way or to ahve like "half" or something
+// - TODO should store teleport items or do you walk them over
+// - TODO handtruck broken?
+//
+// - store should give one free reroll per day
+// - add post office for free items from new recipies
+// -> mailbox upgrade which gives a closer place to pick up items
+// - school should give new recipies
+// - recycle / landfill for selling&destroying furniture you dont need
+// - add tutorial for using handtruck
+// - add upgraded handtruck for easier movement
+//
+// open questions
+// - where do upgrades come in?
+// - how do you fail?
+// - do customers leave when its day time (without finishing ordering)
+//  -> punishment would be to lose the money
+// - what if the goal is to make enough money to pay off your landlord?
+// - can you manually close the bar?
+//   -> value would be to be able to move furniture around similar to planning
+//   mode
+// - how bad is it if other players can see items spawn in?
+//  -> maybe the upgrade just "mails" the items to the spawn area (eventually
+//  can add a parachute animation or something )
+//
 
 namespace network {
 long long total_ping = 0;

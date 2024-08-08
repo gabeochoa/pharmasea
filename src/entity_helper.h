@@ -88,12 +88,6 @@ struct EntityHelper {
         vec2 pos, float range,
         const std::function<bool(const Entity&)>& filter);
 
-    static std::vector<RefEntity> getEntitiesInRange(vec2 pos, float range);
-
-    static std::vector<RefEntity> getEntitiesInPosition(vec2 pos) {
-        return getEntitiesInRange(pos, TILESIZE);
-    }
-
     // TODO exists as a conversion for things that need shared_ptr right now
     static std::shared_ptr<Entity> getEntityAsSharedPtr(const Entity& entity) {
         for (std::shared_ptr<Entity> current_entity : get_entities()) {
@@ -129,19 +123,6 @@ struct EntityHelper {
         const std::function<bool(const Entity&)>& filter  //
     );
 
-    static OptEntity getClosestMatchingEntity(
-        vec2 pos, float range,
-        const std::function<bool(const Entity&)>& filter);
-
-    template<typename T>
-    static OptEntity getClosestWithComponent(const Entity& entity,
-                                             float range) {
-        const Transform& transform = entity.get<Transform>();
-        return EntityHelper::getClosestMatchingEntity(
-            transform.as2(), range,
-            [](const Entity& entity) { return entity.has<T>(); });
-    }
-
     static RefEntities getAllInRange(vec2 range_min, vec2 range_max);
     static RefEntities getAllInRangeFiltered(
         vec2 range_min, vec2 range_max,
@@ -149,7 +130,8 @@ struct EntityHelper {
 
     static OptEntity getOverlappingEntityIfExists(
         const Entity& entity, float range,
-        const std::function<bool(const Entity&)>& filter = {});
+        const std::function<bool(const Entity&)>& filter = {},
+        bool include_store_entities = false);
 
     static OptEntity getMatchingFloorMarker(IsFloorMarker::Type type);
     static OptEntity getMatchingTriggerArea(IsTriggerArea::Type type);

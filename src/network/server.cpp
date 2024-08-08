@@ -3,6 +3,7 @@
 #include <chrono>
 #include <thread>
 
+#include "../building_locations.h"
 #include "../system/system_manager.h"
 #include "shared.h"
 
@@ -118,7 +119,7 @@ void Server::run() {
             previousTime = currentTime;
         }
 
-#if 0
+#if MEASURE_SERVER_PERF
         last_frames[last_frames_index] = ms;
         last_frames_index = (last_frames_index + 1);
         if (!has_looped && last_frames_index >= last_frames.size())
@@ -142,22 +143,26 @@ void Server::run() {
     }
 }
 
-// float fps_timer = 1.f;
-// int frames = 0;
-//
-// void fps(float dt) {
-// fps_timer -= dt;
-// frames++;
-// if (fps_timer <= 0) {
-// fps_timer = 1.f;
-// log_info("{} {} imq{} fwq{}", dt, frames,
-// incoming_message_queue.size(), packet_queue.size());
-// frames = 0;
-// }
-// }
+#if MEASURE_SERVER_PERF
+float fps_timer = 1.f;
+int frames = 0;
+
+void Server::fps(float dt) {
+    fps_timer -= dt;
+    frames++;
+    if (fps_timer <= 0) {
+        fps_timer = 1.f;
+        log_info("{} {} imq{} fwq{}", dt, frames, incoming_message_queue.size(),
+                 packet_queue.size());
+        frames = 0;
+    }
+}
+#endif
 
 void Server::tick(float dt) {
-    // fps(dt);
+#if MEASURE_SERVER_PERF
+    fps(dt);
+#endif
 
     TRACY_ZONE_SCOPED;
     server_p->run();
@@ -426,7 +431,7 @@ void Server::process_player_join_packet(
     int client_id = incoming_client.client_id;
 
     const auto get_position_for_current_state = [=]() -> vec3 {
-        vec3 default_pos = {LOBBY_ORIGIN, 0.f, 0.f};
+        vec3 default_pos = LOBBY_BUILDING.to3();
 
         auto current_game_state = GameState::get().read();
         // Not in game just spawn them in the lobby
@@ -440,12 +445,12 @@ void Server::process_player_join_packet(
             case game::InRound:
             case game::Planning:
                 return {0.f, 0.f, 0.f};
-            case game::Progression:
-                return {PROGRESSION_ORIGIN, 0.f, 0.f};
-            case game::Store:
-                return {STORE_ORIGIN, 0.f, 0.f};
-            case game::ModelTest:
-                return {MODEL_TEST_ORIGIN, 0.f, 0.f};
+            case game::Progression: {
+                return PROGRESSION_BUILDING.to3();
+            }
+            case game::ModelTest: {
+                return MODEL_TEST_BUILDING.to3();
+            }
         }
 
         return default_pos;

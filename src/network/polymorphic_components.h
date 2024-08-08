@@ -21,6 +21,7 @@
 #include "../components/can_grab_from_other_furniture.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
+#include "../components/can_hold_handtruck.h"
 #include "../components/can_hold_item.h"
 #include "../components/can_order_drink.h"
 #include "../components/can_pathfind.h"
@@ -60,6 +61,7 @@
 #include "../components/is_toilet.h"
 #include "../components/is_trigger_area.h"
 #include "../components/model_renderer.h"
+#include "../components/responds_to_day_night.h"
 #include "../components/responds_to_user_input.h"
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
@@ -88,7 +90,8 @@ struct PolymorphicBaseClass<BaseComponent>
           AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
           AIPlayJukebox, HasLastInteractedCustomer,
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
-          CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput
+          CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
+          CanHoldHandTruck, RespondsToDayNight
           // END
           > {};
 // If you add anything here ^^ then you should add that component to
@@ -102,6 +105,13 @@ struct PolymorphicBaseClass<AIComponent>
           AICloseTab, AIWandering
           // END
           > {};
+
+template<>
+struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
+                                             // BEGIN
+                                             CanBeHeld_HT
+                                             // END
+                                             > {};
 
 }  // namespace ext
 }  // namespace bitsery

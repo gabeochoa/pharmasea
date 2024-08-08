@@ -8,7 +8,8 @@ from collections import defaultdict
 
 base_classes = [
     "BaseComponent",
-    "AIComponent"
+    "AIComponent",
+    "CanBeHeld",
 ]
 
 mapping = defaultdict(list)

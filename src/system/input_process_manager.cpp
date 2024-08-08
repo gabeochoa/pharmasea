@@ -1,6 +1,7 @@
 
 #include "input_process_manager.h"
 
+#include "../building_locations.h"
 #include "../camera.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_be_pushed.h"
@@ -93,6 +94,10 @@ bool is_collidable(const Entity& entity, OptEntity other) {
         return false;
     }
 
+    if (entity.has<CanBeHeld_HT>() && entity.get<CanBeHeld_HT>().is_held()) {
+        return false;
+    }
+
     if (check_type(entity, EntityType::MopBuddy)) {
         if (other && check_type(other.asE(), EntityType::MopBuddyHolder)) {
             return false;
@@ -164,6 +169,10 @@ void collect_user_input(Entity& entity, float dt) {
         KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
     if (pickup) cui.write(InputName::PlayerPickup, 1.f);
 
+    bool handtruck_interact = KeyMap::is_event_once_DO_NOT_USE(
+        state, InputName::PlayerHandTruckInteract);
+    if (handtruck_interact) cui.write(InputName::PlayerHandTruckInteract, 1.f);
+
     bool rotate = KeyMap::is_event_once_DO_NOT_USE(
         state, InputName::PlayerRotateFurniture);
     if (rotate) cui.write(InputName::PlayerRotateFurniture, 1.f);
@@ -198,7 +207,25 @@ void process_player_movement_input(Entity& entity, float dt,
     auto new_position_x = transform.pos();
     auto new_position_z = transform.pos();
 
+    // TODO :DESIGN: this should be separate functions or something because
+    // at the moment the order really matters, but probably we want these
+    // to be additive? (like handtruck full & vomit is 25% speed??)
     const auto getSpeedMultiplier = [&]() {
+        if (entity.has<CanHoldHandTruck>()) {
+            const CanHoldHandTruck& chht = entity.get<CanHoldHandTruck>();
+            if (chht.is_holding()) {
+                OptEntity hand_truck =
+                    EntityHelper::getEntityForID(chht.hand_truck_id());
+                if (hand_truck) {
+                    const CanHoldFurniture& ht_chf =
+                        hand_truck->get<CanHoldFurniture>();
+                    if (ht_chf.is_holding_furniture()) {
+                        return 0.5f;
+                    }
+                }
+            }
+        }
+
         OptEntity overlap =
             EntityHelper::getOverlappingEntityIfExists(entity, 0.75f);
         if (!overlap.has_value()) return 1.f;
@@ -291,6 +318,10 @@ void drop_held_furniture(Entity& player) {
 
     vec3 drop_location = player.get<Transform>().drop_location();
 
+    // TODO :DUPE: this logic is also in rendering system
+    // they should match so we dont have weirdness with ui not matching
+    // the actual logic
+
     // We have to use the non cached version because the pickup location
     // is in the cache
     bool can_place =
@@ -300,6 +331,14 @@ void drop_held_furniture(Entity& player) {
     // log_info("you cant place that here...");
     if (!can_place) {
         return;
+    }
+
+    // For items in the store, we should make sure you dont take them outside
+    // somehow
+    if (hf->has<IsStoreSpawned>()) {
+        // TODO add a message or something to show you cant drop it
+        if (!STORE_BUILDING.is_inside({drop_location.x, drop_location.z}))
+            return;
     }
 
     hf->get<CanBeHeld>().set_is_being_held(false);
@@ -329,6 +368,7 @@ void drop_held_furniture(Entity& player) {
 }
 
 void handle_grab_or_drop(Entity& player) {
+    log_info("Handle grab or drop, player is {}", player.type);
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
     CanHoldFurniture& ourCHF = player.get<CanHoldFurniture>();
 
@@ -687,13 +727,15 @@ void handle_grab(Entity& player) {
     // Handles the non-furniture grabbing case
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
-    OptEntity closest_item = EntityHelper::getClosestMatchingEntity(
-        player.get<Transform>().as2(), TILESIZE * cho.reach(),
-        [](const Entity& entity) {
-            if (entity.template is_missing<IsItem>()) return false;
-            if (entity.template get<IsItem>().is_held()) return false;
-            return true;
-        });
+    auto pos = player.get<Transform>().as2();
+
+    OptEntity closest_item =
+        EntityQuery()
+            .whereHasComponentAndLambda<IsItem>(
+                [](const IsItem& isitem) { return !isitem.is_held(); })
+            .whereInRange(pos, TILESIZE * cho.reach())
+            .orderByDist(pos)
+            .gen_first();
 
     // nothing found
     if (!closest_item) return;
@@ -706,7 +748,125 @@ void handle_grab(Entity& player) {
                                 strings::sounds::PICKUP);
 }
 
+bool handle_drop_hand_truck(Entity& player) {
+    Transform& transform = player.get<Transform>();
+    CanHoldHandTruck& chht = player.get<CanHoldHandTruck>();
+    OptEntity hand_truck = EntityHelper::getEntityForID(chht.hand_truck_id());
+    if (!hand_truck) {
+        log_error(
+            "We are supposed to be holding a handtruck but the id is bad "
+            "{}",
+            chht.hand_truck_id());
+        return true;
+    }
+
+    CanHoldFurniture& ht_chf = hand_truck->get<CanHoldFurniture>();
+
+    if (!ht_chf.is_holding_furniture()) {
+        log_info("chf is not holding anything, Handle drop hand truck");
+        ///////////////////
+        // Drop the hand truck
+        ///////////////////
+
+        vec3 drop_location = player.get<Transform>().drop_location();
+
+        // We have to use the non cached version because the pickup location
+        // is in the cache
+        bool can_place =
+            EntityHelper::isWalkableRawEntities(vec::to2(drop_location));
+
+        // need to make sure it doesnt place ontop of another one
+        // log_info("you cant place that here...");
+        if (!can_place) {
+            return true;
+        }
+
+        // hand_truck->get<CanBeHeld>().set_is_being_held(false);
+        Transform& hftrans = hand_truck->get<Transform>();
+        hftrans.update(drop_location);
+
+        chht.update(-1, vec3{});
+        log_info("we {} dropped the handtruck {} we were holding", player.id,
+                 hand_truck->id);
+
+        EntityHelper::invalidatePathCache();
+
+        // TODO :PICKUP: i dont like that these are spread everywhere,
+        network::Server::play_sound(player.get<Transform>().as2(),
+                                    strings::sounds::PLACE);
+
+        {
+            auto my_bounds = transform.bounds();
+            auto their_bounds = hftrans.bounds();
+
+            if (raylib::CheckCollisionBoxes(my_bounds, their_bounds)) {
+                // player is inside dropped object
+                transform.update(vec::to3(transform.tile_behind(0.15f)));
+            }
+        }
+        return false;
+    }
+
+    log_info("pickup/drop the furniture");
+    planning::handle_grab_or_drop(hand_truck.asE());
+    //
+    return false;
+}
+
+bool handle_hand_truck(Entity& player) {
+    log_info("Handle hand truck");
+    const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
+    const Transform& transform = player.get<Transform>();
+    CanHoldHandTruck& chht = player.get<CanHoldHandTruck>();
+
+    const auto handle_grab_hand_truck = [&]() -> bool {
+        log_info("Handle grab hand truck");
+
+        // TODO need a way to ignore ones that are held by someone else
+        OptEntity closest_handtruck =
+            EntityQuery()
+                .whereInRange(transform.as2(), cho.reach())
+                .whereType(EntityType::HandTruck)
+                .gen_first();
+        // no match
+        if (!closest_handtruck) return false;
+
+        chht.update(closest_handtruck->id,
+                    closest_handtruck->get<Transform>().pos());
+
+        OptEntity hand_truck =
+            EntityHelper::getEntityForID(chht.hand_truck_id());
+        hand_truck->get<CanBeHeld_HT>().set_is_being_held(true);
+
+        // Note: we expect thatr since ^ set is held is true,
+        // the previous position this furniture was at before you picked it up
+        // should now be walkable but for some reason the preview doesnt turn
+        // red
+        EntityHelper::invalidatePathCache();
+
+        // TODO :PICKUP: i dont like that these are spread everywhere,
+        network::Server::play_sound(player.get<Transform>().as2(),
+                                    strings::sounds::PICKUP);
+        return true;
+    };
+
+    // We dont have to check CanHoldFurniture because you cant hold anything
+    // without a handtruck during inround mode
+    return (chht.empty() ? handle_grab_hand_truck()
+                         : handle_drop_hand_truck(player));
+}
+
 void handle_grab_or_drop(Entity& player) {
+    // If you are holding the handtruck,
+    // then dont allow picking up anything else
+    CanHoldHandTruck& chht = player.get<CanHoldHandTruck>();
+    if (chht.is_holding()) {
+        OptEntity hand_truck =
+            EntityHelper::getEntityForID(chht.hand_truck_id());
+        planning::handle_grab_or_drop(hand_truck.asE());
+        return;
+    }
+
     // Do we already have something in our hands?
     // We must be trying to drop it
     player.get<CanHoldItem>().empty() ? handle_grab(player)
@@ -747,14 +907,17 @@ void process_input(Entity& entity, const UserInput& input) {
                 case InputName::PlayerRotateFurniture:
                     planning::rotate_furniture(entity);
                     break;
+                case InputName::PlayerHandTruckInteract:
+                    if (GameState::get().in_round()) {
+                        inround::handle_hand_truck(entity);
+                    }
+                    break;
                 case InputName::PlayerPickup:
                     // grab_or_drop(entity);
                     {
                         if (GameState::get().in_round()) {
                             inround::handle_grab_or_drop(entity);
                         } else if (GameState::get().is(game::State::Planning)) {
-                            planning::handle_grab_or_drop(entity);
-                        } else if (GameState::get().is(game::State::Store)) {
                             planning::handle_grab_or_drop(entity);
                         } else {
                             // probably want to handle messing around in the

@@ -11,6 +11,7 @@
 #include "components/ai_wait_in_queue.h"
 #include "components/ai_wandering.h"
 #include "components/can_change_settings_interactively.h"
+#include "components/can_hold_handtruck.h"
 #include "components/can_pathfind.h"
 #include "components/has_fishing_game.h"
 #include "components/has_last_interacted_customer.h"
@@ -26,6 +27,7 @@
 #include "components/is_round_settings_manager.h"
 #include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
+#include "components/responds_to_day_night.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
 #include "engine/bitset_utils.h"
@@ -33,6 +35,7 @@
 #include "engine/ui/color.h"
 #include "engine/util.h"
 #include "entity.h"
+#include "entity_helper.h"
 #include "entity_type.h"
 //
 #include "client_server_comm.h"
@@ -151,12 +154,15 @@ void register_all_components() {
         CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
         CanOrderDrink, CanPathfind, CanChangeSettingsInteractively,
+        CanHoldHandTruck, CanBeHeld_HT,
         //
         HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
         HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
         HasFishingGame, HasLastInteractedCustomer,
         // render
-        ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
+        ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer,
+        // responds to
+        RespondsToDayNight
         //
         >();
     // TODO now that we have removeComponent we could remove some instead
@@ -234,6 +240,7 @@ void make_entity(Entity& entity, const DebugOptions& options, vec2 p) {
 void add_player_components(Entity& player) {
     player.addComponent<CanHighlightOthers>();
     player.addComponent<CanHoldFurniture>();
+    player.addComponent<CanHoldHandTruck>();
     player.get<HasBaseSpeed>().update(7.5f);
     player.addComponent<HasName>();
     player.addComponent<HasClientID>();
@@ -490,6 +497,23 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
             hasWork.reset_pct();
         }
     });
+}
+
+void make_door(Entity& door, vec2 pos, Color) {
+    furniture::make_furniture(door, DebugOptions{.type = EntityType::Door}, pos,
+                              ui::color::ugly_yellow, ui::color::ugly_blue,
+                              true);
+
+    // we start at day
+    door.removeComponent<IsSolid>();
+
+    door.addComponent<RespondsToDayNight>()
+        .registerOnDayStarted([](Entity& door) {
+            // TODO kick everyone out of the store
+            door.removeComponent<IsSolid>();
+        })
+        .registerOnNightStarted(
+            [](Entity& door) { door.addComponent<IsSolid>(); });
 }
 
 void make_wall(Entity& wall, vec2 pos, Color c) {
@@ -924,6 +948,43 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
 }
 
 }  // namespace furniture
+
+void make_hand_truck(Entity& hand_truck, vec2 pos) {
+    const DebugOptions options = {EntityType::HandTruck};
+    make_entity(hand_truck, options, pos);
+
+    hand_truck.get<Transform>().init({pos.x, 0, pos.y},
+                                     {TILESIZE, TILESIZE, TILESIZE});
+    hand_truck.addComponent<IsSolid>();
+    hand_truck.addComponent<SimpleColoredBoxRenderer>()
+        .update_face(BLUE)
+        .update_base(BLUE);
+
+    if (ENABLE_MODELS) {
+        auto model_name = util::convertToSnakeCase<EntityType>(options.type);
+        if (ModelInfoLibrary::get().has(model_name)) {
+            hand_truck.addComponent<ModelRenderer>(options.type);
+        }
+    }
+
+    if (hand_truck.is_missing<ModelRenderer>()) {
+        hand_truck.get<Transform>().update_visual_offset({0, -0.25f, 0});
+        hand_truck.get<Transform>().update_size(
+            {TILESIZE, TILESIZE * 0.5f, TILESIZE});
+    }
+
+    // we need to add it to set a default, so its here
+    hand_truck.addComponent<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Table);
+
+    hand_truck.addComponent<CanBeHeld_HT>();
+
+    // TODO this is needed to process "reach" for pickup/drop
+    hand_truck.addComponent<CanHighlightOthers>();
+
+    hand_truck.addComponent<CanBeHighlighted>();
+    hand_truck.addComponent<CanHoldFurniture>();
+}
 
 namespace items {
 
@@ -1502,6 +1563,10 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::MapRandomizer: {
             furniture::make_map_randomizer(entity, location);
         } break;
+        case EntityType::Door: {
+            const auto d_color = Color{155, 75, 0, 255};
+            (furniture::make_door(entity, location, d_color));
+        } break;
         case EntityType::Wall: {
             const auto d_color = Color{155, 75, 0, 255};
             (furniture::make_wall(entity, location, d_color));
@@ -1580,6 +1645,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::Jukebox: {
             furniture::make_jukebox(entity, location);
+        } break;
+        case EntityType::HandTruck: {
+            make_hand_truck(entity, location);
         } break;
 
         // These return false

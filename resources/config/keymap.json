@@ -54,6 +54,16 @@
                 }
             }
         ],
+        "PlayerHandTruckInteract": [
+            {
+                "type": 0,
+                "value": 67
+            },
+            {
+                "type": 1,
+                "value": "GAMEPAD_BUTTON_RIGHT_FACE_UP"
+            }
+        ],
         "PlayerLeft": [
             {
                 "type": 0,
@@ -125,7 +135,7 @@
             },
             {
                 "type": 1,
-                "value": "GAMEPAD_BUTTON_RIGHT_FACE_UP"
+                "value": "GAMEPAD_BUTTON_MIDDLE_LEFT"
             }
         ],
         "SkipIngredientMatch": [
@@ -156,10 +166,6 @@
             {
                 "type": 0,
                 "value": 61
-            },
-            {
-                "type": 1,
-                "value": "GAMEPAD_BUTTON_MIDDLE_LEFT"
             }
         ]
     },

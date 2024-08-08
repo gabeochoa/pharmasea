@@ -14,7 +14,19 @@ void PathRequestManager::process_responses(
     {
         std::lock_guard<std::mutex> lock(
             g_path_request_manager->entities_mutex_);
-        g_path_request_manager->entities_storage_ = entities;
+
+        g_path_request_manager->entities_storage_.clear();
+        g_path_request_manager->entities_storage_.reserve(entities.size());
+
+        for (const std::shared_ptr<Entity>& entity : entities) {
+            // Remove non collidables
+            if (!system_manager::input_process_manager::is_collidable(*entity))
+                continue;
+
+            // only store the positions
+            g_path_request_manager->entities_storage_.push_back(
+                entity->get<Transform>().as2());
+        }
     }
 
     while (!g_path_request_manager->response_queue.empty()) {
@@ -51,18 +63,8 @@ bool PathRequestManager::is_walkable(const vec2& pos) {
     bool hit_impassable = false;
     std::lock_guard<std::mutex> lock(g_path_request_manager->entities_mutex_);
     for (const auto& e : entities_storage_) {
-        if (!e) continue;
-        Entity& entity = *e;
-
-        // Ignore non colliable objects
-        if (!system_manager::input_process_manager::is_collidable(entity))
-            continue;
         // ignore things that are not at this location
-        if (vec::distance(entity.template get<Transform>().as2(), pos) >
-            TILESIZE / 2.f)
-            continue;
-
-        // is_collidable and inside this square
+        if (vec::distance_sq(e, pos) > 0.25f) continue;
         hit_impassable = true;
         break;
     }

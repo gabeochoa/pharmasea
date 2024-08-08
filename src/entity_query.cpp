@@ -1,6 +1,18 @@
 
 #include "entity_query.h"
 
+#include <memory>
+
+//
+#include "engine/pathfinder.h"
+
+bool EntityQuery::WhereCanPathfindTo::operator()(const Entity& entity) const {
+    return !pathfinder::find_path(
+                start, entity.get<Transform>().tile_directly_infront(),
+                std::bind(EntityHelper::isWalkable, std::placeholders::_1))
+                .empty();
+}
+
 //
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
@@ -72,6 +84,18 @@ RefEntities EntityQuery::run_query(UnderlyingOptions) const {
         if (!e_ptr) continue;
         Entity& e = *e_ptr;
         out.push_back(e);
+    }
+
+    // By default we want to ignore anything spawned in the store
+    if (!_include_store_entities) {
+        auto it = out.end();
+        Modification* mod = new Not(new WhereHasComponent<IsStoreSpawned>());
+
+        it = std::partition(out.begin(), it, [&mod](const auto& entity) {
+            return (*mod)(entity);
+        });
+
+        delete mod;
     }
 
     auto it = out.end();

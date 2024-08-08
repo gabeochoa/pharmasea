@@ -3,6 +3,7 @@
 
 #include <regex>
 
+#include "../building_locations.h"
 #include "../components/adds_ingredient.h"
 #include "../components/ai_clean_vomit.h"
 #include "../components/ai_close_tab.h"
@@ -775,6 +776,49 @@ void render_trigger_area(const Entity& entity, float dt) {
     }
 }
 
+// TODO merge all these so we can just pass in the texture name?
+void render_dollarsign_marker(const Entity& entity) {
+    const Transform& transform = entity.get<Transform>();
+    vec3 position = transform.pos();
+
+    raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
+    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+    raylib::DrawBillboard(cam.camera, texture,
+                          vec3{position.x + (TILESIZE * 0.05f),  //
+                               position.y + (TILESIZE * 2.f),    //
+                               position.z},                      //
+                          0.75f * TILESIZE,                      //
+                          raylib::WHITE);
+}
+
+void render_lock_marker(const Entity& entity) {
+    const Transform& transform = entity.get<Transform>();
+    vec3 position = transform.pos();
+
+    raylib::Texture texture = TextureLibrary::get().get("lock");
+    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+    raylib::DrawBillboard(cam.camera, texture,
+                          vec3{position.x + (TILESIZE * 0.05f),  //
+                               position.y + (TILESIZE * 2.f),    //
+                               position.z},                      //
+                          0.75f * TILESIZE,                      //
+                          raylib::WHITE);
+}
+
+void render_trash_marker(const Entity& entity) {
+    const Transform& transform = entity.get<Transform>();
+    vec3 position = transform.pos();
+
+    raylib::Texture texture = TextureLibrary::get().get("trashcan");
+    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+    raylib::DrawBillboard(cam.camera, texture,
+                          vec3{position.x + (TILESIZE * 0.05f),  //
+                               position.y + (TILESIZE * 2.f),    //
+                               position.z},                      //
+                          0.75f * TILESIZE,                      //
+                          raylib::WHITE);
+}
+
 void render_floor_marker(const Entity& entity, float) {
     if (entity.is_missing<IsFloorMarker>()) return;
 
@@ -804,6 +848,9 @@ void render_floor_marker(const Entity& entity, float) {
                 return TranslatableString(strings::i18n::FLOORMARKER_NEW_ITEMS);
             case IsFloorMarker::Planning_TrashArea:
                 return TranslatableString(strings::i18n::FLOORMARKER_TRASH);
+            case IsFloorMarker::Store_LockedArea:
+                return TranslatableString(
+                    strings::i18n::FLOORMARKER_STORE_LOCK);
             case IsFloorMarker::Store_PurchaseArea:
                 return TranslatableString(
                     strings::i18n::FLOORMARKER_STORE_PURCHASE);
@@ -851,34 +898,15 @@ void render_floor_marker(const Entity& entity, float) {
             render_dollarsign_marker(marked_entity.asE());
         }
     }
-}
 
-void render_dollarsign_marker(const Entity& entity) {
-    const Transform& transform = entity.get<Transform>();
-    vec3 position = transform.pos();
-
-    raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::DrawBillboard(cam.camera, texture,
-                          vec3{position.x + (TILESIZE * 0.05f),  //
-                               position.y + (TILESIZE * 2.f),    //
-                               position.z},                      //
-                          0.75f * TILESIZE,                      //
-                          raylib::WHITE);
-}
-
-void render_trash_marker(const Entity& entity) {
-    const Transform& transform = entity.get<Transform>();
-    vec3 position = transform.pos();
-
-    raylib::Texture texture = TextureLibrary::get().get("trashcan");
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::DrawBillboard(cam.camera, texture,
-                          vec3{position.x + (TILESIZE * 0.05f),  //
-                               position.y + (TILESIZE * 2.f),    //
-                               position.z},                      //
-                          0.75f * TILESIZE,                      //
-                          raylib::WHITE);
+    if (ifm.type == IsFloorMarker::Type::Store_LockedArea) {
+        for (size_t i = 0; i < ifm.num_marked(); i++) {
+            EntityID id = ifm.marked_ids()[i];
+            OptEntity marked_entity = EntityHelper::getEntityForID(id);
+            if (!marked_entity) continue;
+            render_lock_marker(marked_entity.asE());
+        }
+    }
 }
 
 void render_spawner_next_customer(const Entity& entity, float) {
@@ -1202,7 +1230,8 @@ void render_normal(const Entity& entity, float dt) {
         render_machine_name(entity, 100);
     }
 
-    if (GameState::get().is(game::State::Store)) {
+    if (entity.has<IsStoreSpawned>() &&
+        STORE_BUILDING.is_inside(entity.get<Transform>().as2())) {
         render_machine_name(entity, 200);
         render_price(entity, dt);
     }
@@ -1327,9 +1356,24 @@ void render_held_furniture_preview(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
 
     vec3 drop_location = entity.get<Transform>().drop_location();
-    bool walkable = EntityHelper::isWalkable(vec::to2(drop_location));
 
-    walkable = walkable || (drop_location == chf.picked_up_at());
+    // TODO :DUPE: this logic is also in input process manager,
+    // they should match so we dont have weirdness with ui not matching
+    // the actual logic
+    bool walkable =                                        //
+        EntityHelper::isWalkable(vec::to2(drop_location))  //
+        || (drop_location == chf.picked_up_at());
+
+    if (walkable) {
+        EntityID furn_id = chf.furniture_id();
+        OptEntity hf = EntityHelper::getEntityForID(furn_id);
+        if (hf->has<IsStoreSpawned>()) {
+            if (!STORE_BUILDING.is_inside({drop_location.x, drop_location.z})) {
+                // TODO add a message or something to show you cant drop it
+                walkable = false;
+            }
+        }
+    }
 
     // since the preview is just a box we can just use 0 for angle
     // but if we need in the future, then we can fetch the entity with:

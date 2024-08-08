@@ -3,6 +3,7 @@
 #include "system_manager.h"
 
 ///
+#include "../building_locations.h"
 #include "../components/adds_ingredient.h"
 #include "../components/base_component.h"
 #include "../components/can_be_ghost_player.h"
@@ -48,6 +49,7 @@
 #include "../components/uses_character_model.h"
 #include "../dataclass/upgrades.h"
 #include "../engine/util.h"
+#include "raylib.h"
 #include "sophie.h"
 ///
 #include "../engine/pathfinder.h"
@@ -73,6 +75,32 @@ void generate_store_options();
 void move_purchased_furniture();
 }  // namespace store
 
+void move_player_out_of_building_SERVER_ONLY(Entity& entity,
+                                             const Building& building) {
+    if (!is_server()) {
+        log_warn(
+            "you are calling a server only function from a client context, "
+            "this is best case a no-op and worst case a visual desync");
+    }
+
+    vec3 position = vec::to3(building.vomit_location);
+    Transform& transform = entity.get<Transform>();
+    transform.update(position);
+
+    // TODO if we have multiple local players then we need to specify which here
+
+    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+
+    int client_id = server->get_client_id_for_entity(entity);
+    if (client_id == -1) {
+        log_warn("Tried to find a client id for entity but didnt find one");
+        return;
+    }
+
+    server->send_player_location_packet(client_id, position, transform.facing,
+                                        entity.get<HasName>().name());
+}
+
 void move_player_SERVER_ONLY(Entity& entity, game::State location) {
     if (!is_server()) {
         log_warn(
@@ -87,7 +115,7 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
             return;
             break;
         case game::Lobby: {
-            position = {LOBBY_ORIGIN, 0, 0};
+            position = LOBBY_BUILDING.to3();
         } break;
         case game::InRound:  // fall through
         case game::Planning: {
@@ -105,13 +133,10 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
             }
         } break;
         case game::Progression: {
-            position = {PROGRESSION_ORIGIN, 0, 0};
-        } break;
-        case game::Store: {
-            position = {STORE_ORIGIN, 0, 0};
+            position = PROGRESSION_BUILDING.to3();
         } break;
         case game::ModelTest: {
-            position = {MODEL_TEST_ORIGIN, 0, 0};
+            position = MODEL_TEST_BUILDING.to3();
         } break;
     }
 
@@ -160,6 +185,8 @@ void mark_item_in_floor_area(Entity& entity, float) {
             .whereHasComponent<IsSolid>()
             .whereCollides(
                 entity.get<Transform>().expanded_bounds({0, TILESIZE, 0}))
+            // we want to include store items since it has many floor areas
+            .include_store_entities()
             .gen_ids();
 
     ifm.mark_all(std::move(ids));
@@ -168,6 +195,34 @@ void mark_item_in_floor_area(Entity& entity, float) {
 void process_floor_markers(Entity& entity, float dt) {
     clear_all_floor_markers(entity, dt);
     mark_item_in_floor_area(entity, dt);
+}
+
+void update_held_hand_truck_position(Entity& entity, float) {
+    if (entity.is_missing_any<Transform, CanHoldHandTruck>()) return;
+
+    const Transform& transform = entity.get<Transform>();
+    const CanHoldHandTruck& can_hold_hand_truck =
+        entity.get<CanHoldHandTruck>();
+
+    if (can_hold_hand_truck.empty()) return;
+
+    auto new_pos = transform.pos();
+    if (transform.face_direction() & Transform::FrontFaceDirection::FORWARD) {
+        new_pos.z += TILESIZE;
+    }
+    if (transform.face_direction() & Transform::FrontFaceDirection::RIGHT) {
+        new_pos.x += TILESIZE;
+    }
+    if (transform.face_direction() & Transform::FrontFaceDirection::BACK) {
+        new_pos.z -= TILESIZE;
+    }
+    if (transform.face_direction() & Transform::FrontFaceDirection::LEFT) {
+        new_pos.x -= TILESIZE;
+    }
+
+    OptEntity hand_truck =
+        EntityHelper::getEntityForID(can_hold_hand_truck.hand_truck_id());
+    hand_truck->get<Transform>().update(new_pos);
 }
 
 void update_held_furniture_position(Entity& entity, float) {
@@ -310,6 +365,7 @@ void highlight_facing_furniture(Entity& entity, float) {
     OptEntity match = EntityQuery()
                           .whereInRange(transform.as2(), cho.reach())
                           .whereHasComponent<CanBeHighlighted>()
+                          .include_store_entities()
                           .gen_first();
     if (!match) return;
 
@@ -380,11 +436,18 @@ void process_conveyer_items(Entity& entity, float dt) {
         return _conveyer_filter(furn);
     };
 
-    OptEntity match = is_ipp
-                          ? EntityHelper::getClosestMatchingEntity(
-                                transform.as2(), MAX_SEARCH_RANGE, _ipp_filter)
-                          : EntityHelper::getClosestMatchingFurniture(
-                                transform, 1.f, _conveyer_filter);
+    OptEntity match;
+    if (is_ipp) {
+        auto pos = transform.as2();
+        match = EntityQuery()
+                    .whereLambda(_ipp_filter)
+                    .whereInRange(pos, MAX_SEARCH_RANGE)
+                    .orderByDist(pos)
+                    .gen_first();
+    } else {
+        match = EntityHelper::getMatchingEntityInFront(
+            transform.as2(), 1.f, transform.face_direction(), _conveyer_filter);
+    }
 
     // no match means we can't continue, stay in the middle
     if (!match) {
@@ -876,11 +939,11 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     ita.reset_cooldown();
 
     const auto _choose_option = [](int option_chosen) {
-        GameState::get().transition_to_store();
+        GameState::get().transition_to_planning();
 
         SystemManager::get().for_each_old([](Entity& e) {
             if (check_type(e, EntityType::Player)) {
-                move_player_SERVER_ONLY(e, game::State::Store);
+                move_player_SERVER_ONLY(e, game::State::Planning);
                 return;
             }
         });
@@ -941,7 +1004,6 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
     switch (ita.type) {
         case IsTriggerArea::Store_Reroll: {
-            system_manager::store::cleanup_old_store_options();
             system_manager::store::generate_store_options();
             {
                 OptEntity sophie =
@@ -972,10 +1034,15 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 // inherit the creation options of the parent? which might
                 // cause issues for permanant, when this is a simple brute
                 // force solution for now
-                float rad = 30;
+
+                // NOTE: pre-building code, we used to use the 100,0 positio
+                // as the origin and not the top left corner.
+                // this assumption changes the box we delete items in
+                // new: 100, 0 => 150, 50
+                // old: 70, -30 => 130, 30
+
                 const auto ents = EntityHelper::getAllInRange(
-                    {MODEL_TEST_ORIGIN - rad, -1.f * rad},
-                    {MODEL_TEST_ORIGIN + rad, rad});
+                    MODEL_TEST_BUILDING.min(), MODEL_TEST_BUILDING.max());
 
                 for (Entity& to_delete : ents) {
                     // TODO add a way to skip the permananent ones
@@ -1016,7 +1083,12 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::Progression_Option2:
             _choose_option(1);
             break;
+            // TODO rename this and change text to "order for delivery"
+            // or something  (maybe delivery is an upgrade?)
         case IsTriggerArea::Store_BackToPlanning: {
+            system_manager::store::move_purchased_furniture();
+            system_manager::store::cleanup_old_store_options();
+
             GameState::get().transition_to_planning();
             SystemManager::get().for_each_old([](Entity& e) {
                 if (!check_type(e, EntityType::Player)) return;
@@ -1696,7 +1768,8 @@ void process_spawner(Entity& entity, float dt) {
 
     bool should_prev_dupes = iss.prevent_dupes();
     if (should_prev_dupes) {
-        for (const Entity& e : EntityHelper::getEntitiesInPosition(pos)) {
+        for (const Entity& e :
+             EntityQuery().whereInRange(pos, TILESIZE).gen()) {
             if (e.id == entity.id) continue;
 
             // Other than invalid and Us, is there anything else there?
@@ -1859,18 +1932,21 @@ void process_squirter(Entity& entity, float) {
     // so we got something, lets see if anyone around can give us
     // something to use
 
-    OptEntity closest_furniture = EntityHelper::getClosestMatchingEntity(
-        entity.get<Transform>().as2(), 1.25f, [](const Entity& f) {
-            if (f.is_missing<CanHoldItem>()) return false;
-            const CanHoldItem& fchi = f.get<CanHoldItem>();
-            if (fchi.empty()) return false;
+    auto pos = entity.get<Transform>().as2();
+    OptEntity closest_furniture =
+        EntityQuery()
+            .whereHasComponentAndLambda<CanHoldItem>(
+                [](const CanHoldItem& chi) {
+                    if (chi.empty()) return false;
+                    const Item& item = chi.const_item();
+                    // TODO should we instead check for <AddsIngredient>?
+                    if (!check_type(item, EntityType::Alcohol)) return false;
+                    return true;
+                })
+            .whereInRange(pos, 1.25f)
+            .orderByDist(pos)
+            .gen_first();
 
-            const Item& item = fchi.const_item();
-
-            // TODO should we instead check for <AddsIngredient>?
-            if (!check_type(item, EntityType::Alcohol)) return false;
-            return true;
-        });
     if (!closest_furniture) return;
 
     Entity& drink = sqCHI.item();
@@ -2072,7 +2148,9 @@ void pop_out_when_colliding(Entity& entity, float) {
 
     OptEntity match = EntityHelper::getOverlappingEntityIfExists(
         entity, 0.75f,
-        [](const Entity& entity) { return entity.has<IsSolid>(); });
+        [](const Entity& entity) { return entity.has<IsSolid>(); },
+        true /* include store entities */
+    );
     if (!match) return;
 
     const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
@@ -2144,13 +2222,34 @@ void cleanup_old_store_options() {
                 const IsFloorMarker& fm = entity.get<IsFloorMarker>();
                 return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
             })
+            .include_store_entities()
             .gen_first();
 
-    for (Entity& entity :
-         EntityQuery().whereHasComponent<IsStoreSpawned>().gen()) {
+    OptEntity locked_area =
+        EntityQuery()
+            .whereHasComponent<IsFloorMarker>()
+            .whereLambda([](const Entity& entity) {
+                if (entity.is_missing<IsFloorMarker>()) return false;
+                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                return fm.type == IsFloorMarker::Type::Store_LockedArea;
+            })
+            .include_store_entities()
+            .gen_first();
+
+    for (Entity& entity : EntityQuery()
+                              .whereHasComponent<IsStoreSpawned>()
+                              .include_store_entities()
+                              .gen()) {
         // ignore antyhing in the cart
         if (cart_area) {
             if (cart_area->get<IsFloorMarker>().is_marked(entity.id)) {
+                continue;
+            }
+        }
+
+        // ignore anything locked
+        if (locked_area) {
+            if (locked_area->get<IsFloorMarker>().is_marked(entity.id)) {
                 continue;
             }
         }
@@ -2166,6 +2265,7 @@ void cleanup_old_store_options() {
 }
 
 void generate_store_options() {
+    system_manager::store::cleanup_old_store_options();
     // Figure out what kinds of things we can spawn generally
     // - what is spawnable?
     // - are they capped by progression? (alcohol / fruits for sure
@@ -2184,6 +2284,17 @@ void generate_store_options() {
 
     int num_to_spawn = irsm.get<int>(ConfigKey::NumStoreSpawns);
 
+    // NOTE: areas expand outward so as2() refers to the center
+    // so we have to go back half the size
+    Transform& area_transform = spawn_area->get<Transform>();
+    vec2 area_origin = area_transform.as2();
+    float half_width = area_transform.sizex() / 2.f;
+    float half_height = area_transform.sizez() / 2.f;
+    float reset_x = area_origin.x - half_width;
+    float reset_y = area_origin.y - half_height;
+
+    vec2 spawn_position = vec2{reset_x, reset_y};
+
     while (num_to_spawn) {
         int entity_type_id = bitset_utils::get_random_enabled_bit(unlocked);
         EntityType etype = magic_enum::enum_value<EntityType>(entity_type_id);
@@ -2194,14 +2305,22 @@ void generate_store_options() {
 
         auto& entity = EntityHelper::createEntity();
         entity.addComponent<IsStoreSpawned>();
-        vec2 random_spot = RandomEngine::get().get_vec(-3.f, 3.f);
-        log_info("random spot: {}", random_spot);
-        bool success = convert_to_type(
-            etype, entity, spawn_area->get<Transform>().as2() + random_spot);
+        bool success = convert_to_type(etype, entity, spawn_position);
         if (success) {
             num_to_spawn--;
         } else {
             entity.cleanup = true;
+        }
+
+        spawn_position.x += 2;
+
+        if (spawn_position.x > (area_origin.x + half_width)) {
+            spawn_position.x = reset_x;
+            spawn_position.y += 2;
+        } else if (spawn_position.y > (area_origin.y + half_height)) {
+            reset_x += 1;
+            spawn_position.x = reset_x;
+            spawn_position.y = reset_y;
         }
     }
 
@@ -2374,6 +2493,48 @@ inline void on_round_finished(Entity& entity, float) {
 
 }  // namespace upgrade
 
+namespace day_night {
+void on_day_ended(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_day_ended();
+}
+
+void on_night_ended(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_night_ended();
+}
+void on_day_started(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_day_started();
+}
+void on_night_started(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_night_started();
+}
+
+}  // namespace day_night
+
+void close_buildings_when_night(Entity& entity) {
+    // just choosing this since theres only one
+    if (!check_type(entity, EntityType::Sophie)) return;
+
+    const std::array<Building, 2> buildings_that_close = {
+        PROGRESSION_BUILDING,
+        STORE_BUILDING,
+    };
+
+    for (const Building& building : buildings_that_close) {
+        // Teleport anyone inside a store outside
+        SystemManager::get().for_each_old([&](Entity& e) {
+            if (!check_type(e, EntityType::Player)) return;
+            if (CheckCollisionBoxes(e.get<Transform>().bounds(),
+                                    building.bounds)) {
+                move_player_out_of_building_SERVER_ONLY(e, building);
+            }
+        });
+    }
+}
+
 }  // namespace system_manager
 
 void SystemManager::on_game_state_change(game::State new_state,
@@ -2413,8 +2574,6 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
         if (GameState::get().is_lobby_like()) {
             //
-        } else if (GameState::get().is(game::State::Store)) {
-            store_update(entities, dt);
         } else if (GameState::get().is(game::State::ModelTest)) {
             model_test_update(entities, dt);
         } else if (GameState::get().is(game::State::Progression)) {
@@ -2433,9 +2592,8 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 }
 
 void SystemManager::update_local_players(const Entities& players, float dt) {
+    local_players = players;
     for (const auto& entity : players) {
-        // TODO fix this if we have more than one local player
-        firstPlayerID = entity->id;
         system_manager::input_process_manager::collect_user_input(*entity, dt);
     }
 }
@@ -2474,6 +2632,9 @@ void SystemManager::process_state_change(
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
             system_manager::upgrade::on_round_finished(entity, dt);
+
+            system_manager::day_night::on_night_ended(entity);
+            system_manager::day_night::on_day_started(entity);
         });
     };
 
@@ -2484,18 +2645,14 @@ void SystemManager::process_state_change(
             system_manager::release_mop_buddy_at_start_of_day(entity);
             system_manager::delete_trash_when_leaving_planning(entity);
 
+            system_manager::day_night::on_day_ended(entity);
+            system_manager::day_night::on_night_started(entity);
+
+            system_manager::close_buildings_when_night(entity);
+
             // TODO
             // system_manager::upgrade::on_round_started(entity, dt);
         });
-    };
-
-    const auto onStoreEntered = [&]() {
-        system_manager::store::generate_store_options();
-    };
-
-    const auto onStoreLeave = [&]() {
-        system_manager::store::move_purchased_furniture();
-        system_manager::store::cleanup_old_store_options();
     };
 
     for (const auto& transition : transitions) {
@@ -2511,11 +2668,8 @@ void SystemManager::process_state_change(
         if (new_state == game::State::InRound) {
             onRoundStarted();
         }
-        if (new_state == game::State::Store) {
-            onStoreEntered();
-        }
-        if (old_state == game::State::Store) {
-            onStoreLeave();
+        if (new_state == game::State::Planning) {
+            system_manager::store::generate_store_options();
         }
 
         if (old_state == game::State::Progression) {
@@ -2537,7 +2691,10 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
         // maybe a second one for highlighting items?
         system_manager::highlight_facing_furniture(entity, dt);
         system_manager::transform_snapper(entity, dt);
+
         system_manager::update_held_item_position(entity, dt);
+        system_manager::update_held_furniture_position(entity, dt);
+        system_manager::update_held_hand_truck_position(entity, dt);
 
         system_manager::process_trigger_area(entity, dt);
         system_manager::update_visuals_for_settings_changer(entity, dt);
@@ -2617,24 +2774,13 @@ void SystemManager::in_round_update(
     });
 }
 
-void SystemManager::store_update(const Entities& entity_list, float dt) {
-    for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // If you add something here think should it also go in
-        // planning?
-        system_manager::update_held_furniture_position(entity, dt);
-        system_manager::store::cart_management(entity, dt);
-        system_manager::pop_out_when_colliding(entity, dt);
-
-        // game like
-        system_manager::process_is_container_and_should_backfill_item(entity,
-                                                                      dt);
-    });
-}
-
 void SystemManager::planning_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // If you add something here think should it also go in store?
+        system_manager::store::cart_management(entity, dt);
+
+        system_manager::process_is_container_and_should_backfill_item(entity,
+                                                                      dt);
         system_manager::update_held_furniture_position(entity, dt);
         system_manager::pop_out_when_colliding(entity, dt);
     });

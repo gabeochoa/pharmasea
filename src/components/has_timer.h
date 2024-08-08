@@ -94,6 +94,7 @@ struct HasTimer : public BaseComponent {
         CustomersInStore,
         HoldingFurniture,
         NoPathToRegister,
+        RegisterNotInside,
         BarNotClean,
         FurnitureOverlapping,
         ItemInSpawnArea,
@@ -122,8 +123,10 @@ struct HasTimer : public BaseComponent {
                 return TranslatableString(strings::i18n::ITEMS_IN_SPAWN_AREA);
             case DeletingNeededItem:
                 return TranslatableString(strings::i18n::DELETING_NEEDED_ITEM);
+            case RegisterNotInside:
+                return TranslatableString(strings::i18n::REGISTER_NOT_INSIDE);
             default:
-                log_warn("got reason {} but dont have a way to render it", wr);
+                log_error("got reason {} but dont have a way to render it", wr);
             case WaitingReasonLast:
             case None:
                 return NO_TRANSLATE("");

@@ -55,6 +55,7 @@ enum InputName {
     PlayerRotateFurniture,
     PlayerDoWork,
     ShowRecipeBook,
+    PlayerHandTruckInteract,
     RecipeNext,
 
     // TODO dont show any below in the settings page
