@@ -2285,9 +2285,13 @@ void generate_store_options() {
     // NOTE: areas expand outward so as2() refers to the center
     // so we have to go back half the size
     Transform& area_transform = spawn_area->get<Transform>();
-    float reset_x = area_transform.as2().x - area_transform.sizex() / 2.f;
-    float reset_y = area_transform.as2().y - area_transform.sizez() / 2.f;
-    vec2 spawn_position = {reset_x, reset_y};
+    vec2 area_origin = area_transform.as2();
+    float half_width = area_transform.sizex() / 2.f;
+    float half_height = area_transform.sizez() / 2.f;
+    float reset_x = area_origin.x - half_width;
+    float reset_y = area_origin.y - half_height;
+
+    vec2 spawn_position = vec2{reset_x, reset_y};
 
     while (num_to_spawn) {
         int entity_type_id = bitset_utils::get_random_enabled_bit(unlocked);
@@ -2307,14 +2311,11 @@ void generate_store_options() {
         }
 
         spawn_position.x += 2;
-        if (spawn_position.x >
-            (area_transform.as2().x + area_transform.sizex() / 2)) {
+
+        if (spawn_position.x > (area_origin.x + half_width)) {
             spawn_position.x = reset_x;
             spawn_position.y += 2;
-        }
-
-        if (spawn_position.y >
-            (area_transform.as2().y + area_transform.sizez() / 2)) {
+        } else if (spawn_position.y > (area_origin.y + half_height)) {
             reset_x += 1;
             spawn_position.x = reset_x;
             spawn_position.y = reset_y;
@@ -2571,8 +2572,6 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
         if (GameState::get().is_lobby_like()) {
             //
-        } else if (GameState::get().is(game::State::Store)) {
-            store_update(entities, dt);
         } else if (GameState::get().is(game::State::ModelTest)) {
             model_test_update(entities, dt);
         } else if (GameState::get().is(game::State::Progression)) {
