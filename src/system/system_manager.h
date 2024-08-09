@@ -70,6 +70,9 @@ struct SystemManager {
         });
     }
 
+    bool is_daytime() const;
+    bool is_nighttime() const;
+
    private:
     using Transition = std::pair<game::State, game::State>;
     std::vector<Transition> transitions;

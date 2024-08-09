@@ -23,30 +23,7 @@ struct HasDynamicModelName : public BaseComponent {
     using ModelNameFetcher =
         std::function<std::string(const Entity&, const std::string&)>;
 
-    [[nodiscard]] std::string fetch(const Entity& owner) const {
-        if (!initialized)
-            log_warn(
-                "calling HasDynamicModelName::fetch() without initializing");
-
-        switch (dynamic_type) {
-            case OpenClosed: {
-                const bool in_planning =
-                    GameState::get().is(game::State::Planning);
-                if (in_planning) return base_name;
-                return fmt::format("open_{}", base_name);
-            } break;
-                // TODO eventually id like the logic to live in here assuming we
-                // have a ton using these. if its just one for each then fetcher
-                // (Custom:) is perfectly fine
-            case NoDynamicType:
-            case Ingredients:
-            case EmptyFull:
-            case Subtype: {
-                return fetcher(owner, base_name);
-            } break;
-        }
-        return base_name;
-    }
+    [[nodiscard]] std::string fetch(const Entity& owner) const;
 
     void init(EntityType type, DynamicType dyn_type,
               const ModelNameFetcher& fet = nullptr) {

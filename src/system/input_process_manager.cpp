@@ -23,6 +23,7 @@
 #include "../entity_helper.h"
 #include "../network/server.h"
 #include "expected.hpp"
+#include "system_manager.h"
 
 namespace system_manager {
 
@@ -294,7 +295,7 @@ void fishing_game(Entity& player, float frame_dt) {
 namespace planning {
 void rotate_furniture(const Entity& player) {
     // Cant rotate outside planning mode
-    if (GameState::get().is_not(game::State::Planning)) return;
+    if (SystemManager::get().is_nighttime()) return;
 
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
@@ -917,10 +918,11 @@ void process_input(Entity& entity, const UserInput& input) {
                     {
                         if (GameState::get().is_game_like()) {
                             inround::handle_grab_or_drop(entity);
-                        } else if (GameState::get().is(game::State::Planning)) {
+                            // } else if
+                            // (GameState::get().is(game::State::Planning)) {
                             // TODO the is_game_like check above kills this
                             // entire case
-                            planning::handle_grab_or_drop(entity);
+                            // planning::handle_grab_or_drop(entity);
                         } else {
                             // probably want to handle messing around in the
                             // lobby?

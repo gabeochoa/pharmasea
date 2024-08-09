@@ -1226,7 +1226,7 @@ void render_normal(const Entity& entity, float dt) {
     //  planning state.
     //
     //  They kept trying to grab the cups and start making drinks
-    if (GameState::get().is(game::State::Planning)) {
+    if (SystemManager::get().is_daytime()) {
         render_machine_name(entity, 100);
     }
 

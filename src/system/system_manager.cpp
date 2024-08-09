@@ -116,8 +116,7 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
         case game::Lobby: {
             position = LOBBY_BUILDING.to3();
         } break;
-        case game::InRound:  // fall through
-        case game::Planning: {
+        case game::InGame: {
             OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
                 IsFloorMarker::Planning_SpawnArea);
             if (!spawn_area) {
@@ -938,11 +937,11 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     ita.reset_cooldown();
 
     const auto _choose_option = [](int option_chosen) {
-        GameState::get().transition_to_planning();
+        GameState::get().transition_to_game();
 
         SystemManager::get().for_each_old([](Entity& e) {
             if (check_type(e, EntityType::Player)) {
-                move_player_SERVER_ONLY(e, game::State::Planning);
+                move_player_SERVER_ONLY(e, game::State::InGame);
                 return;
             }
         });
@@ -1070,10 +1069,10 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         } break;
 
         case IsTriggerArea::Lobby_PlayGame: {
-            GameState::get().transition_to_planning();
+            GameState::get().transition_to_game();
             SystemManager::get().for_each_old([](Entity& e) {
                 if (!check_type(e, EntityType::Player)) return;
-                move_player_SERVER_ONLY(e, game::State::Planning);
+                move_player_SERVER_ONLY(e, game::State::InGame);
             });
         } break;
         case IsTriggerArea::Progression_Option1:
@@ -1088,10 +1087,10 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             system_manager::store::move_purchased_furniture();
             system_manager::store::cleanup_old_store_options();
 
-            GameState::get().transition_to_planning();
+            GameState::get().transition_to_game();
             SystemManager::get().for_each_old([](Entity& e) {
                 if (!check_type(e, EntityType::Player)) return;
-                move_player_SERVER_ONLY(e, game::State::Planning);
+                move_player_SERVER_ONLY(e, game::State::InGame);
             });
         } break;
     }
@@ -1260,7 +1259,7 @@ void update_visuals_for_settings_changer(Entity& entity, float) {
 }
 
 bool _create_nuxes(Entity&) {
-    if (GameState::get().read() != game::State::Planning) return false;
+    if (SystemManager::get().is_nighttime()) return false;
 
     OptEntity player = EntityQuery(SystemManager::get().oldAll)
                            .whereType(EntityType::Player)
@@ -2593,43 +2592,8 @@ void SystemManager::process_inputs(const Entities& entities,
 }
 
 void SystemManager::process_state_change(
-    const std::vector<std::shared_ptr<Entity>>& entities, float dt) {
+    const std::vector<std::shared_ptr<Entity>>&, float) {
     if (transitions.empty()) return;
-
-    const auto onRoundFinished = [&]() {
-        for_each(entities, dt, [](Entity& entity, float dt) {
-            system_manager::delete_floating_items_when_leaving_inround(entity);
-            system_manager::delete_held_items_when_leaving_inround(entity);
-            system_manager::delete_customers_when_leaving_inround(entity);
-            system_manager::reset_customer_spawner_when_leaving_inround(entity);
-            system_manager::reset_max_gen_when_after_deletion(entity);
-            system_manager::reset_toilet_when_leaving_inround(entity);
-
-            // TODO run HasDayNightTimer::start_day()
-            // system_manager::increment_day_count(entity, dt);
-
-            // Handle updating all the things that rely on progression
-            system_manager::update_new_max_customers(entity, dt);
-
-            // I think this will only happen when you debug change round
-            // while customers are already in line, but doesnt hurt to
-            // reset
-            system_manager::reset_register_queue_when_leaving_inround(entity);
-
-            system_manager::upgrade::on_round_finished(entity, dt);
-        });
-    };
-
-    const auto onRoundStarted = [&]() {
-        for_each(entities, dt, [](Entity& entity, float) {
-            system_manager::handle_autodrop_furniture_when_exiting_planning(
-                entity);
-            system_manager::release_mop_buddy_at_start_of_day(entity);
-            system_manager::delete_trash_when_leaving_planning(entity);
-            // TODO
-            // system_manager::upgrade::on_round_started(entity, dt);
-        });
-    };
 
     for (const auto& transition : transitions) {
         const auto [old_state, new_state] = transition;
@@ -2638,13 +2602,7 @@ void SystemManager::process_state_change(
         if (old_state == game::State::Paused) continue;
         if (new_state == game::State::Paused) continue;
 
-        if (old_state == game::State::InRound) {
-            onRoundFinished();
-        }
-        if (new_state == game::State::InRound) {
-            onRoundStarted();
-        }
-        if (new_state == game::State::Planning) {
+        if (old_state == game::State::Lobby) {
             system_manager::store::generate_store_options();
         }
 
@@ -2712,15 +2670,49 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
             bool is_day = hastimer.is_daytime();
 
             if (is_day) {
-                for_each(entity_list, dt, [](Entity& entity, float) {
+                for_each(entity_list, dt, [](Entity& entity, float dt) {
                     system_manager::day_night::on_night_ended(entity);
                     system_manager::day_night::on_day_started(entity);
+
+                    //
+                    system_manager::delete_floating_items_when_leaving_inround(
+                        entity);
+                    system_manager::delete_held_items_when_leaving_inround(
+                        entity);
+                    system_manager::delete_customers_when_leaving_inround(
+                        entity);
+                    system_manager::reset_customer_spawner_when_leaving_inround(
+                        entity);
+                    system_manager::reset_max_gen_when_after_deletion(entity);
+                    system_manager::reset_toilet_when_leaving_inround(entity);
+
+                    // TODO run HasDayNightTimer::start_day()
+                    // system_manager::increment_day_count(entity, dt);
+
+                    // Handle updating all the things that rely on progression
+                    system_manager::update_new_max_customers(entity, dt);
+
+                    // I think this will only happen when you debug change round
+                    // while customers are already in line, but doesnt hurt to
+                    // reset
+                    system_manager::reset_register_queue_when_leaving_inround(
+                        entity);
+
+                    system_manager::upgrade::on_round_finished(entity, dt);
                 });
             } else {
                 for_each(entity_list, dt, [](Entity& entity, float) {
                     system_manager::day_night::on_day_ended(entity);
                     system_manager::close_buildings_when_night(entity);
                     system_manager::day_night::on_night_started(entity);
+
+                    //
+                    system_manager::
+                        handle_autodrop_furniture_when_exiting_planning(entity);
+                    system_manager::release_mop_buddy_at_start_of_day(entity);
+                    system_manager::delete_trash_when_leaving_planning(entity);
+                    // TODO
+                    // system_manager::upgrade::on_round_started(entity, dt);
                 });
             }
 
@@ -2821,3 +2813,12 @@ void SystemManager::render_ui(const Entities& entities, float dt) const {
     // GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
     system_manager::ui::render_normal(entities, dt);
 }
+
+bool SystemManager::is_daytime() const {
+    for (const auto& entity : oldAll) {
+        if (entity->is_missing<HasDayNightTimer>()) continue;
+        return entity->get<HasDayNightTimer>().is_daytime();
+    }
+    return false;
+}
+bool SystemManager::is_nighttime() const { return !is_daytime(); }

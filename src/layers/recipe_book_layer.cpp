@@ -69,9 +69,7 @@ bool RecipeBookLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
 }
 
 bool RecipeBookLayer::onKeyPressed(KeyPressedEvent& event) {
-    if (GameState::get().is_not(game::State::InRound) &&
-        GameState::get().is_not(game::State::Planning))
-        return false;
+    if (GameState::get().is_not(game::State::InGame)) return false;
 
     if (should_show_recipes &&
         KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==

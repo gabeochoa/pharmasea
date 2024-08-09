@@ -80,6 +80,7 @@
 #include "entity_query.h"
 #include "recipe_library.h"
 #include "strings.h"
+#include "system/system_manager.h"
 
 namespace items {
 // Returns true if item was cleaned up
@@ -670,7 +671,7 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
     container.addComponent<Indexer>((int) ingredient::AlcoholsInCycle.size());
     container.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                               Entity&, float dt) {
-        if (GameState::get().is_not(game::State::InRound)) return;
+        if (SystemManager::get().is_daytime()) return;
         const Indexer& indexer = owner.get<Indexer>();
         if (indexer.max() < 2) return;
 
@@ -915,7 +916,7 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
 
     vomit.addComponent<HasWork>().init(
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
-            if (GameState::get().is_not(game::State::InRound)) return;
+            if (SystemManager::get().is_daytime()) return;
 
             const auto validate =
                 [](const Entity& entity) -> std::pair<bool, float> {
@@ -1027,7 +1028,7 @@ void make_mop(Item& mop, vec2 pos) {
 }
 void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
                            float dt) {
-    if (GameState::get().is_not(game::State::InRound)) return;
+    if (SystemManager::get().is_daytime()) return;
     if (drink.is_missing<IsItem>()) return;
     if (drink.is_missing<IsDrink>()) return;
 
@@ -1211,7 +1212,7 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
         });
     fruit.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                           Entity& /* person */, float dt) {
-        if (GameState::get().is_not(game::State::InRound)) return;
+        if (SystemManager::get().is_daytime()) return;
         const IsItem& ii = owner.get<IsItem>();
         const HasSubtype& hasSubtype = owner.get<HasSubtype>();
         Ingredient fruit_type = ingredient::Fruits[hasSubtype.get_type_index()];

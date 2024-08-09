@@ -442,8 +442,7 @@ void Server::process_player_join_packet(
             case game::Lobby:
             case game::Paused:
                 return default_pos;
-            case game::InRound:
-            case game::Planning:
+            case game::InGame:
                 return {0.f, 0.f, 0.f};
             case game::Progression: {
                 return PROGRESSION_BUILDING.to3();

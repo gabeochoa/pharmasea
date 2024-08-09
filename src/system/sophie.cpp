@@ -352,8 +352,8 @@ void update_sophie(Entity& entity, float dt) {
     CollectsCustomerFeedback& feedback = entity.get<CollectsCustomerFeedback>();
 
     // TODO i dont like that this is copy paste from layers/round_end
-    if (GameState::get().is_not(game::State::Planning) &&
-        ht.get_current_length() > 0 && !debug_mode_on)
+    if (SystemManager::get().is_nighttime() && ht.get_current_length() > 0 &&
+        !debug_mode_on)
         return;
 
     if (!feedback.waiting_time_pass(dt)) {

@@ -248,7 +248,7 @@ void render_round_timer(const Entity& entity, float) {
     text(::ui::Widget{rtl.rounded_rect}, get_status_text(ht));
 
     // Only show the customer count during planning
-    if (GameState::get().is(game::State::Planning)) {
+    if (SystemManager::get().is_daytime()) {
         Rectangle spawn_count{rtl.rounded_rect};
         spawn_count.y += 160;
 

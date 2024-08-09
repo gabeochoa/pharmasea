@@ -22,6 +22,7 @@
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
+#include "../system/system_manager.h"
 #include "raylib.h"
 
 void GameDebugLayer::onUpdate(float) {}
@@ -93,7 +94,7 @@ void GameDebugLayer::draw_debug_ui(float dt) {
     }
 
     // Round Info
-    if (GameState::get().is(game::State::InRound)) {
+    if (SystemManager::get().is_nighttime()) {
         if (map_ptr) {
             const HasDayNightTimer& hasTimer =
                 EntityQuery()
