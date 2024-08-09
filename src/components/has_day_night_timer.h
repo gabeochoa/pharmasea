@@ -28,6 +28,7 @@ struct HasDayNightTimer : public BaseComponent {
         return is_daytime() ? day_length : night_length;
     }
 
+    // slowly going down
     [[nodiscard]] float pct() const {
         return current_length / get_total_length();
     }

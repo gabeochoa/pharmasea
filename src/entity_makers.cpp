@@ -472,33 +472,37 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
     // TODO translate
     fast_forward.addComponent<HasName>().update("Fast-Forward Day");
 
-    fast_forward.addComponent<HasWork>().init([](Entity&, HasWork& hasWork,
-                                                 Entity&, float dt) {
-        const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    fast_forward.addComponent<HasWork>().init(
+        [](Entity&, HasWork& hasWork, Entity&, float dt) {
+            const auto debug_mode_on =
+                GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
 
-        const float amt = debug_mode_on ? 100.f : 15.f;
+            const float amt = debug_mode_on ? 100.f : 15.f;
 
-        {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             HasDayNightTimer& ht = sophie.get<HasDayNightTimer>();
-            ht.pass_time(amt * dt);
-            hasWork.update_pct(1.f - ht.pct());
-        }
 
-        // TODO i dont think the spawner is working correctly
-        {
-            IsSpawner& isp = EntityQuery()
-                                 .whereType(EntityType::CustomerSpawner)
-                                 .gen_first()
-                                 ->get<IsSpawner>();
-            isp.pass_time(amt * dt);
-        }
+            // can only ffwd if theres a good maount of the day left
+            if (ht.pct() <= 0.02f) return;
 
-        if (hasWork.is_work_complete()) {
-            hasWork.reset_pct();
-        }
-    });
+            {
+                ht.pass_time(amt * dt);
+                hasWork.update_pct(1.f - ht.pct());
+            }
+
+            // TODO i dont think the spawner is working correctly
+            {
+                IsSpawner& isp = EntityQuery()
+                                     .whereType(EntityType::CustomerSpawner)
+                                     .gen_first()
+                                     ->get<IsSpawner>();
+                isp.pass_time(amt * dt);
+            }
+
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+            }
+        });
 }
 
 void make_door(Entity& door, vec2 pos, Color) {
