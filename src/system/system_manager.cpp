@@ -937,14 +937,25 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     ita.reset_cooldown();
 
     const auto _choose_option = [](int option_chosen) {
+        // We want to lock the doors until the next day
+        // so you can get two upgrades at a time
+        for (RefEntity door : EntityQuery()
+                                  .whereType(EntityType::Door)
+                                  .whereInside(PROGRESSION_BUILDING.min(),
+                                               PROGRESSION_BUILDING.max())
+                                  .gen()) {
+            door.get().addComponent<IsSolid>();
+        }
+
         GameState::get().transition_to_game();
 
-        SystemManager::get().for_each_old([](Entity& e) {
-            if (check_type(e, EntityType::Player)) {
-                move_player_SERVER_ONLY(e, game::State::InGame);
-                return;
-            }
-        });
+        for (RefEntity player : EntityQuery(SystemManager::get().oldAll)
+                                    .whereType(EntityType::Player)
+                                    .whereInside(PROGRESSION_BUILDING.min(),
+                                                 PROGRESSION_BUILDING.max())
+                                    .gen()) {
+            move_player_SERVER_ONLY(player, game::State::InGame);
+        }
 
         {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
