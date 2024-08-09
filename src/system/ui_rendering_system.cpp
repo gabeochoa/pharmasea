@@ -4,10 +4,10 @@
 #include "../building_locations.h"
 #include "../components/can_order_drink.h"
 #include "../components/has_client_id.h"
+#include "../components/has_day_night_timer.h"
 #include "../components/has_name.h"
 #include "../components/has_patience.h"
 #include "../components/has_speech_bubble.h"
-#include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/is_bank.h"
 #include "../components/model_renderer.h"
@@ -120,21 +120,6 @@ void render_current_register_queue(float dt) {
     }
 }
 
-void render_timer(const Entity& entity, float) {
-    if (entity.is_missing<HasTimer>()) return;
-
-    auto& ht = entity.get<HasTimer>();
-    switch (ht.type) {
-        case HasTimer::Renderer::Round: {
-            // Rendered by round_timer_layer.h
-        } break;
-        default:
-            log_warn("you have a timer that we dont know how to render: {}",
-                     ht.type);
-            break;
-    }
-}
-
 void render_networked_players(const Entities& entities, float dt) {
     float x_pos = WIN_WF() - 170;
     float y_pos = 75.f;
@@ -222,15 +207,15 @@ RoundTimerLocation get_round_timer_location() {
     };
 }
 
-TranslatableString get_status_text(const HasTimer& ht) {
-    const bool is_closing = ht.store_is_closed();
-    const bool is_day = GameState::get().in_round() && !is_closing;
-    const int dayCount = ht.dayCount;
+TranslatableString get_status_text(const HasDayNightTimer& ht) {
+    const bool is_closing = ht.is_nighttime() && ht.pct() <= 0.1f;
+    const bool is_open = ht.is_nighttime() && !is_closing;
+    const int dayCount = ht.days_passed();
 
     auto status_text =
-        is_day ? TranslatableString(strings::i18n::OPEN)
-               : (is_closing ? TranslatableString(strings::i18n::CLOSING)
-                             : TranslatableString(strings::i18n::CLOSED));
+        is_open ? TranslatableString(strings::i18n::OPEN)
+                : (is_closing ? TranslatableString(strings::i18n::CLOSING)
+                              : TranslatableString(strings::i18n::CLOSED));
 
     return TranslatableString(strings::i18n::RoundDayWithStatusText)
         .set_param(strings::i18nParam::OpeningStatus, status_text)
@@ -238,15 +223,13 @@ TranslatableString get_status_text(const HasTimer& ht) {
 }
 
 void render_round_timer(const Entity& entity, float) {
-    if (entity.is_missing<HasTimer>()) return;
+    if (entity.is_missing<HasDayNightTimer>()) return;
 
-    const HasTimer& ht = entity.get<HasTimer>();
-    if (ht.type != HasTimer::Renderer::Round) return;
+    const HasDayNightTimer& ht = entity.get<HasDayNightTimer>();
 
     const auto rtl = get_round_timer_location();
 
-    const bool is_closing = ht.store_is_closed();
-    const bool is_day = GameState::get().in_round() && !is_closing;
+    const bool is_day = ht.is_daytime();
     const float pct = ht.pct();
     const float angle = util::deg2rad(util::lerp(170, 365, 1 - pct));
 
@@ -400,7 +383,6 @@ void render_normal(const Entities& entities, float dt) {
             for (const auto& entity_ptr : entities) {
                 if (!entity_ptr) continue;
                 const Entity& entity = *entity_ptr;
-                render_timer(entity, dt);
                 render_animated_transactions(entity, dt);
                 render_round_timer(entity, dt);
             }

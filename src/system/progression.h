@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <random>
 
-#include "../components/has_timer.h"
+#include "../components/has_day_night_timer.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
 #include "../dataclass/upgrades.h"
@@ -188,8 +188,10 @@ inline void update_upgrade_variables() {
 
         switch (key) {
             case ConfigKey::RoundLength: {
-                HasTimer& hasTimer = sophie.get<HasTimer>();
-                hasTimer.set_total_round_time(
+                // TODO right now we are just making the night longer
+                // but maybe we want the day to be longer too?
+                HasDayNightTimer& hasTimer = sophie.get<HasDayNightTimer>();
+                hasTimer.set_night_length(
                     irsm.get<float>(ConfigKey::RoundLength));
 
             } break;

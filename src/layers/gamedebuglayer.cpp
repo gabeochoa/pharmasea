@@ -15,7 +15,7 @@
 #include "../components/can_hold_furniture.h"
 #include "../components/can_hold_item.h"
 #include "../components/collects_user_input.h"
-#include "../components/has_timer.h"
+#include "../components/has_day_night_timer.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_spawner.h"
 #include "../engine/layer.h"
@@ -95,18 +95,19 @@ void GameDebugLayer::draw_debug_ui(float dt) {
     // Round Info
     if (GameState::get().is(game::State::InRound)) {
         if (map_ptr) {
-            const HasTimer& hasTimer = EntityQuery()
-                                           .whereType(EntityType::Sophie)
-                                           .gen_first()
-                                           ->get<HasTimer>();
+            const HasDayNightTimer& hasTimer =
+                EntityQuery()
+                    .whereType(EntityType::Sophie)
+                    .gen_first()
+                    ->get<HasDayNightTimer>();
 
             auto [round_time_div, round_spawn_div, drinks_div,
                   ingredients_div] = rect::hsplit<4>(round_info, 10);
 
             text(Widget{round_time_div},
                  NO_TRANSLATE(fmt::format("Round Length: {:.0f}/{}",
-                                          hasTimer.get_current_round_time(),
-                                          hasTimer.get_total_round_time())));
+                                          hasTimer.get_current_length(),
+                                          hasTimer.get_total_length())));
 
             {
                 auto [num_spawned, countdown] =

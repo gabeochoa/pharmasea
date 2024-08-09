@@ -7,7 +7,8 @@
 
 #include "../building_locations.h"
 #include "../components/can_hold_furniture.h"
-#include "../components/has_timer.h"
+#include "../components/collects_customer_feedback.h"
+#include "../components/has_day_night_timer.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
@@ -41,8 +42,9 @@ void customers_in_store(Entity& entity) {
 
     vec2 pos = any.has_value() ? any->get<Transform>().as2() : vec2{0, 0};
 
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::CustomersInStore, any.has_value(), pos);
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::CustomersInStore,
+        any.has_value(), pos);
 }
 
 // Handle some player is holding furniture
@@ -51,8 +53,8 @@ void player_holding_furniture(Entity& entity) {
                          .whereIsHoldingAnyFurniture()
                          .is_empty();
 
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::HoldingFurniture, !all_empty,
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::HoldingFurniture, !all_empty,
         // players can figure it out on their own
         {});
 }
@@ -74,8 +76,9 @@ void bar_not_clean(Entity& entity) {
 
     vec2 pos = any.has_value() ? vec::to2(any->second) : vec2{0, 0};
 
-    entity.get<HasTimer>().write_reason(HasTimer::WaitingReason::BarNotClean,
-                                        any.has_value(), pos);
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::BarNotClean, any.has_value(),
+        pos);
 }
 
 void overlapping_furniture(Entity& entity) {
@@ -118,8 +121,9 @@ void overlapping_furniture(Entity& entity) {
                                   ? overlapping_entity->get<Transform>().as2()
                                   : std::optional<vec2>{};
 
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::FurnitureOverlapping, has_overlapping, pos);
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::FurnitureOverlapping,
+        has_overlapping, pos);
 }
 
 void forgot_item_in_spawn_area(Entity& entity) {
@@ -142,9 +146,9 @@ void forgot_item_in_spawn_area(Entity& entity) {
         }
     }
 
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::ItemInSpawnArea, has_item_in_spawn_area,
-        position);
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::ItemInSpawnArea,
+        has_item_in_spawn_area, position);
 }
 
 void lightweight_map_validation(Entity& entity) {
@@ -170,8 +174,9 @@ void lightweight_map_validation(Entity& entity) {
     if (all_registers.empty()) {
         // because we require the map to spawn one, we know this is due to the
         // bar building area check above
-        entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::RegisterNotInside, true, {});
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::RegisterNotInside, true,
+            {});
         return;
     }
 
@@ -208,28 +213,29 @@ void lightweight_map_validation(Entity& entity) {
     // probably not pathable anyway so return false
     if (reg_with_bad_spots == (int) all_registers.size()) {
         // TODO maybe we could add a separate error message for this
-        entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::NoPathToRegister, true,
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::NoPathToRegister, true,
             bad_spot_reg_location);
         return;
     }
 
     if (reg_with_no_pathing == (int) all_registers.size()) {
         // TODO maybe we could add a separate error message for this
-        entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::NoPathToRegister, true,
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::NoPathToRegister, true,
             non_pathable_reg_location);
         return;
     }
 
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::NoPathToRegister, false, {});
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::NoPathToRegister, false, {});
 }
 
 void deleting_item_needed_for_recipe(Entity& entity) {
     const auto result = [&entity](bool on, std::optional<vec2> position = {}) {
-        entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::DeletingNeededItem, on, position);
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::DeletingNeededItem, on,
+            position);
         return;
     };
 
@@ -338,18 +344,19 @@ void deleting_item_needed_for_recipe(Entity& entity) {
 // TODO this function is 75% of our game update time spent
 void update_sophie(Entity& entity, float dt) {
     if (!check_type(entity, EntityType::Sophie)) return;
-    if (entity.is_missing<HasTimer>()) return;
+    if (entity.is_missing<HasDayNightTimer>()) return;
 
     const auto debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    HasTimer& ht = entity.get<HasTimer>();
+    HasDayNightTimer& ht = entity.get<HasDayNightTimer>();
+    CollectsCustomerFeedback& feedback = entity.get<CollectsCustomerFeedback>();
 
     // TODO i dont like that this is copy paste from layers/round_end
     if (GameState::get().is_not(game::State::Planning) &&
-        ht.get_current_round_time() > 0 && !debug_mode_on)
+        ht.get_current_length() > 0 && !debug_mode_on)
         return;
 
-    if (!ht.waiting_time_pass(dt)) {
+    if (!feedback.waiting_time_pass(dt)) {
         return;
     }
 

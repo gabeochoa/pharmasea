@@ -26,11 +26,13 @@
 #include "../components/can_order_drink.h"
 #include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
+#include "../components/collects_customer_feedback.h"
 #include "../components/collects_user_input.h"
 #include "../components/conveys_held_item.h"
 #include "../components/custom_item_position.h"
 #include "../components/has_base_speed.h"
 #include "../components/has_client_id.h"
+#include "../components/has_day_night_timer.h"
 #include "../components/has_dynamic_model_name.h"
 #include "../components/has_fishing_game.h"
 #include "../components/has_last_interacted_customer.h"
@@ -40,7 +42,6 @@
 #include "../components/has_rope_to_item.h"
 #include "../components/has_speech_bubble.h"
 #include "../components/has_subtype.h"
-#include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/has_work.h"
 #include "../components/indexer.h"
@@ -83,15 +84,15 @@ struct PolymorphicBaseClass<BaseComponent>
           HasPatience, HasProgression, IsRotatable, CanGrabFromOtherFurniture,
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
           UsesCharacterModel, HasDynamicModelName, IsTriggerArea,
-          HasSpeechBubble, Indexer, IsSpawner, HasTimer, HasRopeToItem,
-          HasSubtype, IsItem, IsDrink, AddsIngredient, CanOrderDrink,
-          IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
-          IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager,
-          AIComponent, HasFishingGame, IsStoreSpawned, AICloseTab,
-          AIPlayJukebox, HasLastInteractedCustomer,
+          HasSpeechBubble, Indexer, IsSpawner, HasRopeToItem, HasSubtype,
+          IsItem, IsDrink, AddsIngredient, CanOrderDrink, IsPnumaticPipe,
+          IsProgressionManager, IsFloorMarker, IsBank, IsFreeInStore, IsToilet,
+          CanPathfind, IsRoundSettingsManager, AIComponent, HasFishingGame,
+          IsStoreSpawned, AICloseTab, AIPlayJukebox, HasLastInteractedCustomer,
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
-          CanHoldHandTruck, RespondsToDayNight
+          CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
+          CollectsCustomerFeedback
           // END
           > {};
 // If you add anything here ^^ then you should add that component to

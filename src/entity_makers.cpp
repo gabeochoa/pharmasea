@@ -13,6 +13,8 @@
 #include "components/can_change_settings_interactively.h"
 #include "components/can_hold_handtruck.h"
 #include "components/can_pathfind.h"
+#include "components/collects_customer_feedback.h"
+#include "components/has_day_night_timer.h"
 #include "components/has_fishing_game.h"
 #include "components/has_last_interacted_customer.h"
 #include "components/has_progression.h"
@@ -60,7 +62,6 @@
 #include "components/has_name.h"
 #include "components/has_patience.h"
 #include "components/has_speech_bubble.h"
-#include "components/has_timer.h"
 #include "components/has_waiting_queue.h"
 #include "components/has_work.h"
 #include "components/indexer.h"
@@ -154,11 +155,11 @@ void register_all_components() {
         CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
         CanOrderDrink, CanPathfind, CanChangeSettingsInteractively,
-        CanHoldHandTruck, CanBeHeld_HT,
+        CanHoldHandTruck, CanBeHeld_HT, CollectsCustomerFeedback,
         //
-        HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
-        HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
-        HasFishingGame, HasLastInteractedCustomer,
+        HasWaitingQueue, HasSubtype, HasSpeechBubble, HasWork, HasBaseSpeed,
+        HasRopeToItem, HasProgression, HasPatience, HasFishingGame,
+        HasLastInteractedCustomer, HasDayNightTimer,
         // render
         ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer,
         // responds to
@@ -479,7 +480,7 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
 
         {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            HasTimer& ht = sophie.get<HasTimer>();
+            HasDayNightTimer& ht = sophie.get<HasDayNightTimer>();
             ht.pass_time(amt * dt);
             hasWork.update_pct(1.f - ht.pct());
         }
@@ -508,10 +509,8 @@ void make_door(Entity& door, vec2 pos, Color) {
     door.removeComponent<IsSolid>();
 
     door.addComponent<RespondsToDayNight>()
-        .registerOnDayStarted([](Entity& door) {
-            // TODO kick everyone out of the store
-            door.removeComponent<IsSolid>();
-        })
+        .registerOnDayStarted(
+            [](Entity& door) { door.removeComponent<IsSolid>(); })
         .registerOnNightStarted(
             [](Entity& door) { door.addComponent<IsSolid>(); });
 }
@@ -893,9 +892,11 @@ void make_sophie(Entity& sophie, vec3 pos) {
     sophie.addComponent<IsRoundSettingsManager>();
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    sophie.addComponent<HasTimer>(
-        HasTimer::Renderer::Round,
+    sophie.addComponent<HasDayNightTimer>(
         irsm.get_for_init<float>(ConfigKey::RoundLength));
+
+    sophie.addComponent<CollectsCustomerFeedback>();
+
     sophie.addComponent<IsProgressionManager>().init();
     sophie.addComponent<IsBank>();
     sophie.addComponent<IsNuxManager>();

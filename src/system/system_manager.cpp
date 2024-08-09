@@ -27,7 +27,6 @@
 #include "../components/has_rope_to_item.h"
 #include "../components/has_speech_bubble.h"
 #include "../components/has_subtype.h"
-#include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/has_work.h"
 #include "../components/indexer.h"
@@ -1390,11 +1389,13 @@ bool _create_nuxes(Entity&) {
                 .should_attach_to(ffd_id)
                 .set_eligibility_fn([](const IsNux&) -> bool { return true; })
                 .set_completion_fn([](const IsNux&) -> bool {
-                    auto e_ht =
-                        EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                    auto e_ht = EntityQuery()
+                                    .whereHasComponent<HasDayNightTimer>()
+                                    .gen_first();
                     if (!e_ht.has_value()) return false;
-                    const HasTimer& timer = e_ht->get<HasTimer>();
-                    return timer.remaining_time_in_round() >= 50.f;
+                    const HasDayNightTimer& timer =
+                        e_ht->get<HasDayNightTimer>();
+                    return timer.pct() >= 0.5f;
                 })
                 .set_content(TODO_TRANSLATE(
                     fmt::format("Use [{}] to skip time", tex_name),
@@ -1633,7 +1634,7 @@ bool _create_nuxes(Entity&) {
             entity.addComponent<IsNux>()
                 .should_attach_to(ffd_id)
                 .set_eligibility_fn([](const IsNux&) -> bool {
-                    if (!GameState::get().in_round()) return false;
+                    if (!GameState::get().is_game_like()) return false;
 
                     bool has_customers = EntityQuery()
                                              .whereType(EntityType::Customer)
@@ -1648,22 +1649,25 @@ bool _create_nuxes(Entity&) {
                             .whereNotInRange(endpos, TILESIZE * 2.f)
                             .is_empty();
 
-                    auto e_ht =
-                        EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                    auto e_ht = EntityQuery()
+                                    .whereHasComponent<HasDayNightTimer>()
+                                    .gen_first();
                     if (!e_ht.has_value()) return false;
-                    const HasTimer& timer = e_ht->get<HasTimer>();
-                    bool lt_halfway_through_day =
-                        timer.remaining_time_in_round() <= 50.f;
+                    const HasDayNightTimer& timer =
+                        e_ht->get<HasDayNightTimer>();
+                    bool lt_halfway_through_day = timer.pct() <= 0.5f;
 
                     return all_customers_at_gather && lt_halfway_through_day;
                 })
                 .set_completion_fn([](const IsNux&) -> bool {
                     // hide when 80% through the day
-                    auto e_ht =
-                        EntityQuery().whereHasComponent<HasTimer>().gen_first();
+                    auto e_ht = EntityQuery()
+                                    .whereHasComponent<HasDayNightTimer>()
+                                    .gen_first();
                     if (!e_ht.has_value()) return false;
-                    const HasTimer& timer = e_ht->get<HasTimer>();
-                    return timer.remaining_time_in_round() >= 80.f;
+                    const HasDayNightTimer& timer =
+                        e_ht->get<HasDayNightTimer>();
+                    return timer.pct() >= 0.8f;
                 })
                 .set_content(TODO_TRANSLATE("Since customers are all gone, \n"
                                             "Fast Forward to the next day",
@@ -1789,47 +1793,71 @@ void process_spawner(Entity& entity, float dt) {
     }
 }
 
+namespace day_night {
+void on_day_ended(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_day_ended();
+}
+
+void on_night_ended(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_night_ended();
+}
+void on_day_started(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_day_started();
+}
+void on_night_started(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_night_started();
+}
+
+}  // namespace day_night
+
+void close_buildings_when_night(Entity& entity) {
+    // just choosing this since theres only one
+    if (!check_type(entity, EntityType::Sophie)) return;
+
+    const std::array<Building, 2> buildings_that_close = {
+        PROGRESSION_BUILDING,
+        STORE_BUILDING,
+    };
+
+    for (const Building& building : buildings_that_close) {
+        // Teleport anyone inside a store outside
+        SystemManager::get().for_each_old([&](Entity& e) {
+            if (!check_type(e, EntityType::Player)) return;
+            if (CheckCollisionBoxes(e.get<Transform>().bounds(),
+                                    building.bounds)) {
+                move_player_out_of_building_SERVER_ONLY(e, building);
+            }
+        });
+    }
+}
+
 void run_timer(Entity& entity, float dt) {
-    if (entity.is_missing<HasTimer>()) return;
-    HasTimer& ht = entity.get<HasTimer>();
+    if (entity.is_missing<HasDayNightTimer>()) return;
+    HasDayNightTimer& ht = entity.get<HasDayNightTimer>();
 
     ht.pass_time(dt);
+    if (!ht.is_round_over()) return;
 
-    // If we round isnt over yet, then thats all for now
-    if (ht.round_not_over()) return;
-
-    // Round is over so pass time for the round switch countdown
-
-    ht.pass_time_round_switch(dt);
-
-    // player still has time to do things
-    if (ht.round_switch_not_ready()) return;
-
-    // the timer expired, time to switch rounds
-    // but first need to check if we can or not
-
-    // Round is actually over, reset timers
-
-    switch (GameState::get().read()) {
-        case game::State::Planning: {
-            GameState::get().set(game::State::InRound);
-        } break;
-        case game::State::InRound: {
-            GameState::get().set(game::State::Progression);
-            SystemManager::get().for_each_old([](Entity& e) {
-                if (check_type(e, EntityType::Player)) {
-                    move_player_SERVER_ONLY(e, game::State::Progression);
-                    return;
-                }
-            });
-        } break;
-        default:
-            log_warn("processing round switch timer but no state handler {}",
-                     GameState::get().read());
-            return;
+    if (ht.is_daytime()) {
+        ht.start_night();
+        return;
     }
 
-    ht.reset_round_switch_timer().reset_timer();
+    GameState::get().set(game::State::Progression);
+    SystemManager::get().for_each_old([](Entity& e) {
+        if (check_type(e, EntityType::Player)) {
+            move_player_SERVER_ONLY(e, game::State::Progression);
+            return;
+        }
+    });
+
+    // TODO theoretically we shouldnt start until after you choose upgrades but
+    // we are gonna change how this works later anyway i think
+    ht.start_day();
 }
 
 void reset_empty_work_furniture(Entity& entity, float) {
@@ -2015,11 +2043,6 @@ void process_pnumatic_pipe_movement(Entity& entity, float) {
     ipp.item_id = cur_id;
 }
 
-void increment_day_count(Entity& entity, float) {
-    if (entity.is_missing<HasTimer>()) return;
-    entity.get<HasTimer>().dayCount++;
-}
-
 void reset_customer_spawner_when_leaving_inround(Entity& entity) {
     if (entity.is_missing<IsSpawner>()) return;
     entity.get<IsSpawner>().reset_num_spawned();
@@ -2073,8 +2096,8 @@ void update_new_max_customers(Entity& entity, float) {
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    const HasTimer& hasTimer = sophie.get<HasTimer>();
-    const int day_count = hasTimer.dayCount;
+    const HasDayNightTimer& hasTimer = sophie.get<HasDayNightTimer>();
+    const int day_count = hasTimer.days_passed();
 
     if (check_type(entity, EntityType::CustomerSpawner)) {
         float customer_spawn_multiplier =
@@ -2412,7 +2435,7 @@ inline void in_round_update(Entity& entity, float) {
     if (entity.is_missing<IsProgressionManager>()) return;
     const IsProgressionManager& ipm = entity.get<IsProgressionManager>();
 
-    HasTimer& hasTimer = entity.get<HasTimer>();
+    HasDayNightTimer& hasTimer = entity.get<HasDayNightTimer>();
     int hour = 100 - static_cast<int>(hasTimer.pct() * 100.f);
 
     // Make sure we only run this once an hour
@@ -2493,48 +2516,6 @@ inline void on_round_finished(Entity& entity, float) {
 
 }  // namespace upgrade
 
-namespace day_night {
-void on_day_ended(Entity& entity) {
-    if (entity.is_missing<RespondsToDayNight>()) return;
-    entity.get<RespondsToDayNight>().call_day_ended();
-}
-
-void on_night_ended(Entity& entity) {
-    if (entity.is_missing<RespondsToDayNight>()) return;
-    entity.get<RespondsToDayNight>().call_night_ended();
-}
-void on_day_started(Entity& entity) {
-    if (entity.is_missing<RespondsToDayNight>()) return;
-    entity.get<RespondsToDayNight>().call_day_started();
-}
-void on_night_started(Entity& entity) {
-    if (entity.is_missing<RespondsToDayNight>()) return;
-    entity.get<RespondsToDayNight>().call_night_started();
-}
-
-}  // namespace day_night
-
-void close_buildings_when_night(Entity& entity) {
-    // just choosing this since theres only one
-    if (!check_type(entity, EntityType::Sophie)) return;
-
-    const std::array<Building, 2> buildings_that_close = {
-        PROGRESSION_BUILDING,
-        STORE_BUILDING,
-    };
-
-    for (const Building& building : buildings_that_close) {
-        // Teleport anyone inside a store outside
-        SystemManager::get().for_each_old([&](Entity& e) {
-            if (!check_type(e, EntityType::Player)) return;
-            if (CheckCollisionBoxes(e.get<Transform>().bounds(),
-                                    building.bounds)) {
-                move_player_out_of_building_SERVER_ONLY(e, building);
-            }
-        });
-    }
-}
-
 }  // namespace system_manager
 
 void SystemManager::on_game_state_change(game::State new_state,
@@ -2579,9 +2560,11 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
         } else if (GameState::get().is(game::State::Progression)) {
             progression_update(entities, dt);
         } else if (GameState::get().is_game_like()) {
-            if (GameState::get().in_round()) {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
+            if (hastimer.is_nighttime()) {
                 in_round_update(entities, dt);
-            } else if (GameState::get().in_planning()) {
+            } else if (hastimer.is_daytime()) {
                 planning_update(entities, dt);
             }
             game_like_update(entities, dt);
@@ -2621,7 +2604,9 @@ void SystemManager::process_state_change(
             system_manager::reset_customer_spawner_when_leaving_inround(entity);
             system_manager::reset_max_gen_when_after_deletion(entity);
             system_manager::reset_toilet_when_leaving_inround(entity);
-            system_manager::increment_day_count(entity, dt);
+
+            // TODO run HasDayNightTimer::start_day()
+            // system_manager::increment_day_count(entity, dt);
 
             // Handle updating all the things that rely on progression
             system_manager::update_new_max_customers(entity, dt);
@@ -2632,9 +2617,6 @@ void SystemManager::process_state_change(
             system_manager::reset_register_queue_when_leaving_inround(entity);
 
             system_manager::upgrade::on_round_finished(entity, dt);
-
-            system_manager::day_night::on_night_ended(entity);
-            system_manager::day_night::on_day_started(entity);
         });
     };
 
@@ -2644,12 +2626,6 @@ void SystemManager::process_state_change(
                 entity);
             system_manager::release_mop_buddy_at_start_of_day(entity);
             system_manager::delete_trash_when_leaving_planning(entity);
-
-            system_manager::day_night::on_day_ended(entity);
-            system_manager::day_night::on_night_started(entity);
-
-            system_manager::close_buildings_when_night(entity);
-
             // TODO
             // system_manager::upgrade::on_round_started(entity, dt);
         });
@@ -2715,7 +2691,8 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
 }
 
 void SystemManager::game_like_update(const Entities& entity_list, float dt) {
-    for_each(entity_list, dt, [](Entity& entity, float dt) {
+    OptEntity sophie;
+    for_each(entity_list, dt, [&](Entity& entity, float dt) {
         system_manager::run_timer(entity, dt);
         system_manager::process_pnumatic_pipe_pairing(entity, dt);
 
@@ -2726,7 +2703,30 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
         // this function also handles the map validation code
         // rename it
         system_manager::update_sophie(entity, dt);
+        if (entity.has<HasDayNightTimer>()) sophie = entity;
     });
+
+    if (sophie.has_value()) {
+        HasDayNightTimer& hastimer = sophie->get<HasDayNightTimer>();
+        if (hastimer.needs_to_process_change) {
+            bool is_day = hastimer.is_daytime();
+
+            if (is_day) {
+                for_each(entity_list, dt, [](Entity& entity, float) {
+                    system_manager::day_night::on_night_ended(entity);
+                    system_manager::day_night::on_day_started(entity);
+                });
+            } else {
+                for_each(entity_list, dt, [](Entity& entity, float) {
+                    system_manager::day_night::on_day_ended(entity);
+                    system_manager::close_buildings_when_night(entity);
+                    system_manager::day_night::on_night_started(entity);
+                });
+            }
+
+            hastimer.needs_to_process_change = false;
+        }
+    }
 }
 
 void SystemManager::model_test_update(

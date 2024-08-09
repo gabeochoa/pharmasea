@@ -14,7 +14,6 @@
 #include "../components/has_last_interacted_customer.h"
 #include "../components/has_patience.h"
 #include "../components/has_speech_bubble.h"
-#include "../components/has_timer.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/is_bank.h"
 #include "../components/is_progression_manager.h"

@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "../engine/log.h"
@@ -5,90 +6,35 @@
 #include "../vec_util.h"
 #include "base_component.h"
 
-struct HasTimer : public BaseComponent {
-    // TODO using this cause i dont want to make a new component for each
-    // renderer type
-    enum Renderer {
-        Round,
-    } type;
+struct CollectsCustomerFeedback : public BaseComponent {
+    virtual ~CollectsCustomerFeedback() {}
 
-    virtual ~HasTimer() {}
-
-    HasTimer() : type(Round), currentRoundTime(10.f), totalRoundTime(10.f) {}
-
-    explicit HasTimer(Renderer _type, float t) {
-        type = _type;
-        totalRoundTime = t;
-        currentRoundTime = totalRoundTime;
-    }
-
-    auto& pass_time(float dt) {
-        if (currentRoundTime >= 0) currentRoundTime -= dt;
-        return *this;
-    }
-
-    [[nodiscard]] float pct() const {
-        return currentRoundTime / totalRoundTime;
-    }
-
-    auto& reset_timer() {
-        currentRoundTime = totalRoundTime;
-        return *this;
-    }
-
-    [[nodiscard]] float remaining_time_in_round() const {
-        return totalRoundTime - currentRoundTime;
-    }
-
-    [[nodiscard]] float get_current_round_time() const {
-        return currentRoundTime;
-    }
-    [[nodiscard]] float get_total_round_time() const { return totalRoundTime; }
-
-    void set_total_round_time(float trt) {
-        totalRoundTime = trt;
-        currentRoundTime = totalRoundTime;
-    }
+    CollectsCustomerFeedback() {}
 
    private:
-    float currentRoundTime;
-    float totalRoundTime;
+    // we only want to run the checks every second
+    float waiting_time = 1.f;
+    float waiting_time_reset = 1.f;
 
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        s.value4b(type);
-        s.value4b(currentRoundTime);
-        s.value4b(totalRoundTime);
-
-        // other pcomponent
         s.ext(block_state_change_reasons, bitsery::ext::StdBitset{});
         s.container(block_state_change_locations);
-        s.value4b(roundSwitchCountdown);
-        s.value4b(roundSwitchCountdownReset);
-        s.value4b(dayCount);
     }
 
    public:
-    float roundSwitchCountdownReset = 5.f;
-    float roundSwitchCountdown = 5.f;
-    int dayCount = 0;
-
-    float waitingTimer = 0.f;
-    float waitingTimerReset = 0.1f;
     [[nodiscard]] bool waiting_time_pass(float dt) {
-        bool its_time = false;
-        waitingTimer -= dt;
-        if (waitingTimer < 0.f) {
-            its_time = true;
-            waitingTimer = waitingTimerReset;
+        waiting_time -= dt;
+        if (waiting_time <= 0) {
+            waiting_time += waiting_time_reset;
+            return true;
         }
-        return its_time;
+        return false;
     }
 
-    // TODO move into its own component
     enum WaitingReason {
         None,
         CustomersInStore,
@@ -162,30 +108,5 @@ struct HasTimer : public BaseComponent {
         auto i = magic_enum::enum_integer<WaitingReason>(wr);
         block_state_change_reasons[i] = value;
         block_state_change_locations[i] = location.value_or(invalid_location);
-        if (value) roundSwitchCountdown = roundSwitchCountdownReset;
-    }
-
-    [[nodiscard]] bool store_is_closed() const {
-        return round_over() && GameState::get().in_round();
-    }
-
-    [[nodiscard]] bool round_over() const { return currentRoundTime <= 0; }
-    [[nodiscard]] bool round_not_over() const { return !round_over(); }
-
-    auto& pass_time_round_switch(float dt) {
-        if (roundSwitchCountdown >= 0) roundSwitchCountdown -= dt;
-        return *this;
-    }
-
-    [[nodiscard]] bool round_switch_ready() const {
-        return roundSwitchCountdown <= 0;
-    }
-    [[nodiscard]] bool round_switch_not_ready() const {
-        return !round_switch_ready();
-    }
-
-    auto& reset_round_switch_timer() {
-        roundSwitchCountdown = roundSwitchCountdownReset;
-        return *this;
     }
 };

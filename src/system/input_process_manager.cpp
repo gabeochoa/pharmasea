@@ -282,7 +282,7 @@ void work_furniture(Entity& player, float frame_dt) {
 }
 
 void fishing_game(Entity& player, float frame_dt) {
-    if (!GameState::get().in_round()) return;
+    if (!GameState::get().is_game_like()) return;
     CanHoldItem& chi = player.get<CanHoldItem>();
     if (!chi.is_holding_item()) return;
     Item& item = chi.item();
@@ -908,16 +908,18 @@ void process_input(Entity& entity, const UserInput& input) {
                     planning::rotate_furniture(entity);
                     break;
                 case InputName::PlayerHandTruckInteract:
-                    if (GameState::get().in_round()) {
+                    if (GameState::get().is_game_like()) {
                         inround::handle_hand_truck(entity);
                     }
                     break;
                 case InputName::PlayerPickup:
                     // grab_or_drop(entity);
                     {
-                        if (GameState::get().in_round()) {
+                        if (GameState::get().is_game_like()) {
                             inround::handle_grab_or_drop(entity);
                         } else if (GameState::get().is(game::State::Planning)) {
+                            // TODO the is_game_like check above kills this
+                            // entire case
                             planning::handle_grab_or_drop(entity);
                         } else {
                             // probably want to handle messing around in the

@@ -140,9 +140,6 @@ struct GameState : public StateManager2<game::State> {
         return read();
     }
 
-    [[nodiscard]] bool in_round() const { return is(game::State::InRound); }
-    [[nodiscard]] bool in_planning() const { return is(game::State::Planning); }
-
     [[nodiscard]] bool is_paused() const { return is(game::State::Paused); }
 
     [[nodiscard]] bool is_paused_in(game::State s) const {
