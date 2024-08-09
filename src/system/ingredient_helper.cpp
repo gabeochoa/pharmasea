@@ -2,6 +2,7 @@
 #include "ingredient_helper.h"
 
 #include "../components/indexer.h"
+#include "../components/is_store_spawned.h"
 #include "../engine/bitset_utils.h"
 #include "../entity_helper.h"
 #include "../recipe_library.h"
@@ -127,6 +128,8 @@ bool IngredientHelper::has_machines_required_for_ingredient(
     const auto doesAnyExist =
         [&ents](const std::function<bool(const Entity&)>& filter) {
             for (const Entity& e : ents) {
+                // TODO replace with actual entityquery
+                if (e.has<IsStoreSpawned>()) continue;
                 if (filter(e)) return true;
             }
             return false;
