@@ -830,7 +830,7 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
     OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
         // Note we spawn free items in the purchase area so its more obvious
         // that they are free
-        IsFloorMarker::Type::Store_PurchaseArea);
+        IsFloorMarker::Type::Planning_SpawnArea);
 
     if (!spawn_area) {
         // need to guarantee this exists long before we get here
