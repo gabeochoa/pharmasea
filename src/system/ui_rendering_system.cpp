@@ -321,7 +321,7 @@ void render_store(const Entity& entity, float) {
         if (!purchase_area.valid()) return;
 
         const IsTriggerArea& ita = purchase_area->get<IsTriggerArea>();
-        if (ita.should_progress()) return;
+        if (ita.active_entrants() == 0) return;
 
         text(::ui::Widget{content}, TranslatableString(ita.validation_msg()));
     };
