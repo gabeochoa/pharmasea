@@ -453,13 +453,14 @@ void LevelInfo::generate_store_map() {
         entity.get<IsTriggerArea>()
             .set_validation_fn([](const IsTriggerArea& ita)
                                    -> ValidationResult {
-                // TODO should we only run the below when there is at least one
+                // should we only run the below when there is at least one
                 // person standing on it?
+                // TODO right now we only show it when someone is standing, but
+                // it does run every frame (i think)
 
                 OptEntity sophie =
                     EntityQuery().whereType(EntityType::Sophie).gen_first();
 
-                // TODO translate these strings .
                 if (!sophie.valid())
                     return {false, strings::i18n::InternalError};
 
