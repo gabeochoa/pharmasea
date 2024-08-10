@@ -44,7 +44,7 @@
 // - TODO update reason text to say "customers wont like it if you dont "
 // - TODO its a little awkward when the day ends and customers are still paying
 // - TODO handtruck reach is really bad, should just amke it pretend to be
-// normal grab/drop
+// normal grab/drop, for now you dont need it
 //
 // - store should give one free reroll per day
 // - add post office for free items from new recipies

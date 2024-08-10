@@ -202,18 +202,6 @@ void update_held_hand_truck_position(Entity& entity, float) {
     if (can_hold_hand_truck.empty()) return;
 
     auto new_pos = transform.pos();
-    if (transform.face_direction() & Transform::FrontFaceDirection::FORWARD) {
-        new_pos.z += TILESIZE;
-    }
-    if (transform.face_direction() & Transform::FrontFaceDirection::RIGHT) {
-        new_pos.x += TILESIZE;
-    }
-    if (transform.face_direction() & Transform::FrontFaceDirection::BACK) {
-        new_pos.z -= TILESIZE;
-    }
-    if (transform.face_direction() & Transform::FrontFaceDirection::LEFT) {
-        new_pos.x -= TILESIZE;
-    }
 
     OptEntity hand_truck =
         EntityHelper::getEntityForID(can_hold_hand_truck.hand_truck_id());

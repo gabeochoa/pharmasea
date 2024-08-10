@@ -915,7 +915,8 @@ void process_input(Entity& entity, const UserInput& input) {
                     break;
                 case InputName::PlayerHandTruckInteract:
                     if (GameState::get().is_game_like()) {
-                        inround::handle_hand_truck(entity);
+                        // inround::handle_hand_truck(entity);
+                        planning::handle_grab_or_drop(entity);
                     }
                     break;
                 case InputName::PlayerPickup:
