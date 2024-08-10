@@ -28,6 +28,7 @@
 // suggest changing it, if the diff is too large, then itll be impossible to
 // change the resolution
 // TODO move network polling to its own thread and use a message queue
+// TODO ffwd progress bar needs to hide when you are not near
 
 // branch
 // - TODO need message for when user is stealing
@@ -38,6 +39,7 @@
 // - TODO right now all users have to stand to buy things in cart, we need a
 // better way or to ahve like "half" or something
 // - TODO should store teleport items or do you walk them over
+// - TODO update reason text to say "customers wont like it if you dont "
 //
 // - store should give one free reroll per day
 // - add post office for free items from new recipies

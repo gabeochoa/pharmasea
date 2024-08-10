@@ -425,6 +425,7 @@ void LevelInfo::generate_progression_map() {
         furniture::make_trigger_area(
             entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Progression_Option1);
+        entity.get<IsTriggerArea>().make_single_only();
     }
 
     {
@@ -432,6 +433,7 @@ void LevelInfo::generate_progression_map() {
         furniture::make_trigger_area(
             entity, progression_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Progression_Option2);
+        entity.get<IsTriggerArea>().make_single_only();
     }
 }
 

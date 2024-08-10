@@ -46,10 +46,12 @@ struct IsTriggerArea : public BaseComponent {
     [[nodiscard]] int active_entrants() const { return current_entrants; }
 
     [[nodiscard]] bool has_matching_entrants() const {
+        if (single_only && current_entrants == 1) return true;
         return current_entrants == wanted_entrants;
     }
 
     [[nodiscard]] bool has_min_matching_entrants() const {
+        if (single_only && current_entrants == 1) return true;
         return current_entrants >= wanted_entrants;
     }
 
@@ -126,6 +128,11 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
+    auto& make_single_only() {
+        single_only = true;
+        return *this;
+    }
+
     void set_validation_fn(const ValidationFn& cb) { validation_cb = cb; }
 
     [[nodiscard]] bool should_progress() const {
@@ -154,6 +161,7 @@ struct IsTriggerArea : public BaseComponent {
         std::pair{true, strings::i18n::Empty};
     ValidationFn validation_cb = nullptr;
 
+    bool single_only = false;
     int wanted_entrants = 1;
     int current_entrants = 0;
     TranslatableString _title;
