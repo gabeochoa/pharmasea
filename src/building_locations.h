@@ -5,7 +5,6 @@
 #include <array>
 
 #include "external_include.h"
-#include "raylib.h"
 
 enum BuildingType {
     ModelTest,

@@ -425,7 +425,9 @@ void LevelInfo::generate_progression_map() {
         furniture::make_trigger_area(
             entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Progression_Option1);
-        entity.get<IsTriggerArea>().make_single_only();
+        entity.get<IsTriggerArea>().set_required_entrants_type(
+            IsTriggerArea::EntrantsRequired::AllInBuilding,
+            PROGRESSION_BUILDING);
     }
 
     {
@@ -433,7 +435,9 @@ void LevelInfo::generate_progression_map() {
         furniture::make_trigger_area(
             entity, progression_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Progression_Option2);
-        entity.get<IsTriggerArea>().make_single_only();
+        entity.get<IsTriggerArea>().set_required_entrants_type(
+            IsTriggerArea::EntrantsRequired::AllInBuilding,
+            PROGRESSION_BUILDING);
     }
 }
 
@@ -446,8 +450,9 @@ void LevelInfo::generate_store_map() {
             entity, store_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
             IsTriggerArea::Store_BackToPlanning);
 
-        entity.get<IsTriggerArea>().set_validation_fn(
-            [](const IsTriggerArea& ita) -> ValidationResult {
+        entity.get<IsTriggerArea>()
+            .set_validation_fn([](const IsTriggerArea& ita)
+                                   -> ValidationResult {
                 // TODO should we only run the below when there is at least one
                 // person standing on it?
 
@@ -516,7 +521,9 @@ void LevelInfo::generate_store_map() {
                 }
 
                 return {true, strings::i18n::Empty};
-            });
+            })
+            .set_required_entrants_type(
+                IsTriggerArea::EntrantsRequired::AllInBuilding, STORE_BUILDING);
     }
     {
         auto& entity = EntityHelper::createEntity();

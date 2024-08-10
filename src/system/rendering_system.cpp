@@ -662,10 +662,12 @@ void render_trigger_area(const Entity& entity, float dt) {
         };
         raylib::DrawText3D(titleConfig);
 
+        auto text =
+            fmt::format("{}/{}", ita.active_entrants(), ita.min_req_entrants());
+
         raylib::DrawTextConfig metaConfig = {
             .font = font,
-            .text =
-                fmt::format("{}/{}", ita.active_entrants(), ita.max_entrants()),
+            .text = text,
             .position = number_position,
             .fontSize = fsize / 2.f,
             .fontSpacing = 4,

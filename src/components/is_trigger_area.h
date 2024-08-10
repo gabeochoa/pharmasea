@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../building_locations.h"
 #include "../engine/is_server.h"
 #include "../engine/log.h"
 #include "base_component.h"
@@ -23,6 +24,13 @@ struct IsTriggerArea : public BaseComponent {
         ModelTest_BackToLobby,
     } type = Unset;
 
+    enum struct EntrantsRequired {
+        All,
+        AllInBuilding,
+        One,
+    } entrantsRequired = EntrantsRequired::All;
+    std::optional<Building> building;
+
     explicit IsTriggerArea(Type type)
         : type(type),
           wanted_entrants(1),
@@ -41,18 +49,32 @@ struct IsTriggerArea : public BaseComponent {
         return has_min_matching_entrants() && should_progress();
     }
 
-    [[nodiscard]] int max_entrants() const { return wanted_entrants; }
+    [[nodiscard]] int all_possible_entrants() const { return wanted_entrants; }
+    [[nodiscard]] int min_req_entrants() const {
+        switch (entrantsRequired) {
+            case EntrantsRequired::All:
+                return all_possible_entrants();
+            case EntrantsRequired::AllInBuilding:
+                return current_in_building;
+            case EntrantsRequired::One:
+                return 1;
+        }
+        return all_possible_entrants();
+    }
 
     [[nodiscard]] int active_entrants() const { return current_entrants; }
 
-    [[nodiscard]] bool has_matching_entrants() const {
-        if (single_only && current_entrants == 1) return true;
-        return current_entrants == wanted_entrants;
-    }
-
     [[nodiscard]] bool has_min_matching_entrants() const {
-        if (single_only && current_entrants == 1) return true;
-        return current_entrants >= wanted_entrants;
+        switch (entrantsRequired) {
+            case EntrantsRequired::AllInBuilding:
+                return current_entrants >= 1 &&
+                       current_entrants >= min_req_entrants();
+            case EntrantsRequired::All:
+                return current_entrants >= min_req_entrants();
+            case EntrantsRequired::One:
+                return current_entrants == 1;
+        }
+        return false;
     }
 
     [[nodiscard]] float progress() const {
@@ -123,17 +145,20 @@ struct IsTriggerArea : public BaseComponent {
         return *this;
     }
 
-    auto& update_max_entrants(int ne) {
+    auto& update_entrants_in_building(int ne) {
+        current_in_building = ne;
+        return *this;
+    }
+
+    auto& update_all_entrants(int ne) {
         wanted_entrants = ne;
         return *this;
     }
 
-    auto& make_single_only() {
-        single_only = true;
+    auto& set_validation_fn(const ValidationFn& cb) {
+        validation_cb = cb;
         return *this;
     }
-
-    void set_validation_fn(const ValidationFn& cb) { validation_cb = cb; }
 
     [[nodiscard]] bool should_progress() const {
         if (is_on_cooldown()) {
@@ -153,6 +178,19 @@ struct IsTriggerArea : public BaseComponent {
         return last_validation_result.second;
     }
 
+    auto& set_required_entrants_type(
+        EntrantsRequired req, const std::optional<Building>& _building = {}) {
+        entrantsRequired = req;
+        building = _building;
+
+        if (entrantsRequired == EntrantsRequired::AllInBuilding &&
+            !building.has_value()) {
+            log_error(
+                "You selected all in building but didnt pass in a building");
+        }
+        return *this;
+    }
+
    private:
     // This is mutable because we cant serialize std::funciton
     // and we need a way to send the values up.
@@ -161,9 +199,9 @@ struct IsTriggerArea : public BaseComponent {
         std::pair{true, strings::i18n::Empty};
     ValidationFn validation_cb = nullptr;
 
-    bool single_only = false;
     int wanted_entrants = 1;
     int current_entrants = 0;
+    int current_in_building = 0;
     TranslatableString _title;
     TranslatableString _subtitle;
     int max_title_length = TranslatableString::MAX_LENGTH;
@@ -184,6 +222,10 @@ struct IsTriggerArea : public BaseComponent {
 
         s.value4b(wanted_entrants);
         s.value4b(current_entrants);
+        s.value4b(current_in_building);
+
+        s.value4b(entrantsRequired);
+        s.ext(building, bitsery::ext::StdOptional{});
 
         // These two are needed for drawing the percentage
         // TODO store the pct instead of sending two ints?

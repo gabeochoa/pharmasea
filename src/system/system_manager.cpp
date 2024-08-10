@@ -768,14 +768,14 @@ void refetch_dynamic_model_names(Entity& entity, float) {
     renderer.update_model_name(hDMN.fetch(entity));
 }
 
-void count_max_trigger_area_entrants(Entity& entity, float) {
+void count_all_possible_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
     size_t count = EntityQuery(SystemManager::get().oldAll)
                        .whereType(EntityType::Player)
                        .gen_count();
 
-    entity.get<IsTriggerArea>().update_max_entrants(static_cast<int>(count));
+    entity.get<IsTriggerArea>().update_all_entrants(static_cast<int>(count));
 }
 
 void count_trigger_area_entrants(Entity& entity, float) {
@@ -790,6 +790,21 @@ void count_trigger_area_entrants(Entity& entity, float) {
     entity.get<IsTriggerArea>().update_entrants(static_cast<int>(count));
 }
 
+void count_in_building_trigger_area_entrants(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+
+    std::optional<Building> building = entity.get<IsTriggerArea>().building;
+    if (!building) return;
+
+    size_t count =
+        EntityQuery(SystemManager::get().oldAll)
+            .whereType(EntityType::Player)
+            .whereInside(building.value().min(), building.value().max())
+            .gen_count();
+
+    entity.get<IsTriggerArea>().update_entrants_in_building(
+        static_cast<int>(count));
+}
 void update_trigger_area_percent(Entity& entity, float dt) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
@@ -1195,7 +1210,8 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
 
 void process_trigger_area(Entity& entity, float dt) {
     update_dynamic_trigger_area_settings(entity, dt);
-    count_max_trigger_area_entrants(entity, dt);
+    count_all_possible_trigger_area_entrants(entity, dt);
+    count_in_building_trigger_area_entrants(entity, dt);
     count_trigger_area_entrants(entity, dt);
     update_trigger_area_percent(entity, dt);
     trigger_cb_on_full_progress(entity, dt);
