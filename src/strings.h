@@ -241,6 +241,7 @@ enum struct i18n {
     StoreMissingRequired,
     StoreCartEmpty,
     StoreStealingMachine,
+    StoreHasGarbage,
     StoreBalance,
     StoreTip,
     StoreInCart,

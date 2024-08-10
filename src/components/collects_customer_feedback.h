@@ -46,6 +46,7 @@ struct CollectsCustomerFeedback : public BaseComponent {
         ItemInSpawnArea,
         DeletingNeededItem,
         StoreStealingMachine,
+        StoreHasGarbage,
         //
         WaitingReasonLast,
     } waiting_reason = None;
@@ -77,6 +78,9 @@ struct CollectsCustomerFeedback : public BaseComponent {
                 return NO_TRANSLATE("");
             case StoreStealingMachine:
                 return TranslatableString(strings::i18n::StoreStealingMachine);
+                break;
+            case StoreHasGarbage:
+                return TranslatableString(strings::i18n::StoreHasGarbage);
                 break;
         }
     }

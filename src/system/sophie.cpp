@@ -363,6 +363,30 @@ void holding_stolen_item(Entity& entity) {
         position);
 }
 
+void garbage_in_store(Entity& entity) {
+    // Find if players put non sellables in the store
+
+    auto garbage = EntityQuery()
+                       .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
+                       .whereMissingComponent<IsStoreSpawned>()
+                       .whereHasComponent<CanBeHeld>()
+                       .gen();
+
+    if (garbage.empty()) {
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::StoreHasGarbage, false,
+            {});
+        return;
+    }
+
+    Entity& garbo = garbage[0];
+    auto position = garbo.get<Transform>().as2();
+
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::StoreHasGarbage, true,
+        position);
+}
+
 }  // namespace sophie
 
 // TODO this function is 75% of our game update time spent
@@ -391,6 +415,7 @@ void update_sophie(Entity& entity, float dt) {
     std::vector<WaitingFn> fns{
         sophie::customers_in_store,   //
         sophie::holding_stolen_item,  //
+        sophie::garbage_in_store,     //
         // sophie::player_holding_furniture,         //
         sophie::bar_not_clean,                    //
         sophie::overlapping_furniture,            //

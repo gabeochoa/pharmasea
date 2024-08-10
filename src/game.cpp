@@ -33,7 +33,6 @@
 // https://sonarcloud.io/project/analysis_method?id=gabeochoa_pharmasea
 
 // branch
-// - TODO need message for when user is stealing
 // - TODO you can drop your own furniture in the store ( does this soft lock
 // yourself?)
 // - TODO UI when inside store vs UI when outside (both have balance, maybe a

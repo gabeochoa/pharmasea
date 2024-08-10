@@ -24,6 +24,7 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::StoreCartEmpty, "Nothing in your cart yet :) "},
         {i18n::StoreStealingMachine,
          "No Stealing! Please put that machine back"},
+        {i18n::StoreHasGarbage, "Please dont leave your trash in here"},
         {i18n::StoreTip, "{transaction_extra} tip"},
         {i18n::StoreBalance, "Balance: {balance_amount}"},
         {i18n::StoreInCart, "In Cart: {cart_amount}"},
