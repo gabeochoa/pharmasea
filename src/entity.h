@@ -135,6 +135,18 @@ struct Entity {
         return get<T>();
     }
 
+    template<typename T, typename... TArgs>
+    T& addComponentIfMissing(TArgs&&... args) {
+        if (this->has<T>()) return this->get<T>();
+        return addComponent<T>(std::forward<TArgs>(args)...);
+    }
+
+    template<typename T>
+    void removeComponentIfExists() {
+        if (this->is_missing<T>()) return;
+        return removeComponent<T>();
+    }
+
     template<typename A>
     void addAll() {
         addComponent<A>();
