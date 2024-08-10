@@ -206,6 +206,8 @@ struct EntityQuery {
     }
 
     EntityQuery& whereIsHoldingAnyFurniture();
+    EntityQuery& whereIsHoldingAnyFurnitureThatMatches(
+        const std::function<bool(const Entity&)>&);
     EntityQuery& whereIsHoldingFurnitureID(EntityID entityID);
     EntityQuery& whereIsHoldingItemOfType(EntityType type);
     EntityQuery& whereIsDrinkAndMatches(Drink recipe);

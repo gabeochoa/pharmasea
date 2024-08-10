@@ -339,6 +339,30 @@ void deleting_item_needed_for_recipe(Entity& entity) {
     return result(!has_req_machines, get_position_for_reason());
 }
 
+void holding_stolen_item(Entity& entity) {
+    // Find all players holding Store items and not in the store
+    OptEntity player =
+        EntityQuery(SystemManager::get().oldAll)
+            .whereNotInside(STORE_BUILDING.min(), STORE_BUILDING.max())
+            .whereIsHoldingAnyFurnitureThatMatches([](const Entity& furniture) {
+                return furniture.has<IsStoreSpawned>();
+            })
+            .gen_first();
+
+    if (!player) {
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::StoreStealingMachine,
+            false, {});
+        return;
+    }
+
+    auto position = player->get<Transform>().as2();
+
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::StoreStealingMachine, true,
+        position);
+}
+
 }  // namespace sophie
 
 // TODO this function is 75% of our game update time spent
@@ -365,8 +389,9 @@ void update_sophie(Entity& entity, float dt) {
     typedef std::function<void(Entity&)> WaitingFn;
 
     std::vector<WaitingFn> fns{
-        sophie::customers_in_store,               //
-        sophie::player_holding_furniture,         //
+        sophie::customers_in_store,   //
+        sophie::holding_stolen_item,  //
+        // sophie::player_holding_furniture,         //
         sophie::bar_not_clean,                    //
         sophie::overlapping_furniture,            //
         sophie::forgot_item_in_spawn_area,        //

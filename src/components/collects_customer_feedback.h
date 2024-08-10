@@ -45,6 +45,7 @@ struct CollectsCustomerFeedback : public BaseComponent {
         FurnitureOverlapping,
         ItemInSpawnArea,
         DeletingNeededItem,
+        StoreStealingMachine,
         //
         WaitingReasonLast,
     } waiting_reason = None;
@@ -71,11 +72,12 @@ struct CollectsCustomerFeedback : public BaseComponent {
                 return TranslatableString(strings::i18n::DELETING_NEEDED_ITEM);
             case RegisterNotInside:
                 return TranslatableString(strings::i18n::REGISTER_NOT_INSIDE);
-            default:
-                log_error("got reason {} but dont have a way to render it", wr);
             case WaitingReasonLast:
             case None:
                 return NO_TRANSLATE("");
+            case StoreStealingMachine:
+                return TranslatableString(strings::i18n::StoreStealingMachine);
+                break;
         }
     }
 

@@ -26,6 +26,21 @@ EntityQuery& EntityQuery::whereIsHoldingAnyFurniture() {
             }));
 }
 
+EntityQuery& EntityQuery::whereIsHoldingAnyFurnitureThatMatches(
+    const std::function<bool(const Entity&)>& filter) {
+    return  //
+        add_mod(new WhereHasComponent<CanHoldFurniture>())
+            .add_mod(new WhereLambda([&](const Entity& entity) {
+                const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
+                if (!chf.is_holding_furniture()) return false;
+                OptEntity furniture =
+                    EntityHelper::getEntityForID(chf.furniture_id());
+                if (!furniture.has_value()) return false;
+
+                return filter(furniture.asE());
+            }));
+}
+
 EntityQuery& EntityQuery::whereIsHoldingFurnitureID(EntityID entityID) {
     return  //
         add_mod(new WhereHasComponent<CanHoldFurniture>())

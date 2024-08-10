@@ -21,7 +21,8 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
 
         {i18n::StoreNotEnoughCoins, "toN hguone snioc"},
         {i18n::StoreMissingRequired, "gnissiM deriuqer enihcam"},
-        {i18n::StoreStealingMachine, "esaelP tup taht enihcam kcab"},
+        {i18n::StoreStealingMachine,
+         "oN !gnilaetS esaelP tup taht enihcam kcab"},
         {i18n::StoreTip, "{transaction_extra}pit"},
         {i18n::StoreBalance, ":ecnalaB{balance_amount}"},
         {i18n::StoreInCart, "nI :traC{cart_amount}"},
@@ -34,6 +35,8 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
          "t'naC trats emag litnu lla sreyalp pord erutinruf"},
         {i18n::NO_PATH_TO_REGISTER,
          "t'naC trats emag litnu ereht si a htap ot a retsiger"},
+        {i18n::REGISTER_NOT_INSIDE,
+         "t'naC trats emag litnu uoy evah a retsiger edisni eht rab aera"},
         {i18n::BAR_NOT_CLEAN, "t'naC trats emag litnu ruoy rab si lla naelc"},
         {i18n::FURNITURE_OVERLAPPING,
          "t'naC trats emag fi uoy evah erutinruf gnippalrevo"},
