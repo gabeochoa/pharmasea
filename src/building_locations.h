@@ -88,6 +88,14 @@ struct Building {
         if (pos.y > max().y - 1 || pos.y < min().y) return false;
         return true;
     }
+
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.object(area);
+        s.object(bounds);
+        s.value4b(door_location);
+    }
 };
 
 const Building MODEL_TEST_BUILDING =  //

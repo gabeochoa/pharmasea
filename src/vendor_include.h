@@ -63,6 +63,20 @@ void serialize(S& s, Color& data) {
     s.value1b(data.b);
     s.value1b(data.a);
 }
+
+template<typename S>
+void serialize(S& s, Rectangle& data) {
+    s.value4b(data.x);
+    s.value4b(data.y);
+    s.value4b(data.width);
+    s.value4b(data.height);
+}
+
+template<typename S>
+void serialize(S& s, BoundingBox& data) {
+    s.object(data.min);
+    s.object(data.max);
+}
 }  // namespace bitsery
 
 #include "engine/tracy.h"
