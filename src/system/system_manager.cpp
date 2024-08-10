@@ -2241,6 +2241,8 @@ void cart_management(Entity& entity, float) {
 
         // Its free!
         if (marked_entity->has<IsFreeInStore>()) continue;
+        // it was already purchased or is otherwise just randomly in the store
+        if (marked_entity->is_missing<IsStoreSpawned>()) continue;
 
         amount_in_cart +=
             std::max(0, get_price_for_entity_type(marked_entity->type));
