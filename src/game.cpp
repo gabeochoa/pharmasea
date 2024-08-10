@@ -37,14 +37,10 @@
 // yourself?)
 // - TODO UI when inside store vs UI when outside (both have balance, maybe a
 // smaller outside one? how to handle overlapping ui when we forget to check)
-// - TODO right now all users have to stand to buy things in cart, we need a
-// better way or to ahve like "half" or something
-//  -> what if we just have all people who are in the store have to that way we
-//  can avoid any people trying to drop things as they pay
 // - TODO should store teleport items or do you walk them over
 // - TODO update reason text to say "customers wont like it if you dont "
 // - TODO its a little awkward when the day ends and customers are still paying
-// - TODO handtruck reach is really bad, should just amke it pretend to be
+// - TODO handtruck reach is really bad, should just make it pretend to be
 // normal grab/drop, for now you dont need it
 //
 // - store should give one free reroll per day
