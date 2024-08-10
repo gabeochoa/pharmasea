@@ -21,6 +21,7 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
 
         {i18n::StoreNotEnoughCoins, "toN hguone snioc"},
         {i18n::StoreMissingRequired, "gnissiM deriuqer enihcam"},
+        {i18n::StoreCartEmpty, "gnihtoN ni ruoy trac tey ):"},
         {i18n::StoreStealingMachine,
          "oN !gnilaetS esaelP tup taht enihcam kcab"},
         {i18n::StoreTip, "{transaction_extra}pit"},

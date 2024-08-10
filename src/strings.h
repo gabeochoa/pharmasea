@@ -239,6 +239,7 @@ enum struct i18n {
     // Store
     StoreNotEnoughCoins,
     StoreMissingRequired,
+    StoreCartEmpty,
     StoreStealingMachine,
     StoreBalance,
     StoreTip,

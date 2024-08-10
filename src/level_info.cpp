@@ -487,14 +487,20 @@ void LevelInfo::generate_store_map() {
                 if (!cart_area.valid())
                     return {false, strings::i18n::InternalError};
 
-                const auto ents =
-                    // TODO does there need ot be a better way to handle
-                    // this kind of query where its literally only asking for
-                    // store spawned stuff
-                    EntityQuery()
-                        .whereHasComponent<IsStoreSpawned>()
-                        .include_store_entities()
-                        .gen();
+                const IsFloorMarker& ifm = cart_area->get<IsFloorMarker>();
+
+                std::vector<RefEntity> ents;
+                for (size_t i = 0; i < ifm.num_marked(); i++) {
+                    EntityID id = ifm.marked_ids()[i];
+                    OptEntity marked_entity = EntityHelper::getEntityForID(id);
+                    if (!marked_entity) continue;
+                    if (marked_entity->is_missing<IsStoreSpawned>()) continue;
+                    ents.push_back(marked_entity.asE());
+                }
+
+                if (ents.empty()) {
+                    return {false, strings::i18n::StoreCartEmpty};
+                }
 
                 // If its free and not marked, then we cant continue
                 for (const Entity& ent : ents) {
