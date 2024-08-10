@@ -906,6 +906,7 @@ void render_floor_marker(const Entity& entity, float) {
             EntityID id = ifm.marked_ids()[i];
             OptEntity marked_entity = EntityHelper::getEntityForID(id);
             if (!marked_entity) continue;
+            if (marked_entity->is_missing<IsStoreSpawned>()) continue;
             render_lock_marker(marked_entity.asE());
         }
     }
