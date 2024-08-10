@@ -372,6 +372,24 @@ void render_store(const Entity& entity, float) {
     render_validation(content);
 }
 
+void render_store_when_player_inside(const Entities& entities, float dt) {
+    if (SystemManager::get().local_players.empty()) return;
+
+    auto local_player = SystemManager::get().local_players[0];
+    if (STORE_BUILDING.is_inside(local_player->get<Transform>().as2())) {
+        // Grab the global ui context,
+        ::ui::begin(::ui::context, dt);
+
+        for (const auto& entity_ptr : entities) {
+            if (!entity_ptr) continue;
+            const Entity& entity = *entity_ptr;
+            render_store(entity, dt);
+        }
+        //
+        ::ui::end();
+    }
+}
+
 void render_normal(const Entities& entities, float dt) {
     // In game only
     if (GameState::get().should_render_timer()) {
@@ -390,22 +408,7 @@ void render_normal(const Entities& entities, float dt) {
             //
             ::ui::end();
         }
-
-        if (STORE_BUILDING.is_inside(SystemManager::get()
-                                         .local_players[0]
-                                         ->get<Transform>()
-                                         .as2())) {
-            // Grab the global ui context,
-            ::ui::begin(::ui::context, dt);
-
-            for (const auto& entity_ptr : entities) {
-                if (!entity_ptr) continue;
-                const Entity& entity = *entity_ptr;
-                render_store(entity, dt);
-            }
-            //
-            ::ui::end();
-        }
+        render_store_when_player_inside(entities, dt);
     }
 
     // always
