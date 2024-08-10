@@ -29,6 +29,8 @@
 // change the resolution
 // TODO move network polling to its own thread and use a message queue
 // TODO ffwd progress bar needs to hide when you are not near
+// TODO turn back on automatic analysis
+// https://sonarcloud.io/project/analysis_method?id=gabeochoa_pharmasea
 
 // branch
 // - TODO need message for when user is stealing
