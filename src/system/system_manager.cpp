@@ -944,7 +944,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                                   .whereInside(PROGRESSION_BUILDING.min(),
                                                PROGRESSION_BUILDING.max())
                                   .gen()) {
-            door.get().addComponent<IsSolid>();
+            door.get().addComponentIfMissing<IsSolid>();
         }
 
         GameState::get().transition_to_game();
@@ -2400,6 +2400,14 @@ void generate_store_options() {
         }
     }
     irsm.config.store_to_spawn.clear();
+
+    for (RefEntity door :
+         EntityQuery()
+             .whereType(EntityType::Door)
+             .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
+             .gen()) {
+        door.get().removeComponentIfExists<IsSolid>();
+    }
 }
 
 void move_purchased_furniture() {

@@ -510,14 +510,11 @@ void make_door(Entity& door, vec2 pos, Color) {
                               ui::color::ugly_yellow, ui::color::ugly_blue,
                               true);
 
-    // we start at day
-    door.removeComponent<IsSolid>();
-
     door.addComponent<RespondsToDayNight>()
         .registerOnDayStarted(
-            [](Entity& door) { door.removeComponent<IsSolid>(); })
+            [](Entity& door) { door.removeComponentIfExists<IsSolid>(); })
         .registerOnNightStarted(
-            [](Entity& door) { door.addComponent<IsSolid>(); });
+            [](Entity& door) { door.addComponentIfMissing<IsSolid>(); });
 }
 
 void make_wall(Entity& wall, vec2 pos, Color c) {

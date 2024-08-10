@@ -2,11 +2,13 @@
 #include <algorithm>
 #include <random>
 
+#include "../building_locations.h"
 #include "../components/has_day_night_timer.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
 #include "../dataclass/upgrades.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 #include "magic_enum/magic_enum.hpp"
 #include "system_manager.h"
 
@@ -174,6 +176,15 @@ inline void collect_progression_options(Entity& entity, float) {
     }
 
     ipm.collectedOptions = true;
+
+    // unlock doors
+    for (RefEntity door : EntityQuery()
+                              .whereType(EntityType::Door)
+                              .whereInside(PROGRESSION_BUILDING.min(),
+                                           PROGRESSION_BUILDING.max())
+                              .gen()) {
+        door.get().removeComponentIfExists<IsSolid>();
+    }
 }
 
 inline void update_upgrade_variables() {
