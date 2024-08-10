@@ -444,9 +444,6 @@ void Server::process_player_join_packet(
                 return default_pos;
             case game::InGame:
                 return {0.f, 0.f, 0.f};
-            case game::Progression: {
-                return PROGRESSION_BUILDING.to3();
-            }
             case game::ModelTest: {
                 return MODEL_TEST_BUILDING.to3();
             }

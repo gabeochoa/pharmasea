@@ -740,7 +740,9 @@ void render_trigger_area(const Entity& entity, float dt) {
     };
 
     const auto _render_progression_option = [&](IsTriggerArea::Type type) {
-        if (GameState::get().is_not(game::State::Progression)) return;
+        if (!STORE_BUILDING.is_inside(
+                SystemManager::get().local_players[0]->get<Transform>().as2()))
+            return;
         OptEntity sophie =
             EntityQuery().whereType(EntityType::Sophie).gen_first();
         const IsProgressionManager& ipm = sophie->get<IsProgressionManager>();

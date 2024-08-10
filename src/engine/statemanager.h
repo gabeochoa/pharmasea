@@ -112,7 +112,6 @@ enum State {
     Lobby = 1,
     InGame = 2,
     Paused = 4,
-    Progression = 5,
     ModelTest = 7,
 };
 

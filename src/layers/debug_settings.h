@@ -9,7 +9,6 @@ constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //
 
 constexpr CEMap<int, game::State, CHOOSABLE_STATES> choosable_game_states = {{{
     {2, game::State::InGame},
-    {5, game::State::Progression},
     {7, game::State::ModelTest},
     {1, game::State::Lobby},
 }}};

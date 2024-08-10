@@ -130,9 +130,6 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
                 position = {pos.x, 0, pos.y + 3};
             }
         } break;
-        case game::Progression: {
-            position = PROGRESSION_BUILDING.to3();
-        } break;
         case game::ModelTest: {
             position = MODEL_TEST_BUILDING.to3();
         } break;
@@ -1008,6 +1005,9 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
             // reset options so it collections new ones next upgrade round
             ipm.next_round();
+
+            //
+            system_manager::progression::update_upgrade_variables();
         }
     };
 
@@ -1170,11 +1170,9 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
     switch (ita.type) {
         case IsTriggerArea::Progression_Option1:  // fall through
         case IsTriggerArea::Progression_Option2: {
-            if (GameState::get().is_not(game::State::Progression)) {
-                ita.update_title(internal_ts);
-                ita.update_subtitle(internal_ts);
-                return;
-            }
+            // TODO this is happening every frame?
+            ita.update_title(internal_ts);
+            ita.update_subtitle(internal_ts);
 
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const IsProgressionManager& ipm =
@@ -1857,13 +1855,9 @@ void run_timer(Entity& entity, float dt) {
         return;
     }
 
-    GameState::get().set(game::State::Progression);
-    SystemManager::get().for_each_old([](Entity& e) {
-        if (check_type(e, EntityType::Player)) {
-            move_player_SERVER_ONLY(e, game::State::Progression);
-            return;
-        }
-    });
+    // TODO this will only work if entity is Sophie (which it is but its not
+    // guaranteed)
+    system_manager::progression::collect_progression_options(entity, dt);
 
     // TODO theoretically we shouldnt start until after you choose upgrades but
     // we are gonna change how this works later anyway i think
@@ -2595,8 +2589,6 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
             //
         } else if (GameState::get().is(game::State::ModelTest)) {
             model_test_update(entities, dt);
-        } else if (GameState::get().is(game::State::Progression)) {
-            progression_update(entities, dt);
         } else if (GameState::get().is_game_like()) {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
@@ -2643,10 +2635,6 @@ void SystemManager::process_state_change(
 
         if (old_state == game::State::Lobby) {
             system_manager::store::generate_store_options();
-        }
-
-        if (old_state == game::State::Progression) {
-            system_manager::progression::update_upgrade_variables();
         }
     }
 
@@ -2814,14 +2802,6 @@ void SystemManager::planning_update(
                                                                       dt);
         system_manager::update_held_furniture_position(entity, dt);
         system_manager::pop_out_when_colliding(entity, dt);
-    });
-}
-
-void SystemManager::progression_update(const Entities& entity_list, float dt) {
-    for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // TODO this runs every progression frame when it probably just
-        // needs to run on transition
-        system_manager::progression::collect_progression_options(entity, dt);
     });
 }
 
