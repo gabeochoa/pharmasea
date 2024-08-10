@@ -2179,32 +2179,52 @@ void pop_out_when_colliding(Entity& entity, float) {
     // Only popping out players right now
     if (!check_type(entity, EntityType::Player)) return;
 
-    OptEntity match = EntityHelper::getOverlappingEntityIfExists(
-        entity, 0.75f,
-        [](const Entity& entity) { return entity.has<IsSolid>(); },
-        true /* include store entities */
-    );
-    if (!match) return;
+    OptEntity match =  //
+        EntityQuery()
+            .whereNotID(entity.id)  // not us
+            .whereHasComponent<IsSolid>()
+            .whereInRange(entity.get<Transform>().as2(), 0.7f)
+            .whereLambdaExistsAndTrue([](const Entity& other) {
+                // this filter isnt for you
+                if (other.is_missing<CanBeHeld_HT>()) return true;
+                // ignore if held
+                return !other.get<CanBeHeld_HT>().is_held();
+            })
+            .include_store_entities()
+            .gen_first();
+
+    if (!match) {
+        return;
+    }
+
+    const CanHoldHandTruck& chht = entity.get<CanHoldHandTruck>();
+    if (chht.is_holding()) {
+        OptEntity hand_truck =
+            EntityHelper::getEntityForID(chht.hand_truck_id());
+        if (match->id == chht.hand_truck_id()) {
+            return;
+        }
+        if (chht.is_holding() &&
+            match->id == hand_truck->get<CanHoldFurniture>().furniture_id()) {
+            return;
+        }
+    }
 
     const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
     if (chf.is_holding_furniture()) return;
     if (chf.furniture_id() == match->id) return;
 
-    const Rectangle playerBounds = entity.get<Transform>().rectangular_bounds();
-    const Rectangle matchBounds = match->get<Transform>().rectangular_bounds();
-
     vec2 new_position = entity.get<Transform>().as2();
 
-    float dx = playerBounds.x + (playerBounds.width / 2) - matchBounds.x -
-               (matchBounds.width / 2);
-    float dy = playerBounds.y + (playerBounds.height / 2) - matchBounds.y -
-               (matchBounds.height / 2);
-
-    if (dx != 0) {
-        new_position.x += util::sgn(dx) * matchBounds.width * 0.75f;
-    }
-    if (dy != 0) {
-        new_position.y += util::sgn(dy) * matchBounds.height * 0.75f;
+    int i = static_cast<int>(new_position.x);
+    int j = static_cast<int>(new_position.y);
+    for (int a = 0; a < 8; a++) {
+        auto position = (vec2{(float) i + (bfs::neigh_x[a]),
+                              (float) j + (bfs::neigh_y[a])});
+        if (EntityHelper::isWalkable(position)) {
+            new_position = position;
+            break;
+        }
     }
 
     entity.get<Transform>().update(vec::to3(new_position));

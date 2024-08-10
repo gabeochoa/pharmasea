@@ -133,6 +133,11 @@ bool is_collidable(const Entity& entity, OptEntity other) {
     return false;
 }
 
+bool is_collidable(const Entity& entity, const Entity& other) {
+    // The logic is const but OptEntity doesnt support it yet
+    return is_collidable(entity, OptEntity{const_cast<Entity&>(other)});
+}
+
 void collect_user_input(Entity& entity, float dt) {
     if (entity.is_missing<CollectsUserInput>()) return;
     CollectsUserInput& cui = entity.get<CollectsUserInput>();
