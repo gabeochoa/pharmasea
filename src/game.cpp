@@ -47,8 +47,6 @@
 // day starts or show them how much theyve made today so far
 // - TODO keeps respawning roomba, we should probably not do that anymore...just
 // need to clean it up at end of day i guess
-// - TODO toilet didnt spawn after getting upgrade
-// - TODO store isnt spawning either
 //
 // - store should give one free reroll per day
 // - add post office for free items from new recipies
