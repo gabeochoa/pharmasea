@@ -43,6 +43,14 @@
 // - TODO cant make drinks at night because R is rotate...
 // - TODO show the user what their current min and max profit will be before the
 // day starts or show them how much theyve made today so far
+// - TODO big city upgrade didnt double estimated profit
+// - TODO roomba wasnt released
+// - TODO cant clean during the day
+// - TODO beer cannot be placed inside and filled more than once?
+// - TODO controls arent labeled correctly in the settings page
+// - TODO settings button "keyboard" is weird
+// - TODO Rotate should be moved to B and also disabled when recipe page is open
+//
 //
 // - store should give one free reroll per day
 // - add post office for free items from new recipies

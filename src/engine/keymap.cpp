@@ -266,13 +266,13 @@ std::string icon_for_button(GamepadButton input) {
             // return "PS3: Triangle, Xbox: Y";
             // TODO for now just use the xbox ones
             return "xbox_button_color_y";
-        case raylib::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT:
+        case raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT:
             // return "PS3: Square, Xbox: X";
             return "xbox_button_color_x";
         case raylib::GAMEPAD_BUTTON_RIGHT_FACE_DOWN:
             // return "PS3: Cross, Xbox: A";
             return "xbox_button_color_a";
-        case raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT:
+        case raylib::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT:
             // return "PS3: Circle, Xbox: B";
             return "xbox_button_color_b";
         case raylib::GAMEPAD_BUTTON_MIDDLE_LEFT:
