@@ -61,13 +61,16 @@ struct HasDayNightTimer : public BaseComponent {
     HasDayNightTimer() : HasDayNightTimer(10.f) {}
 
     [[nodiscard]] int days_until() const { return days_until_rent_due; }
-    [[nodiscard]] float rent_due() const { return amount_due; }
+    [[nodiscard]] int rent_due() const { return amount_due; }
+    void reset_rent_days() { days_until_rent_due = 5; }
+
+    void update_amount_due(int new_amt) { amount_due = new_amt; }
 
    private:
     int day_count;
     int days_until_rent_due;
     // TODO - this should probably not live here but for now
-    float amount_due = 150;
+    int amount_due = 75;
 
     float day_length;
     float night_length;

@@ -1856,11 +1856,27 @@ void run_timer(Entity& entity, float dt) {
 
     if (ht.is_daytime()) {
         ht.start_night();
+
+        if (entity.is_missing<IsBank>())
+            log_warn("system_manager::run_timer missing IsBank");
+
+        if (ht.days_until() <= 0) {
+            IsBank& isbank = entity.get<IsBank>();
+            if (isbank.balance() < ht.rent_due()) {
+                log_error("you ran out of money, sorry");
+            }
+            isbank.withdraw(ht.rent_due());
+            ht.reset_rent_days();
+
+            // TODO update rent due amount
+            // TODO add a way to pay ahead of time just cause
+        }
+
         return;
     }
 
-    // TODO this will only work if entity is Sophie (which it is but its not
-    // guaranteed)
+    if (entity.is_missing<IsProgressionManager>())
+        log_warn("system_manager::run_timer missing IsProgressionManager");
     system_manager::progression::collect_progression_options(entity, dt);
 
     // TODO theoretically we shouldnt start until after you choose upgrades but
@@ -2718,9 +2734,6 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                         entity);
                     system_manager::reset_max_gen_when_after_deletion(entity);
                     system_manager::reset_toilet_when_leaving_inround(entity);
-
-                    // TODO run HasDayNightTimer::start_day()
-                    // system_manager::increment_day_count(entity, dt);
 
                     // Handle updating all the things that rely on progression
                     system_manager::update_new_max_customers(entity, dt);
