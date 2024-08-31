@@ -24,8 +24,11 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::StoreCartEmpty, "gnihtoN ni ruoy trac tey ):"},
         {i18n::StoreStealingMachine,
          "oN !gnilaetS esaelP tup taht enihcam kcab"},
+        {i18n::StoreHasGarbage, "esaelP tnod evael ruoy hsart ni ereh"},
         {i18n::StoreTip, "{transaction_extra}pit"},
         {i18n::StoreBalance, ":ecnalaB{balance_amount}"},
+        {i18n::StoreRentDue, "tneR :euD{rent_due}"},
+        {i18n::StoreRentDaysRemaining, "syaD :gniniameR{days_until_rent}"},
         {i18n::StoreInCart, "nI :traC{cart_amount}"},
         {i18n::StoreReroll, "lloreR pohs rof{reroll_cost}snioc"},
 

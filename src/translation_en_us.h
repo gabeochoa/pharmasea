@@ -27,6 +27,8 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::StoreHasGarbage, "Please dont leave your trash in here"},
         {i18n::StoreTip, "{transaction_extra} tip"},
         {i18n::StoreBalance, "Balance: {balance_amount}"},
+        {i18n::StoreRentDue, "Rent Due: {rent_due}"},
+        {i18n::StoreRentDaysRemaining, "Days Remaining: {days_until_rent}"},
         {i18n::StoreInCart, "In Cart: {cart_amount}"},
         {i18n::StoreReroll, "Reroll shop for {reroll_cost} coins"},
 

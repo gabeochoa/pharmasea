@@ -2734,6 +2734,9 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                     system_manager::upgrade::on_round_finished(entity, dt);
                 });
             } else {
+                // TODO - check if days until is zero and handle end of game
+                // TODO - if had enough money, reset days until to 5
+
                 for_each(entity_list, dt, [](Entity& entity, float) {
                     system_manager::day_night::on_day_ended(entity);
                     system_manager::close_buildings_when_night(entity);

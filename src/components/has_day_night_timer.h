@@ -41,6 +41,8 @@ struct HasDayNightTimer : public BaseComponent {
         day_count++;
         current_length += day_length;
         needs_to_process_change = true;
+
+        days_until_rent_due--;
     }
 
     void start_night() {
@@ -51,14 +53,18 @@ struct HasDayNightTimer : public BaseComponent {
 
     HasDayNightTimer(float round_length)
         : day_count(0),
+          days_until_rent_due(5),
           day_length(round_length),
           night_length(round_length),
           current_length(round_length) {}
 
     HasDayNightTimer() : HasDayNightTimer(10.f) {}
 
+    [[nodiscard]] int days_until() const { return days_until_rent_due; }
+
    private:
     int day_count;
+    int days_until_rent_due;
 
     float day_length;
     float night_length;
@@ -71,6 +77,9 @@ struct HasDayNightTimer : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+
+        s.value4b(day_count);
+        s.value4b(days_until_rent_due);
 
         s.value4b(day_length);
         s.value4b(night_length);

@@ -260,6 +260,17 @@ void render_round_timer(const Entity& entity, float) {
              TranslatableString(strings::i18n::PLANNING_CUSTOMERS_COMING)
                  .set_param(strings::i18nParam::CustomerCount,
                             iss.get_max_spawned()));
+
+        spawn_count.y += 80;
+        text(::ui::Widget{spawn_count},
+             TranslatableString(strings::i18n::StoreRentDue)
+                 .set_param(strings::i18nParam::RentDue, 350));
+
+        spawn_count.y += 80;
+        text(
+            ::ui::Widget{spawn_count},
+            TranslatableString(strings::i18n::StoreRentDaysRemaining)
+                .set_param(strings::i18nParam::DaysUntilRent, ht.days_until()));
     }
 }
 
