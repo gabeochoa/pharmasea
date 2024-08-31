@@ -929,6 +929,27 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
     });
 }
 
+void generate_machines_for_new_upgrades() {
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+    OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
+        IsFloorMarker::Type::Planning_SpawnArea);
+
+    for (EntityType et : irsm.config.store_to_spawn) {
+        auto& entity = EntityHelper::createEntity();
+        bool success =
+            convert_to_type(et, entity, purchase_area->get<Transform>().as2());
+        if (!success) {
+            entity.cleanup = true;
+            log_error(
+                "Store spawn of newly unlocked item failed to "
+                "generate");
+        }
+    }
+    irsm.config.store_to_spawn.clear();
+}
+
 void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
@@ -982,6 +1003,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     // TODO If an upgrade also unlocked machines, we probably
                     // have to handle it
                     // spawn_machines_for_new_unlock_DONOTCALL(irsm);
+                    generate_machines_for_new_upgrades();
 
                     break;
                 }
@@ -2392,30 +2414,6 @@ void generate_store_options() {
             spawn_position.y = reset_y;
         }
     }
-
-    // Add any that came from upgrades
-
-    // Note we spawn free items in the purchase area so its more obvious
-    // that they are free
-    OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
-        IsFloorMarker::Type::Store_PurchaseArea);
-
-    for (EntityType et : irsm.config.store_to_spawn) {
-        auto& entity = EntityHelper::createEntity();
-        entity.addComponent<IsStoreSpawned>();
-        entity.addComponent<IsFreeInStore>();
-
-        bool success =
-            convert_to_type(et, entity, purchase_area->get<Transform>().as2());
-
-        if (!success) {
-            entity.cleanup = true;
-            log_error(
-                "Store spawn of newly unlocked item failed to "
-                "generate");
-        }
-    }
-    irsm.config.store_to_spawn.clear();
 
     for (RefEntity door :
          EntityQuery()
