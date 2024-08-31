@@ -45,8 +45,6 @@
 // - TODO cant make drinks at night because R is rotate...
 // - TODO show the user what their current min and max profit will be before the
 // day starts or show them how much theyve made today so far
-// - TODO keeps respawning roomba, we should probably not do that anymore...just
-// need to clean it up at end of day i guess
 //
 // - store should give one free reroll per day
 // - add post office for free items from new recipies

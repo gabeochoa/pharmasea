@@ -2768,7 +2768,12 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                     system_manager::close_buildings_when_night(entity);
                     system_manager::day_night::on_night_started(entity);
 
-                    system_manager::release_mop_buddy_at_start_of_day(entity);
+                    // - TODO keeps respawning roomba, we should probably not do
+                    // that anymore...just need to clean it up at end of day i
+                    // guess or let him roam??
+                    //
+                    // system_manager::release_mop_buddy_at_start_of_day(entity);
+                    //
                     system_manager::delete_trash_when_leaving_planning(entity);
                     // TODO
                     // system_manager::upgrade::on_round_started(entity, dt);
