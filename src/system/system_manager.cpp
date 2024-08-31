@@ -2662,10 +2662,6 @@ void SystemManager::process_state_change(
         // the game state didnt actually change in a meaningful way
         if (old_state == game::State::Paused) continue;
         if (new_state == game::State::Paused) continue;
-
-        if (old_state == game::State::Lobby) {
-            system_manager::store::generate_store_options();
-        }
     }
 
     transitions.clear();
