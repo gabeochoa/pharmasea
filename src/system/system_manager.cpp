@@ -741,6 +741,9 @@ void delete_floating_items_when_leaving_inround(Entity& entity) {
     // Its being held by something so we'll get it in the function below
     if (ii.is_held()) return;
 
+    // Skip the mop buddy for now
+    if (check_type(entity, EntityType::MopBuddy)) return;
+
     // mark it for cleanup
     entity.cleanup = true;
 }
@@ -2741,10 +2744,11 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                     system_manager::day_night::on_night_ended(entity);
                     system_manager::day_night::on_day_started(entity);
 
+                    system_manager::delete_floating_items_when_leaving_inround(
+                        entity);
+
                     // TODO these we likely no longer need to do
                     if (false) {
-                        system_manager::
-                            delete_floating_items_when_leaving_inround(entity);
                         system_manager::delete_held_items_when_leaving_inround(
                             entity);
 
@@ -2757,13 +2761,18 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                         // off if they arent served when their patience runs out
                         system_manager::delete_customers_when_leaving_inround(
                             entity);
+
+                        // I dont think we want to do this since we arent
+                        // deleting anything anymore maybe there might be a
+                        // problem with spawning a simple syurup in the store??
+                        system_manager::reset_max_gen_when_after_deletion(
+                            entity);
                     }
 
                     system_manager::tell_customers_to_leave(entity);
 
                     system_manager::reset_customer_spawner_when_leaving_inround(
                         entity);
-                    system_manager::reset_max_gen_when_after_deletion(entity);
 
                     // Handle updating all the things that rely on progression
                     system_manager::update_new_max_customers(entity, dt);
@@ -2790,7 +2799,7 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                     // that anymore...just need to clean it up at end of day i
                     // guess or let him roam??
                     //
-                    // system_manager::release_mop_buddy_at_start_of_day(entity);
+                    system_manager::release_mop_buddy_at_start_of_day(entity);
                     //
                     system_manager::delete_trash_when_leaving_planning(entity);
                     // TODO
