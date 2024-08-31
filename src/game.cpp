@@ -44,7 +44,6 @@
 // - TODO show the user what their current min and max profit will be before the
 // day starts or show them how much theyve made today so far
 // - TODO big city upgrade didnt double estimated profit
-// - TODO roomba wasnt released
 // - TODO beer cannot be placed inside and filled more than once?
 // - TODO settings button "keyboard" is weird
 // - TODO Rotate should be also disabled when recipe page is open

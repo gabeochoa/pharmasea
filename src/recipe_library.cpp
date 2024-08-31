@@ -7,6 +7,9 @@
 #include "components/is_progression_manager.h"
 #include "entity_query.h"
 
+// TODO at some point these should be one path instead of separate
+// so we can avoid weirdness
+//
 int get_average_unlocked_drink_cost() {
     OptEntity opt_sophie =
         EntityQuery().whereHasComponent<IsProgressionManager>().gen_first();
@@ -16,10 +19,11 @@ int get_average_unlocked_drink_cost() {
 
     const IsProgressionManager& progressionManager =
         sophie.get<IsProgressionManager>();
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
     DrinkSet unlockedDrinks = progressionManager.enabled_drinks();
 
-    int total_price = 0;
+    float total_price = 0;
     int num_drinks = (int) unlockedDrinks.count();
 
     bitset_utils::for_each_enabled_bit(unlockedDrinks, [&](size_t index) {
@@ -29,6 +33,11 @@ int get_average_unlocked_drink_cost() {
 
         return bitset_utils::ForEachFlow::NormalFlow;
     });
+
+    // TODO this doesnt work because irsm config isnt serialized....
+    // because its a map of variant, its not really that easy to do
+    float cost_multiplier = irsm.get<float>(ConfigKey::DrinkCostMultiplier);
+    total_price *= cost_multiplier;
 
     return (int) (total_price / num_drinks);
 }
