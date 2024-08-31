@@ -651,8 +651,8 @@ void KeyMap::load_game_keys() {
     };
 
     game_map[InputName::PlayerRotateFurniture] = {
-        raylib::KEY_R,
-        raylib::GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
+        raylib::KEY_F,
+        raylib::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT,
     };
 
     game_map[InputName::PlayerDoWork] = {

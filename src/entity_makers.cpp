@@ -917,7 +917,7 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
 
     vomit.addComponent<HasWork>().init(
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
-            if (SystemManager::get().is_daytime()) return;
+            // if (SystemManager::get().is_daytime()) return;
 
             const auto validate =
                 [](const Entity& entity) -> std::pair<bool, float> {

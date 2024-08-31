@@ -299,8 +299,8 @@ void fishing_game(Entity& player, float frame_dt) {
 
 namespace planning {
 void rotate_furniture(const Entity& player) {
-    // Cant rotate outside planning mode
-    if (SystemManager::get().is_nighttime()) return;
+    // TODO decide if we care about rotate outside planning mode
+    // if (SystemManager::get().is_nighttime()) return;
 
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 

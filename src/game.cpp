@@ -45,11 +45,17 @@
 // day starts or show them how much theyve made today so far
 // - TODO big city upgrade didnt double estimated profit
 // - TODO roomba wasnt released
-// - TODO cant clean during the day
 // - TODO beer cannot be placed inside and filled more than once?
-// - TODO controls arent labeled correctly in the settings page
 // - TODO settings button "keyboard" is weird
-// - TODO Rotate should be moved to B and also disabled when recipe page is open
+// - TODO Rotate should be also disabled when recipe page is open
+// - TODO ffwding will basically tell everyone to go home even if they had a
+// drink. you probably want to allow people to pay even when closed? maybe just
+// spawn everyone in the first half of the day, and only allow you to ffwd until
+// everyone is spawned and then stop
+// - TODO you can buy only one time per day which doesnt really make sense
+// - TODO when you buy it doesnt clean up the items just the machines
+// - TODO dont allow cleaning the toilet until no one is using it
+//
 //
 //
 // - store should give one free reroll per day
