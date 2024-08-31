@@ -1914,9 +1914,10 @@ void run_timer(Entity& entity, float dt) {
             }
             isbank.withdraw(ht.rent_due());
             ht.reset_rent_days();
-
             // TODO update rent due amount
-            // TODO add a way to pay ahead of time just cause
+            ht.update_amount_due(ht.rent_due() + 25);
+
+            // TODO add a way to pay ahead of time ?? design
         }
 
         return;
