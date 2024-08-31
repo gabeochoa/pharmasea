@@ -2747,17 +2747,11 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                     system_manager::upgrade::on_round_finished(entity, dt);
                 });
             } else {
-                // TODO - check if days until is zero and handle end of game
-                // TODO - if had enough money, reset days until to 5
-
                 for_each(entity_list, dt, [](Entity& entity, float) {
                     system_manager::day_night::on_day_ended(entity);
                     system_manager::close_buildings_when_night(entity);
                     system_manager::day_night::on_night_started(entity);
 
-                    //
-                    system_manager::
-                        handle_autodrop_furniture_when_exiting_planning(entity);
                     system_manager::release_mop_buddy_at_start_of_day(entity);
                     system_manager::delete_trash_when_leaving_planning(entity);
                     // TODO
