@@ -245,41 +245,18 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
     }
 
     // I'm relatively happy with my drink
-    const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    // TODO :DRINK_PRICE: this should be a single place
-    // mark how much we are paying for this drink
-    // + how much we will tip
-    {
-        float base_price = get_base_price_for_drink(canOrderDrink.get_order());
+    auto [price, tip] = get_price_for_order(
+        {.order = canOrderDrink.get_order(),
+         .max_pathfind_distance =
+             (int) entity.get<CanPathfind>().get_max_length(),
+         .patience_pct = entity.get<HasPatience>().pct()});
 
-        float speakeasy_multiplier = 1.f;
-        if (irsm.has_upgrade_unlocked(UpgradeClass::Speakeasy)) {
-            speakeasy_multiplier +=
-                (0.01f * entity.get<CanPathfind>().get_max_length());
-        }
-
-        float cost_multiplier = irsm.get<float>(ConfigKey::DrinkCostMultiplier);
-
-        float price_float = cost_multiplier * speakeasy_multiplier * base_price;
-        int price = static_cast<int>(price_float);
-        canOrderDrink.increment_tab(price);
-
-        log_info(
-            "Drink price was {} (base_price({}) * speakeasy({}) * "
-            "cost_mult({}) => {})",
-            price, base_price, speakeasy_multiplier, cost_multiplier,
-            price_float);
-
-        const HasPatience& hasPatience = entity.get<HasPatience>();
-        int tip = (int) fmax(0, ceil(price * 0.8f * hasPatience.pct()));
-        canOrderDrink.increment_tip(tip);
-
-        // If the drink has any "fancy" ingredients or other multipliers
-        canOrderDrink.apply_tip_multiplier(
-            drink.get<IsDrink>().get_tip_multiplier());
-    }
+    // mark how much we will pay for the drink
+    canOrderDrink.increment_tab(price);
+    canOrderDrink.increment_tip(tip);
+    canOrderDrink.apply_tip_multiplier(
+        drink.get<IsDrink>().get_tip_multiplier());
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
     ourCHI.update(EntityHelper::getEntityAsSharedPtr(regCHI.item()), entity.id);

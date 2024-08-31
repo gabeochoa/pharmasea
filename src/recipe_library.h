@@ -93,8 +93,18 @@ static int get_base_price_for_drink(Drink drink) {
     return (num_ingredients * 5) + (num_prereqs * 10);
 }
 
+int get_average_unlocked_drink_cost();
+
 static bool needs_upgrade(Drink drink) {
     return RecipeLibrary::get()
         .get(get_string_for_drink(drink))
         .requires_upgrade;
 }
+
+struct OrderInfo {
+    Drink order;
+    int max_pathfind_distance;
+    float patience_pct;
+};
+
+std::tuple<int, int> get_price_for_order(OrderInfo order_info);

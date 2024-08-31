@@ -272,8 +272,7 @@ void render_round_timer(const Entity& entity, float) {
             TranslatableString(strings::i18n::StoreRentDaysRemaining)
                 .set_param(strings::i18nParam::DaysUntilRent, ht.days_until()));
 
-        // TODO :DRINK_PRICE: this should be a single place
-        int average_drink_price = (9);
+        int average_drink_price = get_average_unlocked_drink_cost();
         int estimated_profit = iss.get_max_spawned() * average_drink_price;
         spawn_count.y += 80;
         text(::ui::Widget{spawn_count},
