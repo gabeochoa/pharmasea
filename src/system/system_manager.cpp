@@ -715,6 +715,16 @@ void delete_customers_when_leaving_inround(Entity& entity) {
     entity.cleanup = true;
 }
 
+void tell_customers_to_leave(Entity& entity) {
+    if (!check_type(entity, EntityType::Customer)) return;
+
+    // Force leaving job
+    entity.get<CanPerformJob>().current = JobType::Leaving;
+    entity.removeComponentIfExists<CanPathfind>();
+    entity.addComponent<CanPathfind>();
+    // log_info("telling entity {} to leave", entity.id);
+}
+
 // TODO :DESIGN: do we actually want to do this?
 void reset_toilet_when_leaving_inround(Entity& entity) {
     if (entity.is_missing<IsToilet>()) return;
@@ -2705,7 +2715,6 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                                                                       dt);
         system_manager::pass_time_for_transaction_animation(entity, dt);
 
-        // TODO how dangerous is doing this (instead of day-only like before)
         system_manager::ai::process_(entity, dt);
 
         // this function also handles the map validation code
@@ -2740,16 +2749,9 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                         // off if they arent served when their patience runs out
                         system_manager::delete_customers_when_leaving_inround(
                             entity);
-
-                        // NOTE: we likely dont need this any more because they
-                        // can pay after day happens its fine....
-                        //
-                        // I think this will only happen when you debug change
-                        // round while customers are already in line, but doesnt
-                        // hurt to reset
-                        system_manager::
-                            reset_register_queue_when_leaving_inround(entity);
                     }
+
+                    system_manager::tell_customers_to_leave(entity);
 
                     system_manager::reset_customer_spawner_when_leaving_inround(
                         entity);
@@ -2765,7 +2767,15 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
 
                 for_each(entity_list, dt, [](Entity& entity, float) {
                     system_manager::day_night::on_day_ended(entity);
+
+                    // just in case theres anyone in the queue still, just clear
+                    // it before the customers start coming in
+                    //
+                    system_manager::reset_register_queue_when_leaving_inround(
+                        entity);
+
                     system_manager::close_buildings_when_night(entity);
+
                     system_manager::day_night::on_night_started(entity);
 
                     // - TODO keeps respawning roomba, we should probably not do
