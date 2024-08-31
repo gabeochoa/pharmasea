@@ -2626,6 +2626,13 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
     // This check might cause lots of issues when high latency
     if (!is_server()) return;
 
+    timePassed += dt;
+
+    if (timePassed >= 0.016f) {
+        sixty_fps_update(entities, timePassed);
+        timePassed = 0;
+    }
+
     // actual update
     {
         // TODO add num entities to debug overlay
@@ -2645,7 +2652,7 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
             }
             game_like_update(entities, dt);
         }
-        always_update(entities, dt);
+        every_frame_update(entities, dt);
         process_state_change(entities, dt);
     }
 }
@@ -2683,24 +2690,12 @@ void SystemManager::process_state_change(
     transitions.clear();
 }
 
-void SystemManager::always_update(const Entities& entity_list, float dt) {
-    PathRequestManager::process_responses(entity_list);
-
-    for_each(entity_list, dt, [](Entity& entity, float dt) {
+void SystemManager::sixty_fps_update(const Entities& entities, float dt) {
+    for_each(entities, dt, [](Entity& entity, float dt) {
         system_manager::process_floor_markers(entity, dt);
         system_manager::reset_highlighted(entity, dt);
 
-        // TODO should be just planning + lobby?
-        // maybe a second one for highlighting items?
-        system_manager::highlight_facing_furniture(entity, dt);
-        system_manager::transform_snapper(entity, dt);
-
-        system_manager::update_held_item_position(entity, dt);
-        system_manager::update_held_furniture_position(entity, dt);
-        system_manager::update_held_hand_truck_position(entity, dt);
-
         system_manager::process_trigger_area(entity, dt);
-        system_manager::update_visuals_for_settings_changer(entity, dt);
         system_manager::process_nux_updates(entity, dt);
 
         system_manager::render_manager::update_character_model_from_index(
@@ -2714,7 +2709,27 @@ void SystemManager::always_update(const Entities& entity_list, float dt) {
         //
         // For now its okay to stay here its just a perf thing
         system_manager::refetch_dynamic_model_names(entity, dt);
+
+        system_manager::process_floor_markers(entity, dt);
+        system_manager::reset_highlighted(entity, dt);
+
+        // TODO should be just planning + lobby?
+        // maybe a second one for highlighting items?
+        system_manager::highlight_facing_furniture(entity, dt);
+        system_manager::transform_snapper(entity, dt);
+
+        system_manager::update_held_item_position(entity, dt);
+        system_manager::update_held_furniture_position(entity, dt);
+        system_manager::update_held_hand_truck_position(entity, dt);
+
+        system_manager::update_visuals_for_settings_changer(entity, dt);
     });
+}
+
+void SystemManager::every_frame_update(const Entities& entity_list, float) {
+    PathRequestManager::process_responses(entity_list);
+
+    // for_each(entity_list, dt, [](Entity& entity, float dt) {});
 }
 
 void SystemManager::game_like_update(const Entities& entity_list, float dt) {

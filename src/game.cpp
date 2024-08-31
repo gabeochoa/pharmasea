@@ -51,7 +51,7 @@
 // spawn everyone in the first half of the day, and only allow you to ffwd until
 // everyone is spawned and then stop
 // - TODO you can buy only one time per day which doesnt really make sense
-// - TODO when you buy it doesnt clean up the items just the machines
+//  -> should you just walk out of the store and be charged? amazon go style?
 //
 //
 //

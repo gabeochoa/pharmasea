@@ -41,6 +41,9 @@ struct SystemManager {
     Entities local_players;
     Entities oldAll;
 
+    // so that we run the first time always
+    float timePassed = 0.016f;
+
     SystemManager() {
         // Register state manager
         GameState::get().register_on_change(
@@ -99,7 +102,8 @@ struct SystemManager {
     }
 
     void process_state_change(const Entities& entities, float dt);
-    void always_update(const Entities& entity_list, float dt);
+    void sixty_fps_update(const Entities& entity_list, float dt);
+    void every_frame_update(const Entities& entity_list, float dt);
     void game_like_update(const Entities& entity_list, float dt);
     void in_round_update(const Entities& entity_list, float dt);
     void model_test_update(const Entities& entity_list, float dt);

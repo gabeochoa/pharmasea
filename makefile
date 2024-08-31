@@ -27,7 +27,7 @@ OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
 OUTPUT_EXE := pharmasea.exe
 
 # CXX := g++
-cxx := clang++ 
+cxx := clang++
 # cxx := clang++ --analyze
 # CXX := include-what-you-use
 
