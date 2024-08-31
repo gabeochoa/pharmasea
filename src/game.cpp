@@ -41,20 +41,17 @@
 // they leave
 // - TODO handtruck reach is really bad, should just make it pretend to be
 // normal grab/drop, for now you dont need it
-// - TODO show the user what their current min and max profit will be before the
-// day starts or show them how much theyve made today so far
 // - TODO big city upgrade didnt double estimated profit
 //  => this is because the config data isnt serialized
 // - TODO beer cannot be placed inside and filled more than once?
 // - TODO settings button "keyboard" is weird
-// - TODO Rotate should be also disabled when recipe page is open
+// - TODO Rotate should be disabled when recipe page is open
 // - TODO ffwding will basically tell everyone to go home even if they had a
 // drink. you probably want to allow people to pay even when closed? maybe just
 // spawn everyone in the first half of the day, and only allow you to ffwd until
 // everyone is spawned and then stop
 // - TODO you can buy only one time per day which doesnt really make sense
 // - TODO when you buy it doesnt clean up the items just the machines
-// - TODO dont allow cleaning the toilet until no one is using it
 //
 //
 //

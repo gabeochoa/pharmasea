@@ -2753,10 +2753,6 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                         system_manager::delete_held_items_when_leaving_inround(
                             entity);
 
-                        // we want you to always have to clean >:)
-                        system_manager::reset_toilet_when_leaving_inround(
-                            entity);
-
                         // TODO I dont actually think we need to do anything
                         // here because the customers should probably just walk
                         // off if they arent served when their patience runs out
@@ -2771,6 +2767,13 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                     }
 
                     system_manager::tell_customers_to_leave(entity);
+
+                    // TODO we want you to always have to clean >:)
+                    // but we need some way of having the customers
+                    // finishe the last job they were doing (as long as it isnt
+                    // ordering) and then leaving, otherwise the toilet is stuck
+                    // "inuse" when its really not
+                    system_manager::reset_toilet_when_leaving_inround(entity);
 
                     system_manager::reset_customer_spawner_when_leaving_inround(
                         entity);

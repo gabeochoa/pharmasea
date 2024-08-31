@@ -601,6 +601,11 @@ void make_toilet(Entity& toilet, vec2 pos) {
         [](Entity& toilet, HasWork& hasWork, Entity& /*player*/, float dt) {
             IsToilet& istoilet = toilet.get<IsToilet>();
 
+            // Dont allow cleaning when someone is currently using it
+            if (istoilet.state == IsToilet::State::InUse) {
+                return;
+            }
+
             // TODO figure out a better number
             // recently cleaned
             if (istoilet.pct_full() <= 0.25f) {
