@@ -9,7 +9,6 @@
 #include "engine/pathfinder.h"
 #include "entity_helper.h"
 #include "entity_query.h"
-#include "strings.h"
 #include "wave_collapse.h"
 
 namespace generation {

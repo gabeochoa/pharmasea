@@ -3,6 +3,7 @@
 
 #include "../engine/log.h"
 #include "../engine/statemanager.h"
+#include "../strings.h"
 #include "../vec_util.h"
 #include "base_component.h"
 

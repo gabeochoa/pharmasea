@@ -21,7 +21,6 @@
 #include "entity.h"
 #include "entity_makers.h"
 #include "job.h"
-#include "strings.h"
 
 enum struct NamedEntity {
     Sophie,

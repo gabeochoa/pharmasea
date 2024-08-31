@@ -614,3 +614,10 @@ void Preload::load_shaders() {
             std::get<2>(s));
     }
 }
+
+void Preload::load_translations() {
+    // TODO :IMPACT: load correct language pack for settings file
+    auto path = Files::get().fetch_resource_path(
+        strings::settings::TRANSLATIONS, "en_us.mo");
+    on_language_change("en_us", path.c_str());
+}

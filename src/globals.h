@@ -2,7 +2,6 @@
 #pragma once
 
 #include "engine/globals.h"
-#include "strings.h"
 
 // YY / MM / DD (Monday of week)
 constexpr std::string_view VERSION = "alpha_0.24.05.11";

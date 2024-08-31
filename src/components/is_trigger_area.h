@@ -3,6 +3,7 @@
 #include "../building_locations.h"
 #include "../engine/is_server.h"
 #include "../engine/log.h"
+#include "../strings.h"
 #include "base_component.h"
 
 struct IsTriggerArea;

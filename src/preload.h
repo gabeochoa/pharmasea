@@ -20,7 +20,6 @@
 #include "engine/texture_library.h"
 #include "globals.h"
 #include "resources/fonts/Karmina_Regular_256.h"
-#include "strings.h"
 
 inline raylib::Font load_karmina_regular() {
     auto font = font::LoadFont_KarminaRegular256();
@@ -91,12 +90,7 @@ struct Preload {
     void load_map_generation_info();
     void load_keymapping();
 
-    void load_translations() {
-        // TODO :IMPACT: load correct language pack for settings file
-        auto path = Files::get().fetch_resource_path(
-            strings::settings::TRANSLATIONS, "en_us.mo");
-        on_language_change("en_us", path.c_str());
-    }
+    void load_translations();
 
     void _load_font_from_name(const std::string& filename,
                               const std::string& lang);
