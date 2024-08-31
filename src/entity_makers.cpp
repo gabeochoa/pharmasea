@@ -1029,7 +1029,9 @@ void make_mop(Item& mop, vec2 pos) {
 }
 void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
                            float dt) {
-    if (SystemManager::get().is_daytime()) return;
+    // TODO should we only allow making drinks during the night time?
+    // if (SystemManager::get().is_daytime()) return;
+    //
     if (drink.is_missing<IsItem>()) return;
     if (drink.is_missing<IsDrink>()) return;
 

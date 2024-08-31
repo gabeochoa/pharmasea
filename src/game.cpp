@@ -37,13 +37,14 @@
 // smaller outside one? how to handle overlapping ui when we forget to check)
 // - TODO should store teleport items or do you walk them over
 // - TODO update reason text to say "customers wont like it if you dont "
-// - TODO its a little awkward when the day ends and customers are still paying
+// - TODO its a little awkward when the day ends and customers should pay but
+// they leave
 // - TODO handtruck reach is really bad, should just make it pretend to be
 // normal grab/drop, for now you dont need it
-// - TODO cant make drinks at night because R is rotate...
 // - TODO show the user what their current min and max profit will be before the
 // day starts or show them how much theyve made today so far
 // - TODO big city upgrade didnt double estimated profit
+//  => this is because the config data isnt serialized
 // - TODO beer cannot be placed inside and filled more than once?
 // - TODO settings button "keyboard" is weird
 // - TODO Rotate should be also disabled when recipe page is open
