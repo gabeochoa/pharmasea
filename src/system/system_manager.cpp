@@ -2707,6 +2707,9 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                                                                       dt);
         system_manager::pass_time_for_transaction_animation(entity, dt);
 
+        // TODO how dangerous is doing this (instead of day-only like before)
+        system_manager::ai::process_(entity, dt);
+
         // this function also handles the map validation code
         // rename it
         system_manager::update_sophie(entity, dt);
@@ -2723,30 +2726,45 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                     system_manager::day_night::on_night_ended(entity);
                     system_manager::day_night::on_day_started(entity);
 
-                    //
-                    system_manager::delete_floating_items_when_leaving_inround(
-                        entity);
-                    system_manager::delete_held_items_when_leaving_inround(
-                        entity);
-                    system_manager::delete_customers_when_leaving_inround(
-                        entity);
+                    // TODO these we likely no longer need to do
+                    if (false) {
+                        system_manager::
+                            delete_floating_items_when_leaving_inround(entity);
+                        system_manager::delete_held_items_when_leaving_inround(
+                            entity);
+
+                        // we want you to always have to clean >:)
+                        system_manager::reset_toilet_when_leaving_inround(
+                            entity);
+
+                        // TODO I dont actually think we need to do anything
+                        // here because the customers should probably just walk
+                        // off if they arent served when their patience runs out
+                        system_manager::delete_customers_when_leaving_inround(
+                            entity);
+
+                        // NOTE: we likely dont need this any more because they
+                        // can pay after day happens its fine....
+                        //
+                        // I think this will only happen when you debug change
+                        // round while customers are already in line, but doesnt
+                        // hurt to reset
+                        system_manager::
+                            reset_register_queue_when_leaving_inround(entity);
+                    }
+
                     system_manager::reset_customer_spawner_when_leaving_inround(
                         entity);
                     system_manager::reset_max_gen_when_after_deletion(entity);
-                    system_manager::reset_toilet_when_leaving_inround(entity);
 
                     // Handle updating all the things that rely on progression
                     system_manager::update_new_max_customers(entity, dt);
 
-                    // I think this will only happen when you debug change round
-                    // while customers are already in line, but doesnt hurt to
-                    // reset
-                    system_manager::reset_register_queue_when_leaving_inround(
-                        entity);
-
                     system_manager::upgrade::on_round_finished(entity, dt);
                 });
             } else {
+                system_manager::store::generate_store_options();
+
                 for_each(entity_list, dt, [](Entity& entity, float) {
                     system_manager::day_night::on_day_ended(entity);
                     system_manager::close_buildings_when_night(entity);
@@ -2784,7 +2802,6 @@ void SystemManager::in_round_update(
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::reset_customers_that_need_resetting(entity);
         //
-        system_manager::ai::process_(entity, dt);
         system_manager::process_grabber_items(entity, dt);
         system_manager::process_conveyer_items(entity, dt);
         system_manager::process_grabber_filter(entity, dt);
