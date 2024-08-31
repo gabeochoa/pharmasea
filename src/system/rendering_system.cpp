@@ -1250,6 +1250,10 @@ void render_normal(const Entity& entity, float dt) {
         return;
     }
 
+    if (check_type(entity, EntityType::Door)) {
+        if (entity.is_missing<IsSolid>()) return;
+    }
+
     render_speech_bubble(entity, dt);
     render_patience(entity, dt);
     render_toilet_floor_timer(entity, dt);
