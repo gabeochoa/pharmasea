@@ -216,6 +216,7 @@ enum struct i18nParam {
     RerollCost,
     RentDue,
     DaysUntilRent,
+    EstimatedProfit,
 };
 const std::map<i18nParam, std::string> translation_param = {{
     {i18nParam::ExampleFormattedParam, "username"},
@@ -229,6 +230,7 @@ const std::map<i18nParam, std::string> translation_param = {{
     {i18nParam::RerollCost, "reroll_cost"},
     {i18nParam::RentDue, "rent_due"},
     {i18nParam::DaysUntilRent, "days_until_rent"},
+    {i18nParam::EstimatedProfit, "estimated_profit"},
 }};
 
 enum struct i18n {
@@ -252,6 +254,7 @@ enum struct i18n {
     StoreReroll,
     StoreRentDue,
     StoreRentDaysRemaining,
+    StoreEstimatedProfit,
 
     //
     START_GAME,

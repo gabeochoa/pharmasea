@@ -248,6 +248,7 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
+    // TODO :DRINK_PRICE: this should be a single place
     // mark how much we are paying for this drink
     // + how much we will tip
     {
