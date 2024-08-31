@@ -1320,6 +1320,14 @@ bool _create_nuxes(Entity&) {
     if (1) {
         // Find register
         {
+            // move the register out to the Planning_SpawnArea
+            {
+                OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
+                    IsFloorMarker::Type::Planning_SpawnArea);
+                reg->get<Transform>().update(
+                    vec::to3(purchase_area->get<Transform>().as2()));
+            }
+
             auto& entity = EntityHelper::createEntity();
             make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
 
@@ -1345,7 +1353,7 @@ bool _create_nuxes(Entity&) {
         // Grab register
         {
             const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
-                menu::State::Game, InputName::PlayerPickup);
+                menu::State::Game, InputName::PlayerHandTruckInteract);
             const auto tex_name = KeyMap::get().icon_for_input(valid_inputs[0]);
 
             auto& entity = EntityHelper::createEntity();
@@ -1736,8 +1744,12 @@ void process_nux_updates(Entity& entity, float dt) {
 
     // Tutorial isnt on so dont do any nuxes
     if (!entity.get<IsRoundSettingsManager>()
-             .interactive_settings.is_tutorial_active)
+             .interactive_settings.is_tutorial_active) {
         return;
+    }
+
+    // only generate the nux once you leave the lobby
+    if (!GameState::get().is_game_like()) return;
 
     IsNuxManager& inm = entity.get<IsNuxManager>();
     if (!inm.initialized) {
