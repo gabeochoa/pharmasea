@@ -222,6 +222,62 @@ TranslatableString get_status_text(const HasDayNightTimer& ht) {
         .set_param(strings::i18nParam::DayCount, dayCount);
 }
 
+void render_rent_info_when_player_in_bar(const Entity& sophie) {
+    const HasDayNightTimer& ht = sophie.get<HasDayNightTimer>();
+
+    const auto rtl = get_round_timer_location();
+
+    // Only show the customer count during planning
+    if (!SystemManager::get().is_daytime()) return;
+
+    Entity& spawner =
+        (EntityQuery().whereType(EntityType::CustomerSpawner).gen_first())
+            .asE();
+    const IsSpawner& iss = spawner.get<IsSpawner>();
+
+    //
+    Rectangle spawn_count{rtl.rounded_rect};
+    float width = spawn_count.width;
+    // float height = spawn_count.height;
+
+    if (SystemManager::get().local_players.empty()) return;
+    auto local_player = SystemManager::get().local_players[0];
+    spawn_count.y += 120;
+    if (STORE_BUILDING.is_inside(local_player->get<Transform>().as2())) {
+        spawn_count.y += 40;
+    }
+
+    text(::ui::Widget{spawn_count},
+         TranslatableString(strings::i18n::StoreRentDue)
+             .set_param(strings::i18nParam::RentDue, ht.rent_due()));
+
+    if (BAR_BUILDING.is_inside(local_player->get<Transform>().as2())) {
+        spawn_count.x += 40;
+        spawn_count.y += 60;
+
+        text(
+            ::ui::Widget{spawn_count},
+            TranslatableString(strings::i18n::StoreRentDaysRemaining)
+                .set_param(strings::i18nParam::DaysUntilRent, ht.days_until()));
+
+        int average_drink_price = get_average_unlocked_drink_cost();
+        int estimated_profit = iss.get_max_spawned() * average_drink_price;
+        spawn_count.y += 60;
+        text(::ui::Widget{spawn_count},
+             TranslatableString(strings::i18n::StoreEstimatedProfit)
+                 .set_param(strings::i18nParam::EstimatedProfit,
+                            estimated_profit));
+
+        spawn_count.y += 60;
+        text(::ui::Widget{spawn_count},
+             TranslatableString(strings::i18n::PLANNING_CUSTOMERS_COMING)
+                 .set_param(strings::i18nParam::CustomerCount,
+                            iss.get_max_spawned()));
+
+        spawn_count.width = width;
+    }
+}
+
 void render_round_timer(const Entity& entity, float) {
     if (entity.is_missing<HasDayNightTimer>()) return;
 
@@ -247,39 +303,7 @@ void render_round_timer(const Entity& entity, float) {
         is_day ? ::ui::theme::Primary : ::ui::theme::Background);
     text(::ui::Widget{rtl.rounded_rect}, get_status_text(ht));
 
-    // Only show the customer count during planning
-    if (SystemManager::get().is_daytime()) {
-        Rectangle spawn_count{rtl.rounded_rect};
-        spawn_count.y += 160;
-
-        Entity& spawner =
-            (EntityQuery().whereType(EntityType::CustomerSpawner).gen_first())
-                .asE();
-        const IsSpawner& iss = spawner.get<IsSpawner>();
-        text(::ui::Widget{spawn_count},
-             TranslatableString(strings::i18n::PLANNING_CUSTOMERS_COMING)
-                 .set_param(strings::i18nParam::CustomerCount,
-                            iss.get_max_spawned()));
-
-        spawn_count.y += 80;
-        text(::ui::Widget{spawn_count},
-             TranslatableString(strings::i18n::StoreRentDue)
-                 .set_param(strings::i18nParam::RentDue, ht.rent_due()));
-
-        spawn_count.y += 80;
-        text(
-            ::ui::Widget{spawn_count},
-            TranslatableString(strings::i18n::StoreRentDaysRemaining)
-                .set_param(strings::i18nParam::DaysUntilRent, ht.days_until()));
-
-        int average_drink_price = get_average_unlocked_drink_cost();
-        int estimated_profit = iss.get_max_spawned() * average_drink_price;
-        spawn_count.y += 80;
-        text(::ui::Widget{spawn_count},
-             TranslatableString(strings::i18n::StoreEstimatedProfit)
-                 .set_param(strings::i18nParam::EstimatedProfit,
-                            estimated_profit));
-    }
+    render_rent_info_when_player_in_bar(entity);
 }
 
 void render_animated_transactions(const Entity& entity, float) {
@@ -354,7 +378,7 @@ void render_store(const Entity& entity, float) {
         int balance = bank.balance();
         int cart = bank.cart();
 
-        {
+        if (false) {
             Rectangle spawn_count(left_col);
             spawn_count.y += 60;
 
@@ -375,14 +399,10 @@ void render_store(const Entity& entity, float) {
         }
     };
 
+    auto rtl = get_round_timer_location().rounded_rect;
+    render_balances(rtl);
+
     auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-    auto left_col = rect::tpad(window, 40);
-    left_col = rect::rpad(left_col, 20);
-    left_col = rect::lpad(left_col, 10);
-    left_col = rect::bpad(left_col, 20);
-
-    render_balances(left_col);
-
     auto content = rect::tpad(window, 30);
     content = rect::lpad(content, 20);
     content = rect::rpad(content, 75);
