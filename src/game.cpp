@@ -50,12 +50,11 @@
 // drink. you probably want to allow people to pay even when closed? maybe just
 // spawn everyone in the first half of the day, and only allow you to ffwd until
 // everyone is spawned and then stop
-// - TODO you can buy only one time per day which doesnt really make sense
-//  -> should you just walk out of the store and be charged? amazon go style?
 //
 //
 //
 // - store should give one free reroll per day
+//  -> should you just walk out of the store and be charged? amazon go style?
 // - add post office for free items from new recipies
 // -> mailbox upgrade which gives a closer place to pick up items
 // - school should give new recipies
