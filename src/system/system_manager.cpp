@@ -71,6 +71,7 @@ namespace store {
 void cart_management(Entity&, float);
 void cleanup_old_store_options();
 void generate_store_options();
+void open_store_doors();
 void move_purchased_furniture();
 }  // namespace store
 
@@ -1051,6 +1052,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
     switch (ita.type) {
         case IsTriggerArea::Store_Reroll: {
+            system_manager::store::cleanup_old_store_options();
             system_manager::store::generate_store_options();
             {
                 OptEntity sophie =
@@ -1134,13 +1136,16 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             // or something  (maybe delivery is an upgrade?)
         case IsTriggerArea::Store_BackToPlanning: {
             system_manager::store::move_purchased_furniture();
-            system_manager::store::cleanup_old_store_options();
 
             GameState::get().transition_to_game();
-            SystemManager::get().for_each_old([](Entity& e) {
-                if (!check_type(e, EntityType::Player)) return;
-                move_player_SERVER_ONLY(e, game::State::InGame);
-            });
+
+            for (RefEntity player :
+                 EntityQuery(SystemManager::get().oldAll)
+                     .whereType(EntityType::Player)
+                     .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
+                     .gen()) {
+                move_player_SERVER_ONLY(player, game::State::InGame);
+            }
         } break;
     }
 }
@@ -2382,7 +2387,6 @@ void cleanup_old_store_options() {
 }
 
 void generate_store_options() {
-    system_manager::store::cleanup_old_store_options();
     // Figure out what kinds of things we can spawn generally
     // - what is spawnable?
     // - are they capped by progression? (alcohol / fruits for sure
@@ -2440,7 +2444,9 @@ void generate_store_options() {
             spawn_position.y = reset_y;
         }
     }
+}
 
+void open_store_doors() {
     for (RefEntity door :
          EntityQuery()
              .whereType(EntityType::Door)
@@ -2701,20 +2707,11 @@ void SystemManager::sixty_fps_update(const Entities& entities, float dt) {
         system_manager::render_manager::update_character_model_from_index(
             entity, dt);
 
-        // TODO :SPEED: originally this was running in
-        // "process_game_state" and only supposed to run on transitions
-        // but when i fixed it to actually run only on transitions it
-        // broke the model for vodka (just different one) and lime
-        // (invisible)
-        //
-        // For now its okay to stay here its just a perf thing
         system_manager::refetch_dynamic_model_names(entity, dt);
 
         system_manager::process_floor_markers(entity, dt);
         system_manager::reset_highlighted(entity, dt);
 
-        // TODO should be just planning + lobby?
-        // maybe a second one for highlighting items?
         system_manager::highlight_facing_furniture(entity, dt);
         system_manager::transform_snapper(entity, dt);
 
@@ -2756,6 +2753,12 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
             bool is_day = hastimer.is_daytime();
 
             if (is_day) {
+                log_info("DAY STARTED");
+                {
+                    system_manager::store::generate_store_options();
+                    system_manager::store::open_store_doors();
+                }
+
                 for_each(entity_list, dt, [](Entity& entity, float dt) {
                     system_manager::day_night::on_night_ended(entity);
                     system_manager::day_night::on_day_started(entity);
@@ -2799,7 +2802,9 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                     system_manager::upgrade::on_round_finished(entity, dt);
                 });
             } else {
-                system_manager::store::generate_store_options();
+                log_info("DAY ENDED");
+                // store setup
+                { system_manager::store::cleanup_old_store_options(); }
 
                 for_each(entity_list, dt, [](Entity& entity, float) {
                     system_manager::day_night::on_day_ended(entity);
