@@ -423,7 +423,7 @@ void LevelInfo::generate_progression_map() {
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
-            entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
+            entity, progression_origin + vec3{-5, TILESIZE / -2.f, 0}, 8, 3,
             IsTriggerArea::Progression_Option1);
         entity.get<IsTriggerArea>().set_required_entrants_type(
             IsTriggerArea::EntrantsRequired::AllInBuilding,
@@ -433,7 +433,7 @@ void LevelInfo::generate_progression_map() {
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
-            entity, progression_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
+            entity, progression_origin + vec3{5, TILESIZE / -2.f, 0}, 8, 3,
             IsTriggerArea::Progression_Option2);
         entity.get<IsTriggerArea>().set_required_entrants_type(
             IsTriggerArea::EntrantsRequired::AllInBuilding,
@@ -447,7 +447,7 @@ void LevelInfo::generate_store_map() {
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
-            entity, store_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
+            entity, store_origin + vec3{-4, TILESIZE / -2.f, 10}, 8, 3,
             IsTriggerArea::Store_BackToPlanning);
 
         entity.get<IsTriggerArea>()
@@ -455,8 +455,8 @@ void LevelInfo::generate_store_map() {
                                    -> ValidationResult {
                 // should we only run the below when there is at least one
                 // person standing on it?
-                // TODO right now we only show it when someone is standing, but
-                // it does run every frame (i think)
+                // TODO right now we only show it when someone is standing,
+                // but it does run every frame (i think)
 
                 OptEntity sophie =
                     EntityQuery().whereType(EntityType::Sophie).gen_first();
@@ -535,33 +535,33 @@ void LevelInfo::generate_store_map() {
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_floor_marker(
-            entity, store_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
+            entity, store_origin + vec3{-4, TILESIZE / -2.f, 5}, 8, 3,
             IsFloorMarker::Type::Store_PurchaseArea);
     }
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_floor_marker(
-            entity, store_origin + vec3{-5, TILESIZE / -2.f, 0}, 8, 3,
+            entity, store_origin + vec3{-4, TILESIZE / -2.f, -10}, 8, 3,
             IsFloorMarker::Type::Store_SpawnArea);
     }
 
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_floor_marker(
-            entity, store_origin + vec3{-5, TILESIZE / -2.f, 7}, 8, 3,
+            entity, store_origin + vec3{-4, TILESIZE / -2.f, 0}, 8, 3,
             IsFloorMarker::Type::Store_LockedArea);
     }
 
     {
         auto& entity = EntityHelper::createPermanentEntity();
-        furniture::make_trigger_area(entity,
-                                     store_origin + vec3{5, TILESIZE / -2.f, 0},
-                                     8, 3, IsTriggerArea::Store_Reroll);
+        furniture::make_trigger_area(
+            entity, store_origin + vec3{-4, TILESIZE / -2.f, -5}, 8, 3,
+            IsTriggerArea::Store_Reroll);
 
         entity.get<IsTriggerArea>().update_cooldown_max(2.f).set_validation_fn(
             [](const IsTriggerArea&) -> ValidationResult {
-                // TODO should we only run the below when there is at least one
-                // person standing on it?
+                // TODO should we only run the below when there is at least
+                // one person standing on it?
 
                 OptEntity sophie =
                     EntityQuery().whereType(EntityType::Sophie).gen_first();

@@ -106,12 +106,12 @@ const Building LOBBY_BUILDING =  //
         .set_area({25.f, 5.f, 15.f, 15.f});
 const Building PROGRESSION_BUILDING =
     Building()
-        .set_area({14.f, -35.f, 20.f, 25.f})
+        .set_area({12.f, -23.f, 20.f, 15.f})
         .add_door(Building::DoorLocation::Bottom);
 const Building STORE_BUILDING =  //
     Building()
-        .set_area({-18.f, -35.f, 20.f, 25.f})
+        .set_area({-14.f, -38.f, 18.f, 30.f})
         .add_door(Building::DoorLocation::Bottom);
 const Building BAR_BUILDING =  //
     Building()                 //
-        .set_area({-25.f, -5.f, 30.f, 30.f});
+        .set_area({-25.f, -5.f, 29.f, 30.f});

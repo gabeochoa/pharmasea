@@ -33,8 +33,6 @@
 // https://sonarcloud.io/project/analysis_method?id=gabeochoa_pharmasea
 
 // branch
-// - TODO UI when inside store vs UI when outside (both have balance, maybe a
-// smaller outside one? how to handle overlapping ui when we forget to check)
 // - TODO should store teleport items or do you walk them over
 // - TODO update reason text to say "customers wont like it if you dont "
 // - TODO its a little awkward when the day ends and customers should pay but
@@ -47,7 +45,6 @@
 // drink. you probably want to allow people to pay even when closed? maybe just
 // spawn everyone in the first half of the day, and only allow you to ffwd until
 // everyone is spawned and then stop
-//
 //
 //
 // - store should give one free reroll per day

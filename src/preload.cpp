@@ -485,8 +485,8 @@ void Preload::load_map_generation_info() {
             };
 
             // TODO so we draw from the center and this will look off
-            SPAWN_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z - 12, 7, 2};
-            TRASH_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z - 4, 7, 2};
+            SPAWN_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z - 9, 7, 2};
+            TRASH_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z + 2, 7, 2};
 
             auto jpatterns = contents["patterns"];
 
