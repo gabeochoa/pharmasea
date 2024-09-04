@@ -145,6 +145,9 @@ bring:
 heavycompile:
 	ls output/src | grep json | xargs -n1 -I {} wc -c output/src/{} | sort -r
 
+raylib4.5:
+	brew install --build-from-source ./raylib.rb
+
 # When using lldb, you have to run these commands:
 # 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION
 # 	c
