@@ -1,7 +1,7 @@
 
 
-RAYLIB_FLAGS := `pkg-config --cflags raylib` 
-RAYLIB_LIB := `pkg-config --libs raylib` 
+RAYLIB_FLAGS := `pkg-config --cflags raylib`
+RAYLIB_LIB := `pkg-config --libs raylib`
 
 RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) 
 
