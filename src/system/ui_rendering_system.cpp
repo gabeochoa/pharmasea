@@ -252,8 +252,7 @@ void render_rent_info_when_player_in_bar(const Entity& sophie) {
              .set_param(strings::i18nParam::RentDue, ht.rent_due()));
 
     if (BAR_BUILDING.is_inside(local_player->get<Transform>().as2())) {
-        spawn_count.x += 40;
-        spawn_count.y += 60;
+        spawn_count.y += 40;
 
         text(
             ::ui::Widget{spawn_count},
@@ -262,13 +261,13 @@ void render_rent_info_when_player_in_bar(const Entity& sophie) {
 
         int average_drink_price = get_average_unlocked_drink_cost();
         int estimated_profit = iss.get_max_spawned() * average_drink_price;
-        spawn_count.y += 60;
+        spawn_count.y += 40;
         text(::ui::Widget{spawn_count},
              TranslatableString(strings::i18n::StoreEstimatedProfit)
                  .set_param(strings::i18nParam::EstimatedProfit,
                             estimated_profit));
 
-        spawn_count.y += 60;
+        spawn_count.y += 40;
         text(::ui::Widget{spawn_count},
              TranslatableString(strings::i18n::PLANNING_CUSTOMERS_COMING)
                  .set_param(strings::i18nParam::CustomerCount,

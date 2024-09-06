@@ -311,7 +311,7 @@ void Preload::load_models() {
                 object["position_offset"][2].get<float>();
             modelInfo.rotation_angle = object["rotation_angle"].get<float>();
 
-            log_info("attempting loading {} as {} ", modelInfo.filename,
+            log_trace("attempting loading {} as {} ", modelInfo.filename,
                       modelInfo.library_name);
 
             // Load the ModelLoadingInfo into the ModelInfoLibrary
@@ -328,7 +328,7 @@ void Preload::load_models() {
                 .filename = modelInfo.filename.c_str(),
                 .libraryname = modelInfo.library_name.c_str(),
             });
-            log_info("loaded {} as {} ", modelInfo.filename,
+            log_trace("loaded {} as {} ", modelInfo.filename,
                       modelInfo.library_name);
         }
     });
