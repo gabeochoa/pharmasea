@@ -41,8 +41,6 @@
 // they leave
 // - TODO handtruck reach is really bad, should just make it pretend to be
 // normal grab/drop, for now you dont need it
-// - TODO big city upgrade didnt double estimated profit
-//  => this is because the config data isnt serialized
 // - TODO settings button "keyboard" is weird
 // - TODO Rotate should be disabled when recipe page is open
 // - TODO ffwding will basically tell everyone to go home even if they had a

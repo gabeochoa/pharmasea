@@ -22,8 +22,204 @@ struct ConfigData {
     UpgradeClassBitSet unlocked_upgrades = UpgradeClassBitSet().reset();
     std::map<UpgradeClass, int> reusable_counts;
 
-    using ConfigValueType = std::variant<int, bool, float>;
-    std::map<ConfigKey, ConfigValueType> data;
+    struct Data {
+        float roundlength;
+        float patiencemultiplier;
+        float customerspawnmultiplier;
+        float pisstimer;
+        float vomitfreqmultiplier;
+        float drinkcostmultiplier;
+        float vomitamountmultiplier;
+        float test;
+        float maxdrinktime;
+        int maxnumorders;
+        int numstorespawns;
+        int bladdersize;
+        int storererollprice;
+
+        template<typename T>
+        void set(const ConfigKey& key, const T&) {
+            log_error("Setting value for {} but not supported for {}",
+                      key_name(key), type_name<T>());
+            return T();
+        }
+
+        template<>
+        void set(const ConfigKey& key, const float& value) {
+            switch (key) {
+                case ConfigKey::RoundLength:
+                    roundlength = value;
+                    break;
+                case ConfigKey::PatienceMultiplier:
+                    patiencemultiplier = value;
+                    break;
+                case ConfigKey::CustomerSpawnMultiplier:
+                    customerspawnmultiplier = value;
+                    break;
+                case ConfigKey::PissTimer:
+                    pisstimer = value;
+                    break;
+                case ConfigKey::VomitFreqMultiplier:
+                    vomitfreqmultiplier = value;
+                    break;
+                case ConfigKey::DrinkCostMultiplier:
+                    drinkcostmultiplier = value;
+                    break;
+                case ConfigKey::VomitAmountMultiplier:
+                    vomitamountmultiplier = value;
+                    break;
+                case ConfigKey::Test:
+                    test = value;
+                    break;
+                case ConfigKey::MaxDrinkTime:
+                    maxdrinktime = value;
+                    break;
+                case ConfigKey::MaxNumOrders:
+                case ConfigKey::NumStoreSpawns:
+                case ConfigKey::BladderSize:
+                case ConfigKey::StoreRerollPrice:
+                    log_error(
+                        "Setting value for {} but not supported for float",
+                        key_name(key));
+                    break;
+            }
+        }
+
+        template<>
+        void set(const ConfigKey& key, const int& value) {
+            switch (key) {
+                case ConfigKey::RoundLength:
+                case ConfigKey::PatienceMultiplier:
+                case ConfigKey::CustomerSpawnMultiplier:
+                case ConfigKey::PissTimer:
+                case ConfigKey::VomitFreqMultiplier:
+                case ConfigKey::DrinkCostMultiplier:
+                case ConfigKey::VomitAmountMultiplier:
+                case ConfigKey::Test:
+                case ConfigKey::MaxDrinkTime:
+                    log_error("Setting value for {} but not supported for int",
+                              key_name(key));
+                    break;
+                case ConfigKey::MaxNumOrders:
+                    maxnumorders = value;
+                    break;
+                case ConfigKey::NumStoreSpawns:
+                    numstorespawns = value;
+                    break;
+                case ConfigKey::BladderSize:
+                    bladdersize = value;
+                    break;
+                case ConfigKey::StoreRerollPrice:
+                    storererollprice = value;
+                    break;
+            }
+        }
+
+        template<typename T>
+        [[nodiscard]] T get(const ConfigKey& key) const {
+            log_error("Fetching value for {} but not supported for {}",
+                      key_name(key), type_name<T>());
+            return T();
+        }
+
+        template<>
+        [[nodiscard]] float get(const ConfigKey& key) const {
+            switch (key) {
+                case ConfigKey::RoundLength:
+                    return roundlength;
+                case ConfigKey::PatienceMultiplier:
+                    return patiencemultiplier;
+                case ConfigKey::CustomerSpawnMultiplier:
+                    return customerspawnmultiplier;
+                case ConfigKey::PissTimer:
+                    return pisstimer;
+                case ConfigKey::VomitFreqMultiplier:
+                    return vomitfreqmultiplier;
+                case ConfigKey::DrinkCostMultiplier:
+                    return drinkcostmultiplier;
+                case ConfigKey::VomitAmountMultiplier:
+                    return vomitamountmultiplier;
+                case ConfigKey::Test:
+                    return test;
+                case ConfigKey::MaxDrinkTime:
+                    return maxdrinktime;
+                case ConfigKey::MaxNumOrders:
+                case ConfigKey::NumStoreSpawns:
+                case ConfigKey::BladderSize:
+                case ConfigKey::StoreRerollPrice:
+                    break;
+            }
+            log_error("Fetching value for {} but not supported for float",
+                      key_name(key));
+            return 0.f;
+        }
+
+        template<>
+        [[nodiscard]] int get(const ConfigKey& key) const {
+            switch (key) {
+                case ConfigKey::RoundLength:
+                case ConfigKey::PatienceMultiplier:
+                case ConfigKey::CustomerSpawnMultiplier:
+                case ConfigKey::PissTimer:
+                case ConfigKey::VomitFreqMultiplier:
+                case ConfigKey::DrinkCostMultiplier:
+                case ConfigKey::VomitAmountMultiplier:
+                case ConfigKey::Test:
+                case ConfigKey::MaxDrinkTime:
+                    break;
+                case ConfigKey::MaxNumOrders:
+                    return maxnumorders;
+                case ConfigKey::NumStoreSpawns:
+                    return numstorespawns;
+                case ConfigKey::BladderSize:
+                    return bladdersize;
+                case ConfigKey::StoreRerollPrice:
+                    return storererollprice;
+            }
+            log_error("Fetching value for {} but not supported for int",
+                      key_name(key));
+            return 0.f;
+        }
+
+        [[nodiscard]] bool contains(const ConfigKey& key) const {
+            switch (key) {
+                case ConfigKey::Test:
+                case ConfigKey::RoundLength:
+                case ConfigKey::MaxNumOrders:
+                case ConfigKey::PatienceMultiplier:
+                case ConfigKey::CustomerSpawnMultiplier:
+                case ConfigKey::NumStoreSpawns:
+                case ConfigKey::StoreRerollPrice:
+                case ConfigKey::PissTimer:
+                case ConfigKey::BladderSize:
+                case ConfigKey::DrinkCostMultiplier:
+                case ConfigKey::VomitFreqMultiplier:
+                case ConfigKey::VomitAmountMultiplier:
+                case ConfigKey::MaxDrinkTime:
+                    return true;
+            }
+            log_info("Config key {} but missing from data", key_name(key));
+            return false;
+        }
+
+        template<typename S>
+        void serialize(S& s) {
+            s.value4b(roundlength);
+            s.value4b(patiencemultiplier);
+            s.value4b(customerspawnmultiplier);
+            s.value4b(pisstimer);
+            s.value4b(vomitfreqmultiplier);
+            s.value4b(drinkcostmultiplier);
+            s.value4b(vomitamountmultiplier);
+            s.value4b(test);
+            s.value4b(maxdrinktime);
+            s.value4b(maxnumorders);
+            s.value4b(numstorespawns);
+            s.value4b(bladdersize);
+            s.value4b(storererollprice);
+        }
+    };
+    Data data;
 
     template<typename T>
     T modify(ConfigKey key, T input, Operation op, T value) const {
@@ -50,8 +246,7 @@ struct ConfigData {
 
     template<typename T>
     [[nodiscard]] T raw_get(const ConfigKey& key) const {
-        auto vt = data.at(key);
-        return std::get<T>(vt);
+        return data.get<T>(key);
     }
 
     template<typename T>
@@ -79,7 +274,7 @@ struct ConfigData {
 
     template<typename T>
     void set(const ConfigKey& key, T value) {
-        data[key] = value;
+        data.set(key, value);
     }
 
     [[nodiscard]] bool meets_prereq(const UpgradeClass& uc,
@@ -90,9 +285,7 @@ struct ConfigData {
    public:
     template<typename T>
     [[nodiscard]] bool contains(const ConfigKey& key) const {
-        if (!data.contains(key)) return false;
-        auto vt = data.at(key);
-        return std::holds_alternative<T>(vt);
+        return data.contains(key);
     }
 
     template<typename T>
@@ -131,5 +324,6 @@ struct ConfigData {
     template<typename S>
     void serialize(S& s) {
         s.ext(unlocked_upgrades, bitsery::ext::StdBitset{});
+        s.object(data);
     }
 };
