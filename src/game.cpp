@@ -21,7 +21,7 @@
 //  => this is not a problem except when the state gets messed up
 // TODO affect tip based on how much vomit is around?
 // => how can we communicate this to the player
-// TODO can you check if the tutorial buttons work for gameoad, its not
+// TODO can you check if the tutorial buttons work for gamepad, its not
 // switching
 // TODO check polymorphic_components script should check entity_makers too
 // TODO when the resolution is larger than the monitor, pop up something to
@@ -43,7 +43,6 @@
 // normal grab/drop, for now you dont need it
 // - TODO big city upgrade didnt double estimated profit
 //  => this is because the config data isnt serialized
-// - TODO beer cannot be placed inside and filled more than once?
 // - TODO settings button "keyboard" is weird
 // - TODO Rotate should be disabled when recipe page is open
 // - TODO ffwding will basically tell everyone to go home even if they had a

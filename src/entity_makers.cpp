@@ -856,12 +856,16 @@ void make_draft(Entity& draft, vec2 pos) {
                               pos, ui::color::red, ui::color::yellow);
 
     draft.addComponent<HasWork>().init(
-        [](Entity&, HasWork& hasWork, Entity& player, float dt) {
+        [](Entity& draftmachine, HasWork& hasWork, Entity&, float dt) {
             // TODO this logic is duplicated with _process_if_beer_tap
-            CanHoldItem& chi = player.get<CanHoldItem>();
-            if (chi.empty()) return;
+            CanHoldItem& chi = draftmachine.get<CanHoldItem>();
+            if (chi.empty()) {
+                return;
+            }
             Item& item = chi.item();
-            if (!check_if_drink(item)) return;
+            if (!check_if_drink(item)) {
+                return;
+            }
 
             Ingredient ing = Ingredient::Beer;
 
@@ -1039,6 +1043,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
     //
     if (drink.is_missing<IsItem>()) return;
     if (drink.is_missing<IsDrink>()) return;
+
 
     const IsDrink& isdrink = drink.get<IsDrink>();
 
