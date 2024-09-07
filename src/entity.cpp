@@ -72,6 +72,7 @@ bool check_if_drink(const Entity& entity) {
         case EntityType::InteractiveSettingChanger:
         case EntityType::HandTruck:
         case EntityType::Door:
+        case EntityType::SodaFountain:
             return false;
         case EntityType::Pitcher:
         case EntityType::Drink:

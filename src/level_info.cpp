@@ -340,6 +340,7 @@ void LevelInfo::generate_model_test_map() {
             },
             {EntityType::Jukebox},
             {EntityType::HandTruck},
+            {EntityType::SodaFountain},
         }};
 
     const auto _carraige_return = [&]() {

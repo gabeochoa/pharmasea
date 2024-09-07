@@ -640,6 +640,14 @@
         },
         {
             "folder": "models/kennynl",
+            "filename": "vending-machine.obj",
+            "library_name": "soda_fountain",
+            "size_scale": 2.0,
+            "position_offset": [0,-0.5,0.0],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models/kennynl",
             "filename": "lampRoundFloor.obj",
             "library_name": "mop",
             "size_scale": 3.0,

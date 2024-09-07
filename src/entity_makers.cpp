@@ -767,6 +767,12 @@ void make_cupboard(Entity& cupboard, vec2 pos, int index) {
             .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
+void make_soda_fountain(Entity& soda_fountain, vec2 pos) {
+    furniture::make_furniture(soda_fountain,
+                              DebugOptions{.type = EntityType::SodaFountain},
+                              pos, ui::color::brown, ui::color::brown);
+}
+
 void make_soda_machine(Entity& soda_machine, vec2 pos) {
     furniture::make_itemcontainer(soda_machine,
                                   DebugOptions{.type = EntityType::SodaMachine},
@@ -1608,6 +1614,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::SodaMachine: {
             furniture::make_soda_machine(entity, location);
+        } break;
+        case EntityType::SodaFountain: {
+            furniture::make_soda_fountain(entity, location);
         } break;
         case EntityType::DraftTap: {
             furniture::make_draft(entity, location);
