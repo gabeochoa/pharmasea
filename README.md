@@ -63,6 +63,56 @@ I am publishing some releases on itch, you can find the url in the code or build
 if you need the password join the discord and say hi!
 
 
+### alpha_0.24.09.06
+
+Its possible this version is spectaularly buggy since I havent tested that much over the network....
+maybe skip this one and try the next one if you can :) 
+
+design changes
+- Customer Spawner now spawns all customers by midday, so you have more time to serve them 
+- change so that you can only clean the toilet when its not in use
+- drinks can now be prepped in the daytime (make sure to buy some extra tables to store them)
+- make it so that the register is only spawned outside when you are in tutorial mode 
+- You now move furniture with the 'C' key or Triangle/Y on gamepad
+- Upgrades and Store no longer require all players to complete action 
+- You now have to walk to the store and upgrade areas 
+- No longer need to drop the cup into the beer machine to fill it up 
+
+impact
+- you will now get an estimate for how much you might make for a given day
+- Store now has a locker to save items day over day 
+- Customer Spawner now has a progress bar 
+- Customers will now wander where theres no space in the line
+
+bug fix 
+- Beer machine should be less flakey now
+- Settings page X and B buttons were reversed 
+- Store correctly validates cart contents now
+- Customers will now check to see if they can path to the register before choosing it 
+- Spawner will no longer spawn all customers instantly during first round
+- Fix bug where username would think it wasnt locked in when already locked 
+- Store spending animation should be more reliable 
+- Fix issue where UI was always drawn at 720p 
+
+better eng
+- Add better instructions for getting raylib4.5
+- most code will now run at 60fps on the backend 
+- only show validation errors when standing on trigger area 
+- add support for new types of trigger areas 
+- rewrite timer to split reason from timer 
+- remove most game states to simplify system 
+- bind -> lambda 
+- by default ignore entities in the store when running a query 
+- pathfinding should be much much faster now (+ its own thread) 
+- compilation speedups 
+- new randomizer engine with unittest to guarantee order
+- less dynamic allocations and more constexpr 
+- less layer code and more in rendering system
+- new translation system that supports formatting
+- better performance by running the map validation 2400x less often 
+- add script to validate that we have the right polymorphs setup 
+
+
 ### alpha_0.24.05.11
 
 design changes
