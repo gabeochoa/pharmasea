@@ -2185,7 +2185,11 @@ void update_new_max_customers(Entity& entity, float) {
             (int) fmax(2.f,  // force 2 at the beginning of the game
                              //
                        day_count * 2.f * customer_spawn_multiplier);
-        const float time_between = round_length / new_total;
+
+        // the div by 2 is so that everyone is spawned by half day, so
+        // theres time for you to make their drinks and them to pay before
+        // they are forced to leave
+        const float time_between = (round_length / new_total) / 2.f;
 
         log_info("Updating progression, setting new spawn total to {}",
                  new_total);
