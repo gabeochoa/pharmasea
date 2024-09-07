@@ -222,13 +222,54 @@ TranslatableString get_status_text(const HasDayNightTimer& ht) {
         .set_param(strings::i18nParam::DayCount, dayCount);
 }
 
+void render_rent_due_progress_bar(const Entity& sophie, Rectangle round_timer) {
+    const HasDayNightTimer& ht = sophie.get<HasDayNightTimer>();
+    int circle = ht.days_until();
+
+    Color unfilled = ::ui::UI_THEME.from_usage(::ui::theme::Usage::Secondary);
+    Color filled = ::ui::UI_THEME.from_usage(::ui::theme::Usage::Accent);
+
+    float radius = 0.010f * WIN_WF();
+    float spacing = radius * 3;
+
+    float x_off = radius;
+    float y_off = 5 * radius;
+
+    Rectangle path(round_timer);
+    path.x += radius;
+    path.y += (y_off - radius / 2.f);
+    path.width = x_off + (spacing * 5);
+    path.height = radius;
+    raylib::DrawRectangleRounded(path, 0.5f, 8, unfilled);
+
+    path.width = x_off + (spacing * (5 - circle));
+    raylib::DrawRectangleRounded(path, 0.5f, 8, filled);
+
+    for (int i = 5; i >= 0; i--) {
+        raylib::DrawCircleV({round_timer.x + x_off, round_timer.y + y_off},
+                            radius, circle <= i ? filled : unfilled);
+        x_off += spacing;
+    }
+
+    x_off -= spacing;
+
+    raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
+
+    float scale = 1.5f * radius / texture.width;
+
+    raylib::DrawTextureEx(texture,
+                          {round_timer.x + x_off - (0.7f * radius),
+                           round_timer.y + y_off - (0.7f * radius)},
+                          0, scale, WHITE);
+}
+
 void render_rent_info_when_player_in_bar(const Entity& sophie) {
     const HasDayNightTimer& ht = sophie.get<HasDayNightTimer>();
 
     const auto rtl = get_round_timer_location();
 
     // Only show the customer count during planning
-    if (!SystemManager::get().is_daytime()) return;
+    const bool is_daytime = SystemManager::get().is_daytime();
 
     Entity& spawner =
         (EntityQuery().whereType(EntityType::CustomerSpawner).gen_first())
@@ -251,14 +292,10 @@ void render_rent_info_when_player_in_bar(const Entity& sophie) {
          TranslatableString(strings::i18n::StoreRentDue)
              .set_param(strings::i18nParam::RentDue, ht.rent_due()));
 
-    if (BAR_BUILDING.is_inside(local_player->get<Transform>().as2())) {
-        spawn_count.y += 40;
+    render_rent_due_progress_bar(sophie, rtl.rounded_rect);
 
-        text(
-            ::ui::Widget{spawn_count},
-            TranslatableString(strings::i18n::StoreRentDaysRemaining)
-                .set_param(strings::i18nParam::DaysUntilRent, ht.days_until()));
-
+    if (is_daytime &&
+        BAR_BUILDING.is_inside(local_player->get<Transform>().as2())) {
         int average_drink_price = get_average_unlocked_drink_cost();
         int estimated_profit = iss.get_max_spawned() * average_drink_price;
         spawn_count.y += 40;
