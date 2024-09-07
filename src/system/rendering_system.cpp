@@ -742,7 +742,7 @@ void render_trigger_area(const Entity& entity, float dt) {
     };
 
     const auto _render_progression_option = [&](IsTriggerArea::Type type) {
-        if (!STORE_BUILDING.is_inside(
+        if (!PROGRESSION_BUILDING.is_inside(
                 SystemManager::get().local_players[0]->get<Transform>().as2()))
             return;
         OptEntity sophie =
