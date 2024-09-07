@@ -280,12 +280,13 @@ void render_rent_info_when_player_in_bar(const Entity& sophie) {
     Rectangle spawn_count{rtl.rounded_rect};
     float width = spawn_count.width;
     // float height = spawn_count.height;
+    float y_spacing = WIN_HF() / 18;
 
     if (SystemManager::get().local_players.empty()) return;
     auto local_player = SystemManager::get().local_players[0];
-    spawn_count.y += 120;
+    spawn_count.y += y_spacing * 3;
     if (STORE_BUILDING.is_inside(local_player->get<Transform>().as2())) {
-        spawn_count.y += 40;
+        spawn_count.y += y_spacing;
     }
 
     text(::ui::Widget{spawn_count},
@@ -298,13 +299,13 @@ void render_rent_info_when_player_in_bar(const Entity& sophie) {
         BAR_BUILDING.is_inside(local_player->get<Transform>().as2())) {
         int average_drink_price = get_average_unlocked_drink_cost();
         int estimated_profit = iss.get_max_spawned() * average_drink_price;
-        spawn_count.y += 40;
+        spawn_count.y += y_spacing;
         text(::ui::Widget{spawn_count},
              TranslatableString(strings::i18n::StoreEstimatedProfit)
                  .set_param(strings::i18nParam::EstimatedProfit,
                             estimated_profit));
 
-        spawn_count.y += 40;
+        spawn_count.y += y_spacing;
         text(::ui::Widget{spawn_count},
              TranslatableString(strings::i18n::PLANNING_CUSTOMERS_COMING)
                  .set_param(strings::i18nParam::CustomerCount,
@@ -345,8 +346,9 @@ void render_round_timer(const Entity& entity, float) {
 void render_animated_transactions(const Entity& entity, float) {
     if (!check_type(entity, EntityType::Sophie)) return;
 
+    float y_spacing = WIN_HF() / 9;
     Rectangle spawn_count(get_round_timer_location().rounded_rect);
-    spawn_count.y += 80;
+    spawn_count.y += y_spacing;
 
     const IsBank& bank = entity.get<IsBank>();
 
@@ -359,10 +361,12 @@ void render_animated_transactions(const Entity& entity, float) {
     if (!transactions.empty()) {
         const IsBank::Transaction& transaction = transactions.front();
         const auto animate_new_transaction =
-            [](const IsBank::Transaction& transaction, Rectangle spawn_count) {
+            [y_spacing](const IsBank::Transaction& transaction,
+                        Rectangle spawn_count) {
                 if (transaction.amount == 0 && transaction.extra == 0) return;
 
-                spawn_count.y += static_cast<int>(60 * transaction.pct());
+                spawn_count.y +=
+                    static_cast<int>(y_spacing * transaction.pct());
 
                 bool positive = transaction.amount >= 0;
                 unsigned char alpha =
@@ -414,18 +418,9 @@ void render_store(const Entity& entity, float) {
         int balance = bank.balance();
         int cart = bank.cart();
 
-        if (false) {
-            Rectangle spawn_count(left_col);
-            spawn_count.y += 60;
-
-            text(::ui::Widget{spawn_count},
-                 TranslatableString(strings::i18n::StoreBalance)
-                     .set_param(strings::i18nParam::BalanceAmount, balance));
-        }
-
         {
             Rectangle spawn_count(left_col);
-            spawn_count.y += 120;
+            spawn_count.y += (WIN_HF() / 18) * 3;
 
             text(::ui::Widget{spawn_count},
                  TranslatableString(strings::i18n::StoreInCart)
