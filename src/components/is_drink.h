@@ -28,7 +28,9 @@ struct IsDrink : public BaseComponent {
     }
 
     [[nodiscard]] bool has_ingredient(Ingredient i) const {
-        return ingredients.contains(i) && ingredients.at(i) > 0;
+        return unique_igs[magic_enum::enum_integer<Ingredient>(i)];
+        // TODO figure out why this didnt work
+        // return ingredients.contains(i) && ingredients.at(i) > 0;
     }
 
     void add_ingredient(Ingredient i) {
