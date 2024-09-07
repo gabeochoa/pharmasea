@@ -2020,10 +2020,7 @@ void process_has_rope(Entity& entity, float) {
     hrti.mark_generated(pos);
 }
 
-// TODO its been a really long time since i tested this
-// i feel like probably the enttity searching might not work the way
-// people expect since the closest code isnt really good
-void process_squirter(Entity& entity, float) {
+void process_squirter(Entity& entity, float dt) {
     if (!check_type(entity, EntityType::Squirter)) return;
 
     CanHoldItem& sqCHI = entity.get<CanHoldItem>();
@@ -2052,11 +2049,45 @@ void process_squirter(Entity& entity, float) {
             .orderByDist(pos)
             .gen_first();
 
-    if (!closest_furniture) return;
+    if (!closest_furniture) {
+        // Nothing anymore, probably someone took the item away
+        // working reset
+        return;
+    }
 
-    Entity& drink = sqCHI.item();
+    IsSquirter& is_squirter = entity.get<IsSquirter>();
     Item& item = closest_furniture->get<CanHoldItem>().item();
 
+    if (is_squirter.item_id() == -1) {
+        is_squirter.update(item.id, closest_furniture->get<Transform>().pos());
+    }
+    vec3 item_position = is_squirter.picked_up_at();
+
+    if (item.id != is_squirter.item_id()) {
+        // !!TODO need to make sure that the query above always sorts the same
+        // way otherwise this check will kill us...
+        log_info("squirter : item changed while working was {} now {}",
+                 is_squirter.item_id(), item.id);
+        is_squirter.reset();
+        return;
+    }
+
+    if (vec::distance(vec::to2(item_position),
+                      closest_furniture->get<Transform>().as2()) > 1.f) {
+        log_info("squirter : we matched something different {} {}",
+                 item_position, closest_furniture->get<Transform>().as2());
+        // We matched something different
+        is_squirter.reset();
+        return;
+    }
+
+    bool complete = is_squirter.pass_time(dt);
+    if (!complete) {
+        // keep going :)
+        return;
+    }
+
+    Entity& drink = sqCHI.item();
     bool cleanup = items::_add_item_to_drink_NO_VALIDATION(drink, item);
     if (cleanup) {
         closest_furniture->get<CanHoldItem>().update(nullptr, -1);

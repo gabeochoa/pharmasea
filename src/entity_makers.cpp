@@ -27,6 +27,7 @@
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
 #include "components/is_round_settings_manager.h"
+#include "components/is_squirter.h"
 #include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
 #include "components/responds_to_day_night.h"
@@ -149,7 +150,7 @@ void register_all_components() {
         IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
         IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
         IsFreeInStore, IsToilet, IsRoundSettingsManager, IsStoreSpawned,
-        IsNuxManager, IsNux,
+        IsNuxManager, IsNux, IsSquirter,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
         CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
@@ -577,8 +578,7 @@ void make_itemcontainer(Entity& container, const DebugOptions& options,
 
 void make_squirter(Entity& squ, vec2 pos) {
     furniture::make_furniture(squ, {EntityType::Squirter}, pos);
-    // TODO change how progress bar works to support this
-    // squ.addComponent<ShowsProgressBar>();
+    squ.addComponent<IsSquirter>();
 }
 
 void make_trash(Entity& trash, vec2 pos) {
@@ -1043,7 +1043,6 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
     //
     if (drink.is_missing<IsItem>()) return;
     if (drink.is_missing<IsDrink>()) return;
-
 
     const IsDrink& isdrink = drink.get<IsDrink>();
 

@@ -58,6 +58,7 @@
 #include "../components/is_snappable.h"
 #include "../components/is_solid.h"
 #include "../components/is_spawner.h"
+#include "../components/is_squirter.h"
 #include "../components/is_store_spawned.h"
 #include "../components/is_toilet.h"
 #include "../components/is_trigger_area.h"
@@ -92,7 +93,7 @@ struct PolymorphicBaseClass<BaseComponent>
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
           CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback
+          CollectsCustomerFeedback, IsSquirter
           // END
           > {};
 // If you add anything here ^^ then you should add that component to

@@ -22,6 +22,7 @@
 #include "../components/is_free_in_store.h"
 #include "../components/is_nux_manager.h"
 #include "../components/is_progression_manager.h"
+#include "../components/is_squirter.h"
 #include "../components/is_toilet.h"
 #include "../components/transform.h"
 #include "../dataclass/upgrades.h"
@@ -1295,6 +1296,19 @@ void render_progress_bar(const Entity& entity, float) {
     });
 }
 
+void render_squirt_progress_bar(const Entity& entity, float) {
+    if (entity.is_missing<IsSquirter>()) return;
+    const IsSquirter& is_sq = entity.get<IsSquirter>();
+
+    if (entity.is_missing<Transform>()) return;
+    const Transform& transform = entity.get<Transform>();
+
+    if (is_sq.pct() >= 0.9f) return;
+
+    DrawProgressBar(ProgressBarConfig{.position = transform.pos(),
+                                      .pct_full = is_sq.pct()});
+}
+
 void render_fishing_game(const Entity& entity, float) {
     if (entity.is_missing<HasFishingGame>()) return;
     const HasFishingGame& fishing = entity.get<HasFishingGame>();
@@ -1410,6 +1424,7 @@ void render(const Entity& entity, float dt, bool is_debug) {
     render_floating_name(entity, dt);
     render_progress_bar(entity, dt);
     render_fishing_game(entity, dt);
+    render_squirt_progress_bar(entity, dt);
 }
 
 }  // namespace render_manager
