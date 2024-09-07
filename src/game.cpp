@@ -46,6 +46,10 @@
 // spawn everyone in the first half of the day, and only allow you to ffwd until
 // everyone is spawned and then stop
 //
+// mop buddy in store loses buddy
+// squirter constantly going even if the drink has the ingredient already
+//
+//
 //
 // - store should give one free reroll per day
 //  -> should you just walk out of the store and be charged? amazon go style?

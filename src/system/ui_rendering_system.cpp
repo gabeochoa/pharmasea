@@ -419,14 +419,22 @@ void render_store(const Entity& entity, float) {
         int cart = bank.cart();
 
         {
+            const HasDayNightTimer& ht = sophie->get<HasDayNightTimer>();
+            float rent_due = ht.rent_due();
+
             Rectangle spawn_count(left_col);
             spawn_count.y += (WIN_HF() / 18) * 3;
+
+            auto font_color = ::ui::theme::Usage::Font;
+            if (cart > 0 && balance - cart < rent_due)
+                font_color = ::ui::theme::Usage::Accent;
+            if (cart > 0 && cart > balance)
+                font_color = ::ui::theme::Usage::Error;
 
             text(::ui::Widget{spawn_count},
                  TranslatableString(strings::i18n::StoreInCart)
                      .set_param(strings::i18nParam::CartAmount, cart),
-                 cart <= balance ? ::ui::theme::Usage::Font
-                                 : ::ui::theme::Usage::Error);
+                 font_color);
         }
     };
 
