@@ -2022,11 +2022,15 @@ void process_has_rope(Entity& entity, float) {
 
 void process_squirter(Entity& entity, float dt) {
     if (!check_type(entity, EntityType::Squirter)) return;
-
+    IsSquirter& is_squirter = entity.get<IsSquirter>();
     CanHoldItem& sqCHI = entity.get<CanHoldItem>();
 
     // If we arent holding anything, nothing to squirt into
-    if (sqCHI.empty()) return;
+    if (sqCHI.empty()) {
+        is_squirter.reset();
+        is_squirter.set_drink_id(-1);
+        return;
+    }
 
     // cant squirt into this !
     if (sqCHI.item().is_missing<IsDrink>()) return;
@@ -2054,9 +2058,13 @@ void process_squirter(Entity& entity, float dt) {
         // working reset
         return;
     }
-
-    IsSquirter& is_squirter = entity.get<IsSquirter>();
+    Entity& drink = sqCHI.item();
     Item& item = closest_furniture->get<CanHoldItem>().item();
+
+    if (is_squirter.drink_id() == drink.id) {
+        is_squirter.reset();
+        return;
+    }
 
     if (is_squirter.item_id() == -1) {
         is_squirter.update(item.id, closest_furniture->get<Transform>().pos());
@@ -2087,7 +2095,8 @@ void process_squirter(Entity& entity, float dt) {
         return;
     }
 
-    Entity& drink = sqCHI.item();
+    is_squirter.set_drink_id(drink.id);
+
     bool cleanup = items::_add_item_to_drink_NO_VALIDATION(drink, item);
     if (cleanup) {
         closest_furniture->get<CanHoldItem>().update(nullptr, -1);

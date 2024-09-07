@@ -47,7 +47,6 @@
 // everyone is spawned and then stop
 //
 // mop buddy in store loses buddy
-// squirter constantly going even if the drink has the ingredient already
 //
 //
 //

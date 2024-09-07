@@ -35,12 +35,15 @@ struct IsSquirter : public BaseComponent {
     [[nodiscard]] float pct() const { return sq_time / sq_time_reset; }
     [[nodiscard]] float time() const { return sq_time; }
 
+    void set_drink_id(EntityID id) { held_drink_id = id; }
+    [[nodiscard]] EntityID drink_id() const { return held_drink_id; }
     [[nodiscard]] EntityID item_id() const { return held_item_id; }
     [[nodiscard]] vec3 picked_up_at() const { return pos; }
 
    private:
     vec3 pos;
     EntityID held_item_id = -1;
+    EntityID held_drink_id = -1;
 
     bool working = false;
     float sq_time;
@@ -53,6 +56,7 @@ struct IsSquirter : public BaseComponent {
 
         s.object(pos);
         s.value4b(held_item_id);
+        s.value4b(held_drink_id);
 
         s.value1b(working);
         s.value4b(sq_time);
