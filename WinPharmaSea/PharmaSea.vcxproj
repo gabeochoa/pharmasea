@@ -26,28 +26,44 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\bitsery_include.h" />
+    <ClInclude Include="..\src\building_locations.h" />
     <ClInclude Include="..\src\camera.h" />
+    <ClInclude Include="..\src\client_server_comm.h" />
     <ClInclude Include="..\src\components\adds_ingredient.h" />
+    <ClInclude Include="..\src\components\ai_clean_vomit.h" />
+    <ClInclude Include="..\src\components\ai_close_tab.h" />
+    <ClInclude Include="..\src\components\ai_component.h" />
+    <ClInclude Include="..\src\components\ai_drinking.h" />
+    <ClInclude Include="..\src\components\ai_play_jukebox.h" />
+    <ClInclude Include="..\src\components\ai_use_bathroom.h" />
+    <ClInclude Include="..\src\components\ai_wait_in_queue.h" />
+    <ClInclude Include="..\src\components\ai_wandering.h" />
     <ClInclude Include="..\src\components\base_component.h" />
     <ClInclude Include="..\src\components\can_be_ghost_player.h" />
     <ClInclude Include="..\src\components\can_be_held.h" />
     <ClInclude Include="..\src\components\can_be_highlighted.h" />
     <ClInclude Include="..\src\components\can_be_pushed.h" />
     <ClInclude Include="..\src\components\can_be_taken_from.h" />
+    <ClInclude Include="..\src\components\can_change_settings_interactively.h" />
     <ClInclude Include="..\src\components\can_grab_from_other_furniture.h" />
     <ClInclude Include="..\src\components\can_highlight_others.h" />
     <ClInclude Include="..\src\components\can_hold_furniture.h" />
+    <ClInclude Include="..\src\components\can_hold_handtruck.h" />
     <ClInclude Include="..\src\components\can_hold_item.h" />
     <ClInclude Include="..\src\components\can_order_drink.h" />
     <ClInclude Include="..\src\components\can_pathfind.h" />
     <ClInclude Include="..\src\components\can_perform_job.h" />
+    <ClInclude Include="..\src\components\collects_customer_feedback.h" />
     <ClInclude Include="..\src\components\collects_user_input.h" />
     <ClInclude Include="..\src\components\conveys_held_item.h" />
     <ClInclude Include="..\src\components\custom_item_position.h" />
     <ClInclude Include="..\src\components\debug_name.h" />
     <ClInclude Include="..\src\components\has_base_speed.h" />
     <ClInclude Include="..\src\components\has_client_id.h" />
+    <ClInclude Include="..\src\components\has_day_night_timer.h" />
     <ClInclude Include="..\src\components\has_dynamic_model_name.h" />
+    <ClInclude Include="..\src\components\has_fishing_game.h" />
+    <ClInclude Include="..\src\components\has_last_interacted_customer.h" />
     <ClInclude Include="..\src\components\has_name.h" />
     <ClInclude Include="..\src\components\has_patience.h" />
     <ClInclude Include="..\src\components\has_progression.h" />
@@ -64,6 +80,7 @@
     <ClInclude Include="..\src\components\is_free_in_store.h" />
     <ClInclude Include="..\src\components\is_item.h" />
     <ClInclude Include="..\src\components\is_item_container.h" />
+    <ClInclude Include="..\src\components\is_nux_manager.h" />
     <ClInclude Include="..\src\components\is_pnumatic_pipe.h" />
     <ClInclude Include="..\src\components\is_progression_manager.h" />
     <ClInclude Include="..\src\components\is_rotatable.h" />
@@ -71,9 +88,11 @@
     <ClInclude Include="..\src\components\is_snappable.h" />
     <ClInclude Include="..\src\components\is_solid.h" />
     <ClInclude Include="..\src\components\is_spawner.h" />
+    <ClInclude Include="..\src\components\is_store_spawned.h" />
     <ClInclude Include="..\src\components\is_toilet.h" />
     <ClInclude Include="..\src\components\is_trigger_area.h" />
     <ClInclude Include="..\src\components\model_renderer.h" />
+    <ClInclude Include="..\src\components\responds_to_day_night.h" />
     <ClInclude Include="..\src\components\responds_to_user_input.h" />
     <ClInclude Include="..\src\components\shows_progress_bar.h" />
     <ClInclude Include="..\src\components\simple_colored_box_renderer.h" />
@@ -120,15 +139,18 @@
     <ClInclude Include="..\src\engine\navmesh.h" />
     <ClInclude Include="..\src\engine\network\webrequest.h" />
     <ClInclude Include="..\src\engine\pathfinder.h" />
+    <ClInclude Include="..\src\engine\path_request_manager.h" />
     <ClInclude Include="..\src\engine\polygon.h" />
     <ClInclude Include="..\src\engine\profile.h" />
     <ClInclude Include="..\src\engine\random.h" />
+    <ClInclude Include="..\src\engine\random_engine.h" />
     <ClInclude Include="..\src\engine\resolution.h" />
     <ClInclude Include="..\src\engine\settings.h" />
     <ClInclude Include="..\src\engine\shader_library.h" />
     <ClInclude Include="..\src\engine\singleton.h" />
     <ClInclude Include="..\src\engine\sound_library.h" />
     <ClInclude Include="..\src\engine\statemanager.h" />
+    <ClInclude Include="..\src\engine\svg_renderer.h" />
     <ClInclude Include="..\src\engine\texture_library.h" />
     <ClInclude Include="..\src\engine\time.h" />
     <ClInclude Include="..\src\engine\timer.h" />
@@ -153,6 +175,7 @@
     <ClInclude Include="..\src\engine\ui\ui_internal.h" />
     <ClInclude Include="..\src\engine\ui\ui_render_textures.h" />
     <ClInclude Include="..\src\engine\ui\widget.h" />
+    <ClInclude Include="..\src\engine\unreachable.h" />
     <ClInclude Include="..\src\engine\util.h" />
     <ClInclude Include="..\src\engine\uuid.h" />
     <ClInclude Include="..\src\entity.h" />
@@ -185,6 +208,7 @@
     <ClInclude Include="..\src\layers\uitestlayer.h" />
     <ClInclude Include="..\src\layers\versionlayer.h" />
     <ClInclude Include="..\src\level_info.h" />
+    <ClInclude Include="..\src\local_ui.h" />
     <ClInclude Include="..\src\map.h" />
     <ClInclude Include="..\src\map_generation.h" />
     <ClInclude Include="..\src\network\client.h" />
@@ -192,10 +216,12 @@
     <ClInclude Include="..\src\network\internal\client.h" />
     <ClInclude Include="..\src\network\internal\server.h" />
     <ClInclude Include="..\src\network\network.h" />
+    <ClInclude Include="..\src\network\polymorphic_components.h" />
     <ClInclude Include="..\src\network\server.h" />
     <ClInclude Include="..\src\network\shared.h" />
     <ClInclude Include="..\src\preload.h" />
     <ClInclude Include="..\src\recipe_library.h" />
+    <ClInclude Include="..\src\simple.h" />
     <ClInclude Include="..\src\spawner.h" />
     <ClInclude Include="..\src\std_include.h" />
     <ClInclude Include="..\src\strings.h" />
@@ -218,6 +244,10 @@
     <ClInclude Include="..\src\tests\test_pathing.h" />
     <ClInclude Include="..\src\tests\test_ui_widget.h" />
     <ClInclude Include="..\src\text_util.h" />
+    <ClInclude Include="..\src\translation_en_rev.h" />
+    <ClInclude Include="..\src\translation_en_us.h" />
+    <ClInclude Include="..\src\translation_es_la.h" />
+    <ClInclude Include="..\src\translation_ko_kr.h" />
     <ClInclude Include="..\src\upgrade_library.h" />
     <ClInclude Include="..\src\vec_util.h" />
     <ClInclude Include="..\src\vendor_include.h" />
@@ -225,6 +255,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\camera.cpp" />
+    <ClCompile Include="..\src\client_server_comm.cpp" />
+    <ClCompile Include="..\src\components\has_dynamic_model_name.cpp" />
     <ClCompile Include="..\src\components\has_waiting_queue.cpp" />
     <ClCompile Include="..\src\components\is_progression_manager.cpp" />
     <ClCompile Include="..\src\dataclass\configdata.cpp" />
@@ -235,6 +267,7 @@
     <ClCompile Include="..\src\engine\keymap.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
     <ClCompile Include="..\src\engine\path_request_manager.cpp" />
+    <ClCompile Include="..\src\engine\random_engine.cpp" />
     <ClCompile Include="..\src\engine\settings.cpp" />
     <ClCompile Include="..\src\engine\ui\ui.cpp" />
     <ClCompile Include="..\src\entity.cpp" />
@@ -243,17 +276,26 @@
     <ClCompile Include="..\src\entity_query.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
+    <ClCompile Include="..\src\layers\gamedebuglayer.cpp" />
+    <ClCompile Include="..\src\layers\gamelayer.cpp" />
+    <ClCompile Include="..\src\layers\networklayer.cpp" />
+    <ClCompile Include="..\src\layers\pauselayer.cpp" />
+    <ClCompile Include="..\src\layers\recipe_book_layer.cpp" />
+    <ClCompile Include="..\src\layers\seedmanagerlayer.cpp" />
     <ClCompile Include="..\src\layers\settingslayer.cpp" />
     <ClCompile Include="..\src\level_info.cpp" />
+    <ClCompile Include="..\src\map.cpp" />
     <ClCompile Include="..\src\network\client.cpp" />
     <ClCompile Include="..\src\network\server.cpp" />
     <ClCompile Include="..\src\preload.cpp" />
+    <ClCompile Include="..\src\recipe_library.cpp" />
     <ClCompile Include="..\src\system\ai_system.cpp" />
     <ClCompile Include="..\src\system\ingredient_helper.cpp" />
     <ClCompile Include="..\src\system\input_process_manager.cpp" />
     <ClCompile Include="..\src\system\rendering_system.cpp" />
     <ClCompile Include="..\src\system\sophie.cpp" />
     <ClCompile Include="..\src\system\system_manager.cpp" />
+    <ClCompile Include="..\src\system\ui_rendering_system.cpp" />
     <ClCompile Include="..\src\wave_collapse.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
