@@ -620,7 +620,8 @@ void render_trigger_area(const Entity& entity, float dt) {
     // TODO eventually we can detect the size to fit the text correctly
     // but thats more of an issue for translations since i can manually
     // place the english
-    auto fsize = 500.f;
+    auto fsize_per_width = 62.f;
+    auto fsize = fsize_per_width * size.x;
 
     TranslatableString title = entity.get<IsTriggerArea>().title();
     log_ifx(title.empty(), LogLevel::LOG_WARN,

@@ -444,11 +444,15 @@ void LevelInfo::generate_progression_map() {
 void LevelInfo::generate_store_map() {
     generate_walls_for_building(STORE_BUILDING);
 
+    const float trig_x = -4;
+    const float trig_width = 8;
+    const float trig_height = 3;
+
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
-            entity, store_origin + vec3{-4, TILESIZE / -2.f, 10}, 8, 3,
-            IsTriggerArea::Store_BackToPlanning);
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, 10},
+            trig_width, trig_height, IsTriggerArea::Store_BackToPlanning);
 
         entity.get<IsTriggerArea>()
             .set_validation_fn([](const IsTriggerArea& ita)
@@ -535,28 +539,28 @@ void LevelInfo::generate_store_map() {
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_floor_marker(
-            entity, store_origin + vec3{-4, TILESIZE / -2.f, 5}, 8, 3,
-            IsFloorMarker::Type::Store_PurchaseArea);
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, 5}, trig_width,
+            trig_height, IsFloorMarker::Type::Store_PurchaseArea);
     }
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_floor_marker(
-            entity, store_origin + vec3{-4, TILESIZE / -2.f, -10}, 8, 3,
-            IsFloorMarker::Type::Store_SpawnArea);
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, -5},
+            trig_width, trig_height, IsFloorMarker::Type::Store_SpawnArea);
     }
 
     {
         auto& entity = EntityHelper::createEntity();
         furniture::make_floor_marker(
-            entity, store_origin + vec3{-4, TILESIZE / -2.f, 0}, 8, 3,
-            IsFloorMarker::Type::Store_LockedArea);
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, 0}, trig_width,
+            trig_height, IsFloorMarker::Type::Store_LockedArea);
     }
 
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
-            entity, store_origin + vec3{-4, TILESIZE / -2.f, -5}, 8, 3,
-            IsTriggerArea::Store_Reroll);
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, -10},
+            trig_width, trig_height, IsTriggerArea::Store_Reroll);
 
         entity.get<IsTriggerArea>().update_cooldown_max(2.f).set_validation_fn(
             [](const IsTriggerArea&) -> ValidationResult {

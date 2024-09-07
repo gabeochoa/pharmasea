@@ -24,6 +24,7 @@ struct Building {
         Bottom,
         Left,
         Right,
+        BottomRight,
     } door_location;
     std::vector<vec2> doors;
 
@@ -50,37 +51,7 @@ struct Building {
         return *this;
     }
 
-    auto& add_door(const DoorLocation& location) {
-        switch (location) {
-            case DoorLocation::None:
-                break;
-            case DoorLocation::Top: {
-                doors.push_back({center().x, area.y});
-                doors.push_back({center().x - 1, area.y});
-                doors.push_back({center().x + 1, area.y});
-                vomit_location = {center().x, area.y - 1};
-            } break;
-            case DoorLocation::Bottom: {
-                doors.push_back({center().x, area.y + area.height - 1});
-                doors.push_back({center().x - 1, area.y + area.height - 1});
-                doors.push_back({center().x + 1, area.y + area.height - 1});
-                vomit_location = {center().x, area.y + area.height + 1};
-            } break;
-            case DoorLocation::Left: {
-                doors.push_back({area.x, center().y});
-                doors.push_back({area.x, center().y - 1});
-                doors.push_back({area.x, center().y + 1});
-                vomit_location = {area.x - 1, center().y};
-            } break;
-            case DoorLocation::Right: {
-                doors.push_back({area.x + area.width - 1, center().y});
-                doors.push_back({area.x + area.width - 1, center().y - 1});
-                doors.push_back({area.x + area.width - 1, center().y + 1});
-                vomit_location = {area.x + area.width + 1, center().y};
-            } break;
-        }
-        return *this;
-    }
+    Building& add_door(const DoorLocation& location);
 
     bool is_inside(const vec2 pos) const {
         if (pos.x > max().x - 1 || pos.x < min().x) return false;
@@ -111,7 +82,7 @@ const Building PROGRESSION_BUILDING =
 const Building STORE_BUILDING =  //
     Building()
         .set_area({-14.f, -38.f, 18.f, 30.f})
-        .add_door(Building::DoorLocation::Bottom);
+        .add_door(Building::DoorLocation::BottomRight);
 const Building BAR_BUILDING =  //
     Building()                 //
         .set_area({-25.f, -5.f, 29.f, 30.f});
