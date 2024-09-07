@@ -97,6 +97,7 @@ void GameLayer::onUpdate(float dt) {
         // what they server has access to
         map_ptr->grab_things();
         map_ptr->onUpdateLocalPlayers(dt);
+        map_ptr->onUpdateRemotePlayers(dt);
     }
 }
 

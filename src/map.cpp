@@ -37,6 +37,11 @@ void Map::onUpdateLocalPlayers(float dt) {
     SystemManager::get().update_local_players(local_players_NOT_SERIALIZED, dt);
 }
 
+void Map::onUpdateRemotePlayers(float dt) {
+    SystemManager::get().update_remote_players(remote_players_NOT_SERIALIZED,
+                                               dt);
+}
+
 void Map::_onUpdate(const std::vector<std::shared_ptr<Entity>>& players,
                     float dt) {
     TRACY_ZONE_SCOPED;

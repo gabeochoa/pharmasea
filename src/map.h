@@ -38,6 +38,7 @@ struct Map {
     }
 
     void onUpdateLocalPlayers(float dt);
+    void onUpdateRemotePlayers(float dt);
 
     void _onUpdate(const std::vector<std::shared_ptr<Entity>>& players,
                    float dt);

@@ -2698,6 +2698,10 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
     }
 }
 
+void SystemManager::update_remote_players(const Entities& players, float) {
+    remote_players = players;
+}
+
 void SystemManager::update_local_players(const Entities& players, float dt) {
     local_players = players;
     for (const auto& entity : players) {

@@ -39,6 +39,7 @@ struct SystemManager {
     SINGLETON(SystemManager)
 
     Entities local_players;
+    Entities remote_players;
     Entities oldAll;
 
     // so that we run the first time always
@@ -55,6 +56,7 @@ struct SystemManager {
     void render_ui(const Entities& entities, float dt) const;
 
     void update_local_players(const Entities& players, float dt);
+    void update_remote_players(const Entities& players, float dt);
     void update_all_entities(const Entities& players, float dt);
 
     void process_inputs(const Entities& entities, const UserInputs& inputs);
