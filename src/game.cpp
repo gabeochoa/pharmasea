@@ -17,8 +17,6 @@
 // TODO conveyerbelt speed
 // TODO tutorial should only apply when host has it on
 // TODO save tutorial in save file
-// TODO fastforward should not work in shop mode
-//  => this is not a problem except when the state gets messed up
 // TODO affect tip based on how much vomit is around?
 // => how can we communicate this to the player
 // TODO can you check if the tutorial buttons work for gamepad, its not
@@ -33,6 +31,8 @@
 // https://sonarcloud.io/project/analysis_method?id=gabeochoa_pharmasea
 
 // branch
+// - TODO highlight seems to be one off or less reliable but the pick up is
+// still correct
 // - TODO should store teleport items or do you walk them over
 // - TODO update reason text to say "customers wont like it if you dont "
 // - TODO its a little awkward when the day ends and customers should pay but
@@ -59,18 +59,9 @@
 // open questions
 // - are there items you should not be able to move during the day and how will
 // the player know
-// - where do upgrades come in?
-// - how do you fail?
-// - do customers leave when its day time (without finishing ordering)
-//  -> punishment would be to lose the money
-// - what if the goal is to make enough money to pay off your landlord?
-// - can you manually close the bar?
-//   -> value would be to be able to move furniture around similar to planning
-//   mode
 // - how bad is it if other players can see items spawn in?
 //  -> maybe the upgrade just "mails" the items to the spawn area (eventually
 //  can add a parachute animation or something )
-//
 
 namespace network {
 long long total_ping = 0;
