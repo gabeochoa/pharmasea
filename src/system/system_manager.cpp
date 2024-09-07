@@ -2724,6 +2724,9 @@ void SystemManager::sixty_fps_update(const Entities& entities, float dt) {
         system_manager::update_held_hand_truck_position(entity, dt);
 
         system_manager::update_visuals_for_settings_changer(entity, dt);
+
+        system_manager::process_squirter(entity, dt);
+        system_manager::process_trash(entity, dt);
     });
 }
 
@@ -2864,6 +2867,7 @@ void SystemManager::in_round_update(
         system_manager::process_conveyer_items(entity, dt);
         system_manager::process_grabber_filter(entity, dt);
         system_manager::process_pnumatic_pipe_movement(entity, dt);
+        system_manager::process_has_rope(entity, dt);
         // should move all the container functions into its own
         // function?
         system_manager::process_is_container_and_should_update_item(entity, dt);
@@ -2871,10 +2875,7 @@ void SystemManager::in_round_update(
         system_manager::process_is_indexed_container_holding_incorrect_item(
             entity, dt);
 
-        system_manager::process_has_rope(entity, dt);
         system_manager::process_spawner(entity, dt);
-        system_manager::process_squirter(entity, dt);
-        system_manager::process_trash(entity, dt);
         system_manager::reset_empty_work_furniture(entity, dt);
         system_manager::reduce_impatient_customers(entity, dt);
 
