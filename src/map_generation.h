@@ -14,38 +14,38 @@
 namespace generation {
 
 const char WALL = '#';
-const char WALL2 = 'w';
 const char EMPTY = '.';
-const char ORIGIN = '0';
-const char CUSTOMER = 'c';
-const char CUST_SPAWNER = 'C';
-const char REGISTER = 'R';
-const char TABLE = 't';
-
 const char GRABBERu = '^';
 const char GRABBERl = '<';
 const char GRABBERr = '>';
 const char GRABBERd = 'v';
 
-const char MED_CAB = 'M';
-const char FRUIT = 'F';
-const char BLENDER = 'b';
-const char SODA_MACHINE = 'S';
-const char ICE_MACHINE = 'I';
+const char ORIGIN = '0';
 
-const char CUPBOARD = 'd';
-const char SIMPLE_SYRUP = 'y';
-const char SQUIRTER = 'q';
-const char TRASH = 'g';
-const char TOILET = 'T';
-const char FILTERED_GRABBER = 'G';
-const char PIPE = 'p';
-const char MOP_HOLDER = 'm';
-const char FAST_FORWARD = 'f';
 const char MOP_BUDDY = 'B';
+const char BLENDER = 'b';
+const char CUSTOMER = 'c';
+const char CUST_SPAWNER = 'C';
+const char CUPBOARD = 'd';
+const char FRUIT = 'F';
+const char FAST_FORWARD = 'f';
+const char FILTERED_GRABBER = 'G';
+const char TRASH = 'g';
 const char HAND_TRUCK = 'H';
+const char ICE_MACHINE = 'I';
+const char MED_CAB = 'M';
+const char MOP_HOLDER = 'm';
+const char PIPE = 'p';
+const char SQUIRTER = 'q';
+const char REGISTER = 'R';
+const char SODA_MACHINE = 'S';
+const char SODA_FOUNTAIN = 's';
+const char TOILET = 'T';
+const char TABLE = 't';
+const char WALL2 = 'w';
+const char SIMPLE_SYRUP = 'y';
 
-const char SOPHIE = 's';
+const char SOPHIE = '+';
 
 struct helper {
     std::vector<std::string> lines;
@@ -174,6 +174,9 @@ struct helper {
             } break;
             case HAND_TRUCK: {
                 return EntityType::HandTruck;
+            } break;
+            case SODA_FOUNTAIN: {
+                return EntityType::SodaFountain;
             } break;
             case 32: {
                 // space

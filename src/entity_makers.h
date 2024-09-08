@@ -64,5 +64,6 @@ void make_item_type(Item& item, EntityType type_name, vec3 pos, int index = -1);
 
 // Returns true if item was cleaned up
 bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd);
+bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient toadd);
 
 }  // namespace items
