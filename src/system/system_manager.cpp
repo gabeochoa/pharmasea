@@ -740,6 +740,9 @@ void delete_customers_when_leaving_inround(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return;
     if (!check_type(entity, EntityType::Customer)) return;
 
+    const Transform& transform = entity.get<Transform>();
+    if (vec::distance(transform.as2(), {GATHER_SPOT, GATHER_SPOT}) > 2.f)
+        return;
     entity.cleanup = true;
 }
 
@@ -2818,6 +2821,8 @@ void SystemManager::sixty_fps_update(const Entities& entities, float dt) {
         system_manager::process_squirter(entity, dt);
         system_manager::process_soda_fountain(entity, dt);
         system_manager::process_trash(entity, dt);
+
+        system_manager::delete_customers_when_leaving_inround(entity);
     });
 }
 
@@ -2867,12 +2872,6 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
                     // TODO these we likely no longer need to do
                     if (false) {
                         system_manager::delete_held_items_when_leaving_inround(
-                            entity);
-
-                        // TODO I dont actually think we need to do anything
-                        // here because the customers should probably just walk
-                        // off if they arent served when their patience runs out
-                        system_manager::delete_customers_when_leaving_inround(
                             entity);
 
                         // I dont think we want to do this since we arent
