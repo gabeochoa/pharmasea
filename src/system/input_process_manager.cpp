@@ -593,11 +593,18 @@ void handle_drop(Entity& player) {
                 if (f.has<IsItemContainer>()) {
                     const IsItemContainer& itemContainer =
                         f.get<IsItemContainer>();
-                    // note: right now item container only validates
-                    // EntityType
-                    bool matches_item_type =
-                        itemContainer.is_matching_item(item);
-                    if (!matches_item_type) return false;
+
+                    if (itemContainer.table_when_empty()) {
+                        if (!furnCanHold.empty()) {
+                            return false;
+                        }
+                    } else {
+                        // note: right now item container only validates
+                        // EntityType
+                        bool matches_item_type =
+                            itemContainer.is_matching_item(item);
+                        if (!matches_item_type) return false;
+                    }
                 }
                 // if you are not an item container
                 // then you have to be empty for us to place into

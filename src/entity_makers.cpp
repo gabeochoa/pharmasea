@@ -793,7 +793,9 @@ void make_simple_syrup_holder(Entity& simple_syrup_holder, vec2 pos) {
         DebugOptions{.type = EntityType::SimpleSyrupHolder}, pos,
         EntityType::SimpleSyrup);
 
-    simple_syrup_holder.get<IsItemContainer>().set_max_generations(1);
+    simple_syrup_holder.get<IsItemContainer>()
+        .set_max_generations(1)
+        .enable_table_when_enable();
     // We are not setting a filter because we want this to just act like a
     // normal table if its empty
 }
@@ -802,13 +804,17 @@ void make_mopbuddy_holder(Entity& mopbuddy_holder, vec2 pos) {
     furniture::make_itemcontainer(
         mopbuddy_holder, DebugOptions{.type = EntityType::MopBuddyHolder}, pos,
         EntityType::MopBuddy);
-    mopbuddy_holder.get<IsItemContainer>().set_max_generations(1);
-    mopbuddy_holder.get<CanHoldItem>().set_filter(
-        EntityFilter()
-            .set_enabled_flags(EntityFilter::FilterDatumType::Name)
-            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                       EntityType::MopBuddy)
-            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
+    mopbuddy_holder.get<IsItemContainer>()
+        .set_max_generations(1)
+        .enable_table_when_enable();
+
+    // TODO If we decide to make it only the roomba
+    // mopbuddy_holder.get<CanHoldItem>().set_filter(
+    // EntityFilter()
+    // .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+    // .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+    // EntityType::MopBuddy)
+    // .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
 void make_mop_holder(Entity& mop_holder, vec2 pos) {

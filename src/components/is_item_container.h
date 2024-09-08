@@ -39,11 +39,15 @@ struct IsItemContainer : public BaseComponent {
 
     void reset_generations() { gens = 0; }
 
+    void enable_table_when_enable() { is_table_when_empty = true; }
+    [[nodiscard]] bool table_when_empty() const { return is_table_when_empty; }
+
    private:
     int gens = 0;
     int max_gens = -1;
     EntityType item_type;
     bool uses_indexer;
+    bool is_table_when_empty = false;
 
     friend bitsery::Access;
     template<typename S>
