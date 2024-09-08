@@ -475,13 +475,40 @@ void process_conveyer_items(Entity& entity, float dt) {
         match->get<IsPnumaticPipe>().recieving = true;
     }
 
-    // TODO if we are pushing onto a conveyer, we need to make sure
-    // we are keeping track of the orientations
-    //
-    //  --> --> in this case we want to place at 0.5f
-    //
-    //          ^
-    //    -->-> |     in this we want to place at 0.f instead of -0.5
+    if (match->is_missing<IsPnumaticPipe>() && match->has<ConveysHeldItem>()) {
+        // if we are pushing onto a conveyer, we need to make sure
+        // we are keeping track of the orientations
+        //
+        //  --> --> in this case we want to place at 0.5f
+        //
+        //          ^
+        //    -->-> |     in this we want to place at 0.f instead of -0.5
+        bool send_to_middle = false;
+        auto other_face = match->get<Transform>().face_direction();
+        // TODO theres gotta be a math way to do this
+        switch (transform.face_direction()) {
+            case Transform::FORWARD:
+            case Transform::BACK:
+                if (other_face == Transform::RIGHT ||
+                    other_face == Transform::LEFT) {
+                    send_to_middle = true;
+                }
+                break;
+            case Transform::RIGHT:
+            case Transform::LEFT:
+                if (other_face == Transform::FORWARD ||
+                    other_face == Transform::BACK) {
+                    send_to_middle = true;
+                }
+                break;
+        }
+        if (send_to_middle) {
+            match->get<ConveysHeldItem>().relative_item_pos =
+                ConveysHeldItem::ITEM_START +
+                ((ConveysHeldItem::ITEM_END - ConveysHeldItem::ITEM_START) /
+                 2.f);
+        }
+    }
 }
 
 void process_grabber_items(Entity& entity, float) {
@@ -2027,7 +2054,6 @@ void process_soda_fountain(Entity& entity, float) {
     // If we arent holding anything, nothing to squirt into
     if (sfCHI.empty()) return;
 
-    // cant squirt into this !
     if (sfCHI.item().is_missing<IsDrink>()) return;
 
     Entity& drink = sfCHI.item();
