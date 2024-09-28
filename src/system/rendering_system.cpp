@@ -33,6 +33,7 @@
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../preload.h"
+#include "../vendor_include.h"
 #include "raylib.h"
 #include "system_manager.h"
 
@@ -285,7 +286,6 @@ bool render_simple_highlighted(const Entity& entity, float) {
     if (entity.is_missing<SimpleColoredBoxRenderer>()) return false;
     const SimpleColoredBoxRenderer& renderer =
         entity.get<SimpleColoredBoxRenderer>();
-    // TODO replace size with Bounds component when it exists
     draw_valid_colored_box(transform, renderer, true);
     return true;
 }
@@ -782,12 +782,10 @@ void render_trigger_area(const Entity& entity, float dt) {
     }
 }
 
-// TODO merge all these so we can just pass in the texture name?
-void render_dollarsign_marker(const Entity& entity) {
-    const Transform& transform = entity.get<Transform>();
+void render_texture_billboard(const Transform& transform,
+                              const std::string& texture_name) {
     vec3 position = transform.pos();
-
-    raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
+    raylib::Texture texture = TextureLibrary::get().get(texture_name);
     GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
     raylib::DrawBillboard(cam.camera, texture,
                           vec3{position.x + (TILESIZE * 0.05f),  //
@@ -797,32 +795,20 @@ void render_dollarsign_marker(const Entity& entity) {
                           raylib::WHITE);
 }
 
-void render_lock_marker(const Entity& entity) {
-    const Transform& transform = entity.get<Transform>();
-    vec3 position = transform.pos();
-
-    raylib::Texture texture = TextureLibrary::get().get("lock");
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::DrawBillboard(cam.camera, texture,
-                          vec3{position.x + (TILESIZE * 0.05f),  //
-                               position.y + (TILESIZE * 2.f),    //
-                               position.z},                      //
-                          0.75f * TILESIZE,                      //
-                          raylib::WHITE);
+void render_billboard_at_entity(const OptEntity& opt_entity,
+                                const std::string& texture_name) {
+    if (!opt_entity.has_value()) return;
+    return render_texture_billboard(opt_entity->get<Transform>(), texture_name);
 }
 
-void render_trash_marker(const Entity& entity) {
-    const Transform& transform = entity.get<Transform>();
-    vec3 position = transform.pos();
-
-    raylib::Texture texture = TextureLibrary::get().get("trashcan");
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::DrawBillboard(cam.camera, texture,
-                          vec3{position.x + (TILESIZE * 0.05f),  //
-                               position.y + (TILESIZE * 2.f),    //
-                               position.z},                      //
-                          0.75f * TILESIZE,                      //
-                          raylib::WHITE);
+void render_icon_for_marked_items(const IsFloorMarker& ifm,
+                                  const std::string& texture_name) {
+    for (size_t i = 0; i < ifm.num_marked(); i++) {
+        EntityID id = ifm.marked_ids()[i];
+        OptEntity marked_entity = EntityHelper::getEntityForID(id);
+        if (!marked_entity) continue;
+        render_billboard_at_entity(marked_entity, texture_name);
+    }
 }
 
 void render_floor_marker(const Entity& entity, float) {
@@ -886,33 +872,21 @@ void render_floor_marker(const Entity& entity, float) {
     // we dont need this since the caller of render_floor_marker doesnt
     // return render_simple_normal(entity, dt);
 
-    // Next lets draw the trash marker
     const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
-    if (ifm.type == IsFloorMarker::Type::Planning_TrashArea) {
-        for (size_t i = 0; i < ifm.num_marked(); i++) {
-            EntityID id = ifm.marked_ids()[i];
-            OptEntity marked_entity = EntityHelper::getEntityForID(id);
-            if (!marked_entity) continue;
-            render_trash_marker(marked_entity.asE());
-        }
-    }
-    if (ifm.type == IsFloorMarker::Type::Store_PurchaseArea) {
-        for (size_t i = 0; i < ifm.num_marked(); i++) {
-            EntityID id = ifm.marked_ids()[i];
-            OptEntity marked_entity = EntityHelper::getEntityForID(id);
-            if (!marked_entity) continue;
-            render_dollarsign_marker(marked_entity.asE());
-        }
-    }
-
-    if (ifm.type == IsFloorMarker::Type::Store_LockedArea) {
-        for (size_t i = 0; i < ifm.num_marked(); i++) {
-            EntityID id = ifm.marked_ids()[i];
-            OptEntity marked_entity = EntityHelper::getEntityForID(id);
-            if (!marked_entity) continue;
-            if (marked_entity->is_missing<IsStoreSpawned>()) continue;
-            render_lock_marker(marked_entity.asE());
-        }
+    switch (ifm.type) {
+        case IsFloorMarker::Unset:
+        case IsFloorMarker::Planning_SpawnArea:
+        case IsFloorMarker::Store_SpawnArea:
+            break;
+        case IsFloorMarker::Planning_TrashArea:
+            render_icon_for_marked_items(ifm, "trash_can");
+            break;
+        case IsFloorMarker::Store_PurchaseArea:
+            render_icon_for_marked_items(ifm, "dollar_sign");
+            break;
+        case IsFloorMarker::Store_LockedArea:
+            render_icon_for_marked_items(ifm, "lock");
+            break;
     }
 }
 
