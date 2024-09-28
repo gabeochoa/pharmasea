@@ -1096,7 +1096,11 @@ void render_price(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
-    vec3 location = transform.raw() + vec3{0, 0.5f * TILESIZE, 0.4f * TILESIZE};
+    bool someone_close =
+        SystemManager::get().is_some_player_near(transform.as2(), 2.f);
+    if (!someone_close) return;
+
+    vec3 location = transform.raw() + vec3{0, 0.5f * TILESIZE, 0.5f * TILESIZE};
 
     bool is_free = entity.has<IsFreeInStore>();
     if (is_free) price = 0;
