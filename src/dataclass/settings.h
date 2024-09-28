@@ -53,6 +53,7 @@ enum struct ConfigKey {
     VomitAmountMultiplier,  // max vomit amount
     //
     MaxDrinkTime,  // how long it takes to drink
+    MaxDwellTime,  // how long the customer will wander around
     //
 };
 
@@ -74,6 +75,7 @@ inline ConfigKeyType get_type(ConfigKey key) {
         case ConfigKey::VomitAmountMultiplier:
         case ConfigKey::Test:
         case ConfigKey::MaxDrinkTime:
+        case ConfigKey::MaxDwellTime:
             return ConfigKeyType::Float;
         case ConfigKey::MaxNumOrders:
         case ConfigKey::NumStoreSpawns:

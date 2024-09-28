@@ -32,6 +32,7 @@ struct ConfigData {
         float vomitamountmultiplier;
         float test;
         float maxdrinktime;
+        float maxdwelltime;
         int maxnumorders;
         int numstorespawns;
         int bladdersize;
@@ -74,6 +75,9 @@ struct ConfigData {
                 case ConfigKey::MaxDrinkTime:
                     maxdrinktime = value;
                     break;
+                case ConfigKey::MaxDwellTime:
+                    maxdwelltime = value;
+                    break;
                 case ConfigKey::MaxNumOrders:
                 case ConfigKey::NumStoreSpawns:
                 case ConfigKey::BladderSize:
@@ -97,6 +101,7 @@ struct ConfigData {
                 case ConfigKey::VomitAmountMultiplier:
                 case ConfigKey::Test:
                 case ConfigKey::MaxDrinkTime:
+                case ConfigKey::MaxDwellTime:
                     log_error("Setting value for {} but not supported for int",
                               key_name(key));
                     break;
@@ -143,6 +148,8 @@ struct ConfigData {
                     return test;
                 case ConfigKey::MaxDrinkTime:
                     return maxdrinktime;
+                case ConfigKey::MaxDwellTime:
+                    return maxdwelltime;
                 case ConfigKey::MaxNumOrders:
                 case ConfigKey::NumStoreSpawns:
                 case ConfigKey::BladderSize:
@@ -166,6 +173,7 @@ struct ConfigData {
                 case ConfigKey::VomitAmountMultiplier:
                 case ConfigKey::Test:
                 case ConfigKey::MaxDrinkTime:
+                case ConfigKey::MaxDwellTime:
                     break;
                 case ConfigKey::MaxNumOrders:
                     return maxnumorders;
@@ -196,6 +204,7 @@ struct ConfigData {
                 case ConfigKey::VomitFreqMultiplier:
                 case ConfigKey::VomitAmountMultiplier:
                 case ConfigKey::MaxDrinkTime:
+                case ConfigKey::MaxDwellTime:
                     return true;
             }
             log_info("Config key {} but missing from data", key_name(key));

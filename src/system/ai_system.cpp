@@ -26,7 +26,7 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
                           Item& madeDrink) {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-    // TODO how many ingredients have to be correct?
+    // TODO :DESIGN: how many ingredients have to be correct?
     // as people get more drunk they should care less and less
     //
     bool all_ingredients_match =
@@ -289,7 +289,6 @@ void _set_customer_next_order(Entity& entity) {
         sophie.get<IsProgressionManager>();
 
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
-    // TODO make a function set_order()
     cod.set_order(progressionManager.get_random_unlocked_drink());
 
     reset_job_component<AIDrinking>(entity);
@@ -303,11 +302,14 @@ void process_wandering(Entity& entity, float dt) {
     aiwandering.pass_time(dt);
     if (!aiwandering.ready()) return;
 
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
     bool found =
         aiwandering.target.find_if_missing(entity, nullptr, [&](Entity&) {
-            // TODO make dwell time a variable
-            // float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
-            float dwell_time = RandomEngine::get().get_float(1.f, 5.f);
+            float max_dwell_time = irsm.get<float>(ConfigKey::MaxDwellTime);
+            float dwell_time =
+                RandomEngine::get().get_float(1.f, max_dwell_time);
             aiwandering.timer.set_time(dwell_time);
         });
     if (!found) {
