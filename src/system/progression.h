@@ -2,11 +2,13 @@
 #include <algorithm>
 #include <random>
 
-#include "../components/has_timer.h"
+#include "../building_locations.h"
+#include "../components/has_day_night_timer.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
 #include "../dataclass/upgrades.h"
 #include "../entity_helper.h"
+#include "../entity_query.h"
 #include "magic_enum/magic_enum.hpp"
 #include "system_manager.h"
 
@@ -14,10 +16,10 @@ namespace system_manager {
 namespace progression {
 
 inline void skip_upgrade_visit() {
-    GameState::get().transition_to_store();
+    GameState::get().transition_to_game();
     SystemManager::get().for_each_old([](Entity& e) {
         if (check_type(e, EntityType::Player)) {
-            move_player_SERVER_ONLY(e, game::State::Store);
+            move_player_SERVER_ONLY(e, game::State::InGame);
             return;
         }
     });
@@ -77,9 +79,8 @@ inline bool collect_drink_options(IsProgressionManager& ipm) {
         }
     }
     // TODO add a little randomness
-    // TODO grab the rng engine from map
-    // auto rng = std::default_random_engine{};
-    // std::shuffle(std::begin(options), std::end(options), rng);
+    // std::shuffle(std::begin(options), std::end(options),
+    // RandomEngine()::generator());
 
     if (options.size() < 2) {
         // No more options so just go direct to the store
@@ -104,29 +105,14 @@ inline bool collect_upgrade_options(Entity& entity) {
     IsProgressionManager& ipm = entity.get<IsProgressionManager>();
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
-    std::vector<std::shared_ptr<UpgradeImpl>> possible_upgrades;
+    std::vector<std::shared_ptr<UpgradeImpl>> possible_upgrades =
+        irsm.config.get_possible_upgrades(ipm);
 
     log_info("num upgrades without filters : {}",
              magic_enum::enum_count<UpgradeClass>());
 
     // possible_upgrades.push_back(make_upgrade(UpgradeClass::CantEvenTell));
     // possible_upgrades.push_back(make_upgrade(UpgradeClass::UnlockToilet));
-
-    magic_enum::enum_for_each<UpgradeClass>([&](auto val) {
-        constexpr UpgradeClass upgrade = val;
-
-        if (bitset_utils::test(irsm.config.unlocked_upgrades, upgrade)) {
-            // By default we just assume you can only have each upgrade once...
-            // TODO do we need to support multiple?
-            return;
-        }
-
-        auto impl = make_upgrade(upgrade);
-        bool meets = impl->meetsPrereqs(irsm.config, ipm);
-        if (meets) {
-            possible_upgrades.push_back(impl);
-        }
-    });
 
     log_info("num upgrades with filters : {}", possible_upgrades.size());
 
@@ -190,6 +176,15 @@ inline void collect_progression_options(Entity& entity, float) {
     }
 
     ipm.collectedOptions = true;
+
+    // unlock doors
+    for (RefEntity door : EntityQuery()
+                              .whereType(EntityType::Door)
+                              .whereInside(PROGRESSION_BUILDING.min(),
+                                           PROGRESSION_BUILDING.max())
+                              .gen()) {
+        door.get().removeComponentIfExists<IsSolid>();
+    }
 }
 
 inline void update_upgrade_variables() {
@@ -204,12 +199,15 @@ inline void update_upgrade_variables() {
 
         switch (key) {
             case ConfigKey::RoundLength: {
-                HasTimer& hasTimer = sophie.get<HasTimer>();
-                hasTimer.set_total_round_time(
+                // TODO right now we are just making the night longer
+                // but maybe we want the day to be longer too?
+                HasDayNightTimer& hasTimer = sophie.get<HasDayNightTimer>();
+                hasTimer.set_night_length(
                     irsm.get<float>(ConfigKey::RoundLength));
 
             } break;
             case ConfigKey::Test:
+            case ConfigKey::StoreRerollPrice:
             case ConfigKey::MaxNumOrders:
             case ConfigKey::PatienceMultiplier:
             case ConfigKey::CustomerSpawnMultiplier:
@@ -220,6 +218,7 @@ inline void update_upgrade_variables() {
             case ConfigKey::VomitFreqMultiplier:
             case ConfigKey::VomitAmountMultiplier:
             case ConfigKey::MaxDrinkTime:
+            case ConfigKey::MaxDwellTime:
                 break;
         }
     });

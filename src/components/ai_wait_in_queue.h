@@ -12,7 +12,7 @@ struct AIWaitInQueue : public AIComponent {
         explicit AIWaitInQueueTarget(const ResetFn& resetFn)
             : AITarget(resetFn) {}
 
-        virtual OptEntity find_target(const Entity&) override {
+        virtual OptEntity find_target(const Entity& ai_entity) override {
             // TODO :DUPE: same as process_ai_paying
             return EntityQuery()
                 .whereType(EntityType::Register)
@@ -23,6 +23,7 @@ struct AIWaitInQueue : public AIComponent {
                     if (hwq.is_full()) return false;
                     return true;
                 })
+                .whereCanPathfindTo(ai_entity.get<Transform>().as2())
                 // Find the register with the least people on it
                 .orderByLambda([](const Entity& r1, const Entity& r2) {
                     const HasWaitingQueue& hwq1 = r1.get<HasWaitingQueue>();
@@ -32,7 +33,6 @@ struct AIWaitInQueue : public AIComponent {
                     return rpos1 < rpos2;
                 })
                 .gen_first();
-            // TODO Check to see if we can path to that spot
         }
     } target;
 
@@ -51,5 +51,6 @@ struct AIWaitInQueue : public AIComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<AIComponent>{});
+        s.object(target);
     }
 };

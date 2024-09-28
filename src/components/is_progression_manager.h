@@ -8,6 +8,7 @@
 #include "../dataclass/settings.h"
 #include "../dataclass/upgrade_class.h"
 #include "../recipe_library.h"
+#include "../strings.h"
 #include "base_component.h"
 
 struct IsProgressionManager : public BaseComponent {
@@ -22,8 +23,6 @@ struct IsProgressionManager : public BaseComponent {
         // Unlock all the starting store items
         magic_enum::enum_for_each<EntityType>([&](EntityType val) {
             StoreEligibilityType set = get_store_eligibility(val);
-            // TODO right now we also unlock time based things
-            // but need to figure out when to do this
             if (set == StoreEligibilityType::OnStart ||
                 set == StoreEligibilityType::TimeBased) {
                 unlock_entity(val);
@@ -54,6 +53,7 @@ struct IsProgressionManager : public BaseComponent {
                     magic_enum::enum_name<Ingredient>(ig));
 
                 unlock_ingredient(ig);
+                return bitset_utils::ForEachFlow::NormalFlow;
             });
         }
 

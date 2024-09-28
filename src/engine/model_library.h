@@ -100,7 +100,7 @@ struct ModelInfoLibrary {
         return impl.get(name);
     }
 
-    void load(ModelLoadingInfo mli) {
+    void load(const ModelLoadingInfo& mli) {
         const auto full_filename =
             Files::get().fetch_resource_path(mli.folder, mli.filename);
         impl.load(full_filename.c_str(), mli.library_name.c_str());

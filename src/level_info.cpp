@@ -1,21 +1,28 @@
 
 #include "level_info.h"
 
+#include "building_locations.h"
 #include "camera.h"
+#include "components/can_change_settings_interactively.h"
+#include "components/can_hold_furniture.h"
+#include "components/is_bank.h"
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
 #include "components/is_progression_manager.h"
+#include "components/is_round_settings_manager.h"
+#include "components/is_store_spawned.h"
 #include "components/is_trigger_area.h"
+#include "components/transform.h"
 #include "dataclass/ingredient.h"
 #include "engine/bitset_utils.h"
 #include "engine/globals.h"
+#include "engine/random_engine.h"
 #include "engine/texture_library.h"
 #include "entity_helper.h"
 #include "entity_makers.h"
 #include "entity_query.h"
 #include "entity_type.h"
 #include "map_generation.h"
-#include "network/server.h"
 #include "recipe_library.h"
 #include "simple.h"
 #include "strings.h"
@@ -23,21 +30,20 @@
 #include "vec_util.h"
 #include "wave_collapse.h"
 
+vec3 lobby_origin = LOBBY_BUILDING.to3();
+vec3 progression_origin = PROGRESSION_BUILDING.to3();
+vec3 model_test_origin = MODEL_TEST_BUILDING.to3();
+vec3 store_origin = STORE_BUILDING.to3();
+
 namespace wfc {
 extern Rectangle SPAWN_AREA;
 extern Rectangle TRASH_AREA;
 }  // namespace wfc
 
 void LevelInfo::update_seed(const std::string& s) {
-    // TODO implement this
-    // randomizer.get<HasName>().update(server->get_map_SERVER_ONLY()->seed);
-
     log_info("level info update seed {}", s);
     seed = s;
-    hashed_seed = hashString(seed);
-    generator = make_engine(hashed_seed);
-    // TODO leaving at 1 because we dont have a door to block the entrance
-    dist = std::uniform_int_distribution<>(1, MAX_MAP_SIZE - 1);
+    RandomEngine::set_seed(seed);
 
     was_generated = false;
 }
@@ -56,6 +62,72 @@ void LevelInfo::onDrawUI(float dt) {
     SystemManager::get().render_ui(entities, dt);
 }
 
+void generate_walls_for_building(const Building& building) {
+    std::vector<RefEntity> walls;
+    walls.reserve((int) (building.area.width + building.area.height) * 2);
+
+    for (int i = 0; i < (int) building.area.width; i++) {
+        // top
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(
+                EntityType::Wall, entity,
+                vec2{building.area.x, building.area.y} + vec2{i * 1.f, 0});
+            walls.push_back(entity);
+        }
+        // bottom
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{building.area.x, building.area.y} +
+                                vec2{i * 1.f, building.area.height - 1});
+            walls.push_back(entity);
+        }
+    }
+
+    for (int j = 1; j < (int) building.area.height - 1; j++) {
+        // left
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(
+                EntityType::Wall, entity,
+                vec2{building.area.x, building.area.y} + vec2{0, j * 1.f});
+            walls.push_back(entity);
+        }
+        // right
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Wall, entity,
+                            vec2{building.area.x, building.area.y} +
+                                vec2{building.area.width - 1, j * 1.f});
+            walls.push_back(entity);
+        }
+    }
+
+    bool skip = false;
+    for (auto& door_pos : building.doors) {
+        for (RefEntity entityref : walls) {
+            // we already deleted one wall,
+            if (skip) continue;
+
+            Entity& entity = entityref;
+            if (entity.cleanup) continue;
+            const Transform& transform = entity.get<Transform>();
+            vec2 pos = transform.as2();
+            if (vec::distance(pos, door_pos) >= 1.f) continue;
+            entity.cleanup = true;
+        }
+
+        skip = false;
+
+        // place door in that spot
+        {
+            auto& entity = EntityHelper::createEntity();
+            convert_to_type(EntityType::Door, entity, door_pos);
+        }
+    }
+}
+
 void LevelInfo::grab_things() {
     {
         this->entities.clear();
@@ -70,6 +142,13 @@ void LevelInfo::generate_lobby_map() {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_character_switcher(
             entity, vec::to2(lobby_origin) + vec2{4.f, -2.f});
+    }
+
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_interactive_settings_changet(
+            entity, vec::to2(lobby_origin) + vec2{6.f, -2.f},
+            CanChangeSettingsInteractively::ToggleIsTutorial);
     }
 
     {
@@ -155,6 +234,7 @@ void LevelInfo::generate_model_test_map() {
                                 Ingredient ig =
                                     magic_enum::enum_value<Ingredient>(index);
                                 item.get<IsDrink>().add_ingredient(ig);
+                                return bitset_utils::ForEachFlow::NormalFlow;
                             });
 
                         canHold.update(EntityHelper::getEntityAsSharedPtr(item),
@@ -225,6 +305,8 @@ void LevelInfo::generate_model_test_map() {
         }
     };
 
+    // TODO i was hoping this could enforce any missing
+    // but it doesnt seem like it
     std::array<ModelTestMapInfo, magic_enum::enum_count<EntityType>() - 25>
         static_map_info = {{
             //
@@ -257,6 +339,8 @@ void LevelInfo::generate_model_test_map() {
                 .spawner_type = ModelTestMapInfo::Some,
             },
             {EntityType::Jukebox},
+            {EntityType::HandTruck},
+            {EntityType::SodaFountain},
         }};
 
     const auto _carraige_return = [&]() {
@@ -335,45 +419,62 @@ void LevelInfo::generate_model_test_map() {
 }
 
 void LevelInfo::generate_progression_map() {
+    generate_walls_for_building(PROGRESSION_BUILDING);
+
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
-            entity, progression_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
+            entity, progression_origin + vec3{-5, TILESIZE / -2.f, 0}, 8, 3,
             IsTriggerArea::Progression_Option1);
+        entity.get<IsTriggerArea>().set_required_entrants_type(
+            IsTriggerArea::EntrantsRequired::AllInBuilding,
+            PROGRESSION_BUILDING);
     }
 
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
-            entity, progression_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
+            entity, progression_origin + vec3{5, TILESIZE / -2.f, 0}, 8, 3,
             IsTriggerArea::Progression_Option2);
+        entity.get<IsTriggerArea>().set_required_entrants_type(
+            IsTriggerArea::EntrantsRequired::AllInBuilding,
+            PROGRESSION_BUILDING);
     }
 }
 
 void LevelInfo::generate_store_map() {
+    generate_walls_for_building(STORE_BUILDING);
+
+    const float trig_x = -4;
+    const float trig_width = 8;
+    const float trig_height = 3;
+
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
-            entity, store_origin + vec3{5, TILESIZE / -2.f, -10}, 8, 3,
-            IsTriggerArea::Store_BackToPlanning);
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, 10},
+            trig_width, trig_height, IsTriggerArea::Store_BackToPlanning);
 
-        entity.get<IsTriggerArea>().set_validation_fn(
-            [](const IsTriggerArea& ita) -> ValidationResult {
-                // TODO should we only run the below when there is at least one
+        entity.get<IsTriggerArea>()
+            .set_validation_fn([](const IsTriggerArea& ita)
+                                   -> ValidationResult {
+                // should we only run the below when there is at least one
                 // person standing on it?
+                // TODO right now we only show it when someone is standing,
+                // but it does run every frame (i think)
 
                 OptEntity sophie =
                     EntityQuery().whereType(EntityType::Sophie).gen_first();
 
-                // TODO translate these strings .
-                if (!sophie.valid()) return {false, "Internal Error"};
+                if (!sophie.valid())
+                    return {false, strings::i18n::InternalError};
 
                 // Do we have enough money?
                 const IsBank& bank = sophie->get<IsBank>();
                 int balance = bank.balance();
                 int cart = bank.cart();
                 if (balance < cart)
-                    return {false, strings::i18n::STORE_NOT_ENOUGH_COINS};
+                    return {false, strings::i18n::StoreNotEnoughCoins};
 
                 // Are all the required machines here?
                 OptEntity cart_area =
@@ -387,17 +488,31 @@ void LevelInfo::generate_store_map() {
                             return fm.type ==
                                    IsFloorMarker::Type::Store_PurchaseArea;
                         })
+                        .include_store_entities()
                         .gen_first();
-                if (!cart_area.valid()) return {false, "Internal Error"};
+                if (!cart_area.valid())
+                    return {false, strings::i18n::InternalError};
 
-                const auto ents =
-                    EntityQuery().whereHasComponent<IsStoreSpawned>().gen();
+                const IsFloorMarker& ifm = cart_area->get<IsFloorMarker>();
+
+                std::vector<RefEntity> ents;
+                for (size_t i = 0; i < ifm.num_marked(); i++) {
+                    EntityID id = ifm.marked_ids()[i];
+                    OptEntity marked_entity = EntityHelper::getEntityForID(id);
+                    if (!marked_entity) continue;
+                    if (marked_entity->is_missing<IsStoreSpawned>()) continue;
+                    ents.push_back(marked_entity.asE());
+                }
+
+                if (ents.empty()) {
+                    return {false, strings::i18n::StoreCartEmpty};
+                }
 
                 // If its free and not marked, then we cant continue
                 for (const Entity& ent : ents) {
                     if (ent.is_missing<IsFreeInStore>()) continue;
                     if (!cart_area->get<IsFloorMarker>().is_marked(ent.id)) {
-                        return {false, strings::i18n::STORE_MISSING_REQUIRED};
+                        return {false, strings::i18n::StoreMissingRequired};
                     }
                 }
 
@@ -414,23 +529,67 @@ void LevelInfo::generate_store_map() {
                         }
                     }
                     if (!all_empty)
-                        return {false, strings::i18n::STORE_STEALING_MACHINE};
+                        return {false, strings::i18n::StoreStealingMachine};
                 }
 
-                return {true, ""};
+                return {true, strings::i18n::Empty};
+            })
+            .set_required_entrants_type(
+                IsTriggerArea::EntrantsRequired::AllInBuilding, STORE_BUILDING);
+    }
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_floor_marker(
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, 5}, trig_width,
+            trig_height, IsFloorMarker::Type::Store_PurchaseArea);
+    }
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_floor_marker(
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, -5},
+            trig_width, trig_height, IsFloorMarker::Type::Store_SpawnArea);
+    }
+
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_floor_marker(
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, 0}, trig_width,
+            trig_height, IsFloorMarker::Type::Store_LockedArea);
+    }
+
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_trigger_area(
+            entity, store_origin + vec3{trig_x, TILESIZE / -2.f, -10},
+            trig_width, trig_height, IsTriggerArea::Store_Reroll);
+
+        entity.get<IsTriggerArea>().update_cooldown_max(2.f).set_validation_fn(
+            [](const IsTriggerArea&) -> ValidationResult {
+                // TODO should we only run the below when there is at least
+                // one person standing on it?
+
+                OptEntity sophie =
+                    EntityQuery().whereType(EntityType::Sophie).gen_first();
+
+                // TODO translate these strings .
+                if (!sophie.valid())
+                    return {false, strings::i18n::InternalError};
+
+                // Do we have enough money?
+                const IsBank& bank = sophie->get<IsBank>();
+                int balance = bank.balance();
+
+                const IsRoundSettingsManager& isrm =
+                    sophie->get<IsRoundSettingsManager>();
+
+                if (balance < isrm.get<int>(ConfigKey::StoreRerollPrice))
+                    // TODO more accurate string?
+                    return {false, strings::i18n::StoreNotEnoughCoins};
+
+                // TODO only run if everyone is on this?
+
+                return {true, strings::i18n::Empty};
             });
-    }
-    {
-        auto& entity = EntityHelper::createEntity();
-        furniture::make_floor_marker(
-            entity, store_origin + vec3{-5, TILESIZE / -2.f, -10}, 8, 3,
-            IsFloorMarker::Type::Store_PurchaseArea);
-    }
-    {
-        auto& entity = EntityHelper::createEntity();
-        furniture::make_floor_marker(
-            entity, store_origin + vec3{-5, TILESIZE / -2.f, 0}, 8, 3,
-            IsFloorMarker::Type::Store_SpawnArea);
     }
 }
 
@@ -438,7 +597,7 @@ void LevelInfo::generate_default_seed() {
     generation::helper helper(EXAMPLE_MAP);
     helper.generate();
     helper.validate();
-    EntityHelper::invalidatePathCache();
+    EntityHelper::invalidateCaches();
 }
 
 vec2 generate_in_game_map_wfc(const std::string&) {
@@ -498,7 +657,8 @@ vec2 generate_in_game_map_wfc(const std::string&) {
     generation::helper helper(lines);
     vec2 max_location = helper.generate();
     helper.validate();
-    EntityHelper::invalidatePathCache();
+    EntityHelper::invalidateCaches();
+
     log_info("max location {}", max_location);
 
     return max_location;
@@ -550,8 +710,8 @@ void LevelInfo::generate_in_game_map() {
 
     std::vector<std::string> lines;
 
-    int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
-    int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
+    int rows = RandomEngine::get().get_int(MIN_MAP_SIZE, MAX_MAP_SIZE);
+    int cols = RandomEngine::get().get_int(MIN_MAP_SIZE, MAX_MAP_SIZE);
 
     const auto _is_inside = [lines](int i, int j) -> bool {
         if (i < 0 || j < 0 || i >= (int) lines.size() ||
@@ -570,14 +730,14 @@ void LevelInfo::generate_in_game_map() {
         return get_char(i, j) == '.';
     };
 
-    const auto _get_random_empty = [_is_empty, rows, cols,
-                                    this]() -> std::pair<int, int> {
+    const auto _get_random_empty = [_is_empty, rows,
+                                    cols]() -> std::pair<int, int> {
         int tries = 0;
         int x;
         int y;
         do {
-            x = gen_rand(1, rows - 1);
-            y = gen_rand(1, cols - 1);
+            x = RandomEngine::get().get_int(1, rows - 1);
+            y = RandomEngine::get().get_int(1, cols - 1);
             if (tries++ > 100) {
                 x = 0;
                 y = 0;
@@ -588,10 +748,10 @@ void LevelInfo::generate_in_game_map() {
         return {x, y};
     };
 
-    const auto _get_empty_neighbor = [_is_empty, this](
-                                         int i, int j) -> std::pair<int, int> {
+    const auto _get_empty_neighbor = [_is_empty](int i,
+                                                 int j) -> std::pair<int, int> {
         auto ns = vec::get_neighbors_i(i, j);
-        std::shuffle(std::begin(ns), std::end(ns), generator);
+        std::shuffle(std::begin(ns), std::end(ns), RandomEngine::generator());
 
         for (auto n : ns) {
             if (_is_empty(n.first, n.second)) {
@@ -601,14 +761,14 @@ void LevelInfo::generate_in_game_map() {
         return ns[0];
     };
 
-    const auto _get_valid_register_location = [_is_empty, rows, cols,
-                                               this]() -> std::pair<int, int> {
+    const auto _get_valid_register_location = [_is_empty, rows,
+                                               cols]() -> std::pair<int, int> {
         int tries = 0;
         int x;
         int y;
         do {
-            x = gen_rand(1, rows - 1);
-            y = gen_rand(1, cols - 1);
+            x = RandomEngine::get().get_int(1, rows - 1);
+            y = RandomEngine::get().get_int(1, cols - 1);
             if (tries++ > 100) {
                 x = 0;
                 y = 0;
@@ -639,7 +799,7 @@ void LevelInfo::generate_in_game_map() {
         }
 
         // Add one empty spot so that we can get into the box
-        int y = gen_rand(1, rows - 1);
+        int y = RandomEngine::get().get_int(1, rows - 1);
         lines[y][cols] = '.';
     }
 
@@ -695,13 +855,14 @@ void LevelInfo::generate_in_game_map() {
     generation::helper helper(lines);
     helper.generate();
     helper.validate();
-    EntityHelper::invalidatePathCache();
+    EntityHelper::invalidateCaches();
 }
 
 auto LevelInfo::get_rand_walkable() {
     vec2 location;
     do {
-        location = vec2{dist(generator) * TILESIZE, dist(generator) * TILESIZE};
+        location = vec2{RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1),
+                        RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1)};
     } while (!EntityHelper::isWalkable(location));
     return location;
 }
@@ -709,7 +870,8 @@ auto LevelInfo::get_rand_walkable() {
 auto LevelInfo::get_rand_walkable_register() {
     vec2 location;
     do {
-        location = vec2{dist(generator) * TILESIZE, dist(generator) * TILESIZE};
+        location = vec2{RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1),
+                        RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1)};
     } while (
         !EntityHelper::isWalkable(location) &&
         !EntityHelper::isWalkable(vec2{location.x, location.y + 1 * TILESIZE}));

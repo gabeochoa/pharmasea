@@ -42,9 +42,6 @@ void render_progress_bar(const Entity& entity, float);
 void render_waiting_queue(const Entity& entity, float);
 void render_walkable_spots(float);
 
-void render_trash_marker(const Entity& entity);
-void render_dollarsign_marker(const Entity& entity);
-
 void render(const Entity&, float, bool);
 
 }  // namespace render_manager

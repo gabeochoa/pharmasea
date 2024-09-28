@@ -8,7 +8,6 @@
 #include "engine/bitset_utils.h"
 #include "engine/pathfinder.h"
 #include "entity_helper.h"
-#include "strings.h"
 
 namespace wfc {
 
