@@ -1121,7 +1121,7 @@ void render_machine_name(const Entity& entity, int font_size = 200) {
     if (!someone_close) return;
 
     // TODO rotate the name with the camera?
-    raylib::DrawFloatingText(transform.raw() + vec3{0.3f, 0.2f, 0.2f},
+    raylib::DrawFloatingText(transform.raw() + vec3{0.3f, 0.2f, 0.5f},
                              Preload::get().font,
                              std::string(entity.name()).c_str(), font_size);
 }
