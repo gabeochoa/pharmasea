@@ -1116,6 +1116,10 @@ void render_machine_name(const Entity& entity, int font_size = 200) {
 
     const Transform& transform = entity.get<Transform>();
 
+    bool someone_close =
+        SystemManager::get().is_some_player_near(transform.as2(), 2.f);
+    if (!someone_close) return;
+
     // TODO rotate the name with the camera?
     raylib::DrawFloatingText(transform.raw() + vec3{0.3f, 0.2f, 0.2f},
                              Preload::get().font,
