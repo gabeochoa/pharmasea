@@ -1228,20 +1228,21 @@ void render_normal(const Entity& entity, float dt) {
         render_floor_marker(entity, dt);
     }
 
-    //  Showing machine name because playtesters
-    //  didnt find it clear enough that they were still in
-    //  planning state.
-    //
-    //  They kept trying to grab the cups and start making drinks
-    if (SystemManager::get().is_daytime()) {
-        render_machine_name(entity, 100);
-    }
-
     if (entity.has<IsStoreSpawned>() &&
         STORE_BUILDING.is_inside(entity.get<Transform>().as2())) {
         render_machine_name(entity, 200);
         render_price(entity, dt);
     }
+    //  Showing machine name because playtesters
+    //  didnt find it clear enough that they were still in
+    //  planning state.
+    //
+    //  They kept trying to grab the cups and start making drinks
+    else if (SystemManager::get().is_daytime()) {
+        render_machine_name(entity, 100);
+    }
+    // ^ adding an "else" because otherwise itll show two names when in the
+    // store
 
     if (entity.has<CanBeHighlighted>() &&
         entity.get<CanBeHighlighted>().is_highlighted()) {
