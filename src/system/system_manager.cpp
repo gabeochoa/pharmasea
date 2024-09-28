@@ -3023,3 +3023,15 @@ bool SystemManager::is_daytime() const {
     return false;
 }
 bool SystemManager::is_nighttime() const { return !is_daytime(); }
+
+bool SystemManager::is_some_player_near(vec2 spot, float distance) const {
+    bool someone_close = false;
+    for (auto& player : remote_players) {
+        auto pos = player->get<Transform>().as2();
+        if (vec::distance(pos, spot) < distance) {
+            someone_close = true;
+            break;
+        }
+    }
+    return someone_close;
+}

@@ -1292,14 +1292,8 @@ void render_progress_bar(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
-    bool someone_close = false;
-    for (auto& player : SystemManager::get().remote_players) {
-        auto pos = player->get<Transform>().as2();
-        if (vec::distance(pos, transform.as2()) < 4.f) {
-            someone_close = true;
-            break;
-        }
-    }
+    bool someone_close =
+        SystemManager::get().is_some_player_near(transform.as2());
     if (!someone_close) return;
 
     DrawProgressBar(ProgressBarConfig{

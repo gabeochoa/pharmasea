@@ -78,6 +78,8 @@ struct SystemManager {
     bool is_daytime() const;
     bool is_nighttime() const;
 
+    bool is_some_player_near(vec2 spot, float distance = 4.f) const;
+
    private:
     using Transition = std::pair<game::State, game::State>;
     std::vector<Transition> transitions;
