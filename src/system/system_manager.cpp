@@ -350,6 +350,7 @@ void highlight_facing_furniture(Entity& entity, float) {
                           .whereInRange(transform.as2(), cho.reach())
                           .whereHasComponent<CanBeHighlighted>()
                           .include_store_entities()
+                          .orderByDist(transform.as2())
                           .gen_first();
     if (!match) return;
 
