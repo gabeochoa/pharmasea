@@ -308,11 +308,7 @@ bool render_bounding_box(const Entity& entity, float) {
     DrawFloatingText(transform.raw(), Preload::get().font,
                      fmt::format("{}", entity.id).c_str());
 
-    if (false && check_type(entity, EntityType::RemotePlayer)) {
-        vec3 circle_bounds = transform.circular_bounds();
-        DrawSphere({circle_bounds.x, -1.f * (TILESIZE / 2.f), circle_bounds.y},
-                   circle_bounds.z, MAROON);
-    } else {
+    {
         DrawBoundingBox(transform.bounds(), MAROON);
         Rectangle rect_bounds = transform.rectangular_bounds();
         DrawCubeCustom({rect_bounds.x, -1.f * (TILESIZE / 2.f), rect_bounds.y},
