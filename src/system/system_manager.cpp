@@ -1046,9 +1046,6 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
                     // They will be spawned in upgrade_system at Unlock time
 
-                    // TODO If an upgrade also unlocked machines, we probably
-                    // have to handle it
-                    // spawn_machines_for_new_unlock_DONOTCALL(irsm);
                     generate_machines_for_new_upgrades();
 
                     break;
