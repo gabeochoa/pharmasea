@@ -103,6 +103,9 @@ inline Color getHighlighted(const Color& color) {
     return toRGB(hsl);
 }
 
+static const Color transleucent_green = Color{0, 250, 50, 5};
+static const Color transleucent_red = Color{250, 0, 50, 5};
+
 static const Color pacific_blue = Color{71, 168, 189, 255};
 static const Color oxford_blue = Color{12, 27, 51, 255};
 static const Color orange_soda = Color{240, 100, 73, 255};

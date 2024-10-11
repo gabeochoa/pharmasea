@@ -1044,18 +1044,16 @@ void render_waiting_queue(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
     vec3 size = transform.size();
 
-    // TODO spelling?
-    Color transleucent_green = Color{0, 250, 50, 50};
-    Color transleucent_red = Color{250, 0, 50, 50};
-
     for (size_t i = 0; i < hwq.max_queue_size; i++) {
         vec2 pos2 = transform.tile_infront((int) i + 1);
         vec3 pos = vec::to3(pos2);
         bool walkable = EntityHelper::isWalkable(pos2);
         DrawCubeCustom({pos.x, pos.y - (TILESIZE * 0.5f), pos.z}, size.x,
                        size.y / 10.f, size.z, transform.facing,
-                       walkable ? transleucent_green : transleucent_red,
-                       walkable ? transleucent_green : transleucent_red);
+                       walkable ? ui::color::transleucent_green
+                                : ui::color::transleucent_red,
+                       walkable ? ui::color::transleucent_green
+                                : ui::color::transleucent_red);
     }
 }
 
@@ -1302,7 +1300,6 @@ void render_fishing_game(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
     vec3 position = transform.pos();
 
-    // TODO show the game for a second before switching over
     if (!fishing.has_score()) {
         DrawFishingGame(ProgressBarConfig{
             .position = position,
@@ -1318,6 +1315,7 @@ void render_fishing_game(const Entity& entity, float) {
     float x_offset = 0;
 
     // TODO read icon from score sheet
+    //  ^ idk what i meant by this
     raylib::Texture texture = TextureLibrary::get().get("star_filled");
     GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
     for (int i = 0; i < fishing.num_stars(); i++) {
@@ -1338,10 +1336,6 @@ void render_walkable_spots(float) {
 
     if (!GLOBALS.get<bool>("debug_ui_enabled")) return;
 
-    // TODO spelling?
-    Color transleucent_green = Color{0, 250, 50, 5};
-    Color transleucent_red = Color{250, 0, 50, 5};
-
     for (int i = -25; i < 25; i++) {
         for (int j = -25; j < 25; j++) {
             vec2 pos2 = {(float) i, (float) j};
@@ -1350,8 +1344,10 @@ void render_walkable_spots(float) {
 
             DrawCubeCustom(vec::to3(pos2), TILESIZE, TILESIZE + TILESIZE / 10.f,
                            TILESIZE, 0,
-                           walkable ? transleucent_green : transleucent_red,
-                           walkable ? transleucent_green : transleucent_red);
+                           walkable ? ui::color::transleucent_green
+                                    : ui::color::transleucent_red,
+                           walkable ? ui::color::transleucent_green
+                                    : ui::color::transleucent_red);
         }
     }
 }
