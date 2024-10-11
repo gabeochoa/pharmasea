@@ -358,6 +358,7 @@ void highlight_facing_furniture(Entity& entity, float) {
 }
 
 // TODO We need like a temporary storage for this
+// TODO ^ we arent even pushing customers anymore
 void move_entity_based_on_push_force(Entity& entity, float, vec3& new_pos_x,
                                      vec3& new_pos_z) {
     CanBePushed& cbp = entity.get<CanBePushed>();

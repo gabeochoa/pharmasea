@@ -222,7 +222,7 @@ void LevelInfo::generate_model_test_map() {
                         CanHoldItem& canHold = entity.get<CanHoldItem>();
                         // create item
                         Entity& item = EntityHelper::createEntity();
-                        items::make_drink(item, location);
+                        items::make_drink(item, vec::to3(location));
 
                         const auto igs =
                             RecipeLibrary::get()
@@ -247,7 +247,7 @@ void LevelInfo::generate_model_test_map() {
                         CanHoldItem& canHold = entity.get<CanHoldItem>();
                         // create item
                         Entity& item = EntityHelper::createEntity();
-                        items::make_juice(item, location,
+                        items::make_juice(item, vec::to3(location),
                                           mtmi.fruit_type.value());
                         canHold.update(EntityHelper::getEntityAsSharedPtr(item),
                                        entity.id);

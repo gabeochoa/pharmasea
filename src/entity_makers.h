@@ -57,8 +57,8 @@ void make_interactive_settings_changet(
 }  // namespace furniture
 
 namespace items {
-void make_juice(Item& juice, vec2 pos, Ingredient fruit);
-void make_drink(Item& drink, vec2 pos);
+void make_juice(Item& juice, vec3 pos, Ingredient fruit);
+void make_drink(Item& drink, vec3 pos);
 
 void make_item_type(Item& item, EntityType type_name, vec3 pos, int index = -1);
 

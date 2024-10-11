@@ -305,11 +305,11 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     person.addComponent<CanPathfind>();
 }
 
-void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
+void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
     make_aiperson(mop_buddy,
                   DebugOptions{.type = EntityType::MopBuddy,
                                .enableCharacterModel = false},
-                  vec::to3(pos));
+                  pos);
 
     mop_buddy.get<ModelRenderer>().update_model_name(
         util::convertToSnakeCase(EntityType::MopBuddy));
@@ -1012,8 +1012,8 @@ void make_hand_truck(Entity& hand_truck, vec2 pos) {
 
 namespace items {
 
-void make_item(Item& item, const DebugOptions& options, vec2 p) {
-    make_entity(item, options, {p.x, 0, p.y});
+void make_item(Item& item, const DebugOptions& options, vec3 p) {
+    make_entity(item, options, p);
     item.addComponent<IsItem>();
     // TODO Not everyone needs this but easier for now
     item.addComponent<CustomHeldItemPosition>().init(
@@ -1022,7 +1022,7 @@ void make_item(Item& item, const DebugOptions& options, vec2 p) {
     item.addComponent<ModelRenderer>(options.type);
 }
 
-void make_soda_spout(Item& soda_spout, vec2 pos) {
+void make_soda_spout(Item& soda_spout, vec3 pos) {
     make_item(soda_spout, {.type = EntityType::SodaSpout}, pos);
 
     soda_spout.get<IsItem>()
@@ -1040,7 +1040,7 @@ void make_soda_spout(Item& soda_spout, vec2 pos) {
         });
 }
 
-void make_mop(Item& mop, vec2 pos) {
+void make_mop(Item& mop, vec3 pos) {
     make_item(mop, {.type = EntityType::Mop}, pos);
 
     mop.get<IsItem>()
@@ -1127,7 +1127,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
     _process_add_ingredient();
 }
 
-void make_champagne(Item& alc, vec2 pos) {
+void make_champagne(Item& alc, vec3 pos) {
     make_item(alc, {.type = EntityType::Champagne}, pos);
 
     alc.addComponent<HasFishingGame>();
@@ -1150,7 +1150,7 @@ void make_champagne(Item& alc, vec2 pos) {
         });
 }
 
-void make_alcohol(Item& alc, vec2 pos, int index) {
+void make_alcohol(Item& alc, vec3 pos, int index) {
     make_item(alc, {.type = EntityType::Alcohol}, pos);
 
     // TODO have to change this to just be 0>size
@@ -1176,7 +1176,7 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
         });
 }
 
-void make_simple_syrup(Item& simple_syrup, vec2 pos) {
+void make_simple_syrup(Item& simple_syrup, vec3 pos) {
     make_item(simple_syrup, {.type = EntityType::SimpleSyrup}, pos);
 
     simple_syrup
@@ -1194,7 +1194,7 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
         .remove_hb_filter(EntityType::Blender);
 }
 
-void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
+void make_juice(Item& juice, vec3 pos, Ingredient fruit) {
     make_item(juice, {.type = EntityType::FruitJuice}, pos);
 
     juice
@@ -1213,7 +1213,7 @@ void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
         });
 }
 
-void make_fruit(Item& fruit, vec2 pos, int index) {
+void make_fruit(Item& fruit, vec3 pos, int index) {
     make_item(fruit, {.type = EntityType::Fruit}, pos);
 
     fruit.addComponent<HasSubtype>(0, (int) ingredient::Fruits.size(), index);
@@ -1270,7 +1270,7 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
 
             // create juice
             auto& juice = EntityHelper::createEntity();
-            make_juice(juice, owner.get<Transform>().as2(), fruit_type);
+            make_juice(juice, owner.get<Transform>().pos(), fruit_type);
 
             CanHoldItem& blenderCHI = blender->get<CanHoldItem>();
             blenderCHI.update(EntityHelper::getEntityAsSharedPtr(juice),
@@ -1279,7 +1279,7 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
     });
 }
 
-void make_drink(Item& drink, vec2 pos) {
+void make_drink(Item& drink, vec3 pos) {
     make_item(drink, {.type = EntityType::Drink}, pos);
 
     drink.addComponent<IsDrink>();
@@ -1300,7 +1300,7 @@ void make_drink(Item& drink, vec2 pos) {
         });
 }
 
-void make_pitcher(Item& pitcher, vec2 pos) {
+void make_pitcher(Item& pitcher, vec3 pos) {
     make_item(pitcher, {.type = EntityType::Pitcher}, pos);
 
     pitcher.addComponent<IsDrink>().turn_on_support_multiple(10);
@@ -1347,10 +1347,8 @@ void make_item_type(Item& item, EntityType type, vec3 location, int index) {
     // log_info("generating new item {} of type {} at {} subtype{}", item.id,
     // type_name, pos, index);
 
-    // TODO change the funcs below to take vec3
-    vec2 pos = vec::to2(location);
+    vec3 pos = (location);
 
-    // TODO make exhaustive
     switch (type) {
         case EntityType::SodaSpout:
             return make_soda_spout(item, pos);
@@ -1370,7 +1368,54 @@ void make_item_type(Item& item, EntityType type, vec3 location, int index) {
             return make_mop_buddy(item, pos);
         case EntityType::SimpleSyrup:
             return make_simple_syrup(item, pos);
-        default:
+            //
+        case EntityType::Unknown:
+        case EntityType::x:
+        case EntityType::y:
+        case EntityType::z:
+        case EntityType::RemotePlayer:
+        case EntityType::Player:
+        case EntityType::Customer:
+        case EntityType::Table:
+        case EntityType::CharacterSwitcher:
+        case EntityType::MapRandomizer:
+        case EntityType::Wall:
+        case EntityType::Conveyer:
+        case EntityType::Grabber:
+        case EntityType::Register:
+        case EntityType::SingleAlcohol:
+        case EntityType::AlcoholCabinet:
+        case EntityType::FruitBasket:
+        case EntityType::TriggerArea:
+        case EntityType::FloorMarker:
+        case EntityType::CustomerSpawner:
+        case EntityType::Sophie:
+        case EntityType::Blender:
+        case EntityType::SodaMachine:
+        case EntityType::Cupboard:
+        case EntityType::PitcherCupboard:
+        case EntityType::Squirter:
+        case EntityType::FilteredGrabber:
+        case EntityType::PnumaticPipe:
+        case EntityType::Vomit:
+        case EntityType::MopHolder:
+        case EntityType::FastForward:
+        case EntityType::MopBuddyHolder:
+        case EntityType::SimpleSyrupHolder:
+        case EntityType::IceMachine:
+        case EntityType::Face:
+        case EntityType::DraftTap:
+        case EntityType::Toilet:
+        case EntityType::Guitar:
+        case EntityType::ChampagneHolder:
+        case EntityType::Jukebox:
+        case EntityType::AITargetLocation:
+        case EntityType::InteractiveSettingChanger:
+        case EntityType::Door:
+        case EntityType::SodaFountain:
+        case EntityType::FruitJuice:
+        case EntityType::HandTruck:
+        case EntityType::Trash:
             break;
     }
     log_warn(
@@ -1666,9 +1711,6 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::IceMachine: {
             furniture::make_ice_machine(entity, location);
         } break;
-        case EntityType::SimpleSyrup: {
-            items::make_simple_syrup(entity, location);
-        } break;
         case EntityType::Face: {
             make_face(entity, pos);
         } break;
@@ -1706,8 +1748,11 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
 
         // TODO is anyone even doing this?
+        case EntityType::SimpleSyrup: {
+            items::make_simple_syrup(entity, pos);
+        } break;
         case EntityType::MopBuddy: {
-            make_mop_buddy(entity, location);
+            make_mop_buddy(entity, pos);
             return false;
         } break;
         case EntityType::SingleAlcohol:
