@@ -616,8 +616,12 @@ void process_ai_paying(Entity& entity, float dt) {
     bool reached_front = aiclosetab.line_wait.try_to_move_closer(
         reg, entity, get_speed_for_entity(entity) * dt, [&]() {
             if (!aiclosetab.timer.initialized) {
-                // TODO make into a config?
-                float pay_process_time = 1.f;
+                Entity& sophie =
+                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
+                const IsRoundSettingsManager& irsm =
+                    sophie.get<IsRoundSettingsManager>();
+                float pay_process_time =
+                    irsm.get<float>(ConfigKey::PayProcessTime);
                 aiclosetab.timer.set_time(pay_process_time);
             }
         });

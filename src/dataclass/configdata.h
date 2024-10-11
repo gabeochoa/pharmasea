@@ -33,6 +33,8 @@ struct ConfigData {
         float test;
         float maxdrinktime;
         float maxdwelltime;
+        float payprocesstime;
+
         int maxnumorders;
         int numstorespawns;
         int bladdersize;
@@ -78,6 +80,9 @@ struct ConfigData {
                 case ConfigKey::MaxDwellTime:
                     maxdwelltime = value;
                     break;
+                case ConfigKey::PayProcessTime:
+                    payprocesstime = value;
+                    break;
                 case ConfigKey::MaxNumOrders:
                 case ConfigKey::NumStoreSpawns:
                 case ConfigKey::BladderSize:
@@ -102,6 +107,7 @@ struct ConfigData {
                 case ConfigKey::Test:
                 case ConfigKey::MaxDrinkTime:
                 case ConfigKey::MaxDwellTime:
+                case ConfigKey::PayProcessTime:
                     log_error("Setting value for {} but not supported for int",
                               key_name(key));
                     break;
@@ -150,6 +156,8 @@ struct ConfigData {
                     return maxdrinktime;
                 case ConfigKey::MaxDwellTime:
                     return maxdwelltime;
+                case ConfigKey::PayProcessTime:
+                    return payprocesstime;
                 case ConfigKey::MaxNumOrders:
                 case ConfigKey::NumStoreSpawns:
                 case ConfigKey::BladderSize:
@@ -174,6 +182,7 @@ struct ConfigData {
                 case ConfigKey::Test:
                 case ConfigKey::MaxDrinkTime:
                 case ConfigKey::MaxDwellTime:
+                case ConfigKey::PayProcessTime:
                     break;
                 case ConfigKey::MaxNumOrders:
                     return maxnumorders;
@@ -205,6 +214,7 @@ struct ConfigData {
                 case ConfigKey::VomitAmountMultiplier:
                 case ConfigKey::MaxDrinkTime:
                 case ConfigKey::MaxDwellTime:
+                case ConfigKey::PayProcessTime:
                     return true;
             }
             log_info("Config key {} but missing from data", key_name(key));
@@ -226,6 +236,7 @@ struct ConfigData {
             s.value4b(numstorespawns);
             s.value4b(bladdersize);
             s.value4b(storererollprice);
+            s.value4b(payprocesstime);
         }
     };
     Data data;

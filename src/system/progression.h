@@ -219,6 +219,7 @@ inline void update_upgrade_variables() {
             case ConfigKey::VomitAmountMultiplier:
             case ConfigKey::MaxDrinkTime:
             case ConfigKey::MaxDwellTime:
+            case ConfigKey::PayProcessTime:
                 break;
         }
     });

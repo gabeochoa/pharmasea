@@ -78,6 +78,10 @@ struct IsRoundSettingsManager : public BaseComponent {
                 case ConfigKey::StoreRerollPrice:
                     config.permanent_set<int>(ConfigKey::StoreRerollPrice, 50);
                     break;
+                case ConfigKey::PayProcessTime:
+                    // TODO replace the other ones with key
+                    config.permanent_set<float>(key, 1.f);
+                    break;
             }
         });
     }
