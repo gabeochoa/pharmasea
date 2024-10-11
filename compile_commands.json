@@ -23,12 +23,74 @@
       "-Ivendor/",
       "-c",
       "-o",
+      "output/src/building_locations.o",
+      "src/building_locations.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/building_locations.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/building_locations.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
       "output/src/camera.o",
       "src/camera.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/camera.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/camera.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/camera.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/camera.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/client_server_comm.o",
+      "src/client_server_comm.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/client_server_comm.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/client_server_comm.o"
   },
   {
     "arguments": [
@@ -57,9 +119,9 @@
       "output/src/entity.o",
       "src/entity.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/entity.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/entity.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/entity.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/entity.o"
   },
   {
     "arguments": [
@@ -88,9 +150,9 @@
       "output/src/entity_helper.o",
       "src/entity_helper.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/entity_helper.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/entity_helper.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/entity_helper.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/entity_helper.o"
   },
   {
     "arguments": [
@@ -119,9 +181,40 @@
       "output/src/entity_makers.o",
       "src/entity_makers.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/entity_makers.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/entity_makers.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/entity_makers.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/entity_makers.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/entity_query.o",
+      "src/entity_query.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/entity_query.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/entity_query.o"
   },
   {
     "arguments": [
@@ -150,9 +243,9 @@
       "output/src/game.o",
       "src/game.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/game.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/game.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/game.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/game.o"
   },
   {
     "arguments": [
@@ -181,9 +274,9 @@
       "output/src/job.o",
       "src/job.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/job.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/job.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/job.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/job.o"
   },
   {
     "arguments": [
@@ -212,9 +305,40 @@
       "output/src/level_info.o",
       "src/level_info.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/level_info.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/level_info.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/level_info.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/level_info.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/map.o",
+      "src/map.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/map.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/map.o"
   },
   {
     "arguments": [
@@ -243,9 +367,40 @@
       "output/src/preload.o",
       "src/preload.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/preload.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/preload.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/preload.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/preload.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/recipe_library.o",
+      "src/recipe_library.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/recipe_library.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/recipe_library.o"
   },
   {
     "arguments": [
@@ -274,9 +429,40 @@
       "output/src/wave_collapse.o",
       "src/wave_collapse.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/wave_collapse.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/wave_collapse.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/wave_collapse.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/wave_collapse.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/components/has_dynamic_model_name.o",
+      "src/components/has_dynamic_model_name.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/components/has_dynamic_model_name.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/components/has_dynamic_model_name.o"
   },
   {
     "arguments": [
@@ -305,9 +491,9 @@
       "output/src/components/has_waiting_queue.o",
       "src/components/has_waiting_queue.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/components/has_waiting_queue.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/components/has_waiting_queue.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/components/has_waiting_queue.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/components/has_waiting_queue.o"
   },
   {
     "arguments": [
@@ -336,9 +522,40 @@
       "output/src/components/is_progression_manager.o",
       "src/components/is_progression_manager.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/components/is_progression_manager.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/components/is_progression_manager.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/components/is_progression_manager.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/components/is_progression_manager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/dataclass/configdata.o",
+      "src/dataclass/configdata.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/dataclass/configdata.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/dataclass/configdata.o"
   },
   {
     "arguments": [
@@ -367,9 +584,9 @@
       "output/src/dataclass/upgrades.o",
       "src/dataclass/upgrades.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/dataclass/upgrades.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/dataclass/upgrades.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/dataclass/upgrades.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/dataclass/upgrades.o"
   },
   {
     "arguments": [
@@ -398,9 +615,9 @@
       "output/src/engine/app.o",
       "src/engine/app.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/engine/app.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/engine/app.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/engine/app.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/engine/app.o"
   },
   {
     "arguments": [
@@ -429,9 +646,9 @@
       "output/src/engine/files.o",
       "src/engine/files.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/engine/files.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/engine/files.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/engine/files.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/engine/files.o"
   },
   {
     "arguments": [
@@ -460,9 +677,102 @@
       "output/src/engine/globals_register.o",
       "src/engine/globals_register.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/engine/globals_register.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/engine/globals_register.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/engine/globals_register.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/engine/globals_register.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/engine/keymap.o",
+      "src/engine/keymap.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/engine/keymap.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/engine/keymap.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/engine/path_request_manager.o",
+      "src/engine/path_request_manager.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/engine/path_request_manager.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/engine/path_request_manager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/engine/random_engine.o",
+      "src/engine/random_engine.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/engine/random_engine.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/engine/random_engine.o"
   },
   {
     "arguments": [
@@ -491,9 +801,195 @@
       "output/src/engine/settings.o",
       "src/engine/settings.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/engine/settings.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/engine/settings.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/engine/settings.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/engine/settings.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/layers/gamedebuglayer.o",
+      "src/layers/gamedebuglayer.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/layers/gamedebuglayer.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/layers/gamedebuglayer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/layers/gamelayer.o",
+      "src/layers/gamelayer.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/layers/gamelayer.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/layers/gamelayer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/layers/networklayer.o",
+      "src/layers/networklayer.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/layers/networklayer.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/layers/networklayer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/layers/pauselayer.o",
+      "src/layers/pauselayer.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/layers/pauselayer.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/layers/pauselayer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/layers/recipe_book_layer.o",
+      "src/layers/recipe_book_layer.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/layers/recipe_book_layer.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/layers/recipe_book_layer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/layers/seedmanagerlayer.o",
+      "src/layers/seedmanagerlayer.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/layers/seedmanagerlayer.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/layers/seedmanagerlayer.o"
   },
   {
     "arguments": [
@@ -522,9 +1018,9 @@
       "output/src/layers/settingslayer.o",
       "src/layers/settingslayer.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/layers/settingslayer.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/layers/settingslayer.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/layers/settingslayer.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/layers/settingslayer.o"
   },
   {
     "arguments": [
@@ -553,9 +1049,9 @@
       "output/src/network/client.o",
       "src/network/client.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/network/client.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/network/client.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/network/client.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/network/client.o"
   },
   {
     "arguments": [
@@ -584,9 +1080,40 @@
       "output/src/network/server.o",
       "src/network/server.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/network/server.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/network/server.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/network/server.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/network/server.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/system/ai_system.o",
+      "src/system/ai_system.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/system/ai_system.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/system/ai_system.o"
   },
   {
     "arguments": [
@@ -615,9 +1142,9 @@
       "output/src/system/ingredient_helper.o",
       "src/system/ingredient_helper.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/system/ingredient_helper.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/system/ingredient_helper.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/system/ingredient_helper.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/system/ingredient_helper.o"
   },
   {
     "arguments": [
@@ -646,9 +1173,9 @@
       "output/src/system/input_process_manager.o",
       "src/system/input_process_manager.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/system/input_process_manager.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/system/input_process_manager.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/system/input_process_manager.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/system/input_process_manager.o"
   },
   {
     "arguments": [
@@ -677,9 +1204,9 @@
       "output/src/system/rendering_system.o",
       "src/system/rendering_system.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/system/rendering_system.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/system/rendering_system.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/system/rendering_system.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/system/rendering_system.o"
   },
   {
     "arguments": [
@@ -708,9 +1235,9 @@
       "output/src/system/sophie.o",
       "src/system/sophie.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/system/sophie.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/system/sophie.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/system/sophie.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/system/sophie.o"
   },
   {
     "arguments": [
@@ -739,9 +1266,40 @@
       "output/src/system/system_manager.o",
       "src/system/system_manager.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/system/system_manager.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/system/system_manager.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/system/system_manager.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/system/system_manager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++2a",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wuninitialized",
+      "-Wshadow",
+      "-Wmost",
+      "-Wconversion",
+      "-g",
+      "-I/opt/homebrew/Cellar/raylib/4.5.0/include",
+      "-DTRACY_ENABLE",
+      "-Wno-deprecated-volatile",
+      "-Wno-missing-field-initializers",
+      "-Wno-c99-extensions",
+      "-Wno-unused-function",
+      "-Wno-sign-conversion",
+      "-Wno-implicit-int-float-conversion",
+      "-Werror",
+      "-Ivendor/",
+      "-c",
+      "-o",
+      "output/src/system/ui_rendering_system.o",
+      "src/system/ui_rendering_system.cpp"
+    ],
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/system/ui_rendering_system.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/system/ui_rendering_system.o"
   },
   {
     "arguments": [
@@ -770,9 +1328,9 @@
       "output/src/engine/network/webrequest.o",
       "src/engine/network/webrequest.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/engine/network/webrequest.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/engine/network/webrequest.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/engine/network/webrequest.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/engine/network/webrequest.o"
   },
   {
     "arguments": [
@@ -801,9 +1359,9 @@
       "output/src/engine/ui/ui.o",
       "src/engine/ui/ui.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/src/engine/ui/ui.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/src/engine/ui/ui.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/src/engine/ui/ui.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/src/engine/ui/ui.o"
   },
   {
     "arguments": [
@@ -832,8 +1390,8 @@
       "output/vendor/backward/backward.o",
       "vendor/backward/backward.cpp"
     ],
-    "directory": "/Users/gabeochoa/p/pharmasea",
-    "file": "/Users/gabeochoa/p/pharmasea/vendor/backward/backward.cpp",
-    "output": "/Users/gabeochoa/p/pharmasea/output/vendor/backward/backward.o"
+    "directory": "/Users/gabe/p/pharmasea",
+    "file": "/Users/gabe/p/pharmasea/vendor/backward/backward.cpp",
+    "output": "/Users/gabe/p/pharmasea/output/vendor/backward/backward.o"
   }
 ]

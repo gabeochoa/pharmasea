@@ -12,6 +12,7 @@
 #include "magic_enum/magic_enum.hpp"
 #include "map_generation.h"
 #include "recipe_library.h"
+#include "strings.h"
 
 // TODO move to a config?
 // dataclass/settings.h
@@ -25,10 +26,20 @@ std::vector<UpgradeType> upgrade_rounds = {{
     UpgradeType::Upgrade,
 }};
 
+int __WIN_H = 720;
+int __WIN_W = 1280;
 float DEADZONE = 0.25f;
 int LOG_LEVEL = 2;
 std::vector<std::string> EXAMPLE_MAP;
-i18n::LocalizationText* localization;
+
+namespace strings {
+std::map<i18n, std::string> pre_translation;
+}  // end namespace strings
+
+#include "translation_en_rev.h"
+#include "translation_en_us.h"
+#include "translation_es_la.h"
+#include "translation_ko_kr.h"
 
 namespace wfc {
 MapGenerationInformation MAP_GEN_INFO;
@@ -98,30 +109,23 @@ void Preload::_load_font_from_name(const std::string& filename,
     FontLibrary::get().load(fli, lang.c_str());
 }
 
-const char* Preload::get_font_for_lang(const char* lang_name) {
-    // TODO :BE: eventually load from json config
-    switch (hashString(lang_name)) {
-        case hashString("en_rev"):
-        case hashString("en_us"):
-            return "Gaegu-Bold.ttf";
-        case hashString("ko_kr"):
-            return "NotoSansKR.ttf";
-    }
-    return "Gaegu-Bold.ttf";
-}
-
-void Preload::load_fonts() {
+void Preload::load_fonts(const nlohmann::json& fonts) {
     // Font loading must happen after InitWindow
 
-    // TODO :BE: load from json
-    std::array<const char*, 3> langs = {
-        "en_us",
-        "en_rev",
-        "ko_kr",
-    };
+    const auto& font_object = fonts.get<nlohmann::json::object_t>();
+    // TODO we load every font on startup, even though 99% of the time
+    //      the user isnt going to change from the language they already have
+    //      selected
+    //      we could instead just load the new file when they try to change the
+    //      language
 
-    for (const auto lang : langs) {
-        _load_font_from_name(get_font_for_lang(lang), lang);
+    for (const auto& font_kv : font_object) {
+        std::string language = font_kv.first;
+        std::string font_name = font_kv.second;
+
+        log_info("loading font {} for language {}", font_name, language);
+
+        _load_font_from_name(font_name, language);
     }
 
     // default to en us
@@ -136,9 +140,33 @@ void Preload::load_fonts() {
 }
 
 void Preload::on_language_change(const char* lang_name, const char* fn) {
-    // Reset localization and reload from file...
-    if (localization) delete localization;
-    localization = new i18n::LocalizationText(fn);
+    // TODO Reset localization and reload from file...
+    (void) fn;
+
+    log_info("loading language {}", lang_name);
+
+    const auto _load_language = [lang_name](const auto& pt) {
+        for (auto& key : magic_enum::enum_values<strings::i18n>()) {
+            if (!pt.contains(key)) {
+                log_warn("{} is missing {}", lang_name,
+                         magic_enum::enum_name<strings::i18n>(key));
+                continue;
+            }
+
+            auto value = pt.at(key);
+            strings::pre_translation[key] = value;
+        }
+    };
+
+    if (std::string(lang_name) == std::string("en_us")) {
+        _load_language(strings::en_us::pre_translation);
+    } else if (std::string(lang_name) == std::string("en_rev")) {
+        _load_language(strings::en_rev::pre_translation);
+    } else if (std::string(lang_name) == std::string("ko_kr")) {
+        _load_language(strings::ko_kr::pre_translation);
+    } else if (std::string(lang_name) == std::string("es_la")) {
+        _load_language(strings::es_la::pre_translation);
+    }
 
     // During startup we load settings before preload, but that means that
     // the fonts arent loaded yet.
@@ -236,6 +264,8 @@ void Preload::load_config() {
         log_trace("LOG_LEVEL read from file: {}", LOG_LEVEL);
 
         DEADZONE = contents.value("DEADZONE", 0.25f);
+
+        load_fonts(contents["fonts"]);
 
         EXAMPLE_MAP = contents["DEFAULT_MAP"];
         log_trace("DEFAULT_MAP read from file: {}", EXAMPLE_MAP.size());
@@ -397,6 +427,20 @@ void Preload::load_textures() {
             TextureLibrary::get().load(filename.c_str(), name.c_str());
         });
 
+    // TODO how safe is the path combination here esp for mac vs windows
+    Files::get().for_resources_in_folder(
+        strings::settings::IMAGES, "controls/keyboard_default",
+        [](const std::string& name, const std::string& filename) {
+            TextureLibrary::get().load(filename.c_str(), name.c_str());
+        });
+
+    // TODO how safe is the path combination here esp for mac vs windows
+    Files::get().for_resources_in_folder(
+        strings::settings::IMAGES, "controls/xbox_default",
+        [](const std::string& name, const std::string& filename) {
+            TextureLibrary::get().load(filename.c_str(), name.c_str());
+        });
+
     // Now load the one off ones
 
     load_json_config_file("textures.json", [](const nlohmann::json& contents) {
@@ -441,8 +485,8 @@ void Preload::load_map_generation_info() {
             };
 
             // TODO so we draw from the center and this will look off
-            SPAWN_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z - 12, 7, 2};
-            TRASH_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z - 4, 7, 2};
+            SPAWN_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z - 9, 7, 2};
+            TRASH_AREA = Rectangle{MAX_SPOT.x - 1, MAX_SPOT.z + 2, 7, 2};
 
             auto jpatterns = contents["patterns"];
 
@@ -469,4 +513,111 @@ void Preload::load_map_generation_info() {
             log_info("Loaded map generation details containing {} patterns",
                      MAP_GEN_INFO.patterns.size());
         });
+}
+
+void Preload::load_sounds() {
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "roblox_oof.ogg")
+            .c_str(),
+        strings::sounds::ROBLOX);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "vom.wav")
+            .c_str(),
+        strings::sounds::VOMIT);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
+            .c_str(),
+        strings::sounds::SELECT);
+
+    SoundLibrary::get().load(
+        Files::get()
+            // TODO replace sound
+            .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
+            .c_str(),
+        strings::sounds::CLICK);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "water.ogg")
+            .c_str(),
+        strings::sounds::WATER);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "blender.ogg")
+            .c_str(),
+        strings::sounds::BLENDER);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "solid.ogg")
+            .c_str(),
+        strings::sounds::SOLID);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "ice.ogg")
+            .c_str(),
+        strings::sounds::ICE);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "pickup.ogg")
+            .c_str(),
+        strings::sounds::PICKUP);
+
+    SoundLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SOUNDS, "place.ogg")
+            .c_str(),
+        strings::sounds::PLACE);
+
+    Files::get().for_resources_in_folder(
+        strings::settings::SOUNDS, "pa_announcements",
+        [](const std::string& name, const std::string& filename) {
+            SoundLibrary::get().load(
+                filename.c_str(),
+                fmt::format("pa_announcements_{}", name).c_str());
+        });
+}
+
+void Preload::load_music() {
+    MusicLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::MUSIC, "jaunt.ogg")
+            .c_str(),
+        "supermarket");
+
+    MusicLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::MUSIC, "theme.ogg")
+            .c_str(),
+        "theme");
+}
+
+void Preload::load_shaders() {
+    const std::tuple<const char*, const char*, const char*> shaders[] = {
+        {strings::settings::SHADERS, "post_processing.fs", "post_processing"},
+        {strings::settings::SHADERS, "discard_alpha.fs", "discard_alpha"},
+    };
+
+    for (const auto& s : shaders) {
+        ShaderLibrary::get().load(
+            Files::get()
+                .fetch_resource_path(std::get<0>(s), std::get<1>(s))
+                .c_str(),
+            std::get<2>(s));
+    }
+}
+
+void Preload::load_translations() {
+    // TODO :IMPACT: load correct language pack for settings file
+    auto path = Files::get().fetch_resource_path(
+        strings::settings::TRANSLATIONS, "en_us.mo");
+    on_language_change("en_us", path.c_str());
 }

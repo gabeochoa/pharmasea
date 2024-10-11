@@ -1,5 +1,6 @@
 #include "entity_helper.h"
 
+#include "components/is_floor_marker.h"
 #include "components/is_trigger_area.h"
 #include "entity_query.h"
 #include "system/input_process_manager.h"
@@ -51,7 +52,7 @@ Entity& EntityHelper::getNamedEntity(const NamedEntity& name) {
     return *(e_ptr);
 }
 
-Entities& EntityHelper::get_entities() {
+Entities& EntityHelper::get_entities_for_mod() {
     if (is_server()) {
         return server_entities_DO_NOT_USE;
     }
@@ -62,6 +63,8 @@ Entities& EntityHelper::get_entities() {
     // GLOBALS.get_or_default("client_thread_id", std::thread::id());
     return client_entities_DO_NOT_USE;
 }
+
+const Entities& EntityHelper::get_entities() { return get_entities_for_mod(); }
 
 RefEntities EntityHelper::get_ref_entities() {
     RefEntities matching;
@@ -86,7 +89,7 @@ Entity& EntityHelper::createPermanentEntity() {
 
 Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
     std::shared_ptr<Entity> e(new Entity());
-    get_entities().push_back(e);
+    get_entities_for_mod().push_back(e);
     // log_info("created a new entity {}", e->id);
 
     invalidatePathCache();
@@ -128,7 +131,7 @@ void EntityHelper::removeEntity(int e_id) {
     // cache_is_walkable.clear();
     // }
 
-    auto& entities = get_entities();
+    auto& entities = get_entities_for_mod();
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
@@ -150,7 +153,7 @@ void EntityHelper::removeEntity(int e_id) {
 
 void EntityHelper::cleanup() {
     // Cleanup entities marked cleanup
-    Entities& entities = get_entities();
+    Entities& entities = get_entities_for_mod();
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
@@ -160,7 +163,7 @@ void EntityHelper::cleanup() {
 }
 
 void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
-    Entities& entities = get_entities();
+    Entities& entities = get_entities_for_mod();
     // just clear the whole thing
     entities.clear();
 }
@@ -172,7 +175,7 @@ void EntityHelper::delete_all_entities(bool include_permanent) {
     }
 
     // Only delete non perms
-    Entities& entities = get_entities();
+    Entities& entities = get_entities_for_mod();
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
@@ -218,42 +221,31 @@ OptEntity EntityHelper::getEntityForID(EntityID id) {
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,
                                          const EntityType& type, float range) {
     const Transform& transform = entity.get<Transform>();
-    return EntityHelper::getClosestMatchingEntity(
-        transform.as2(), range,
-        [type](const Entity& entity) { return check_type(entity, type); });
+    return EntityQuery()
+        .whereType(type)
+        .whereInRange(transform.as2(), range)
+        .orderByDist(transform.as2())
+        .gen_first();
 }
 
 OptEntity EntityHelper::getMatchingFloorMarker(IsFloorMarker::Type type) {
     return EntityQuery()
-        .whereHasComponent<IsFloorMarker>()
-        .whereLambda([type](const Entity& entity) {
-            const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-            return fm.type == type;
-        })
+        .whereHasComponentAndLambda<IsFloorMarker>(
+            [type](const IsFloorMarker& fm) { return fm.type == type; })
         .gen_first();
 }
 
 OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
     return EntityQuery()
-        .whereHasComponent<IsTriggerArea>()
-        .whereLambda([type](const Entity& entity) {
-            const IsTriggerArea& ta = entity.get<IsTriggerArea>();
-            return ta.type == type;
-        })
+        .whereHasComponentAndLambda<IsTriggerArea>(
+            [type](const IsTriggerArea& ta) { return ta.type == type; })
         .gen_first();
 }
 
+// TODO: make this more explicit that we are ignoring store entities
+// (this was already the default but new callers should know)
 bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
     return EntityQuery().whereType(type).has_values();
-}
-
-std::vector<RefEntity> EntityHelper::getFilteredEntitiesInRange(
-    vec2 pos, float range, const std::function<bool(const Entity&)>& filter) {
-    return EntityQuery().whereLambda(filter).whereInRange(pos, range).gen();
-}
-
-std::vector<RefEntity> EntityHelper::getEntitiesInRange(vec2 pos, float range) {
-    return EntityQuery().whereInRange(pos, range).gen();
 }
 
 OptEntity EntityHelper::getMatchingEntityInFront(
@@ -312,73 +304,37 @@ OptEntity EntityHelper::getMatchingEntityInFront(
     return {};
 }
 
-OptEntity EntityHelper::getClosestMatchingEntity(
-    vec2 pos, float range, const std::function<bool(const Entity&)>& filter) {
-    return EntityQuery()
-        .whereLambda(filter)
-        .whereInRange(pos, range)
-        .orderByDist(pos)
-        .gen_first();
-}
-
-bool EntityHelper::hasOverlappingSolidEntitiesInRange(vec2 range_min,
-                                                      vec2 range_max) {
-    OptEntity e =
-        EntityHelper::getOverlappingSolidEntityInRange(range_min, range_max);
-    return e.valid();
-}
-
 RefEntities EntityHelper::getAllInRangeFiltered(
     vec2 range_min, vec2 range_max,
     const std::function<bool(const Entity&)>& filter) {
     return EntityQuery()
         .whereInside(range_min, range_max)
+        // idk its called all
+        .include_store_entities()
         .whereLambda(filter)
         .gen();
 }
 
 RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
-    return EntityQuery().whereInside(range_min, range_max).gen();
-}
-
-// TODO :EQ_CPP: We cant expose this function direction because
-// EntityQuery cant be including in entity helper du eot circular
-// need to move into a cpp
-EntityQuery& getOverlappingSolidEntityInRangeQuery2(
-    vec2 range_min, vec2 range_max,
-    const std::function<bool(const Entity&)>& filter) {
-    return EntityQuery()                    //
-        .whereHasComponent<IsSolid>()       //
-        .whereInside(range_min, range_max)  //
-        .whereLambdaExistsAndTrue(filter)   //
-        .whereLambda([&](const Entity& entity) -> bool {
-            return EntityQuery()                    //
-                .whereNotID(entity.id)              //
-                .whereHasComponent<IsSolid>()       //
-                .whereInside(range_min, range_max)  //
-                .wherePositionMatches(entity)       //
-                .first()                            //
-                .has_values();
-        });
-}
-
-OptEntity EntityHelper::getOverlappingSolidEntityInRange(
-    vec2 range_min, vec2 range_max,
-    const std::function<bool(const Entity&)>& filter) {
-    return getOverlappingSolidEntityInRangeQuery2(range_min, range_max, filter)
-        .gen_first();
+    return EntityQuery()
+        .whereInside(range_min, range_max)
+        // idk its called all
+        .include_store_entities()
+        .gen();
 }
 
 OptEntity EntityHelper::getOverlappingEntityIfExists(
     const Entity& entity, float range,
-    const std::function<bool(const Entity&)>& filter) {
+    const std::function<bool(const Entity&)>& filter,
+    bool include_store_entities) {
     const vec2 position = entity.get<Transform>().as2();
-    return EntityQuery()                   //
-        .whereNotID(entity.id)             //
-        .whereLambdaExistsAndTrue(filter)  //
-        .whereHasComponent<IsSolid>()      //
-        .whereInRange(position, range)     //
-        .wherePositionMatches(entity)      //
+    return EntityQuery()                                 //
+        .whereNotID(entity.id)                           //
+        .whereLambdaExistsAndTrue(filter)                //
+        .whereHasComponent<IsSolid>()                    //
+        .whereInRange(position, range)                   //
+        .wherePositionMatches(entity)                    //
+        .include_store_entities(include_store_entities)  //
         .gen_first();
 }
 
@@ -399,6 +355,11 @@ OptEntity EntityHelper::getOverlappingEntityIfExists(
 // }
 // return true;
 // }
+//
+void EntityHelper::invalidateCaches() {
+    named_entities_DO_NOT_USE.clear();
+    invalidatePathCache();
+}
 
 // TODO :PBUG: need to invalidate any current valid paths
 void EntityHelper::invalidatePathCacheLocation(vec2 pos) {

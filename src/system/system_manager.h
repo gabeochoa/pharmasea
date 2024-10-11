@@ -38,9 +38,12 @@ SINGLETON_FWD(SystemManager)
 struct SystemManager {
     SINGLETON(SystemManager)
 
-    // TODO fix this if we have more than one local player
-    EntityID firstPlayerID = -1;
+    Entities local_players;
+    Entities remote_players;
     Entities oldAll;
+
+    // so that we run the first time always
+    float timePassed = 0.016f;
 
     SystemManager() {
         // Register state manager
@@ -53,6 +56,7 @@ struct SystemManager {
     void render_ui(const Entities& entities, float dt) const;
 
     void update_local_players(const Entities& players, float dt);
+    void update_remote_players(const Entities& players, float dt);
     void update_all_entities(const Entities& players, float dt);
 
     void process_inputs(const Entities& entities, const UserInputs& inputs);
@@ -70,6 +74,11 @@ struct SystemManager {
             cb(*entity);
         });
     }
+
+    bool is_daytime() const;
+    bool is_nighttime() const;
+
+    bool is_some_player_near(vec2 spot, float distance = 4.f) const;
 
    private:
     using Transition = std::pair<game::State, game::State>;
@@ -97,7 +106,8 @@ struct SystemManager {
     }
 
     void process_state_change(const Entities& entities, float dt);
-    void always_update(const Entities& entity_list, float dt);
+    void sixty_fps_update(const Entities& entity_list, float dt);
+    void every_frame_update(const Entities& entity_list, float dt);
     void game_like_update(const Entities& entity_list, float dt);
     void in_round_update(const Entities& entity_list, float dt);
     void model_test_update(const Entities& entity_list, float dt);
