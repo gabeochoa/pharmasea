@@ -2098,6 +2098,8 @@ void process_squirter(Entity& entity, float dt) {
                     return true;
                 })
             .whereInRange(pos, 1.25f)
+            // NOTE: if you change this make sure that this always sorts the
+            // same per game version
             .orderByDist(pos)
             .gen_first();
 
@@ -2120,9 +2122,7 @@ void process_squirter(Entity& entity, float dt) {
     vec3 item_position = is_squirter.picked_up_at();
 
     if (item.id != is_squirter.item_id()) {
-        // !!TODO need to make sure that the query above always sorts the same
-        // way otherwise this check will kill us...
-        log_info("squirter : item changed while working was {} now {}",
+        log_warn("squirter : item changed while working was {} now {}",
                  is_squirter.item_id(), item.id);
         is_squirter.reset();
         return;
@@ -2130,7 +2130,7 @@ void process_squirter(Entity& entity, float dt) {
 
     if (vec::distance(vec::to2(item_position),
                       closest_furniture->get<Transform>().as2()) > 1.f) {
-        log_info("squirter : we matched something different {} {}",
+        log_warn("squirter : we matched something different {} {}",
                  item_position, closest_furniture->get<Transform>().as2());
         // We matched something different
         is_squirter.reset();
