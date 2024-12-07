@@ -148,6 +148,13 @@ heavycompile:
 raylib4.5:
 	brew install --build-from-source ./raylib.rb
 
+	
+# https://www.flourish.org/cinclude2dot/cinclude2dot
+# visualize in https://dreampuf.github.io/Graphvi 
+headermap:
+	scripts/cinclude2dot > output/source.dot
+	python3 scripts/count_includes.py
+
 # When using lldb, you have to run these commands:
 # 	settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_INSTRUCTION
 # 	c
