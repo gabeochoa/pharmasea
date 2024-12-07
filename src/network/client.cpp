@@ -68,7 +68,21 @@ void Client::send_ping_packet(int my_id, float dt) {
             .pong = now::current_ms(),
         }),
     };
-    client_p->send_packet_to_server(packet);
+    send_packet_to_server(packet);
+}
+
+// TODO :DUPE: this is duplicated with the version in internal/client
+void Client::send_packet_to_server(ClientPacket packet) {
+    Buffer buffer;
+    TContext ctx{};
+
+    std::get<1>(ctx).registerBasesList<BitserySerializer>(
+        MyPolymorphicClasses{});
+    BitserySerializer ser{ctx, buffer};
+    ser.object(packet);
+    ser.adapter().flush();
+    // size = ser.adapter().writtenBytesCount();
+    client_p->send_string_to_server(buffer, packet.channel);
 }
 
 void Client::send_player_input_packet(int my_id) {
@@ -89,7 +103,7 @@ void Client::send_player_input_packet(int my_id) {
         }),
     };
     cui.clear();
-    client_p->send_packet_to_server(packet);
+    send_packet_to_server(packet);
 }
 
 void Client::send_current_menu_state() {
