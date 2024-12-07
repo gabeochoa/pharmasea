@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "engine/constexpr_containers.h"
-#include "strings.h"
+#include "../engine/constexpr_containers.h"
+#include "../strings.h"
 
 namespace strings {
 namespace en_rev {
@@ -122,4 +122,3 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
 
 }  // namespace en_rev
 }  // namespace strings
-

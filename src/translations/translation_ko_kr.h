@@ -1,8 +1,9 @@
 
 
 #pragma once
-#include "engine/constexpr_containers.h"
-#include "strings.h"
+
+#include "../engine/constexpr_containers.h"
+#include "../strings.h"
 
 // TODO this was all AI generated and most of it isnt usable/correct
 // this is just for a way to test languages with other word orders

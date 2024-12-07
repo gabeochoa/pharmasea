@@ -36,10 +36,10 @@ namespace strings {
 std::map<i18n, std::string> pre_translation;
 }  // end namespace strings
 
-#include "translation_en_rev.h"
-#include "translation_en_us.h"
-#include "translation_es_la.h"
-#include "translation_ko_kr.h"
+#include "translations/translation_en_rev.h"
+#include "translations/translation_en_us.h"
+#include "translations/translation_es_la.h"
+#include "translations/translation_ko_kr.h"
 
 namespace wfc {
 MapGenerationInformation MAP_GEN_INFO;
