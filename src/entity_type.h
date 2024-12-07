@@ -51,6 +51,9 @@ enum struct EntityType {
                       // alcohol without adding it to the cycler
     Jukebox,
     AITargetLocation,
+    InteractiveSettingChanger,
+    Door,
+    SodaFountain,
 
     //
     // Items
@@ -67,6 +70,7 @@ enum struct EntityType {
     FruitJuice,
     SimpleSyrup,
     Mop,
+    HandTruck,
 
     // NOTE: Every time you add something above, add a 1 on the right of the
     // number below
@@ -88,7 +92,7 @@ constexpr EntityTypeSet create_non_destructive() {
     // TODO :INFRA: MSVC doesnt have enough constexpr constructors for bitset
     // https://learn.microsoft.com/en-us/cpp/standard-library/bitset-class?view=msvc-170#bitset
     // generate number through: https://godbolt.org/z/ef7sTsWb6
-    return 0b011111111111111111111111111111111111111111111111;
+    return 0b0111111111111111111111111111111111111111111111111111;
 #endif
 }
 
@@ -116,7 +120,7 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::Trash:
         case EntityType::Table:
         case EntityType::Register:
-            return 10;
+            return 5;
         case EntityType::ChampagneHolder:
         case EntityType::DraftTap:
         case EntityType::SodaMachine:
@@ -126,19 +130,21 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::IceMachine:
         case EntityType::SimpleSyrupHolder:
         case EntityType::MopHolder:
-            return 20;
+            return 10;
         case EntityType::AlcoholCabinet:
         case EntityType::FruitBasket:
         case EntityType::Conveyer:
         case EntityType::Toilet:
-            return 100;
+            return 50;
         case EntityType::Grabber:
         case EntityType::MopBuddyHolder:
-            return 200;
+            return 100;
         case EntityType::Squirter:
         case EntityType::FilteredGrabber:
         case EntityType::PnumaticPipe:
-            return 500;
+        case EntityType::HandTruck:
+        case EntityType::SodaFountain:
+            return 200;
             // Non buyables
         case EntityType::FastForward:
             // TODO see todo above...
@@ -171,6 +177,8 @@ inline constexpr int get_price_for_entity_type(EntityType type) {
         case EntityType::Pitcher:
         case EntityType::Champagne:
         case EntityType::AITargetLocation:
+        case EntityType::InteractiveSettingChanger:
+        case EntityType::Door:
             // log_warn("You should probably not need the price for this {}",
             // magic_enum::enum_name<EntityType>(type));
             return -1;
@@ -200,6 +208,8 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::Cupboard:
         case EntityType::SodaMachine:
         case EntityType::Trash:
+        case EntityType::HandTruck:
+        case EntityType::SodaFountain:
             return StoreEligibilityType::OnStart;
         case EntityType::Conveyer:
         case EntityType::DraftTap:
@@ -211,6 +221,9 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::PnumaticPipe:
         case EntityType::MopHolder:
         case EntityType::MopBuddyHolder:
+            // TODO Right now we unlock these at the start of game
+            //      but we probably should build a system to
+            //      configure day count or upgrade count or something
             return StoreEligibilityType::TimeBased;
         case EntityType::FruitBasket:
         case EntityType::SimpleSyrupHolder:
@@ -244,6 +257,8 @@ inline StoreEligibilityType get_store_eligibility(EntityType etype) {
         case EntityType::Pitcher:
         case EntityType::Champagne:
         case EntityType::AITargetLocation:
+        case EntityType::InteractiveSettingChanger:
+        case EntityType::Door:
             return StoreEligibilityType::Never;
     }
     return StoreEligibilityType::Never;

@@ -7,7 +7,6 @@
 #include "library.h"
 #include "singleton.h"
 
-// TODO enforce it on object creation?
 constexpr int MAX_ANIM_NAME_LENGTH = 100;
 
 struct AnimationInfo {
@@ -58,6 +57,12 @@ struct AnimLibrary {
         const auto full_filename =
             Files::get().fetch_resource_path(mli.folder, mli.filename);
         impl.load(full_filename.c_str(), mli.libraryname);
+        if (strlen(mli.libraryname) > MAX_ANIM_NAME_LENGTH) {
+            log_warn(
+                "Loadded animation {} but name is longer than our max length "
+                "which means there might be conflicts on serialization",
+                mli.libraryname);
+        }
     }
 
     void unload_all() { impl.unload_all(); }

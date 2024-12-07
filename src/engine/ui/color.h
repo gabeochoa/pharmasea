@@ -14,6 +14,14 @@ inline Color getOppositeColor(const Color& color) {
                  color.a};
 }
 
+inline Color change_opacity(const Color& color, unsigned char alpha) {
+    return Color{                                      //
+                 static_cast<unsigned char>(color.r),  //
+                 static_cast<unsigned char>(color.g),  //
+                 static_cast<unsigned char>(color.b),  //
+                 alpha};
+}
+
 inline unsigned char comp_min(const Color& a) {
     return (unsigned char) std::min({a.r, a.g, a.b});
 }
@@ -94,6 +102,9 @@ inline Color getHighlighted(const Color& color) {
     hsl.z = (hsl.z + 0.01f);
     return toRGB(hsl);
 }
+
+static const Color transleucent_green = Color{0, 250, 50, 5};
+static const Color transleucent_red = Color{250, 0, 50, 5};
 
 static const Color pacific_blue = Color{71, 168, 189, 255};
 static const Color oxford_blue = Color{12, 27, 51, 255};

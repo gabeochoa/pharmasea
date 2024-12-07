@@ -9,43 +9,43 @@
 #include "engine/pathfinder.h"
 #include "entity_helper.h"
 #include "entity_query.h"
-#include "strings.h"
 #include "wave_collapse.h"
 
 namespace generation {
 
 const char WALL = '#';
-const char WALL2 = 'w';
 const char EMPTY = '.';
-const char ORIGIN = '0';
-const char CUSTOMER = 'c';
-const char CUST_SPAWNER = 'C';
-const char REGISTER = 'R';
-const char TABLE = 't';
-
 const char GRABBERu = '^';
 const char GRABBERl = '<';
 const char GRABBERr = '>';
 const char GRABBERd = 'v';
 
-const char MED_CAB = 'M';
-const char FRUIT = 'F';
-const char BLENDER = 'b';
-const char SODA_MACHINE = 'S';
-const char ICE_MACHINE = 'I';
+const char ORIGIN = '0';
 
-const char CUPBOARD = 'd';
-const char SIMPLE_SYRUP = 'y';
-const char SQUIRTER = 'q';
-const char TRASH = 'g';
-const char TOILET = 'T';
-const char FILTERED_GRABBER = 'G';
-const char PIPE = 'p';
-const char MOP_HOLDER = 'm';
-const char FAST_FORWARD = 'f';
 const char MOP_BUDDY = 'B';
+const char BLENDER = 'b';
+const char CUSTOMER = 'c';
+const char CUST_SPAWNER = 'C';
+const char CUPBOARD = 'd';
+const char FRUIT = 'F';
+const char FAST_FORWARD = 'f';
+const char FILTERED_GRABBER = 'G';
+const char TRASH = 'g';
+const char HAND_TRUCK = 'H';
+const char ICE_MACHINE = 'I';
+const char MED_CAB = 'M';
+const char MOP_HOLDER = 'm';
+const char PIPE = 'p';
+const char SQUIRTER = 'q';
+const char REGISTER = 'R';
+const char SODA_MACHINE = 'S';
+const char SODA_FOUNTAIN = 's';
+const char TOILET = 'T';
+const char TABLE = 't';
+const char WALL2 = 'w';
+const char SIMPLE_SYRUP = 'y';
 
-const char SOPHIE = 's';
+const char SOPHIE = '+';
 
 struct helper {
     std::vector<std::string> lines;
@@ -172,6 +172,12 @@ struct helper {
             case TOILET: {
                 return EntityType::Toilet;
             } break;
+            case HAND_TRUCK: {
+                return EntityType::HandTruck;
+            } break;
+            case SODA_FOUNTAIN: {
+                return EntityType::SodaFountain;
+            } break;
             case 32: {
                 // space
             } break;
@@ -232,7 +238,6 @@ struct helper {
                 }
             }
         }
-        origin = vec2{0, 0};
         return origin;
     }
 
@@ -271,20 +276,18 @@ struct helper {
             VALIDATE(customer,
                      "map needs to have at least one customer spawn point");
 
-            OptEntity reg = EntityQuery()
-                                .whereType(EntityType::Register)
-                                .whereLambda([&customer](const Entity& e) {
-                                    // TODO :INFRA: need a better way to do this
-                                    // 0 makes sense but is the position of the
-                                    // entity, when its infront?
-                                    auto new_path = pathfinder::find_path(
-                                        customer->get<Transform>().as2(),
-                                        e.get<Transform>().tile_infront(1),
-                                        std::bind(EntityHelper::isWalkable,
-                                                  std::placeholders::_1));
-                                    return !new_path.empty();
-                                })
-                                .gen_first();
+            OptEntity reg =
+                EntityQuery()
+                    .whereType(EntityType::Register)
+                    .whereLambda([&customer](const Entity& e) {
+                        auto new_path = pathfinder::find_path(
+                            customer->get<Transform>().as2(),
+                            e.get<Transform>().tile_directly_infront(),
+                            std::bind(EntityHelper::isWalkable,
+                                      std::placeholders::_1));
+                        return !new_path.empty();
+                    })
+                    .gen_first();
 
             VALIDATE(
                 reg,

@@ -108,9 +108,8 @@ int main() {
     // De-Initialization
     //--------------------------------------------------------------------------------------
     UnloadModel(model);  // Unload model
-
-    CloseWindow();  // Close window and OpenGL context
+    CloseWindow();       // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
-
+    //
     return 0;
 }

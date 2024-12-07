@@ -2,6 +2,7 @@
 
 #include "client.h"
 
+#include "../building_locations.h"
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
 #include "../engine/sound_library.h"
@@ -10,11 +11,12 @@
 namespace network {
 
 Client::Client() {
-    client_p = std::make_shared<internal::Client>();
-    client_p->set_process_message(std::bind(
-        &Client::client_process_message_string, this, std::placeholders::_1));
+    client_p = std::make_unique<internal::Client>();
+    client_p->set_process_message([this](const std::string& msg) {
+        this->client_process_message_string(msg);
+    });
 
-    map = std::make_shared<Map>("default_seed");
+    map = std::make_unique<Map>("default_seed");
     GLOBALS.set("map", map.get());
 }
 
@@ -66,7 +68,21 @@ void Client::send_ping_packet(int my_id, float dt) {
             .pong = now::current_ms(),
         }),
     };
-    client_p->send_packet_to_server(packet);
+    send_packet_to_server(packet);
+}
+
+// TODO :DUPE: this is duplicated with the version in internal/client
+void Client::send_packet_to_server(ClientPacket packet) {
+    Buffer buffer;
+    TContext ctx{};
+
+    std::get<1>(ctx).registerBasesList<BitserySerializer>(
+        MyPolymorphicClasses{});
+    BitserySerializer ser{ctx, buffer};
+    ser.object(packet);
+    ser.adapter().flush();
+    // size = ser.adapter().writtenBytesCount();
+    client_p->send_string_to_server(buffer, packet.channel);
 }
 
 void Client::send_player_input_packet(int my_id) {
@@ -87,7 +103,7 @@ void Client::send_player_input_packet(int my_id) {
         }),
     };
     cui.clear();
-    client_p->send_packet_to_server(packet);
+    send_packet_to_server(packet);
 }
 
 void Client::send_current_menu_state() {
@@ -123,7 +139,7 @@ void Client::client_process_message_string(const std::string& msg) {
         // want this in the array that is serialized, this should only live
         // in remote_players
         Entity* entity = new Entity();
-        make_remote_player(*entity, {LOBBY_ORIGIN, 0, 0});
+        make_remote_player(*entity, LOBBY_BUILDING.to3());
         remote_players[client_id] = std::shared_ptr<Entity>(entity);
         const auto& rp = remote_players[client_id];
         rp->get<HasClientID>().update(client_id);
@@ -219,7 +235,6 @@ void Client::client_process_message_string(const std::string& msg) {
                 log_info("my id is {}", id);
                 add_new_player(id, client_p->username);
                 GLOBALS.set("active_camera_target", remote_players[id].get());
-                // TODO make shared doesnt work here
                 map->local_players_NOT_SERIALIZED.push_back(remote_players[id]);
                 (*(map->local_players_NOT_SERIALIZED.rbegin()))
                     ->addComponent<CollectsUserInput>();

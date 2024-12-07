@@ -14,7 +14,9 @@ struct AITarget {
     using ValidateFn = std::function<bool(const Entity&)>;
     using SuccessFn = std::function<void(Entity&)>;
 
+    std::optional<int> target_id;
     ResetFn reset;
+
     explicit AITarget(const ResetFn& resetFn) : reset(resetFn) {}
 
     [[nodiscard]] bool exists() const { return target_id.has_value(); }
@@ -23,8 +25,6 @@ struct AITarget {
     void unset() { target_id = {}; }
     void set(int id) { target_id = id; }
     [[nodiscard]] int id() const { return target_id.value(); }
-
-    std::optional<int> target_id;
 
     [[nodiscard]] bool _find_target(const Entity& entity,
                                     const ValidateFn& validate = nullptr,
@@ -39,7 +39,10 @@ struct AITarget {
 
         if (validate) {
             bool success = validate(closest.asE());
-            if (!success) return false;
+            if (!success) {
+                reset();
+                return false;
+            }
         }
 
         set(closest->id);
@@ -57,6 +60,14 @@ struct AITarget {
         }
         return true;
     }
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.ext(target_id, bitsery::ext::StdOptional{},
+              [](S& sv, int& val) { sv.value4b(val); });
+    }
 };
 
 struct AILineWait {
@@ -64,6 +75,7 @@ struct AILineWait {
 
     bool has_set_position_before = false;
     vec2 position;
+    int last_line_position = -1;
 
    private:
     ResetFn reset;
@@ -87,7 +99,8 @@ struct AILineWait {
                  "Trying to pos-in-line for entity which doesnt have a "
                  "waiting queue ");
         const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
-        return hwq.has_matching_person(entity.id);
+        last_line_position = hwq.get_customer_position(entity.id);
+        return last_line_position;
     }
 
     [[nodiscard]] bool can_move_up(const Entity& reg, const Entity& customer) {
@@ -113,7 +126,7 @@ struct AILineWait {
         if (spot_in_line != 0) {
             // Waiting in line :)
 
-            // TODO We didnt move so just wait a bit before trying again
+            // We didnt move so just wait a bit before trying again
 
             if (!can_move_up(reg, entity)) {
                 // We cant move so just wait a bit before trying again
@@ -131,7 +144,7 @@ struct AILineWait {
             return false;
         }
 
-        position = reg.get<Transform>().tile_infront(1);
+        position = reg.get<Transform>().tile_directly_infront();
         if (onReachedFront) onReachedFront();
         return true;
     }
@@ -153,22 +166,38 @@ struct AILineWait {
 struct AITakesTime {
     bool initialized = false;
     float totalTime = -1;
+    float timeRemaining = -1;
 
     void set_time(float t) {
         VALIDATE(t > 0, "time must be positive");
         totalTime = t;
+        timeRemaining = t;
         initialized = true;
     }
     [[nodiscard]] bool pass_time(float dt) {
         VALIDATE(initialized, "AITakesTime was never initialized");
-        totalTime -= dt;
-        return totalTime <= 0.f;
+        timeRemaining -= dt;
+        return timeRemaining <= 0.f;
+    }
+
+   private:
+    friend bitsery::Access;
+    template<typename S>
+    void serialize(S& s) {
+        s.value1b(initialized);
+        s.value4b(totalTime);
+        s.value4b(timeRemaining);
     }
 };
 
 struct AIComponent : BaseComponent {
-    // TODO :BE: what does cooldown do? when should we use it? do all AI need
-    // it?
+    // Cooldown provides a way for us to skip processing ai on certain frames
+    // when the ai is in a particular state.
+    // For example
+    //  Its not useful to run every single frame when the AI is just waiting for
+    //  you to make the drink. So instead we just have a cooldown where they
+    //  only check if theres a drink in front of them every second instead of
+    //  every frame
     float cooldown;
     float cooldownReset = 1.f;
 

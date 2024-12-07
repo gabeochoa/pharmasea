@@ -21,6 +21,9 @@ struct CanHoldItem : public BaseComponent {
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
+    // Note, this is a shared_ptr, because I'm having issues serializing
+    // OptEntity
+    // i dont really want to look up how to use bitsery ExtensionTraits
     CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
         if (held_item != nullptr && !held_item->cleanup &&
             //
@@ -48,16 +51,8 @@ struct CanHoldItem : public BaseComponent {
         return *this;
     }
 
-    // TODO this isnt const because we want to write to the item
-    // we could make this const and then expose certain things that we want to
-    // change separately like 'held_by'
-    // (change to use update instead and make this const)
-    [[nodiscard]] std::shared_ptr<Entity>& item() { return held_item; }
-
-    // const?
-    [[nodiscard]] const std::shared_ptr<Entity> const_item() const {
-        return held_item;
-    }
+    [[nodiscard]] Entity& item() const { return *held_item; }
+    [[nodiscard]] const Entity& const_item() const { return *held_item; }
 
     CanHoldItem& set_filter(EntityFilter ef) {
         filter = ef;
@@ -100,7 +95,7 @@ struct CanHoldItem : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.value4b(held_by);
 
-        // TODO we only need these for debug info
+        // we only need these for debug info
         s.ext(held_item, bitsery::ext::StdSmartPtr{});
         s.object(filter);
     }

@@ -11,7 +11,7 @@ namespace ui {
 
 // TODO add mode for Percent of window size?
 enum SizeMode { Null, Pixels, Text, Percent, Children };
-enum GrowFlags { None = (1 << 0), Row = (1 << 1), Column = (1 << 2) };
+enum struct GrowFlags { None = (1 << 0), Row = (1 << 1), Column = (1 << 2) };
 
 struct SizeExpectation {
     SizeMode mode = Pixels;
@@ -93,12 +93,15 @@ struct DropdownData {
 
 struct CheckboxData {
     bool selected = false;
-    std::string content = "";
+    std::string content;
+    bool background = true;
+    bool content_is_icon = false;
 };
 
 struct TextfieldData {
-    std::string content = "";
+    std::string content;
     TextFieldValidationFn validationFunction = {};
+    bool content_is_icon = false;
 };
 
 struct SliderData {

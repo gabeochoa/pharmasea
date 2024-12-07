@@ -7,7 +7,9 @@
 
 struct HandLayer : public Layer {
     raylib::Texture texture;
-    HandLayer() : Layer("hand_layer") {
+    HandLayer() : Layer("hand_layer") {}
+
+    virtual void onStartup() override {
         texture = TextureLibrary::get().get("hand");
         // TODO disable
         // raylib::DisableCursor();

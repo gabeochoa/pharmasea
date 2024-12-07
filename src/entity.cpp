@@ -2,10 +2,10 @@
 #include "entity.h"
 
 Entity::~Entity() {
-    for (auto itr = componentArray.begin(); itr != componentArray.end();
-         itr++) {
-        if (itr->second) delete (itr->second);
-    }
+    // for (auto itr = componentArray.begin(); itr != componentArray.end();
+    // itr++) {
+    // if (itr->second) delete (itr->second);
+    // }
     componentArray.clear();
 }
 
@@ -69,6 +69,10 @@ bool check_if_drink(const Entity& entity) {
         case EntityType::Champagne:
         case EntityType::Jukebox:
         case EntityType::AITargetLocation:
+        case EntityType::InteractiveSettingChanger:
+        case EntityType::HandTruck:
+        case EntityType::Door:
+        case EntityType::SodaFountain:
             return false;
         case EntityType::Pitcher:
         case EntityType::Drink:

@@ -29,9 +29,9 @@ void end();
 
 ElementResult hoverable(const Widget& widget);
 
-// TODO add rounded corners
-ElementResult div(const Widget& widget, Color c);
-ElementResult div(const Widget& widget, theme::Usage theme);
+ElementResult div(const Widget& widget, Color c, bool rounded = false);
+ElementResult div(const Widget& widget, theme::Usage theme,
+                  bool rounded = false);
 ElementResult colored_text(const Widget& widget,
                            const TranslatableString& content, Color c = WHITE);
 ElementResult window(const Widget& widget);
@@ -42,12 +42,14 @@ ElementResult text(const Widget& widget, const TranslatableString& content,
 
 );
 
-ElementResult scroll_window(const Widget& widget, Rectangle view,
-                            std::function<void(ScrollWindowResult)> children);
+ElementResult scroll_window(
+    const Widget& widget, Rectangle view,
+    const std::function<void(ScrollWindowResult)>& children);
 
 ElementResult button(const Widget& widget,
                      const TranslatableString& content = NO_TRANSLATE(""),
-                     bool background = true);
+                     bool background = true,
+                     bool draw_background_when_hot = true);
 ElementResult image(const Widget& widget, const std::string& texture_name);
 
 ElementResult image_button(const Widget& widget,

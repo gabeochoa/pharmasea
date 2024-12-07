@@ -27,11 +27,14 @@ bool HasWaitingQueue::matching_id(int id, int i) const {
     return has_person_in_position(i) ? ppl_in_line[i] == id : false;
 }
 
-// TODO rename this or fix return type to work in other contexts better
-int HasWaitingQueue::has_matching_person(int id) const {
+int HasWaitingQueue::get_customer_position(int id) const {
     for (int i = 0; i < max_queue_size; i++) {
         if (matching_id(id, i)) return i;
     }
     log_warn("Cannot find customer {} in line", id);
     return -1;
+}
+
+bool HasWaitingQueue::has_matching_person(int id) const {
+    return get_customer_position(id) != -1;
 }

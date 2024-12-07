@@ -1,12 +1,15 @@
 #include "server.h"
 
+#include <chrono>
 #include <thread>
 
+#include "../building_locations.h"
+#include "../system/system_manager.h"
 #include "shared.h"
 
 namespace network {
 
-static std::shared_ptr<Server> g_server;
+static std::unique_ptr<Server> g_server;
 
 // TODO once clang supports jthread replace with jthread and remove "running
 // = true" to use stop_token
@@ -86,6 +89,7 @@ void Server::run() {
     thread_id = std::this_thread::get_id();
     GLOBALS.set("server_thread_id", &thread_id);
 
+    // should probably always be about / above whats in the game.h
     constexpr float desiredFrameRate = 240.0f;
     constexpr std::chrono::duration<float> fixedTimeStep(1.0f /
                                                          desiredFrameRate);
@@ -94,17 +98,19 @@ void Server::run() {
     auto previousTime = std::chrono::high_resolution_clock::now();
     auto currentTime = previousTime;
 
+    // Turn on pathfinding
+    pathfinding_thread = PathRequestManager::start();
+
     while (running) {
         currentTime = std::chrono::high_resolution_clock::now();
         float duration =
             std::chrono::duration_cast<std::chrono::duration<float>>(
                 currentTime - previousTime)
                 .count();
-        // 240fps would be 4ms (well like 4.16ms)
-        // log_info("last server frame took {}ms ",
-        // std::chrono::duration_cast<std::chrono::milliseconds>(
-        // currentTime - previousTime)
-        // .count());
+
+        size_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        currentTime - previousTime)
+                        .count();
 
         if (duration >= fixedTimeStep.count()) {
             tick(fixedTimeStep.count());
@@ -113,27 +119,50 @@ void Server::run() {
             previousTime = currentTime;
         }
 
+#if MEASURE_SERVER_PERF
+        last_frames[last_frames_index] = ms;
+        last_frames_index = (last_frames_index + 1);
+        if (!has_looped && last_frames_index >= last_frames.size())
+            has_looped = true;
+        last_frames_index = last_frames_index % last_frames.size();
+
+        float avglf = 0.f;
+        for (size_t i = 0;
+             i < (has_looped ? last_frames.size() : last_frames_index); i++) {
+            avglf += (last_frames[i]);
+        }
+        avglf /= (has_looped ? last_frames.size() : last_frames_index);
+        log_info("avg frame {:2}ms", avglf);
+#endif
+        // 240fps would be 4ms (well like 4.16ms)
+
         // Sleep to control the frame rate
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        if (ms < 3) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
     }
 }
 
-// float fps_timer = 1.f;
-// int frames = 0;
-//
-// void fps(float dt) {
-// fps_timer -= dt;
-// frames++;
-// if (fps_timer <= 0) {
-// fps_timer = 1.f;
-// log_info("{} {} imq{} fwq{}", dt, frames,
-// incoming_message_queue.size(), packet_queue.size());
-// frames = 0;
-// }
-// }
+#if MEASURE_SERVER_PERF
+float fps_timer = 1.f;
+int frames = 0;
+
+void Server::fps(float dt) {
+    fps_timer -= dt;
+    frames++;
+    if (fps_timer <= 0) {
+        fps_timer = 1.f;
+        log_info("{} {} imq{} fwq{}", dt, frames, incoming_message_queue.size(),
+                 packet_queue.size());
+        frames = 0;
+    }
+}
+#endif
 
 void Server::tick(float dt) {
-    // fps(dt);
+#if MEASURE_SERVER_PERF
+    fps(dt);
+#endif
 
     TRACY_ZONE_SCOPED;
     server_p->run();
@@ -156,6 +185,21 @@ void Server::tick(float dt) {
     process_map_sync(dt);
 
     TRACY_FRAME_MARK("server::tick");
+}
+
+void Server::send_game_state_update() {
+    ClientPacket game_state_update{
+        .channel = Channel::UNRELIABLE,
+        .client_id = SERVER_CLIENT_ID,
+        .msg_type = network::ClientPacket::MsgType::GameState,
+        .msg =
+            network::ClientPacket::GameStateInfo{
+                .host_menu_state = MenuState::get().read(),
+                .host_game_state = GameState::get().read()},
+    };
+    // log_info("game state packet sent {} {}", MenuState::get().read(),
+    // GameState::get().read());
+    send_client_packet_to_all(game_state_update);
 }
 
 void Server::process_incoming_messages() {
@@ -192,11 +236,11 @@ void Server::process_packet_forwarding() {
 
         switch (p.msg_type) {
             case ClientPacket::MsgType::GameState: {
-                ClientPacket::GameStateInfo info =
-                    std::get<ClientPacket::GameStateInfo>(p.msg);
+                // ClientPacket::GameStateInfo info =
+                // std::get<ClientPacket::GameStateInfo>(p.msg);
                 // TODO probably dont need this
-                current_menu_state = info.host_menu_state;
-                current_game_state = info.host_game_state;
+                // current_menu_state = info.host_menu_state;
+                // current_game_state = info.host_game_state;
             } break;
             default:
                 break;
@@ -210,7 +254,7 @@ void Server::process_packet_forwarding() {
 
 void Server::process_map_update(float dt) {
     // No need to do anything if we are still in the menu
-    if (!MenuState::s_is_game(current_menu_state)) return;
+    if (!MenuState::get().in_game()) return;
 
     // TODO right now we have the run update on all the server players
     // this kinda makes sense but most of the game doesnt need this.
@@ -244,6 +288,9 @@ void Server::process_player_rare_tick(float dt) {
         // TODO decide if this needs to be more / less often
         send_player_rare_data();
         next_player_rare_tick = next_player_rare_tick_reset;
+
+        // TODO this should probably have its own timer but w/e
+        send_game_state_update();
     }
 }
 
@@ -384,25 +431,22 @@ void Server::process_player_join_packet(
     int client_id = incoming_client.client_id;
 
     const auto get_position_for_current_state = [=]() -> vec3 {
-        vec3 default_pos = {LOBBY_ORIGIN, 0.f, 0.f};
+        vec3 default_pos = LOBBY_BUILDING.to3();
 
+        auto current_game_state = GameState::get().read();
         // Not in game just spawn them in the lobby
-        if (current_menu_state != menu::State::Game) return default_pos;
+        if (MenuState::get().read() != menu::State::Game) return default_pos;
 
         switch (current_game_state) {
             case game::InMenu:
             case game::Lobby:
             case game::Paused:
                 return default_pos;
-            case game::InRound:
-            case game::Planning:
+            case game::InGame:
                 return {0.f, 0.f, 0.f};
-            case game::Progression:
-                return {PROGRESSION_ORIGIN, 0.f, 0.f};
-            case game::Store:
-                return {STORE_ORIGIN, 0.f, 0.f};
-            case game::ModelTest:
-                return {MODEL_TEST_ORIGIN, 0.f, 0.f};
+            case game::ModelTest: {
+                return MODEL_TEST_BUILDING.to3();
+            }
         }
 
         return default_pos;
@@ -572,7 +616,7 @@ void Server::send_client_packet_to_client(HSteamNetConnection conn,
 
 void Server::send_client_packet_to_all(
     const ClientPacket& packet,
-    std::function<bool(internal::Client_t&)> exclude) {
+    const std::function<bool(internal::Client_t&)>& exclude) {
     Buffer buffer = serialize_to_buffer(packet);
     server_p->send_message_to_all(buffer.c_str(), (uint32) buffer.size(),
                                   exclude);
