@@ -1,22 +1,8 @@
 
 #include "seedmanagerlayer.h"
 
-#include "../components/can_be_ghost_player.h"
-#include "../drawing_util.h"
-#include "../engine/ui/color.h"
-#include "../external_include.h"
-//
-#include "../globals.h"
-//
-#include "../camera.h"
 #include "../dataclass/names.h"
-#include "../engine.h"
-#include "../engine/app.h"
-#include "../engine/layer.h"
-#include "../map.h"
 #include "../network/network.h"
-#include "networklayer.h"
-#include "raylib.h"
 
 bool SeedManagerLayer::is_user_host() {
     if (network_info) {
