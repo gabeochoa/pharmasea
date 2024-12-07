@@ -2987,6 +2987,9 @@ void SystemManager::planning_update(
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {
+    // Tell the rendering system we are about to start a frame :)
+    system_manager::render_manager::on_frame_start();
+
     const bool debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
 

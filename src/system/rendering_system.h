@@ -44,6 +44,8 @@ void render_walkable_spots(float);
 
 void render(const Entity&, float, bool);
 
+void on_frame_start();
+
 }  // namespace render_manager
 
 }  // namespace system_manager

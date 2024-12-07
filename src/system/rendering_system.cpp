@@ -36,6 +36,8 @@
 #include "../vendor_include.h"
 #include "raylib.h"
 #include "system_manager.h"
+//
+#include "../engine/frustum.h"
 
 namespace system_manager {
 namespace job_system {
@@ -1392,12 +1394,40 @@ void render_held_furniture_preview(const Entity& entity, float) {
 }  // namespace render_manager
 }  // namespace system_manager
 
+#define LOG_RENDER_ENT_COUNT 0
+
+#if LOG_RENDER_ENT_COUNT
+static size_t num_ents_drawn = 0;
+#endif
+
+static Frustum frustum;
+
 namespace system_manager {
 
 namespace render_manager {
 
+void on_frame_start() {
+#if LOG_RENDER_ENT_COUNT
+    log_warn("num entities drawn: {}", num_ents_drawn);
+    num_ents_drawn = 0;
+#endif
+    frustum.fetch_data();
+}
+
+bool should_cull(const Entity& entity) {
+    auto bounds = entity.get<Transform>().expanded_bounds({0, 0, 0});
+    return !frustum.AABBoxIn(bounds.min, bounds.max);
+}
+
 void render(const Entity& entity, float dt, bool is_debug) {
     if (is_debug) render_debug(entity, dt);
+
+    if (should_cull(entity)) return;
+
+#if LOG_RENDER_ENT_COUNT
+    // rough approx :)
+    num_ents_drawn++;
+#endif
 
     render_normal(entity, dt);
     render_held_furniture_preview(entity, dt);
