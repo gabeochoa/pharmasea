@@ -1060,7 +1060,7 @@ void render_waiting_queue(const Entity& entity, float) {
 }
 
 void render_price(const Entity& entity, float) {
-    int price = get_price_for_entity_type(entity.type);
+    int price = get_price_for_entity_type(entity.get<Type>().type);
     if (price == -1) return;
 
     if (entity.is_missing<Transform>()) return;
@@ -1095,9 +1095,9 @@ void render_machine_name(const Entity& entity, int font_size = 200) {
     if (!someone_close) return;
 
     // TODO rotate the name with the camera?
-    raylib::DrawFloatingText(transform.raw() + vec3{0.3f, 0.2f, 0.5f},
-                             Preload::get().font,
-                             std::string(entity.name()).c_str(), font_size);
+    raylib::DrawFloatingText(
+        transform.raw() + vec3{0.3f, 0.2f, 0.5f}, Preload::get().font,
+        std::string(entity.get<Type>().name()).c_str(), font_size);
 }
 
 void render_debug_fruit_juice(const Entity& entity, float) {
