@@ -1,13 +1,12 @@
 
 #pragma once
 
+#include "afterhours/ah.h"
+using afterhours::Entity;
 #include "engine/assert.h"
 #include "engine/log.h"
 #include "external_include.h"
 //
-
-using EntityID = int;
-struct Entity;
 
 enum JobType {
     NoJob = 0,

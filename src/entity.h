@@ -1,221 +1,19 @@
 
 #pragma once
 
-#include "engine.h"
-#include "external_include.h"
-//
+#include "afterhours/ah.h"
+using afterhours::Entity;
+
+#include "bitsery/ext/std_bitset.h"
+#include "bitsery/ext/std_smart_ptr.h"
 #include "entity_type.h"
-//
-#include "components/base_component.h"
-//
-#include "engine/assert.h"
-#include "engine/log.h"
-#include "engine/type_name.h"
 //
 #include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
 
-#include <map>
-
-using bitsery::ext::PointerObserver;
-using bitsery::ext::PointerOwner;
-using bitsery::ext::PointerType;
-using StdMap = bitsery::ext::StdMap;
-
-using ComponentBitSet = std::bitset<max_num_components>;
-// originally this was a std::array<BaseComponent*, max_num_components> but i
-// cant seem to serialize this so lets try map
-using ComponentArray = std::map<int, std::unique_ptr<BaseComponent>>;
-using Item = Entity;
-using EntityID = int;
-
 // TODO memory? we could keep track of deleted entities and reuse those ids if
 // we wanted to we'd have to be pretty disiplined about clearing people who
 // store ids...
-
-static std::atomic_int ENTITY_ID_GEN = 0;
-struct Entity {
-    // TODO :INFRA: go around and audit id uses
-    EntityID id;
-
-    EntityType type = EntityType::Unknown;
-
-    ComponentBitSet componentSet;
-    ComponentArray componentArray;
-
-    bool cleanup = false;
-
-    Entity() : id(ENTITY_ID_GEN++) {}
-    ~Entity();
-    Entity(const Entity&) = delete;
-    Entity(Entity&& other) noexcept = default;
-
-    // These two functions can be used to validate than an entity has all of the
-    // matching components that are needed for this system to run
-    template<typename T>
-    [[nodiscard]] bool has() const {
-        log_trace("checking component {} {} on entity {}",
-                  components::get_type_id<T>(), type_name<T>(), id);
-        log_trace("your set is now {}", componentSet);
-        bool result = componentSet[components::get_type_id<T>()];
-        log_trace("and the result was {}", result);
-        return result;
-    }
-
-    template<typename A, typename B, typename... Rest>
-    bool has() const {
-        return has<A>() && has<B, Rest...>();
-    }
-
-    template<typename T>
-    [[nodiscard]] bool is_missing() const {
-        return !has<T>();
-    }
-
-    template<typename A>
-    bool is_missing_any() const {
-        return is_missing<A>();
-    }
-
-    template<typename A, typename B, typename... Rest>
-    bool is_missing_any() const {
-        return is_missing<A>() || is_missing_any<B, Rest...>();
-    }
-
-    template<typename T>
-    void removeComponent() {
-        log_info("removing component_id:{} {} to entity_id: {}",
-                 components::get_type_id<T>(), type_name<T>(), id);
-        if (!this->has<T>()) {
-            log_error(
-                "trying to remove but this entity {} {} doesnt have the "
-                "component attached {} {}",
-                name(), id, components::get_type_id<T>(), type_name<T>());
-        }
-        componentSet[components::get_type_id<T>()] = false;
-        // BaseComponent* ptr = componentArray[components::get_type_id<T>()];
-        componentArray.erase(components::get_type_id<T>());
-        // if (ptr) delete ptr;
-    }
-
-    template<typename T, typename... TArgs>
-    T& addComponent(TArgs&&... args) {
-        log_trace("adding component_id:{} {} to entity_id: {}",
-                  components::get_type_id<T>(), type_name<T>(), id);
-
-        // checks for duplicates
-        if (this->has<T>()) {
-            log_warn(
-                "This entity {}, {} already has this component attached id: "
-                "{}, "
-                "component {}",
-                name(), id, components::get_type_id<T>(), type_name<T>());
-
-            VALIDATE(false, "duplicate component");
-            // Commented out on purpose because the assert is gonna kill the
-            // program anyway at some point we should stop enforcing it to avoid
-            // crashing the game when people are playing
-            //
-            // return this->get<T>();
-        }
-
-        // non uinque ptr
-        // T* component(new T(std::forward<TArgs>(args)...));
-        // componentArray[components::get_type_id<T>()] = component;
-        // componentSet[components::get_type_id<T>()] = true;
-
-        auto component = std::make_unique<T>(std::forward<TArgs>(args)...);
-        componentArray[components::get_type_id<T>()] = std::move(component);
-        componentSet[components::get_type_id<T>()] = true;
-
-        log_trace("your set is now {}", componentSet);
-
-        componentArray[components::get_type_id<T>()]->attach_parent(this);
-
-        return get<T>();
-    }
-
-    template<typename T, typename... TArgs>
-    T& addComponentIfMissing(TArgs&&... args) {
-        if (this->has<T>()) return this->get<T>();
-        return addComponent<T>(std::forward<TArgs>(args)...);
-    }
-
-    template<typename T>
-    void removeComponentIfExists() {
-        if (this->is_missing<T>()) return;
-        return removeComponent<T>();
-    }
-
-    template<typename A>
-    void addAll() {
-        addComponent<A>();
-    }
-
-    template<typename A, typename B, typename... Rest>
-    void addAll() {
-        addComponent<A>();
-        addAll<B, Rest...>();
-    }
-
-    const std::string_view name() const;
-
-    template<typename T>
-    void warnIfMissingComponent() const {
-        if (this->is_missing<T>()) {
-            log_warn(
-                "This entity {} {} is missing id: {}, "
-                "component {}",
-                name(), id, components::get_type_id<T>(), type_name<T>());
-        }
-    }
-
-    template<typename T>
-    [[nodiscard]] T& get() {
-        warnIfMissingComponent<T>();
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wreturn-stack-address"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wreturn-stack-address"
-        return static_cast<T&>(
-            *componentArray.at(components::get_type_id<T>()).get());
-    }
-
-    template<typename T>
-    [[nodiscard]] const T& get() const {
-        warnIfMissingComponent<T>();
-
-        return static_cast<const T&>(
-            *componentArray.at(components::get_type_id<T>()).get());
-#pragma GCC diagnostic pop
-#pragma clang diagnostic pop
-    }
-
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(id);
-        s.value4b(type);
-
-        s.ext(componentSet, bitsery::ext::StdBitset{});
-        s.value1b(cleanup);
-
-        s.ext(componentArray, StdMap{max_num_components},
-              [](S& sv, int& key, std::unique_ptr<BaseComponent>(&value)) {
-                  sv.value4b(key);
-                  // sv.ext(value, PointerOwner{PointerType::Nullable});
-                  sv.ext(value, bitsery::ext::StdSmartPtr{});
-              });
-    }
-};
-
-namespace bitsery {
-template<typename S>
-void serialize(S& s, std::shared_ptr<Entity>& entity) {
-    s.ext(entity, bitsery::ext::StdSmartPtr{});
-}
-}  // namespace bitsery
 
 struct DebugOptions {
     EntityType type = EntityType::Unknown;
@@ -256,7 +54,39 @@ struct OptEntity {
     operator bool() const { return valid(); }
 };
 
+using Item = Entity;
+
 namespace bitsery {
+
+using bitsery::ext::PointerObserver;
+using bitsery::ext::PointerOwner;
+using bitsery::ext::PointerType;
+using bitsery::ext::StdBitset;
+using bitsery::ext::StdMap;
+using bitsery::ext::StdOptional;
+using bitsery::ext::StdSmartPtr;
+
+template<typename S>
+void serialize(S& s, Entity& entity) {
+    s.value4b(entity.id);
+
+    s.ext(entity.componentSet, StdBitset{});
+    s.value1b(entity.cleanup);
+
+    s.ext(entity.componentArray, StdMap{afterhours::max_num_components},
+          [](S& sv, afterhours::ComponentID& key,
+             std::unique_ptr<afterhours::BaseComponent>(&value)) {
+              sv.value8b(key);
+              // sv.ext(value, PointerOwner{PointerType::Nullable});
+              sv.ext(value, StdSmartPtr{});
+          });
+}
+
+template<typename S>
+void serialize(S& s, std::shared_ptr<Entity>& entity) {
+    s.ext(entity, StdSmartPtr{});
+}
+
 template<typename S>
 void serialize(S& s, RefEntity ref) {
     Entity& e = ref.get();
@@ -266,7 +96,7 @@ void serialize(S& s, RefEntity ref) {
 
 template<typename S>
 void serialize(S& s, OptEntity opt) {
-    s.ext(opt, bitsery::ext::StdOptional{});
+    s.ext(opt, StdOptional{});
 }
 }  // namespace bitsery
 

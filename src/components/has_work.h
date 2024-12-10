@@ -4,7 +4,7 @@
 
 #include "base_component.h"
 
-struct Entity;
+using afterhours::Entity;
 
 struct HasWork : public BaseComponent {
     HasWork()

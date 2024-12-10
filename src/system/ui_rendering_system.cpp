@@ -11,6 +11,8 @@
 #include "../components/has_waiting_queue.h"
 #include "../components/is_bank.h"
 #include "../components/model_renderer.h"
+#include "../engine/assert.h"
+#include "../engine/log.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "system_manager.h"
@@ -51,7 +53,7 @@ void render_current_register_queue(float dt) {
                 if (entity.is_missing<CanOrderDrink>()) {
                     log_warn(
                         "register {} has people who cant order in line: {}", i,
-                        entity.name());
+                        entity.get<Type>().name());
                     continue;
                 }
 
@@ -144,7 +146,7 @@ void render_networked_players(const Entities& entities, float dt) {
         if (entity.is_missing<ModelRenderer>()) {
             log_warn(
                 "render_little_model_guy, entity {} is missing model renderer",
-                entity.name());
+                entity.get<Type>().name());
             return;
         }
         auto model_name = entity.get<ModelRenderer>().name();

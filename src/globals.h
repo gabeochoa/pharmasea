@@ -17,8 +17,6 @@ constexpr int MAP_H = 33;
 // if you change this here, then go in there and add support as well
 constexpr float TILESIZE = 1.0f;
 
-struct Entity;
-
 constexpr float GATHER_SPOT = -20.f;
 constexpr int MAX_SEARCH_RANGE = 100;
 
