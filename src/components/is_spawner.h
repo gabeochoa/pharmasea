@@ -5,7 +5,7 @@
 #include "../vendor_include.h"
 #include "base_component.h"
 
-struct Entity;
+using afterhours::Entity;
 
 struct SpawnInfo {
     vec2 location;

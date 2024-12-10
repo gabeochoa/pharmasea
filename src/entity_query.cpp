@@ -56,7 +56,8 @@ EntityQuery& EntityQuery::whereIsHoldingItemOfType(EntityType type) {
         add_mod(new WhereHasComponent<CanHoldItem>())
             .add_mod(new WhereLambda([type](const Entity& entity) {
                 const CanHoldItem& chi = entity.get<CanHoldItem>();
-                return chi.is_holding_item() && chi.item().type == type;
+                return chi.is_holding_item() &&
+                       chi.item().get<Type>().type == type;
             }));
 }
 

@@ -1,24 +1,14 @@
 
 #include "entity.h"
 
-Entity::~Entity() {
-    // for (auto itr = componentArray.begin(); itr != componentArray.end();
-    // itr++) {
-    // if (itr->second) delete (itr->second);
-    // }
-    componentArray.clear();
-}
-
-const std::string_view Entity::name() const {
-    return magic_enum::enum_name<EntityType>(type);
-}
+#include "components/type.h"
 
 bool check_type(const Entity& entity, EntityType type) {
-    return type == entity.type;
+    return type == entity.get<Type>().type;
 }
 
 bool check_if_drink(const Entity& entity) {
-    switch (entity.type) {
+    switch (entity.get<Type>().type) {
         case EntityType::Unknown:
         case EntityType::x:
         case EntityType::y:

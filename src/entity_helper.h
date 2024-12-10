@@ -26,11 +26,13 @@ enum struct NamedEntity {
     Sophie,
 };
 
-using Entities = std::vector<std::shared_ptr<Entity>>;
-using RefEntities = std::vector<RefEntity>;
+using Entities = std::vector<std::shared_ptr<afterhours::Entity>>;
+using RefEntities = std::vector<afterhours::RefEntity>;
+
 using NamedEntities = std::map<NamedEntity, std::shared_ptr<Entity>>;
 
 extern Entities client_entities_DO_NOT_USE;
+extern Entities server_entities_DO_NOT_USE;
 extern NamedEntities named_entities_DO_NOT_USE;
 
 extern std::set<int> permanant_ids;

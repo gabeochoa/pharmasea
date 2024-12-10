@@ -3,8 +3,6 @@
 
 #include "base_component.h"
 
-struct Entity;
-
 using OnChangeFn = std::function<void(Entity&, bool)>;
 
 struct CanBeHighlighted : public BaseComponent {

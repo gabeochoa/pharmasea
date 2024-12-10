@@ -2,9 +2,10 @@
 
 #include "../camera.h"
 #include "../engine/layer.h"
+#include "afterhours/ah.h"
 
 struct GameLayer : public Layer {
-    std::shared_ptr<Entity> active_player;
+    std::shared_ptr<afterhours::Entity> active_player;
     std::unique_ptr<GameCam> cam;
     raylib::Model bag_model;
     raylib::RenderTexture2D game_render_texture;

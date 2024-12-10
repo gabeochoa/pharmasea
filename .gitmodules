@@ -1,0 +1,3 @@
+[submodule "vendor/afterhours"]
+	path = vendor/afterhours
+	url = https://github.com/gabeochoa/afterhours
