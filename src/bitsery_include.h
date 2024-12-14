@@ -2,6 +2,8 @@
 #pragma once
 
 #define CEREAL_EXCEPTIONS
+
+#undef CEREAL_THREAD_SAFE
 #define CEREAL_THREAD_SAFE 1
 #include <cereal/types/polymorphic.hpp>
 //

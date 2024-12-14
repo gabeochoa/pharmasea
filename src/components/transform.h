@@ -3,10 +3,11 @@
 
 #include <cereal/types/polymorphic.hpp>
 
+#include "../vendor_include.h"
+//
 #include "../engine/util.h"
 #include "../std_include.h"
 #include "../vec_util.h"
-#include "../vendor_include.h"
 //
 #include "base_component.h"
 

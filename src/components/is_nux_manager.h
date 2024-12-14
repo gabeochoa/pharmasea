@@ -6,8 +6,6 @@
 #include "../vec_util.h"
 #include "base_component.h"
 
-struct IsNux;
-
 struct IsNux : public BaseComponent {
     bool is_active = false;
     std::function<void(IsNux&)> onTrigger;
@@ -70,7 +68,6 @@ struct IsNux : public BaseComponent {
 
     virtual ~IsNux() {}
 
-   private:
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {

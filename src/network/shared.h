@@ -261,6 +261,8 @@ static void deserialize_to_entity(Entity* entity, const std::string& msg) {
 // ClientPacket is in shared.h which is specific to the game,
 // TODO how can we support both abstract while also configuration
 static ClientPacket deserialize_to_packet(const std::string& msg) {
+    log_warn("hihi {} {}", msg.size(), msg);
+
     ClientPacket packet;
     std::stringstream ss(msg);
     {
@@ -276,6 +278,7 @@ static Buffer serialize_to_buffer(ClientPacket packet) {
         cereal::JSONOutputArchive archive(ss);
         archive(packet);
     }
+    log_warn("output packet: {} {}", ss.str().size(), ss.str());
     return ss.str();
 }
 

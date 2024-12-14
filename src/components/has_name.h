@@ -27,4 +27,5 @@ struct HasName : public BaseComponent {
     }
 };
 
+CEREAL_REGISTER_ARCHIVE(cereal::JSONOutputArchive)
 CEREAL_REGISTER_TYPE(HasName);
