@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2017 Mindaugas Vinkelis
+// Copyright (c) 2018 Mindaugas Vinkelis
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BITSERY_BRIEF_SYNTAX_TYPE_STD_UNORDERED_SET_H
-#define BITSERY_BRIEF_SYNTAX_TYPE_STD_UNORDERED_SET_H
+#ifndef BITSERY_BRIEF_SYNTAX_TYPE_STD_BITSET_H
+#define BITSERY_BRIEF_SYNTAX_TYPE_STD_BITSET_H
 
-#include "../ext/std_set.h"
-#include <limits>
-#include <unordered_set>
+#include "../ext/std_bitset.h"
 
 namespace bitsery {
-template<typename S,
-         typename Key,
-         typename Hash,
-         typename KeyEqual,
-         typename Allocator>
+template<typename S, size_t N>
 void
-serialize(S& s,
-          std::unordered_set<Key, Hash, KeyEqual, Allocator>& obj,
-          size_t maxSize = std::numeric_limits<size_t>::max())
+serialize(S& s, std::bitset<N>& obj)
 {
-  s.ext(obj, ext::StdSet{ maxSize });
+  s.ext(obj, ext::StdBitset{});
 }
-
-template<typename S,
-         typename Key,
-         typename Hash,
-         typename KeyEqual,
-         typename Allocator>
-void
-serialize(S& s,
-          std::unordered_multiset<Key, Hash, KeyEqual, Allocator>& obj,
-          size_t maxSize = std::numeric_limits<size_t>::max())
-{
-  s.ext(obj, ext::StdSet{ maxSize });
 }
-
-}
-
-#endif // BITSERY_BRIEF_SYNTAX_TYPE_STD_UNORDERED_SET_H
+#endif
