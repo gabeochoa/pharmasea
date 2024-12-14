@@ -64,3 +64,4 @@ struct AddsIngredient : public BaseComponent {
         s.value4b(num_uses);
     }
 };
+

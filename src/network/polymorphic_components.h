@@ -77,6 +77,7 @@
 namespace bitsery {
 template<>
 struct SelectSerializeFnc<afterhours::BaseComponent> : UseNonMemberFnc {};
+
 template<>
 struct SelectSerializeFnc<Transform> : UseMemberFnc {};
 template<>
@@ -229,8 +230,8 @@ struct PolymorphicBaseClass<BaseComponent>
           Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
           CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
           CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
-          CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid, CanBeHeld,
-          HasPatience, HasProgression, IsRotatable, CanGrabFromOtherFurniture,
+          CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid, HasPatience,
+          HasProgression, IsRotatable, CanGrabFromOtherFurniture,
           ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
           UsesCharacterModel, HasDynamicModelName, IsTriggerArea,
           HasSpeechBubble, Indexer, IsSpawner, HasRopeToItem, HasSubtype,
@@ -241,7 +242,9 @@ struct PolymorphicBaseClass<BaseComponent>
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
           CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback, IsSquirter, Type
+          CollectsCustomerFeedback, IsSquirter, Type,
+          //
+          CanBeHeld
           // END
           > {};
 // If you add anything here ^^ then you should add that component to
@@ -267,4 +270,5 @@ struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<BaseComponent, AIComponent, Job>;
+    bitsery::ext::PolymorphicClassesList<afterhours::BaseComponent, AIComponent,
+                                         Job>;
