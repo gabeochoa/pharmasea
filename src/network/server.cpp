@@ -4,6 +4,10 @@
 #include <thread>
 
 #include "../building_locations.h"
+#include "../components/has_client_id.h"
+#include "../components/has_name.h"
+#include "../components/uses_character_model.h"
+#include "../engine/path_request_manager.h"
 #include "../system/system_manager.h"
 #include "shared.h"
 

@@ -14,14 +14,15 @@ struct ConveysHeldItem : public BaseComponent {
     virtual ~ConveysHeldItem() {}
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        // The reason we dont need to serialize this is that
-        // we dont render the underlying value,
-        // we use this value to move the entity and then serialize the entity's
-        // position
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this)
+                // The reason we dont need to serialize this is that
+                // we dont render the underlying value,
+                // we use this value to move the entity and then serialize the
+                // entity's position
+        );
     }
 };
+
+CEREAL_REGISTER_TYPE(ConveysHeldItem);

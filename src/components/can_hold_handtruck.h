@@ -25,12 +25,11 @@ struct CanHoldHandTruck : public BaseComponent {
     int held_hand_truck_id = -1;
     vec3 pos;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(held_hand_truck_id);
-        s.object(pos);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this), held_hand_truck_id,
+                pos);
     }
 };
+
+CEREAL_REGISTER_TYPE(CanHoldHandTruck);

@@ -15,13 +15,12 @@ struct IsPnumaticPipe : public BaseComponent {
     [[nodiscard]] bool has_pair() const { return paired_id != -1; }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(paired_id);
-
-        // s.value4b(item_id);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                paired_id);
     }
 };
+
+CEREAL_REGISTER_TYPE(IsPnumaticPipe);

@@ -127,22 +127,18 @@ struct IsSpawner : public BaseComponent {
 
     std::string spawn_sound;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                // We likely dont need to serialize anything because it should
+                // be all server side info
 
-        // We likely dont need to serialize anything because it should be
-        // all server side info
+                // TODO add macro to only show these for debug builds
+                // Debug only
 
-        // TODO add macro to only show these for debug builds
-        // Debug only
-
-        s.value1b(showsProgressBar);
-        s.value4b(countdown);
-        s.value4b(spread);
-
-        s.value4b(num_spawned);
-        s.value4b(max_spawned);
+                showsProgressBar, countdown, spread, num_spawned, max_spawned);
     }
 };
+
+CEREAL_REGISTER_TYPE(IsSpawner);

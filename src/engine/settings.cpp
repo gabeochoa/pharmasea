@@ -1,6 +1,7 @@
 
 #include "settings.h"
 
+#include "../bitsery_include.h"
 #include "../preload.h"
 
 Settings Settings::instance;
@@ -145,43 +146,40 @@ void Settings::update_post_processing_enabled(bool pp_enabled) {
 
 // TODO music volumes only seem to take effect once you open SettingsLayer
 bool Settings::load_save_file() {
-    std::ifstream ifs(Files::get().settings_filepath());
-    if (!ifs.is_open()) {
-        log_warn("Failed to find settings file (Read) {}",
-                 Files::get().settings_filepath());
-        return false;
-    }
-
     log_trace("Reading settings file");
-    std::stringstream buffer;
-    buffer << ifs.rdbuf();
-    auto buf_str = buffer.str();
-
-    bitsery::quickDeserialization<settings::InputAdapter>(
-        {buf_str.begin(), buf_str.size()}, data);
+    {
+        std::ifstream ifs(Files::get().settings_filepath(), std::ios::binary);
+        if (!ifs.is_open()) {
+            log_warn("Failed to find settings file (Read) {}",
+                     Files::get().settings_filepath());
+            return false;
+        }
+        cereal::BinaryInputArchive archive(ifs);
+        archive(data);
+        ifs.close();
+    }
 
     refresh_settings();
 
     log_info("Settings Loaded: {}", data);
     log_trace("End loading settings file");
-    ifs.close();
     return true;
 }
 
 // TODO instead of writing to a string and then file
 // theres a way to write directly to the file
-// https://github.com/fraillt/bitsery/blob/master/examples/file_stream.cpp
 bool Settings::write_save_file() {
-    std::ofstream ofs(Files::get().settings_filepath());
-    if (!ofs.is_open()) {
-        log_warn("Failed to find settings file (Write) {}",
-                 Files::get().settings_filepath());
-        return false;
+    {
+        std::ofstream ofs(Files::get().settings_filepath(), std::ios::binary);
+        if (!ofs.is_open()) {
+            log_warn("Failed to find settings file (Write) {}",
+                     Files::get().settings_filepath());
+            return false;
+        }
+
+        cereal::BinaryOutputArchive archive(ofs);
+        archive(data);
     }
-    settings::Buffer buffer;
-    bitsery::quickSerialization(settings::OutputAdapter{buffer}, data);
-    ofs << buffer << std::endl;
-    ofs.close();
 
     log_info("Wrote Settings File to {}", Files::get().settings_filepath());
     return true;

@@ -47,10 +47,10 @@ struct AIWaitInQueue : public AIComponent {
     virtual ~AIWaitInQueue() {}
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<AIComponent>{});
-        s.object(target);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<AIComponent>(this), target);
     }
 };
+
+CEREAL_REGISTER_TYPE(AIWaitInQueue);

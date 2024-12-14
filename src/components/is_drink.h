@@ -8,8 +8,6 @@
 #include "../vendor_include.h"
 #include "base_component.h"
 
-using StdMap = bitsery::ext::StdMap;
-
 struct IsDrink : public BaseComponent {
     IsDrink() : _supports_multiple(false) {}
     virtual ~IsDrink() {}
@@ -136,24 +134,13 @@ struct IsDrink : public BaseComponent {
 
     float tip_multiplier = 1.f;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(_supports_multiple);
-
-        s.value4b(num_completed);
-
-        s.ext(ingredients, StdMap{magic_enum::enum_count<Ingredient>()},
-              [](S& sv, Ingredient& key, int value) {
-                  sv.value4b(key);
-                  sv.value4b(value);
-              });
-
-        s.ext(unique_igs, bitsery::ext::StdBitset{});
-
-        s.ext(underlying, bitsery::ext::StdOptional{},
-              [](S& sv, Drink& val) { sv.value4b(val); });
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                _supports_multiple, num_completed, ingredients, unique_igs,
+                underlying);
     }
 };
+
+CEREAL_REGISTER_TYPE(IsDrink);

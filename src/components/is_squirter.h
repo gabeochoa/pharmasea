@@ -49,17 +49,12 @@ struct IsSquirter : public BaseComponent {
     float sq_time;
     float sq_time_reset;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(pos);
-        s.value4b(held_item_id);
-        s.value4b(held_drink_id);
-
-        s.value1b(working);
-        s.value4b(sq_time);
-        s.value4b(sq_time_reset);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                pos, held_drink_id, held_item_id, working, sq_time,
+                sq_time_reset);
     }
 };
+CEREAL_REGISTER_TYPE(IsSquirter);

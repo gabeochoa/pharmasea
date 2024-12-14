@@ -15,7 +15,7 @@ FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
 		  -Wno-implicit-int-float-conversion -Werror
-INCLUDES = -Ivendor/ 
+INCLUDES = -Ivendor/ -Ivendor/cereal/include/
 LIBS = -L. -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
 # SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp)
@@ -82,6 +82,7 @@ clean:
 	mkdir -p $(OBJ_DIR)/src/dataclass/
 	mkdir -p $(OBJ_DIR)/src/engine/
 	mkdir -p $(OBJ_DIR)/src/engine/network/
+	mkdir -p $(OBJ_DIR)/src/network/internal/
 	mkdir -p $(OBJ_DIR)/src/components/
 	mkdir -p $(OBJ_DIR)/src/engine/ui/
 	mkdir -p $(OBJ_DIR)/src/system/

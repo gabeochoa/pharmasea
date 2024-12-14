@@ -340,10 +340,8 @@ struct ConfigData {
     std::vector<std::shared_ptr<UpgradeImpl>> get_possible_upgrades(
         const IsProgressionManager&);
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(unlocked_upgrades, bitsery::ext::StdBitset{});
-        s.object(data);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(unlocked_upgrades, data);
     }
 };

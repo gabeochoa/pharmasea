@@ -71,15 +71,11 @@ struct IsNux : public BaseComponent {
     virtual ~IsNux() {}
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(is_active);
-        s.value4b(entityID);
-        s.object(content);
-        s.value4b(ghost);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                is_active, entityID, content, ghost);
     }
 };
 
@@ -89,11 +85,12 @@ struct IsNuxManager : public BaseComponent {
     bool initialized = false;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(initialized);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                initialized);
     }
 };
+
+CEREAL_REGISTER_TYPE(IsNuxManager);

@@ -39,15 +39,18 @@ struct HasDynamicModelName : public BaseComponent {
     bool initialized = false;
     ModelNameFetcher fetcher;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this)
+                //
 
-        // Not needed because this is only used to change the underlying model
-        // inside <ModelRenderer>
-        //
-        // s.value1b(initialized);
-        // s.text1b(base_name, MAX_MODEL_NAME_LENGTH);
+                // Not needed because this is only used to change the underlying
+                // model inside <ModelRenderer>
+                //
+                // s.value1b(initialized);
+                // s.text1b(base_name, MAX_MODEL_NAME_LENGTH);
+        );
     }
 };
+
+CEREAL_REGISTER_TYPE(HasDynamicModelName);

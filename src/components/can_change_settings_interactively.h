@@ -15,11 +15,10 @@ struct CanChangeSettingsInteractively : public BaseComponent {
     virtual ~CanChangeSettingsInteractively() {}
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(style);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this), style);
     }
 };
+
+CEREAL_REGISTER_TYPE(CanChangeSettingsInteractively);

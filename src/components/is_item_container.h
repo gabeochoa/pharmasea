@@ -49,12 +49,10 @@ struct IsItemContainer : public BaseComponent {
     bool uses_indexer;
     bool is_table_when_empty = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        // s.text1b(item_type, MAX_ITEM_NAME);
-        // s.value4b(max_gens);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this));
     }
 };
+
+CEREAL_REGISTER_TYPE(IsItemContainer);

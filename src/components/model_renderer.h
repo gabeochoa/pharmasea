@@ -36,11 +36,11 @@ struct ModelRenderer : public BaseComponent {
    private:
     std::string model_name;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                model_name);
     }
 };
+CEREAL_REGISTER_TYPE(ModelRenderer);

@@ -13,10 +13,9 @@ struct IsRoundSettingsManager : public BaseComponent {
         // Turn tutorial off by default for now :)
         bool is_tutorial_active = false;
 
-        friend bitsery::Access;
-        template<typename S>
-        void serialize(S& s) {
-            s.value1b(is_tutorial_active);
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(is_tutorial_active);
         }
     } interactive_settings;
 
@@ -170,10 +169,12 @@ struct IsRoundSettingsManager : public BaseComponent {
         return meets;
     }
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(config);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                config);
     }
 };
+
+CEREAL_REGISTER_TYPE(IsRoundSettingsManager);

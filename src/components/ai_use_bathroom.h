@@ -48,11 +48,10 @@ struct AIUseBathroom : public AIComponent {
     JobType next_job;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<AIComponent>{});
-        s.object(target);
-        s.object(floor_timer);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<AIComponent>(this), target, floor_timer);
     }
 };
+
+CEREAL_REGISTER_TYPE(AIUseBathroom);

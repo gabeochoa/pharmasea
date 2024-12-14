@@ -1,5 +1,6 @@
 
 #pragma once
+/*
 #include "../external_include.h"
 //
 
@@ -120,3 +121,4 @@ struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
 
 using MyPolymorphicClasses =
     bitsery::ext::PolymorphicClassesList<BaseComponent, AIComponent, Job>;
+    */

@@ -14,10 +14,10 @@ struct CanBeTakenFrom : public BaseComponent {
    private:
     bool allowed = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(allowed);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this), allowed);
     }
 };
+
+CEREAL_REGISTER_TYPE(CanBeTakenFrom);

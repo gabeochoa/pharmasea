@@ -16,9 +16,10 @@ struct CanBePushed : public BaseComponent {
    private:
     vec3 force{0.0, 0.0, 0.0};
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this));
     }
 };
+
+CEREAL_REGISTER_TYPE(CanBePushed);

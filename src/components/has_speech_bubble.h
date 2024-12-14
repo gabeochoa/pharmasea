@@ -17,15 +17,12 @@ struct HasSpeechBubble : public BaseComponent {
     bool _enabled = false;
     int max_icon_name_length = 20;
     std::string icon_name;
-
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(_enabled);
-
-        s.value4b(max_icon_name_length);
-        s.text1b(icon_name, max_icon_name_length);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                _enabled, max_icon_name_length, icon_name);
     }
 };
+
+CEREAL_REGISTER_TYPE(HasSpeechBubble);

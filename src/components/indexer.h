@@ -52,14 +52,12 @@ struct Indexer : public BaseComponent {
     int max_value;
     bool changed;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(index);
-        s.value4b(max_value);
-
-        // s.value1b(changed);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                index, max_value);
     }
 };
+
+CEREAL_REGISTER_TYPE(Indexer);

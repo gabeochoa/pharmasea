@@ -243,12 +243,8 @@ struct EntityFilter {
     }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(flags);
-        s.ext(entity_type, bitsery::ext::StdOptional{},
-              [](S& sv, EntityType& val) { sv.value4b(val); });
-        s.value4b(subtype_index);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(flags, entity_type, subtype_index);
     }
 };

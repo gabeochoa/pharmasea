@@ -46,13 +46,12 @@ struct IsFloorMarker : public BaseComponent {
 
    private:
     std::vector<int> marked_entities;
-
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(type);
-
-        s.container4b(marked_entities, MAX_FLOOR_MARKERS);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                type, marked_entities);
     }
 };
+
+CEREAL_REGISTER_TYPE(IsFloorMarker);

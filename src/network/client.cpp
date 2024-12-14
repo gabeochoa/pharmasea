@@ -3,6 +3,9 @@
 #include "client.h"
 
 #include "../building_locations.h"
+#include "../components/collects_user_input.h"
+#include "../components/has_client_id.h"
+#include "../components/has_name.h"
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
 #include "../engine/sound_library.h"
@@ -73,16 +76,12 @@ void Client::send_ping_packet(int my_id, float dt) {
 
 // TODO :DUPE: this is duplicated with the version in internal/client
 void Client::send_packet_to_server(ClientPacket packet) {
-    Buffer buffer;
-    TContext ctx{};
-
-    std::get<1>(ctx).registerBasesList<BitserySerializer>(
-        MyPolymorphicClasses{});
-    BitserySerializer ser{ctx, buffer};
-    ser.object(packet);
-    ser.adapter().flush();
-    // size = ser.adapter().writtenBytesCount();
-    client_p->send_string_to_server(buffer, packet.channel);
+    std::stringstream ss;
+    {
+        cereal::JSONOutputArchive archive(ss);
+        archive(packet);
+    }
+    client_p->send_string_to_server(ss.str(), packet.channel);
 }
 
 void Client::send_player_input_packet(int my_id) {

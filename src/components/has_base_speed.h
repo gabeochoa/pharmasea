@@ -14,10 +14,10 @@ struct HasBaseSpeed : public BaseComponent {
    private:
     float base_speed = 1.f;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        // We dont serialize because its fully serverside
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this));
     }
 };
+
+CEREAL_REGISTER_TYPE(HasBaseSpeed);

@@ -78,19 +78,13 @@ struct HasDayNightTimer : public BaseComponent {
     // how much time remaining in the current state
     float current_length;
     bool is_day = true;
-
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(day_count);
-        s.value4b(days_until_rent_due);
-        s.value4b(amount_due);
-
-        s.value4b(day_length);
-        s.value4b(night_length);
-        s.value4b(current_length);
-        s.value1b(is_day);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                day_count, days_until_rent_due, amount_due, day_length,
+                night_length, current_length, is_day);
     }
 };
+
+CEREAL_REGISTER_TYPE(HasDayNightTimer);

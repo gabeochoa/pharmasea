@@ -9,6 +9,7 @@
 #include "../engine/util.h"
 #include "../globals.h"
 #include "../job.h"
+#include "../level_info.h"
 #include "../map.h"
 #include "internal/channel.h"
 #include "polymorphic_components.h"
@@ -17,13 +18,6 @@
 namespace network {
 
 using Buffer = std::string;
-using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
-using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
-using TContext =
-    std::tuple<bitsery::ext::PointerLinkingContext,
-               bitsery::ext::PolymorphicContext<bitsery::ext::StandardRTTI>>;
-using BitserySerializer = bitsery::Serializer<OutputAdapter, TContext>;
-using BitseryDeserializer = bitsery::Deserializer<InputAdapter, TContext>;
 
 struct ClientPacket {
     Channel channel = Channel::RELIABLE;
@@ -46,21 +40,41 @@ struct ClientPacket {
     struct PingInfo {
         long long ping = 0;
         long long pong = 0;
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(ping, pong);
+        }
     };
 
     struct AnnouncementInfo {
         std::string message;
         AnnouncementType type = AnnouncementType::Message;
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(message, type);
+        }
     };
 
     // Map Info
     struct MapInfo {
         struct Map map;
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(map);
+        }
     };
 
     // Map Seed Info
     struct MapSeedInfo {
         std::string seed{};
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(seed);
+        }
     };
 
     // Game Info
@@ -68,11 +82,21 @@ struct ClientPacket {
         // TODO we likely dont need to send menu state anymore
         menu::State host_menu_state = menu::State::Game;
         game::State host_game_state = game::State::Lobby;
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(host_game_state, host_menu_state);
+        }
     };
 
     // Packet containing a recent keypress
     struct PlayerControlInfo {
         UserInputs inputs;
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(inputs);
+        }
     };
 
     // Player Join
@@ -83,11 +107,21 @@ struct ClientPacket {
         size_t hashed_version = 0;
         bool is_you = false;
         std::string username{};
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(all_clients, is_you, hashed_version, client_id, username);
+        }
     };
 
     struct PlayerLeaveInfo {
         std::vector<int> all_clients;
         int client_id = -1;
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(all_clients, client_id);
+        }
     };
 
     // Player Location
@@ -95,17 +129,31 @@ struct ClientPacket {
         float facing = 0.f;
         float location[3];
         std::string username{};
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(username, location, facing);
+        }
     };
 
     struct PlayerRareInfo {
         int client_id = -1;
         int model_index = 0;
         long long last_ping = -1;
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(client_id, model_index, last_ping);
+        }
     };
 
     struct PlaySoundInfo {
         float location[2];
         std::string sound;
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(location, sound);
+        }
     };
 
     using Msg =
@@ -118,6 +166,11 @@ struct ClientPacket {
                      ClientPacket::PlaySoundInfo>;
 
     Msg msg;
+
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(channel, client_id, msg_type, msg);
+    }
 };
 
 inline std::ostream& operator<<(std::ostream& os,
@@ -183,145 +236,42 @@ inline std::ostream& operator<<(std::ostream& os, const ClientPacket& packet) {
     return os;
 }
 
-template<typename S>
-void serialize(S& s, ClientPacket& packet) {
-    s.value4b(packet.channel);
-    s.value4b(packet.client_id);
-    s.value4b(packet.msg_type);
-    s.ext(packet.msg,
-          bitsery::ext::StdVariant{
-              [](S& s, ClientPacket::AnnouncementInfo& info) {
-                  s.text1b(info.message, MAX_ANNOUNCEMENT_LENGTH);
-                  s.value4b(info.type);
-              },
-              [](S& s, ClientPacket::PlayerJoinInfo& info) {
-                  s.container4b(info.all_clients, MAX_CLIENTS);
-                  s.value1b(info.is_you);
-                  s.value8b(info.hashed_version);
-                  s.value4b(info.client_id);
-                  s.text1b(info.username, MAX_NAME_LENGTH);
-              },
-              [](S& s, ClientPacket::PlayerLeaveInfo& info) {
-                  s.container4b(info.all_clients, MAX_CLIENTS);
-                  s.value4b(info.client_id);
-              },
-              [](S& s, ClientPacket::PlayerControlInfo& info) {
-                  s.container(
-                      info.inputs, MAX_INPUTS, [](S& sv, UserInput& input) {
-                          sv.ext(
-                              input,
-                              bitsery::ext::StdTuple{
-                                  [](auto& s, menu::State& o) { s.value4b(o); },
-                                  [](auto& s, game::State& o) { s.value4b(o); },
-                                  [](auto& s, InputName& o) { s.value4b(o); },
-                                  [](auto& s, InputSet& o) {
-                                      s.container(
-                                          o, [](S& sv2, InputAmount& amount) {
-                                              sv2.value4b(amount);
-                                          });
-                                  },
-                                  [](auto& s, float& o) { s.value4b(o); }});
-                      });
-              },
-              [](S& s, ClientPacket::GameStateInfo& info) {
-                  s.value4b(info.host_menu_state);
-                  s.value4b(info.host_game_state);
-              },
-              [](S& s, ClientPacket::MapInfo& info) { s.object(info.map); },
-              [](S& s, ClientPacket::MapSeedInfo& info) {
-                  s.text1b(info.seed, MAX_SEED_LENGTH);
-              },
-              [](S& s, ClientPacket::PlayerInfo& info) {
-                  s.text1b(info.username, MAX_NAME_LENGTH);
-                  s.value4b(info.location[0]);
-                  s.value4b(info.location[1]);
-                  s.value4b(info.location[2]);
-                  s.value4b(info.facing);
-              },
-              [](S& s, ClientPacket::PlayerRareInfo& info) {
-                  s.value4b(info.client_id);
-                  s.value4b(info.model_index);
-                  s.value8b(info.last_ping);
-              },
-              [](S& s, ClientPacket::PingInfo& info) {
-                  s.value8b(info.ping);
-                  s.value8b(info.pong);
-              },
-              [](S& s, ClientPacket::PlaySoundInfo& info) {
-                  s.value4b(info.location[0]);
-                  s.value4b(info.location[1]);
-                  s.text1b(info.sound, network::MAX_SOUND_LENGTH);
-              },
-          });
-}
-
 static Buffer serialize_to_entity(Entity* entity) {
-    Buffer buffer;
-    TContext ctx{};
-
-    std::get<1>(ctx).registerBasesList<BitserySerializer>(
-        MyPolymorphicClasses{});
-    BitserySerializer ser{ctx, buffer};
-    ser.object(*entity);
-    ser.adapter().flush();
-
-    return buffer;
+    std::stringstream ss;
+    {
+        cereal::JSONOutputArchive archive(ss);
+        archive(*entity);
+    }
+    return ss.str();
 }
 
 static void deserialize_to_entity(Entity* entity, const std::string& msg) {
-    TContext ctx{};
-    std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
-        MyPolymorphicClasses{});
-
-    BitseryDeserializer des{ctx, msg.begin(), msg.size()};
-    des.object(*entity);
-
-    switch (des.adapter().error()) {
-        case bitsery::ReaderError::NoError:
-            break;
-        case bitsery::ReaderError::ReadingError:
-            log_error("reading error");
-            break;
-        case bitsery::ReaderError::DataOverflow:
-            log_error("data overflow error");
-            break;
-        case bitsery::ReaderError::InvalidData:
-            log_error("invalid data error");
-            break;
-        case bitsery::ReaderError::InvalidPointer:
-            log_error("invalid pointer error");
-            break;
+    std::stringstream ss(msg);
+    {
+        cereal::JSONInputArchive archive(ss);
+        archive(*entity);
     }
-    assert(des.adapter().error() == bitsery::ReaderError::NoError);
 }
 
 // ClientPacket is in shared.h which is specific to the game,
 // TODO how can we support both abstract while also configuration
 static ClientPacket deserialize_to_packet(const std::string& msg) {
-    TContext ctx{};
-    std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
-        MyPolymorphicClasses{});
-
-    BitseryDeserializer des{ctx, msg.begin(), msg.size()};
-
     ClientPacket packet;
-    des.object(packet);
-    // TODO obviously theres a ton of validation we can do here but idk
-    // https://github.com/fraillt/bitsery/blob/master/examples/smart_pointers_with_polymorphism.cpp
+    std::stringstream ss(msg);
+    {
+        cereal::JSONInputArchive archive(ss);
+        archive(packet);
+    }
     return packet;
 }
 
 static Buffer serialize_to_buffer(ClientPacket packet) {
-    Buffer buffer;
-    TContext ctx{};
-
-    std::get<1>(ctx).registerBasesList<BitserySerializer>(
-        MyPolymorphicClasses{});
-    BitserySerializer ser{ctx, buffer};
-    ser.object(packet);
-    ser.adapter().flush();
-
-    return buffer;
+    std::stringstream ss;
+    {
+        cereal::JSONOutputArchive archive(ss);
+        archive(packet);
+    }
+    return ss.str();
 }
 
 }  // namespace network
