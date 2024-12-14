@@ -52,6 +52,7 @@ struct RespondsToDayNight : public BaseComponent {
     OnNightStartedFn onNightStartedFn = nullptr;
     OnNightEndedFn onNightEndedFn = nullptr;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this));

@@ -288,6 +288,7 @@ struct Transform : public BaseComponent {
     vec3 raw_position = {0, 0, 0};
     vec3 visual_offset = {0, 0, 0};
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

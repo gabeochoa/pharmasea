@@ -17,6 +17,7 @@ struct HasClientID : public BaseComponent {
     int client_id = -1;
     long long last_ping_to_server = -1;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

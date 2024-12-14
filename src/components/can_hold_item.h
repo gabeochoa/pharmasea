@@ -89,6 +89,7 @@ struct CanHoldItem : public BaseComponent {
     EntityType held_by;
     EntityFilter filter;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

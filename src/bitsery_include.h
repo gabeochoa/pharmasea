@@ -10,11 +10,16 @@
 #include <cereal/types/array.hpp>
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/bitset.hpp>
+#include <cereal/types/deque.hpp>
 #include <cereal/types/map.hpp>
 #include <cereal/types/memory.hpp>
+#include <cereal/types/optional.hpp>
 #include <cereal/types/tuple.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/variant.hpp>
 #include <cereal/types/vector.hpp>
 
+CEREAL_REGISTER_ARCHIVE(cereal::JSONInputArchive)
 CEREAL_REGISTER_ARCHIVE(cereal::JSONOutputArchive)
+CEREAL_REGISTER_ARCHIVE(cereal::PortableBinaryInputArchive)
+CEREAL_REGISTER_ARCHIVE(cereal::PortableBinaryOutputArchive)

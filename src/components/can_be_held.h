@@ -15,6 +15,7 @@ struct CanBeHeld : public BaseComponent {
    private:
     bool held = false;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this), held);

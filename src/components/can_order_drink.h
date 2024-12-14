@@ -126,6 +126,7 @@ struct CanOrderDrink : public BaseComponent {
     int tip = 0;
     int drinks_in_bladder = 0;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

@@ -41,6 +41,7 @@ struct AIDrinking : public AIComponent {
     virtual ~AIDrinking() {}
 
    private:
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<AIComponent>(this), target);

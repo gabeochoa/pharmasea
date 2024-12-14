@@ -213,6 +213,7 @@ struct IsTriggerArea : public BaseComponent {
     float cooldown_time_max = 0.f;
     float cooldown_time_passed = 0.f;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

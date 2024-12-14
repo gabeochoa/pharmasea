@@ -56,6 +56,7 @@ struct AddsIngredient : public BaseComponent {
     OnDecrementFn on_decrement = nullptr;
     int num_uses = -1;
 
+   public:
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this), num_uses);

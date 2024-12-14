@@ -49,7 +49,7 @@ struct AICleanVomit : public AIComponent {
 
     virtual ~AICleanVomit() {}
 
-   private:
+   public:
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<AIComponent>(this), target);

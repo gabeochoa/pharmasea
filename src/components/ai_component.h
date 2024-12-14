@@ -61,7 +61,7 @@ struct AITarget {
         return true;
     }
 
-   private:
+   public:
     template<class Archive>
     void serialize(Archive& archive) {
         archive(target_id);
@@ -178,7 +178,8 @@ struct AITakesTime {
         return timeRemaining <= 0.f;
     }
 
-   private:
+   public:
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(initialized, totalTime, timeRemaining);
@@ -208,6 +209,7 @@ struct AIComponent : BaseComponent {
     void set_cooldown(float d) { cooldownReset = d; }
 
    private:
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this));

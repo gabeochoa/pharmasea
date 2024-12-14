@@ -14,6 +14,7 @@ struct HasBaseSpeed : public BaseComponent {
    private:
     float base_speed = 1.f;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this));

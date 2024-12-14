@@ -81,6 +81,8 @@ struct HasWork : public BaseComponent {
     bool reset_on_empty;
     bool hide_progress_bar_on_full;
     bool hide_progress_bar;
+
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

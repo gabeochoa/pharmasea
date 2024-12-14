@@ -12,6 +12,7 @@ struct CanPerformJob : public BaseComponent {
     JobType current = JobType::NoJob;
 
    private:
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(

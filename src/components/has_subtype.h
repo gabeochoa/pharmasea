@@ -56,6 +56,8 @@ struct HasSubtype : public BaseComponent {
     int start;
     int end;
     int type_index;
+
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

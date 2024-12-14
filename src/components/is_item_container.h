@@ -49,6 +49,7 @@ struct IsItemContainer : public BaseComponent {
     bool uses_indexer;
     bool is_table_when_empty = false;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this));

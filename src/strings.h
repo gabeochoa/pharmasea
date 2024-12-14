@@ -450,6 +450,7 @@ struct TranslatableString {
     bool formatted = false;
     bool no_translate = false;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(content, formatted, no_translate, params);

@@ -15,6 +15,7 @@ struct IsPnumaticPipe : public BaseComponent {
     [[nodiscard]] bool has_pair() const { return paired_id != -1; }
 
    private:
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

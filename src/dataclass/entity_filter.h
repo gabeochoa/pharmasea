@@ -243,6 +243,7 @@ struct EntityFilter {
     }
 
    private:
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(flags, entity_type, subtype_index);

@@ -11,6 +11,7 @@ struct CanHighlightOthers : public BaseComponent {
 
    private:
     float furniture_reach = 1.80f;
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this));

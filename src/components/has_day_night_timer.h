@@ -78,6 +78,8 @@ struct HasDayNightTimer : public BaseComponent {
     // how much time remaining in the current state
     float current_length;
     bool is_day = true;
+
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

@@ -6,8 +6,8 @@
 #include <map>
 #include <memory>
 
-#include "../bitsery_include.h"
 #include "../globals.h"
+#include "../vendor_include.h"
 
 struct Entity;
 using Entities = std::vector<std::shared_ptr<Entity>>;

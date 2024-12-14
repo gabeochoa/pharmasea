@@ -110,6 +110,7 @@ struct HasFishingGame : public BaseComponent {
 
     int m_num_stars = 0;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

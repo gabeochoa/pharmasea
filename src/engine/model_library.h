@@ -23,7 +23,6 @@ struct ModelInfo {
     // vec3 rotation_axis = vec3{0, 1, 0};
     float rotation_angle = 0;
 
-   private:
     template<class Archive>
     void serialize(Archive& archive) {
         archive(model_name, size_scale, position_offset, rotation_angle);

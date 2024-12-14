@@ -37,6 +37,8 @@ struct HasRopeToItem : public BaseComponent {
     bool generated = false;
     int rope_length = 0;
     std::vector<EntityID> rope;
+
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

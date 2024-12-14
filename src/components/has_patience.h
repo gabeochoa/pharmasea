@@ -30,6 +30,7 @@ struct HasPatience : public BaseComponent {
     float amount_left_s;
     float max_patience_s;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

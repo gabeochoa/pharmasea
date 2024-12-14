@@ -25,6 +25,7 @@ struct CanHoldFurniture : public BaseComponent {
     int held_furniture_id = -1;
     vec3 pos;
 
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this), held_furniture_id,

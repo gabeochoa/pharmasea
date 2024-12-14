@@ -16,7 +16,6 @@ struct HasName : public BaseComponent {
 
     const std::string& name() const { return _name; }
 
-   private:
     int name_length = 1;
     std::string _name;
 

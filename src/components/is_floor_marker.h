@@ -46,6 +46,8 @@ struct IsFloorMarker : public BaseComponent {
 
    private:
     std::vector<int> marked_entities;
+
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<BaseComponent>(this),

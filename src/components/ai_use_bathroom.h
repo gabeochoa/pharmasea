@@ -48,6 +48,7 @@ struct AIUseBathroom : public AIComponent {
     JobType next_job;
 
    private:
+    friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive) {
         archive(cereal::base_class<AIComponent>(this), target, floor_timer);
