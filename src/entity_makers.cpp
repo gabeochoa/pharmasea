@@ -228,6 +228,7 @@ void add_person_components(Entity& person, DebugOptions options = {}) {
 }
 
 void make_entity(Entity& entity, const DebugOptions& options, vec3 p) {
+    entity.entity_type = (int) options.type;
     entity.addComponent<Type>(options.type);
 
     add_entity_components(entity);
