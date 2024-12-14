@@ -242,9 +242,7 @@ struct PolymorphicBaseClass<BaseComponent>
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
           CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback, IsSquirter, Type,
-          //
-          CanBeHeld
+          CollectsCustomerFeedback, IsSquirter, Type, CanBeHeld
           // END
           > {};
 // If you add anything here ^^ then you should add that component to
