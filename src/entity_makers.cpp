@@ -83,6 +83,8 @@
 #include "strings.h"
 #include "system/system_manager.h"
 
+//
+
 namespace items {
 // Returns true if item was cleaned up
 bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient ing) {
@@ -140,6 +142,27 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 }  // namespace items
 
 void register_all_components() {
+    {
+        // Serialize one component
+        Entity* entity = new Entity();
+        entity->addComponent<HasName>();
+
+        std::stringstream ss;
+        {
+            cereal::JSONOutputArchive archive(ss);
+            archive(*entity);
+        }
+        log_warn("register one: {} {}", ss.str().size(), ss.str());
+
+        for (auto it = entity->componentArray.cbegin(), next_it = it;
+             it != entity->componentArray.cend(); it = next_it) {
+            ++next_it;
+            entity->componentArray.erase(it);
+        }
+
+        delete entity;
+    }
+
     Entity* entity = new Entity();
     entity->addAll<  //
         Transform, HasName,
@@ -178,6 +201,13 @@ void register_all_components() {
     // components"); entity->removeComponent<ModelRenderer>();
     // VALIDATE(entity->is_missing<ModelRenderer>(),
     // "entity should not have all components");
+
+    std::stringstream ss;
+    {
+        cereal::JSONOutputArchive archive(ss);
+        archive(*entity);
+    }
+    log_warn("register all : {} {}", ss.str().size(), ss.str());
 
     // Now that they are all registered we can delete them
     //

@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "../engine/util.h"
 #include "../std_include.h"
 #include "../vec_util.h"

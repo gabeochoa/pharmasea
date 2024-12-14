@@ -154,7 +154,7 @@ bool Settings::load_save_file() {
                      Files::get().settings_filepath());
             return false;
         }
-        cereal::BinaryInputArchive archive(ifs);
+        cereal::PortableBinaryInputArchive archive(ifs);
         archive(data);
         ifs.close();
     }
@@ -177,7 +177,7 @@ bool Settings::write_save_file() {
             return false;
         }
 
-        cereal::BinaryOutputArchive archive(ofs);
+        cereal::PortableBinaryOutputArchive archive(ofs);
         archive(data);
     }
 

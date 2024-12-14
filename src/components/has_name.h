@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+
+#include "../bitsery_include.h"
 //
 #include "base_component.h"
 

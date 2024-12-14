@@ -43,7 +43,8 @@ struct ClientPacket {
 
         template<class Archive>
         void serialize(Archive& archive) {
-            archive(ping, pong);
+            archive(cereal::make_nvp("ping", ping),
+                    cereal::make_nvp("pong", pong));
         }
     };
 
@@ -53,7 +54,8 @@ struct ClientPacket {
 
         template<class Archive>
         void serialize(Archive& archive) {
-            archive(message, type);
+            archive(cereal::make_nvp("message", message),
+                    cereal::make_nvp("msg type", type));
         }
     };
 
@@ -85,7 +87,8 @@ struct ClientPacket {
 
         template<class Archive>
         void serialize(Archive& archive) {
-            archive(host_game_state, host_menu_state);
+            archive(cereal::make_nvp("host game state", host_game_state),
+                    cereal::make_nvp("host menu state", host_menu_state));
         }
     };
 
@@ -169,7 +172,9 @@ struct ClientPacket {
 
     template<class Archive>
     void serialize(Archive& archive) {
-        archive(channel, client_id, msg_type, msg);
+        archive(cereal::make_nvp("channel", channel),
+                cereal::make_nvp("client id ", client_id),
+                cereal::make_nvp("msg type", msg_type), msg);
     }
 };
 
@@ -237,7 +242,7 @@ inline std::ostream& operator<<(std::ostream& os, const ClientPacket& packet) {
 }
 
 static Buffer serialize_to_entity(Entity* entity) {
-    std::stringstream ss;
+    std::ostringstream ss;
     {
         cereal::JSONOutputArchive archive(ss);
         archive(*entity);
