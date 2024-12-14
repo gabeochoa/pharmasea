@@ -26,10 +26,6 @@
 
 namespace settings {
 
-using Buffer = std::string;
-using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
-using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
-
 // TODO how do we support different games having different save file data
 // requirements?
 
@@ -56,26 +52,25 @@ struct Data {
     bool snapCameraTo90 = false;
     bool isFullscreen = false;
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(engineVersion);
-        s.value4b(master_volume);
-        s.value4b(music_volume);
-        s.value4b(sound_volume);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(engineVersion,  //
+                master_volume,  //
+                music_volume,   //
+                sound_volume,   //
 
-        s.value1b(show_streamer_safe_box);
-        s.value1b(snapCameraTo90);
-        s.value1b(enable_postprocessing);
-        s.value1b(isFullscreen);
+                show_streamer_safe_box,  //
+                snapCameraTo90,          //
+                enable_postprocessing,   //
+                isFullscreen,            //
 
-        s.text1b(username, network::MAX_NAME_LENGTH);
-        s.text1b(last_ip_joined, 25);
-        s.text1b(lang_name, MAX_LANG_LENGTH);
-        s.text1b(ui_theme, MAX_LANG_LENGTH);
+                username,        //
+                last_ip_joined,  //
+                lang_name,       //
+                ui_theme,        //
 
-        s.object(resolution);
+                resolution  //
+        );
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Data& data) {
@@ -109,11 +104,9 @@ struct LanguageInfo {
     bool operator==(const LanguageInfo& r) const { return name == r.name; }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.text1b(name, MAX_LANG_LENGTH);
-        s.text1b(filename, MAX_LANG_LENGTH);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(name, filename);
     }
 };
 

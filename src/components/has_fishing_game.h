@@ -110,19 +110,14 @@ struct HasFishingGame : public BaseComponent {
 
     int m_num_stars = 0;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(started);
-
-        s.value4b(direction);
-        s.value4b(m_num_stars);
-
-        s.value4b(best_location);
-        s.value4b(score);
-        s.value4b(progress);
-        s.value4b(countdown);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                started, direction, m_num_stars, best_location, score, progress,
+                countdown);
     }
 };
+
+CEREAL_REGISTER_TYPE(HasFishingGame);

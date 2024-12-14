@@ -61,12 +61,10 @@ struct AITarget {
         return true;
     }
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(target_id, bitsery::ext::StdOptional{},
-              [](S& sv, int& val) { sv.value4b(val); });
+   public:
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(target_id);
     }
 };
 
@@ -180,13 +178,11 @@ struct AITakesTime {
         return timeRemaining <= 0.f;
     }
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value1b(initialized);
-        s.value4b(totalTime);
-        s.value4b(timeRemaining);
+   public:
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(initialized, totalTime, timeRemaining);
     }
 };
 
@@ -213,9 +209,11 @@ struct AIComponent : BaseComponent {
     void set_cooldown(float d) { cooldownReset = d; }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this));
     }
 };
+
+CEREAL_REGISTER_TYPE(AIComponent);

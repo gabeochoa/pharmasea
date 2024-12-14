@@ -126,12 +126,13 @@ struct CanOrderDrink : public BaseComponent {
     int tip = 0;
     int drinks_in_bladder = 0;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(current_order);
-        s.value4b(order_state);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                current_order, order_state);
     }
 };
+
+CEREAL_REGISTER_TYPE(CanOrderDrink);

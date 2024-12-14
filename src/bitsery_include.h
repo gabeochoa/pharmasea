@@ -1,18 +1,27 @@
 
 #pragma once
 
-#include <bitsery/adapter/buffer.h>
-#include <bitsery/bitsery.h>
-#include <bitsery/ext/inheritance.h>
-#include <bitsery/ext/pointer.h>
-#include <bitsery/ext/std_bitset.h>
-#include <bitsery/ext/std_map.h>
-#include <bitsery/ext/std_optional.h>
-#include <bitsery/ext/std_set.h>
-#include <bitsery/ext/std_smart_ptr.h>
-#include <bitsery/ext/std_tuple.h>
-#include <bitsery/ext/std_variant.h>
-#include <bitsery/traits/array.h>
-#include <bitsery/traits/deque.h>
-#include <bitsery/traits/string.h>
-#include <bitsery/traits/vector.h>
+#define CEREAL_EXCEPTIONS
+
+#undef CEREAL_THREAD_SAFE
+#define CEREAL_THREAD_SAFE 1
+#include <cereal/types/polymorphic.hpp>
+//
+#include <cereal/archives/json.hpp>
+#include <cereal/archives/portable_binary.hpp>
+#include <cereal/types/array.hpp>
+#include <cereal/types/base_class.hpp>
+#include <cereal/types/bitset.hpp>
+#include <cereal/types/deque.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/types/optional.hpp>
+#include <cereal/types/tuple.hpp>
+#include <cereal/types/unordered_map.hpp>
+#include <cereal/types/variant.hpp>
+#include <cereal/types/vector.hpp>
+
+CEREAL_REGISTER_ARCHIVE(cereal::JSONInputArchive)
+CEREAL_REGISTER_ARCHIVE(cereal::JSONOutputArchive)
+CEREAL_REGISTER_ARCHIVE(cereal::PortableBinaryInputArchive)
+CEREAL_REGISTER_ARCHIVE(cereal::PortableBinaryOutputArchive)

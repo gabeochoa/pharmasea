@@ -8,19 +8,11 @@
 //
 #include "components/base_component.h"
 //
+#include <map>
+
 #include "engine/assert.h"
 #include "engine/log.h"
 #include "engine/type_name.h"
-//
-#include <bitsery/ext/pointer.h>
-#include <bitsery/ext/std_map.h>
-
-#include <map>
-
-using bitsery::ext::PointerObserver;
-using bitsery::ext::PointerOwner;
-using bitsery::ext::PointerType;
-using StdMap = bitsery::ext::StdMap;
 
 using ComponentBitSet = std::bitset<max_num_components>;
 // originally this was a std::array<BaseComponent*, max_num_components> but i
@@ -130,7 +122,7 @@ struct Entity {
 
         log_trace("your set is now {}", componentSet);
 
-        componentArray[components::get_type_id<T>()]->attach_parent(this);
+        // componentArray[components::get_type_id<T>()]->attach_parent(this);
 
         return get<T>();
     }
@@ -191,31 +183,11 @@ struct Entity {
 #pragma clang diagnostic pop
     }
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(id);
-        s.value4b(type);
-
-        s.ext(componentSet, bitsery::ext::StdBitset{});
-        s.value1b(cleanup);
-
-        s.ext(componentArray, StdMap{max_num_components},
-              [](S& sv, int& key, std::unique_ptr<BaseComponent>(&value)) {
-                  sv.value4b(key);
-                  // sv.ext(value, PointerOwner{PointerType::Nullable});
-                  sv.ext(value, bitsery::ext::StdSmartPtr{});
-              });
+    template<class Archive>
+    void serialize(Archive& ar) {
+        ar(id, type, componentSet, componentArray);
     }
 };
-
-namespace bitsery {
-template<typename S>
-void serialize(S& s, std::shared_ptr<Entity>& entity) {
-    s.ext(entity, bitsery::ext::StdSmartPtr{});
-}
-}  // namespace bitsery
 
 struct DebugOptions {
     EntityType type = EntityType::Unknown;
@@ -256,19 +228,15 @@ struct OptEntity {
     operator bool() const { return valid(); }
 };
 
-namespace bitsery {
-template<typename S>
-void serialize(S& s, RefEntity ref) {
-    Entity& e = ref.get();
-    Entity* eptr = &e;
-    s.ext8b(eptr, PointerObserver{});
+template<class Archive>
+void serialize(Archive& archive, RefEntity ref) {
+    archive(ref);
 }
 
-template<typename S>
-void serialize(S& s, OptEntity opt) {
-    s.ext(opt, bitsery::ext::StdOptional{});
+template<class Archive>
+void serialize(Archive& archive, OptEntity ref) {
+    archive(ref);
 }
-}  // namespace bitsery
 
 bool check_type(const Entity& entity, EntityType type);
 bool check_if_drink(const Entity& entity);

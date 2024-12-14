@@ -129,15 +129,13 @@ struct CanPathfind : public BaseComponent {
     std::deque<vec2> path;
     size_t max_path_length = 0;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(start);
-        s.object(goal);
-
-        s.value4b(path_size);
-        s.container(path, path_size, [](S& sv, vec2 pos) { sv.object(pos); });
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                start, goal, path_size, path);
     }
 };
+
+CEREAL_REGISTER_TYPE(CanPathfind);

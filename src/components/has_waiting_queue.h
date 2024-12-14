@@ -56,12 +56,13 @@ struct HasWaitingQueue : public BaseComponent {
     // These impl are in job.cpp
     void dump_contents() const;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(next_line_position);
-        s.container4b(ppl_in_line);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                next_line_position, ppl_in_line);
     }
 };
+
+CEREAL_REGISTER_TYPE(HasWaitingQueue);

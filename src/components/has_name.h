@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+
+#include "../bitsery_include.h"
 //
 #include "base_component.h"
 
@@ -14,15 +16,16 @@ struct HasName : public BaseComponent {
 
     const std::string& name() const { return _name; }
 
-   private:
     int name_length = 1;
     std::string _name;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(name_length);
-        s.text1b(_name, name_length);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                name_length, _name);
     }
 };
+
+CEREAL_REGISTER_ARCHIVE(cereal::JSONOutputArchive)
+CEREAL_REGISTER_TYPE(HasName);

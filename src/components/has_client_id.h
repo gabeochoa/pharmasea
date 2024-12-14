@@ -17,11 +17,13 @@ struct HasClientID : public BaseComponent {
     int client_id = -1;
     long long last_ping_to_server = -1;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(client_id);
-        s.value8b(last_ping_to_server);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                client_id, last_ping_to_server);
     }
 };
+
+CEREAL_REGISTER_TYPE(HasClientID);

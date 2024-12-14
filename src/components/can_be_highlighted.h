@@ -25,10 +25,11 @@ struct CanBeHighlighted : public BaseComponent {
     bool highlighted;
     OnChangeFn onchange;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(highlighted);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this), highlighted);
     }
 };
+
+CEREAL_REGISTER_TYPE(CanBeHighlighted);

@@ -3,6 +3,8 @@
 #include "../camera.h"
 #include "../engine/layer.h"
 
+struct Entity;
+
 struct GameLayer : public Layer {
     std::shared_ptr<Entity> active_player;
     std::unique_ptr<GameCam> cam;

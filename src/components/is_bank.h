@@ -31,15 +31,10 @@ struct IsBank : public BaseComponent {
               extra(0),
               remainingTime(0.f),
               remainingTimeTotal(0.f) {}
-        friend bitsery::Access;
-        template<typename S>
-        void serialize(S& s) {
-            s.value4b(amount);
-            s.value4b(extra);
 
-            // animation stuff
-            s.value4b(remainingTime);
-            s.value4b(remainingTimeTotal);
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(amount, extra, remainingTime, remainingTimeTotal);
         }
     };
 
@@ -94,17 +89,13 @@ struct IsBank : public BaseComponent {
     std::vector<Transaction> transactions;
     int coins = 0;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(num_in_cart);
-
-        s.value4b(num_transactions);
-        s.container(transactions, num_transactions,
-                    [](S& s2, Transaction& a) { s2.object(a); });
-
-        s.value4b(coins);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                num_in_cart, num_transactions, transactions, coins);
     }
 };
+
+CEREAL_REGISTER_TYPE(IsBank);

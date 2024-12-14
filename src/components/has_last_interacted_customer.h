@@ -11,11 +11,13 @@ struct HasLastInteractedCustomer : public BaseComponent {
     virtual ~HasLastInteractedCustomer() {}
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(customer_id);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                customer_id);
     }
 };
+
+CEREAL_REGISTER_TYPE(HasLastInteractedCustomer);

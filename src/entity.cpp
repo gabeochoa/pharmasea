@@ -2,10 +2,10 @@
 #include "entity.h"
 
 Entity::~Entity() {
-    // for (auto itr = componentArray.begin(); itr != componentArray.end();
-    // itr++) {
-    // if (itr->second) delete (itr->second);
-    // }
+    for (auto itr = componentArray.begin(); itr != componentArray.end();
+         itr++) {
+        if (itr->second) itr->second->parent = nullptr;
+    }
     componentArray.clear();
 }
 

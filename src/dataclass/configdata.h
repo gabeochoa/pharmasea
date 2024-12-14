@@ -221,22 +221,24 @@ struct ConfigData {
             return false;
         }
 
-        template<typename S>
-        void serialize(S& s) {
-            s.value4b(roundlength);
-            s.value4b(patiencemultiplier);
-            s.value4b(customerspawnmultiplier);
-            s.value4b(pisstimer);
-            s.value4b(vomitfreqmultiplier);
-            s.value4b(drinkcostmultiplier);
-            s.value4b(vomitamountmultiplier);
-            s.value4b(test);
-            s.value4b(maxdrinktime);
-            s.value4b(maxnumorders);
-            s.value4b(numstorespawns);
-            s.value4b(bladdersize);
-            s.value4b(storererollprice);
-            s.value4b(payprocesstime);
+        friend class cereal::access;
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(roundlength,              //
+                    patiencemultiplier,       //
+                    customerspawnmultiplier,  //
+                    pisstimer,                //
+                    vomitfreqmultiplier,      //
+                    drinkcostmultiplier,      //
+                    vomitamountmultiplier,    //
+                    test,                     //
+                    maxdrinktime,             //
+                    maxnumorders,             //
+                    numstorespawns,           //
+                    bladdersize,              //
+                    storererollprice,         //
+                    payprocesstime            //
+            );
         }
     };
     Data data;
@@ -340,10 +342,9 @@ struct ConfigData {
     std::vector<std::shared_ptr<UpgradeImpl>> get_possible_upgrades(
         const IsProgressionManager&);
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(unlocked_upgrades, bitsery::ext::StdBitset{});
-        s.object(data);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(unlocked_upgrades, data);
     }
 };

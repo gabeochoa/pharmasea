@@ -45,14 +45,9 @@ struct Job {
     vec2 end;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(type);
-        s.value4b(state);
-
-        s.object(start);
-        s.object(end);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(type, state, start, end);
     }
 
    public:

@@ -23,14 +23,9 @@ struct ModelInfo {
     // vec3 rotation_axis = vec3{0, 1, 0};
     float rotation_angle = 0;
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
-        s.value4b(size_scale);
-        s.object(position_offset);
-        s.value4b(rotation_angle);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(model_name, size_scale, position_offset, rotation_angle);
     }
 };
 

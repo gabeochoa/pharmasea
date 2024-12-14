@@ -15,10 +15,11 @@ struct CanBeGhostPlayer : public BaseComponent {
    private:
     bool ghost = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(ghost);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this), ghost);
     }
 };
+
+CEREAL_REGISTER_TYPE(CanBeGhostPlayer);

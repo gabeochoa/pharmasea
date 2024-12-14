@@ -82,15 +82,13 @@ struct HasWork : public BaseComponent {
     bool hide_progress_bar_on_full;
     bool hide_progress_bar;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(hide_progress_bar_on_full);
-        //
-        // s.value1b(more_to_do);
-        // s.value1b(reset_on_empty);
-
-        s.value4b(pct_work_complete);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                hide_progress_bar_on_full, pct_work_complete);
     }
 };
+
+CEREAL_REGISTER_TYPE(HasWork);

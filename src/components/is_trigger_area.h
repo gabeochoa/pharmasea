@@ -213,30 +213,25 @@ struct IsTriggerArea : public BaseComponent {
     float cooldown_time_max = 0.f;
     float cooldown_time_passed = 0.f;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(last_validation_result.first);
-        s.value4b(last_validation_result.second);
-
-        s.value4b(wanted_entrants);
-        s.value4b(current_entrants);
-        s.value4b(current_in_building);
-
-        s.value4b(entrantsRequired);
-        s.ext(building, bitsery::ext::StdOptional{});
-
-        // These two are needed for drawing the percentage
-        // TODO store the pct instead of sending two ints?
-        s.value4b(completion_time_max);
-        s.value4b(completion_time_passed);
-
-        s.value4b(type);
-
-        s.value4b(max_title_length);
-        s.object(_title);
-        s.object(_subtitle);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                last_validation_result.first, last_validation_result.second,
+                //
+                wanted_entrants, current_entrants, current_in_building,
+                //
+                entrantsRequired, building,
+                // These two are needed for drawing the percentage
+                // TODO store the pct instead of sending two ints?
+                completion_time_max, completion_time_passed,
+                //
+                type,
+                //
+                max_title_length, _title, _subtitle
+                //
+        );
     }
 };
+CEREAL_REGISTER_TYPE(IsTriggerArea);

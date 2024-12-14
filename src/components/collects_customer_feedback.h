@@ -17,13 +17,12 @@ struct CollectsCustomerFeedback : public BaseComponent {
     float waiting_time = 1.f;
     float waiting_time_reset = 1.f;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.ext(block_state_change_reasons, bitsery::ext::StdBitset{});
-        s.container(block_state_change_locations);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                block_state_change_reasons, block_state_change_locations);
     }
 
    public:
@@ -117,3 +116,5 @@ struct CollectsCustomerFeedback : public BaseComponent {
         block_state_change_locations[i] = location.value_or(invalid_location);
     }
 };
+
+CEREAL_REGISTER_TYPE(CollectsCustomerFeedback);

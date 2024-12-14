@@ -30,14 +30,13 @@ struct HasPatience : public BaseComponent {
     float amount_left_s;
     float max_patience_s;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        // TODO since we only need the pct to render,
-        // we should save the pct and just serialize that
-        s.value4b(amount_left_s);
-        s.value4b(max_patience_s);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                amount_left_s, max_patience_s);
     }
 };
+
+CEREAL_REGISTER_TYPE(HasPatience);

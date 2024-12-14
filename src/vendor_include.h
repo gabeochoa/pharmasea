@@ -1,4 +1,6 @@
 #pragma once
+#include "bitsery_include.h"
+//
 
 #include "engine/graphics.h"
 
@@ -40,44 +42,32 @@ namespace reasings {
 #include <magic_enum/magic_enum_fuse.hpp>
 #include <nlohmann/json.hpp>
 
-#include "bitsery_include.h"
-
-namespace bitsery {
-template<typename S>
-void serialize(S& s, vec2& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
+namespace cereal {
+template<class Archive>
+void serialize(Archive& archive, vec2& ref) {
+    archive(ref.x, ref.y);
 }
 
-template<typename S>
-void serialize(S& s, vec3& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
-    s.value4b(data.z);
+template<class Archive>
+void serialize(Archive& archive, vec3& ref) {
+    archive(ref.x, ref.y, ref.z);
 }
 
-template<typename S>
-void serialize(S& s, Color& data) {
-    s.value1b(data.r);
-    s.value1b(data.g);
-    s.value1b(data.b);
-    s.value1b(data.a);
+template<class Archive>
+void serialize(Archive& archive, Color& ref) {
+    archive(ref.r, ref.g, ref.b, ref.a);
 }
 
-template<typename S>
-void serialize(S& s, Rectangle& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
-    s.value4b(data.width);
-    s.value4b(data.height);
+template<class Archive>
+void serialize(Archive& archive, Rectangle& ref) {
+    archive(ref.x, ref.y, ref.width, ref.height);
 }
 
-template<typename S>
-void serialize(S& s, BoundingBox& data) {
-    s.object(data.min);
-    s.object(data.max);
+template<class Archive>
+void serialize(Archive& archive, BoundingBox& ref) {
+    archive(ref.min, ref.max);
 }
-}  // namespace bitsery
+}  // namespace cereal
 
 #include "engine/tracy.h"
 
