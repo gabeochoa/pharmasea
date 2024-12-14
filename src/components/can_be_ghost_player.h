@@ -3,6 +3,7 @@
 
 #include "base_component.h"
 
+// TODO is this actually used anymore
 struct CanBeGhostPlayer : public BaseComponent {
     virtual ~CanBeGhostPlayer() {}
 

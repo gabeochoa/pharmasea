@@ -11,6 +11,7 @@ void person_update_given_new_pos(int id, Transform& transform, Entity& person,
 namespace input_process_manager {
 
 [[nodiscard]] bool is_collidable(const Entity& entity, OptEntity other = {});
+[[nodiscard]] bool is_collidable(const Entity& entity, const Entity& other);
 
 void collect_user_input(Entity& entity, float dt);
 void process_player_movement_input(Entity& entity, float dt,

@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include "base_component.h"
+#include "../engine/log.h"
 #include "../vendor_include.h"
+#include "base_component.h"
 
 struct Entity;
 
@@ -22,19 +23,18 @@ struct IsSpawner : public BaseComponent {
     [[nodiscard]] int get_max_spawned() const { return max_spawned; }
 
     auto& reset_num_spawned() {
-        // TODO add max to progression_manager
         num_spawned = 0;
         // set this to 0 so that the first guy immediately spawns
         countdown = 0.f;
         return *this;
     }
 
-    auto& set_fn(SpawnFn fn) {
+    auto& set_fn(const SpawnFn& fn) {
         spawn_fn = fn;
         return *this;
     }
 
-    auto& set_validation_fn(ValidationSpawnFn fn) {
+    auto& set_validation_fn(const ValidationSpawnFn& fn) {
         validation_spawn_fn = fn;
         return *this;
     }
@@ -54,7 +54,7 @@ struct IsSpawner : public BaseComponent {
         return *this;
     }
 
-    // TODO probably need a thing to specify the units
+    // might need a thing to specify the units
     auto& set_time_between(float s) {
         spread = s;
         countdown = 0.f;
@@ -84,6 +84,8 @@ struct IsSpawner : public BaseComponent {
         countdown += spread;
     }
 
+    [[nodiscard]] float get_pct() const { return countdown / (spread * 1.f); }
+
     void spawn(Entity& entity, SpawnInfo info) {
         spawn_fn(entity, info);
         num_spawned++;
@@ -106,7 +108,14 @@ struct IsSpawner : public BaseComponent {
         return spawn_sound;
     }
 
+    auto& enable_show_progress() {
+        showsProgressBar = true;
+        return *this;
+    }
+    [[nodiscard]] bool show_progress() const { return showsProgressBar; }
+
    private:
+    bool showsProgressBar = false;
     bool prevent_duplicate_spawns = false;
     int max_spawned = 0;
     float spread = 0;
@@ -128,6 +137,10 @@ struct IsSpawner : public BaseComponent {
 
         // TODO add macro to only show these for debug builds
         // Debug only
+
+        s.value1b(showsProgressBar);
+        s.value4b(countdown);
+        s.value4b(spread);
 
         s.value4b(num_spawned);
         s.value4b(max_spawned);

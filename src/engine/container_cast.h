@@ -8,6 +8,7 @@ class ContainerConverter {
    public:
     explicit ContainerConverter(const SourceContainer& s) : s_(s) {}
 
+    // Dont make explicit
     template<class TargetContainer>
     operator TargetContainer() const {
         return TargetContainer(s_.begin(), s_.end());

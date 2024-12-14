@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../engine/constexpr_containers.h"
-#include "../entity_helper.h"
 #include "base_game_renderer.h"
 
 constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //
@@ -9,10 +8,7 @@ constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //
 );
 
 constexpr CEMap<int, game::State, CHOOSABLE_STATES> choosable_game_states = {{{
-    {2, game::State::InRound},
-    {3, game::State::Planning},
-    {5, game::State::Progression},
-    {6, game::State::Store},
+    {2, game::State::InGame},
     {7, game::State::ModelTest},
     {1, game::State::Lobby},
 }}};
