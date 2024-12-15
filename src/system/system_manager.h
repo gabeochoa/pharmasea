@@ -1,8 +1,11 @@
 
 #pragma once
 
+#include "../engine/keymap.h"
 #include "../engine/singleton.h"
 #include "../entity.h"
+
+using afterhours::Entities;
 
 namespace system_manager {
 namespace job_system {

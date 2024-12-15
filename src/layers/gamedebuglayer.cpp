@@ -75,14 +75,17 @@ void GameDebugLayer::draw_debug_ui(float dt) {
                      NO_TRANSLATE(
                          fmt::format("{}", (player->get<Transform>().pos()))));
                 text(Widget{holding_div},
-                     NO_TRANSLATE(
-                         fmt::format("holding furniture?: {}",
-                                     furniture ? furniture->name() : "Empty")));
+                     NO_TRANSLATE(fmt::format(
+                         "holding furniture?: {}",
+                         furniture ? furniture->get<Type>().name() : "Empty")));
                 text(Widget{item_div},
                      NO_TRANSLATE(fmt::format(
                          "holding item?: {}",
                          player->get<CanHoldItem>().is_holding_item()
-                             ? player->get<CanHoldItem>().const_item().name()
+                             ? player->get<CanHoldItem>()
+                                   .const_item()
+                                   .get<Type>()
+                                   .name()
                              : "Empty")));
             } else {
                 text(Widget{player_info},
