@@ -509,6 +509,8 @@ std::string icon_for_key(int keycode) {
             return "keyboard_volume_up";
         case raylib::KEY_VOLUME_DOWN:
             return "keyboard_volume_down";
+        case raylib::KEY_MENU:
+            return "keyboard_menu";
         case raylib::KEY_NULL:
             log_info("Passed in {} but wasnt able to parse it", keycode);
             break;

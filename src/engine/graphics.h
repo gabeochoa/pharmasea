@@ -17,14 +17,66 @@
 namespace raylib {
 
 #include <raylib.h>
+#include <raymath.h>
 #include <rlgl.h>
 
-#undef RAYLIB_OP_OVERLOADS_RAYGUI
-#include <RaylibOpOverloads.h>
+// #undef RAYLIB_OP_OVERLOADS_RAYGUI
+// #include <RaylibOpOverloads.h>
 
 // NOTE: why doesnt RaylibOpOverloads do this?
 inline bool operator<(const Vector2& l, const Vector2& r) {
     return (l.x < r.x) || ((l.x == r.x) && (l.y < r.y));
+}
+
+inline Vector2& operator-(Vector2& a) {
+    a = Vector2Negate(a);
+    return a;
+}
+
+inline Vector3& operator-(Vector3& a) {
+    a = Vector3Negate(a);
+    return a;
+}
+
+inline std::ostream& operator<<(std::ostream& os, Vector2 a) {
+    os << "(" << a.x << "," << a.y << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, Vector3 a) {
+    os << "(" << a.x << "," << a.y << "," << a.z << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, Vector4 a) {
+    os << "(" << a.x << "," << a.y << "," << a.z << "," << a.w << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, Color c) {
+    os << "(" << (unsigned int) c.r << "," << (unsigned int) c.g << ","
+       << (unsigned int) c.b << "," << (unsigned int) c.a << ")";
+    return os;
+}
+
+// Per definition of Matrix in raylib.h as "Matrix type (OpenGL style 4x4 -
+// right handed, column major)"
+inline std::ostream& operator<<(std::ostream& os, Matrix m) {
+    os << " \t" << m.m0 << "\t" << m.m4 << " \t" << m.m8 << " \t" << m.m12
+       << "\n";
+    os << " \t" << m.m1 << "\t" << m.m5 << " \t" << m.m9 << " \t" << m.m13
+       << "\n";
+    os << " \t" << m.m2 << "\t" << m.m6 << " \t" << m.m10 << " \t" << m.m14
+       << "\n";
+    os << " \t" << m.m3 << "\t" << m.m7 << " \t" << m.m11 << " \t" << m.m15
+       << "\n";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, Rectangle r) {
+    os << "Rectangle corner: (" << r.x << "," << r.y << "), Width=" << r.width
+       << "Height=" << r.height;
+    return os;
 }
 
 }  // namespace raylib

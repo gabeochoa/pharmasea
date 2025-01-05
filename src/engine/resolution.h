@@ -52,6 +52,12 @@ struct ResolutionExplorer {
 
     void load_resolution_options() {
 #ifdef __APPLE__
+        const auto glfwGetPrimaryMonitor = []() -> GLFWmonitor* {
+            return nullptr;
+        };
+        const auto glfwGetVideoModes = [](GLFWmonitor*, int*) -> GLFWvidmode* {
+            return nullptr;
+        };
         // Nothing needed here this one works :)
 #else
         // TODO either implement these for windows or get them in the dll

@@ -111,7 +111,8 @@ inline void draw_any_rect(const RectRenderInfo& info) {
                 if (info.outlineInfo.outlineOnly) {
                     DrawRectangleRoundedLines(
                         info.rect, info.roundedInfo.roundness,
-                        info.roundedInfo.segments, info.outlineInfo.thickness,
+                        info.roundedInfo
+                            .segments, /*info.outlineInfo.thickness,*/
                         info.color);
                 } else {
                     DrawRectangleRounded(info.rect, info.roundedInfo.roundness,
