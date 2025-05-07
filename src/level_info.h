@@ -33,6 +33,11 @@ struct LevelInfo {
     // called by the server sometimes
     void generate_model_test_map();
 
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(num_entities, entities, was_generated, seed, hashed_seed);
+    }
+
    private:
     void generate_lobby_map();
     void generate_progression_map();
@@ -43,18 +48,4 @@ struct LevelInfo {
     auto get_rand_walkable();
     auto get_rand_walkable_register();
     void add_outside_triggers(vec2 origin);
-
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value8b(num_entities);
-        s.container(entities, num_entities,
-                    [](S& s2, std::shared_ptr<Entity>& entity) {
-                        s2.ext(entity, bitsery::ext::StdSmartPtr{});
-                    });
-        s.value1b(was_generated);
-        s.text1b(seed, MAX_SEED_LENGTH);
-
-        s.value8b(hashed_seed);
-    }
 };

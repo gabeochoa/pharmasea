@@ -1,6 +1,7 @@
 
 #include "networklayer.h"
 
+#include "../components/has_name.h"
 #include "../engine/toastmanager.h"
 #include "../local_ui.h"
 #include "../network/network.h"

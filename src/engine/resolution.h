@@ -25,12 +25,9 @@ struct ResolutionInfo {
         return (this->width == r.width) && (this->height == r.height);
     }
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(this->width);
-        s.value4b(this->height);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(width, height);
     }
 };
 

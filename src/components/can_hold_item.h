@@ -89,14 +89,15 @@ struct CanHoldItem : public BaseComponent {
     EntityType held_by;
     EntityFilter filter;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(held_by);
-
-        // we only need these for debug info
-        s.ext(held_item, bitsery::ext::StdSmartPtr{});
-        s.object(filter);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                held_by,
+                // we only need these for debug info
+                held_item, filter);
     }
 };
+
+CEREAL_REGISTER_TYPE(CanHoldItem);

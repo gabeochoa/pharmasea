@@ -50,12 +50,8 @@ struct Map {
     // sends everything over to clients
     void grab_things() { game_info.grab_things(); }
 
-   public:
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.object(game_info);
-        s.value1b(showMinimap);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(game_info, showMinimap);
     }
 };

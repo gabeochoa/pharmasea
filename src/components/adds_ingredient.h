@@ -56,11 +56,11 @@ struct AddsIngredient : public BaseComponent {
     OnDecrementFn on_decrement = nullptr;
     int num_uses = -1;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(num_uses);
+   public:
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this), num_uses);
     }
 };
+
+CEREAL_REGISTER_TYPE(AddsIngredient);

@@ -57,13 +57,13 @@ struct HasSubtype : public BaseComponent {
     int end;
     int type_index;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(start);
-        s.value4b(end);
-        s.value4b(type_index);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                start, end, type_index);
     }
 };
+
+CEREAL_REGISTER_TYPE(HasSubtype);

@@ -6,12 +6,11 @@
 #include <map>
 #include <memory>
 
-#include "../bitsery_include.h"
 #include "../globals.h"
+#include "../vendor_include.h"
 
 struct Entity;
 using Entities = std::vector<std::shared_ptr<Entity>>;
-using bitsery::ext::PointerObserver;
 
 struct BaseComponent;
 constexpr int max_num_components = 128;
@@ -41,23 +40,19 @@ inline ComponentID get_type_id() noexcept {
 }  // namespace components
 
 struct BaseComponent {
-    Entity* parent = nullptr;
+    std::shared_ptr<Entity> parent;
 
     BaseComponent() {}
     BaseComponent(BaseComponent&&) = default;
 
-    void attach_parent(Entity* p) {
-        parent = p;
-        onAttach();
-    }
-
-    virtual void onAttach() {}
     virtual ~BaseComponent() {}
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(parent, PointerObserver{});
-    }
+    void attach_parent(Entity* p);
+
+    virtual void onAttach() {}
+
+    template<class Archive>
+    void serialize(Archive& archive);
 };
+
+CEREAL_REGISTER_TYPE(BaseComponent);

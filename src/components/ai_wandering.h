@@ -43,10 +43,11 @@ struct AIWandering : public AIComponent {
     virtual ~AIWandering() {}
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<AIComponent>{});
-        s.object(target);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<AIComponent>(this), target);
     }
 };
+
+CEREAL_REGISTER_TYPE(AIWandering);

@@ -59,12 +59,9 @@ struct Building {
         return true;
     }
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.object(area);
-        s.object(bounds);
-        s.value4b(door_location);
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(area, bounds, door_location);
     }
 };
 

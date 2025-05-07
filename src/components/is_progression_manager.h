@@ -162,21 +162,20 @@ struct IsProgressionManager : public BaseComponent {
     EntityTypeSet unlockedEntityTypes;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.ext(enabledDrinks, bitsery::ext::StdBitset{});
-        s.ext(enabledIngredients, bitsery::ext::StdBitset{});
-        s.ext(unlockedEntityTypes, bitsery::ext::StdBitset{});
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
 
-        s.value4b(drinkOption1);
-        s.value4b(drinkOption2);
-
-        s.value4b(upgradeOption1);
-        s.value4b(upgradeOption2);
-
-        s.value4b(upgrade_index);
-        s.value1b(collectedOptions);
+                enabledDrinks, enabledIngredients, unlockedEntityTypes,
+                //
+                drinkOption1, drinkOption2,
+                //
+                upgradeOption1, upgradeOption2,
+                //
+                upgrade_index, collectedOptions);
     }
 };
+
+CEREAL_REGISTER_TYPE(IsProgressionManager);

@@ -69,6 +69,8 @@
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
 
+/*
+
 //
 
 namespace bitsery {
@@ -120,3 +122,4 @@ struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
 
 using MyPolymorphicClasses =
     bitsery::ext::PolymorphicClassesList<BaseComponent, AIComponent, Job>;
+    */

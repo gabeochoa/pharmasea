@@ -73,6 +73,33 @@ using InputSet = std::array<InputAmount, magic_enum::enum_count<InputName>()>;
 using UserInput = std::tuple<InputSet, float, float>;
 using UserInputs = std::vector<UserInput>;
 
+template<class Archive>
+void serialize(Archive& archive, std::array<float, 28>& arr) {
+    for (auto& element : arr) archive(element);
+}
+
+// Serialize for the specific tuple type
+template<class Archive>
+void serialize(Archive& archive,
+               std::tuple<std::array<float, 28>, float, float>& input) {
+    archive(std::get<0>(input), std::get<1>(input), std::get<2>(input));
+}
+
+template<class Archive>
+void serialize(Archive& archive, InputName& iname) {
+    archive(iname);
+}
+
+template<class Archive>
+void serialize(Archive& archive, menu::State& state) {
+    archive(state);
+}
+
+template<class Archive>
+void serialize(Archive& archive, game::State& state) {
+    archive(state);
+}
+
 // TODO: had a bit of trouble trying to serialize "full map" which
 // we need to do if we want to allow remapping of keys
 using AnyInput = std::variant<int, GamepadAxisWithDir, GamepadButton>;

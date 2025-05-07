@@ -11,10 +11,11 @@ struct CanHighlightOthers : public BaseComponent {
 
    private:
     float furniture_reach = 1.80f;
-
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this));
     }
 };
+
+CEREAL_REGISTER_TYPE(CanHighlightOthers);

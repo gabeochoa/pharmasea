@@ -22,11 +22,13 @@ struct SimpleColoredBoxRenderer : public BaseComponent {
     Color face_color = PINK;
     Color base_color = PINK;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(face_color);
-        s.object(base_color);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                face_color, base_color);
     }
 };
+
+CEREAL_REGISTER_TYPE(SimpleColoredBoxRenderer);

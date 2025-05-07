@@ -1,10 +1,13 @@
 
 #pragma once
 
+#include <cereal/types/polymorphic.hpp>
+
+#include "../vendor_include.h"
+//
 #include "../engine/util.h"
 #include "../std_include.h"
 #include "../vec_util.h"
-#include "../vendor_include.h"
 //
 #include "base_component.h"
 
@@ -286,15 +289,12 @@ struct Transform : public BaseComponent {
     vec3 raw_position = {0, 0, 0};
     vec3 visual_offset = {0, 0, 0};
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(visual_offset);
-        s.object(raw_position);
-        s.object(position);
-        s.value4b(facing);
-        s.object(_size);
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(cereal::base_class<BaseComponent>(this),
+                //
+                visual_offset, raw_position, position, facing, _size);
     }
 };
 
@@ -302,3 +302,5 @@ inline std::ostream& operator<<(std::ostream& os, const Transform& t) {
     os << "Transform<> " << t.pos() << " " << t.size();
     return os;
 }
+
+CEREAL_REGISTER_TYPE(Transform);
