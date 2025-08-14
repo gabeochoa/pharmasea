@@ -264,12 +264,10 @@ struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
                                              // END
                                              > {};
 
-// Register Entity base so shared_ptr<Entity> can be serialized with StdSmartPtr
-template<>
-struct PolymorphicBaseClass<afterhours::Entity>
-    : PolymorphicDerivedClasses<
-          // Base-only for now; add derived entity types here if introduced
-          afterhours::Entity> {};
+// Do not list `afterhours::Entity` as its own derived type. If you introduce
+// actual subclasses of `afterhours::Entity`, specialize this with those types.
+// The default `PolymorphicBaseClass` (empty Childs) is correct for a base-only
+// hierarchy and avoids recursive self-registration.
 
 }  // namespace ext
 }  // namespace bitsery
