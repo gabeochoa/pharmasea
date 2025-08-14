@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "afterhours/ah.h"
+#include "ah.h"
 using afterhours::Entity;
 using afterhours::OptEntity;
 using afterhours::RefEntity;
