@@ -3,7 +3,7 @@
 RAYLIB_FLAGS := `pkg-config --cflags raylib`
 RAYLIB_LIB := `pkg-config --libs raylib`
 
-RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) 
+RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) -DNDEBUG 
 
 # TIMEFLAG = -ftime-trace
 TIMEFLAG = 
@@ -18,8 +18,24 @@ NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 INCLUDES = -Ivendor/ 
 LIBS = -L. -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
+# backward-cpp (Debug only)
+UNAME_S := $(shell uname -s)
+BACKWARD_DW_LIBS := $(shell pkg-config --libs libdw 2>/dev/null)
+BACKWARD_DW_CFLAGS := $(shell pkg-config --cflags libdw 2>/dev/null)
+BACKWARD_UNWIND_LIBS := $(shell pkg-config --libs libunwind 2>/dev/null)
+BACKWARD_UNWIND_CFLAGS := $(shell pkg-config --cflags libunwind 2>/dev/null)
+BACKWARD_FLAGS := -DBACKWARD_HAS_DW=$(if $(BACKWARD_DW_LIBS),1,0) -DBACKWARD_HAS_LIBUNWIND=$(if $(BACKWARD_UNWIND_LIBS),1,0)
+
+FLAGS += $(BACKWARD_FLAGS) $(BACKWARD_DW_CFLAGS) $(BACKWARD_UNWIND_CFLAGS)
+ifeq ($(UNAME_S),Darwin)
+BACKWARD_PLATFORM_LIBS :=
+else
+BACKWARD_PLATFORM_LIBS := -ldl
+endif
+LIBS += $(BACKWARD_DW_LIBS) $(BACKWARD_UNWIND_LIBS) $(BACKWARD_PLATFORM_LIBS)
+
 # SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp)
-SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp src/network/**/*.cpp vendor/backward/backward.cpp )
+SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp src/network/**/*.cpp)
 H_FILES := $(wildcard src/**/*.h src/engine/**/*.h) 
 OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
@@ -27,8 +43,8 @@ OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
 OUTPUT_EXE := pharmasea.exe
 
 # CXX := g++
-cxx := clang++
-# cxx := clang++ --analyze
+CXX := clang++
+# CXX := clang++ --analyze
 # CXX := include-what-you-use
 
 OUTPUT_LOG = $(OBJ_DIR)/build.log
