@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <raylib/glfw3.h>
+// Stop using GLFW directly with raylib 5.5; rely on raylib's monitor APIs
 
 #include <algorithm>
 #include <string>
@@ -51,43 +51,37 @@ struct ResolutionExplorer {
     }
 
     void load_resolution_options() {
-#ifdef __APPLE__
-        // Nothing needed here this one works :)
-#else
-        // TODO either implement these for windows or get them in the dll
-        const auto glfwGetPrimaryMonitor = []() -> GLFWmonitor* {
-            return nullptr;
+        options.clear();
+
+        // Query current monitor via raylib and propose a set of common 16:9
+        // modes
+        int monitor = raylib::GetCurrentMonitor();
+        int maxWidth = raylib::GetMonitorWidth(monitor);
+        int maxHeight = raylib::GetMonitorHeight(monitor);
+
+        const ResolutionInfo common[] = {
+            {1280, 720},  {1366, 768},  {1600, 900},  {1920, 1080},
+            {2048, 1152}, {2560, 1440}, {2880, 1620}, {3008, 1692},
+            {3072, 1728}, {3200, 1800}, {3440, 1440}, {3840, 2160},
         };
-        const auto glfwGetVideoModes = [](GLFWmonitor*, int*) -> GLFWvidmode* {
-            return nullptr;
-        };
-#endif
-        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-        int count = 0;
-        const GLFWvidmode* modes = glfwGetVideoModes(monitor, &count);
 
-        for (int i = 0; i < count; i++) {
-            GLFWvidmode mode = modes[i];
-            // int width
-            // int height
-            // int redBits int greenBits int blueBits
-            // int refreshRate
-
-            // Just kinda easier to not support every possible resolution
-            if (mode.height < 720 || mode.height > 2160) continue;
-            if (1.77f - (mode.width / (mode.height * 1.f)) > 0.1f) continue;
-
-            options.push_back(
-                ResolutionInfo{.width = mode.width, .height = mode.height});
+        for (const auto& cand : common) {
+            if (cand.height < 720 || cand.height > 2160) continue;
+            if (cand.width > maxWidth || cand.height > maxHeight) continue;
+            float aspect = cand.width / (cand.height * 1.f);
+            if (std::fabs(1.7777f - aspect) > 0.12f) continue;
+            options.push_back(cand);
         }
 
         if (options.empty()) {
-            options.push_back(ResolutionInfo{.width = 1280, .height = 720});
+            options.push_back(
+                ResolutionInfo{.width = maxWidth, .height = maxHeight});
             options.push_back(ResolutionInfo{.width = 1920, .height = 1080});
-            options.push_back(ResolutionInfo{.width = 3860, .height = 2160});
+            options.push_back(ResolutionInfo{.width = 1280, .height = 720});
         }
 
-        // TODO SPEED this kinda slow but it only happens once
+        // Deduplicate
+        std::sort(options.begin(), options.end());
         options.erase(std::unique(options.begin(), options.end()),
                       options.end());
     }

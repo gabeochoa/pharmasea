@@ -5,6 +5,8 @@
 
 extern ui::UITheme UI_THEME;
 
+using afterhours::Entities;
+
 namespace system_manager {
 namespace ui {
 

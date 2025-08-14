@@ -92,6 +92,7 @@ struct helper {
             // TODO these are escaping the map generation
             case '?':
             case EMPTY:
+            case ORIGIN:  // Origin character should not create an entity
                 return EntityType::Unknown;
             case 'x':
                 return EntityType::x;
@@ -192,7 +193,7 @@ struct helper {
     template<typename Func = std::function<Entity&()>>
     void generate_entity_from_character(Func&& create, char ch, vec2 location) {
         // This is not a warning since most maps are made up of '.'s
-        if (ch == EMPTY || ch == '?' || ch == 32) return;
+        if (ch == EMPTY || ch == '?' || ch == 32 || ch == ORIGIN) return;
 
         EntityType et = convert_character_to_type(ch);
 

@@ -7,7 +7,7 @@
 using EntityID = int;
 
 struct HasWaitingQueue : public BaseComponent {
-    static const int max_queue_size = 3;
+    static constexpr int max_queue_size = 3;
 
     virtual ~HasWaitingQueue() {}
 

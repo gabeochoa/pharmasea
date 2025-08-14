@@ -12,8 +12,8 @@ namespace ui {
 extern std::shared_ptr<ui::UIContext> context;
 
 namespace focus {
-const int ROOT_ID = -1;
-const int FAKE_ID = -2;
+constexpr int ROOT_ID = -1;
+constexpr int FAKE_ID = -2;
 extern int focus_id;
 extern int last_processed;
 extern int hot_id;

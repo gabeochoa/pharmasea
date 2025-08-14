@@ -11,8 +11,8 @@ namespace raylib {
 #define TEXT_MAX_LAYERS 32
 #define LETTER_BOUNDRY_COLOR VIOLET
 
-const bool SHOW_LETTER_BOUNDRY = false;
-const bool SHOW_TEXT_BOUNDRY = false;
+constexpr bool SHOW_LETTER_BOUNDRY = false;
+constexpr bool SHOW_TEXT_BOUNDRY = false;
 
 using DrawTextConfig = struct DrawTextConfig {
     Font font;
@@ -121,7 +121,7 @@ static void DrawTextCodepoint3D(Font font, int codepoint, vec3 position,
 }
 
 // Draw a 2D text in 3D space
-static void DrawText3D(DrawTextConfig& config) {
+static void DrawText3D(const DrawTextConfig& config) {
     const auto [font, text, position, fontSize, fontSpacing, lineSpacing,
                 backface, color] = config;
 
@@ -233,8 +233,9 @@ static vec3 MeasureText3D(Font font, const char* text, float fontSize,
 // Draw a 2D text in 3D space and wave the parts that start with `~~` and end
 // with `~~`. This is a modified version of the original code by @Nighten found
 // here https://github.com/NightenDushi/Raylib_DrawTextStyle
-static void DrawTextWave3D(DrawTextConfig& text_config, WaveTextConfig* config,
-                           float time, Color tint) {
+static void DrawTextWave3D(const DrawTextConfig& text_config,
+                           const WaveTextConfig& config, float time,
+                           Color tint) {
     const auto [font, text, position, fontSize, fontSpacing, lineSpacing,
                 backface, color] = text_config;
 
@@ -276,15 +277,15 @@ static void DrawTextWave3D(DrawTextConfig& text_config, WaveTextConfig* config,
                 vec3 pos = position;
                 if (wave)  // Apply the wave effect
                 {
-                    pos.x += sinf(time * config->waveSpeed.x -
-                                  k * config->waveOffset.x) *
-                             config->waveRange.x;
-                    pos.y += sinf(time * config->waveSpeed.y -
-                                  k * config->waveOffset.y) *
-                             config->waveRange.y;
-                    pos.z += sinf(time * config->waveSpeed.z -
-                                  k * config->waveOffset.z) *
-                             config->waveRange.z;
+                    pos.x += sinf(time * config.waveSpeed.x -
+                                  k * config.waveOffset.x) *
+                             config.waveRange.x;
+                    pos.y += sinf(time * config.waveSpeed.y -
+                                  k * config.waveOffset.y) *
+                             config.waveRange.y;
+                    pos.z += sinf(time * config.waveSpeed.z -
+                                  k * config.waveOffset.z) *
+                             config.waveRange.z;
                 }
 
                 DrawTextCodepoint3D(

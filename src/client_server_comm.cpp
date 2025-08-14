@@ -4,8 +4,8 @@
 #include "network/server.h"
 
 namespace server_only {
-void play_sound(const vec2& location, const std::string& sound_name) {
-    network::Server::play_sound(location, sound_name);
+void play_sound(const vec2& location, strings::sounds::SoundId sound_id) {
+    network::Server::play_sound(location, sound_id);
 }
 
 void set_show_minimap() {

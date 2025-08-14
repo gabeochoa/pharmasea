@@ -3,9 +3,9 @@
 
 #include "../components/is_round_settings_manager.h"
 #include "../entity_query.h"
-#include "../network/network.h"
+#include "../network/api.h"
 
-void BasePauseLayer::reset_network() { network::Info::reset_connections(); }
+void BasePauseLayer::reset_network() { network::reset_connections(); }
 
 void BasePauseLayer::draw_upgrades(Rectangle window, Rectangle rect) {
     OptEntity sophie =

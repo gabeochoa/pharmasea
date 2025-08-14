@@ -33,7 +33,7 @@ using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 // TODO how do we support different games having different save file data
 // requirements?
 
-const int MAX_LANG_LENGTH = 25;
+constexpr int MAX_LANG_LENGTH = 25;
 
 // TODO How do we support multiple versions
 // we dont want to add a new field and break

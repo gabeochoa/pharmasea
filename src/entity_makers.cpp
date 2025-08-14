@@ -31,6 +31,7 @@
 #include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
 #include "components/responds_to_day_night.h"
+#include "components/type.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
 #include "engine/bitset_utils.h"
@@ -91,18 +92,18 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient ing) {
 
     IngredientSoundType sound_type = ingredient::IngredientSoundType.at(ing);
 
-    std::string sound;
+    strings::sounds::SoundId sound;
     switch (sound_type) {
         case Viscous:
             // TODO add new sounds for other ingredient types
         case Solid:
-            sound = strings::sounds::SOLID;
+            sound = strings::sounds::SoundId::SOLID;
             break;
         case Ice:
-            sound = strings::sounds::ICE;
+            sound = strings::sounds::SoundId::ICE;
             break;
         case Liquid:
-            sound = strings::sounds::WATER;
+            sound = strings::sounds::SoundId::WATER;
             break;
         default:
             return false;
@@ -142,7 +143,7 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 void register_all_components() {
     Entity* entity = new Entity();
     entity->addAll<  //
-        Transform, HasName,
+        Transform, HasName, Type,
         //
         AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AICloseTab,
         AIPlayJukebox, AIWandering,
@@ -227,7 +228,8 @@ void add_person_components(Entity& person, DebugOptions options = {}) {
 }
 
 void make_entity(Entity& entity, const DebugOptions& options, vec3 p) {
-    entity.type = options.type;
+    entity.entity_type = (int) options.type;
+    entity.addComponent<Type>(options.type);
 
     add_entity_components(entity);
     entity.get<Transform>().update(p);
@@ -890,8 +892,8 @@ void make_draft(Entity& draft, vec2 pos) {
             hasWork.increase_pct(amt * dt);
 
             server_only::play_sound(item.get<Transform>().as2(),
-                                    // TODO replace with draft tap sound
-                                    strings::sounds::BLENDER);
+                                // TODO replace with draft tap sound
+                                strings::sounds::SoundId::BLENDER);
 
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
@@ -1081,7 +1083,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         hasWork.increase_pct(amt * dt);
         server_only::play_sound(drink.get<Transform>().as2(),
                                 // TODO replace with draft tap sound
-                                strings::sounds::BLENDER);
+                                strings::sounds::SoundId::BLENDER);
 
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
@@ -1250,7 +1252,7 @@ void make_fruit(Item& fruit, vec3 pos, int index) {
         }
 
         server_only::play_sound(owner.get<Transform>().as2(),
-                                strings::sounds::BLENDER);
+                                strings::sounds::SoundId::BLENDER);
 
         const float amt = 0.75f;
         hasWork.increase_pct(amt * dt);
@@ -1479,7 +1481,7 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     customer
         .addComponent<IsSpawner>()  //
         .set_fn(&furniture::make_vomit)
-        .set_spawn_sound(strings::sounds::VOMIT)
+        .set_spawn_sound(strings::sounds::SoundId::VOMIT)
         .set_validation_fn([](Entity& entity, const SpawnInfo&) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet
@@ -1782,7 +1784,7 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         }
     }
 
-    if (entity.type == EntityType::Unknown) {
+    if (entity.get<Type>().type == EntityType::Unknown) {
         log_error(
             "Created an entity but somehow didnt get a type {}"
             "type",

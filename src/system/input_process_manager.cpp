@@ -19,6 +19,8 @@
 #include "../components/is_snappable.h"
 #include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
+#include "../engine/assert.h"
+#include "../engine/log.h"
 #include "../entity.h"
 #include "../entity_helper.h"
 #include "../network/server.h"
@@ -359,7 +361,7 @@ void drop_held_furniture(Entity& player) {
 
     // TODO :PICKUP: i dont like that these are spread everywhere,
     network::Server::play_sound(player.get<Transform>().as2(),
-                                strings::sounds::PLACE);
+                                strings::sounds::SoundId::PLACE);
 
     {
         Transform& transform = player.get<Transform>();
@@ -374,7 +376,7 @@ void drop_held_furniture(Entity& player) {
 }
 
 void handle_grab_or_drop(Entity& player) {
-    log_info("Handle grab or drop, player is {}", player.type);
+    log_info("Handle grab or drop, player is {}", player.get<Type>().type);
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
     CanHoldFurniture& ourCHF = player.get<CanHoldFurniture>();
 
@@ -409,7 +411,7 @@ void handle_grab_or_drop(Entity& player) {
 
         // TODO :PICKUP: i dont like that these are spread everywhere,
         network::Server::play_sound(player.get<Transform>().as2(),
-                                    strings::sounds::PICKUP);
+                                    strings::sounds::SoundId::PICKUP);
 
         return;
     }
@@ -673,7 +675,7 @@ void handle_drop(Entity& player) {
     if (item_merged) {
         // TODO :PICKUP: i dont like that these are spread everywhere,
         network::Server::play_sound(player.get<Transform>().as2(),
-                                    strings::sounds::PLACE);
+                                    strings::sounds::SoundId::PLACE);
     }
 }
 
@@ -733,7 +735,7 @@ void handle_grab(Entity& player) {
     if (picked_up_item) {
         // TODO :PICKUP: i dont like that these are spread everywhere,
         network::Server::play_sound(player.get<Transform>().as2(),
-                                    strings::sounds::PICKUP);
+                                    strings::sounds::SoundId::PICKUP);
         return;
     }
 
@@ -758,7 +760,7 @@ void handle_grab(Entity& player) {
 
     // TODO :PICKUP: i dont like that these are spread everywhere,
     network::Server::play_sound(player.get<Transform>().as2(),
-                                strings::sounds::PICKUP);
+                                strings::sounds::SoundId::PICKUP);
 }
 
 bool handle_drop_hand_truck(Entity& player) {
@@ -806,7 +808,7 @@ bool handle_drop_hand_truck(Entity& player) {
 
         // TODO :PICKUP: i dont like that these are spread everywhere,
         network::Server::play_sound(player.get<Transform>().as2(),
-                                    strings::sounds::PLACE);
+                                    strings::sounds::SoundId::PLACE);
 
         {
             auto my_bounds = transform.bounds();
@@ -859,7 +861,7 @@ bool handle_hand_truck(Entity& player) {
 
         // TODO :PICKUP: i dont like that these are spread everywhere,
         network::Server::play_sound(player.get<Transform>().as2(),
-                                    strings::sounds::PICKUP);
+                                    strings::sounds::SoundId::PICKUP);
         return true;
     };
 

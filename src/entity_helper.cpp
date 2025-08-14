@@ -281,7 +281,7 @@ OptEntity EntityHelper::getMatchingEntityInFront(
                 log_warn("component {} is missing transform",
                          current_entity->id);
                 log_error("component {} is missing name",
-                          current_entity->name());
+                          current_entity->get<Type>().name());
                 continue;
             }
 

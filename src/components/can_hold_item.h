@@ -4,12 +4,12 @@
 #include <optional>
 //
 
-#include "../entity.h"
 #include "base_component.h"
 //
 #include "../dataclass/entity_filter.h"
 #include "has_subtype.h"
 #include "is_item.h"
+#include "type.h"
 
 struct CanHoldItem : public BaseComponent {
     CanHoldItem() : held_by(EntityType::Unknown), filter(EntityFilter()) {}
@@ -46,7 +46,7 @@ struct CanHoldItem : public BaseComponent {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
                 "UNKNOWN",
-                item->id, item->name());
+                item->id, item->get<Type>().name());
         }
         return *this;
     }

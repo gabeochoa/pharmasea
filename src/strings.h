@@ -126,7 +126,7 @@ constexpr const char* CHARACTER_RUTH = "character_ruth";
 
 }  // namespace model
 
-const std::array<std::string, 7> character_models = {
+constexpr std::array<std::string_view, 7> character_models = {
     strings::model::CHARACTER_BEAR, strings::model::CHARACTER_DOG,
     strings::model::CHARACTER_DUCK, strings::model::CHARACTER_ROGUE,
     strings::model::CHARACTER_GABE, strings::model::CHARACTER_GABE2,
@@ -135,16 +135,36 @@ const std::array<std::string, 7> character_models = {
 
 namespace sounds {
 
-constexpr const char* ROBLOX = "roblox";
-constexpr const char* VOMIT = "vom";
-constexpr const char* SELECT = "select";
-constexpr const char* CLICK = "click";
-constexpr const char* WATER = "water";
-constexpr const char* BLENDER = "blender";
-constexpr const char* SOLID = "solid";
-constexpr const char* ICE = "ice";
-constexpr const char* PICKUP = "pickup";
-constexpr const char* PLACE = "place";
+enum struct SoundId : uint8_t {
+    None = 0,
+    ROBLOX,
+    VOMIT,
+    SELECT,
+    CLICK,
+    WATER,
+    BLENDER,
+    SOLID,
+    ICE,
+    PICKUP,
+    PLACE,
+};
+
+inline const char* to_name(SoundId id) {
+    switch (id) {
+        case SoundId::None: return "";
+        case SoundId::ROBLOX: return "roblox";
+        case SoundId::VOMIT: return "vom";
+        case SoundId::SELECT: return "select";
+        case SoundId::CLICK: return "click";
+        case SoundId::WATER: return "water";
+        case SoundId::BLENDER: return "blender";
+        case SoundId::SOLID: return "solid";
+        case SoundId::ICE: return "ice";
+        case SoundId::PICKUP: return "pickup";
+        case SoundId::PLACE: return "place";
+    }
+    return "";
+}
 
 }  // namespace sounds
 
@@ -390,7 +410,7 @@ enum struct TodoReason {
 };
 
 struct TranslatableString {
-    static const int MAX_LENGTH = 100;
+    static constexpr int MAX_LENGTH = 100;
 
     explicit TranslatableString() {}
     explicit TranslatableString(const std::string& s) : content(s) {}

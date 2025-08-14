@@ -2,7 +2,7 @@
 
 #include "base_game_renderer.h"
 
-const int MAX_VISIBLE_IGS = 10;
+constexpr int MAX_VISIBLE_IGS = 10;
 
 struct RecipeBookLayer : public BaseGameRendererLayer {
     bool should_show_recipes = false;

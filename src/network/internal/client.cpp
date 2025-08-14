@@ -34,6 +34,13 @@ void Client::set_address(const std::string &ip) {
 
 void Client::startup() {
     interface = SteamNetworkingSockets();
+    if (interface == nullptr) {
+        log_warn(
+            "Failed to initialize GameNetworkingSockets (SNS) client; cannot "
+            "connect");
+        running = false;
+        return;
+    }
 
     /// [connection int32] Upper limit of buffered pending bytes to be sent,
     /// if this is reached SendMessage will return k_EResultLimitExceeded
