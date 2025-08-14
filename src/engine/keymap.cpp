@@ -1,7 +1,7 @@
 
 #include "keymap.h"
 
-#include "graphics.h"
+#include "graphics_types.h"
 
 void KeyMap::forEachCharTyped(const std::function<void(Event&)>& cb) {
     int character = raylib::GetCharPressed();
