@@ -109,10 +109,11 @@ inline void draw_any_rect(const RectRenderInfo& info) {
         [=]() {
             if (info.roundedInfo.rounded) {
                 if (info.outlineInfo.outlineOnly) {
+                    // Raylib 5.5: DrawRectangleRoundedLines no longer takes
+                    // line thickness
                     DrawRectangleRoundedLines(
                         info.rect, info.roundedInfo.roundness,
-                        info.roundedInfo.segments, info.outlineInfo.thickness,
-                        info.color);
+                        info.roundedInfo.segments, info.color);
                 } else {
                     DrawRectangleRounded(info.rect, info.roundedInfo.roundness,
                                          info.roundedInfo.segments, info.color);

@@ -193,7 +193,7 @@ void process_dev_flags(char* argv[]) {
     }
 
     if (cmdl[{"--disable-models", "-M"}]) {
-        ENABLE_MODELS = true;
+        ENABLE_MODELS = false;
     }
     if (cmdl[{"--sound", "-s"}]) {
         ENABLE_SOUND = true;

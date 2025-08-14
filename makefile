@@ -3,6 +3,10 @@
 RAYLIB_FLAGS := `pkg-config --cflags raylib`
 RAYLIB_LIB := `pkg-config --libs raylib`
 
+# Local GameNetworkingSockets paths (built from ~/p/GameNetworkingSockets)
+GNS_INC := /Users/gabe/p/GameNetworkingSockets/include
+GNS_LIBDIR := /Users/gabe/p/GameNetworkingSockets/build/bin
+
 RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) -DNDEBUG 
 
 # TIMEFLAG = -ftime-trace
@@ -15,8 +19,8 @@ FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
 		  -Wno-implicit-int-float-conversion -Werror
-INCLUDES = -Ivendor/ 
-LIBS = -L. -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
+INCLUDES = -I$(GNS_INC) -Ivendor/ 
+LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
 # backward-cpp (Debug only)
 UNAME_S := $(shell uname -s)
@@ -62,7 +66,7 @@ pre-build:
 main-build: pre-build $(OUTPUT_EXE) 
 
 post-build: main-build
-	install_name_tool -change @rpath/libGameNetworkingSockets.dylib @executable_path/vendor/libGameNetworkingSockets.dylib $(OUTPUT_EXE)
+	install_name_tool -change @rpath/libGameNetworkingSockets.dylib $(GNS_LIBDIR)/libGameNetworkingSockets.dylib $(OUTPUT_EXE)
 	./$(OUTPUT_EXE) 2>&1 $(GAME_LOG)
 # -g disables sounds 
 # ./$(OUTPUT_EXE) -g 2>&1 $(GAME_LOG)

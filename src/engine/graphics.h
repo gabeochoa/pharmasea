@@ -17,14 +17,44 @@
 namespace raylib {
 
 #include <raylib.h>
+#include <raymath.h>
 #include <rlgl.h>
 
-#undef RAYLIB_OP_OVERLOADS_RAYGUI
-#include <RaylibOpOverloads.h>
+#include <ostream>
 
 // NOTE: why doesnt RaylibOpOverloads do this?
 inline bool operator<(const Vector2& l, const Vector2& r) {
     return (l.x < r.x) || ((l.x == r.x) && (l.y < r.y));
+}
+
+// Stream operators to enable logging/formatting via fmt/ostream
+inline std::ostream& operator<<(std::ostream& os, const Vector2& v) {
+    os << "(" << v.x << "," << v.y << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const Vector3& v) {
+    os << "(" << v.x << "," << v.y << "," << v.z << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const Vector4& v) {
+    os << "(" << v.x << "," << v.y << "," << v.z << "," << v.w << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const Color& c) {
+    os << "(" << static_cast<unsigned int>(c.r) << ","
+       << static_cast<unsigned int>(c.g) << ","
+       << static_cast<unsigned int>(c.b) << ","
+       << static_cast<unsigned int>(c.a) << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const Rectangle& r) {
+    os << "Rectangle(" << r.x << "," << r.y << "," << r.width << "," << r.height
+       << ")";
+    return os;
 }
 
 }  // namespace raylib

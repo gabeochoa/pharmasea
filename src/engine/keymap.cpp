@@ -469,6 +469,9 @@ std::string icon_for_key(int keycode) {
             return "keyboard_right_super";
         case raylib::KEY_KB_MENU:
             return "keyboard_kb_menu";
+        case raylib::KEY_MENU:
+            // Raylib 5.5 adds KEY_MENU (Android). Use same icon as KB menu.
+            return "keyboard_kb_menu";
         case raylib::KEY_KP_0:
             return "keyboard_kp_0";
         case raylib::KEY_KP_1:

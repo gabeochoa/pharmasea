@@ -314,6 +314,18 @@ void Preload::load_models() {
             log_trace("attempting loading {} as {} ", modelInfo.filename,
                       modelInfo.library_name);
 
+            // Temporary safety: skip formats known to be problematic in 5.5
+            // until we can validate and fix the assets.
+            {
+                std::string lower = modelInfo.filename;
+                std::transform(lower.begin(), lower.end(), lower.begin(),
+                               ::tolower);
+                if (lower.ends_with(".glb") || lower.ends_with(".gltf")) {
+                    log_warn("Skipping model {} (disabled format)", lower);
+                    continue;
+                }
+            }
+
             // Load the ModelLoadingInfo into the ModelInfoLibrary
             ModelInfoLibrary::get().load({
                 .folder = modelInfo.folder,
