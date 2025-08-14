@@ -460,8 +460,7 @@ void process_conveyer_items(Entity& entity, float dt) {
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
-    matchCHI.update(EntityHelper::getEntityAsSharedPtr(ourCHI.item()),
-                    entity.id);
+    matchCHI.update(ourCHI.item().id, entity.id);
 
     ourCHI.update(nullptr, -1);
 
@@ -560,8 +559,7 @@ void process_grabber_items(Entity& entity, float) {
     CanHoldItem& matchCHI = match->get<CanHoldItem>();
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
-    ourCHI.update(EntityHelper::getEntityAsSharedPtr(matchCHI.item()),
-                  entity.id);
+    ourCHI.update(matchCHI.item().id, entity.id);
     matchCHI.update(nullptr, -1);
 
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
@@ -598,8 +596,8 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
         EntityHelper::createItem(iic.type(), pos, std::forward<TArgs>(args)...);
     // ^ cannot be const because converting to SharedPtr v
 
-    // TODO do we need shared pointer here? (vs just id?)
-    canHold.update(EntityHelper::getEntityAsSharedPtr(item), entity.id);
+    // Now stores EntityID instead of shared_ptr
+    canHold.update(item.id, entity.id);
 }
 
 void process_is_container_and_should_backfill_item(Entity& entity, float) {

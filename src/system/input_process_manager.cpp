@@ -648,8 +648,7 @@ void handle_drop(Entity& player) {
             }
         }
 
-        furnCHI.update(EntityHelper::getEntityAsSharedPtr(item),
-                       closest_furniture->id);
+        furnCHI.update(item.id, closest_furniture->id);
         player.get<CanHoldItem>().update(nullptr, -1);
         return true;
     };
@@ -715,7 +714,7 @@ void handle_grab(Entity& player) {
         // item->name(), closest_furniture->name());
 
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
-        playerCHI.update(EntityHelper::getEntityAsSharedPtr(item), player.id);
+        playerCHI.update(item.id, player.id);
         item.get<Transform>().update(player.get<Transform>().snap_position());
         furnCanHold.update(nullptr, -1);
 
@@ -755,8 +754,7 @@ void handle_grab(Entity& player) {
     // nothing found
     if (!closest_item) return;
 
-    player.get<CanHoldItem>().update(
-        EntityHelper::getEntityAsSharedPtr(closest_item), player.id);
+    player.get<CanHoldItem>().update(closest_item->id, player.id);
 
     // TODO :PICKUP: i dont like that these are spread everywhere,
     network::Server::play_sound(player.get<Transform>().as2(),
