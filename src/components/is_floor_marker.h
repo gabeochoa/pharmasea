@@ -4,7 +4,7 @@
 #include "../engine/log.h"
 #include "base_component.h"
 
-const int MAX_FLOOR_MARKERS = 100;
+constexpr int MAX_FLOOR_MARKERS = 100;
 
 struct IsFloorMarker : public BaseComponent {
     enum Type {

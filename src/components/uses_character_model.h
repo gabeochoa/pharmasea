@@ -22,8 +22,8 @@ struct UsesCharacterModel : public BaseComponent {
         changed = true;
     }
 
-    [[nodiscard]] const std::string& fetch_model_name() const {
-        return strings::character_models[index];
+    [[nodiscard]] std::string fetch_model_name() const {
+        return std::string(strings::character_models[index]);
     }
 
     [[nodiscard]] bool value_same_as_last_render() const {

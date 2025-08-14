@@ -645,7 +645,7 @@ void render_trigger_area(const Entity& entity, float dt) {
                                              .waveOffset = {0.f, 0.f, 0.2f}};
 
         raylib::DrawTextWave3D(textConfig,             //
-                               &waveConfig,            //
+                               waveConfig,             //
                                now::current_hrc_ms(),  //
                                WHITE);
 
