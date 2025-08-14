@@ -44,11 +44,6 @@ template<typename T>
 [[nodiscard]] bool contains(const std::vector<T>& vec, const T& value) {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
 }
-
-template<typename T>
-[[nodiscard]] bool contains(const std::vector<T>& vec, const T& value) {
-    return std::find(vec.begin(), vec.end(), value) != vec.end();
-}
 }  // namespace vector
 
 inline float comp_max(const vec2& a) { return fmax(a.x, a.y); }
@@ -71,7 +66,8 @@ namespace vec {
 static constexpr int neigh_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 static constexpr int neigh_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
-static void forEachNeighbor(int i, int j, const std::function<void(const vec2&)>& cb,
+static void forEachNeighbor(int i, int j,
+                            const std::function<void(const vec2&)>& cb,
                             int step = 1) {
     for (int a = 0; a < 8; a++) {
         cb(vec2{(float) i + (neigh_x[a] * step),
@@ -81,7 +77,8 @@ static void forEachNeighbor(int i, int j, const std::function<void(const vec2&)>
 
 static std::vector<vec2> get_neighbors(int i, int j, int step = 1) {
     std::vector<vec2> ns;
-    forEachNeighbor(i, j, [&](const vec2& v) { ns.push_back(v); }, step);
+    forEachNeighbor(
+        i, j, [&](const vec2& v) { ns.push_back(v); }, step);
     return ns;
 }
 
@@ -89,7 +86,10 @@ static std::vector<std::pair<int, int>> get_neighbors_i(int i, int j,
                                                         int step = 1) {
     std::vector<std::pair<int, int>> ns;
     forEachNeighbor(
-        i, j, [&](const vec2& v) { ns.push_back({(int) v.x, (int) v.y}); },
+        i, j,
+        [&](const vec2& v) {
+            ns.push_back({(int) v.x, (int) v.y});
+        },
         step);
     return ns;
 }
