@@ -47,6 +47,10 @@ struct EntityHelper {
     static Entities& get_entities_for_mod();
     static RefEntities get_ref_entities();
 
+    // Rebuild the O(1) id -> shared_ptr registry from the current entities
+    // container for the active (client/server) context.
+    static void rebuild_id_registry();
+
     static Entity& createEntity();
     static Entity& createPermanentEntity();
     static Entity& createEntityWithOptions(const CreationOptions& options);
@@ -90,18 +94,9 @@ struct EntityHelper {
         const std::function<bool(const Entity&)>& filter);
 
     // TODO exists as a conversion for things that need shared_ptr right now
-    static std::shared_ptr<Entity> getEntityAsSharedPtr(const Entity& entity) {
-        for (std::shared_ptr<Entity> current_entity : get_entities()) {
-            if (entity.id == current_entity->id) return current_entity;
-        }
-        return {};
-    }
+    static std::shared_ptr<Entity> getEntityAsSharedPtr(const Entity& entity);
 
-    static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity) {
-        if (!entity) return {};
-        const Entity& e = entity.asE();
-        return getEntityAsSharedPtr(e);
-    }
+    static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity);
 
     static OptEntity getClosestMatchingFurniture(
         const Transform& transform, float range,

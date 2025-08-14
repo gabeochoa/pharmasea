@@ -6,6 +6,7 @@
 #include "../engine/globals_register.h"
 #include "../engine/log.h"
 #include "../engine/sound_library.h"
+#include "../entity_helper.h"
 #include "network.h"
 
 namespace network {
@@ -278,6 +279,8 @@ void Client::client_process_message_string(const std::string& msg) {
 
             client_entities_DO_NOT_USE.clear();
             client_entities_DO_NOT_USE = info.map.entities();
+            // Rebuild id registry for client side
+            EntityHelper::rebuild_id_registry();
 
             map->update_map(info.map);
 

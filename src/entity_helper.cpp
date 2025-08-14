@@ -4,6 +4,20 @@
 #include "components/is_trigger_area.h"
 #include "entity_query.h"
 #include "system/input_process_manager.h"
+#include <unordered_map>
+
+// Maintain an O(1) id -> shared ownership handle via weak_ptr so the registry
+// does not extend lifetimes on its own. Callers lock() to get the canonical
+// shared_ptr from the owning vector.
+using EntityRegistry = std::unordered_map<int, std::weak_ptr<Entity>>;
+
+static EntityRegistry client_id_registry;
+static EntityRegistry server_id_registry;
+
+static inline EntityRegistry& get_registry_for_mod() {
+    if (is_server()) return server_id_registry;
+    return client_id_registry;
+}
 
 Entities client_entities_DO_NOT_USE;
 Entities server_entities_DO_NOT_USE;
@@ -36,7 +50,12 @@ OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
                 break;
         }
         if (!e_ptr) return {};
-        named_entities_DO_NOT_USE.insert(std::make_pair(name, e_ptr));
+        // Store the canonical shared_ptr for safer hand-offs
+        if (auto sp = EntityHelper::getEntityAsSharedPtr(*e_ptr)) {
+            named_entities_DO_NOT_USE.insert(std::make_pair(name, sp));
+        } else {
+            return {};
+        }
     }
     return *(named_entities_DO_NOT_USE[name]);
 }
@@ -75,6 +94,15 @@ RefEntities EntityHelper::get_ref_entities() {
     return matching;
 }
 
+void EntityHelper::rebuild_id_registry() {
+    auto& reg = get_registry_for_mod();
+    reg.clear();
+    for (const auto& e : get_entities_for_mod()) {
+        if (!e) continue;
+        reg[e->id] = e;
+    }
+}
+
 struct CreationOptions {
     bool is_permanent;
 };
@@ -90,6 +118,8 @@ Entity& EntityHelper::createPermanentEntity() {
 Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
     std::shared_ptr<Entity> e(new Entity());
     get_entities_for_mod().push_back(e);
+    // Update registry
+    get_registry_for_mod()[e->id] = e;
     // log_info("created a new entity {}", e->id);
 
     invalidatePathCache();
@@ -113,14 +143,22 @@ Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
 }
 
 void EntityHelper::markIDForCleanup(int e_id) {
-    auto& entities = get_entities();
-    auto it = entities.begin();
-    while (it != get_entities().end()) {
-        if ((*it)->id == e_id) {
-            (*it)->cleanup = true;
+    // O(1) mark via registry
+    auto& reg = get_registry_for_mod();
+    auto it = reg.find(e_id);
+    if (it != reg.end()) {
+        if (auto sp = it->second.lock()) {
+            sp->cleanup = true;
+            return;
+        }
+    }
+    // Fallback scan if registry entry missing/expired
+    for (const auto& e : get_entities()) {
+        if (!e) continue;
+        if (e->id == e_id) {
+            e->cleanup = true;
             break;
         }
-        it++;
     }
 }
 
@@ -132,12 +170,16 @@ void EntityHelper::removeEntity(int e_id) {
     // }
 
     auto& entities = get_entities_for_mod();
+    auto& reg = get_registry_for_mod();
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
         [e_id](const auto& entity) { return !entity || entity->id == e_id; });
 
     entities.erase(newend, entities.end());
+
+    // Remove from registry
+    reg.erase(e_id);
 }
 
 //  Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
@@ -154,6 +196,16 @@ void EntityHelper::removeEntity(int e_id) {
 void EntityHelper::cleanup() {
     // Cleanup entities marked cleanup
     Entities& entities = get_entities_for_mod();
+    auto& reg = get_registry_for_mod();
+
+    // Collect ids to remove from registry first
+    std::vector<int> ids_to_erase;
+    ids_to_erase.reserve(entities.size());
+    for (const auto& entity : entities) {
+        if (!entity) continue;
+        if (entity->cleanup) ids_to_erase.push_back(entity->id);
+    }
+    for (int id : ids_to_erase) reg.erase(id);
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
@@ -166,6 +218,8 @@ void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
     Entities& entities = get_entities_for_mod();
     // just clear the whole thing
     entities.clear();
+    // and clear registry
+    get_registry_for_mod().clear();
 }
 
 void EntityHelper::delete_all_entities(bool include_permanent) {
@@ -176,6 +230,13 @@ void EntityHelper::delete_all_entities(bool include_permanent) {
 
     // Only delete non perms
     Entities& entities = get_entities_for_mod();
+    auto& reg = get_registry_for_mod();
+
+    // Remove registry entries for non-permanent entities
+    for (const auto& entity : entities) {
+        if (!entity) continue;
+        if (!permanant_ids.contains(entity->id)) reg.erase(entity->id);
+    }
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
@@ -210,11 +271,12 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
 
 OptEntity EntityHelper::getEntityForID(EntityID id) {
     if (id == -1) return {};
-
-    for (const auto& e : get_entities()) {
-        if (!e) continue;
-        if (e->id == id) return *e;
-    }
+    auto& reg = get_registry_for_mod();
+    auto it = reg.find(id);
+    if (it == reg.end()) return {};
+    if (auto sp = it->second.lock()) return *sp;
+    // Entry exists but expired, drop it and report not found
+    reg.erase(it);
     return {};
 }
 
@@ -246,6 +308,19 @@ OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
 // (this was already the default but new callers should know)
 bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
     return EntityQuery().whereType(type).has_values();
+}
+
+std::shared_ptr<Entity> EntityHelper::getEntityAsSharedPtr(
+    const Entity& entity) {
+    auto& reg = get_registry_for_mod();
+    auto it = reg.find(entity.id);
+    if (it == reg.end()) return {};
+    return it->second.lock();
+}
+
+std::shared_ptr<Entity> EntityHelper::getEntityAsSharedPtr(OptEntity entity) {
+    if (!entity) return {};
+    return getEntityAsSharedPtr(entity.asE());
 }
 
 OptEntity EntityHelper::getMatchingEntityInFront(
