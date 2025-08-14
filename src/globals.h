@@ -2,10 +2,9 @@
 #pragma once
 
 #include "engine/globals.h"
-#include "strings.h"
 
 // YY / MM / DD (Monday of week)
-constexpr std::string_view VERSION = "alpha_0.24.04.06";
+constexpr std::string_view VERSION = "alpha_0.24.09.06";
 constexpr size_t HASHED_VERSION = hashString(VERSION);
 
 constexpr std::string_view SETTINGS_FILE_NAME = "settings.bin";
@@ -22,11 +21,6 @@ struct Entity;
 
 constexpr float GATHER_SPOT = -20.f;
 constexpr int MAX_SEARCH_RANGE = 100;
-
-constexpr float MODEL_TEST_ORIGIN = 100.f;
-constexpr float LOBBY_ORIGIN = 50.f;
-constexpr float PROGRESSION_ORIGIN = -50.f;
-constexpr float STORE_ORIGIN = -100.f;
 
 static bool ENABLE_MODELS = true;
 static bool ENABLE_SOUND = true;

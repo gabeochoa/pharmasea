@@ -1,7 +1,16 @@
 
 #include "rendering_system.h"
 
+#include <regex>
+
+#include "../building_locations.h"
 #include "../components/adds_ingredient.h"
+#include "../components/ai_clean_vomit.h"
+#include "../components/ai_close_tab.h"
+#include "../components/ai_drinking.h"
+#include "../components/ai_play_jukebox.h"
+#include "../components/ai_use_bathroom.h"
+#include "../components/ai_wait_in_queue.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
@@ -11,7 +20,9 @@
 #include "../components/has_subtype.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/is_free_in_store.h"
+#include "../components/is_nux_manager.h"
 #include "../components/is_progression_manager.h"
+#include "../components/is_squirter.h"
 #include "../components/is_toilet.h"
 #include "../components/transform.h"
 #include "../dataclass/upgrades.h"
@@ -22,10 +33,11 @@
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../preload.h"
+#include "../vendor_include.h"
 #include "raylib.h"
 #include "system_manager.h"
-
-extern ui::UITheme UI_THEME;
+//
+#include "../engine/frustum.h"
 
 namespace system_manager {
 namespace job_system {
@@ -138,21 +150,25 @@ void DrawProgressBar(const ProgressBarConfig& config) {
             const float x_size =
                 fmax(0.000001f, util::lerp(0, size.x, config.pct_full));
 
-            DrawCubeCustom(
-                {
-                    x_offset + (x_size / 2.f) - (config.scale.x / 4.f),
-                    y_offset,  //
-                    0          //
-                },
-                x_size, size.y, size.z, 0, primary, primary);
+            if (x_size > 0.f) {
+                DrawCubeCustom(
+                    {
+                        x_offset + (x_size / 2.f) - (config.scale.x / 4.f),
+                        y_offset,  //
+                        0          //
+                    },
+                    x_size, size.y, size.z, 0, primary, primary);
+            }
 
-            DrawCubeCustom(
-                {
-                    x_offset + (x_size / 2.f) + (config.scale.x / 4.f),
-                    y_offset,  //
-                    0          //
-                },
-                size.x - x_size, size.y, size.z, 0, background, background);
+            if (size.x - x_size > 0.f) {
+                DrawCubeCustom(
+                    {
+                        x_offset + (x_size / 2.f) + (config.scale.x / 4.f),
+                        y_offset,  //
+                        0          //
+                    },
+                    size.x - x_size, size.y, size.z, 0, background, background);
+            }
         }
         raylib::rlPopMatrix();
         return;
@@ -171,21 +187,25 @@ void DrawProgressBar(const ProgressBarConfig& config) {
         const float y_size =
             fmax(0.000001f, util::lerp(0, size.y, config.pct_full));
 
-        DrawCubeCustom(
-            {
-                x_offset,  //
-                y_offset + (y_size / 2.f) - (config.scale.y / 4.f),
-                0  //
-            },
-            size.x, y_size, size.z, 0, primary, primary);
+        if (y_size > 0.f) {
+            DrawCubeCustom(
+                {
+                    x_offset,  //
+                    y_offset + (y_size / 2.f) - (config.scale.y / 4.f),
+                    0  //
+                },
+                size.x, y_size, size.z, 0, primary, primary);
+        }
 
-        DrawCubeCustom(
-            {
-                x_offset,  //
-                y_offset + (y_size / 2.f) + (config.scale.y / 4.f),
-                0  //
-            },
-            size.x, size.y - y_size, size.z, 0, background, background);
+        if ((size.y - y_size) > 0.f) {
+            DrawCubeCustom(
+                {
+                    x_offset,  //
+                    y_offset + (y_size / 2.f) + (config.scale.y / 4.f),
+                    0  //
+                },
+                size.x, size.y - y_size, size.z, 0, background, background);
+        }
     }
     raylib::rlPopMatrix();
 }
@@ -211,8 +231,31 @@ void draw_valid_colored_box(const Transform& transform,
         b = ui::color::getHighlighted(b);
     }
 
-    DrawCubeCustom(transform.raw(), transform.sizex(), transform.sizey(),
-                   transform.sizez(), transform.facing, f, b);
+    DrawCubeCustom(transform.raw() + transform.viz_offset(), transform.sizex(),
+                   transform.sizey(), transform.sizez(), transform.facing, f,
+                   b);
+}
+
+bool draw_transform_with_model(const Transform& transform,
+                               const ModelRenderer& renderer, Color color) {
+    if (renderer.missing()) return false;
+    ModelInfo& model_info = renderer.model_info();
+
+    float rotation_angle = 180.f + transform.facing;
+
+    DrawModelEx(renderer.model(),
+                {
+                    transform.pos().x + transform.viz_x() +
+                        model_info.position_offset.x,
+                    transform.pos().y + transform.viz_y() +
+                        model_info.position_offset.y,
+                    transform.pos().z + transform.viz_z() +
+                        model_info.position_offset.z,
+                },
+                vec3{0.f, 1.f, 0.f}, model_info.rotation_angle + rotation_angle,
+                transform.size() * model_info.size_scale, color);
+
+    return true;
 }
 
 bool draw_internal_model(const Entity& entity, Color color) {
@@ -221,21 +264,7 @@ bool draw_internal_model(const Entity& entity, Color color) {
 
     const Transform& transform = entity.get<Transform>();
     const ModelRenderer& renderer = entity.get<ModelRenderer>();
-    if (renderer.missing()) return false;
-    ModelInfo& model_info = renderer.model_info();
-
-    float rotation_angle = 180.f + transform.facing;
-
-    DrawModelEx(renderer.model(),
-                {
-                    transform.pos().x + model_info.position_offset.x,
-                    transform.pos().y + model_info.position_offset.y,
-                    transform.pos().z + model_info.position_offset.z,
-                },
-                vec3{0.f, 1.f, 0.f}, model_info.rotation_angle + rotation_angle,
-                transform.size() * model_info.size_scale, color);
-
-    return true;
+    return draw_transform_with_model(transform, renderer, color);
 }
 
 void update_character_model_from_index(Entity& entity, float) {
@@ -259,7 +288,6 @@ bool render_simple_highlighted(const Entity& entity, float) {
     if (entity.is_missing<SimpleColoredBoxRenderer>()) return false;
     const SimpleColoredBoxRenderer& renderer =
         entity.get<SimpleColoredBoxRenderer>();
-    // TODO replace size with Bounds component when it exists
     draw_valid_colored_box(transform, renderer, true);
     return true;
 }
@@ -282,11 +310,7 @@ bool render_bounding_box(const Entity& entity, float) {
     DrawFloatingText(transform.raw(), Preload::get().font,
                      fmt::format("{}", entity.id).c_str());
 
-    if (false && check_type(entity, EntityType::RemotePlayer)) {
-        vec3 circle_bounds = transform.circular_bounds();
-        DrawSphere({circle_bounds.x, -1.f * (TILESIZE / 2.f), circle_bounds.y},
-                   circle_bounds.z, MAROON);
-    } else {
+    {
         DrawBoundingBox(transform.bounds(), MAROON);
         Rectangle rect_bounds = transform.rectangular_bounds();
         DrawCubeCustom({rect_bounds.x, -1.f * (TILESIZE / 2.f), rect_bounds.y},
@@ -371,6 +395,28 @@ void render_debug_num_uses_left(const Entity& entity, float) {
                      std::string(content).c_str(), 50);
 }
 
+template<typename C>
+void _render_ai_target_if_exists(const Entity& entity) {
+    if (entity.is_missing<C>()) return;
+    const C& ai_component = entity.get<C>();
+
+    // no active target
+    if (ai_component.target.missing()) return;
+
+    OptEntity opt_target =
+        EntityHelper::getEntityForID(ai_component.target.id());
+
+    // Didnt find the target for some reason...
+    if (!opt_target.valid()) return;
+
+    // TODO I would like for non debug mode if there would be a tooltip
+    // with the customer's face or something so we know who is going there
+    Entity& target = opt_target.asE();
+    vec3 position = target.get<Transform>().pos();
+    DrawCubeCustom(position, 1.f, 1.f, 1.f, 0, ui::color::hot_pink,
+                   ui::color::hot_pink);
+}
+
 void render_debug_ai_info(const Entity& entity, float) {
     if (entity.is_missing<CanPerformJob>()) return;
 
@@ -382,6 +428,12 @@ void render_debug_ai_info(const Entity& entity, float) {
         fmt::format("{}", magic_enum::enum_name<JobType>(cpj.current));
     DrawFloatingText(vec::raise(transform.raw(), 2.0f), Preload::get().font,
                      std::string(content).c_str(), 150);
+
+    _render_ai_target_if_exists<AICleanVomit>(entity);
+    _render_ai_target_if_exists<AIUseBathroom>(entity);
+    _render_ai_target_if_exists<AIDrinking>(entity);
+    _render_ai_target_if_exists<AIWaitInQueue>(entity);
+    _render_ai_target_if_exists<AIPlayJukebox>(entity);
 }
 
 void render_debug_filter_info(const Entity& entity, float) {
@@ -434,6 +486,113 @@ bool render_model_normal(const Entity& entity, float) {
     return draw_internal_model(entity, WHITE);
 }
 
+std::tuple<std::string, int, int> get_texture_name_and_position(
+    const std::string& input) {
+    std::regex pattern("\\[(.*?)\\]");
+    std::match_results<std::string::const_iterator> what;
+    if (!std::regex_search(input, what, pattern)) {
+        return {"", -1, -1};
+    }
+    size_t position =
+        what.position(0);  // return the index of the '[' character
+
+    auto extract_string = [](const std::string& input,
+                             size_t index) -> std::string {
+        size_t start = index;  // index of the '[' character
+        size_t end =
+            input.find(']', start);  // find the index of the ']' character
+        if (end != std::string::npos) {
+            return input.substr(start + 1,
+                                end - start - 1);  // extract the string inside
+        }
+        return "";  // return an empty string if no ']' character is found
+    };
+
+    auto extracted = extract_string(input, position);
+    if (!TextureLibrary::get().contains(extracted)) return {"", -1, -1};
+    return {extracted, position, input.find(']', position)};
+}
+
+// TODO at some point move to the other drawing utils
+static void DrawFloatingTextWithIcons(const std::string& content,
+                                      const vec3& position, font::Font font,
+                                      int size = 96, Color color = BLACK,
+                                      bool backface = true) {
+    auto tex_position = get_texture_name_and_position(content);
+
+    // No texture found, just draw normally
+    if (std::get<1>(tex_position) == -1) {
+        return DrawFloatingText(position, font, content.c_str(), size, color,
+                                backface);
+    }
+
+    int start = std::get<1>(tex_position);
+    int end = std::get<2>(tex_position);
+
+    std::string post = content;
+    post.replace(start, end - start + 1, "    ");
+
+    DrawFloatingText(position, font, post.c_str(), size, color, backface,
+                     std::get<0>(tex_position), start);
+}
+
+void render_nux(const Entity& entity, float) {
+    if (entity.is_missing<IsNux>()) return;
+
+    const IsNux& nux = entity.get<IsNux>();
+    const Transform& transform = entity.get<Transform>();
+
+    if (!nux.is_active) return;
+
+    vec3 entity_pos = transform.pos();
+    if (nux.is_attached()) {
+        OptEntity attached_opt = EntityHelper::getEntityForID(nux.entityID);
+        // if the attached entity is a player we have to do something else
+        if (!attached_opt.has_value()) {
+            attached_opt = EntityQuery(SystemManager::get().oldAll)
+                               .whereID(nux.entityID)
+                               .gen_first();
+        }
+
+        if (attached_opt.has_value()) {
+            entity_pos = attached_opt->get<Transform>().pos();
+        }
+    }
+
+    // _render_tooltip
+    {
+        const float scale = 2.f;
+
+        const auto font = Preload::get().font;
+        const auto nux_position = entity_pos + vec3{-1.f, 2.f * TILESIZE, 0};
+
+        DrawCubeCustom(nux_position + vec3{1.f, 0.5f, -0.1f}, scale * 4.f,
+                       0.5f * scale, 0.10f, 0.f, WHITE, BLACK);
+
+        DrawFloatingTextWithIcons(translation_lookup(nux.content), nux_position,
+                                  font, static_cast<int>(96 * scale), BLACK,
+                                  false);
+    }
+
+    // _render_ghost
+    {
+        if (nux.ghost != EntityType::Unknown) {
+            ModelRenderer ghost(nux.ghost);
+
+            bool has_model = draw_transform_with_model(
+                transform, ghost,
+                ui::color::change_opacity(ui::color::green_apple, 100));
+
+            if (!has_model) {
+                DrawCubeCustom(
+                    transform.pos(), 1.f, 1.f, 1.f, 0,
+                    ui::color::change_opacity(ui::color::green_apple, 100),
+                    ui::color::change_opacity(ui::color::green_apple, 100));
+            }
+        }
+    }
+}
+
 void render_trigger_area(const Entity& entity, float dt) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
@@ -459,7 +618,8 @@ void render_trigger_area(const Entity& entity, float dt) {
     // TODO eventually we can detect the size to fit the text correctly
     // but thats more of an issue for translations since i can manually
     // place the english
-    auto fsize = 500.f;
+    auto fsize_per_width = 62.f;
+    auto fsize = fsize_per_width * size.x;
 
     TranslatableString title = entity.get<IsTriggerArea>().title();
     log_ifx(title.empty(), LogLevel::LOG_WARN,
@@ -467,43 +627,55 @@ void render_trigger_area(const Entity& entity, float dt) {
             entity.id, pos);
 
     if (ita.should_wave()) {
+        raylib::DrawTextConfig textConfig = {
+            .font = font,
+            .text = fmt::format("~~{}~~", translation_lookup(TranslatableString(
+                                              ita.subtitle()))),
+            .position = text_position,
+            .fontSize = fsize,
+            .fontSpacing = 4,
+            .lineSpacing = 4,
+            .backface = false,
+            .color = WHITE,
+            //
+        };
+
         raylib::WaveTextConfig waveConfig = {.waveRange = {0, 0, 1},
                                              .waveSpeed = {0.0f, 0.0f, 0.01f},
                                              .waveOffset = {0.f, 0.f, 0.2f}};
-        // TODO we probably should have all of this kind of thing in the
-        // config for the components
-        //
-        raylib::DrawTextWave3D(
-            font,
-            fmt::format("~~{}~~",
-                        translation_lookup(TranslatableString(ita.subtitle())))
-                .c_str(),
-            text_position, fsize,
-            4,                      // font spacing
-            4,                      // line spacing
-            false,                  // backface
-            &waveConfig,            //
-            now::current_hrc_ms(),  //
-            WHITE);
+
+        raylib::DrawTextWave3D(textConfig,             //
+                               &waveConfig,            //
+                               now::current_hrc_ms(),  //
+                               WHITE);
 
     } else {
-        raylib::DrawText3D(font, translation_lookup(title).c_str(),
-                           text_position, fsize,
-                           4,      // font spacing
-                           4,      // line spacing
-                           false,  // backface
-                           WHITE);
+        raylib::DrawTextConfig titleConfig = {
+            .font = font,
+            .text = translation_lookup(title),
+            .position = text_position,
+            .fontSize = fsize,
+            .fontSpacing = 4,
+            .lineSpacing = 4,
+            .backface = false,
+            .color = WHITE,
+        };
+        raylib::DrawText3D(titleConfig);
 
-        raylib::DrawText3D(
-            font,
-            fmt::format("{}/{}", ita.active_entrants(), ita.max_entrants())
-                .c_str(),
-            number_position,  //
-            fsize / 2.f,
-            4,      // font spacing
-            4,      // line spacing
-            false,  // backface
-            WHITE);
+        auto text =
+            fmt::format("{}/{}", ita.active_entrants(), ita.min_req_entrants());
+
+        raylib::DrawTextConfig metaConfig = {
+            .font = font,
+            .text = text,
+            .position = number_position,
+            .fontSize = fsize / 2.f,
+            .fontSpacing = 4,
+            .lineSpacing = 4,
+            .backface = false,
+            .color = WHITE,
+        };
+        raylib::DrawText3D(metaConfig);
     }
 
     if (ita.progress() > 0.f) {
@@ -540,6 +712,7 @@ void render_trigger_area(const Entity& entity, float dt) {
                 // TODO translate?
                 fmt::format("{}", get_string_for_ingredient(ig)).c_str());
             i++;
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
     };
 
@@ -569,7 +742,9 @@ void render_trigger_area(const Entity& entity, float dt) {
     };
 
     const auto _render_progression_option = [&](IsTriggerArea::Type type) {
-        if (GameState::get().is_not(game::State::Progression)) return;
+        if (!PROGRESSION_BUILDING.is_inside(
+                SystemManager::get().local_players[0]->get<Transform>().as2()))
+            return;
         OptEntity sophie =
             EntityQuery().whereType(EntityType::Sophie).gen_first();
         const IsProgressionManager& ipm = sophie->get<IsProgressionManager>();
@@ -596,11 +771,41 @@ void render_trigger_area(const Entity& entity, float dt) {
         case IsTriggerArea::Lobby_ModelTest:
         case IsTriggerArea::Store_BackToPlanning:
         case IsTriggerArea::ModelTest_BackToLobby:
+        case IsTriggerArea::Store_Reroll:
             break;
         case IsTriggerArea::Progression_Option1:
         case IsTriggerArea::Progression_Option2:
             _render_progression_option(ita.type);
             break;
+    }
+}
+
+void render_texture_billboard(const Transform& transform,
+                              const std::string& texture_name) {
+    vec3 position = transform.pos();
+    raylib::Texture texture = TextureLibrary::get().get(texture_name);
+    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+    raylib::DrawBillboard(cam.camera, texture,
+                          vec3{position.x + (TILESIZE * 0.05f),  //
+                               position.y + (TILESIZE * 2.f),    //
+                               position.z},                      //
+                          0.75f * TILESIZE,                      //
+                          raylib::WHITE);
+}
+
+void render_billboard_at_entity(const OptEntity& opt_entity,
+                                const std::string& texture_name) {
+    if (!opt_entity.has_value()) return;
+    return render_texture_billboard(opt_entity->get<Transform>(), texture_name);
+}
+
+void render_icon_for_marked_items(const IsFloorMarker& ifm,
+                                  const std::string& texture_name) {
+    for (size_t i = 0; i < ifm.num_marked(); i++) {
+        EntityID id = ifm.marked_ids()[i];
+        OptEntity marked_entity = EntityHelper::getEntityForID(id);
+        if (!marked_entity) continue;
+        render_billboard_at_entity(marked_entity, texture_name);
     }
 }
 
@@ -633,6 +838,9 @@ void render_floor_marker(const Entity& entity, float) {
                 return TranslatableString(strings::i18n::FLOORMARKER_NEW_ITEMS);
             case IsFloorMarker::Planning_TrashArea:
                 return TranslatableString(strings::i18n::FLOORMARKER_TRASH);
+            case IsFloorMarker::Store_LockedArea:
+                return TranslatableString(
+                    strings::i18n::FLOORMARKER_STORE_LOCK);
             case IsFloorMarker::Store_PurchaseArea:
                 return TranslatableString(
                     strings::i18n::FLOORMARKER_STORE_PURCHASE);
@@ -646,62 +854,86 @@ void render_floor_marker(const Entity& entity, float) {
             "Rendering trigger area with empty text string: id{} pos{}",
             entity.id, pos);
 
-    raylib::DrawText3D(font, translation_lookup(title).c_str(), text_position,
-                       fsize,
-                       4,      // font spacing
-                       4,      // line spacing
-                       false,  // backface
-                       WHITE);
+    raylib::DrawTextConfig textConfig = {
+        .font = font,
+        .text = translation_lookup(title),
+        .position = text_position,
+        .fontSize = fsize,
+        .fontSpacing = 4,
+        .lineSpacing = 4,
+        .backface = false,
+        .color = WHITE,
+    };
+
+    raylib::DrawText3D(textConfig);
 
     // we dont need this since the caller of render_floor_marker doesnt
     // return render_simple_normal(entity, dt);
 
-    // Next lets draw the trash marker
     const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
-    if (ifm.type == IsFloorMarker::Type::Planning_TrashArea) {
-        for (size_t i = 0; i < ifm.num_marked(); i++) {
-            EntityID id = ifm.marked_ids()[i];
-            OptEntity marked_entity = EntityHelper::getEntityForID(id);
-            if (!marked_entity) continue;
-            render_trash_marker(marked_entity.asE());
-        }
-    }
-    if (ifm.type == IsFloorMarker::Type::Store_PurchaseArea) {
-        for (size_t i = 0; i < ifm.num_marked(); i++) {
-            EntityID id = ifm.marked_ids()[i];
-            OptEntity marked_entity = EntityHelper::getEntityForID(id);
-            if (!marked_entity) continue;
-            render_dollarsign_marker(marked_entity.asE());
-        }
+    switch (ifm.type) {
+        case IsFloorMarker::Unset:
+        case IsFloorMarker::Planning_SpawnArea:
+        case IsFloorMarker::Store_SpawnArea:
+            break;
+        case IsFloorMarker::Planning_TrashArea:
+            render_icon_for_marked_items(ifm, "trash_can");
+            break;
+        case IsFloorMarker::Store_PurchaseArea:
+            render_icon_for_marked_items(ifm, "dollar_sign");
+            break;
+        case IsFloorMarker::Store_LockedArea:
+            render_icon_for_marked_items(ifm, "lock");
+            break;
     }
 }
 
-void render_dollarsign_marker(const Entity& entity) {
-    const Transform& transform = entity.get<Transform>();
-    vec3 position = transform.pos();
+void render_spawner_next_customer(const Entity& entity, float) {
+    if (entity.is_missing<IsSpawner>()) return;
+    const IsSpawner& iss = entity.get<IsSpawner>();
+    if (iss.hit_max()) return;
+    if (!iss.show_progress()) return;
 
-    raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::DrawBillboard(cam.camera, texture,
-                          vec3{position.x + (TILESIZE * 0.05f),  //
-                               position.y + (TILESIZE * 2.f),    //
-                               position.z},                      //
-                          0.75f * TILESIZE,                      //
-                          raylib::WHITE);
+    const Transform& transform = entity.get<Transform>();
+
+    float pct = iss.get_pct();
+    if (pct <= 0.01f) return;
+
+    DrawProgressBar(ProgressBarConfig{
+        .type = ProgressBarConfig::Vertical,
+        .position = transform.pos() + vec3{0, 0.5f, 0},
+        .scale = {0.75f, 0.75f, 0.75f},
+        .pct_full = pct,
+        .y_offset = 0.f * TILESIZE,
+        .x_offset = -0.45f * TILESIZE,
+        .use_color = true,
+    });
 }
 
-void render_trash_marker(const Entity& entity) {
+void render_toilet_floor_timer(const Entity& entity, float) {
+    if (entity.is_missing<AIUseBathroom>()) return;
     const Transform& transform = entity.get<Transform>();
-    vec3 position = transform.pos();
+    const AIUseBathroom& aiusebathroom = entity.get<AIUseBathroom>();
 
-    raylib::Texture texture = TextureLibrary::get().get("trashcan");
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::DrawBillboard(cam.camera, texture,
-                          vec3{position.x + (TILESIZE * 0.05f),  //
-                               position.y + (TILESIZE * 2.f),    //
-                               position.z},                      //
-                          0.75f * TILESIZE,                      //
-                          raylib::WHITE);
+    const AITakesTime floor_timer = aiusebathroom.floor_timer;
+
+    // no timer set yet
+    if (!floor_timer.initialized) return;
+    if (floor_timer.totalTime == -1) return;
+    if (floor_timer.timeRemaining == -1) return;
+
+    float pct = floor_timer.timeRemaining / floor_timer.totalTime;
+    if (pct == 1.f) return;
+
+    DrawProgressBar(ProgressBarConfig{
+        .type = ProgressBarConfig::Vertical,
+        .position = transform.pos(),
+        .scale = {0.75f, 0.75f, 0.75f},
+        .pct_full = pct,
+        .y_offset = 2.f * TILESIZE,
+        .x_offset = -0.45f * TILESIZE,
+        .use_color = true,
+    });
 }
 
 void render_patience(const Entity& entity, float) {
@@ -740,10 +972,18 @@ void render_ai_info(const Entity& entity, float) {
                                   icon_position + vec3{0.f, 1.f, 0},
                                   0.75f * TILESIZE, raylib::WHITE);
         } break;
+        case Paying: {
+            GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+            // TODO reuse the store dollar sign one for now
+            raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
+            raylib::DrawBillboard(cam.camera, texture,
+                                  // move it a bit so that it doesnt overlap
+                                  icon_position + vec3{0.f, 1.f, 0},
+                                  0.75f * TILESIZE, raylib::WHITE);
+        } break;
         case NoJob:
         case Wait:
         case WaitInQueue:
-        case Paying:
         case Drinking:
         case Mopping:
         case PlayJukebox:
@@ -782,7 +1022,7 @@ void render_speech_bubble(const Entity& entity, float) {
                               0.75f * TILESIZE, raylib::WHITE);
     }
 
-    const auto model_name = get_model_name_for_drink(cod.current_order);
+    const auto model_name = get_model_name_for_drink(cod.get_order());
     const auto model = ModelLibrary::get().get(model_name);
     const ModelInfo& model_info = ModelInfoLibrary::get().get(model_name);
 
@@ -806,18 +1046,16 @@ void render_waiting_queue(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
     vec3 size = transform.size();
 
-    // TODO spelling?
-    Color transleucent_green = Color{0, 250, 50, 50};
-    Color transleucent_red = Color{250, 0, 50, 50};
-
     for (size_t i = 0; i < hwq.max_queue_size; i++) {
         vec2 pos2 = transform.tile_infront((int) i + 1);
         vec3 pos = vec::to3(pos2);
         bool walkable = EntityHelper::isWalkable(pos2);
         DrawCubeCustom({pos.x, pos.y - (TILESIZE * 0.5f), pos.z}, size.x,
                        size.y / 10.f, size.z, transform.facing,
-                       walkable ? transleucent_green : transleucent_red,
-                       walkable ? transleucent_green : transleucent_red);
+                       walkable ? ui::color::transleucent_green
+                                : ui::color::transleucent_red,
+                       walkable ? ui::color::transleucent_green
+                                : ui::color::transleucent_red);
     }
 }
 
@@ -828,7 +1066,11 @@ void render_price(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
-    vec3 location = transform.raw() + vec3{0, 0.5f * TILESIZE, 0.4f * TILESIZE};
+    bool someone_close =
+        SystemManager::get().is_some_player_near(transform.as2(), 2.f);
+    if (!someone_close) return;
+
+    vec3 location = transform.raw() + vec3{0, 0.5f * TILESIZE, 0.5f * TILESIZE};
 
     bool is_free = entity.has<IsFreeInStore>();
     if (is_free) price = 0;
@@ -842,12 +1084,20 @@ void render_price(const Entity& entity, float) {
 void render_machine_name(const Entity& entity, int font_size = 200) {
     if (entity.is_missing<IsSolid>()) return;
     if (entity.is_missing<Transform>()) return;
+    // not really a point to show "wall" on every wall
+    // so using this as a way to ignore those
+    if (entity.is_missing<CanBeHeld>()) return;
+
     const Transform& transform = entity.get<Transform>();
 
+    bool someone_close =
+        SystemManager::get().is_some_player_near(transform.as2(), 2.f);
+    if (!someone_close) return;
+
     // TODO rotate the name with the camera?
-    raylib::DrawFloatingText(
-        transform.raw() + vec3{0, 1.0f * TILESIZE, 0.2f * TILESIZE},
-        Preload::get().font, std::string(entity.name()).c_str(), font_size);
+    raylib::DrawFloatingText(transform.raw() + vec3{0.3f, 0.2f, 0.5f},
+                             Preload::get().font,
+                             std::string(entity.name()).c_str(), font_size);
 }
 
 void render_debug_fruit_juice(const Entity& entity, float) {
@@ -942,6 +1192,11 @@ void render_normal(const Entity& entity, float dt) {
         return;
     }
 
+    if (entity.has<IsNux>()) {
+        render_nux(entity, dt);
+        return;
+    }
+
     if (entity.has<IsTriggerArea>()) {
         render_trigger_area(entity, dt);
         return;
@@ -951,19 +1206,21 @@ void render_normal(const Entity& entity, float dt) {
         render_floor_marker(entity, dt);
     }
 
+    if (entity.has<IsStoreSpawned>() &&
+        STORE_BUILDING.is_inside(entity.get<Transform>().as2())) {
+        render_machine_name(entity, 200);
+        render_price(entity, dt);
+    }
     //  Showing machine name because playtesters
     //  didnt find it clear enough that they were still in
     //  planning state.
     //
     //  They kept trying to grab the cups and start making drinks
-    if (GameState::get().is(game::State::Planning)) {
+    else if (SystemManager::get().is_daytime()) {
         render_machine_name(entity, 100);
     }
-
-    if (GameState::get().is(game::State::Store)) {
-        render_machine_name(entity, 200);
-        render_price(entity, dt);
-    }
+    // ^ adding an "else" because otherwise itll show two names when in the
+    // store
 
     if (entity.has<CanBeHighlighted>() &&
         entity.get<CanBeHighlighted>().is_highlighted()) {
@@ -974,8 +1231,14 @@ void render_normal(const Entity& entity, float dt) {
         return;
     }
 
+    if (check_type(entity, EntityType::Door)) {
+        if (entity.is_missing<IsSolid>()) return;
+    }
+
     render_speech_bubble(entity, dt);
     render_patience(entity, dt);
+    render_toilet_floor_timer(entity, dt);
+    render_spawner_next_customer(entity, dt);
 
     bool used = render_model_normal(entity, dt);
     if (!used) {
@@ -1007,10 +1270,27 @@ void render_progress_bar(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
+    bool someone_close =
+        SystemManager::get().is_some_player_near(transform.as2());
+    if (!someone_close) return;
+
     DrawProgressBar(ProgressBarConfig{
         .position = transform.pos(),
         .pct_full = hasWork.scale_length(1.f),
     });
+}
+
+void render_squirt_progress_bar(const Entity& entity, float) {
+    if (entity.is_missing<IsSquirter>()) return;
+    const IsSquirter& is_sq = entity.get<IsSquirter>();
+
+    if (entity.is_missing<Transform>()) return;
+    const Transform& transform = entity.get<Transform>();
+
+    if (is_sq.pct() >= 0.9f) return;
+
+    DrawProgressBar(ProgressBarConfig{.position = transform.pos(),
+                                      .pct_full = is_sq.pct()});
 }
 
 void render_fishing_game(const Entity& entity, float) {
@@ -1022,7 +1302,6 @@ void render_fishing_game(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
     vec3 position = transform.pos();
 
-    // TODO show the game for a second before switching over
     if (!fishing.has_score()) {
         DrawFishingGame(ProgressBarConfig{
             .position = position,
@@ -1038,6 +1317,7 @@ void render_fishing_game(const Entity& entity, float) {
     float x_offset = 0;
 
     // TODO read icon from score sheet
+    //  ^ idk what i meant by this
     raylib::Texture texture = TextureLibrary::get().get("star_filled");
     GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
     for (int i = 0; i < fishing.num_stars(); i++) {
@@ -1058,10 +1338,6 @@ void render_walkable_spots(float) {
 
     if (!GLOBALS.get<bool>("debug_ui_enabled")) return;
 
-    // TODO spelling?
-    Color transleucent_green = Color{0, 250, 50, 5};
-    Color transleucent_red = Color{250, 0, 50, 5};
-
     for (int i = -25; i < 25; i++) {
         for (int j = -25; j < 25; j++) {
             vec2 pos2 = {(float) i, (float) j};
@@ -1070,8 +1346,10 @@ void render_walkable_spots(float) {
 
             DrawCubeCustom(vec::to3(pos2), TILESIZE, TILESIZE + TILESIZE / 10.f,
                            TILESIZE, 0,
-                           walkable ? transleucent_green : transleucent_red,
-                           walkable ? transleucent_green : transleucent_red);
+                           walkable ? ui::color::transleucent_green
+                                    : ui::color::transleucent_red,
+                           walkable ? ui::color::transleucent_green
+                                    : ui::color::transleucent_red);
         }
     }
 }
@@ -1083,9 +1361,24 @@ void render_held_furniture_preview(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
 
     vec3 drop_location = entity.get<Transform>().drop_location();
-    bool walkable = EntityHelper::isWalkable(vec::to2(drop_location));
 
-    walkable = walkable || (drop_location == chf.picked_up_at());
+    // TODO :DUPE: this logic is also in input process manager,
+    // they should match so we dont have weirdness with ui not matching
+    // the actual logic
+    bool walkable =                                        //
+        EntityHelper::isWalkable(vec::to2(drop_location))  //
+        || (drop_location == chf.picked_up_at());
+
+    if (walkable) {
+        EntityID furn_id = chf.furniture_id();
+        OptEntity hf = EntityHelper::getEntityForID(furn_id);
+        if (hf->has<IsStoreSpawned>()) {
+            if (!STORE_BUILDING.is_inside({drop_location.x, drop_location.z})) {
+                // TODO add a message or something to show you cant drop it
+                walkable = false;
+            }
+        }
+    }
 
     // since the preview is just a box we can just use 0 for angle
     // but if we need in the future, then we can fetch the entity with:
@@ -1101,69 +1394,47 @@ void render_held_furniture_preview(const Entity& entity, float) {
 }  // namespace render_manager
 }  // namespace system_manager
 
+#define LOG_RENDER_ENT_COUNT 0
+
+#if LOG_RENDER_ENT_COUNT
+static size_t num_ents_drawn = 0;
+#endif
+
+static Frustum frustum;
+
 namespace system_manager {
-namespace ui {
-
-void render_networked_players(const Entities& entities, float dt) {
-    float x_pos = WIN_WF() - 170;
-    float y_pos = 75.f;
-
-    auto _draw_text = [&](const std::string& str) mutable {
-        int size = 20;
-        DrawTextEx(Preload::get().font, str.c_str(), vec2{x_pos, y_pos}, size,
-                   0, WHITE);
-        y_pos += (size * 1.25f);
-    };
-
-    const auto _render_single_networked_player = [&](const Entity& entity,
-                                                     float) {
-        _draw_text(                                    //
-            fmt::format("{}({}) {}",                   //
-                        entity.get<HasName>().name(),  //
-                        entity.get<HasClientID>().id(),
-                        // TODO replace with icon
-                        entity.get<HasClientID>().ping()));
-    };
-    const auto _render_little_model_guy = [&](const Entity& entity, float) {
-        if (entity.is_missing<ModelRenderer>()) {
-            log_warn(
-                "render_little_model_guy, entity {} is missing model renderer",
-                entity.name());
-            return;
-        }
-        auto model_name = entity.get<ModelRenderer>().name();
-        raylib::Texture texture =
-            TextureLibrary::get().get(fmt::format("{}_mug", model_name));
-        float scale = 0.06f;
-        raylib::DrawTextureEx(texture,
-                              {x_pos - (500 /* image size */ * scale), y_pos},
-                              0, scale, WHITE);
-    };
-
-    for (const auto& entity_ptr : entities) {
-        if (!entity_ptr) continue;
-        Entity& entity = *entity_ptr;
-        // TODO think about this check more
-        if (!(check_type(entity, EntityType::Player) ||
-              check_type(entity, EntityType::RemotePlayer)))
-            continue;
-        _render_little_model_guy(entity, dt);
-        _render_single_networked_player(entity, dt);
-    }
-}
-
-}  // namespace ui
 
 namespace render_manager {
 
+void on_frame_start() {
+#if LOG_RENDER_ENT_COUNT
+    log_warn("num entities drawn: {}", num_ents_drawn);
+    num_ents_drawn = 0;
+#endif
+    frustum.fetch_data();
+}
+
+bool should_cull(const Entity& entity) {
+    auto bounds = entity.get<Transform>().expanded_bounds({0, 0, 0});
+    return !frustum.AABBoxIn(bounds.min, bounds.max);
+}
+
 void render(const Entity& entity, float dt, bool is_debug) {
     if (is_debug) render_debug(entity, dt);
+
+    if (should_cull(entity)) return;
+
+#if LOG_RENDER_ENT_COUNT
+    // rough approx :)
+    num_ents_drawn++;
+#endif
 
     render_normal(entity, dt);
     render_held_furniture_preview(entity, dt);
     render_floating_name(entity, dt);
     render_progress_bar(entity, dt);
     render_fishing_game(entity, dt);
+    render_squirt_progress_bar(entity, dt);
 }
 
 }  // namespace render_manager

@@ -23,7 +23,7 @@ TranslatableString IsProgressionManager::get_option_title(bool is_first) const {
             return impl->name;
     }
     unreachable();
-    return TranslatableString{""};
+    // return TranslatableString{""};
 }
 
 TranslatableString IsProgressionManager::get_option_subtitle(

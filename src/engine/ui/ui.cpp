@@ -65,14 +65,19 @@ ElementResult hoverable(const Widget& widget) {
     return false;
 }
 
-ElementResult div(const Widget& widget, Color c) {
+ElementResult div(const Widget& widget, Color c, bool rounded) {
     Rectangle rect = widget.get_rect();
-    internal::draw_rect_color(rect, widget.z_index, c);
+    internal::draw_rect_color(rect, widget.z_index, c, rounded);
     return true;
 }
 
-ElementResult div(const Widget& widget, theme::Usage theme) {
-    return div(widget, UI_THEME.from_usage(theme));
+ElementResult div(const Widget& widget, theme::Usage theme, bool rounded) {
+    return div(widget, UI_THEME.from_usage(theme), rounded);
+}
+
+ElementResult window(const Widget& widget) {
+    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Secondary);
+    return ElementResult{true, widget.z_index - 1};
 }
 
 // TODO merge with text()
@@ -88,11 +93,6 @@ ElementResult colored_text(const Widget& widget,
     return true;
 }
 
-ElementResult window(const Widget& widget) {
-    internal::draw_rect(widget.rect, widget.z_index, ui::theme::Secondary);
-    return ElementResult{true, widget.z_index - 1};
-}
-
 ElementResult text(const Widget& widget, const TranslatableString& content,
                    ui::theme::Usage color_usage, bool draw_background
 
@@ -102,7 +102,7 @@ ElementResult text(const Widget& widget, const TranslatableString& content,
     // No need to render if text is empty
     if (content.empty()) return false;
     if (draw_background) {
-        internal::draw_rect_color(rect, widget.z_index, {0, 0, 0, 180});
+        internal::draw_rect_color(rect, widget.z_index, {0, 0, 0, 180}, false);
         // Disable the dark text since it doesnt align correctly
         // internal::draw_text(text_lookup(content.c_str()),
         // rect::expand_px(rect, 2.f), widget.z_index,
@@ -113,8 +113,9 @@ ElementResult text(const Widget& widget, const TranslatableString& content,
     return true;
 }
 
-ElementResult scroll_window(const Widget& widget, Rectangle view,
-                            std::function<void(ScrollWindowResult)> children) {
+ElementResult scroll_window(
+    const Widget& widget, Rectangle view,
+    const std::function<void(ScrollWindowResult)>& children) {
     //
     auto state = context->widget_init<ui::ScrollViewState>(
         ui::MK_UUID(widget.id, widget.id));
@@ -145,7 +146,7 @@ ElementResult scroll_window(const Widget& widget, Rectangle view,
 }
 
 ElementResult button(const Widget& widget, const TranslatableString& content,
-                     bool background) {
+                     bool background, bool draw_background_when_hot) {
     Rectangle rect = widget.get_rect();
 
     //
@@ -153,17 +154,17 @@ ElementResult button(const Widget& widget, const TranslatableString& content,
     //
     focus::active_if_mouse_inside(widget);
     focus::try_to_grab(widget);
-    internal::draw_focus_ring(widget);
+    internal::draw_focus_ring(widget, true);
     focus::handle_tabbing(widget);
 
-    if (background) {
+    if (background || (draw_background_when_hot && focus::is_hot(widget.id))) {
         // We dont allow customization because
         // you should be using the themed colors
         auto color_usage = ui::theme::Usage::Primary;
         if (focus::is_hot(widget.id)) {
-            color_usage = ui::theme::Usage::Accent;
+            color_usage = ui::theme::Usage::Secondary;
         }
-        internal::draw_rect(rect, widget.z_index, color_usage);
+        internal::draw_rect(rect, widget.z_index, color_usage, true);
     }
 
     const auto _press_logic = [&]() -> bool {
@@ -207,6 +208,10 @@ ElementResult image_button(const Widget& widget,
     internal::draw_focus_ring(widget);
     focus::handle_tabbing(widget);
 
+    if (focus::is_hot(widget.id)) {
+        focus::set(widget.id);
+    }
+
     const raylib::Texture texture = TextureLibrary::get().get(texture_name);
     const vec2 tex_size = {(float) texture.width, (float) texture.height};
     const vec2 button_size = {rect.width, rect.height};
@@ -228,6 +233,8 @@ ElementResult image_button(const Widget& widget,
 }
 
 ElementResult checkbox(const Widget& widget, const CheckboxData& data) {
+    // TODO add focus on hover
+    //
     if (internal::should_exit_early(widget)) return false;
     //
     auto state = context->widget_init<ui::CheckboxState>(
@@ -235,15 +242,20 @@ ElementResult checkbox(const Widget& widget, const CheckboxData& data) {
     state->on = data.selected;
     state->on.changed_since = false;
 
-    if (button(widget, NO_TRANSLATE(""), true)) {
-        state->on = !state->on;
+    if (data.content_is_icon) {
+        if (image_button(widget, data.content)) {
+            state->on = !state->on;
+        }
+    } else {
+        if (button(widget, NO_TRANSLATE(""), data.background)) {
+            state->on = !state->on;
+        }
+        const std::string default_label = state->on ? "  X" : " ";
+        const std::string label =
+            data.content.empty() ? default_label : data.content;
+
+        text(widget, NO_TRANSLATE(label));
     }
-
-    const std::string default_label = state->on ? "  X" : " ";
-    const std::string label =
-        data.content.empty() ? default_label : data.content;
-
-    text(widget, NO_TRANSLATE(label));
 
     return ElementResult{state->on.changed_since, (bool) state->on};
 }
@@ -264,6 +276,10 @@ ElementResult slider(const Widget& widget, const SliderData& data) {
     internal::draw_focus_ring(widget);
     focus::handle_tabbing(widget);
 
+    if (focus::is_hot(widget.id)) {
+        focus::set(widget.id);
+    }
+
     {
         internal::draw_rect(widget.get_rect(), widget.z_index,
                             ui::theme::Usage::Primary);  // Slider Rail
@@ -282,7 +298,7 @@ ElementResult slider(const Widget& widget, const SliderData& data) {
             vertical ? rect.height / 5.f : rect.height,
         };
 
-        internal::draw_rect(rect, widget.z_index, ui::theme::Usage::Accent);
+        internal::draw_rect(rect, widget.z_index, ui::theme::Usage::Secondary);
     }
 
     {
@@ -427,13 +443,11 @@ ElementResult dropdown(const Widget& widget, DropdownData data) {
                 focus::set(option_widget.id);
             }
 
-            if (button(option_widget)) {
+            if (button(option_widget, TODO_TRANSLATE(data.options[i],
+                                                     TodoReason::Recursion))) {
                 state->selected = i;
                 state->on = false;
             }
-
-            text(option_widget,
-                 TODO_TRANSLATE(data.options[i], TodoReason::Recursion));
         }
     } else {
         state->focused = state->selected;
@@ -486,7 +500,11 @@ ElementResult control_input_field(const Widget& widget,
                             ? ui::theme::Usage::Secondary
                             : ui::theme::Usage::Primary);
 
-    text(widget, TODO_TRANSLATE(data.content, TodoReason::Recursion));
+    if (data.content_is_icon) {
+        image(widget, data.content);
+    } else {
+        text(widget, NO_TRANSLATE(data.content));
+    }
 
     return ElementResult{valid, ai};
 }

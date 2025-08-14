@@ -13,6 +13,7 @@ struct IsFloorMarker : public BaseComponent {
         Planning_TrashArea,
         Store_SpawnArea,
         Store_PurchaseArea,
+        Store_LockedArea,
     } type = Unset;
 
     explicit IsFloorMarker(Type type) : type(type) {}

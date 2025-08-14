@@ -34,11 +34,25 @@ kanban-plugin: basic
 - [ ] rendering oreder for text background is weird
 - [ ] likely dont need to queue network packets since we always send the full state
 
+- [ ] AttachmentSystem (+ Attachment/Attachable): unify held item/furniture/handtruck/rope via generic parent→child attachment with local offsets/orientation/collidability; removes duplicated update math and special-cases; reduces desyncs.
+- [ ] Progress/Cooldown components + ProgressRender: centralize timers/progress bars (work, patience, fishing, triggers) and a single HUD/bar renderer; fewer bespoke render paths and less UI drift.
+- [ ] TriggerAreaSystem: own entrants counting, validation, progress/cooldown and activation; removes scattered trigger logic and TODOs in systems; clearer round/lobby/store flows.
+- [ ] GameState change hooks (StateManager on_change): register once to handle player moves, store open/close, resets; eliminates manual cross-calls sprinkled across systems; safer transitions.
+- [ ] Entity Tags/Groups (+ TaggedQuery): bitset tags like Store, Permanent, CleanupOnRoundEnd; simplifies queries and bulk operations; replaces ad‑hoc include_store_entities and type checks.
+- [ ] EntityRegistry (id → shared_ptr): O(1) lookup for ids; removes linear scans in helper; safer hand-offs for systems needing shared ownership.
+- [ ] CollisionCategory/CollisionFilter components: data-driven collision layers and exceptions (e.g., attached items, MopBuddy/holder, rope); replaces hardcoded branches in is_collidable; easier to reason about.
+- [ ] PrefabLibrary (data-driven entity builders): move repetitive makers to JSON prefabs (like drinks/recipes already); shrinks large makers file; reduces human error and speeds iteration.
+- [ ] BillboardText/WorldLabel component + system: single way to draw floating names/prices/speech bubbles/progress labels; consistent styling/sizing and fewer one-offs.
+- [ ] Ability + Cooldown pattern: normalize “do work” interactions (squirter, indexer, adds_ingredient) using Progress/Cooldown; reduces bespoke timers/flags and makes balance easier.
+- [ ] LifecycleSystem (deletion/cleanup policies): tag-driven bulk delete/persist on state changes; removes bespoke cleanup loops and TODOs about tagging.
+- [ ] EventBus (GameEvents): small pub/sub around existing event pattern for AttachmentChanged, TriggerActivated, UpgradeUnlocked, StateChanged; decouples systems and reduces globals traffic.
+- [ ] TransformFollower sockets (named anchors): define front/right/top sockets for precise child placement while following; deletes face-direction math scattered across updates.
+- [ ] InputContext system: drive KeyMap by context (Menu/Game/Paused) instead of hardcoding; clarifies input paths and fixes edge-cases when menus overlap gameplay.
+
 
 ## no repro
 
 - [ ] cosmopolitan model is invisible
-- [ ] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
 - [ ] PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way
 
 
@@ -56,7 +70,6 @@ kanban-plugin: basic
 - [ ] warn player when they are deleting something that we need
 - [ ] need to add some ui to saw how many or when more people will spawn as its not clear
 - [ ] should customers be able to look like players?
-- [ ] add reroll to shop
 - [ ] add an are you sure? when switching resolution and languages
 - [ ] settings dropdown doesnt respect selected language
 - [ ] - more likely to vomit if they waited longer for their drink ?
@@ -65,26 +78,27 @@ kanban-plugin: basic
 - [ ] - should alcohols be multi-use and then you throw out the empty bottle
 - [ ] - patience for first round should be double or triple?
 - [ ] - not enough customers to need automation?
-- [ ] remove job system and switch to just tons of components HasPath, CanWaitInQueue, CanIdle, CanMop, etc
 
 
 ## broke
 
-- [ ] - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
 - [ ] mojito model is big square
 - [ ] mai tai has no model
 - [ ] having pathfinding crashes when rendering the waiting queue (disabled it for now )
-- [ ] drop preview box sometimes has the wrong color
 - [ ] lime doesnt want to go into drink when cup is in register
 - [ ] lime wont go in unless i add lime juice first?
-- [ ] joining twice from a remote computer crashes the host
 - [ ] toilet hitbox is messed up
 - [ ] - vomit hitbox is hard especially without mop
-
 
 ## complete
 
 **Complete**
+- [x] joining twice from a remote computer crashes the host
+- [x] drop preview box sometimes has the wrong color
+- [x - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
+- [x] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
+- [x] remove job system and switch to just tons of components HasPath, CanWaitInQueue, CanIdle, CanMop, etc
+- [x] add reroll to shop
 - [x] need preview for where item will go
 - [x] Tell the player how many customers are coming this round
 - [x] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade

@@ -62,19 +62,19 @@ struct UITestLayer : public Layer {
                     rect::hsplit<4>(body_sv, 20);
 
                 if (button(Widget{rect1, base_z_index},
-                           TranslatableString(strings::i18n::PLAY))) {
+                           TranslatableString(strings::i18n::Play))) {
                     MenuState::get().set(menu::State::Network);
                 }
                 if (button(Widget{rect2, base_z_index},
-                           TranslatableString(strings::i18n::ABOUT))) {
+                           TranslatableString(strings::i18n::About))) {
                     MenuState::get().set(menu::State::About);
                 }
                 if (button(Widget{rect3, base_z_index},
-                           TranslatableString(strings::i18n::SETTINGS))) {
+                           TranslatableString(strings::i18n::Settings))) {
                     MenuState::get().set(menu::State::Settings);
                 }
                 if (button(Widget{rect4, base_z_index},
-                           TranslatableString(strings::i18n::EXIT))) {
+                           TranslatableString(strings::i18n::Exit))) {
                     App::get().close();
                 }
             });

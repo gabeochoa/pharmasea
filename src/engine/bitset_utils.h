@@ -5,7 +5,7 @@
 #include <functional>
 #include <random>
 
-#include "random.h"
+#include "random_engine.h"
 //
 #include "log.h"
 
@@ -71,7 +71,7 @@ int get_random_enabled_bit(const std::bitset<N>& bitset) {
         // No bits are enabled, return -1 or handle the error as needed.
         return -1;
     }
-    int random_index = randIn(0, static_cast<int>(enabled_indices.size()) - 1);
+    int random_index = RandomEngine::get().get_index(enabled_indices);
     return enabled_indices[random_index];
 }
 
@@ -85,12 +85,26 @@ int get_first_enabled_bit(const std::bitset<N>& bitset) {
     return -1;
 }
 
+// TODO combine with the one in entity helper?
+enum struct ForEachFlow {
+    NormalFlow = 0,
+    Continue = 1,
+    Break = 2,
+};
+
 template<size_t N>
 void for_each_enabled_bit(const std::bitset<N>& bitset,
-                          const std::function<void(size_t)>& cb) {
+                          const std::function<ForEachFlow(size_t)>& cb) {
     for (size_t i = 0; i < bitset.size(); ++i) {
         if (bitset.test(i)) {
-            cb(i);
+            ForEachFlow fef = cb(i);
+            switch (fef) {
+                case ForEachFlow::NormalFlow:
+                case ForEachFlow::Continue:
+                    break;
+                case ForEachFlow::Break:
+                    return;
+            }
         }
     }
 }
