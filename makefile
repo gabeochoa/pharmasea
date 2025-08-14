@@ -13,13 +13,13 @@ RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) -DNDEBUG
 TIMEFLAG = 
 
 FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
-		-Wmost -Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TIMEFLAG)
+		-Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TIMEFLAG)
 
 # LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
 		  -Wno-implicit-int-float-conversion -Werror
-INCLUDES = -I$(GNS_INC) -Ivendor/ 
+INCLUDES = -I$(GNS_INC) -Ivendor/ -Ivendor/raylib 
 LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
 # backward-cpp (Debug only)
@@ -43,6 +43,10 @@ SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp src/network/*
 H_FILES := $(wildcard src/**/*.h src/engine/**/*.h) 
 OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
+
+# Precompiled header setup
+PCH_HEADER := src/pch.hpp
+PCH_GCH := src/pch.hpp.gch
 
 OUTPUT_EXE := pharmasea.exe
 
@@ -87,16 +91,23 @@ release: clean all
 	cp -r vendor release/
 
 modeltest:
-	clang++ -std=c++2a -g $(RAYLIB_FLAGS) $(RAYLIB_LIB) -Ivendor/ model_test.cpp;./a.out
+	$(CXX) -std=c++2a -g $(RAYLIB_FLAGS) $(RAYLIB_LIB) -Ivendor/ model_test.cpp;./a.out
 
-$(OBJ_DIR)/%.o: %.cpp makefile
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MF $(@:.o=.d) 
+$(OBJ_DIR)/%.o: %.cpp makefile $(PCH_GCH)
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -Wno-deprecated-literal-operator -Wno-invalid-utf8 -Wno-implicit-float-conversion -Wno-c99-extensions -c $< -o $@ -MMD -MF $(@:.o=.d) 
 
 %.d: %.cpp
 	$(MAKEDEPEND)
 
+# Build the precompiled header (GCC/Clang-compatible). Clang and GCC will
+# consume this automatically when using -include $(PCH_HEADER) if the .gch
+# is present next to the header path.
+$(PCH_GCH): $(PCH_HEADER) makefile
+	$(CXX) $(FLAGS) $(INCLUDES) -DFMT_HEADER_ONLY -DFMT_USE_NONTYPE_TEMPLATE_PARAMETERS=0 -DFMT_CONSTEVAL= -Wno-deprecated-literal-operator -Wno-invalid-utf8 -Wno-implicit-float-conversion -Wno-c99-extensions -x c++-header -o $@ $<
+
 clean:
 	rm -r $(OBJ_DIR)
+	rm -f $(PCH_GCH)
 	mkdir -p $(OBJ_DIR)/src/network/
 	mkdir -p $(OBJ_DIR)/src/network/internal/
 	mkdir -p $(OBJ_DIR)/src/layers/
