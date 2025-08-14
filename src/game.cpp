@@ -12,6 +12,10 @@
 // (this is due to all the template code thats in network/shared
 #include "network/network.h"
 
+#if !defined(NDEBUG)
+#include "backward/backward.hpp"
+#endif
+
 // TODO cleaning bots place some shiny on the floor so its harder to get dirtyu
 // TODO fix bug where "place ghost" green box kept showing
 // TODO conveyerbelt speed
@@ -229,6 +233,14 @@ int main(int, char* argv[]) {
         App::get().run();
     } catch (const std::exception& e) {
         std::cout << "App run exception: " << e.what() << std::endl;
+#if !defined(NDEBUG)
+        backward::StackTrace st;
+        st.load_here(64);
+        backward::Printer p;
+        p.address = true;
+        p.object = true;
+        p.print(st);
+#endif
     }
     return 0;
 }
