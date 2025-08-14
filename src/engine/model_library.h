@@ -66,7 +66,17 @@ struct ModelLibrary {
     struct ModelLibraryImpl : Library<raylib::Model> {
         virtual raylib::Model convert_filename_to_object(
             const char*, const char* filename) override {
-            return raylib::LoadModel(filename);
+            auto model = raylib::LoadModel(filename);
+            const bool looksInvalid =
+                (model.meshes == nullptr) || (model.meshCount <= 0);
+            if (looksInvalid) {
+                log_warn("LoadModel failed for {} — returning fallback cube",
+                         filename);
+                auto mesh = raylib::GenMeshCube(1.0f, 1.0f, 1.0f);
+                auto fallback = raylib::LoadModelFromMesh(mesh);
+                return fallback;
+            }
+            return model;
         }
 
         virtual void unload(raylib::Model model) override {

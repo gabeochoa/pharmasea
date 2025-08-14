@@ -8,6 +8,7 @@ using afterhours::RefEntity;
 
 #include "bitsery/ext/std_bitset.h"
 #include "bitsery/ext/std_smart_ptr.h"
+#include "engine/log.h"
 #include "entity_type.h"
 //
 #include <bitsery/ext/pointer.h>
@@ -36,6 +37,8 @@ using bitsery::ext::StdSmartPtr;
 
 template<typename S>
 void serialize(S& s, Entity& entity) {
+    log_trace("Serializing Entity id:{} type:{}", entity.id,
+              entity.entity_type);
     s.value4b(entity.id);
     s.value4b(entity.entity_type);
 
@@ -45,8 +48,9 @@ void serialize(S& s, Entity& entity) {
     s.ext(entity.componentArray, StdMap{afterhours::max_num_components},
           [](S& sv, afterhours::ComponentID& key,
              std::unique_ptr<afterhours::BaseComponent>(&value)) {
+              log_trace("  Component entry id:{} present:{}", key,
+                        static_cast<bool>(value));
               sv.value8b(key);
-              // sv.ext(value, PointerOwner{PointerType::Nullable});
               sv.ext(value, StdSmartPtr{});
           });
 }
