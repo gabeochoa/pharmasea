@@ -27,7 +27,7 @@ struct ToastLayer : public BaseGameRendererLayer {
         window = rect::tpad(window, 10);
         window = rect::bpad(window, 95);
 
-        const int MX_TOASTS = 10;
+        constexpr int MX_TOASTS = 10;
         auto toast_spots = rect::hsplit<MX_TOASTS>(window, 10);
 
         const auto background_color = [](AnnouncementType type) {

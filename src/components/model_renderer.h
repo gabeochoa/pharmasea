@@ -29,9 +29,7 @@ struct ModelRenderer : public BaseComponent {
     }
     [[nodiscard]] const std::string& name() const { return model_name; }
 
-    void update_model_name(const std::string& new_name) {
-        model_name = new_name;
-    }
+    void update_model_name(std::string_view new_name) { model_name = new_name; }
 
    private:
     std::string model_name;
