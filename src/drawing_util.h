@@ -19,7 +19,7 @@ static void DrawPctFilledCircle(const vec2 position, float radius,
                                 Color backgroundColor, Color foregroundColor,
                                 float pct_filled, float startAngle = 180) {
     const float endAngle = startAngle + (360 * pct_filled);
-    const int segments = 40;
+    constexpr int segments = 40;
 
     raylib::DrawCircle((int) position.x, (int) position.y, radius,
                        backgroundColor);
@@ -169,7 +169,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlPopMatrix();
 }
 
-static void DrawFloatingText(const vec3& position, Font font, const char* text,
+static void DrawFloatingText(const vec3& position, const Font& font, const char* text,
                              int size = 96, Color color = BLACK,
                              bool backface = true,
                              std::string texture_name = "",

@@ -29,7 +29,7 @@ namespace autolayout {
 // }
 // }
 
-const float ACCEPTABLE_ERROR = 0.5f;
+constexpr float ACCEPTABLE_ERROR = 0.5f;
 
 inline float compute_size_for_standalone_expectation(Widget* widget,
                                                      int exp_index) {
