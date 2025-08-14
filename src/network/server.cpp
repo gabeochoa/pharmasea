@@ -29,7 +29,7 @@ void Server::forward_packet(const ClientPacket& p) {
     g_server->packet_queue.push_back(p);
 }
 
-void Server::play_sound(vec2 position, const std::string& sound) {
+void Server::play_sound(vec2 position, strings::sounds::SoundId sound) {
     Server::forward_packet(  //
         ClientPacket{
             //

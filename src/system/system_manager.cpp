@@ -1883,7 +1883,7 @@ void process_spawner(Entity& entity, float dt) {
     iss.post_spawn_reset();
 
     if (iss.has_spawn_sound()) {
-        network::Server::play_sound(pos, iss.get_spawn_sound());
+        network::Server::play_sound(pos, strings::sounds::to_name(iss.get_spawn_sound()));
     }
 }
 

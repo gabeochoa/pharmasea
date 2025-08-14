@@ -311,7 +311,7 @@ void Client::client_process_message_string(const std::string& msg) {
             // info.location[1],
             // };
 
-            SoundLibrary::get().play(info.sound.c_str());
+            SoundLibrary::get().play(strings::sounds::to_name(info.sound));
 
         } break;
 
