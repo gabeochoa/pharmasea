@@ -92,7 +92,7 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient ing) {
 
     IngredientSoundType sound_type = ingredient::IngredientSoundType.at(ing);
 
-    std::string sound;
+    strings::sounds::SoundId sound;
     switch (sound_type) {
         case Viscous:
             // TODO add new sounds for other ingredient types

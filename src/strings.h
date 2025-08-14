@@ -136,6 +136,7 @@ constexpr std::array<std::string_view, 7> character_models = {
 namespace sounds {
 
 enum struct SoundId : uint8_t {
+    None = 0,
     ROBLOX,
     VOMIT,
     SELECT,
@@ -150,6 +151,7 @@ enum struct SoundId : uint8_t {
 
 inline const char* to_name(SoundId id) {
     switch (id) {
+        case SoundId::None: return "";
         case SoundId::ROBLOX: return "roblox";
         case SoundId::VOMIT: return "vom";
         case SoundId::SELECT: return "select";
