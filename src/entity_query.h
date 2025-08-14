@@ -172,6 +172,7 @@ struct EntityQuery : public afterhours::EntityQuery<EntityQuery> {
 
     auto& include_store_entities(bool include = true) {
         _include_store_entities = include;
+        Base::include_store_entities(include);
         return *this;
     }
 
