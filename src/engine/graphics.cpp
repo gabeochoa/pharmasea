@@ -14,9 +14,9 @@
 
 namespace raylib {
 
-#include <raylib.h>
-#include <raymath.h>
-#include <rlgl.h>
+#include "raylib/raylib.h"
+#include "raylib/raymath.h"
+#include "raylib/rlgl.h"
 
 #include <ostream>
 

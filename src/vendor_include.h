@@ -1,22 +1,25 @@
 #pragma once
 
-#include "engine/graphics_types.h"
+#include <cmath>
+#include "engine/graphics.h"
 
 namespace reasings {
 // TODO decide if we wnat to use static inline
 #include "reasings.h"
 }  // namespace reasings
 
-#ifdef __APPLE__
+#if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 #pragma clang diagnostic ignored "-Wdeprecated-volatile"
 #pragma clang diagnostic ignored "-Wmissing-field-initializers"
+#pragma clang diagnostic ignored "-Wdeprecated-literal-operator"
 #endif
 
-#ifdef WIN32
+#ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wshadow"
 #endif
 
 #define FMT_HEADER_ONLY
@@ -87,7 +90,7 @@ void serialize(S& s, BoundingBox& data) {
 #pragma enable_warn
 #endif
 
-#ifdef WIN32
+#ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif
 
