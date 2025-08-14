@@ -28,6 +28,9 @@ NetworkLayer::NetworkLayer()
       network_selection_screen("network_selection_screen") {}
 
 void NetworkLayer::NetworkLayer::onStartup() {
+    // Ensure networking system is initialized before any role selection/hosting
+    network::Info::init_connections();
+
     if (network_info) {
         if (!Settings::get().data.username.empty()) {
             network_info->lock_in_username();

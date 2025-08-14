@@ -62,16 +62,21 @@ struct Server {
     }
 
     ~Server() {
-        for (auto it : clients) {
-            send_announcement_to_client(it.first, "server shutdown",
-                                        InternalServerAnnouncement::Warn);
-            interface->CloseConnection(it.first, 0, "server shutdown", true);
+        if (interface) {
+            for (auto it : clients) {
+                send_announcement_to_client(it.first, "server shutdown",
+                                            InternalServerAnnouncement::Warn);
+                interface->CloseConnection(it.first, 0, "server shutdown",
+                                           true);
+            }
+            clients.clear();
+            interface->CloseListenSocket(listen_sock);
+            listen_sock = k_HSteamListenSocket_Invalid;
+            interface->DestroyPollGroup(poll_group);
+            poll_group = k_HSteamNetPollGroup_Invalid;
+        } else {
+            clients.clear();
         }
-        clients.clear();
-        interface->CloseListenSocket(listen_sock);
-        listen_sock = k_HSteamListenSocket_Invalid;
-        interface->DestroyPollGroup(poll_group);
-        poll_group = k_HSteamNetPollGroup_Invalid;
     }
 
     void send_announcement_to_client(HSteamNetConnection conn,
@@ -152,7 +157,11 @@ struct Server {
         interface = SteamNetworkingSockets();
 
         if (interface == nullptr) {
-            log_error("Failed to initialize SNS");
+            log_warn(
+                "Failed to initialize GameNetworkingSockets (SNS). Hosting "
+                "disabled");
+            running = false;
+            return;
         }
 
         /// [connection int32] Upper limit of buffered pending bytes to be sent,
