@@ -23,7 +23,7 @@ inline void handle_job_holder_pushed(std::shared_ptr<Entity> entity, float) {
     if (cbp.pushed_force().x != 0.0f || cbp.pushed_force().z != 0.0f) {
         job->path.clear();
         job->local = {};
-        SoundLibrary::get().play(strings::sounds::ROBLOX);
+        SoundLibrary::get().play(strings::sounds::to_name(strings::sounds::SoundId::ROBLOX));
     }
 }
 

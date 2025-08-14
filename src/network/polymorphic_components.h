@@ -268,6 +268,8 @@ struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
 // actual subclasses of `afterhours::Entity`, specialize this with those types.
 // The default `PolymorphicBaseClass` (empty Childs) is correct for a base-only
 // hierarchy and avoids recursive self-registration.
+// Note: Base-only is expected here; `afterhours::Entity` participates in
+// StdSmartPtr via default bitsery support without needing self-registration.
 
 }  // namespace ext
 }  // namespace bitsery

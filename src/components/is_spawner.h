@@ -3,6 +3,7 @@
 
 #include "../engine/log.h"
 #include "../vendor_include.h"
+#include "../strings.h"
 #include "base_component.h"
 
 using afterhours::Entity;
@@ -99,12 +100,12 @@ struct IsSpawner : public BaseComponent {
         return prevent_duplicate_spawns;
     }
 
-    auto& set_spawn_sound(const std::string& str) {
+    auto& set_spawn_sound(strings::sounds::SoundId str) {
         spawn_sound = str;
         return *this;
     }
-    [[nodiscard]] bool has_spawn_sound() const { return !spawn_sound.empty(); }
-    [[nodiscard]] const std::string& get_spawn_sound() const {
+    [[nodiscard]] bool has_spawn_sound() const { return spawn_sound != strings::sounds::SoundId::None; }
+    [[nodiscard]] strings::sounds::SoundId get_spawn_sound() const {
         return spawn_sound;
     }
 
@@ -125,7 +126,7 @@ struct IsSpawner : public BaseComponent {
     SpawnFn spawn_fn;
     ValidationSpawnFn validation_spawn_fn;
 
-    std::string spawn_sound;
+    strings::sounds::SoundId spawn_sound = strings::sounds::SoundId::None;
 
     friend bitsery::Access;
     template<typename S>

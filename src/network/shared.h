@@ -10,6 +10,7 @@
 #include "../globals.h"
 #include "../job.h"
 #include "../map.h"
+#include "../strings.h"
 #include "internal/channel.h"
 #include "polymorphic_components.h"
 #include "steam/steamnetworkingtypes.h"
@@ -105,7 +106,7 @@ struct ClientPacket {
 
     struct PlaySoundInfo {
         float location[2];
-        std::string sound;
+        strings::sounds::SoundId sound;
     };
 
     using Msg =
@@ -162,7 +163,7 @@ inline std::ostream& operator<<(std::ostream& os,
             },
             [&](const ClientPacket::PlaySoundInfo& info) {
                 return fmt::format("PlaySound({} {}, {})", info.location[0],
-                                   info.location[1], info.sound);
+                                   info.location[1], (int)info.sound);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }}
         // namespace network
@@ -250,7 +251,7 @@ void serialize(S& s, ClientPacket& packet) {
               [](S& s, ClientPacket::PlaySoundInfo& info) {
                   s.value4b(info.location[0]);
                   s.value4b(info.location[1]);
-                  s.text1b(info.sound, network::MAX_SOUND_LENGTH);
+                  s.value1b(info.sound);
               },
           });
 }
