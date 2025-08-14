@@ -532,62 +532,62 @@ void Preload::load_sounds() {
         Files::get()
             .fetch_resource_path(strings::settings::SOUNDS, "roblox_oof.ogg")
             .c_str(),
-        strings::sounds::ROBLOX);
+        strings::sounds::to_name(strings::sounds::SoundId::ROBLOX));
 
     SoundLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::SOUNDS, "vom.wav")
             .c_str(),
-        strings::sounds::VOMIT);
+        strings::sounds::to_name(strings::sounds::SoundId::VOMIT));
 
     SoundLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
             .c_str(),
-        strings::sounds::SELECT);
+        strings::sounds::to_name(strings::sounds::SoundId::SELECT));
 
     SoundLibrary::get().load(
         Files::get()
             // TODO replace sound
             .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
             .c_str(),
-        strings::sounds::CLICK);
+        strings::sounds::to_name(strings::sounds::SoundId::CLICK));
 
     SoundLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::SOUNDS, "water.ogg")
             .c_str(),
-        strings::sounds::WATER);
+        strings::sounds::to_name(strings::sounds::SoundId::WATER));
 
     SoundLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::SOUNDS, "blender.ogg")
             .c_str(),
-        strings::sounds::BLENDER);
+        strings::sounds::to_name(strings::sounds::SoundId::BLENDER));
 
     SoundLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::SOUNDS, "solid.ogg")
             .c_str(),
-        strings::sounds::SOLID);
+        strings::sounds::to_name(strings::sounds::SoundId::SOLID));
 
     SoundLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::SOUNDS, "ice.ogg")
             .c_str(),
-        strings::sounds::ICE);
+        strings::sounds::to_name(strings::sounds::SoundId::ICE));
 
     SoundLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::SOUNDS, "pickup.ogg")
             .c_str(),
-        strings::sounds::PICKUP);
+        strings::sounds::to_name(strings::sounds::SoundId::PICKUP));
 
     SoundLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::SOUNDS, "place.ogg")
             .c_str(),
-        strings::sounds::PLACE);
+        strings::sounds::to_name(strings::sounds::SoundId::PLACE));
 
     Files::get().for_resources_in_folder(
         strings::settings::SOUNDS, "pa_announcements",

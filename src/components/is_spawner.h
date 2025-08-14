@@ -99,12 +99,12 @@ struct IsSpawner : public BaseComponent {
         return prevent_duplicate_spawns;
     }
 
-    auto& set_spawn_sound(const std::string& str) {
+    auto& set_spawn_sound(SoundId str) {
         spawn_sound = str;
         return *this;
     }
-    [[nodiscard]] bool has_spawn_sound() const { return !spawn_sound.empty(); }
-    [[nodiscard]] const std::string& get_spawn_sound() const {
+    [[nodiscard]] bool has_spawn_sound() const { return spawn_sound != SoundId::None; }
+    [[nodiscard]] SoundId get_spawn_sound() const {
         return spawn_sound;
     }
 
@@ -125,7 +125,7 @@ struct IsSpawner : public BaseComponent {
     SpawnFn spawn_fn;
     ValidationSpawnFn validation_spawn_fn;
 
-    std::string spawn_sound;
+    SoundId spawn_sound = SoundId::None;
 
     friend bitsery::Access;
     template<typename S>

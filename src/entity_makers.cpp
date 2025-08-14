@@ -97,13 +97,13 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient ing) {
         case Viscous:
             // TODO add new sounds for other ingredient types
         case Solid:
-            sound = strings::sounds::SOLID;
+            sound = strings::sounds::SoundId::SOLID;
             break;
         case Ice:
-            sound = strings::sounds::ICE;
+            sound = strings::sounds::SoundId::ICE;
             break;
         case Liquid:
-            sound = strings::sounds::WATER;
+            sound = strings::sounds::SoundId::WATER;
             break;
         default:
             return false;
@@ -892,8 +892,8 @@ void make_draft(Entity& draft, vec2 pos) {
             hasWork.increase_pct(amt * dt);
 
             server_only::play_sound(item.get<Transform>().as2(),
-                                    // TODO replace with draft tap sound
-                                    strings::sounds::BLENDER);
+                                // TODO replace with draft tap sound
+                                strings::sounds::SoundId::BLENDER);
 
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
@@ -1083,7 +1083,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         hasWork.increase_pct(amt * dt);
         server_only::play_sound(drink.get<Transform>().as2(),
                                 // TODO replace with draft tap sound
-                                strings::sounds::BLENDER);
+                                strings::sounds::SoundId::BLENDER);
 
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
@@ -1252,7 +1252,7 @@ void make_fruit(Item& fruit, vec3 pos, int index) {
         }
 
         server_only::play_sound(owner.get<Transform>().as2(),
-                                strings::sounds::BLENDER);
+                                strings::sounds::SoundId::BLENDER);
 
         const float amt = 0.75f;
         hasWork.increase_pct(amt * dt);
@@ -1481,7 +1481,7 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     customer
         .addComponent<IsSpawner>()  //
         .set_fn(&furniture::make_vomit)
-        .set_spawn_sound(strings::sounds::VOMIT)
+        .set_spawn_sound(strings::sounds::SoundId::VOMIT)
         .set_validation_fn([](Entity& entity, const SpawnInfo&) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet

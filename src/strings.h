@@ -135,16 +135,34 @@ constexpr std::array<std::string_view, 7> character_models = {
 
 namespace sounds {
 
-constexpr const char* ROBLOX = "roblox";
-constexpr const char* VOMIT = "vom";
-constexpr const char* SELECT = "select";
-constexpr const char* CLICK = "click";
-constexpr const char* WATER = "water";
-constexpr const char* BLENDER = "blender";
-constexpr const char* SOLID = "solid";
-constexpr const char* ICE = "ice";
-constexpr const char* PICKUP = "pickup";
-constexpr const char* PLACE = "place";
+enum struct SoundId : uint8_t {
+    ROBLOX,
+    VOMIT,
+    SELECT,
+    CLICK,
+    WATER,
+    BLENDER,
+    SOLID,
+    ICE,
+    PICKUP,
+    PLACE,
+};
+
+inline const char* to_name(SoundId id) {
+    switch (id) {
+        case SoundId::ROBLOX: return "roblox";
+        case SoundId::VOMIT: return "vom";
+        case SoundId::SELECT: return "select";
+        case SoundId::CLICK: return "click";
+        case SoundId::WATER: return "water";
+        case SoundId::BLENDER: return "blender";
+        case SoundId::SOLID: return "solid";
+        case SoundId::ICE: return "ice";
+        case SoundId::PICKUP: return "pickup";
+        case SoundId::PLACE: return "place";
+    }
+    return "";
+}
 
 }  // namespace sounds
 
