@@ -10,7 +10,7 @@
 // TODO removing this include would speed up
 // compilation times of this file by probably 1.6 seconds
 // (this is due to all the template code thats in network/shared
-#include "network/network.h"
+#include "network/api.h"
 
 #if !defined(NDEBUG)
 #include "backward/backward.hpp"
@@ -129,7 +129,7 @@ void startup() {
     // and thats this
     register_all_components();
 
-    network::Info::init_connections();
+    network::init_connections();
 
     MenuState::get().reset();
     GameState::get().reset();
