@@ -11,7 +11,7 @@
 #include "util.h"
 
 namespace bfs {
-const int MAX_PATH_LENGTH = 50;
+constexpr int MAX_PATH_LENGTH = 50;
 
 static constexpr int neigh_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 static constexpr int neigh_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};

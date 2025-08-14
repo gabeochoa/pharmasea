@@ -173,7 +173,7 @@ struct Server {
         /// estimate the bandwidth of the channel and set the send rate to that
         /// estimated bandwidth, and these values will only set limits on that
         /// send rate.
-        constexpr const int rate = 1024 * 1024 * 1024;
+        constexpr int rate = 1024 * 1024 * 1024;
         SteamNetworkingUtils()->SetGlobalConfigValueInt32(
             k_ESteamNetworkingConfig_SendRateMin, rate);
         SteamNetworkingUtils()->SetGlobalConfigValueInt32(

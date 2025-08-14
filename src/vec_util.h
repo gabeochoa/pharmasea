@@ -46,7 +46,7 @@ template<typename T>
 }
 
 template<typename T>
-[[nodiscard]] bool contains(const std::vector<T>& vec, T& value) {
+[[nodiscard]] bool contains(const std::vector<T>& vec, const T& value) {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
 }
 }  // namespace vector
@@ -71,7 +71,7 @@ namespace vec {
 static constexpr int neigh_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 static constexpr int neigh_y[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
-static void forEachNeighbor(int i, int j, std::function<void(const vec2&)> cb,
+static void forEachNeighbor(int i, int j, const std::function<void(const vec2&)>& cb,
                             int step = 1) {
     for (int a = 0; a < 8; a++) {
         cb(vec2{(float) i + (neigh_x[a] * step),

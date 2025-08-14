@@ -49,15 +49,15 @@ int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
-static float deg2rad(float deg) {
+constexpr float deg2rad(float deg) {
     return deg * static_cast<float>(M_PI) / 180.0f;
 }
 
-static float rad2deg(float rad) {
+constexpr float rad2deg(float rad) {
     return rad * (180.f / static_cast<float>(M_PI));
 }
 
-static bool in_range(int a, int b, int val) { return val >= a && val <= b; }
+constexpr bool in_range(int a, int b, int val) { return val >= a && val <= b; }
 
 static std::string toLowerCase(const std::string_view& str) {
     std::string result;
@@ -140,7 +140,7 @@ inline std::string convertToSnakeCase(T type) {
     return snake_case(magic_enum::enum_name(type));
 }
 
-static float clamp(float a, float mn, float mx) {
+constexpr float clamp(float a, float mn, float mx) {
     return std::min(std::max(a, mn), mx);
 }
 
@@ -164,7 +164,7 @@ static float trunc(float value, int decimal_places) {
     return std::trunc(value * multiplier) / multiplier;
 }
 
-static float lerp(float a, float b, float pct) {
+constexpr float lerp(float a, float b, float pct) {
     return (a * (1 - pct)) + (b * pct);
 }
 
@@ -178,7 +178,7 @@ inline V map_get_or_default(Container<K, V, Ts...> map, K key, V def_value) {
 }
 
 template<typename T>
-[[nodiscard]] constexpr bool contains(std::vector<T> array, const T& key) {
+[[nodiscard]] constexpr bool contains(const std::vector<T>& array, const T& key) {
     const auto itr = std::find_if(std::begin(array), std::end(array),
                                   [&key](const auto& v) { return v == key; });
     return itr != std::end(array);

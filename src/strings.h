@@ -126,7 +126,7 @@ constexpr const char* CHARACTER_RUTH = "character_ruth";
 
 }  // namespace model
 
-const std::array<std::string, 7> character_models = {
+constexpr std::array<std::string_view, 7> character_models = {
     strings::model::CHARACTER_BEAR, strings::model::CHARACTER_DOG,
     strings::model::CHARACTER_DUCK, strings::model::CHARACTER_ROGUE,
     strings::model::CHARACTER_GABE, strings::model::CHARACTER_GABE2,
@@ -390,7 +390,7 @@ enum struct TodoReason {
 };
 
 struct TranslatableString {
-    static const int MAX_LENGTH = 100;
+    static constexpr int MAX_LENGTH = 100;
 
     explicit TranslatableString() {}
     explicit TranslatableString(const std::string& s) : content(s) {}
