@@ -4,7 +4,6 @@
 #include <optional>
 //
 
-#include "../engine/type_name.h"
 #include "../entity.h"
 //
 #include "../components/has_subtype.h"

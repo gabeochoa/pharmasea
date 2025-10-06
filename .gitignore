@@ -22,6 +22,8 @@ a.out
 release*
 recording.trace/
 output/
+build/
+.xmake/
 # until they are used in the project, hiding the kennynl folder
 art_storage/*
 

@@ -79,6 +79,14 @@ template<>
 struct SelectSerializeFnc<afterhours::BaseComponent> : UseNonMemberFnc {};
 
 template<>
+struct SelectSerializeFnc<BaseComponent> : UseMemberFnc {};
+
+// Provide a no-op free serialize for the vendor base to satisfy bitsery's
+// static checks. Real serialization occurs on derived component types.
+template<typename S>
+inline void serialize(S&, afterhours::BaseComponent&) {}
+
+template<>
 struct SelectSerializeFnc<Transform> : UseMemberFnc {};
 template<>
 struct SelectSerializeFnc<HasName> : UseMemberFnc {};
@@ -245,6 +253,28 @@ struct PolymorphicBaseClass<BaseComponent>
           CollectsCustomerFeedback, IsSquirter, Type, CanBeHeld
           // END
           > {};
+
+// Register the vendor base so unique_ptr<afterhours::BaseComponent> works
+template<>
+struct PolymorphicBaseClass<afterhours::BaseComponent>
+    : PolymorphicDerivedClasses<
+          // Mirror the same concrete components as our BaseComponent
+          Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
+          CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
+          CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
+          CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid, HasPatience,
+          HasProgression, IsRotatable, CanGrabFromOtherFurniture,
+          ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
+          UsesCharacterModel, HasDynamicModelName, IsTriggerArea,
+          HasSpeechBubble, Indexer, IsSpawner, HasRopeToItem, HasSubtype,
+          IsItem, IsDrink, AddsIngredient, CanOrderDrink, IsPnumaticPipe,
+          IsProgressionManager, IsFloorMarker, IsBank, IsFreeInStore, IsToilet,
+          CanPathfind, IsRoundSettingsManager, AIComponent, HasFishingGame,
+          IsStoreSpawned, AICloseTab, AIPlayJukebox, HasLastInteractedCustomer,
+          CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
+          CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
+          CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
+          CollectsCustomerFeedback, IsSquirter, Type, CanBeHeld> {};
 // If you add anything here ^^ then you should add that component to
 // register_all_components in entity.h
 
@@ -275,5 +305,5 @@ struct PolymorphicBaseClass<afterhours::Entity>
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<afterhours::BaseComponent, AIComponent,
-                                         Job, afterhours::Entity>;
+    bitsery::ext::PolymorphicClassesList<BaseComponent, AIComponent, Job,
+                                         afterhours::Entity>;

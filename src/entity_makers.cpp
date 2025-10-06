@@ -187,11 +187,10 @@ void register_all_components() {
     // otherwise it will leak the memory
     //
 
-    for (auto it = entity->componentArray.cbegin(), next_it = it;
-         it != entity->componentArray.cend(); it = next_it) {
-        ++next_it;
-        entity->componentArray.erase(it);
+    for (size_t i = 0; i < afterhours::max_num_components; ++i) {
+        entity->componentArray[i].reset();
     }
+    entity->componentSet.reset();
 
     delete entity;
 }
@@ -892,8 +891,8 @@ void make_draft(Entity& draft, vec2 pos) {
             hasWork.increase_pct(amt * dt);
 
             server_only::play_sound(item.get<Transform>().as2(),
-                                // TODO replace with draft tap sound
-                                strings::sounds::SoundId::BLENDER);
+                                    // TODO replace with draft tap sound
+                                    strings::sounds::SoundId::BLENDER);
 
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();

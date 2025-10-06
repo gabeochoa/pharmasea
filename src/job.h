@@ -1,10 +1,11 @@
 
 #pragma once
 
+#include "log/log.h"
+//
 #include "afterhours/ah.h"
 using afterhours::Entity;
 #include "engine/assert.h"
-#include "engine/log.h"
 #include "external_include.h"
 //
 

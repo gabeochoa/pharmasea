@@ -1,8 +1,9 @@
 #pragma once
 
 // Standard library bundle used widely
-#include "std_include.h"
 #include <cmath>
+
+#include "std_include.h"
 
 // fmt (header-only usage)
 #ifndef FMT_HEADER_ONLY
@@ -27,3 +28,11 @@
 // argh CLI
 #include <argh.h>
 
+// bring logging macros early so vendor afterhours sees replacements
+#ifndef AFTER_HOURS_REPLACE_LOGGING
+#define AFTER_HOURS_REPLACE_LOGGING
+#endif
+#ifndef AFTER_HOURS_REPLACE_VALIDATE
+#define AFTER_HOURS_REPLACE_VALIDATE
+#endif
+#include "log/log.h"

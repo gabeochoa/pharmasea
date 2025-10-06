@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include "log/log.h"
+//
+
 #include "afterhours/ah.h"
 using afterhours::Entity;
 using afterhours::OptEntity;
@@ -8,7 +11,6 @@ using afterhours::RefEntity;
 
 #include "bitsery/ext/std_bitset.h"
 #include "bitsery/ext/std_smart_ptr.h"
-#include "engine/log.h"
 #include "entity_type.h"
 //
 #include <bitsery/ext/pointer.h>
@@ -45,14 +47,14 @@ void serialize(S& s, Entity& entity) {
     s.ext(entity.componentSet, StdBitset{});
     s.value1b(entity.cleanup);
 
-    s.ext(entity.componentArray, StdMap{afterhours::max_num_components},
-          [](S& sv, afterhours::ComponentID& key,
-             std::unique_ptr<afterhours::BaseComponent>(&value)) {
-              log_trace("  Component entry id:{} present:{}", key,
-                        static_cast<bool>(value));
-              sv.value8b(key);
-              sv.ext(value, StdSmartPtr{});
-          });
+    for (size_t i = 0; i < afterhours::max_num_components; ++i) {
+        if (entity.componentSet.test(i)) {
+            auto& ptr = entity.componentArray[i];
+            log_trace("  Component entry id:{} present:{}", i,
+                      static_cast<bool>(ptr));
+            s.ext(ptr, StdSmartPtr{});
+        }
+    }
 }
 
 template<typename S>

@@ -4,8 +4,8 @@
 // Note move to cpp if we create one
 #include "files.h"
 //
+#include "graphics.h"
 #include "library.h"
-#include "raylib.h"
 #include "singleton.h"
 
 // TODO enforce it on object creation?

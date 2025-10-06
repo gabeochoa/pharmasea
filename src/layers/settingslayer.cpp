@@ -341,8 +341,8 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
         return KeyMap::get().name_for_input(button);
     };
     const auto _get_label =
-        [=,*this](menu::State state,
-            InputName name) -> tl::expected<std::string, std::string> {
+        [=, *this](menu::State state,
+                   InputName name) -> tl::expected<std::string, std::string> {
         switch (selected_input_type) {
             case Keyboard:
                 return _get_label_for_key(state, name);
@@ -353,6 +353,7 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
                 log_error("idk how to handle axis right now");
                 break;
         }
+        return tl::unexpected("input not used in this state");
     };
 
     const auto _get_icon_for_key =
@@ -376,8 +377,8 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
 
     const auto _get_icon =
         // TODO
-        [=,*this](menu::State state,
-            InputName name) -> tl::expected<std::string, std::string> {
+        [=, *this](menu::State state,
+                   InputName name) -> tl::expected<std::string, std::string> {
         switch (selected_input_type) {
             case Keyboard:
                 return _get_icon_for_key(state, name);
@@ -389,7 +390,8 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
         }
     };
 
-    const auto _keys_for_state = [=, *this](menu::State state,
+    const auto _keys_for_state = [=, *this](
+                                     menu::State state,
                                      std::array<Rectangle, num_per_col> rects,
                                      int starting_index = 0) {
         int rendering_index = 0;
