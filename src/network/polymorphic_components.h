@@ -294,13 +294,6 @@ struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
                                              // END
                                              > {};
 
-// Register Entity base so shared_ptr<Entity> can be serialized with StdSmartPtr
-template<>
-struct PolymorphicBaseClass<afterhours::Entity>
-    : PolymorphicDerivedClasses<
-          // Base-only for now; add derived entity types here if introduced
-          afterhours::Entity> {};
-
 }  // namespace ext
 }  // namespace bitsery
 
