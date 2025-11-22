@@ -2709,8 +2709,9 @@ void SystemManager::on_game_state_change(game::State new_state,
 // This is called after SystemManager singleton is created
 void SystemManager::register_afterhours_systems() {
     // Register proof-of-concept timer system
+    // Commented out for now until we're ready to migrate timer logic
     // systems.register_update_system(std::make_unique<system_manager::TimerSystem>());
-
+    
     // TODO: Register more systems as we migrate them
 }
 
