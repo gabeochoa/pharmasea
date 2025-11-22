@@ -143,6 +143,179 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 - Register `afterhours::ui::register_render_systems()` and update/render hooks
 - This is likely the most complex migration - may want to defer or keep custom UI
 
+### 2.4 Migrate Autolayout to afterhours::ui::autolayout
+**Files**: `src/engine/ui/autolayout.h`, `src/engine/ui/widget.h`
+
+**Current State**:
+- Pharmasea has `src/engine/ui/autolayout.h` which appears to be commented out or incomplete (lines 8-514 are commented)
+- Afterhours has full autolayout system in `afterhours/plugins/autolayout.h` with flexbox-like layout
+
+**Steps**:
+- Review afterhours autolayout API and capabilities
+- Compare with pharmasea's commented autolayout implementation
+- If afterhours provides needed features: migrate to `afterhours::ui::AutoLayout`
+- Replace `Widget`-based layout with `afterhours::ui::UIComponent`-based layout
+- Update UI rendering to use afterhours autolayout computed positions
+- Remove or archive `src/engine/ui/autolayout.h` if fully replaced
+
+**Note**: This could significantly simplify UI layout code if afterhours autolayout meets requirements
+
+### 2.5 Evaluate Animation Plugin for UI Animations
+**Files**: `src/engine/anim_library.h`, UI animation code
+
+**Current State**:
+- Pharmasea has `AnimLibrary` for 3D model animations (raymlib ModelAnimation)
+- Afterhours has `animation` plugin for 2D value animations (UI, easing, sequences)
+- Pharmasea uses `reasings.h` for easing functions
+
+**Steps**:
+- Evaluate if afterhours animation plugin can replace UI animation code
+- Use `afterhours::animation::anim()` for UI transitions, fades, slides
+- Keep `AnimLibrary` for 3D model animations (different use case)
+- Replace direct easing function calls with afterhours animation system where applicable
+- Register `afterhours::animation::register_update_systems<UIAnimationKey>()` in SystemManager
+
+**Note**: Afterhours animation is for 2D/value animations, not 3D model animations - these serve different purposes
+
+### 2.6 Migrate Library Pattern to afterhours::Library
+**Files**: `src/engine/library.h`, all `*Library` classes
+
+**Current State**:
+- Pharmasea has custom `Library<T>` template in `src/engine/library.h`
+- Afterhours has `Library<T>` in `vendor/afterhours/src/library.h` with better error handling (`tl::expected`)
+- Multiple libraries use pharmasea version: `TextureLibrary`, `FontLibrary`, `AnimLibrary`, `ModelLibrary`, `SoundLibrary`, `MusicLibrary`, `ShaderLibrary`
+
+**Steps**:
+- Compare pharmasea `Library<T>` with afterhours `Library<T>`
+- Migrate to afterhours `Library<T>` for better error handling
+- Update all library implementations to use afterhours version:
+  - `TextureLibrary` → use afterhours Library
+  - `FontLibrary` → use afterhours Library  
+  - `AnimLibrary` → use afterhours Library
+  - `ModelLibrary` → use afterhours Library
+  - `SoundLibrary` → use afterhours Library
+  - `MusicLibrary` → use afterhours Library
+  - `ShaderLibrary` → use afterhours Library
+- Replace `Library<T>::Error` with afterhours error handling
+- Remove `src/engine/library.h` after migration
+
+**Benefits**: Better error handling, consistent API, less code to maintain
+
+### 2.7 Evaluate Texture Manager Plugin for Sprite Rendering
+**Files**: `src/engine/texture_library.h`, sprite rendering code
+
+**Current State**:
+- Pharmasea has `TextureLibrary` for texture loading
+- Afterhours has `texture_manager` plugin with sprite components (`HasSpritesheet`, `HasSprite`, `HasAnimation`)
+- Afterhours provides sprite rendering systems (`RenderSprites`, `RenderAnimation`)
+
+**Steps**:
+- Evaluate if afterhours sprite system fits pharmasea's rendering needs
+- If using 2D sprites: migrate to `afterhours::texture_manager::HasSprite` components
+- Use `afterhours::texture_manager::RenderSprites` system for sprite rendering
+- Keep `TextureLibrary` for general texture loading if needed
+- Consider using afterhours sprite animation for 2D animations
+
+**Note**: Only migrate if pharmasea uses sprite-based 2D rendering. 3D model rendering should stay custom.
+
+### 2.8 Use afterhours Font Helper Utilities
+**Files**: `src/engine/font_util.h`, `src/engine/font_library.h`, font loading code
+
+**Current State**:
+- Pharmasea has `FontLibrary` and `font_util.h` for font management
+- Afterhours has `font_helper.h` with font loading utilities and text measurement
+
+**Steps**:
+- Use `afterhours::load_font_from_file_with_codepoints()` for CJK font loading
+- Use `afterhours::measure_text()` and `measure_text_utf8()` for text measurement
+- Keep `FontLibrary` wrapper but use afterhours font helpers internally
+- Evaluate if afterhours font helpers can replace `font_util.h` functions
+
+**Note**: Afterhours font helpers are utilities, not a full library replacement - use alongside FontLibrary
+
+### 2.9 Use afterhours Color Utilities
+**Files**: Color usage throughout codebase
+
+**Current State**:
+- Pharmasea uses raylib colors directly
+- Afterhours has `color` plugin with utilities: `darken()`, `increase()`, `set_opacity()`, `opacity_pct()`
+- Afterhours has `HasColor` component for dynamic colors
+
+**Steps**:
+- Use `afterhours::colors::darken()`, `increase()`, `set_opacity()`, `opacity_pct()` utilities
+- Consider `afterhours::HasColor` component for entities with dynamic colors
+- Replace manual color manipulation with afterhours utilities
+- Use `afterhours::colors` namespace constants where applicable
+
+**Note**: Low-priority quality-of-life improvement, not critical migration
+
+### 2.10 Migrate Bitset Utils to afterhours::bitset_utils
+**Files**: `src/engine/bitset_utils.h`, all files using `bitset_utils::`
+
+**Current State**:
+- Pharmasea has `src/engine/bitset_utils.h` with enum-based bitset operations
+- Afterhours has `bitset_utils.h` with similar functionality plus additional utilities
+- Both have: `set()`, `reset()`, `test()`, `index_of_nth_set_bit()`, `get_random_enabled_bit()`, `get_first_enabled_bit()`
+- Afterhours has additional: `get_next_boolean_bit()`, `get_random_disabled_bit()`, `get_first_disabled_bit()`, `get_next_disabled_bit()`
+- Pharmasea has `for_each_enabled_bit()` which afterhours doesn't have
+
+**Steps**:
+- Compare functionality - afterhours version is more complete
+- Migrate to use `afterhours::bitset_utils` namespace
+- Replace pharmasea `bitset_utils::` calls with `afterhours::bitset_utils::`
+- Keep or port `for_each_enabled_bit()` if needed (or use afterhours pattern)
+- Remove `src/engine/bitset_utils.h` after migration
+- Update all includes from `engine/bitset_utils.h` to `afterhours/bitset_utils.h` (via `ah.h`)
+
+**Files Using Bitset Utils**:
+- `src/dataclass/configdata.h` - uses `bitset_utils::test()`, `bitset_utils::ForEachFlow`
+- Any other files using bitset utilities
+
+**Note**: Afterhours version requires `std::mt19937&` generator parameter for random functions, may need to adapt pharmasea's `RandomEngine` integration
+
+### 2.11 Use afterhours Drawing Helpers
+**Files**: Drawing code throughout codebase
+
+**Current State**:
+- Pharmasea uses raylib drawing functions directly
+- Afterhours has `drawing_helpers.h` with utilities: `draw_text_ex()`, `draw_text()`, `draw_rectangle()`, `draw_rectangle_outline()`, `draw_rectangle_rounded()` with per-corner rounding
+
+**Steps**:
+- Use `afterhours::draw_rectangle_rounded()` for rounded rectangles with per-corner control
+- Use `afterhours::draw_text_ex()` and `draw_text()` for consistent text rendering
+- Use `afterhours::draw_rectangle()` and `draw_rectangle_outline()` utilities
+- Replace direct raylib calls with afterhours helpers where applicable
+- Benefit: Per-corner rounded rectangles, consistent API
+
+**Note**: Low-priority quality improvement, but rounded rectangle per-corner control is useful for UI
+
+### 2.12 Standardize Afterhours Includes
+**Files**: All files including afterhours headers
+
+**Current State**:
+- Some files include `afterhours/ah.h` directly
+- Some files include afterhours internal headers: `afterhours/src/type_name.h`, `afterhours/src/singleton.h`, `afterhours/src/library.h`
+- `src/ah.h` wrapper exists but not all files use it
+- `src/engine/type_name.h` and `src/engine/singleton.h` forward to afterhours (good pattern)
+
+**Steps**:
+- Replace all `#include "afterhours/ah.h"` with `#include "ah.h"` (use wrapper)
+- Replace all `#include "../../vendor/afterhours/src/..."` with `#include "ah.h"` or appropriate wrapper
+- Update files that include internal headers:
+  - `src/engine/library.h` - should use `ah.h` wrapper instead of direct include
+  - Any other files including `afterhours/src/` or `afterhours/core/` directly
+- Ensure `src/ah.h` wrapper sets all necessary flags (`ENABLE_AFTERHOURS_BITSERY_SERIALIZE`, `AFTER_HOURS_REPLACE_LOGGING`, etc.)
+- Document include policy: always use `ah.h` wrapper, never include afterhours internal headers directly
+
+**Files to Update**:
+- `src/entity.h` - already uses `afterhours/ah.h`, change to `ah.h`
+- `src/job.h` - already uses `afterhours/ah.h`, change to `ah.h`
+- `src/components/base_component.h` - already uses `afterhours/ah.h`, change to `ah.h`
+- `src/layers/gamelayer.h` - already uses `afterhours/ah.h`, change to `ah.h`
+- `src/engine/library.h` - includes `afterhours/src/library.h` directly, change to use wrapper
+
+**Benefits**: Centralized configuration, easier maintenance, ensures all necessary flags are set
+
 ## Implementation Notes
 
 ### Serialization
@@ -187,12 +360,24 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 - `src/engine/settings.cpp` (use window_manager)
 - `src/engine/keymap.h` (evaluate migration)
 - `src/system/input_process_manager.cpp` (use input plugin)
+- `src/engine/ui/autolayout.h` (evaluate/remove if using afterhours)
+- `src/engine/ui/widget.h` (evaluate if using afterhours UI)
+- `src/engine/library.h` (remove after migration to afterhours Library)
+- `src/engine/texture_library.h` (evaluate sprite migration)
+- `src/engine/font_util.h` (use afterhours font helpers)
+- `src/engine/bitset_utils.h` (remove after migration)
+- All files using `bitset_utils::` (update to `afterhours::bitset_utils::`)
+- Drawing code (use afterhours drawing helpers)
 
 ## Dependencies
 - Phase 0 must complete before Phase 1 (serialization compatibility is critical)
 - Phase 1.1 must complete before 1.2 and 1.3 (EntityQuery is used everywhere)
 - Phase 1.2 and 1.3 can proceed in parallel
 - Phase 2 can proceed after Phase 1 is stable
+- Phase 2.6 (Library migration) should be done early as it affects many systems
+- Phase 2.10 (Bitset Utils) should be done early as it's used in multiple places
+- Phase 2.4 (Autolayout) can be done independently if UI migration proceeds
+- Phase 2.5 (Animation), 2.9 (Color), 2.11 (Drawing Helpers) are low-priority quality improvements
 
 ## Phase 3: Code Health & Robustness Improvements
 
@@ -468,10 +653,34 @@ static tl::expected<Entity, DeserializeError> deserialize_to_entity(const std::s
 
 ## Integration with Afterhours Migration
 
+- Phase 0 (Serialization Review) must complete before Phase 1
+- Phase 2.12 (Standardize Includes) should be done first - ensures all files use wrapper correctly
+- Phase 2.10 (Bitset Utils) should be done early as it's used in multiple places
+- Phase 2.6 (Library migration) should be done early as it affects many systems
 - Phase 3.1 (Error Handling) should be done alongside Phase 0 (Serialization Review)
 - Phase 3.2 (Memory Safety) should be done before Phase 1 (EntityHelper migration)
 - Phase 3.3 (Type Safety) can be done incrementally during Phase 1
 - Phase 3.4 (Network Robustness) is critical and should be done early
 - Phase 3.10 (Contract Enforcement) should be done early to catch issues during migration
 - Phase 3.5 (Global State) can be done after Phase 1 completes
+
+## Migration Summary
+
+**Total Migration Opportunities Identified**:
+- **Phase 0**: 1 critical review (Serialization Compatibility)
+- **Phase 1**: 3 core ECS migrations (EntityQuery, SystemManager, EntityHelper)
+- **Phase 2**: 9 plugin/utility migrations (Window Manager, Input, UI, Autolayout, Animation, Library, Texture Manager, Font Helpers, Color, Bitset Utils, Drawing Helpers, Include Standardization)
+- **Phase 3**: 10 code health improvements (Error Handling, Memory Safety, Type Safety, Network Robustness, Global State, Code Simplification, Testing, Build Tools, Documentation, Contract Enforcement)
+
+**Estimated Impact**:
+- **Code Reduction**: Removing duplicate implementations (EntityQuery, EntityHelper, Library, Bitset Utils, Autolayout) could reduce codebase by ~2000-3000 lines
+- **Maintenance**: Centralizing on afterhours reduces maintenance burden - fixes/improvements benefit all projects
+- **Robustness**: Using battle-tested afterhours code improves stability
+- **Features**: Access to afterhours plugins (animation, autolayout, UI) provides new capabilities
+
+**Risk Assessment**:
+- **Low Risk**: Phase 2.9 (Color), 2.11 (Drawing Helpers) - utility functions, easy to rollback
+- **Medium Risk**: Phase 2.6 (Library), 2.10 (Bitset Utils) - affects many files but straightforward replacements
+- **High Risk**: Phase 1 (Core ECS), Phase 2.2 (Input), Phase 2.3 (UI) - fundamental systems, requires thorough testing
+- **Critical Risk**: Phase 0 (Serialization) - network compatibility is essential, must be verified before proceeding
 
