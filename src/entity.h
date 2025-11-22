@@ -52,7 +52,13 @@ void serialize(S& s, Entity& entity) {
             auto& ptr = entity.componentArray[i];
             log_trace("  Component entry id:{} present:{}", i,
                       static_cast<bool>(ptr));
+            if (ptr) {
+                log_info("About to serialize component at index {}", i);
+            }
             s.ext(ptr, StdSmartPtr{});
+            if (ptr) {
+                log_info("Successfully serialized component at index {}", i);
+            }
         }
     }
 }

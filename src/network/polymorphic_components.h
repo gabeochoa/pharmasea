@@ -258,6 +258,8 @@ struct PolymorphicBaseClass<BaseComponent>
 template<>
 struct PolymorphicBaseClass<afterhours::BaseComponent>
     : PolymorphicDerivedClasses<
+          // Include BaseComponent itself as an intermediate base
+          BaseComponent,
           // Mirror the same concrete components as our BaseComponent
           Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
           CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
@@ -298,5 +300,5 @@ struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<BaseComponent, AIComponent, Job,
+    bitsery::ext::PolymorphicClassesList<BaseComponent, afterhours::BaseComponent, AIComponent, Job,
                                          afterhours::Entity>;
