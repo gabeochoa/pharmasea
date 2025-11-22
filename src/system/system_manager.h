@@ -92,20 +92,42 @@ struct SystemManager {
     // shared_ptrs
     void for_each(const Entities& entities, float dt,
                   const std::function<void(Entity&, float)>& cb) {
-        std::ranges::for_each(entities,
-                              [cb, dt](std::shared_ptr<Entity> entity) {
-                                  if (!entity) return;
-                                  cb(*entity, dt);
-                              });
+        for (const auto& entity : entities) {
+            if (!entity) continue;
+            // Check if entity is marked for cleanup before processing
+            if (entity->cleanup) continue;
+            // Additional safety: check if entity ID is valid (should always be
+            // >= 0)
+            if (entity->id < 0) continue;
+            try {
+                cb(*entity, dt);
+            } catch (...) {
+                // Skip entities that cause exceptions (likely
+                // invalid/destroyed) Log for debugging but don't crash
+                log_warn("Exception processing entity {} in for_each",
+                         entity->id);
+            }
+        }
     }
 
     void for_each(const Entities& entities, float dt,
                   const std::function<void(const Entity&, float)>& cb) const {
-        std::ranges::for_each(std::as_const(entities),
-                              [cb, dt](std::shared_ptr<Entity> entity) {
-                                  if (!entity) return;
-                                  cb(*entity, dt);
-                              });
+        for (const auto& entity : entities) {
+            if (!entity) continue;
+            // Check if entity is marked for cleanup before processing
+            if (entity->cleanup) continue;
+            // Additional safety: check if entity ID is valid (should always be
+            // >= 0)
+            if (entity->id < 0) continue;
+            try {
+                cb(*entity, dt);
+            } catch (...) {
+                // Skip entities that cause exceptions (likely
+                // invalid/destroyed) Log for debugging but don't crash
+                log_warn("Exception processing entity {} in for_each (const)",
+                         entity->id);
+            }
+        }
     }
 
     void process_state_change(const Entities& entities, float dt);

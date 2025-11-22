@@ -15,6 +15,9 @@ struct CanPathfind : public BaseComponent {
     [[nodiscard]] vec2 get_local_target() { return local_target.value(); }
 
     [[nodiscard]] bool travel_toward(vec2 end, float speed) {
+        if (!parent) return false;
+        if (parent->is_missing<Transform>()) return false;
+        
         // Nothing to do we are already at the goal
         if (is_at_position(end)) return true;
 
@@ -63,11 +66,15 @@ struct CanPathfind : public BaseComponent {
 
    private:
     [[nodiscard]] bool is_at_position(vec2 position) {
+        if (!parent) return false;
+        if (parent->is_missing<Transform>()) return false;
         return vec::distance(parent->get<Transform>().as2(), position) <
                (TILESIZE / 2.f);
     }
 
     void move_transform_toward_local_target(float speed) {
+        if (!parent) return;
+        if (parent->is_missing<Transform>()) return;
         if (!local_target.has_value()) {
             log_warn("Tried to ensure local target but still dont have one");
             return;
@@ -90,6 +97,7 @@ struct CanPathfind : public BaseComponent {
     }
 
     void path_to(vec2 begin, vec2 end) {
+        if (!parent) return;
         if (has_active_request) {
             // just keep waiting
             return;

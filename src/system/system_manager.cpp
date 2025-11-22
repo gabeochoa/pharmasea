@@ -2710,8 +2710,17 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
     entities.reserve(players.size() + ents.size());
 
-    entities.insert(entities.end(), ents.begin(), ents.end());
-    entities.insert(entities.end(), players.begin(), players.end());
+    // Filter out null and cleanup entities when building the list
+    for (const auto& ent : ents) {
+        if (ent && !ent->cleanup) {
+            entities.push_back(ent);
+        }
+    }
+    for (const auto& player : players) {
+        if (player && !player->cleanup) {
+            entities.push_back(player);
+        }
+    }
 
     oldAll = entities;
 

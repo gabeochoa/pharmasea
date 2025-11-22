@@ -32,17 +32,17 @@ struct RespondsToDayNight : public BaseComponent {
     }
 
     void call_day_started() {
-        if (onDayStartedFn) onDayStartedFn(*parent);
+        if (onDayStartedFn && parent) onDayStartedFn(*parent);
     }
     void call_night_started() {
-        if (onNightStartedFn) onNightStartedFn(*parent);
+        if (onNightStartedFn && parent) onNightStartedFn(*parent);
     }
 
     void call_day_ended() {
-        if (onDayEndedFn) onDayEndedFn(*parent);
+        if (onDayEndedFn && parent) onDayEndedFn(*parent);
     }
     void call_night_ended() {
-        if (onNightEndedFn) onNightEndedFn(*parent);
+        if (onNightEndedFn && parent) onNightEndedFn(*parent);
     }
 
    private:

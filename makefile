@@ -71,7 +71,7 @@ main-build: pre-build $(OUTPUT_EXE)
 
 post-build: main-build
 	install_name_tool -change @rpath/libGameNetworkingSockets.dylib $(GNS_LIBDIR)/libGameNetworkingSockets.dylib $(OUTPUT_EXE)
-	./$(OUTPUT_EXE) 2>&1 $(GAME_LOG)
+	# ./$(OUTPUT_EXE) 2>&1 $(GAME_LOG)
 # -g disables sounds 
 # ./$(OUTPUT_EXE) -g 2>&1 $(GAME_LOG)
 
