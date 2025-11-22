@@ -62,7 +62,11 @@ struct Server {
     }
 
     ~Server() {
+        log_info(
+            "internal::Server destructor called, running: {}, interface: {}",
+            running ? "true" : "false", (void *) interface);
         if (interface) {
+            log_info("Cleaning up {} client connections", clients.size());
             for (auto it : clients) {
                 send_announcement_to_client(it.first, "server shutdown",
                                             InternalServerAnnouncement::Warn);
@@ -70,11 +74,15 @@ struct Server {
                                            true);
             }
             clients.clear();
+            log_info("Closing listen socket");
             interface->CloseListenSocket(listen_sock);
             listen_sock = k_HSteamListenSocket_Invalid;
+            log_info("Destroying poll group");
             interface->DestroyPollGroup(poll_group);
             poll_group = k_HSteamNetPollGroup_Invalid;
+            log_info("internal::Server destructor cleanup completed");
         } else {
+            log_info("No interface to clean up, clearing clients");
             clients.clear();
         }
     }
@@ -154,15 +162,22 @@ struct Server {
     }
 
     void startup() {
+        log_info("internal::Server::startup() called");
+        log_info("Calling SteamNetworkingSockets() to get interface");
         interface = SteamNetworkingSockets();
+        log_info("SteamNetworkingSockets() returned: {}", (void *) interface);
 
         if (interface == nullptr) {
             log_warn(
                 "Failed to initialize GameNetworkingSockets (SNS). Hosting "
                 "disabled");
+            log_warn(
+                "SteamNetworkingSockets() returned nullptr - this may indicate "
+                "GNS was not properly initialized");
             running = false;
             return;
         }
+        log_info("GameNetworkingSockets interface obtained successfully");
 
         /// [connection int32] Upper limit of buffered pending bytes to be sent,
         /// if this is reached SendMessage will return k_EResultLimitExceeded
@@ -192,18 +207,26 @@ struct Server {
         opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
                    (void *) Server::SteamNetConnectionStatusChangedCallback);
 
+        log_info("Creating listen socket on port {}", address.m_port);
         listen_sock = interface->CreateListenSocketIP(address, 1, &opt);
         if (listen_sock == k_HSteamListenSocket_Invalid) {
             log_warn("Failed to listen on port {}", address.m_port);
+            running = false;
             return;
         }
+        log_info("Listen socket created successfully: {}",
+                 (unsigned long long) listen_sock);
+        log_info("Creating poll group");
         poll_group = interface->CreatePollGroup();
         if (poll_group == k_HSteamNetPollGroup_Invalid) {
-            log_warn("(poll group) Failed to listen on port {}",
+            log_warn("(poll group) Failed to create poll group on port {}",
                      address.m_port);
+            running = false;
             return;
         }
-        log_info("Server listening on port");
+        log_info("Poll group created successfully: {}",
+                 (unsigned long long) poll_group);
+        log_info("Server listening on port {}", address.m_port);
 
         running = true;
     }

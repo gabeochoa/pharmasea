@@ -14,10 +14,16 @@ static std::unique_ptr<Server> g_server;
 // TODO once clang supports jthread replace with jthread and remove "running
 // = true" to use stop_token
 std::thread Server::start(int port) {
+    log_info("Server::start called with port: {}", port);
     // TODO makeshared doesnt work here
+    log_info("Creating new Server instance");
     g_server.reset(new Server(port));
+    log_info("Server instance created, setting running = true");
     g_server->running = true;
-    return std::thread(std::bind(&Server::run, g_server.get()));
+    log_info("Starting server thread");
+    auto thread = std::thread(std::bind(&Server::run, g_server.get()));
+    log_info("Server thread started, returning thread handle");
+    return thread;
 }
 
 void Server::queue_packet(const ClientPacket& p) {
@@ -47,7 +53,15 @@ void Server::play_sound(vec2 position, strings::sounds::SoundId sound) {
     );
 }
 
-void Server::stop() { g_server->running = false; }
+void Server::stop() {
+    log_info("Server::stop() called");
+    if (g_server) {
+        log_info("Setting g_server->running = false");
+        g_server->running = false;
+    } else {
+        log_warn("Server::stop() called but g_server is null");
+    }
+}
 
 void Server::send_map_state() {
     pharmacy_map->grab_things();

@@ -66,7 +66,10 @@ struct Server {
     float next_player_rare_tick = 0;
 
     explicit Server(int port) {
+        log_info("Server constructor called with port: {}", port);
+        log_info("Creating internal::Server instance");
         server_p.reset(new internal::Server(port));
+        log_info("Setting up server callbacks");
         server_p->set_process_message(
             [this](const internal::Client_t& incoming_client,
                    const std::string& msg) {
@@ -80,14 +83,19 @@ struct Server {
                    internal::InternalServerAnnouncement type) {
                 this->send_announcement(conn, msg, type);
             };
+        log_info("Calling server_p->startup()");
         server_p->startup();
+        log_info("server_p->startup() completed, running state: {}",
+                 server_p->running ? "true" : "false");
 
         // TODO add some kind of seed
         // selection screen
+        log_info("Creating pharmacy_map with default_seed");
         pharmacy_map = std::make_unique<Map>("default_seed");
         GLOBALS.set("server_map", pharmacy_map.get());
         GLOBALS.set("server_players", &players);
         GLOBALS.set("server", this);
+        log_info("Server constructor completed");
     }
 
     void send_map_state();

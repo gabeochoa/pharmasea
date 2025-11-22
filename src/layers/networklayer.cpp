@@ -28,9 +28,9 @@ NetworkLayer::NetworkLayer()
       network_selection_screen("network_selection_screen") {}
 
 void NetworkLayer::NetworkLayer::onStartup() {
-    // Ensure networking system is initialized before any role selection/hosting
-    network::Info::init_connections();
-
+    // Note: init_connections() is already called from game.cpp during startup
+    // so we don't need to call it again here
+    
     if (network_info) {
         if (!Settings::get().data.username.empty()) {
             network_info->lock_in_username();
@@ -146,7 +146,9 @@ void NetworkLayer::draw_role_selector_screen(float) {
 
     if (network_selection_screen.button(
             "HostButton", TranslatableString(strings::i18n::HOST))) {
+        log_info("Host button clicked - attempting to set role to Host");
         network_info->set_role(network::Info::Role::s_Host);
+        log_info("Host button clicked - set_role call completed");
     }
     if (network_selection_screen.button(
             "JoinButton", TranslatableString(strings::i18n::JOIN))) {

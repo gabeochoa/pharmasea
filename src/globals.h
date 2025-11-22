@@ -3,6 +3,11 @@
 
 #include "engine/globals.h"
 
+// steam networking uses an "app id" that we dont have
+// also the code isnt written yet :)
+// TODO :IMPACT: add support for steam connections
+#define BUILD_WITHOUT_STEAM
+
 // YY / MM / DD (Monday of week)
 constexpr std::string_view VERSION = "alpha_0.24.09.06";
 constexpr size_t HASHED_VERSION = hashString(VERSION);
