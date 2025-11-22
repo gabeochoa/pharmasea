@@ -15,6 +15,7 @@
 #include "lerp_test.h"
 #include "rect_split_tests.h"
 #include "size_ents.h"
+#include "test_entity_serialization.h"
 #include "test_pathing.h"
 #include "test_ui_widget.h"
 
@@ -71,6 +72,7 @@ inline void run_all() {
 
     size_test();
     test_rect_split();
+    test_entity_serialization();
 
     // back to default , preload will set it as well
     LOG_LEVEL = old_level;

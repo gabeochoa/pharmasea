@@ -173,7 +173,7 @@ void mark_item_in_floor_area(Entity& entity, float) {
     IsFloorMarker& ifm = entity.get<IsFloorMarker>();
 
     std::vector<int> ids =
-        EntityQuery(SystemManager::get().oldAll)
+        EQ(SystemManager::get().oldAll)
             .whereNotID(entity.id)  // not us
             .whereNotType(EntityType::Player)
             .whereNotType(EntityType::RemotePlayer)
@@ -817,7 +817,7 @@ void refetch_dynamic_model_names(Entity& entity, float) {
 void count_all_possible_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
-    size_t count = EntityQuery(SystemManager::get().oldAll)
+    size_t count = EQ(SystemManager::get().oldAll)
                        .whereType(EntityType::Player)
                        .gen_count();
 
@@ -827,7 +827,7 @@ void count_all_possible_trigger_area_entrants(Entity& entity, float) {
 void count_trigger_area_entrants(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
 
-    size_t count = EntityQuery(SystemManager::get().oldAll)
+    size_t count = EQ(SystemManager::get().oldAll)
                        .whereType(EntityType::Player)
                        .whereCollides(entity.get<Transform>().expanded_bounds(
                            {0, TILESIZE, 0}))
@@ -843,7 +843,7 @@ void count_in_building_trigger_area_entrants(Entity& entity, float) {
     if (!building) return;
 
     size_t count =
-        EntityQuery(SystemManager::get().oldAll)
+        EQ(SystemManager::get().oldAll)
             .whereType(EntityType::Player)
             .whereInside(building.value().min(), building.value().max())
             .gen_count();
@@ -1016,7 +1016,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
         GameState::get().transition_to_game();
 
-        for (RefEntity player : EntityQuery(SystemManager::get().oldAll)
+        for (RefEntity player : EQ(SystemManager::get().oldAll)
                                     .whereType(EntityType::Player)
                                     .whereInside(PROGRESSION_BUILDING.min(),
                                                  PROGRESSION_BUILDING.max())
@@ -1169,7 +1169,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             GameState::get().transition_to_game();
 
             for (RefEntity player :
-                 EntityQuery(SystemManager::get().oldAll)
+                 EQ(SystemManager::get().oldAll)
                      .whereType(EntityType::Player)
                      .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
                      .gen()) {
@@ -1343,7 +1343,7 @@ void update_visuals_for_settings_changer(Entity& entity, float) {
 bool _create_nuxes(Entity&) {
     if (SystemManager::get().is_nighttime()) return false;
 
-    OptEntity player = EntityQuery(SystemManager::get().oldAll)
+    OptEntity player = EQ(SystemManager::get().oldAll)
                            .whereType(EntityType::Player)
                            .gen_first();
     if (!player.has_value()) return false;
@@ -1378,7 +1378,7 @@ bool _create_nuxes(Entity&) {
 
                     // We have to do oldAll because players
                     // are not in the normal entity list
-                    return EntityQuery(SystemManager::get().oldAll)
+                    return EQ(SystemManager::get().oldAll)
                         .whereID(inux.entityID)
                         .whereInRange(reg->get<Transform>().as2(), 2.f)
                         .has_values();
@@ -1400,7 +1400,7 @@ bool _create_nuxes(Entity&) {
                 .should_attach_to(player_id)
                 .set_eligibility_fn([](const IsNux&) -> bool { return true; })
                 .set_completion_fn([register_id](const IsNux& inux) -> bool {
-                    return EntityQuery(SystemManager::get().oldAll)
+                    return EQ(SystemManager::get().oldAll)
                         .whereID(inux.entityID)
                         .whereIsHoldingFurnitureID(register_id)
                         .has_values();
@@ -1450,7 +1450,7 @@ bool _create_nuxes(Entity&) {
 
                     // We have to do oldAll because players
                     // are not in the normal entity list
-                    return EntityQuery(SystemManager::get().oldAll)
+                    return EQ(SystemManager::get().oldAll)
                         .whereID(player_id)
                         .whereInRange(ffd->get<Transform>().as2(), 2.f)
                         .has_values();
@@ -1548,7 +1548,7 @@ bool _create_nuxes(Entity&) {
                     inux.should_attach_to(cups->id);
                 })
                 .set_completion_fn([player_id](const IsNux&) -> bool {
-                    return EntityQuery(SystemManager::get().oldAll)
+                    return EQ(SystemManager::get().oldAll)
                         .whereID(player_id)
                         .whereIsHoldingItemOfType(EntityType::Drink)
                         .has_values();
@@ -1603,7 +1603,7 @@ bool _create_nuxes(Entity&) {
                     inux.should_attach_to(sodamach->id);
                 })
                 .set_completion_fn([player_id](const IsNux&) -> bool {
-                    return EntityQuery(SystemManager::get().oldAll)
+                    return EQ(SystemManager::get().oldAll)
                         .whereID(player_id)
                         .whereIsHoldingItemOfType(EntityType::SodaSpout)
                         .has_values();
@@ -1655,7 +1655,7 @@ bool _create_nuxes(Entity&) {
                             .has_values();
 
                     bool player_holding_spout =
-                        EntityQuery(SystemManager::get().oldAll)
+                        EQ(SystemManager::get().oldAll)
                             .whereType(EntityType::Player)
                             .whereHasComponent<CanHoldItem>()
                             .whereIsHoldingItemOfType(EntityType::SodaSpout)
@@ -1670,7 +1670,7 @@ bool _create_nuxes(Entity&) {
                 })
                 .set_completion_fn([](const IsNux&) -> bool {
                     // No players holding spouts anymore
-                    return EntityQuery(SystemManager::get().oldAll)
+                    return EQ(SystemManager::get().oldAll)
                         .whereType(EntityType::Player)
                         .whereIsHoldingItemOfType(EntityType::SodaSpout)
                         .is_empty();

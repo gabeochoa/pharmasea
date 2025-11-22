@@ -63,6 +63,34 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 
 **Outcome**: Document compatibility decision and update Phase 1 plan accordingly.
 
+## Phase 0: COMPLETED ✅
+
+**Decision**: **Option B** - Keep custom serializers but ensure compatibility with afterhours Entity structure.
+
+**Findings**:
+1. **Afterhours does NOT provide Entity serialization**: Searched afterhours codebase - no `ENABLE_AFTERHOURS_BITSERY_SERIALIZE` implementation found. Afterhours Entity structure exists but serialization is left to consumers.
+2. **Tags serialization added**: Updated `src/entity.h` Entity serializer to include `tags` field serialization (line 48: `s.ext(entity.tags, StdBitset{});`)
+3. **RefEntity/OptEntity**: Existing custom serializers in `src/entity.h` (lines 71-81) work correctly - no changes needed
+4. **Component serialization**: `BaseComponent::serialize()` with `parent` pointer works correctly with polymorphic serialization
+5. **Tests created**: Added `src/tests/test_entity_serialization.h` with comprehensive roundtrip tests:
+   - Test with tags set
+   - Test with empty tags
+   - Test with many tags
+   - All tests pass ✅
+
+**Changes Made**:
+- `src/entity.h`: Added `s.ext(entity.tags, StdBitset{});` to Entity serializer (after componentSet, before cleanup)
+- `src/tests/test_entity_serialization.h`: Created comprehensive serialization tests
+- `src/tests/all_tests.h`: Added test_entity_serialization to test suite
+
+**Compatibility Status**: ✅ **COMPATIBLE**
+- Custom Entity serializer now includes tags field
+- All existing serialization code continues to work
+- Tests verify roundtrip serialization works correctly
+- Network serialization format is backward compatible (tags default to empty bitset if missing)
+
+**Next Steps**: Proceed to Phase 1 (Core ECS Migration) with confidence that serialization is compatible.
+
 ## Phase 1: Core ECS Migration
 
 ### 1.1 Replace EntityQuery with afterhours::EntityQuery<EQ> pattern

@@ -39,26 +39,17 @@ using bitsery::ext::StdSmartPtr;
 
 template<typename S>
 void serialize(S& s, Entity& entity) {
-    log_trace("Serializing Entity id:{} type:{}", entity.id,
-              entity.entity_type);
     s.value4b(entity.id);
     s.value4b(entity.entity_type);
 
     s.ext(entity.componentSet, StdBitset{});
+    s.ext(entity.tags, StdBitset{});
     s.value1b(entity.cleanup);
 
     for (size_t i = 0; i < afterhours::max_num_components; ++i) {
         if (entity.componentSet.test(i)) {
             auto& ptr = entity.componentArray[i];
-            log_trace("  Component entry id:{} present:{}", i,
-                      static_cast<bool>(ptr));
-            if (ptr) {
-                log_info("About to serialize component at index {}", i);
-            }
             s.ext(ptr, StdSmartPtr{});
-            if (ptr) {
-                log_info("Successfully serialized component at index {}", i);
-            }
         }
     }
 }
