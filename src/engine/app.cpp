@@ -13,6 +13,7 @@
 #include "raylib.h"
 //
 
+#include "bypass_helper.h"
 #include "log.h"
 #include "settings.h"
 #include "shader_library.h"
@@ -197,6 +198,10 @@ void App::loop(float dt) {
     for (Layer* layer : layerstack) {
         if (layer) layer->onUpdate(dt);
     }
+
+    // Auto-bypass: inject clicks via event system (before draw so buttons see
+    // them)
+    bypass_helper::inject_clicks_for_bypass(dt);
 
     draw_all_to_texture(dt);
     render_to_screen();

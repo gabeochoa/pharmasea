@@ -29,6 +29,7 @@ static bool ENABLE_MODELS = true;
 static bool ENABLE_SOUND = true;
 static bool TESTS_ONLY = false;
 static bool ENABLE_UI_TEST = false;
+extern bool BYPASS_MENU;
 
 // TODO :BE: is there a way for us to move these to engine
 // and then let the game pass them in or something _while_ staying const?

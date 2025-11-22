@@ -9,6 +9,11 @@
 #include "ui_context.h"
 #include "widget.h"
 
+// Forward declare
+namespace input_injector {
+    void inject_scheduled_click();
+}
+
 namespace ui {
 
 // TODO im not able to move this to cpp without breaking tabbing
@@ -21,6 +26,10 @@ inline void begin(std::shared_ptr<ui::UIContext> ui_context, float dt) {
     }
 
     focus::begin();
+    
+    // Inject any scheduled clicks (after focus::begin() resets mouse state)
+    input_injector::inject_scheduled_click();
+    
     //
     context->begin(dt);
 }

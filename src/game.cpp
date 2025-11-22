@@ -78,6 +78,9 @@ long long there_ping = 0;
 long long return_ping = 0;
 }  // namespace network
 
+// Define BYPASS_MENU (declared as extern in globals.h)
+bool BYPASS_MENU = false;
+
 void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues
     // with network initlization
@@ -205,6 +208,12 @@ void process_dev_flags(char* argv[]) {
 
     if (cmdl[{"--disable-sound", "-S"}]) {
         ENABLE_SOUND = false;
+    }
+
+    if (cmdl[{"--bypass-menu"}]) {
+        BYPASS_MENU = true;
+        log_info(
+            "Bypass: --bypass-menu flag detected, BYPASS_MENU set to true");
     }
 
 #endif

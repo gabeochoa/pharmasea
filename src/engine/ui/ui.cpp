@@ -9,6 +9,7 @@
 #include "../font_sizer.h"
 #include "../font_util.h"
 #include "../gamepad_axis_with_dir.h"
+#include "../input_injector.h"
 #include "../keymap.h"
 #include "../log.h"
 #include "../statemanager.h"
@@ -50,6 +51,10 @@ UIContext* globalContext;
 CallbackRegistry callback_registry;
 
 void end() {
+    // Release any scheduled click after buttons have been checked
+    // This allows is_mouse_click to detect the click (it requires !leftDown)
+    input_injector::release_scheduled_click();
+    
     callback_registry.execute_callbacks();
     focus::end();
 
