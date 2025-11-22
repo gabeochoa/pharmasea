@@ -203,6 +203,9 @@ void App::loop(float dt) {
     // them)
     bypass_helper::inject_clicks_for_bypass(dt);
 
+    // Update key hold state for bypass
+    input_injector::update_key_hold(dt);
+
     draw_all_to_texture(dt);
     render_to_screen();
 

@@ -2,6 +2,8 @@
 
 #include "system_manager.h"
 
+#include "afterhours_systems.h"
+
 ///
 #include "../building_locations.h"
 #include "../components/adds_ingredient.h"
@@ -2703,6 +2705,15 @@ void SystemManager::on_game_state_change(game::State new_state,
     transitions.emplace_back(std::make_pair(old_state, new_state));
 }
 
+// Register afterhours systems in the constructor
+// This is called after SystemManager singleton is created
+void SystemManager::register_afterhours_systems() {
+    // Register proof-of-concept timer system
+    // systems.register_update_system(std::make_unique<system_manager::TimerSystem>());
+
+    // TODO: Register more systems as we migrate them
+}
+
 void SystemManager::update_all_entities(const Entities& players, float dt) {
     // TODO speed?
     Entities entities;
@@ -2762,6 +2773,11 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
         }
         every_frame_update(entities, dt);
         process_state_change(entities, dt);
+
+        // Run afterhours systems
+        // Note: systems.tick() expects a non-const Entities&
+        // We use oldAll which contains the same entities but is mutable
+        systems.tick(oldAll, dt);
     }
 }
 

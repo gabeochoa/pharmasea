@@ -11,7 +11,7 @@
 
 // Forward declare
 namespace input_injector {
-    void inject_scheduled_click();
+void inject_scheduled_click();
 }
 
 namespace ui {
@@ -26,10 +26,10 @@ inline void begin(std::shared_ptr<ui::UIContext> ui_context, float dt) {
     }
 
     focus::begin();
-    
+
     // Inject any scheduled clicks (after focus::begin() resets mouse state)
     input_injector::inject_scheduled_click();
-    
+
     //
     context->begin(dt);
 }

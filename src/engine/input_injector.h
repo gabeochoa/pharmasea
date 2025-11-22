@@ -29,4 +29,13 @@ inline void inject_key_press(int keycode) {
     App::get().processEvent(event);
 }
 
+// Start holding a key for a specific duration (call update_key_hold each frame)
+void hold_key_for_duration(int keycode, float duration);
+
+// Update key hold state (call this each frame)
+void update_key_hold(float dt);
+
+// Check if a key is synthetically held down (for movement system)
+bool is_key_synthetically_down(int keycode);
+
 }  // namespace input_injector

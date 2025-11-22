@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../ah.h"
 #include "../engine/keymap.h"
 #include "../engine/singleton.h"
 #include "../entity.h"
@@ -48,6 +49,9 @@ struct SystemManager {
     // so that we run the first time always
     float timePassed = 0.016f;
 
+    // afterhours SystemManager for entity systems
+    afterhours::SystemManager systems;
+
     SystemManager() {
         // Register state manager
         GameState::get().register_on_change(
@@ -87,6 +91,7 @@ struct SystemManager {
     using Transition = std::pair<game::State, game::State>;
     std::vector<Transition> transitions;
     void on_game_state_change(game::State new_state, game::State old_state);
+    void register_afterhours_systems();
 
     // TODO this probably shouldnt be const but it can be since it holds
     // shared_ptrs

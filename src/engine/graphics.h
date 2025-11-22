@@ -81,6 +81,11 @@ using raylib::BoundingBox;
 using raylib::Color;
 using raylib::Rectangle;
 
+// Forward declaration for synthetic key state (bypass functionality)
+namespace input_injector {
+bool is_key_synthetically_down(int keycode);
+}
+
 namespace ext {
 
 // Drawing
@@ -114,6 +119,10 @@ inline void set_clipboard_text(const char* text) {
 }
 
 [[nodiscard]] inline bool is_key_down(int keycode) {
+    // Check synthetic key state first (for bypass)
+    if (input_injector::is_key_synthetically_down(keycode)) {
+        return true;
+    }
     return raylib::IsKeyDown(keycode);
 }
 

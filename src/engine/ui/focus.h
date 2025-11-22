@@ -9,7 +9,7 @@
 
 // Forward declare
 namespace input_injector {
-    void release_scheduled_click();
+void release_scheduled_click();
 }
 
 namespace ui {
@@ -72,12 +72,12 @@ inline void active_if_mouse_inside(const Widget& widget,
 inline bool is_mouse_click(const Widget& widget) {
     // If there's a pending injected click and widget is active_and_hot,
     // release it now so we can detect the click
-    // This allows active_if_mouse_inside to see leftDown=true (set widget as active),
-    // then is_mouse_click to see leftDown=false (detect the click)
+    // This allows active_if_mouse_inside to see leftDown=true (set widget as
+    // active), then is_mouse_click to see leftDown=false (detect the click)
     if (mouse_info.leftDown && is_active_and_hot(widget.id)) {
         input_injector::release_scheduled_click();
     }
-    
+
     bool let_go_of_mouse = !mouse_info.leftDown;
     bool was_click = let_go_of_mouse && is_active_and_hot(widget.id);
     if (was_click) {
