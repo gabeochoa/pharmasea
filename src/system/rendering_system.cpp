@@ -23,6 +23,7 @@
 #include "../components/is_nux_manager.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_squirter.h"
+#include "../components/is_store_spawned.h"
 #include "../components/is_toilet.h"
 #include "../components/transform.h"
 #include "../dataclass/upgrades.h"
@@ -549,7 +550,7 @@ void render_nux(const Entity& entity, float) {
         OptEntity attached_opt = EntityHelper::getEntityForID(nux.entityID);
         // if the attached entity is a player we have to do something else
         if (!attached_opt.has_value()) {
-            attached_opt = EntityQuery(SystemManager::get().oldAll)
+            attached_opt = EQ(SystemManager::get().oldAll)
                                .whereID(nux.entityID)
                                .gen_first();
         }

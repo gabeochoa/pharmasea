@@ -252,7 +252,7 @@ struct helper {
 
     void validate() {
         const auto get_first_matching = [](EntityType et) -> OptEntity {
-            return EntityQuery().whereType(et).first().gen_first();
+            return EQ().whereType(et).first().gen_first();
         };
         const auto validate_exist = [get_first_matching](EntityType et) {
             VALIDATE(get_first_matching(et),
@@ -278,8 +278,7 @@ struct helper {
                      "map needs to have at least one customer spawn point");
 
             OptEntity reg =
-                EntityQuery()
-                    .whereType(EntityType::Register)
+                EQ().whereType(EntityType::Register)
                     .whereLambda([&customer](const Entity& e) {
                         auto new_path = pathfinder::find_path(
                             customer->get<Transform>().as2(),

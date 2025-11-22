@@ -31,7 +31,7 @@ OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
         switch (name) {
             case NamedEntity::Sophie:
                 OptEntity opt_e =
-                    EntityQuery().whereType(EntityType::Sophie).gen_first();
+                    EQ().whereType(EntityType::Sophie).gen_first();
                 e_ptr = opt_e.has_value() ? opt_e.value() : nullptr;
                 break;
         }
@@ -221,7 +221,7 @@ OptEntity EntityHelper::getEntityForID(EntityID id) {
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,
                                          const EntityType& type, float range) {
     const Transform& transform = entity.get<Transform>();
-    return EntityQuery()
+    return EQ()
         .whereType(type)
         .whereInRange(transform.as2(), range)
         .orderByDist(transform.as2())
@@ -229,14 +229,14 @@ OptEntity EntityHelper::getClosestOfType(const Entity& entity,
 }
 
 OptEntity EntityHelper::getMatchingFloorMarker(IsFloorMarker::Type type) {
-    return EntityQuery()
+    return EQ()
         .whereHasComponentAndLambda<IsFloorMarker>(
             [type](const IsFloorMarker& fm) { return fm.type == type; })
         .gen_first();
 }
 
 OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
-    return EntityQuery()
+    return EQ()
         .whereHasComponentAndLambda<IsTriggerArea>(
             [type](const IsTriggerArea& ta) { return ta.type == type; })
         .gen_first();
@@ -245,7 +245,7 @@ OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
 // TODO: make this more explicit that we are ignoring store entities
 // (this was already the default but new callers should know)
 bool EntityHelper::doesAnyExistWithType(const EntityType& type) {
-    return EntityQuery().whereType(type).has_values();
+    return EQ().whereType(type).has_values();
 }
 
 OptEntity EntityHelper::getMatchingEntityInFront(
@@ -258,7 +258,7 @@ OptEntity EntityHelper::getMatchingEntityInFront(
     VALIDATE(range > 0,
              fmt::format("range has to be positive but was {}", range));
     /**
-        auto& eq = EntityQuery()
+        auto& eq = EQ()
                    .whereLambda(filter)
                    .whereInFront(tile)
                    .whereSnappedPositionMatches(vec::snap(tile));
@@ -307,7 +307,7 @@ OptEntity EntityHelper::getMatchingEntityInFront(
 RefEntities EntityHelper::getAllInRangeFiltered(
     vec2 range_min, vec2 range_max,
     const std::function<bool(const Entity&)>& filter) {
-    return EntityQuery()
+    return EQ()
         .whereInside(range_min, range_max)
         // idk its called all
         .include_store_entities()
@@ -316,7 +316,7 @@ RefEntities EntityHelper::getAllInRangeFiltered(
 }
 
 RefEntities EntityHelper::getAllInRange(vec2 range_min, vec2 range_max) {
-    return EntityQuery()
+    return EQ()
         .whereInside(range_min, range_max)
         // idk its called all
         .include_store_entities()
@@ -328,7 +328,7 @@ OptEntity EntityHelper::getOverlappingEntityIfExists(
     const std::function<bool(const Entity&)>& filter,
     bool include_store_entities) {
     const vec2 position = entity.get<Transform>().as2();
-    return EntityQuery()                                 //
+    return EQ()                                          //
         .whereNotID(entity.id)                           //
         .whereLambdaExistsAndTrue(filter)                //
         .whereHasComponent<IsSolid>()                    //

@@ -12,6 +12,7 @@
 #include "../components/has_waiting_queue.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
+#include "../components/is_store_spawned.h"
 #include "../components/is_toilet.h"
 #include "../components/transform.h"
 #include "../dataclass/ingredient.h"
@@ -49,9 +50,8 @@ void customers_in_store(Entity& entity) {
 
 // Handle some player is holding furniture
 void player_holding_furniture(Entity& entity) {
-    bool all_empty = EntityQuery(SystemManager::get().oldAll)
-                         .whereIsHoldingAnyFurniture()
-                         .is_empty();
+    bool all_empty =
+        EQ(SystemManager::get().oldAll).whereIsHoldingAnyFurniture().is_empty();
 
     entity.get<CollectsCustomerFeedback>().write_reason(
         CollectsCustomerFeedback::WaitingReason::HoldingFurniture, !all_empty,
@@ -342,7 +342,7 @@ void deleting_item_needed_for_recipe(Entity& entity) {
 void holding_stolen_item(Entity& entity) {
     // Find all players holding Store items and not in the store
     OptEntity player =
-        EntityQuery(SystemManager::get().oldAll)
+        EQ(SystemManager::get().oldAll)
             .whereNotInside(STORE_BUILDING.min(), STORE_BUILDING.max())
             .whereIsHoldingAnyFurnitureThatMatches([](const Entity& furniture) {
                 return furniture.has<IsStoreSpawned>();
