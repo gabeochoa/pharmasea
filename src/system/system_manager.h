@@ -149,11 +149,16 @@ struct SystemManager {
     // - in_round_update -> InRoundUpdateSystem
     // - planning_update -> PlanningUpdateSystem
     // These are kept for reference but should not be called
-    [[deprecated("Use afterhours systems instead")]] void sixty_fps_update(const Entities& entity_list, float dt);
-    [[deprecated("Use afterhours systems instead")]] void game_like_update(const Entities& entity_list, float dt);
-    [[deprecated("Use afterhours systems instead")]] void in_round_update(const Entities& entity_list, float dt);
-    [[deprecated("Use afterhours systems instead")]] void model_test_update(const Entities& entity_list, float dt);
-    [[deprecated("Use afterhours systems instead")]] void planning_update(const Entities& entity_list, float dt);
+    [[deprecated("Use afterhours systems instead")]] void sixty_fps_update(
+        const Entities& entity_list, float dt);
+    [[deprecated("Use afterhours systems instead")]] void game_like_update(
+        const Entities& entity_list, float dt);
+    [[deprecated("Use afterhours systems instead")]] void in_round_update(
+        const Entities& entity_list, float dt);
+    [[deprecated("Use afterhours systems instead")]] void model_test_update(
+        const Entities& entity_list, float dt);
+    [[deprecated("Use afterhours systems instead")]] void planning_update(
+        const Entities& entity_list, float dt);
     void progression_update(const Entities& entity_list, float dt);
     void store_update(const Entities&, float);
 };

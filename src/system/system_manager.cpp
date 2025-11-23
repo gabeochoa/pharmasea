@@ -2766,10 +2766,10 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
     // The systems have should_run() methods that conditionally enable them
     // based on game state, matching the original conditional logic.
     //
-    // Note: SixtyFpsUpdateSystem runs every frame (not just at 60fps) for better
-    // responsiveness, especially for trigger areas. The timePassed accumulator
-    // is kept for potential future use but is no longer needed for system timing.
-    // We still reset it to maintain the original timing pattern.
+    // Note: SixtyFpsUpdateSystem runs every frame (not just at 60fps) for
+    // better responsiveness, especially for trigger areas. The timePassed
+    // accumulator is kept for potential future use but is no longer needed for
+    // system timing. We still reset it to maintain the original timing pattern.
     if (timePassed >= 0.016f) {
         timePassed = 0;
     }
