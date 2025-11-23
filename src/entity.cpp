@@ -4,6 +4,13 @@
 #include "components/type.h"
 
 bool check_type(const Entity& entity, EntityType type) {
+    if (!entity.has<Type>()) {
+        log_error(
+            "check_type: entity {} does not have Type component. Checking for "
+            "type: {}",
+            entity.id, magic_enum::enum_name<EntityType>(type));
+        // Will crash on next line to help identify the issue
+    }
     return type == entity.get<Type>().type;
 }
 
