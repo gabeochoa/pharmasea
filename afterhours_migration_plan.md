@@ -186,6 +186,24 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 
 **Note**: Game-specific functionality like `getNamedEntity`, `isWalkable` should remain as wrapper functions
 
+**Important Notes for Future Development**:
+
+1. **Type Definition Order (Vector2Type, RectangleType)**:
+   - **Issue**: Afterhours uses `#ifndef` checks in `developer.h` to define fallback types (`MyVec2`, `MyRectangle`)
+   - **Solution**: Define `#define Vector2Type raylib::Vector2` and `#define RectangleType raylib::Rectangle` in `pch.hpp` BEFORE any afterhours headers are included
+   - **Why**: `pch.hpp` is included via `-include` in the build system, ensuring macros are defined before any afterhours headers process `#ifndef` checks
+   - **Pattern**: Any type definitions that afterhours checks with `#ifndef` must be defined in `pch.hpp` or before the first afterhours include
+
+2. **Temp Entities and Validation**:
+   - **Issue**: After EntityHelper migration, new entities are created in `temp_entities` and must be merged before queries can find them
+   - **Problem**: `EQ()` queries `get_entities()` which doesn't include `temp_entities` until merged
+   - **Solution**: Always call `EntityHelper::merge_entity_arrays()` before:
+     - Entity queries (`EQ().whereType(...)`)
+     - Validation functions that query entities
+     - Any code that expects newly created entities to be findable
+   - **Pattern**: After batch entity creation (map generation, level loading), merge before validation/queries
+   - **Future Consideration**: Consider making `EQ()` constructor automatically merge, or add `force_merge` option to EntityQuery
+
 ## Phase 2: Plugin Migration
 
 **Status**: ❌ **NOT STARTED** - All plugin migrations pending evaluation and implementation
