@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "engine/font_util.h"
 #include "engine/globals.h"
 #include "external_include.h"
 //

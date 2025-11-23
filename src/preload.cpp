@@ -3,6 +3,7 @@
 
 #include <istream>
 
+#include "afterhours/src/font_helper.h"
 #include "config_key_library.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/settings.h"
@@ -88,13 +89,13 @@ void Preload::_load_font_from_name(const std::string& filename,
         std::stringstream buffer;
         buffer << ifs.rdbuf();
 
-        // TODO :BE: this is a copypaste from font_util.h
+        // Use afterhours font helper utilities
         int codepointCount = 0;
         int* codepoints =
             raylib::LoadCodepoints(buffer.str().c_str(), &codepointCount);
 
         int codepointNoDupsCounts = 0;
-        int* codepointsNoDups = CodepointRemoveDuplicates(
+        int* codepointsNoDups = afterhours::remove_duplicate_codepoints(
             codepoints, codepointCount, &codepointNoDupsCounts);
 
         raylib::UnloadCodepoints(codepoints);
@@ -314,17 +315,21 @@ void Preload::load_models() {
             log_trace("attempting loading {} as {} ", modelInfo.filename,
                       modelInfo.library_name);
 
-            // NOTE: GLB/GLTF support is temporarily disabled after upgrading to raylib 5.5.
-            // Some GLB/GLTF models that worked in raylib 4 may have compatibility issues.
-            // To re-enable: remove this block and test each GLB/GLTF model individually.
-            // GLTF support is enabled in raylib config (SUPPORT_FILEFORMAT_GLTF), but
-            // specific assets may need validation or conversion.
+            // NOTE: GLB/GLTF support is temporarily disabled after upgrading to
+            // raylib 5.5. Some GLB/GLTF models that worked in raylib 4 may have
+            // compatibility issues. To re-enable: remove this block and test
+            // each GLB/GLTF model individually. GLTF support is enabled in
+            // raylib config (SUPPORT_FILEFORMAT_GLTF), but specific assets may
+            // need validation or conversion.
             {
                 std::string lower = modelInfo.filename;
                 std::transform(lower.begin(), lower.end(), lower.begin(),
                                ::tolower);
                 if (lower.ends_with(".glb") || lower.ends_with(".gltf")) {
-                    log_warn("Skipping model {} (GLB/GLTF temporarily disabled for raylib 5.5 compatibility)", lower);
+                    log_warn(
+                        "Skipping model {} (GLB/GLTF temporarily disabled for "
+                        "raylib 5.5 compatibility)",
+                        lower);
                     continue;
                 }
             }

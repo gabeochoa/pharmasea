@@ -308,20 +308,23 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: Only migrate if pharmasea uses sprite-based 2D rendering. 3D model rendering should stay custom.
 
 ### 2.8 Use afterhours Font Helper Utilities
-**Status**: ❌ **NOT STARTED**
-**Files**: `src/engine/font_util.h`, `src/engine/font_library.h`, font loading code
+**Status**: ✅ **COMPLETE**
+**Files**: `src/engine/font_util.h` (removed), `src/engine/font_library.h`, font loading code
 
 **Current State**:
-- Pharmasea has `FontLibrary` and `font_util.h` for font management
-- Afterhours has `font_helper.h` with font loading utilities and text measurement
+- ✅ Added `afterhours::remove_duplicate_codepoints()` to afterhours library
+- ✅ Added `afterhours::load_font_for_string()` to afterhours library
+- ✅ Migrated `preload.cpp` to use afterhours font helpers directly
+- ✅ Removed `font_util.h` - all functionality now in afterhours library
+- `FontLibrary` still exists but now uses afterhours font helpers internally
 
-**Steps**:
-- Use `afterhours::load_font_from_file_with_codepoints()` for CJK font loading
-- Use `afterhours::measure_text()` and `measure_text_utf8()` for text measurement
-- Keep `FontLibrary` wrapper but use afterhours font helpers internally
-- Evaluate if afterhours font helpers can replace `font_util.h` functions
+**Changes Made**:
+- Added `remove_duplicate_codepoints()` and `load_font_for_string()` to `vendor/afterhours/src/font_helper.h`
+- Updated `src/preload.cpp` to use `afterhours::remove_duplicate_codepoints()` directly
+- Removed `src/engine/font_util.h` (no longer needed)
+- Removed includes of `font_util.h` from `preload.h` and `ui.cpp`
 
-**Note**: Afterhours font helpers are utilities, not a full library replacement - use alongside FontLibrary
+**Note**: Afterhours font helpers are now complete and Pharmasea fully migrated
 
 ### 2.9 Use afterhours Color Utilities
 **Status**: ❌ **NOT STARTED**

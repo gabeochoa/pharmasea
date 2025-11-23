@@ -7,7 +7,6 @@
 #include "../assert.h"
 #include "../event.h"
 #include "../font_sizer.h"
-#include "../font_util.h"
 #include "../gamepad_axis_with_dir.h"
 #include "../input_injector.h"
 #include "../keymap.h"
