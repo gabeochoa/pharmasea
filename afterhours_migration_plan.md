@@ -327,21 +327,24 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: Afterhours font helpers are now complete and Pharmasea fully migrated
 
 ### 2.9 Use afterhours Color Utilities
-**Status**: ❌ **NOT STARTED**
+**Status**: ✅ **COMPLETE**
 **Files**: Color usage throughout codebase
 
 **Current State**:
-- Pharmasea uses raylib colors directly
-- Afterhours has `color` plugin with utilities: `darken()`, `increase()`, `set_opacity()`, `opacity_pct()`
-- Afterhours has `HasColor` component for dynamic colors
+- ✅ Added color utility functions to afterhours: `get_opposite()`, `comp_min()`, `comp_max()`, `is_empty()`, `to_hsl()`, `to_rgb()`, `get_highlighted()`
+- ✅ Replaced `using raylib::Color` with `using Color = afterhours::Color` in graphics.h
+- ✅ Updated rendering_system.cpp to use `afterhours::colors::` functions directly
+- ✅ Removed wrapper functions from ui::color namespace
+- ✅ All color utilities now use afterhours::colors namespace
 
-**Steps**:
-- Use `afterhours::colors::darken()`, `increase()`, `set_opacity()`, `opacity_pct()` utilities
-- Consider `afterhours::HasColor` component for entities with dynamic colors
-- Replace manual color manipulation with afterhours utilities
-- Use `afterhours::colors` namespace constants where applicable
+**Changes Made**:
+- Added color utility functions to `vendor/afterhours/src/plugins/color.h`
+- Updated `src/engine/graphics.h` to use `afterhours::Color` instead of `raylib::Color`
+- Updated `src/system/rendering_system.cpp` to call `afterhours::colors::` functions directly
+- Removed wrapper functions from `src/engine/ui/color.h`
+- Fixed EPSILON macro conflict (renamed to COLOR_EPSILON in afterhours)
 
-**Note**: Low-priority quality-of-life improvement, not critical migration
+**Note**: Pharmasea now fully uses afterhours::Color and color utilities
 
 ### 2.10 Migrate Bitset Utils to afterhours::bitset_utils
 **Status**: ❌ **NOT STARTED**

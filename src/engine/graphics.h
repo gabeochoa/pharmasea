@@ -78,8 +78,13 @@ typedef raylib::Vector4 vec4;
 #endif
 
 using raylib::BoundingBox;
-using raylib::Color;
 using raylib::Rectangle;
+// Use afterhours::Color instead of raylib::Color directly
+#ifndef AFTER_HOURS_USE_RAYLIB
+#define AFTER_HOURS_USE_RAYLIB
+#endif
+#include "afterhours/src/plugins/color.h"
+using Color = afterhours::Color;
 
 // Forward declaration for synthetic key state (bypass functionality)
 namespace input_injector {

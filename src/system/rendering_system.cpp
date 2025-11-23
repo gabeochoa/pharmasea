@@ -216,20 +216,20 @@ void draw_valid_colored_box(const Transform& transform,
                             bool is_highlighted) {
     Color f = renderer.face();
     // TODO Maybe should move into DrawCubeCustom
-    if (ui::color::is_empty(f)) {
+    if (afterhours::colors::is_empty(f)) {
         log_warn("Face color is empty");
         f = PINK;
     }
 
     Color b = renderer.base();
-    if (ui::color::is_empty(b)) {
+    if (afterhours::colors::is_empty(b)) {
         log_warn("Base color is empty");
         b = PINK;
     }
 
     if (is_highlighted) {
-        f = ui::color::getHighlighted(f);
-        b = ui::color::getHighlighted(b);
+        f = afterhours::colors::get_highlighted(f);
+        b = afterhours::colors::get_highlighted(b);
     }
 
     DrawCubeCustom(transform.raw() + transform.viz_offset(), transform.sizex(),
@@ -582,13 +582,13 @@ void render_nux(const Entity& entity, float) {
 
             bool has_model = draw_transform_with_model(
                 transform, ghost,
-                ui::color::change_opacity(ui::color::green_apple, 100));
+                afterhours::colors::set_opacity(ui::color::green_apple, 100));
 
             if (!has_model) {
                 DrawCubeCustom(
                     transform.pos(), 1.f, 1.f, 1.f, 0,
-                    ui::color::change_opacity(ui::color::green_apple, 100),
-                    ui::color::change_opacity(ui::color::green_apple, 100));
+                    afterhours::colors::set_opacity(ui::color::green_apple, 100),
+                    afterhours::colors::set_opacity(ui::color::green_apple, 100));
             }
         }
     }
