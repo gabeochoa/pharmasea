@@ -3,6 +3,15 @@
 ## Overview
 Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern from kart-afterhours and my_name_chef: extend `afterhours::EntityQuery<EQ>` for custom queries, use `afterhours::SystemManager` directly, and migrate to afterhours plugins.
 
+## Migration Status Summary
+
+- **Phase 0**: ✅ **Complete** - Serialization compatibility verified, tags serialization added
+- **Phase 1.1**: ✅ **Complete** - EntityQuery migrated to afterhours::EntityQuery<EQ> pattern
+- **Phase 1.2**: ✅ **Complete** - afterhours::SystemManager integrated via wrapper pattern (Option A)
+- **Phase 1.3**: ❌ **Not Started** - EntityHelper still uses custom implementation
+- **Phase 2**: ❌ **Not Started** - All plugin migrations pending
+- **Phase 3**: ❌ **Not Started** - Code health improvements pending
+
 ## Phase 0: Serialization Compatibility Review (CRITICAL - Do First)
 
 **Purpose**: Verify afterhours serialization is compatible with pharmasea's network serialization before migrating core ECS.
@@ -94,34 +103,76 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 ## Phase 1: Core ECS Migration
 
 ### 1.1 Replace EntityQuery with afterhours::EntityQuery<EQ> pattern
-**Files**: `src/entity_query.h`, `src/entity_query.cpp`, all files using `EntityQuery`
+**Status**: ✅ **COMPLETED**
 
-**Steps**:
-- Create `src/query.h` extending `afterhours::EntityQuery<EQ>` (CRTP pattern)
-- Migrate custom query methods from `src/entity_query.h`:
-  - `whereInRange` → keep as custom method in EQ
-  - `whereType` → migrate to use tags or component checks
-  - `whereIsHoldingAnyFurniture` → keep as custom method
-  - `whereCanPathfindTo` → keep as custom method
-  - `orderByDist` → keep as custom method
-- Replace all `EntityQuery()` usage with `EQ()` throughout codebase
-- Remove `src/entity_query.h` and `src/entity_query.cpp` after migration
+**Implementation**: `src/entity_query.h` already extends `afterhours::EntityQuery<EQ>` (CRTP pattern)
+
+**What Was Done**:
+- `struct EQ : public afterhours::EntityQuery<EQ>` implemented in `src/entity_query.h` (line 20)
+- All custom query methods migrated and working:
+  - `whereType` / `whereNotType` - game-specific type filtering
+  - `whereInRange` / `whereNotInRange` - range-based filtering
+  - `whereIsHoldingAnyFurniture` - held item filtering
+  - `whereCanPathfindTo` - pathfinding filtering
+  - `orderByDist` - distance-based ordering
+  - Plus many other custom methods (whereInFront, whereInside, whereCollides, etc.)
+- Type alias `using EntityQuery = EQ;` provides backward compatibility (line 215)
+- Constructor properly converts pharmasea's `Entities` to afterhours `Entities`
+
+**Note**: Implementation is in `src/entity_query.h` (not `src/query.h` as originally planned). This is acceptable - the file name doesn't matter as long as the pattern is correct.
 
 **Reference**: See `kart-afterhours/src/query.h` and `my_name_chef/src/query.h` for pattern
 
 ### 1.2 Migrate SystemManager to afterhours::SystemManager
-**Files**: `src/system/system_manager.h`, `src/system/system_manager.cpp`, `src/game.cpp`
+**Status**: ✅ **COMPLETED**
 
-**Steps**:
-- Replace `SystemManager` singleton with `afterhours::SystemManager` instance
-- Convert system registration from manual loops to `systems.register_update_system()`, `systems.register_render_system()`
-- Migrate `update_all_entities()`, `render_entities()`, `render_ui()` to use afterhours system pattern
-- Update `src/game.cpp` to create and use `afterhours::SystemManager` instance
-- Keep game-specific logic (state management, timing) but use afterhours systems for entity iteration
+**Decision**: **Option A** - Keep wrapper approach (SystemManager singleton wraps afterhours::SystemManager)
 
-**Reference**: See `kart-afterhours/src/main.cpp` and `my_name_chef/src/main.cpp` for SystemManager usage
+**Rationale**:
+- SystemManager has significant game-specific functionality that isn't part of afterhours:
+  - Game-specific state: `local_players`, `remote_players`, `oldAll`
+  - Game-specific methods: `is_daytime()`, `is_nighttime()`, `is_some_player_near()`, `for_each_old()`
+  - Game-specific rendering: `render_entities()`, `render_ui()`
+  - Game-specific updates: `update_local_players()`, `update_remote_players()`, `update_all_entities()`
+- The wrapper provides a clean, game-specific API while properly delegating to afterhours systems
+- Refactoring 53+ `SystemManager::get()` calls throughout the codebase would be high-risk with minimal benefit
+- The wrapper pattern is appropriate when you need game-specific functionality on top of a library
+
+**What Was Done**:
+- `afterhours::SystemManager systems` member integrated (line 52 in `system_manager.h`)
+- Systems registered via `register_afterhours_systems()` method (lines 2710-2732 in `system_manager.cpp`)
+- Afterhours systems properly called:
+  - `systems.fixed_tick_all(oldAll, dt)` - Fixed update systems at 120fps (line 2791)
+  - `systems.tick(oldAll, dt)` - Update systems (line 2792)
+  - `systems.render(entities, dt)` - Render systems (line 2845)
+- All afterhours systems implemented and registered:
+  - `SixtyFpsUpdateSystem` - Fixed rate updates (120fps)
+  - `GameLikeUpdateSystem` - Game-like state updates
+  - `ModelTestUpdateSystem` - Model test state updates
+  - `InRoundUpdateSystem` - In-round (nighttime) updates
+  - `PlanningUpdateSystem` - Planning (daytime) updates
+  - `RenderEntitiesSystem` - Entity rendering
+- `render_entities()` now delegates to `systems.render()` (line 2845)
+- Game-specific functionality preserved in wrapper methods
+
+**Files**: `src/system/system_manager.h`, `src/system/system_manager.cpp`, `src/system/afterhours_systems.h`
+
+**Integration Status**: ✅ **COMPLETE**
+- All afterhours systems are registered and running
+- System registration pattern follows afterhours conventions
+- Game-specific logic properly preserved in wrapper
+- Rendering properly delegates to afterhours render systems
 
 ### 1.3 Migrate EntityHelper to afterhours::EntityHelper
+**Status**: ❌ **NOT STARTED**
+
+**Current State**:
+- `EntityHelper` still uses custom implementation
+- `get_entities()` returns pharmasea's `Entities` (vector of shared_ptr<Entity>)
+- `createEntity()` uses `new Entity()` instead of afterhours methods (line 91 in `entity_helper.cpp`)
+- Permanent entities tracked via `permanant_ids` set instead of tags
+- Game-specific helpers exist: `getNamedEntity`, `isWalkable`, pathfinding cache
+
 **Files**: `src/entity_helper.h`, `src/entity_helper.cpp`, all files using `EntityHelper`
 
 **Steps**:
@@ -131,12 +182,16 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 - Replace `EntityHelper::cleanup()` with afterhours cleanup mechanisms
 - Keep game-specific helpers (named entities, pathfinding cache) as wrapper functions
 - Update all includes to use `afterhours::EntityHelper` directly
+- Replace `new Entity()` with `std::make_shared<Entity>()` or afterhours creation method
 
 **Note**: Game-specific functionality like `getNamedEntity`, `isWalkable` should remain as wrapper functions
 
 ## Phase 2: Plugin Migration
 
+**Status**: ❌ **NOT STARTED** - All plugin migrations pending evaluation and implementation
+
 ### 2.1 Migrate Window/Resolution Management to window_manager plugin
+**Status**: ❌ **NOT STARTED**
 **Files**: `src/engine/resolution.h`, `src/engine/app.cpp`, `src/engine/settings.cpp`
 
 **Steps**:
@@ -149,6 +204,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 - Remove `src/engine/resolution.h` after migration
 
 ### 2.2 Migrate Input System to input_system plugin
+**Status**: ❌ **NOT STARTED**
 **Files**: `src/engine/keymap.h`, `src/engine/keymap.cpp`, `src/system/input_process_manager.cpp`
 
 **Steps**:
@@ -163,6 +219,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: This may require significant refactoring of input handling - evaluate if full migration is worth it vs keeping KeyMap as adapter
 
 ### 2.3 Evaluate UI Plugin Migration
+**Status**: ❌ **NOT STARTED**
 **Files**: `src/engine/ui/`, `src/layers/base_game_renderer.h`
 
 **Steps**:
@@ -172,6 +229,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 - This is likely the most complex migration - may want to defer or keep custom UI
 
 ### 2.4 Migrate Autolayout to afterhours::ui::autolayout
+**Status**: ❌ **NOT STARTED**
 **Files**: `src/engine/ui/autolayout.h`, `src/engine/ui/widget.h`
 
 **Current State**:
@@ -189,6 +247,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: This could significantly simplify UI layout code if afterhours autolayout meets requirements
 
 ### 2.5 Evaluate Animation Plugin for UI Animations
+**Status**: ❌ **NOT STARTED**
 **Files**: `src/engine/anim_library.h`, UI animation code
 
 **Current State**:
@@ -206,6 +265,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: Afterhours animation is for 2D/value animations, not 3D model animations - these serve different purposes
 
 ### 2.6 Migrate Library Pattern to afterhours::Library
+**Status**: ❌ **NOT STARTED**
 **Files**: `src/engine/library.h`, all `*Library` classes
 
 **Current State**:
@@ -230,6 +290,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Benefits**: Better error handling, consistent API, less code to maintain
 
 ### 2.7 Evaluate Texture Manager Plugin for Sprite Rendering
+**Status**: ❌ **NOT STARTED**
 **Files**: `src/engine/texture_library.h`, sprite rendering code
 
 **Current State**:
@@ -247,6 +308,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: Only migrate if pharmasea uses sprite-based 2D rendering. 3D model rendering should stay custom.
 
 ### 2.8 Use afterhours Font Helper Utilities
+**Status**: ❌ **NOT STARTED**
 **Files**: `src/engine/font_util.h`, `src/engine/font_library.h`, font loading code
 
 **Current State**:
@@ -262,6 +324,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: Afterhours font helpers are utilities, not a full library replacement - use alongside FontLibrary
 
 ### 2.9 Use afterhours Color Utilities
+**Status**: ❌ **NOT STARTED**
 **Files**: Color usage throughout codebase
 
 **Current State**:
@@ -278,6 +341,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: Low-priority quality-of-life improvement, not critical migration
 
 ### 2.10 Migrate Bitset Utils to afterhours::bitset_utils
+**Status**: ❌ **NOT STARTED**
 **Files**: `src/engine/bitset_utils.h`, all files using `bitset_utils::`
 
 **Current State**:
@@ -302,6 +366,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: Afterhours version requires `std::mt19937&` generator parameter for random functions, may need to adapt pharmasea's `RandomEngine` integration
 
 ### 2.11 Use afterhours Drawing Helpers
+**Status**: ❌ **NOT STARTED**
 **Files**: Drawing code throughout codebase
 
 **Current State**:
@@ -318,6 +383,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 **Note**: Low-priority quality improvement, but rounded rectangle per-corner control is useful for UI
 
 ### 2.12 Standardize Afterhours Includes
+**Status**: ❌ **NOT STARTED**
 **Files**: All files including afterhours headers
 
 **Current State**:
@@ -373,8 +439,7 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 - `src/network/shared.h` (verify serialization context)
 
 **Phase 1**:
-- `src/query.h` (new)
-- `src/entity_query.h` (remove after migration)
+- `src/entity_query.h` (✅ already migrated, keep as-is)
 - `src/system/system_manager.h` (refactor)
 - `src/system/system_manager.cpp` (refactor)
 - `src/entity_helper.h` (refactor)
@@ -408,6 +473,8 @@ Migrate pharmasea from duplicate ECS code to afterhours library. Follow pattern 
 - Phase 2.5 (Animation), 2.9 (Color), 2.11 (Drawing Helpers) are low-priority quality improvements
 
 ## Phase 3: Code Health & Robustness Improvements
+
+**Status**: ❌ **NOT STARTED**
 
 **Purpose**: Reduce fragility, complexity, and improve robustness based on codebase review and todo.md analysis.
 

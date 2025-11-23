@@ -45,8 +45,8 @@
         //     "rotation_angle": 0.0
         // },
         {
-            "folder": "models/kennynl",
-            "filename": "boxOpen.glb",
+            "folder": "models/converted/kennynl",
+            "filename": "boxOpen.obj",
             "library_name": "open_cupboard",
             "size_scale": 4.0,
             "position_offset": [
@@ -57,8 +57,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kennynl",
-            "filename": "box.glb",
+            "folder": "models/converted/kennynl",
+            "filename": "box.obj",
             "library_name": "cupboard",
             "size_scale": 4.0,
             "position_offset": [
@@ -118,8 +118,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kennynl",
-            "filename": "barrel.glb",
+            "folder": "models/converted/kennynl",
+            "filename": "barrel.obj",
             "library_name": "draft_tap",
             "size_scale": 2.0,
             "position_offset": [
@@ -130,8 +130,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kennynl",
-            "filename": "barrel.glb",
+            "folder": "models/converted/kennynl",
+            "filename": "barrel.obj",
             "library_name": "medicine_cabinet",
             "size_scale": 2.0,
             "position_offset": [
@@ -142,8 +142,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models",
-            "filename": "me.glb",
+            "folder": "models/converted",
+            "filename": "me.obj",
             "library_name": "character_gabe",
             "size_scale": 2.5,
             "position_offset": [
@@ -154,8 +154,8 @@
             "rotation_angle": 180.0
         },
         {
-            "folder": "models",
-            "filename": "me2.glb",
+            "folder": "models/converted",
+            "filename": "me2.obj",
             "library_name": "character_gabe2",
             "size_scale": 2.5,
             "position_offset": [
@@ -166,8 +166,8 @@
             "rotation_angle": 180.0
         },
         {
-            "folder": "models",
-            "filename": "ruth.glb",
+            "folder": "models/converted",
+            "filename": "ruth.obj",
             "library_name": "character_ruth",
             "size_scale": 2.5,
             "position_offset": [
@@ -178,8 +178,8 @@
             "rotation_angle": 180.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "character_bear.gltf",
+            "folder": "models/converted/kaykit",
+            "filename": "character_bear.obj",
             "library_name": "character_bear",
             "size_scale": 1.5,
             "position_offset": [
@@ -190,8 +190,8 @@
             "rotation_angle": 180.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "character_dog.gltf",
+            "folder": "models/converted/kaykit",
+            "filename": "character_dog.obj",
             "library_name": "character_dog",
             "size_scale": 1.5,
             "position_offset": [
@@ -202,8 +202,8 @@
             "rotation_angle": 180.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "character_duck.gltf",
+            "folder": "models/converted/kaykit",
+            "filename": "character_duck.obj",
             "library_name": "character_duck",
             "size_scale": 1.5,
             "position_offset": [
@@ -214,8 +214,8 @@
             "rotation_angle": 180.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "character_rogue.gltf",
+            "folder": "models/converted/kaykit",
+            "filename": "character_rogue.obj",
             "library_name": "character_rogue",
             "size_scale": 1.5,
             "position_offset": [
@@ -334,8 +334,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_A_brown.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_A_brown.gltf.obj",
             "library_name": "alcohol",
             "size_scale": 1.0,
             "position_offset": [
@@ -346,8 +346,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_C_brown.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_C_brown.gltf.obj",
             "library_name": "rum",
             "size_scale": 1.0,
             "position_offset": [
@@ -358,8 +358,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_A_labeled_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_A_labeled_green.gltf.obj",
             "library_name": "vodka",
             "size_scale": 1.0,
             "position_offset": [
@@ -370,8 +370,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_B_brown.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_B_brown.gltf.obj",
             "library_name": "tequila",
             "size_scale": 1.0,
             "position_offset": [
@@ -382,8 +382,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_B_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_B_green.gltf.obj",
             "library_name": "gin",
             "size_scale": 1.0,
             "position_offset": [
@@ -394,8 +394,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_A_brown.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_A_brown.gltf.obj",
             "library_name": "bitters",
             "size_scale": 1.0,
             "position_offset": [
@@ -406,8 +406,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_C_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_C_green.gltf.obj",
             "library_name": "triplesec",
             "size_scale": 1.0,
             "position_offset": [
@@ -418,8 +418,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_C_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_C_green.gltf.obj",
             "library_name": "cointreau",
             "size_scale": 1.0,
             "position_offset": [
@@ -430,8 +430,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_C_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_C_green.gltf.obj",
             "library_name": "whiskey",
             "size_scale": 1.0,
             "position_offset": [
@@ -441,42 +441,42 @@
             ],
             "rotation_angle": 0.0
         },
-        {
-            "folder": "models/kaykit",
-            "filename": "Barrel_A.obj",
-            "library_name": "barrel_a",
-            "size_scale": 1.0,
-            "position_offset": [
-                0,
-                0,
-                0
-            ],
-            "rotation_angle": 0.0
-        },
-        {
-            "folder": "models/kaykit",
-            "filename": "Barrel_B.obj",
-            "library_name": "barrel_b",
-            "size_scale": 1.0,
-            "position_offset": [
-                0,
-                0,
-                0
-            ],
-            "rotation_angle": 0.0
-        },
-        {
-            "folder": "models/kaykit",
-            "filename": "Barrel_C.obj",
-            "library_name": "barrel_c",
-            "size_scale": 1.0,
-            "position_offset": [
-                0,
-                0,
-                0
-            ],
-            "rotation_angle": 0.0
-        },
+        // {
+        //     "folder": "models/kaykit",
+        //     "filename": "Barrel_A.obj",
+        //     "library_name": "barrel_a",
+        //     "size_scale": 1.0,
+        //     "position_offset": [
+        //         0,
+        //         0,
+        //         0
+        //     ],
+        //     "rotation_angle": 0.0
+        // },
+        // {
+        //     "folder": "models/kaykit",
+        //     "filename": "Barrel_B.obj",
+        //     "library_name": "barrel_b",
+        //     "size_scale": 1.0,
+        //     "position_offset": [
+        //         0,
+        //         0,
+        //         0
+        //     ],
+        //     "rotation_angle": 0.0
+        // },
+        // {
+        //     "folder": "models/kaykit",
+        //     "filename": "Barrel_C.obj",
+        //     "library_name": "barrel_c",
+        //     "size_scale": 1.0,
+        //     "position_offset": [
+        //         0,
+        //         0,
+        //         0
+        //     ],
+        //     "rotation_angle": 0.0
+        // },
         {
             "folder": "models/kennynl",
             "filename": "soda.obj",
