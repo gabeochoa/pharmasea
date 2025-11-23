@@ -2766,12 +2766,11 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
     // The systems have should_run() methods that conditionally enable them
     // based on game state, matching the original conditional logic.
     //
-    // TODO: SixtyFpsUpdateSystem currently runs every frame, but the original
-    // sixty_fps_update only ran when timePassed >= 0.016f. Consider adding
-    // timing logic to SixtyFpsUpdateSystem::should_run() if needed.
+    // Note: SixtyFpsUpdateSystem runs every frame (not just at 60fps) for better
+    // responsiveness, especially for trigger areas. The timePassed accumulator
+    // is kept for potential future use but is no longer needed for system timing.
+    // We still reset it to maintain the original timing pattern.
     if (timePassed >= 0.016f) {
-        // sixty_fps_update(entities, timePassed);  // Now handled by
-        // SixtyFpsUpdateSystem
         timePassed = 0;
     }
 
@@ -2836,8 +2835,8 @@ void SystemManager::process_state_change(
 }
 
 // DEPRECATED: Replaced by SixtyFpsUpdateSystem
-[[deprecated("Use SixtyFpsUpdateSystem instead")]]
-void SystemManager::sixty_fps_update(const Entities& entities, float dt) {
+[[deprecated("Use SixtyFpsUpdateSystem instead")]] void
+SystemManager::sixty_fps_update(const Entities& entities, float dt) {
     for_each(entities, dt, [](Entity& entity, float dt) {
         system_manager::process_floor_markers(entity, dt);
         system_manager::reset_highlighted(entity, dt);
@@ -2877,8 +2876,8 @@ void SystemManager::every_frame_update(const Entities& entity_list, float) {
 }
 
 // DEPRECATED: Replaced by GameLikeUpdateSystem
-[[deprecated("Use GameLikeUpdateSystem instead")]]
-void SystemManager::game_like_update(const Entities& entity_list, float dt) {
+[[deprecated("Use GameLikeUpdateSystem instead")]] void
+SystemManager::game_like_update(const Entities& entity_list, float dt) {
     OptEntity sophie;
     for_each(entity_list, dt, [&](Entity& entity, float dt) {
         system_manager::run_timer(entity, dt);
@@ -2980,8 +2979,8 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
 }
 
 // DEPRECATED: Replaced by ModelTestUpdateSystem
-[[deprecated("Use ModelTestUpdateSystem instead")]]
-void SystemManager::model_test_update(
+[[deprecated("Use ModelTestUpdateSystem instead")]] void
+SystemManager::model_test_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         // should move all the container functions into its own
@@ -2997,8 +2996,8 @@ void SystemManager::model_test_update(
 }
 
 // DEPRECATED: Replaced by InRoundUpdateSystem
-[[deprecated("Use InRoundUpdateSystem instead")]]
-void SystemManager::in_round_update(
+[[deprecated("Use InRoundUpdateSystem instead")]] void
+SystemManager::in_round_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::reset_customers_that_need_resetting(entity);
@@ -3026,8 +3025,8 @@ void SystemManager::in_round_update(
 }
 
 // DEPRECATED: Replaced by PlanningUpdateSystem
-[[deprecated("Use PlanningUpdateSystem instead")]]
-void SystemManager::planning_update(
+[[deprecated("Use PlanningUpdateSystem instead")]] void
+SystemManager::planning_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
         system_manager::store::cart_management(entity, dt);

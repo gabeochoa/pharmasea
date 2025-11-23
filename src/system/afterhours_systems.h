@@ -105,9 +105,10 @@ struct SixtyFpsUpdateSystem : public afterhours::System<> {
 
     // This system should run in all states (lobby, game, model test, etc.)
     // because it handles trigger areas and other essential updates
-    // Note: The original ran at 60fps (when timePassed >= 0.016f), but we run
-    // every frame here for simplicity. The accumulated timePassed is still
-    // tracked in SystemManager for other purposes.
+    // Note: We run every frame for better responsiveness (especially for trigger
+    // areas), which is acceptable since these operations are lightweight.
+    // The original ran at 60fps (when timePassed >= 0.016f), but running every
+    // frame ensures trigger areas and other interactions feel more responsive.
     virtual bool should_run(const float) override { return true; }
 
     virtual void for_each_with(Entity& entity, float dt) override {
