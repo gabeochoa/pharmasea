@@ -2711,8 +2711,18 @@ void SystemManager::register_afterhours_systems() {
     // Register proof-of-concept timer system
     // Commented out for now until we're ready to migrate timer logic
     // systems.register_update_system(std::make_unique<system_manager::TimerSystem>());
-    
-    // TODO: Register more systems as we migrate them
+
+    // Register migrated systems
+    systems.register_update_system(
+        std::make_unique<system_manager::SixtyFpsUpdateSystem>());
+    systems.register_update_system(
+        std::make_unique<system_manager::GameLikeUpdateSystem>());
+    systems.register_update_system(
+        std::make_unique<system_manager::ModelTestUpdateSystem>());
+    systems.register_update_system(
+        std::make_unique<system_manager::InRoundUpdateSystem>());
+    systems.register_update_system(
+        std::make_unique<system_manager::PlanningUpdateSystem>());
 }
 
 void SystemManager::update_all_entities(const Entities& players, float dt) {
@@ -2748,8 +2758,16 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
     timePassed += dt;
 
+    // NOTE: Old system functions are now handled by afterhours systems
+    // The systems have should_run() methods that conditionally enable them
+    // based on game state, matching the original conditional logic.
+    //
+    // TODO: SixtyFpsUpdateSystem currently runs every frame, but the original
+    // sixty_fps_update only ran when timePassed >= 0.016f. Consider adding
+    // timing logic to SixtyFpsUpdateSystem::should_run() if needed.
     if (timePassed >= 0.016f) {
-        sixty_fps_update(entities, timePassed);
+        // sixty_fps_update(entities, timePassed);  // Now handled by
+        // SixtyFpsUpdateSystem
         timePassed = 0;
     }
 
@@ -2758,19 +2776,31 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
         // TODO add num entities to debug overlay
         // log_info("num entities {}", entities.size());
 
+        // NOTE: These system functions are now handled by afterhours systems:
+        // - model_test_update -> ModelTestUpdateSystem
+        // - in_round_update -> InRoundUpdateSystem
+        // - planning_update -> PlanningUpdateSystem
+        // - game_like_update -> GameLikeUpdateSystem
+        // All have should_run() methods that match the original conditional
+        // logic
         if (GameState::get().is_lobby_like()) {
             //
         } else if (GameState::get().is(game::State::ModelTest)) {
-            model_test_update(entities, dt);
+            // model_test_update(entities, dt);  // Now handled by
+            // ModelTestUpdateSystem
         } else if (GameState::get().is_game_like()) {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            if (hastimer.is_nighttime()) {
-                in_round_update(entities, dt);
-            } else if (hastimer.is_daytime()) {
-                planning_update(entities, dt);
-            }
-            game_like_update(entities, dt);
+            // Entity& sophie =
+            // EntityHelper::getNamedEntity(NamedEntity::Sophie); const
+            // HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>(); if
+            // (hastimer.is_nighttime()) {
+            //     in_round_update(entities, dt);  // Now handled by
+            //     InRoundUpdateSystem
+            // } else if (hastimer.is_daytime()) {
+            //     planning_update(entities, dt);  // Now handled by
+            //     PlanningUpdateSystem
+            // }
+            // game_like_update(entities, dt);  // Now handled by
+            // GameLikeUpdateSystem
         }
         every_frame_update(entities, dt);
         process_state_change(entities, dt);

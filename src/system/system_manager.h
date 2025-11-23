@@ -57,6 +57,8 @@ struct SystemManager {
         GameState::get().register_on_change(
             std::bind(&SystemManager::on_game_state_change, this,
                       std::placeholders::_1, std::placeholders::_2));
+        // Register afterhours systems
+        register_afterhours_systems();
     }
 
     void render_entities(const Entities& entities, float dt) const;
