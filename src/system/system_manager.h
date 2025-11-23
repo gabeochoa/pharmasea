@@ -50,7 +50,8 @@ struct SystemManager {
     float timePassed = 0.016f;
 
     // afterhours SystemManager for entity systems
-    // Note: mutable because render() is non-const but render_entities() is const
+    // Note: mutable because render() is non-const but render_entities() is
+    // const
     mutable afterhours::SystemManager systems;
 
     SystemManager() {
@@ -139,12 +140,20 @@ struct SystemManager {
     }
 
     void process_state_change(const Entities& entities, float dt);
-    void sixty_fps_update(const Entities& entity_list, float dt);
     void every_frame_update(const Entities& entity_list, float dt);
-    void game_like_update(const Entities& entity_list, float dt);
-    void in_round_update(const Entities& entity_list, float dt);
-    void model_test_update(const Entities& entity_list, float dt);
-    void planning_update(const Entities& entity_list, float dt);
+
+    // DEPRECATED: These functions are replaced by afterhours systems
+    // - sixty_fps_update -> SixtyFpsUpdateSystem
+    // - game_like_update -> GameLikeUpdateSystem
+    // - model_test_update -> ModelTestUpdateSystem
+    // - in_round_update -> InRoundUpdateSystem
+    // - planning_update -> PlanningUpdateSystem
+    // These are kept for reference but should not be called
+    [[deprecated("Use afterhours systems instead")]] void sixty_fps_update(const Entities& entity_list, float dt);
+    [[deprecated("Use afterhours systems instead")]] void game_like_update(const Entities& entity_list, float dt);
+    [[deprecated("Use afterhours systems instead")]] void in_round_update(const Entities& entity_list, float dt);
+    [[deprecated("Use afterhours systems instead")]] void model_test_update(const Entities& entity_list, float dt);
+    [[deprecated("Use afterhours systems instead")]] void planning_update(const Entities& entity_list, float dt);
     void progression_update(const Entities& entity_list, float dt);
     void store_update(const Entities&, float);
 };

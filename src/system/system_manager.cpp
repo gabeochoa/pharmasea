@@ -2780,32 +2780,14 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
         // TODO add num entities to debug overlay
         // log_info("num entities {}", entities.size());
 
-        // NOTE: These system functions are now handled by afterhours systems:
-        // - model_test_update -> ModelTestUpdateSystem
-        // - in_round_update -> InRoundUpdateSystem
-        // - planning_update -> PlanningUpdateSystem
-        // - game_like_update -> GameLikeUpdateSystem
-        // All have should_run() methods that match the original conditional
-        // logic
-        if (GameState::get().is_lobby_like()) {
-            //
-        } else if (GameState::get().is(game::State::ModelTest)) {
-            // model_test_update(entities, dt);  // Now handled by
-            // ModelTestUpdateSystem
-        } else if (GameState::get().is_game_like()) {
-            // Entity& sophie =
-            // EntityHelper::getNamedEntity(NamedEntity::Sophie); const
-            // HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>(); if
-            // (hastimer.is_nighttime()) {
-            //     in_round_update(entities, dt);  // Now handled by
-            //     InRoundUpdateSystem
-            // } else if (hastimer.is_daytime()) {
-            //     planning_update(entities, dt);  // Now handled by
-            //     PlanningUpdateSystem
-            // }
-            // game_like_update(entities, dt);  // Now handled by
-            // GameLikeUpdateSystem
-        }
+        // NOTE: System updates are now handled by afterhours systems:
+        // - ModelTestUpdateSystem (runs when State::ModelTest)
+        // - InRoundUpdateSystem (runs when is_game_like() && is_nighttime())
+        // - PlanningUpdateSystem (runs when is_game_like() && is_daytime())
+        // - GameLikeUpdateSystem (runs when is_game_like())
+        // - SixtyFpsUpdateSystem (runs in all states)
+        // All systems have should_run() methods that match the original
+        // conditional logic, so we no longer need the conditional blocks here.
         every_frame_update(entities, dt);
         process_state_change(entities, dt);
 
@@ -2853,6 +2835,8 @@ void SystemManager::process_state_change(
     transitions.clear();
 }
 
+// DEPRECATED: Replaced by SixtyFpsUpdateSystem
+[[deprecated("Use SixtyFpsUpdateSystem instead")]]
 void SystemManager::sixty_fps_update(const Entities& entities, float dt) {
     for_each(entities, dt, [](Entity& entity, float dt) {
         system_manager::process_floor_markers(entity, dt);
@@ -2892,6 +2876,8 @@ void SystemManager::every_frame_update(const Entities& entity_list, float) {
     // for_each(entity_list, dt, [](Entity& entity, float dt) {});
 }
 
+// DEPRECATED: Replaced by GameLikeUpdateSystem
+[[deprecated("Use GameLikeUpdateSystem instead")]]
 void SystemManager::game_like_update(const Entities& entity_list, float dt) {
     OptEntity sophie;
     for_each(entity_list, dt, [&](Entity& entity, float dt) {
@@ -2993,6 +2979,8 @@ void SystemManager::game_like_update(const Entities& entity_list, float dt) {
     }
 }
 
+// DEPRECATED: Replaced by ModelTestUpdateSystem
+[[deprecated("Use ModelTestUpdateSystem instead")]]
 void SystemManager::model_test_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
@@ -3008,6 +2996,8 @@ void SystemManager::model_test_update(
     });
 }
 
+// DEPRECATED: Replaced by InRoundUpdateSystem
+[[deprecated("Use InRoundUpdateSystem instead")]]
 void SystemManager::in_round_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
@@ -3035,6 +3025,8 @@ void SystemManager::in_round_update(
     });
 }
 
+// DEPRECATED: Replaced by PlanningUpdateSystem
+[[deprecated("Use PlanningUpdateSystem instead")]]
 void SystemManager::planning_update(
     const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
     for_each(entity_list, dt, [](Entity& entity, float dt) {
@@ -3049,9 +3041,10 @@ void SystemManager::planning_update(
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {
     // NOTE: Rendering is now handled by RenderEntitiesSystem
-    // The system's once() method handles on_frame_start() and render_walkable_spots()
-    // The system's for_each_with() method handles rendering each entity
-    // We use systems.render() which expects const Entities&
+    // The system's once() method handles on_frame_start() and
+    // render_walkable_spots() The system's for_each_with() method handles
+    // rendering each entity We use systems.render() which expects const
+    // Entities&
     systems.render(entities, dt);
 }
 
