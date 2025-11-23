@@ -2712,7 +2712,7 @@ void SystemManager::register_afterhours_systems() {
     // Commented out for now until we're ready to migrate timer logic
     // systems.register_update_system(std::make_unique<system_manager::TimerSystem>());
 
-    // Register migrated systems
+    // Register migrated update systems
     systems.register_update_system(
         std::make_unique<system_manager::SixtyFpsUpdateSystem>());
     systems.register_update_system(
@@ -2723,6 +2723,10 @@ void SystemManager::register_afterhours_systems() {
         std::make_unique<system_manager::InRoundUpdateSystem>());
     systems.register_update_system(
         std::make_unique<system_manager::PlanningUpdateSystem>());
+
+    // Register render systems
+    systems.register_render_system(
+        std::make_unique<system_manager::RenderEntitiesSystem>());
 }
 
 void SystemManager::update_all_entities(const Entities& players, float dt) {
@@ -3044,28 +3048,11 @@ void SystemManager::planning_update(
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {
-    // Tell the rendering system we are about to start a frame :)
-    system_manager::render_manager::on_frame_start();
-
-    const bool debug_mode_on =
-        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-
-    // debug only
-    system_manager::render_manager::render_walkable_spots(dt);
-
-    // TODO do measurements on if the game actually runs faster with
-    // camera culling
-    //
-    // GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-
-    for_each(entities, dt, [debug_mode_on](const Entity& entity, float dt) {
-        // vec2 e_pos = entity.get<Transform>().as2();
-        // if (vec::distance(e_pos,
-        // vec::to2(cam.camera.position)) > 50.f) { return;
-        // }
-
-        system_manager::render_manager::render(entity, dt, debug_mode_on);
-    });
+    // NOTE: Rendering is now handled by RenderEntitiesSystem
+    // The system's once() method handles on_frame_start() and render_walkable_spots()
+    // The system's for_each_with() method handles rendering each entity
+    // We use systems.render() which expects const Entities&
+    systems.render(entities, dt);
 }
 
 void SystemManager::render_ui(const Entities& entities, float dt) const {

@@ -57,6 +57,9 @@ void delete_trash_when_leaving_planning(Entity& entity);
 
 namespace render_manager {
 void update_character_model_from_index(Entity& entity, float dt);
+void on_frame_start();
+void render_walkable_spots(float dt);
+void render(const Entity& entity, float dt, bool is_debug);
 }  // namespace render_manager
 
 namespace ai {
@@ -331,6 +334,35 @@ struct PlanningUpdateSystem : public afterhours::System<> {
         process_is_container_and_should_backfill_item(entity, dt);
         update_held_furniture_position(entity, dt);
         pop_out_when_colliding(entity, dt);
+    }
+};
+
+// Render entities system - renders all entities
+struct RenderEntitiesSystem : public afterhours::System<> {
+    virtual ~RenderEntitiesSystem() = default;
+
+    mutable bool debug_mode_on = false;
+
+    virtual bool should_run(const float) override { return true; }
+
+    virtual void once(const float dt) const override {
+        // Tell the rendering system we are about to start a frame
+        render_manager::on_frame_start();
+
+        // debug only
+        render_manager::render_walkable_spots(dt);
+
+        // Cache debug mode setting
+        debug_mode_on = GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    }
+
+    virtual void for_each_with(const Entity& entity, float dt) const override {
+        // vec2 e_pos = entity.get<Transform>().as2();
+        // if (vec::distance(e_pos,
+        // vec::to2(cam.camera.position)) > 50.f) { return;
+        // }
+
+        render_manager::render(entity, dt, debug_mode_on);
     }
 };
 

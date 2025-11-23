@@ -50,7 +50,8 @@ struct SystemManager {
     float timePassed = 0.016f;
 
     // afterhours SystemManager for entity systems
-    afterhours::SystemManager systems;
+    // Note: mutable because render() is non-const but render_entities() is const
+    mutable afterhours::SystemManager systems;
 
     SystemManager() {
         // Register state manager
