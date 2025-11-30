@@ -53,7 +53,7 @@ void render_current_register_queue(float dt) {
                 if (entity.is_missing<CanOrderDrink>()) {
                     log_warn(
                         "register {} has people who cant order in line: {}", i,
-                        entity.get<Type>().name());
+                        str(get_entity_type(entity)));
                     continue;
                 }
 
@@ -146,7 +146,7 @@ void render_networked_players(const Entities& entities, float dt) {
         if (entity.is_missing<ModelRenderer>()) {
             log_warn(
                 "render_little_model_guy, entity {} is missing model renderer",
-                entity.get<Type>().name());
+                str(get_entity_type(entity)));
             return;
         }
         auto model_name = entity.get<ModelRenderer>().name();

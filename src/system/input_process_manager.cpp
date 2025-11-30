@@ -380,7 +380,7 @@ void drop_held_furniture(Entity& player) {
 }
 
 void handle_grab_or_drop(Entity& player) {
-    log_info("Handle grab or drop, player is {}", player.get<Type>().type);
+    log_info("Handle grab or drop, player is {}", get_entity_type(player));
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
     CanHoldFurniture& ourCHF = player.get<CanHoldFurniture>();
 

@@ -2,9 +2,9 @@
 
 #include "../engine/log.h"
 #include "../entity_query.h"
+#include "../entity_type.h"
 #include "ai_component.h"
 #include "base_component.h"
-#include "type.h"
 
 struct AIDrinking : public AIComponent {
     struct AIDrinkingTarget : AITarget {
@@ -13,8 +13,8 @@ struct AIDrinking : public AIComponent {
         virtual OptEntity find_target(const Entity& customer) override {
             // TODO :MAKE_DURING_FIND: need a way to clean this up on unset
             auto& entity = EntityHelper::createEntity();
-            // Add Type component immediately so entity is valid when isWalkable iterates
-            entity.addComponent<Type>(EntityType::AITargetLocation);
+            // Set tag immediately so entity is valid when isWalkable iterates
+            entity.enableTag(EntityType::AITargetLocation);
 
             vec2 position = vec2{0, 0};
 

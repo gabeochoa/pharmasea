@@ -4,7 +4,6 @@
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
 #include "components/is_drink.h"
-#include "components/type.h"
 #include "engine/pathfinder.h"
 #include "entity_helper.h"
 
@@ -54,8 +53,7 @@ EQ& EQ::whereIsHoldingItemOfType(EntityType type) {
         add_mod(new WhereHasComponent<CanHoldItem>())
             .add_mod(new WhereLambda([type](const Entity& entity) {
                 const CanHoldItem& chi = entity.get<CanHoldItem>();
-                return chi.is_holding_item() &&
-                       chi.item().get<Type>().type == type;
+                return chi.is_holding_item() && chi.item().hasTag(type);
             }));
 }
 

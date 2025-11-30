@@ -9,7 +9,7 @@
 #include "../components/has_subtype.h"
 #include "../components/is_drink.h"
 #include "../components/is_item.h"
-#include "../components/type.h"
+#include "../entity_type.h"
 #include "ingredient.h"
 
 enum RespectFilter { All, ReqOnly, Ignore };
@@ -149,10 +149,10 @@ struct EntityFilter {
                                     FilterDatumType type) const {
         if constexpr (std::is_same_v<T, std::string>) {
             if (type & FilterDatumType::Name)
-                return std::string(entity.get<Type>().name());
+                return std::string(str(get_entity_type(entity)));
         } else if constexpr (std::is_same_v<T, EntityType>) {
             if (type & FilterDatumType::Name) {
-                return entity.get<Type>().type;
+                return get_entity_type(entity);
             }
         } else if constexpr (std::is_same_v<T, int>) {
             if (type & FilterDatumType::Subtype) {

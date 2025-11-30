@@ -8,7 +8,6 @@
 #include "components/is_drink.h"
 #include "components/is_store_spawned.h"
 #include "components/transform.h"
-#include "components/type.h"
 #include "dataclass/ingredient.h"
 #include "entity.h"
 #include "entity_helper.h"
@@ -36,7 +35,7 @@ struct EQ : public afterhours::EntityQuery<EQ> {
         EntityType type;
         explicit WhereType(const EntityType& t) : type(t) {}
         bool operator()(const Entity& entity) const override {
-            return check_type(entity, type);
+            return entity.hasTag(type);
         }
     };
     EQ& whereType(const EntityType& t) { return add_mod(new WhereType(t)); }

@@ -1,14 +1,14 @@
 
 #include "has_waiting_queue.h"
 
-#include "../components/type.h"
 #include "../engine/assert.h"
 #include "../engine/log.h"
 #include "../entity.h"
+#include "../entity_type.h"
 
 HasWaitingQueue& HasWaitingQueue::add_customer(const Entity& customer) {
     log_info("we are adding {} {} to the line in position {}", customer.id,
-             customer.get<Type>().name(), next_line_position);
+             str(get_entity_type(customer)), next_line_position);
     ppl_in_line[next_line_position] = customer.id;
     next_line_position++;
 

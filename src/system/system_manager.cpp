@@ -62,6 +62,7 @@
 #include "../components/uses_character_model.h"
 #include "../dataclass/upgrades.h"
 #include "../engine/util.h"
+#include "../entity.h"
 #include "raylib.h"
 #include "sophie.h"
 ///
@@ -1716,8 +1717,7 @@ bool _create_nuxes(Entity&) {
                         .whereType(EntityType::Register)
                         .whereIsHoldingItemOfType(EntityType::Drink)
                         .whereHeldItemMatches([](const Entity& item) {
-                            if (item.get<Type>().type != EntityType::Drink)
-                                return false;
+                            if (!item.hasTag(EntityType::Drink)) return false;
                             return item.get<IsDrink>().matches_drink(
                                 Drink::coke);
                         })
@@ -2426,7 +2426,7 @@ void cart_management(Entity& entity, float) {
         if (marked_entity->is_missing<IsStoreSpawned>()) continue;
 
         amount_in_cart += std::max(
-            0, get_price_for_entity_type(marked_entity->get<Type>().type));
+            0, get_price_for_entity_type(get_entity_type(marked_entity.asE())));
     }
 
     OptEntity sophie = EntityQuery().whereType(EntityType::Sophie).gen_first();
@@ -2604,8 +2604,9 @@ void move_purchased_furniture() {
 
         // Its not free!
         if (marked_entity->is_missing<IsFreeInStore>()) {
-            amount_in_cart += std::max(
-                0, get_price_for_entity_type(marked_entity->get<Type>().type));
+            amount_in_cart +=
+                std::max(0, get_price_for_entity_type(
+                                get_entity_type(marked_entity.asE())));
         }
     }
 

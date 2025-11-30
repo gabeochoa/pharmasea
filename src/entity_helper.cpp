@@ -3,6 +3,7 @@
 #include "components/is_floor_marker.h"
 #include "components/is_trigger_area.h"
 #include "entity_query.h"
+#include "entity_type.h"
 #include "system/input_process_manager.h"
 
 Entities client_entities_DO_NOT_USE;
@@ -281,7 +282,7 @@ OptEntity EntityHelper::getMatchingEntityInFront(
                 log_warn("component {} is missing transform",
                          current_entity->id);
                 log_error("component {} is missing name",
-                          current_entity->get<Type>().name());
+                          str(get_entity_type(*current_entity)));
                 continue;
             }
 

@@ -585,10 +585,11 @@ void render_nux(const Entity& entity, float) {
                 afterhours::colors::set_opacity(ui::color::green_apple, 100));
 
             if (!has_model) {
-                DrawCubeCustom(
-                    transform.pos(), 1.f, 1.f, 1.f, 0,
-                    afterhours::colors::set_opacity(ui::color::green_apple, 100),
-                    afterhours::colors::set_opacity(ui::color::green_apple, 100));
+                DrawCubeCustom(transform.pos(), 1.f, 1.f, 1.f, 0,
+                               afterhours::colors::set_opacity(
+                                   ui::color::green_apple, 100),
+                               afterhours::colors::set_opacity(
+                                   ui::color::green_apple, 100));
             }
         }
     }
@@ -1061,7 +1062,7 @@ void render_waiting_queue(const Entity& entity, float) {
 }
 
 void render_price(const Entity& entity, float) {
-    int price = get_price_for_entity_type(entity.get<Type>().type);
+    int price = get_price_for_entity_type(get_entity_type(entity));
     if (price == -1) return;
 
     if (entity.is_missing<Transform>()) return;
@@ -1098,7 +1099,7 @@ void render_machine_name(const Entity& entity, int font_size = 200) {
     // TODO rotate the name with the camera?
     raylib::DrawFloatingText(
         transform.raw() + vec3{0.3f, 0.2f, 0.5f}, Preload::get().font,
-        std::string(entity.get<Type>().name()).c_str(), font_size);
+        std::string(str(get_entity_type(entity))).c_str(), font_size);
 }
 
 void render_debug_fruit_juice(const Entity& entity, float) {

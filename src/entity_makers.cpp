@@ -31,7 +31,6 @@
 #include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
 #include "components/responds_to_day_night.h"
-#include "components/type.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
 #include "engine/bitset_utils.h"
@@ -143,7 +142,7 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 void register_all_components() {
     Entity* entity = new Entity();
     entity->addAll<  //
-        Transform, HasName, Type,
+        Transform, HasName,
         //
         AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AICloseTab,
         AIPlayJukebox, AIWandering,
@@ -227,8 +226,7 @@ void add_person_components(Entity& person, DebugOptions options = {}) {
 }
 
 void make_entity(Entity& entity, const DebugOptions& options, vec3 p) {
-    entity.entity_type = (int) options.type;
-    entity.addComponent<Type>(options.type);
+    entity.enableTag(options.type);
 
     add_entity_components(entity);
     entity.get<Transform>().update(p);
@@ -1783,7 +1781,7 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         }
     }
 
-    if (entity.get<Type>().type == EntityType::Unknown) {
+    if (get_entity_type(entity) == EntityType::Unknown) {
         log_error(
             "Created an entity but somehow didnt get a type {}"
             "type",

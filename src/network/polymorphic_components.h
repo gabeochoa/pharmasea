@@ -68,7 +68,6 @@
 #include "../components/responds_to_user_input.h"
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
-#include "../components/type.h"
 #include "../components/uses_character_model.h"
 #include "bitsery/details/serialization_common.h"
 
@@ -212,8 +211,6 @@ template<>
 struct SelectSerializeFnc<CollectsCustomerFeedback> : UseMemberFnc {};
 template<>
 struct SelectSerializeFnc<IsSquirter> : UseMemberFnc {};
-template<>
-struct SelectSerializeFnc<Type> : UseMemberFnc {};
 
 //
 
@@ -250,7 +247,7 @@ struct PolymorphicBaseClass<BaseComponent>
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
           CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback, IsSquirter, Type, CanBeHeld
+          CollectsCustomerFeedback, IsSquirter, CanBeHeld
           // END
           > {};
 
@@ -276,7 +273,7 @@ struct PolymorphicBaseClass<afterhours::BaseComponent>
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
           CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback, IsSquirter, Type, CanBeHeld> {};
+          CollectsCustomerFeedback, IsSquirter, CanBeHeld> {};
 // If you add anything here ^^ then you should add that component to
 // register_all_components in entity.h
 
@@ -300,5 +297,6 @@ struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
 }  // namespace bitsery
 
 using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<BaseComponent, afterhours::BaseComponent, AIComponent, Job,
-                                         afterhours::Entity>;
+    bitsery::ext::PolymorphicClassesList<BaseComponent,
+                                         afterhours::BaseComponent, AIComponent,
+                                         Job, afterhours::Entity>;
