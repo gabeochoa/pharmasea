@@ -936,12 +936,13 @@ void process_input(Entity& entity, const UserInput& input) {
                     // grab_or_drop(entity);
                     {
                         if (GameState::get().is_game_like()) {
-                            inround::handle_grab_or_drop(entity);
-                            // } else if
-                            // (GameState::get().is(game::State::Planning)) {
-                            // TODO the is_game_like check above kills this
-                            // entire case
-                            // planning::handle_grab_or_drop(entity);
+                            // Planning mode is when it's daytime, in-round mode
+                            // is when it's nighttime
+                            if (SystemManager::get().is_daytime()) {
+                                planning::handle_grab_or_drop(entity);
+                            } else {
+                                inround::handle_grab_or_drop(entity);
+                            }
                         } else {
                             // probably want to handle messing around in the
                             // lobby?
