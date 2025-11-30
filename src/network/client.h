@@ -2,9 +2,10 @@
 
 #pragma once
 
+#include "../entity.h"
 #include "internal/client.h"
 //
-#include "shared.h"
+#include "types.h"
 
 namespace network {
 extern long long total_ping;

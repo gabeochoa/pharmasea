@@ -7,7 +7,8 @@
 #include "../engine/atomic_queue.h"
 #include "../engine/tracy.h"
 #include "../engine/trigger_on_dt.h"
-#include "shared.h"
+#include "../entity.h"
+#include "types.h"
 //
 #include "internal/server.h"
 //

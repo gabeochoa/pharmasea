@@ -9,7 +9,7 @@
 #include "../../engine/log.h"
 #include "../../globals.h"
 //
-#include "../shared.h"
+#include "../serialization.h"
 
 namespace network {
 namespace internal {
@@ -107,15 +107,7 @@ bool Client::run() {
 // the header has to include shared.h
 // .. this way we only include it in the cpp
 void send_packet_to_server(Client &client, const ClientPacket &packet) {
-    Buffer buffer;
-    TContext ctx{};
-
-    std::get<1>(ctx).registerBasesList<BitserySerializer>(
-        MyPolymorphicClasses{});
-    BitserySerializer ser{ctx, buffer};
-    ser.object(packet);
-    ser.adapter().flush();
-    // size = ser.adapter().writtenBytesCount();
+    Buffer buffer = serialize_to_buffer(packet);
     client.send_string_to_server(buffer, packet.channel);
 }
 

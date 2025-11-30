@@ -4,7 +4,7 @@
 //
 #include "../engine/assert.h"
 #include "../engine/defer.h"
-#include "../network/shared.h"
+#include "../network/serialization.h"
 
 /*
 void compare_and_validate_components(Entity* a, Entity* b) {

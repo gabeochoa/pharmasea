@@ -4,8 +4,9 @@
 #include <thread>
 
 #include "../building_locations.h"
+#include "../globals.h"  // for HASHED_VERSION
 #include "../system/system_manager.h"
-#include "shared.h"
+#include "serialization.h"
 
 namespace network {
 

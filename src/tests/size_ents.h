@@ -7,7 +7,7 @@
 
 #include "../entity.h"
 #include "../external_include.h"
-#include "../network/shared.h"
+#include "../network/serialization.h"
 
 namespace tests {
 

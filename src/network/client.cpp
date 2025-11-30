@@ -7,6 +7,7 @@
 #include "../engine/log.h"
 #include "../engine/sound_library.h"
 #include "network.h"
+#include "serialization.h"
 
 namespace network {
 
@@ -73,15 +74,7 @@ void Client::send_ping_packet(int my_id, float dt) {
 
 // TODO :DUPE: this is duplicated with the version in internal/client
 void Client::send_packet_to_server(ClientPacket packet) {
-    Buffer buffer;
-    TContext ctx{};
-
-    std::get<1>(ctx).registerBasesList<BitserySerializer>(
-        MyPolymorphicClasses{});
-    BitserySerializer ser{ctx, buffer};
-    ser.object(packet);
-    ser.adapter().flush();
-    // size = ser.adapter().writtenBytesCount();
+    Buffer buffer = serialize_to_buffer(packet);
     client_p->send_string_to_server(buffer, packet.channel);
 }
 

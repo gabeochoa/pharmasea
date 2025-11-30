@@ -1,6 +1,7 @@
 
 #include "networklayer.h"
 
+#include "../components/has_name.h"
 #include "../engine/toastmanager.h"
 #include "../local_ui.h"
 #include "../network/network.h"
@@ -30,7 +31,7 @@ NetworkLayer::NetworkLayer()
 void NetworkLayer::NetworkLayer::onStartup() {
     // Note: init_connections() is already called from game.cpp during startup
     // so we don't need to call it again here
-    
+
     if (network_info) {
         if (!Settings::get().data.username.empty()) {
             network_info->lock_in_username();

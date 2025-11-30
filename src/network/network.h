@@ -9,7 +9,7 @@
 #include "../engine/network/webrequest.h"
 #include "../engine/statemanager.h"
 #include "../engine/trigger_on_dt.h"
-#include "shared.h"
+#include "types.h"
 //
 #include "client.h"
 #include "server.h"

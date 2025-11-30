@@ -7,7 +7,7 @@
 #include "../engine/assert.h"
 #include "../entity.h"
 #include "../entity_helper.h"
-#include "../network/shared.h"
+#include "../network/serialization.h"
 #include "../vec_util.h"
 
 namespace tests {
