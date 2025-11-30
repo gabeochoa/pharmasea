@@ -6,6 +6,7 @@
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
 #include "components/is_drink.h"
+#include "components/is_store_spawned.h"
 #include "components/transform.h"
 #include "components/type.h"
 #include "dataclass/ingredient.h"
@@ -177,6 +178,20 @@ struct EQ : public afterhours::EntityQuery<EQ> {
     EQ& whereIsHoldingItemOfType(EntityType type);
     EQ& whereIsDrinkAndMatches(Drink recipe);
     EQ& whereHeldItemMatches(const std::function<bool(const Entity&)>& fn);
+
+    // Store entity filtering
+    // By default, store entities (with IsStoreSpawned) are excluded
+    // Call include_store_entities() to include them, or
+    // include_store_entities(false) to explicitly exclude
+    EQ& include_store_entities(bool include = true) {
+        if (include) {
+            // Include store entities - no filter needed, just return
+            return *this;
+        } else {
+            // Exclude store entities - filter out those with IsStoreSpawned
+            return whereMissingComponent<IsStoreSpawned>();
+        }
+    }
 
     // Distance-based ordering
     EQ& orderByDist(vec2 position) {
