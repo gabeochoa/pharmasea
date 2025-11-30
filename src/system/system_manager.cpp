@@ -2718,30 +2718,6 @@ void SystemManager::on_game_state_change(game::State new_state,
     transitions.emplace_back(std::make_pair(old_state, new_state));
 }
 
-// Register afterhours systems in the constructor
-// This is called after SystemManager singleton is created
-void SystemManager::register_afterhours_systems() {
-    // Register proof-of-concept timer system
-    // Commented out for now until we're ready to migrate timer logic
-    // systems.register_update_system(std::make_unique<system_manager::TimerSystem>());
-
-    // Register migrated update systems
-    systems.register_update_system(
-        std::make_unique<system_manager::SixtyFpsUpdateSystem>());
-    systems.register_update_system(
-        std::make_unique<system_manager::GameLikeUpdateSystem>());
-    systems.register_update_system(
-        std::make_unique<system_manager::ModelTestUpdateSystem>());
-    systems.register_update_system(
-        std::make_unique<system_manager::InRoundUpdateSystem>());
-    systems.register_update_system(
-        std::make_unique<system_manager::PlanningUpdateSystem>());
-
-    // Register render systems
-    systems.register_render_system(
-        std::make_unique<system_manager::RenderEntitiesSystem>());
-}
-
 void SystemManager::update_all_entities(const Entities& players, float dt) {
     // TODO speed?
     Entities entities;

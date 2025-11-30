@@ -7,8 +7,6 @@
 #include "system_manager.h"
 
 namespace system_manager {
-
-// Forward declarations for functions defined in system_manager.cpp
 void process_floor_markers(Entity& entity, float dt);
 void reset_highlighted(Entity& entity, float dt);
 void process_trigger_area(Entity& entity, float dt);
@@ -112,34 +110,9 @@ struct SixtyFpsUpdateSystem : public afterhours::System<> {
     // more responsive.
     virtual bool should_run(const float) override { return true; }
 
-    virtual void for_each_with(Entity& entity, float dt) override {
-        process_floor_markers(entity, dt);
-        reset_highlighted(entity, dt);
-
-        process_trigger_area(entity, dt);
-        process_nux_updates(entity, dt);
-
-        render_manager::update_character_model_from_index(entity, dt);
-
-        refetch_dynamic_model_names(entity, dt);
-
-        process_floor_markers(entity, dt);
-        reset_highlighted(entity, dt);
-
-        highlight_facing_furniture(entity, dt);
-        transform_snapper(entity, dt);
-
-        update_held_item_position(entity, dt);
-        update_held_furniture_position(entity, dt);
-        update_held_hand_truck_position(entity, dt);
-
-        update_visuals_for_settings_changer(entity, dt);
-
-        process_squirter(entity, dt);
-        process_soda_fountain(entity, dt);
-        process_trash(entity, dt);
-
-        delete_customers_when_leaving_inround(entity);
+    virtual void for_each_with([[maybe_unused]] Entity& entity,
+                               [[maybe_unused]] float dt) override {
+        // All functions have been migrated to individual systems
     }
 };
 
@@ -334,7 +307,6 @@ struct PlanningUpdateSystem : public afterhours::System<> {
         store::cart_management(entity, dt);
 
         process_is_container_and_should_backfill_item(entity, dt);
-        update_held_furniture_position(entity, dt);
         pop_out_when_colliding(entity, dt);
     }
 };

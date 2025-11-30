@@ -96,6 +96,12 @@ struct SystemManager {
     std::vector<Transition> transitions;
     void on_game_state_change(game::State new_state, game::State old_state);
     void register_afterhours_systems();
+    void register_sixtyfps_systems();
+    void register_gamelike_systems();
+    void register_modeltest_systems();
+    void register_inround_systems();
+    void register_planning_systems();
+    void register_render_systems();
 
     // TODO this probably shouldnt be const but it can be since it holds
     // shared_ptrs
