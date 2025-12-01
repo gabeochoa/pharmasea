@@ -3,10 +3,12 @@
 #include "system_manager.h"
 
 // Individual system headers
+#include "cart_management_system.h"
 #include "delete_customers_when_leaving_inround_system.h"
 #include "end_of_round_completion_validation_system.h"
 #include "highlight_facing_furniture_system.h"
 #include "pass_time_for_transaction_animation_system.h"
+#include "pop_out_when_colliding_system.h"
 #include "process_ai_system.h"
 #include "process_floor_markers_system.h"
 #include "process_is_container_and_should_backfill_item_system.h"
@@ -121,7 +123,9 @@ void SystemManager::register_planning_systems() {
     systems.register_update_system(
         std::make_unique<system_manager::UpdateHeldFurniturePositionSystem>());
     systems.register_update_system(
-        std::make_unique<system_manager::PlanningUpdateSystem>());
+        std::make_unique<system_manager::CartManagementSystem>());
+    systems.register_update_system(
+        std::make_unique<system_manager::PopOutWhenCollidingSystem>());
 }
 
 void SystemManager::register_render_systems() {

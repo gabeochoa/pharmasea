@@ -282,29 +282,6 @@ struct InRoundUpdateSystem : public afterhours::System<> {
     }
 };
 
-// Planning update system - processes entities during planning (daytime)
-struct PlanningUpdateSystem : public afterhours::System<> {
-    virtual ~PlanningUpdateSystem() = default;
-
-    virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            return hastimer.is_daytime();
-        } catch (...) {
-            return false;
-        }
-    }
-
-    virtual void for_each_with(Entity& entity, float dt) override {
-        store::cart_management(entity, dt);
-
-        process_is_container_and_should_backfill_item(entity, dt);
-        pop_out_when_colliding(entity, dt);
-    }
-};
-
 // Render entities system - renders all entities
 struct RenderEntitiesSystem : public afterhours::System<> {
     virtual ~RenderEntitiesSystem() = default;
