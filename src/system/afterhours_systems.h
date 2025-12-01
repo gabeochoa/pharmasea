@@ -132,18 +132,9 @@ struct GameLikeUpdateSystem : public afterhours::System<> {
         current_dt = dt;
     }
 
-    virtual void for_each_with(Entity& entity, float dt) override {
-        run_timer(entity, dt);
-        process_pnumatic_pipe_pairing(entity, dt);
-
-        process_is_container_and_should_backfill_item(entity, dt);
-        pass_time_for_transaction_animation(entity, dt);
-
-        ai::process_(entity, dt);
-
-        // this function also handles the map validation code
-        // rename it
-        update_sophie(entity, dt);
+    virtual void for_each_with(Entity& entity,
+                               [[maybe_unused]] float dt) override {
+        // Track sophie for day/night transition handling in after()
         if (entity.has<HasDayNightTimer>()) sophie = entity;
     }
 

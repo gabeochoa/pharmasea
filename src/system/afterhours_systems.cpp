@@ -5,19 +5,25 @@
 // Individual system headers
 #include "delete_customers_when_leaving_inround_system.h"
 #include "highlight_facing_furniture_system.h"
+#include "pass_time_for_transaction_animation_system.h"
+#include "process_ai_system.h"
 #include "process_floor_markers_system.h"
+#include "process_is_container_and_should_backfill_item_system.h"
 #include "process_nux_updates_system.h"
+#include "process_pnumatic_pipe_pairing_system.h"
 #include "process_soda_fountain_system.h"
 #include "process_squirter_system.h"
 #include "process_trash_system.h"
 #include "process_trigger_area_system.h"
 #include "refetch_dynamic_model_names_system.h"
 #include "reset_highlighted_system.h"
+#include "run_timer_system.h"
 #include "transform_snapper_system.h"
 #include "update_character_model_from_index_system.h"
 #include "update_held_furniture_position_system.h"
 #include "update_held_hand_truck_position_system.h"
 #include "update_held_item_position_system.h"
+#include "update_sophie_system.h"
 #include "update_visuals_for_settings_changer_system.h"
 
 void SystemManager::register_sixtyfps_systems() {
@@ -82,6 +88,20 @@ void SystemManager::register_sixtyfps_systems() {
 }
 
 void SystemManager::register_gamelike_systems() {
+    systems.register_update_system(
+        std::make_unique<system_manager::RunTimerSystem>());
+    systems.register_update_system(
+        std::make_unique<system_manager::ProcessPnumaticPipePairingSystem>());
+    systems.register_update_system(
+        std::make_unique<
+            system_manager::ProcessIsContainerAndShouldBackfillItemSystem>());
+    systems.register_update_system(
+        std::make_unique<
+            system_manager::PassTimeForTransactionAnimationSystem>());
+    systems.register_update_system(
+        std::make_unique<system_manager::ProcessAiSystem>());
+    systems.register_update_system(
+        std::make_unique<system_manager::UpdateSophieSystem>());
     systems.register_update_system(
         std::make_unique<system_manager::GameLikeUpdateSystem>());
 }
