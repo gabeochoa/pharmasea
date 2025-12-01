@@ -19,6 +19,7 @@
 #include "process_trash_system.h"
 #include "process_trigger_area_system.h"
 #include "refetch_dynamic_model_names_system.h"
+#include "render_systems.h"
 #include "reset_highlighted_system.h"
 #include "run_timer_system.h"
 #include "transform_snapper_system.h"
@@ -129,8 +130,7 @@ void SystemManager::register_planning_systems() {
 }
 
 void SystemManager::register_render_systems() {
-    systems.register_render_system(
-        std::make_unique<system_manager::RenderEntitiesSystem>());
+    system_manager::register_render_systems(systems);
 }
 
 void SystemManager::register_afterhours_systems() {

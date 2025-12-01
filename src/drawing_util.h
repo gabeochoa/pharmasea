@@ -3,12 +3,14 @@
 #include "external_include.h"
 //
 #include "camera.h"
+#include "engine/globals_register.h"
 #include "engine/log.h"
 #include "engine/texture_library.h"
 #include "engine/ui/color.h"
 #include "globals.h"
 #include "raylib.h"
 #include "rlgl.h"
+#include "strings.h"
 //
 #include "text_util.h"
 #include "vec_util.h"
@@ -169,9 +171,9 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlPopMatrix();
 }
 
-static void DrawFloatingText(const vec3& position, const Font& font, const char* text,
-                             int size = 96, Color color = BLACK,
-                             bool backface = true,
+static void DrawFloatingText(const vec3& position, const Font& font,
+                             const char* text, int size = 96,
+                             Color color = BLACK, bool backface = true,
                              std::string texture_name = "",
                              int texture_position = -1) {
     vec3 text_size = MeasureText3D(font, text, size, 1.f, 1.f);

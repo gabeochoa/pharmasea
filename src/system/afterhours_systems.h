@@ -282,33 +282,4 @@ struct InRoundUpdateSystem : public afterhours::System<> {
     }
 };
 
-// Render entities system - renders all entities
-struct RenderEntitiesSystem : public afterhours::System<> {
-    virtual ~RenderEntitiesSystem() = default;
-
-    mutable bool debug_mode_on = false;
-
-    virtual bool should_run(const float) override { return true; }
-
-    virtual void once(const float dt) const override {
-        // Tell the rendering system we are about to start a frame
-        render_manager::on_frame_start();
-
-        // debug only
-        render_manager::render_walkable_spots(dt);
-
-        // Cache debug mode setting
-        debug_mode_on = GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    }
-
-    virtual void for_each_with(const Entity& entity, float dt) const override {
-        // vec2 e_pos = entity.get<Transform>().as2();
-        // if (vec::distance(e_pos,
-        // vec::to2(cam.camera.position)) > 50.f) { return;
-        // }
-
-        render_manager::render(entity, dt, debug_mode_on);
-    }
-};
-
 }  // namespace system_manager
