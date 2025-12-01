@@ -102,6 +102,7 @@ struct SystemManager {
     void register_inround_systems();
     void register_planning_systems();
     void register_render_systems();
+    void register_day_night_transition_systems();
 
     // TODO this probably shouldnt be const but it can be since it holds
     // shared_ptrs

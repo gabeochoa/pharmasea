@@ -10,8 +10,10 @@
 #include "pass_time_for_transaction_animation_system.h"
 #include "pop_out_when_colliding_system.h"
 #include "process_ai_system.h"
+#include "process_day_start_system.h"
 #include "process_floor_markers_system.h"
 #include "process_is_container_and_should_backfill_item_system.h"
+#include "process_night_start_system.h"
 #include "process_nux_updates_system.h"
 #include "process_pnumatic_pipe_pairing_system.h"
 #include "process_soda_fountain_system.h"
@@ -20,6 +22,7 @@
 #include "process_trigger_area_system.h"
 #include "refetch_dynamic_model_names_system.h"
 #include "render_systems.h"
+#include "reset_has_day_night_changed_system.h"
 #include "reset_highlighted_system.h"
 #include "run_timer_system.h"
 #include "transform_snapper_system.h"
@@ -106,8 +109,25 @@ void SystemManager::register_gamelike_systems() {
     systems.register_update_system(
         std::make_unique<
             system_manager::EndOfRoundCompletionValidationSystem>());
+
+    register_day_night_transition_systems();
+
     systems.register_update_system(
         std::make_unique<system_manager::GameLikeUpdateSystem>());
+}
+
+void SystemManager::register_day_night_transition_systems() {
+    // Day/night transition systems - all check needs_to_process_change in
+    // should_run(), reset clears the flag after processing
+    {
+        systems.register_update_system(
+            std::make_unique<system_manager::ProcessDayStartSystem>());
+        systems.register_update_system(
+            std::make_unique<system_manager::ProcessNightStartSystem>());
+    }
+    // This one needs to run after the transition systems to clear the flag
+    systems.register_update_system(
+        std::make_unique<system_manager::ResetHasDayNightChanged>());
 }
 
 void SystemManager::register_modeltest_systems() {

@@ -120,107 +120,17 @@ struct SixtyFpsUpdateSystem : public afterhours::System<> {
 struct GameLikeUpdateSystem : public afterhours::System<> {
     virtual ~GameLikeUpdateSystem() = default;
 
-    OptEntity sophie;
-    float current_dt = 0.0f;
-
     virtual bool should_run(const float) override {
         return GameState::get().is_game_like();
     }
 
-    virtual void once(float dt) override {
-        sophie = {};
-        current_dt = dt;
-    }
-
     virtual void for_each_with(Entity& entity,
                                [[maybe_unused]] float dt) override {
-        // Track sophie for day/night transition handling in after()
-        if (entity.has<HasDayNightTimer>()) sophie = entity;
-    }
-
-    virtual void after(float dt) override {
-        // TODO look at @day_night_transition_refactor_plan.md for how we might
-        // do this we basically should just make sure the systems are registered
-        // between a set/reset similar to how begindraw/enddraw is done
-        if (sophie.has_value()) {
-            HasDayNightTimer& hastimer = sophie->get<HasDayNightTimer>();
-            if (hastimer.needs_to_process_change) {
-                bool is_day = hastimer.is_daytime();
-
-                if (is_day) {
-                    log_info("DAY STARTED");
-                    {
-                        store::generate_store_options();
-                        store::open_store_doors();
-                    }
-
-                    // Process day start logic for all entities
-                    SystemManager::get().for_each_old([dt](Entity& entity) {
-                        day_night::on_night_ended(entity);
-                        day_night::on_day_started(entity);
-
-                        delete_floating_items_when_leaving_inround(entity);
-
-                        // TODO these we likely no longer need to do
-                        if (false) {
-                            delete_held_items_when_leaving_inround(entity);
-
-                            // I dont think we want to do this since we arent
-                            // deleting anything anymore maybe there might be a
-                            // problem with spawning a simple syurup in the
-                            // store??
-                            reset_max_gen_when_after_deletion(entity);
-                        }
-
-                        tell_customers_to_leave(entity);
-
-                        // TODO we want you to always have to clean >:)
-                        // but we need some way of having the customers
-                        // finishe the last job they were doing (as long as it
-                        // isnt ordering) and then leaving, otherwise the toilet
-                        // is stuck "inuse" when its really not
-                        reset_toilet_when_leaving_inround(entity);
-
-                        reset_customer_spawner_when_leaving_inround(entity);
-
-                        // Handle updating all the things that rely on
-                        // progression
-                        update_new_max_customers(entity, dt);
-
-                        upgrade::on_round_finished(entity, dt);
-                    });
-                } else {
-                    log_info("DAY ENDED");
-                    // store setup
-                    { store::cleanup_old_store_options(); }
-
-                    SystemManager::get().for_each_old([](Entity& entity) {
-                        day_night::on_day_ended(entity);
-
-                        // just in case theres anyone in the queue still, just
-                        // clear it before the customers start coming in
-                        //
-                        reset_register_queue_when_leaving_inround(entity);
-
-                        close_buildings_when_night(entity);
-
-                        day_night::on_night_started(entity);
-
-                        // - TODO keeps respawning roomba, we should probably
-                        // not do that anymore...just need to clean it up at end
-                        // of day i guess or let him roam??
-                        //
-                        release_mop_buddy_at_start_of_day(entity);
-                        //
-                        delete_trash_when_leaving_planning(entity);
-                        // TODO
-                        // upgrade::on_round_started(entity, dt);
-                    });
-                }
-
-                hastimer.needs_to_process_change = false;
-            }
-        }
+        // Day/night transition logic has been moved to separate systems:
+        // ComputeHasDayNightChanged, ProcessDayStartSystem,
+        // ProcessNightStartSystem, and ResetHasDayNightChanged
+        (void) entity;
+        (void) dt;
     }
 };
 
