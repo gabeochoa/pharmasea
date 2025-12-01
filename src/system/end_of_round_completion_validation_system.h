@@ -24,7 +24,7 @@ void deleting_item_needed_for_recipe(Entity& entity);
 void lightweight_map_validation(Entity& entity);
 }  // namespace sophie
 
-struct UpdateSophieSystem
+struct EndOfRoundCompletionValidationSystem
     : public afterhours::System<HasDayNightTimer, CollectsCustomerFeedback,
                                 afterhours::tags::All<EntityType::Sophie>> {
     virtual bool should_run(const float) override {

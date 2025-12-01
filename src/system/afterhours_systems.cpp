@@ -4,6 +4,7 @@
 
 // Individual system headers
 #include "delete_customers_when_leaving_inround_system.h"
+#include "end_of_round_completion_validation_system.h"
 #include "highlight_facing_furniture_system.h"
 #include "pass_time_for_transaction_animation_system.h"
 #include "process_ai_system.h"
@@ -23,7 +24,6 @@
 #include "update_held_furniture_position_system.h"
 #include "update_held_hand_truck_position_system.h"
 #include "update_held_item_position_system.h"
-#include "update_sophie_system.h"
 #include "update_visuals_for_settings_changer_system.h"
 
 void SystemManager::register_sixtyfps_systems() {
@@ -101,7 +101,8 @@ void SystemManager::register_gamelike_systems() {
     systems.register_update_system(
         std::make_unique<system_manager::ProcessAiSystem>());
     systems.register_update_system(
-        std::make_unique<system_manager::UpdateSophieSystem>());
+        std::make_unique<
+            system_manager::EndOfRoundCompletionValidationSystem>());
     systems.register_update_system(
         std::make_unique<system_manager::GameLikeUpdateSystem>());
 }
