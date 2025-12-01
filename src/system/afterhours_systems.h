@@ -139,6 +139,9 @@ struct GameLikeUpdateSystem : public afterhours::System<> {
     }
 
     virtual void after(float dt) override {
+        // TODO look at @day_night_transition_refactor_plan.md for how we might
+        // do this we basically should just make sure the systems are registered
+        // between a set/reset similar to how begindraw/enddraw is done
         if (sophie.has_value()) {
             HasDayNightTimer& hastimer = sophie->get<HasDayNightTimer>();
             if (hastimer.needs_to_process_change) {
