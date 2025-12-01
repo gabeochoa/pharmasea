@@ -17,7 +17,7 @@ struct CanPathfind : public BaseComponent {
     [[nodiscard]] bool travel_toward(vec2 end, float speed) {
         if (!parent) return false;
         if (parent->is_missing<Transform>()) return false;
-        
+
         // Nothing to do we are already at the goal
         if (is_at_position(end)) return true;
 
@@ -62,6 +62,11 @@ struct CanPathfind : public BaseComponent {
         has_active_request = false;
         max_path_length = std::max(max_path_length, path.size());
         log_trace("{} recieved a path of length {}", parent->id, path.size());
+    }
+
+    auto& set_parent(Entity* p) {
+        parent = p;
+        return *this;
     }
 
    private:
@@ -126,6 +131,7 @@ struct CanPathfind : public BaseComponent {
         local_target = path[0];
         path.pop_front();
     }
+
     std::optional<vec2> local_target;
     std::optional<vec2> global_target;
 
@@ -137,10 +143,13 @@ struct CanPathfind : public BaseComponent {
     std::deque<vec2> path;
     size_t max_path_length = 0;
 
+    Entity* parent = nullptr;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+        s.ext(parent, PointerObserver{});
 
         s.object(start);
         s.object(goal);

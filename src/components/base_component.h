@@ -12,10 +12,8 @@ using bitsery::ext::PointerObserver;
 struct BaseComponent : public afterhours::BaseComponent {
     BaseComponent() = default;
     virtual ~BaseComponent() = default;
-    Entity* parent = nullptr;
     friend bitsery::Access;
+
     template<typename S>
-    void serialize(S& s) {
-        s.ext(parent, PointerObserver{});
-    }
+    void serialize(S&) {}
 };

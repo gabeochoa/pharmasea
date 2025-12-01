@@ -50,7 +50,13 @@ struct AddsIngredient : public BaseComponent {
         return validation(*parent, entity);
     }
 
+    auto& set_parent(Entity* p) {
+        parent = p;
+        return *this;
+    }
+
    private:
+    Entity* parent = nullptr;
     IngredientFetcherFn fetcher = nullptr;
     ValidationFn validation = nullptr;
     OnDecrementFn on_decrement = nullptr;
@@ -60,8 +66,8 @@ struct AddsIngredient : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+        s.ext(parent, PointerObserver{});
 
         s.value4b(num_uses);
     }
 };
-

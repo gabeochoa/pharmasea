@@ -119,7 +119,7 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
         }
     }
 
-    AddsIngredient& addsIG = toadd.get<AddsIngredient>();
+    AddsIngredient& addsIG = toadd.get<AddsIngredient>().set_parent(&toadd);
     IngredientBitSet ingredients = addsIG.get(toadd);
 
     bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
@@ -301,7 +301,7 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     add_person_components(person, options);
 
     person.addComponent<CanPerformJob>();
-    person.addComponent<CanPathfind>();
+    person.addComponent<CanPathfind>().set_parent(&person);
 }
 
 void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
@@ -511,6 +511,9 @@ void make_door(Entity& door, vec2 pos, Color) {
                               true);
 
     door.addComponent<RespondsToDayNight>()
+        // TODO this is a hack because the parent is not set automatically with
+        // afterhours
+        .set_parent(&door)
         .registerOnDayStarted(
             [](Entity& door) { door.removeComponentIfExists<IsSolid>(); })
         .registerOnNightStarted(
@@ -1033,10 +1036,12 @@ void make_soda_spout(Item& soda_spout, vec3 pos) {
     // in the soda wand, id like to have it automatically figure it out but it
     // doesnt really work because we dont know what the player is trying to make
     // and so its easier if everything is soda
-    soda_spout.addComponent<AddsIngredient>(
-        [](const Entity&, Entity&) -> IngredientBitSet {
-            return IngredientBitSet().reset().set(Ingredient::Soda);
-        });
+    soda_spout
+        .addComponent<AddsIngredient>(
+            [](const Entity&, Entity&) -> IngredientBitSet {
+                return IngredientBitSet().reset().set(Ingredient::Soda);
+            })
+        .set_parent(&soda_spout);
 }
 
 void make_mop(Item& mop, vec3 pos) {
@@ -1139,6 +1144,7 @@ void make_champagne(Item& alc, vec3 pos) {
             // Only allow adding the ingredient if you opened the bottle
             return bottle.get<HasFishingGame>().has_score();
         })
+        .set_parent(&alc)
         .set_num_uses(3);
 
     alc.addComponent<HasDynamicModelName>().init(
@@ -1163,6 +1169,7 @@ void make_alcohol(Item& alc, vec3 pos, int index) {
                return IngredientBitSet().reset().set(get_ingredient_from_index(
                    ingredient::AlcoholsInCycle[0] + hst.get_type_index()));
            })
+        .set_parent(&alc)
         .set_num_uses(1);
 
     alc.addComponent<HasDynamicModelName>().init(
@@ -1183,6 +1190,7 @@ void make_simple_syrup(Item& simple_syrup, vec3 pos) {
             [](const Entity&, Entity&) -> IngredientBitSet {
                 return IngredientBitSet().reset().set(Ingredient::SimpleSyrup);
             })
+        .set_parent(&simple_syrup)
         .set_num_uses(-1);
 
     // Since theres only one of these and its inf uses, dont let it get deleted
@@ -1202,6 +1210,7 @@ void make_juice(Item& juice, vec3 pos, Ingredient fruit) {
                 return IngredientBitSet().reset().set(
                     ingredient::BlendConvert.at(fruit));
             })
+        .set_parent(&juice)
         .set_num_uses(1);
 
     juice.addComponent<HasDynamicModelName>().init(
@@ -1224,6 +1233,7 @@ void make_fruit(Item& fruit, vec3 pos, int index) {
                 return IngredientBitSet().reset().set(
                     ingredient::Fruits[0 + hst.get_type_index()]);
             })
+        .set_parent(&fruit)
         .set_num_uses(1);
 
     fruit.addComponent<HasDynamicModelName>().init(
@@ -1308,6 +1318,7 @@ void make_pitcher(Item& pitcher, vec3 pos) {
             [](const Entity& pitcher, Entity&) -> IngredientBitSet {
                 return pitcher.get<IsDrink>().ing();
             })
+        .set_parent(&pitcher)
         .set_validator([](const Entity& pitcher, const Entity& drink) -> bool {
             if (drink.is_missing<IsDrink>()) return false;
             const IsDrink& into_isdrink = drink.get<IsDrink>();

@@ -14,11 +14,9 @@ struct ProcessAiSystem : public afterhours::System<CanPathfind, CanPerformJob> {
         return GameState::get().is_game_like();
     }
 
-    virtual void for_each_with(Entity& entity, CanPathfind& canPathfind,
+    virtual void for_each_with(Entity& entity,
+                               [[maybe_unused]] CanPathfind& canPathfind,
                                CanPerformJob& cpj, float dt) override {
-        // TODO why does this no longer happen automatically?
-        canPathfind.parent = &entity;
-
         switch (cpj.current) {
             case Mopping:
                 ai::process_ai_clean_vomit(entity, dt);

@@ -45,6 +45,11 @@ struct RespondsToDayNight : public BaseComponent {
         if (onNightEndedFn && parent) onNightEndedFn(*parent);
     }
 
+    auto& set_parent(Entity* p) {
+        parent = p;
+        return *this;
+    }
+
    private:
     OnDayStartedFn onDayStartedFn = nullptr;
     OnDayEndedFn onDayEndedFn = nullptr;
@@ -52,9 +57,12 @@ struct RespondsToDayNight : public BaseComponent {
     OnNightStartedFn onNightStartedFn = nullptr;
     OnNightEndedFn onNightEndedFn = nullptr;
 
+    Entity* parent = nullptr;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+        s.ext(parent, PointerObserver{});
     }
 };

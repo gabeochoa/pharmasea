@@ -770,7 +770,7 @@ void tell_customers_to_leave(Entity& entity) {
     // Force leaving job
     entity.get<CanPerformJob>().current = JobType::Leaving;
     entity.removeComponentIfExists<CanPathfind>();
-    entity.addComponent<CanPathfind>();
+    entity.addComponent<CanPathfind>().set_parent(&entity);
     // log_info("telling entity {} to leave", entity.id);
 }
 
