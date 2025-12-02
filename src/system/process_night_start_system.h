@@ -25,8 +25,7 @@ struct ProcessNightStartSystem : public afterhours::System<> {
         }
     }
 
-    virtual void for_each_with(Entity& entity,
-                               [[maybe_unused]] float dt) override {
+    virtual void once(float) override {
         log_info("DAY ENDED");
 
         // Store setup
@@ -52,9 +51,6 @@ struct ProcessNightStartSystem : public afterhours::System<> {
             // TODO
             // upgrade::on_round_started(entity, dt);
         });
-
-        (void) entity;
-        (void) dt;
     }
 };
 

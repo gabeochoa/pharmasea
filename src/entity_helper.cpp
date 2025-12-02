@@ -91,7 +91,6 @@ Entity& EntityHelper::createPermanentEntity() {
 Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
     std::shared_ptr<Entity> e(new Entity());
     get_entities_for_mod().push_back(e);
-    // log_info("created a new entity {}", e->id);
 
     invalidatePathCache();
 

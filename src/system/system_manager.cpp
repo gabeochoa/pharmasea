@@ -2622,7 +2622,7 @@ void move_purchased_furniture() {
 }  // namespace store
 
 namespace upgrade {
-inline void in_round_update(Entity& entity, float) {
+void in_round_update(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
     if (entity.is_missing<IsProgressionManager>()) return;
@@ -2699,7 +2699,7 @@ inline void in_round_update(Entity& entity, float) {
     irsm.ran_for_hour = hour;
 }
 
-inline void on_round_finished(Entity& entity, float) {
+void on_round_finished(Entity& entity, float) {
     if (entity.is_missing<IsRoundSettingsManager>()) return;
     IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
 
@@ -2824,208 +2824,10 @@ void SystemManager::process_state_change(
     transitions.clear();
 }
 
-// DEPRECATED: Replaced by SixtyFpsUpdateSystem
-[[deprecated("Use SixtyFpsUpdateSystem instead")]] void
-SystemManager::sixty_fps_update(const Entities& entities, float dt) {
-    for_each(entities, dt, [](Entity& entity, float dt) {
-        system_manager::process_floor_markers(entity, dt);
-        system_manager::reset_highlighted(entity, dt);
-
-        system_manager::process_trigger_area(entity, dt);
-        system_manager::process_nux_updates(entity, dt);
-
-        system_manager::render_manager::update_character_model_from_index(
-            entity, dt);
-
-        system_manager::refetch_dynamic_model_names(entity, dt);
-
-        system_manager::process_floor_markers(entity, dt);
-        system_manager::reset_highlighted(entity, dt);
-
-        system_manager::highlight_facing_furniture(entity, dt);
-        system_manager::transform_snapper(entity, dt);
-
-        system_manager::update_held_item_position(entity, dt);
-        system_manager::update_held_furniture_position(entity, dt);
-        system_manager::update_held_hand_truck_position(entity, dt);
-
-        system_manager::update_visuals_for_settings_changer(entity, dt);
-
-        system_manager::process_squirter(entity, dt);
-        system_manager::process_soda_fountain(entity, dt);
-        system_manager::process_trash(entity, dt);
-
-        system_manager::delete_customers_when_leaving_inround(entity);
-    });
-}
-
 void SystemManager::every_frame_update(const Entities& entity_list, float) {
     PathRequestManager::process_responses(entity_list);
 
     // for_each(entity_list, dt, [](Entity& entity, float dt) {});
-}
-
-// DEPRECATED: Replaced by GameLikeUpdateSystem
-[[deprecated("Use GameLikeUpdateSystem instead")]] void
-SystemManager::game_like_update(const Entities& entity_list, float dt) {
-    OptEntity sophie;
-    for_each(entity_list, dt, [&](Entity& entity, float dt) {
-        system_manager::run_timer(entity, dt);
-        system_manager::process_pnumatic_pipe_pairing(entity, dt);
-
-        system_manager::process_is_container_and_should_backfill_item(entity,
-                                                                      dt);
-        system_manager::pass_time_for_transaction_animation(entity, dt);
-
-        system_manager::ai::process_(entity, dt);
-
-        // this function also handles the map validation code
-        // rename it
-        system_manager::update_sophie(entity, dt);
-        if (entity.has<HasDayNightTimer>()) sophie = entity;
-    });
-
-    if (sophie.has_value()) {
-        HasDayNightTimer& hastimer = sophie->get<HasDayNightTimer>();
-        if (hastimer.needs_to_process_change) {
-            bool is_day = hastimer.is_daytime();
-
-            if (is_day) {
-                log_info("DAY STARTED");
-                {
-                    system_manager::store::generate_store_options();
-                    system_manager::store::open_store_doors();
-                }
-
-                for_each(entity_list, dt, [](Entity& entity, float dt) {
-                    system_manager::day_night::on_night_ended(entity);
-                    system_manager::day_night::on_day_started(entity);
-
-                    system_manager::delete_floating_items_when_leaving_inround(
-                        entity);
-
-                    // TODO these we likely no longer need to do
-                    if (false) {
-                        system_manager::delete_held_items_when_leaving_inround(
-                            entity);
-
-                        // I dont think we want to do this since we arent
-                        // deleting anything anymore maybe there might be a
-                        // problem with spawning a simple syurup in the store??
-                        system_manager::reset_max_gen_when_after_deletion(
-                            entity);
-                    }
-
-                    system_manager::tell_customers_to_leave(entity);
-
-                    // TODO we want you to always have to clean >:)
-                    // but we need some way of having the customers
-                    // finishe the last job they were doing (as long as it isnt
-                    // ordering) and then leaving, otherwise the toilet is stuck
-                    // "inuse" when its really not
-                    system_manager::reset_toilet_when_leaving_inround(entity);
-
-                    system_manager::reset_customer_spawner_when_leaving_inround(
-                        entity);
-
-                    // Handle updating all the things that rely on progression
-                    system_manager::update_new_max_customers(entity, dt);
-
-                    system_manager::upgrade::on_round_finished(entity, dt);
-                });
-            } else {
-                log_info("DAY ENDED");
-                // store setup
-                { system_manager::store::cleanup_old_store_options(); }
-
-                for_each(entity_list, dt, [](Entity& entity, float) {
-                    system_manager::day_night::on_day_ended(entity);
-
-                    // just in case theres anyone in the queue still, just clear
-                    // it before the customers start coming in
-                    //
-                    system_manager::reset_register_queue_when_leaving_inround(
-                        entity);
-
-                    system_manager::close_buildings_when_night(entity);
-
-                    system_manager::day_night::on_night_started(entity);
-
-                    // - TODO keeps respawning roomba, we should probably not do
-                    // that anymore...just need to clean it up at end of day i
-                    // guess or let him roam??
-                    //
-                    system_manager::release_mop_buddy_at_start_of_day(entity);
-                    //
-                    system_manager::delete_trash_when_leaving_planning(entity);
-                    // TODO
-                    // system_manager::upgrade::on_round_started(entity, dt);
-                });
-            }
-
-            hastimer.needs_to_process_change = false;
-        }
-    }
-}
-
-// DEPRECATED: Replaced by ModelTestUpdateSystem
-[[deprecated("Use ModelTestUpdateSystem instead")]] void
-SystemManager::model_test_update(
-    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-    for_each(entity_list, dt, [](Entity& entity, float dt) {
-        // should move all the container functions into its own
-        // function?
-        system_manager::process_is_container_and_should_update_item(entity, dt);
-        // This one should be after the other container ones
-        system_manager::process_is_indexed_container_holding_incorrect_item(
-            entity, dt);
-
-        system_manager::process_is_container_and_should_backfill_item(entity,
-                                                                      dt);
-    });
-}
-
-// DEPRECATED: Replaced by InRoundUpdateSystem
-[[deprecated("Use InRoundUpdateSystem instead")]] void
-SystemManager::in_round_update(
-    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-    for_each(entity_list, dt, [](Entity& entity, float dt) {
-        system_manager::reset_customers_that_need_resetting(entity);
-        //
-        system_manager::process_grabber_items(entity, dt);
-        system_manager::process_conveyer_items(entity, dt);
-        system_manager::process_grabber_filter(entity, dt);
-        system_manager::process_pnumatic_pipe_movement(entity, dt);
-        system_manager::process_has_rope(entity, dt);
-        // should move all the container functions into its own
-        // function?
-        system_manager::process_is_container_and_should_update_item(entity, dt);
-        // This one should be after the other container ones
-        system_manager::process_is_indexed_container_holding_incorrect_item(
-            entity, dt);
-
-        system_manager::process_spawner(entity, dt);
-        system_manager::reset_empty_work_furniture(entity, dt);
-        system_manager::reduce_impatient_customers(entity, dt);
-
-        system_manager::pass_time_for_active_fishing_games(entity, dt);
-
-        system_manager::upgrade::in_round_update(entity, dt);
-    });
-}
-
-// DEPRECATED: Replaced by PlanningUpdateSystem
-[[deprecated("Use PlanningUpdateSystem instead")]] void
-SystemManager::planning_update(
-    const std::vector<std::shared_ptr<Entity>>& entity_list, float dt) {
-    for_each(entity_list, dt, [](Entity& entity, float dt) {
-        system_manager::store::cart_management(entity, dt);
-
-        system_manager::process_is_container_and_should_backfill_item(entity,
-                                                                      dt);
-        system_manager::update_held_furniture_position(entity, dt);
-        system_manager::pop_out_when_colliding(entity, dt);
-    });
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {

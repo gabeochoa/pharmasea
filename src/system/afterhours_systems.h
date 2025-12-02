@@ -162,6 +162,9 @@ struct InRoundUpdateSystem : public afterhours::System<> {
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
+            // Don't run during transitions to avoid spawners creating entities
+            // before transition logic completes
+            if (hastimer.needs_to_process_change) return false;
             return hastimer.is_nighttime();
         } catch (...) {
             return false;
