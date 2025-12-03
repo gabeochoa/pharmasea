@@ -21,85 +21,6 @@
 
 namespace system_manager {
 
-inline void move_player_out_of_building_SERVER_ONLY(Entity& entity,
-                                                    const Building& building) {
-    if (!is_server()) {
-        log_warn(
-            "you are calling a server only function from a client context, "
-            "this is best case a no-op and worst case a visual desync");
-    }
-
-    vec3 position = vec::to3(building.vomit_location);
-    Transform& transform = entity.get<Transform>();
-    transform.update(position);
-
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
-
-    int client_id = server->get_client_id_for_entity(entity);
-    if (client_id == -1) {
-        log_warn("Tried to find a client id for entity but didnt find one");
-        return;
-    }
-
-    server->send_player_location_packet(client_id, position, transform.facing,
-                                        entity.get<HasName>().name());
-}
-
-inline void close_buildings_when_night(Entity& entity) {
-    // just choosing this since theres only one
-    if (!check_type(entity, EntityType::Sophie)) return;
-
-    const std::array<Building, 2> buildings_that_close = {
-        PROGRESSION_BUILDING,
-        STORE_BUILDING,
-    };
-
-    for (const Building& building : buildings_that_close) {
-        // Teleport anyone inside a store outside
-        SystemManager::get().for_each_old([&](Entity& e) {
-            if (!check_type(e, EntityType::Player)) return;
-            if (CheckCollisionBoxes(e.get<Transform>().bounds(),
-                                    building.bounds)) {
-                move_player_out_of_building_SERVER_ONLY(e, building);
-            }
-        });
-    }
-}
-
-inline void release_mop_buddy_at_start_of_day(Entity& entity) {
-    if (!check_type(entity, EntityType::MopBuddyHolder)) return;
-
-    CanHoldItem& chi = entity.get<CanHoldItem>();
-    if (chi.empty()) return;
-
-    // grab yaboi
-    Item& item = chi.item();
-
-    // let go of the item
-    item.get<IsItem>().set_held_by(EntityType::Unknown, -1);
-    chi.update(nullptr, -1);
-}
-
-inline void reset_register_queue_when_leaving_inround(Entity& entity) {
-    if (entity.is_missing<HasWaitingQueue>()) return;
-    HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
-    hwq.clear();
-}
-
-namespace day_night {
-
-inline void on_day_ended(Entity& entity) {
-    if (entity.is_missing<RespondsToDayNight>()) return;
-    entity.get<RespondsToDayNight>().call_day_ended();
-}
-
-inline void on_night_started(Entity& entity) {
-    if (entity.is_missing<RespondsToDayNight>()) return;
-    entity.get<RespondsToDayNight>().call_night_started();
-}
-
-}  // namespace day_night
-
 struct CleanUpOldStoreOptionsSystem : public afterhours::System<> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
@@ -115,7 +36,7 @@ struct CleanUpOldStoreOptionsSystem : public afterhours::System<> {
     virtual void once(float) override { store::cleanup_old_store_options(); }
 };
 
-struct OnDayEndedSystem : public afterhours::System<> {
+struct OnDayEndedSystem : public afterhours::System<RespondsToDayNight> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {
@@ -127,16 +48,16 @@ struct OnDayEndedSystem : public afterhours::System<> {
         }
     }
 
-    virtual void once(float) override {
-        SystemManager::get().for_each_old(
-            [](Entity& entity) { day_night::on_day_ended(entity); });
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+                               float) override {
+        rtdn.call_day_ended();
     }
 };
 
 // just in case theres anyone in the queue still, just
 // clear it before the customers start coming in
 struct ResetRegisterQueueWhenLeavingInRoundSystem
-    : public afterhours::System<> {
+    : public afterhours::System<HasWaitingQueue> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {
@@ -148,10 +69,8 @@ struct ResetRegisterQueueWhenLeavingInRoundSystem
         }
     }
 
-    virtual void once(float) override {
-        SystemManager::get().for_each_old([](Entity& entity) {
-            reset_register_queue_when_leaving_inround(entity);
-        });
+    virtual void for_each_with(Entity&, HasWaitingQueue& hwq, float) override {
+        hwq.clear();
     }
 };
 
@@ -167,13 +86,52 @@ struct CloseBuildingsWhenNightSystem : public afterhours::System<> {
         }
     }
 
+    inline void move_player_out_of_building_SERVER_ONLY(
+        Entity& entity, const Building& building) {
+        if (!is_server()) {
+            log_warn(
+                "you are calling a server only function from a client context, "
+                "this is best case a no-op and worst case a visual desync");
+        }
+
+        vec3 position = vec::to3(building.vomit_location);
+        Transform& transform = entity.get<Transform>();
+        transform.update(position);
+
+        network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+
+        int client_id = server->get_client_id_for_entity(entity);
+        if (client_id == -1) {
+            log_warn("Tried to find a client id for entity but didnt find one");
+            return;
+        }
+
+        server->send_player_location_packet(client_id, position,
+                                            transform.facing,
+                                            entity.get<HasName>().name());
+    }
+
     virtual void once(float) override {
-        SystemManager::get().for_each_old(
-            [](Entity& entity) { close_buildings_when_night(entity); });
+        // TODO rewrite this to use entity queries
+        const std::array<Building, 2> buildings_that_close = {
+            PROGRESSION_BUILDING,
+            STORE_BUILDING,
+        };
+
+        for (const Building& building : buildings_that_close) {
+            // Teleport anyone inside a store outside
+            SystemManager::get().for_each_old([&](Entity& e) {
+                if (!check_type(e, EntityType::Player)) return;
+                if (CheckCollisionBoxes(e.get<Transform>().bounds(),
+                                        building.bounds)) {
+                    move_player_out_of_building_SERVER_ONLY(e, building);
+                }
+            });
+        }
     }
 };
 
-struct OnNightStartedSystem : public afterhours::System<> {
+struct OnNightStartedSystem : public afterhours::System<RespondsToDayNight> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {
@@ -185,16 +143,18 @@ struct OnNightStartedSystem : public afterhours::System<> {
         }
     }
 
-    virtual void once(float) override {
-        SystemManager::get().for_each_old(
-            [](Entity& entity) { day_night::on_night_started(entity); });
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+                               float) override {
+        rtdn.call_night_started();
     }
 };
 
 // - TODO keeps respawning roomba, we should probably
 // not do that anymore...just need to clean it up at end
 // of day i guess or let him roam??
-struct ReleaseMopBuddyAtStartOfDaySystem : public afterhours::System<> {
+struct ReleaseMopBuddyAtStartOfDaySystem
+    : public afterhours::System<
+          afterhours::tags::All<EntityType::MopBuddyHolder>, CanHoldItem> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {
@@ -206,9 +166,10 @@ struct ReleaseMopBuddyAtStartOfDaySystem : public afterhours::System<> {
         }
     }
 
-    virtual void once(float) override {
-        SystemManager::get().for_each_old(
-            [](Entity& entity) { release_mop_buddy_at_start_of_day(entity); });
+    virtual void for_each_with(Entity&, CanHoldItem& chi, float) override {
+        if (chi.empty()) return;
+        chi.item().cleanup = true;
+        chi.update(nullptr, -1);
     }
 };
 
