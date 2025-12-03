@@ -784,6 +784,8 @@ void render_trigger_area(const Entity& entity, float dt) {
 
 void render_texture_billboard(const Transform& transform,
                               const std::string& texture_name) {
+    // TODO cant seem to find trash texture, and is crashing?
+
     vec3 position = transform.pos();
     raylib::Texture texture = TextureLibrary::get().get(texture_name);
     GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
