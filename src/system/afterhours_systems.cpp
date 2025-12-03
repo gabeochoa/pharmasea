@@ -130,7 +130,22 @@ void SystemManager::register_day_night_transition_systems() {
         systems.register_update_system(
             std::make_unique<system_manager::ProcessDayStartSystem>());
         systems.register_update_system(
-            std::make_unique<system_manager::ProcessNightStartSystem>());
+            std::make_unique<system_manager::CleanUpOldStoreOptionsSystem>());
+        systems.register_update_system(
+            std::make_unique<system_manager::OnDayEndedSystem>());
+        systems.register_update_system(
+            std::make_unique<
+                system_manager::ResetRegisterQueueWhenLeavingInRoundSystem>());
+        systems.register_update_system(
+            std::make_unique<system_manager::CloseBuildingsWhenNightSystem>());
+        systems.register_update_system(
+            std::make_unique<system_manager::OnNightStartedSystem>());
+        systems.register_update_system(
+            std::make_unique<
+                system_manager::ReleaseMopBuddyAtStartOfDaySystem>());
+        systems.register_update_system(
+            std::make_unique<
+                system_manager::DeleteTrashWhenLeavingPlanningSystem>());
     }
     // This one needs to run after the transition systems to clear the flag
     systems.register_update_system(
