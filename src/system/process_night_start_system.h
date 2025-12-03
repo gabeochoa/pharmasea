@@ -80,27 +80,6 @@ inline void release_mop_buddy_at_start_of_day(Entity& entity) {
     chi.update(nullptr, -1);
 }
 
-inline void delete_trash_when_leaving_planning(Entity& entity) {
-    if (!check_type(entity, EntityType::FloorMarker)) return;
-    if (entity.is_missing<IsFloorMarker>()) return;
-    const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
-    if (ifm.type != IsFloorMarker::Planning_TrashArea) return;
-
-    for (size_t i = 0; i < ifm.num_marked(); i++) {
-        EntityID id = ifm.marked_ids()[i];
-        OptEntity marked_entity = EntityHelper::getEntityForID(id);
-        if (!marked_entity) continue;
-        marked_entity->cleanup = true;
-
-        // Also delete the held item
-        CanHoldItem& markedCHI = marked_entity->get<CanHoldItem>();
-        if (!markedCHI.empty()) {
-            markedCHI.item().cleanup = true;
-            markedCHI.update(nullptr, -1);
-        }
-    }
-}
-
 inline void reset_register_queue_when_leaving_inround(Entity& entity) {
     if (entity.is_missing<HasWaitingQueue>()) return;
     HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
@@ -233,7 +212,9 @@ struct ReleaseMopBuddyAtStartOfDaySystem : public afterhours::System<> {
     }
 };
 
-struct DeleteTrashWhenLeavingPlanningSystem : public afterhours::System<> {
+struct DeleteTrashWhenLeavingPlanningSystem
+    : public afterhours::System<afterhours::tags::All<EntityType::FloorMarker>,
+                                IsFloorMarker> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {
@@ -244,9 +225,23 @@ struct DeleteTrashWhenLeavingPlanningSystem : public afterhours::System<> {
             return false;
         }
     }
-    virtual void once(float) override {
-        SystemManager::get().for_each_old(
-            [](Entity& entity) { delete_trash_when_leaving_planning(entity); });
+
+    virtual void for_each_with(Entity&, IsFloorMarker& ifm, float) override {
+        if (ifm.type != IsFloorMarker::Planning_TrashArea) return;
+
+        for (size_t i = 0; i < ifm.num_marked(); i++) {
+            EntityID id = ifm.marked_ids()[i];
+            OptEntity marked_entity = EntityHelper::getEntityForID(id);
+            if (!marked_entity) continue;
+            marked_entity->cleanup = true;
+
+            // Also delete the held item
+            CanHoldItem& markedCHI = marked_entity->get<CanHoldItem>();
+            if (!markedCHI.empty()) {
+                markedCHI.item().cleanup = true;
+                markedCHI.update(nullptr, -1);
+            }
+        }
     }
 };
 
