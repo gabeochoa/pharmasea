@@ -2,7 +2,6 @@
 #include "gamelayer.h"
 
 #include "../building_locations.h"
-#include "../components/can_be_ghost_player.h"
 #include "../drawing_util.h"
 #include "../engine/ui/color.h"
 #include "../external_include.h"

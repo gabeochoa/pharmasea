@@ -127,8 +127,15 @@ void SystemManager::register_day_night_transition_systems() {
     // Day/night transition systems - all check needs_to_process_change in
     // should_run(), reset clears the flag after processing
     {
-        systems.register_update_system(
-            std::make_unique<system_manager::ProcessDayStartSystem>());
+        // Day start systems
+        {
+            systems.register_update_system(
+                std::make_unique<system_manager::GenerateStoreOptionsSystem>());
+            systems.register_update_system(
+                std::make_unique<system_manager::OpenStoreDoorsSystem>());
+            systems.register_update_system(
+                std::make_unique<system_manager::ProcessDayStartSystem>());
+        }
         systems.register_update_system(
             std::make_unique<system_manager::CleanUpOldStoreOptionsSystem>());
         systems.register_update_system(

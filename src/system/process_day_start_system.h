@@ -136,20 +136,6 @@ inline void on_day_started(Entity& entity) {
 
 }  // namespace day_night
 
-namespace store {
-
-inline void open_store_doors() {
-    for (RefEntity door :
-         EntityQuery()
-             .whereType(EntityType::Door)
-             .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
-             .gen()) {
-        door.get().removeComponentIfExists<IsSolid>();
-    }
-}
-
-}  // namespace store
-
 namespace upgrade {
 
 inline void on_round_finished(Entity& entity, float) {
@@ -161,6 +147,41 @@ inline void on_round_finished(Entity& entity, float) {
 }
 
 }  // namespace upgrade
+
+struct GenerateStoreOptionsSystem : public afterhours::System<> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+    virtual void once(float) override { store::generate_store_options(); }
+};
+
+struct OpenStoreDoorsSystem
+    : public afterhours::System<IsSolid,
+                                afterhours::tags::All<EntityType::Door>> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+    virtual void for_each_with(Entity& entity, IsSolid&, float) override {
+        if (!CheckCollisionBoxes(entity.get<Transform>().bounds(),
+                                 STORE_BUILDING.bounds))
+            return;
+        entity.removeComponentIfExists<IsSolid>();
+    }
+};
 
 // TODO eventually split this into a separate system for each day start logic
 // System that processes day start logic when needs_to_process_change is true
@@ -179,10 +200,6 @@ struct ProcessDayStartSystem : public afterhours::System<> {
 
     virtual void once(float dt) override {
         log_info("DAY STARTED");
-
-        // Store setup
-        system_manager::store::generate_store_options();
-        store::open_store_doors();
 
         // Process day start logic for all entities
         SystemManager::get().for_each_old([dt](Entity& entity) {
