@@ -7,6 +7,8 @@
 #include "system_manager.h"
 
 namespace system_manager {
+
+// These functions are still in system_manager.cpp and called from *_system.h files
 void process_floor_markers(Entity& entity, float dt);
 void reset_highlighted(Entity& entity, float dt);
 void process_trigger_area(Entity& entity, float dt);
@@ -41,17 +43,6 @@ void reset_empty_work_furniture(Entity& entity, float dt);
 void reduce_impatient_customers(Entity& entity, float dt);
 void pass_time_for_active_fishing_games(Entity& entity, float dt);
 void pop_out_when_colliding(Entity& entity, float dt);
-void delete_floating_items_when_leaving_inround(Entity& entity);
-void delete_held_items_when_leaving_inround(Entity& entity);
-void reset_max_gen_when_after_deletion(Entity& entity);
-void tell_customers_to_leave(Entity& entity);
-void reset_toilet_when_leaving_inround(Entity& entity);
-void reset_customer_spawner_when_leaving_inround(Entity& entity);
-void update_new_max_customers(Entity& entity, float dt);
-void reset_register_queue_when_leaving_inround(Entity& entity);
-void close_buildings_when_night(Entity& entity);
-void release_mop_buddy_at_start_of_day(Entity& entity);
-void delete_trash_when_leaving_planning(Entity& entity);
 
 namespace render_manager {
 void update_character_model_from_index(Entity& entity, float dt);
@@ -66,20 +57,10 @@ void process_(Entity& entity, float dt);
 
 namespace store {
 void cart_management(Entity& entity, float dt);
-void generate_store_options();
-void open_store_doors();
-void cleanup_old_store_options();
+void move_purchased_furniture();
 }  // namespace store
 
-namespace day_night {
-void on_night_ended(Entity& entity);
-void on_day_started(Entity& entity);
-void on_day_ended(Entity& entity);
-void on_night_started(Entity& entity);
-}  // namespace day_night
-
 namespace upgrade {
-void on_round_finished(Entity& entity, float dt);
 void in_round_update(Entity& entity, float dt);
 }  // namespace upgrade
 
