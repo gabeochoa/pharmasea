@@ -26,10 +26,6 @@
 
 namespace system_manager {
 
-// ============================================================================
-// Helper functions for day-start systems
-// ============================================================================
-
 inline void delete_floating_items_when_leaving_inround(Entity& entity) {
     if (entity.is_missing<IsItem>()) return;
 
@@ -224,10 +220,6 @@ inline void on_round_finished(Entity& entity, float) {
 }
 
 }  // namespace upgrade
-
-// ============================================================================
-// Day-start system
-// ============================================================================
 
 // TODO eventually split this into a separate system for each day start logic
 // System that processes day start logic when needs_to_process_change is true

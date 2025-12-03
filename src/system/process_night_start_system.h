@@ -20,10 +20,6 @@
 
 namespace system_manager {
 
-// ============================================================================
-// Helper functions for night-start systems
-// ============================================================================
-
 inline void move_player_out_of_building_SERVER_ONLY(Entity& entity,
                                                     const Building& building) {
     if (!is_server()) {
@@ -178,10 +174,6 @@ inline void cleanup_old_store_options() {
 }
 
 }  // namespace store
-
-// ============================================================================
-// Night-start systems
-// ============================================================================
 
 struct CleanUpOldStoreOptionsSystem : public afterhours::System<> {
     virtual bool should_run(const float) override {
