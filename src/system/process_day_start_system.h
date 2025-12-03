@@ -27,21 +27,6 @@
 
 namespace system_manager {
 
-inline void delete_floating_items_when_leaving_inround(Entity& entity) {
-    if (entity.is_missing<IsItem>()) return;
-
-    const IsItem& ii = entity.get<IsItem>();
-
-    // Its being held by something so we'll get it in the function below
-    if (ii.is_held()) return;
-
-    // Skip the mop buddy for now
-    if (check_type(entity, EntityType::MopBuddy)) return;
-
-    // mark it for cleanup
-    entity.cleanup = true;
-}
-
 inline void delete_held_items_when_leaving_inround(Entity& entity) {
     if (entity.is_missing<CanHoldItem>()) return;
 
@@ -73,19 +58,6 @@ inline void tell_customers_to_leave(Entity& entity) {
     entity.get<CanPerformJob>().current = JobType::Leaving;
     entity.removeComponentIfExists<CanPathfind>();
     entity.addComponent<CanPathfind>().set_parent(&entity);
-}
-
-// TODO :DESIGN: do we actually want to do this?
-inline void reset_toilet_when_leaving_inround(Entity& entity) {
-    if (entity.is_missing<IsToilet>()) return;
-
-    IsToilet& istoilet = entity.get<IsToilet>();
-    istoilet.reset();
-}
-
-inline void reset_customer_spawner_when_leaving_inround(Entity& entity) {
-    if (entity.is_missing<IsSpawner>()) return;
-    entity.get<IsSpawner>().reset_num_spawned();
 }
 
 inline void update_new_max_customers(Entity& entity, float) {
@@ -122,32 +94,6 @@ inline void update_new_max_customers(Entity& entity, float) {
     }
 }
 
-namespace day_night {
-
-inline void on_night_ended(Entity& entity) {
-    if (entity.is_missing<RespondsToDayNight>()) return;
-    entity.get<RespondsToDayNight>().call_night_ended();
-}
-
-inline void on_day_started(Entity& entity) {
-    if (entity.is_missing<RespondsToDayNight>()) return;
-    entity.get<RespondsToDayNight>().call_day_started();
-}
-
-}  // namespace day_night
-
-namespace upgrade {
-
-inline void on_round_finished(Entity& entity, float) {
-    if (entity.is_missing<IsRoundSettingsManager>()) return;
-    IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
-
-    irsm.ran_for_hour = -1;
-    irsm.config.this_hours_mods.clear();
-}
-
-}  // namespace upgrade
-
 struct GenerateStoreOptionsSystem : public afterhours::System<> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
@@ -183,10 +129,8 @@ struct OpenStoreDoorsSystem
     }
 };
 
-// TODO eventually split this into a separate system for each day start logic
-// System that processes day start logic when needs_to_process_change is true
-// and is_daytime is true
-struct ProcessDayStartSystem : public afterhours::System<> {
+struct DeleteFloatingItemsWhenLeavingInRoundSystem
+    : public afterhours::System<IsItem> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {
@@ -198,44 +142,190 @@ struct ProcessDayStartSystem : public afterhours::System<> {
         }
     }
 
-    virtual void once(float dt) override {
-        log_info("DAY STARTED");
+    virtual void for_each_with(Entity& entity, IsItem& ii, float) override {
+        // Its being held by something so we'll get it in the function below
+        if (ii.is_held()) return;
 
-        // Process day start logic for all entities
-        SystemManager::get().for_each_old([dt](Entity& entity) {
-            day_night::on_night_ended(entity);
-            day_night::on_day_started(entity);
+        // Skip the mop buddy for now
+        if (check_type(entity, EntityType::MopBuddy)) return;
 
-            delete_floating_items_when_leaving_inround(entity);
+        // mark it for cleanup
+        entity.cleanup = true;
 
-            // TODO these we likely no longer need to do
-            if (false) {
-                delete_held_items_when_leaving_inround(entity);
+        // TODO these we likely no longer need to do
+        if (false) {
+            delete_held_items_when_leaving_inround(entity);
 
-                // I dont think we want to do this since we arent
-                // deleting anything anymore maybe there might be a
-                // problem with spawning a simple syurup in the
-                // store??
-                reset_max_gen_when_after_deletion(entity);
-            }
+            // I dont think we want to do this since we arent
+            // deleting anything anymore maybe there might be a
+            // problem with spawning a simple syurup in the
+            // store??
+            reset_max_gen_when_after_deletion(entity);
+        }
+    }
+};
 
-            tell_customers_to_leave(entity);
+struct TellCustomersToLeaveSystem
+    : public afterhours::System<afterhours::tags::All<EntityType::Customer>,
+                                CanPerformJob> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+    virtual void for_each_with(Entity& entity, CanPerformJob& cpj,
+                               float) override {
+        cpj.current = JobType::Leaving;
+        entity.removeComponentIfExists<CanPathfind>();
+        entity.addComponent<CanPathfind>().set_parent(&entity);
+    }
+};
 
-            // TODO we want you to always have to clean >:)
-            // but we need some way of having the customers
-            // finishe the last job they were doing (as long as it
-            // isnt ordering) and then leaving, otherwise the toilet
-            // is stuck "inuse" when its really not
-            reset_toilet_when_leaving_inround(entity);
+// TODO :DESIGN: do we actually want to do this?
+struct ResetToiletWhenLeavingInRoundSystem
+    : public afterhours::System<IsToilet> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+    virtual void for_each_with(Entity&, IsToilet& istoilet, float) override {
+        // TODO we want you to always have to clean >:)
+        // but we need some way of having the customers
+        // finishe the last job they were doing (as long as it
+        // isnt ordering) and then leaving, otherwise the toilet
+        // is stuck "inuse" when its really not
+        istoilet.reset();
+    }
+};
 
-            reset_customer_spawner_when_leaving_inround(entity);
+struct ResetCustomerSpawnerWhenLeavingInRoundSystem
+    : public afterhours::System<IsSpawner> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+    virtual void for_each_with(Entity&, IsSpawner& isspawner, float) override {
+        isspawner.reset_num_spawned();
+    }
+};
 
-            // Handle updating all the things that rely on
-            // progression
-            update_new_max_customers(entity, dt);
+struct UpdateNewMaxCustomersSystem
+    : public afterhours::System<
+          HasProgression, IsSpawner,
+          afterhours::tags::All<EntityType::CustomerSpawner>> {
+    IsRoundSettingsManager* irsm;
+    HasDayNightTimer* hasTimer;
 
-            upgrade::on_round_finished(entity, dt);
-        });
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        irsm = &sophie.get<IsRoundSettingsManager>();
+        hasTimer = &sophie.get<HasDayNightTimer>();
+        try {
+            return hasTimer->needs_to_process_change && hasTimer->is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+
+    void once(float) override {
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        irsm = &sophie.get<IsRoundSettingsManager>();
+        hasTimer = &sophie.get<HasDayNightTimer>();
+    }
+
+    virtual void for_each_with(Entity&, HasProgression&, IsSpawner& isspawner,
+                               float) override {
+        const int day_count = hasTimer->days_passed();
+        float customer_spawn_multiplier =
+            irsm->get<float>(ConfigKey::CustomerSpawnMultiplier);
+        float round_length = irsm->get<float>(ConfigKey::RoundLength);
+
+        const int new_total =
+            (int) fmax(2.f,  // force 2 at the beginning of the game
+                       day_count * 2.f * customer_spawn_multiplier);
+
+        // the div by 2 is so that everyone is spawned by half day, so
+        // theres time for you to make their drinks and them to pay before
+        // they are forced to leave
+        const float time_between = (round_length / new_total) / 2.f;
+
+        log_info("Updating progression, setting new spawn total to {}",
+                 new_total);
+        isspawner.set_total(new_total).set_time_between(time_between);
+    }
+};
+
+struct OnNightEndedTriggerSystem
+    : public afterhours::System<RespondsToDayNight> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_nighttime();
+        } catch (...) {
+            return false;
+        }
+    }
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+                               float) override {
+        rtdn.call_night_ended();
+    }
+};
+
+struct OnDayStartedTriggerSystem
+    : public afterhours::System<RespondsToDayNight> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+                               float) override {
+        rtdn.call_day_started();
+    }
+};
+
+struct OnRoundFinishedTriggerSystem
+    : public afterhours::System<IsRoundSettingsManager> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+    virtual void for_each_with(Entity&, IsRoundSettingsManager& irsm,
+                               float) override {
+        irsm.ran_for_hour = -1;
+        irsm.config.this_hours_mods.clear();
     }
 };
 

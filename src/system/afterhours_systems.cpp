@@ -134,7 +134,29 @@ void SystemManager::register_day_night_transition_systems() {
             systems.register_update_system(
                 std::make_unique<system_manager::OpenStoreDoorsSystem>());
             systems.register_update_system(
-                std::make_unique<system_manager::ProcessDayStartSystem>());
+                std::make_unique<
+                    system_manager::
+                        DeleteFloatingItemsWhenLeavingInRoundSystem>());
+            systems.register_update_system(
+                std::make_unique<system_manager::TellCustomersToLeaveSystem>());
+
+            systems.register_update_system(
+                std::make_unique<
+                    system_manager::ResetToiletWhenLeavingInRoundSystem>());
+            systems.register_update_system(
+                std::make_unique<
+                    system_manager::
+                        ResetCustomerSpawnerWhenLeavingInRoundSystem>());
+            systems.register_update_system(
+                std::make_unique<
+                    system_manager::UpdateNewMaxCustomersSystem>());
+            systems.register_update_system(
+                std::make_unique<system_manager::OnNightEndedTriggerSystem>());
+            systems.register_update_system(
+                std::make_unique<system_manager::OnDayStartedTriggerSystem>());
+            systems.register_update_system(
+                std::make_unique<
+                    system_manager::OnRoundFinishedTriggerSystem>());
         }
         systems.register_update_system(
             std::make_unique<system_manager::CleanUpOldStoreOptionsSystem>());
