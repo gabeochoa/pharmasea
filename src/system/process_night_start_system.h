@@ -117,16 +117,15 @@ struct CloseBuildingsWhenNightSystem : public afterhours::System<> {
             PROGRESSION_BUILDING,
             STORE_BUILDING,
         };
+        const auto players = EQ().whereType(EntityType::Player).gen();
 
         for (const Building& building : buildings_that_close) {
-            // Teleport anyone inside a store outside
-            SystemManager::get().for_each_old([&](Entity& e) {
-                if (!check_type(e, EntityType::Player)) return;
-                if (CheckCollisionBoxes(e.get<Transform>().bounds(),
+            for (const Entity& player : players) {
+                if (CheckCollisionBoxes(player.get<Transform>().bounds(),
                                         building.bounds)) {
-                    move_player_out_of_building_SERVER_ONLY(e, building);
+                    move_player_out_of_building_SERVER_ONLY(player, building);
                 }
-            });
+            }
         }
     }
 };
