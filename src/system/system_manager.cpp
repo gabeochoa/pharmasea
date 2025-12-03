@@ -386,149 +386,6 @@ void move_entity_based_on_push_force(Entity& entity, float, vec3& new_pos_x,
     cbp.update_z(0.0f);
 }
 
-void process_conveyer_items(Entity& entity, float dt) {
-    if (entity.is_missing_any<CanHoldItem, ConveysHeldItem, CanBeTakenFrom>())
-        return;
-
-    const Transform& transform = entity.get<Transform>();
-
-    CanHoldItem& canHold = entity.get<CanHoldItem>();
-    CanBeTakenFrom& canBeTakenFrom = entity.get<CanBeTakenFrom>();
-    ConveysHeldItem& conveysHeldItem = entity.get<ConveysHeldItem>();
-
-    // we are not holding anything
-    if (canHold.empty()) return;
-
-    // make sure no one can insta-grab from us
-    canBeTakenFrom.update(false);
-
-    // if the item is less than halfway, just keep moving it along
-    // 0 is halfway btw
-    if (conveysHeldItem.relative_item_pos <= 0.f) {
-        conveysHeldItem.relative_item_pos += conveysHeldItem.SPEED * dt;
-        return;
-    }
-
-    bool is_ipp = entity.has<IsPnumaticPipe>();
-
-    const auto _conveyer_filter = [&entity,
-                                   &canHold](const Entity& furn) -> bool {
-        // cant be us
-        if (entity.id == furn.id) return false;
-        // needs to be able to hold something
-        if (furn.is_missing<CanHoldItem>()) return false;
-        const CanHoldItem& furnCHI = furn.get<CanHoldItem>();
-        // has to be empty
-        if (furnCHI.is_holding_item()) return false;
-        // can this furniture hold the item we are passing?
-        // some have filters
-        bool can_hold =
-            furnCHI.can_hold(canHold.const_item(), RespectFilter::ReqOnly);
-
-        return can_hold;
-    };
-
-    const auto _ipp_filter = [&entity,
-                              _conveyer_filter](const Entity& furn) -> bool {
-        // if we are a pnumatic pipe, filter only down to our guy
-        if (furn.is_missing<IsPnumaticPipe>()) return false;
-        const IsPnumaticPipe& mypp = entity.get<IsPnumaticPipe>();
-        if (mypp.paired_id != furn.id) return false;
-        if (mypp.recieving) return false;
-        return _conveyer_filter(furn);
-    };
-
-    OptEntity match;
-    if (is_ipp) {
-        auto pos = transform.as2();
-        match = EntityQuery()
-                    .whereLambda(_ipp_filter)
-                    .whereInRange(pos, MAX_SEARCH_RANGE)
-                    .orderByDist(pos)
-                    .gen_first();
-    } else {
-        match = EntityHelper::getMatchingEntityInFront(
-            transform.as2(), 1.f, transform.face_direction(), _conveyer_filter);
-    }
-
-    // no match means we can't continue, stay in the middle
-    if (!match) {
-        conveysHeldItem.relative_item_pos = 0.f;
-        canBeTakenFrom.update(true);
-        return;
-    }
-
-    if (is_ipp) {
-        entity.get<IsPnumaticPipe>().recieving = false;
-    }
-
-    // we got something that will take from us,
-    // but only once we get close enough
-
-    // so keep moving forward
-    if (conveysHeldItem.relative_item_pos <= ConveysHeldItem::ITEM_END) {
-        conveysHeldItem.relative_item_pos += conveysHeldItem.SPEED * dt;
-        return;
-    }
-
-    // we reached the end, pass ownership
-
-    CanHoldItem& ourCHI = entity.get<CanHoldItem>();
-
-    CanHoldItem& matchCHI = match->get<CanHoldItem>();
-    matchCHI.update(EntityHelper::getEntityAsSharedPtr(ourCHI.item()),
-                    entity.id);
-
-    ourCHI.update(nullptr, -1);
-
-    canBeTakenFrom.update(true);  // we are ready to have someone grab from us
-    // reset so that the next item we get starts from beginning
-    conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
-
-    if (match->has<CanBeTakenFrom>()) {
-        match->get<CanBeTakenFrom>().update(false);
-    }
-
-    if (is_ipp && match->has<IsPnumaticPipe>()) {
-        match->get<IsPnumaticPipe>().recieving = true;
-    }
-
-    if (match->is_missing<IsPnumaticPipe>() && match->has<ConveysHeldItem>()) {
-        // if we are pushing onto a conveyer, we need to make sure
-        // we are keeping track of the orientations
-        //
-        //  --> --> in this case we want to place at 0.5f
-        //
-        //          ^
-        //    -->-> |     in this we want to place at 0.f instead of -0.5
-        bool send_to_middle = false;
-        auto other_face = match->get<Transform>().face_direction();
-        // TODO theres gotta be a math way to do this
-        switch (transform.face_direction()) {
-            case Transform::FORWARD:
-            case Transform::BACK:
-                if (other_face == Transform::RIGHT ||
-                    other_face == Transform::LEFT) {
-                    send_to_middle = true;
-                }
-                break;
-            case Transform::RIGHT:
-            case Transform::LEFT:
-                if (other_face == Transform::FORWARD ||
-                    other_face == Transform::BACK) {
-                    send_to_middle = true;
-                }
-                break;
-        }
-        if (send_to_middle) {
-            match->get<ConveysHeldItem>().relative_item_pos =
-                ConveysHeldItem::ITEM_START +
-                ((ConveysHeldItem::ITEM_END - ConveysHeldItem::ITEM_START) /
-                 2.f);
-        }
-    }
-}
-
 void process_grabber_items(Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
 
@@ -581,20 +438,6 @@ void process_grabber_items(Entity& entity, float) {
     matchCHI.update(nullptr, -1);
 
     conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
-}
-
-void process_grabber_filter(Entity& entity, float) {
-    if (!check_type(entity, EntityType::FilteredGrabber)) return;
-    if (entity.is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity.get<CanHoldItem>();
-    if (canHold.empty()) return;
-
-    // If we are holding something, then:
-    // - either its already in the filter (and setting it wont be a big deal)
-    // - or we should set the filter
-
-    EntityFilter& ef = canHold.get_filter();
-    ef.set_filter_with_entity(canHold.const_item());
 }
 
 template<typename... TArgs>
@@ -1861,47 +1704,6 @@ void process_nux_updates(Entity& entity, float dt) {
     }
 }
 
-void process_spawner(Entity& entity, float dt) {
-    if (entity.is_missing<IsSpawner>()) return;
-    vec2 pos = entity.get<Transform>().as2();
-
-    IsSpawner& iss = entity.get<IsSpawner>();
-
-    bool is_time_to_spawn = iss.pass_time(dt);
-    if (!is_time_to_spawn) return;
-
-    SpawnInfo info{
-        .location = pos,
-        .is_first_this_round = (iss.get_num_spawned() == 0),
-    };
-
-    // If there is a validation function check that first
-    bool can_spawn_here_and_now = iss.validate(entity, info);
-    if (!can_spawn_here_and_now) return;
-
-    bool should_prev_dupes = iss.prevent_dupes();
-    if (should_prev_dupes) {
-        for (const Entity& e :
-             EntityQuery().whereInRange(pos, TILESIZE).gen()) {
-            if (e.id == entity.id) continue;
-
-            // Other than invalid and Us, is there anything else there?
-            // log_info(
-            // "was ready to spawn but then there was someone there
-            // already");
-            return;
-        }
-    }
-
-    auto& new_ent = EntityHelper::createEntity();
-    iss.spawn(new_ent, info);
-    iss.post_spawn_reset();
-
-    if (iss.has_spawn_sound()) {
-        network::Server::play_sound(pos, iss.get_spawn_sound());
-    }
-}
-
 namespace day_night {
 void on_day_ended(Entity& entity) {
     if (entity.is_missing<RespondsToDayNight>()) return;
@@ -1980,89 +1782,6 @@ void run_timer(Entity& entity, float dt) {
     // TODO theoretically we shouldnt start until after you choose upgrades but
     // we are gonna change how this works later anyway i think
     ht.start_day();
-}
-
-void reset_empty_work_furniture(Entity& entity, float) {
-    if (entity.is_missing<HasWork>()) return;
-    if (entity.is_missing<CanHoldItem>()) return;
-
-    HasWork& hasWork = entity.get<HasWork>();
-    if (!hasWork.should_reset_on_empty()) return;
-
-    const CanHoldItem& chi = entity.get<CanHoldItem>();
-    if (chi.empty()) {
-        hasWork.reset_pct();
-        return;
-    }
-
-    // if its not empty, we have to see if its an item that can be
-    // worked
-}
-
-void process_has_rope(Entity& entity, float) {
-    if (entity.is_missing<CanHoldItem>()) return;
-    if (entity.is_missing<HasRopeToItem>()) return;
-
-    HasRopeToItem& hrti = entity.get<HasRopeToItem>();
-
-    // No need to have rope if spout is put away
-    const CanHoldItem& chi = entity.get<CanHoldItem>();
-    if (chi.is_holding_item()) {
-        hrti.clear();
-        return;
-    }
-
-    // Find the player who is holding __OUR__ spout
-
-    OptEntity player;
-    for (const std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
-        if (!e) continue;
-        // only route to players
-        if (!check_type(*e, EntityType::Player)) continue;
-        const CanHoldItem& e_chi = e->get<CanHoldItem>();
-        if (!e_chi.is_holding_item()) continue;
-        const Item& i = e_chi.item();
-        // that are holding spouts
-        if (!check_type(i, EntityType::SodaSpout)) continue;
-        // that match the one we were holding
-        if (i.id != chi.last_id()) continue;
-        player = *e;
-    }
-    if (!player) return;
-
-    auto pos = player->get<Transform>().as2();
-
-    // If we moved more then regenerate
-    if (vec::distance(pos, hrti.goal()) > TILESIZE) {
-        hrti.clear();
-    }
-
-    // Already generated
-    if (hrti.was_generated()) return;
-
-    auto new_path = pathfinder::find_path(entity.get<Transform>().as2(), pos,
-                                          [](vec2) { return true; });
-
-    std::vector<vec2> extended_path;
-    std::optional<vec2> prev;
-    for (auto p : new_path) {
-        if (prev.has_value()) {
-            extended_path.push_back(vec::lerp(prev.value(), p, 0.33f));
-            extended_path.push_back(vec::lerp(prev.value(), p, 0.66f));
-            extended_path.push_back(vec::lerp(prev.value(), p, 0.99f));
-        }
-        extended_path.push_back(p);
-        prev = p;
-    }
-
-    for (auto p : extended_path) {
-        Entity& item =
-            EntityHelper::createItem(EntityType::SodaSpout, vec::to3(p));
-        item.get<IsItem>().set_held_by(EntityType::Player, player->id);
-        item.addComponent<IsSolid>();
-        hrti.add(item);
-    }
-    hrti.mark_generated(pos);
 }
 
 void process_soda_fountain(Entity& entity, float) {
@@ -2303,27 +2022,6 @@ void update_new_max_customers(Entity& entity, float) {
             .set_time_between(time_between);
         return;
     }
-}
-
-void reduce_impatient_customers(Entity& entity, float dt) {
-    if (entity.is_missing<HasPatience>()) return;
-    HasPatience& hp = entity.get<HasPatience>();
-
-    if (!hp.should_pass_time()) return;
-
-    hp.pass_time(dt);
-
-    // TODO actually do something when they get mad
-    if (hp.pct() <= 0) {
-        hp.reset();
-        log_warn("You wont like me when im angry");
-    }
-}
-
-void pass_time_for_active_fishing_games(Entity& entity, float dt) {
-    if (entity.is_missing<HasFishingGame>()) return;
-    HasFishingGame& fishing = entity.get<HasFishingGame>();
-    fishing.pass_time(dt);
 }
 
 // TODO this sucks, but we dont have a way to have local clientside

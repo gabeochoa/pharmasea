@@ -147,6 +147,8 @@ struct ModelTestUpdateSystem : public afterhours::System<> {
         // function?
         process_is_container_and_should_update_item(entity, dt);
         // This one should be after the other container ones
+        // TODO before you migrate this, we need to look at the should_run logic
+        // since the existing System<> uses is_nighttime
         process_is_indexed_container_holding_incorrect_item(entity, dt);
 
         process_is_container_and_should_backfill_item(entity, dt);
@@ -172,25 +174,6 @@ struct InRoundUpdateSystem : public afterhours::System<> {
     }
 
     virtual void for_each_with(Entity& entity, float dt) override {
-        reset_customers_that_need_resetting(entity);
-        //
-        process_grabber_items(entity, dt);
-        process_conveyer_items(entity, dt);
-        process_grabber_filter(entity, dt);
-        process_pnumatic_pipe_movement(entity, dt);
-        process_has_rope(entity, dt);
-        // should move all the container functions into its own
-        // function?
-        process_is_container_and_should_update_item(entity, dt);
-        // This one should be after the other container ones
-        process_is_indexed_container_holding_incorrect_item(entity, dt);
-
-        process_spawner(entity, dt);
-        reset_empty_work_furniture(entity, dt);
-        reduce_impatient_customers(entity, dt);
-
-        pass_time_for_active_fishing_games(entity, dt);
-
         upgrade::in_round_update(entity, dt);
     }
 };
