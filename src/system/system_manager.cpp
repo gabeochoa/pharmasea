@@ -85,8 +85,37 @@ namespace system_manager {
 
 namespace store {
 void cart_management(Entity&, float);
+void cleanup_old_store_options();
+void generate_store_options();
+void open_store_doors();
 void move_purchased_furniture();
 }  // namespace store
+
+void move_player_out_of_building_SERVER_ONLY(Entity& entity,
+                                             const Building& building) {
+    if (!is_server()) {
+        log_warn(
+            "you are calling a server only function from a client context, "
+            "this is best case a no-op and worst case a visual desync");
+    }
+
+    vec3 position = vec::to3(building.vomit_location);
+    Transform& transform = entity.get<Transform>();
+    transform.update(position);
+
+    // TODO if we have multiple local players then we need to specify which here
+
+    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+
+    int client_id = server->get_client_id_for_entity(entity);
+    if (client_id == -1) {
+        log_warn("Tried to find a client id for entity but didnt find one");
+        return;
+    }
+
+    server->send_player_location_packet(client_id, position, transform.facing,
+                                        entity.get<HasName>().name());
+}
 
 void move_player_SERVER_ONLY(Entity& entity, game::State location) {
     if (!is_server()) {
@@ -533,6 +562,41 @@ void handle_autodrop_furniture_when_exiting_planning(Entity& entity) {
     input_process_manager::planning::drop_held_furniture(entity);
 }
 
+void release_mop_buddy_at_start_of_day(Entity& entity) {
+    if (!check_type(entity, EntityType::MopBuddyHolder)) return;
+
+    CanHoldItem& chi = entity.get<CanHoldItem>();
+    if (chi.empty()) return;
+
+    // grab yaboi
+    Item& item = chi.item();
+
+    // let go of the item
+    item.get<IsItem>().set_held_by(EntityType::Unknown, -1);
+    chi.update(nullptr, -1);
+}
+
+void delete_trash_when_leaving_planning(Entity& entity) {
+    if (!check_type(entity, EntityType::FloorMarker)) return;
+    if (entity.is_missing<IsFloorMarker>()) return;
+    const IsFloorMarker& ifm = entity.get<IsFloorMarker>();
+    if (ifm.type != IsFloorMarker::Planning_TrashArea) return;
+
+    for (size_t i = 0; i < ifm.num_marked(); i++) {
+        EntityID id = ifm.marked_ids()[i];
+        OptEntity marked_entity = EntityHelper::getEntityForID(id);
+        if (!marked_entity) continue;
+        marked_entity->cleanup = true;
+
+        // Also delete the held item
+        CanHoldItem& markedCHI = marked_entity->get<CanHoldItem>();
+        if (!markedCHI.empty()) {
+            markedCHI.item().cleanup = true;
+            markedCHI.update(nullptr, -1);
+        }
+    }
+}
+
 void delete_customers_when_leaving_inround(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return;
     if (!check_type(entity, EntityType::Customer)) return;
@@ -541,6 +605,63 @@ void delete_customers_when_leaving_inround(Entity& entity) {
     if (vec::distance(transform.as2(), {GATHER_SPOT, GATHER_SPOT}) > 2.f)
         return;
     entity.cleanup = true;
+}
+
+void tell_customers_to_leave(Entity& entity) {
+    if (!check_type(entity, EntityType::Customer)) return;
+
+    // Force leaving job
+    entity.get<CanPerformJob>().current = JobType::Leaving;
+    entity.removeComponentIfExists<CanPathfind>();
+    entity.addComponent<CanPathfind>().set_parent(&entity);
+    // log_info("telling entity {} to leave", entity.id);
+}
+
+// TODO :DESIGN: do we actually want to do this?
+void reset_toilet_when_leaving_inround(Entity& entity) {
+    if (entity.is_missing<IsToilet>()) return;
+
+    IsToilet& istoilet = entity.get<IsToilet>();
+    istoilet.reset();
+}
+
+void delete_floating_items_when_leaving_inround(Entity& entity) {
+    if (entity.is_missing<IsItem>()) return;
+
+    const IsItem& ii = entity.get<IsItem>();
+
+    // Its being held by something so we'll get it in the function below
+    if (ii.is_held()) return;
+
+    // Skip the mop buddy for now
+    if (check_type(entity, EntityType::MopBuddy)) return;
+
+    // mark it for cleanup
+    entity.cleanup = true;
+}
+
+void delete_held_items_when_leaving_inround(Entity& entity) {
+    if (entity.is_missing<CanHoldItem>()) return;
+
+    CanHoldItem& canHold = entity.get<CanHoldItem>();
+    if (canHold.empty()) return;
+
+    // Mark it as deletable
+    // let go of the item
+    Item& item = canHold.item();
+    item.cleanup = true;
+    canHold.update(nullptr, -1);
+}
+
+void reset_max_gen_when_after_deletion(Entity& entity) {
+    if (entity.is_missing<CanHoldItem>()) return;
+    if (entity.is_missing<IsItemContainer>()) return;
+
+    const CanHoldItem& canHold = entity.get<CanHoldItem>();
+    // If something wasnt deleted, then just ignore it for now
+    if (canHold.is_holding_item()) return;
+
+    entity.get<IsItemContainer>().reset_generations();
 }
 
 void refetch_dynamic_model_names(Entity& entity, float) {
@@ -1583,6 +1704,48 @@ void process_nux_updates(Entity& entity, float dt) {
     }
 }
 
+namespace day_night {
+void on_day_ended(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_day_ended();
+}
+
+void on_night_ended(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_night_ended();
+}
+void on_day_started(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_day_started();
+}
+void on_night_started(Entity& entity) {
+    if (entity.is_missing<RespondsToDayNight>()) return;
+    entity.get<RespondsToDayNight>().call_night_started();
+}
+
+}  // namespace day_night
+
+void close_buildings_when_night(Entity& entity) {
+    // just choosing this since theres only one
+    if (!check_type(entity, EntityType::Sophie)) return;
+
+    const std::array<Building, 2> buildings_that_close = {
+        PROGRESSION_BUILDING,
+        STORE_BUILDING,
+    };
+
+    for (const Building& building : buildings_that_close) {
+        // Teleport anyone inside a store outside
+        SystemManager::get().for_each_old([&](Entity& e) {
+            if (!check_type(e, EntityType::Player)) return;
+            if (CheckCollisionBoxes(e.get<Transform>().bounds(),
+                                    building.bounds)) {
+                move_player_out_of_building_SERVER_ONLY(e, building);
+            }
+        });
+    }
+}
+
 void run_timer(Entity& entity, float dt) {
     if (entity.is_missing<HasDayNightTimer>()) return;
     HasDayNightTimer& ht = entity.get<HasDayNightTimer>();
@@ -1780,6 +1943,17 @@ void process_pnumatic_pipe_movement(Entity& entity, float) {
     ipp.item_id = cur_id;
 }
 
+void reset_customer_spawner_when_leaving_inround(Entity& entity) {
+    if (entity.is_missing<IsSpawner>()) return;
+    entity.get<IsSpawner>().reset_num_spawned();
+}
+
+void reset_register_queue_when_leaving_inround(Entity& entity) {
+    if (entity.is_missing<HasWaitingQueue>()) return;
+    HasWaitingQueue& hwq = entity.get<HasWaitingQueue>();
+    hwq.clear();
+}
+
 void reset_customers_that_need_resetting(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return;
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
@@ -1813,6 +1987,40 @@ void reset_customers_that_need_resetting(Entity& entity) {
         entity.get<HasPatience>().update_max(ingredients.count() * 30.f *
                                              patience_multiplier);
         entity.get<HasPatience>().reset();
+    }
+}
+
+void update_new_max_customers(Entity& entity, float) {
+    if (entity.is_missing<HasProgression>()) return;
+
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+    const HasDayNightTimer& hasTimer = sophie.get<HasDayNightTimer>();
+    const int day_count = hasTimer.days_passed();
+
+    if (check_type(entity, EntityType::CustomerSpawner)) {
+        float customer_spawn_multiplier =
+            irsm.get<float>(ConfigKey::CustomerSpawnMultiplier);
+        float round_length = irsm.get<float>(ConfigKey::RoundLength);
+
+        const int new_total =
+            (int) fmax(2.f,  // force 2 at the beginning of the game
+                             //
+                       day_count * 2.f * customer_spawn_multiplier);
+
+        // the div by 2 is so that everyone is spawned by half day, so
+        // theres time for you to make their drinks and them to pay before
+        // they are forced to leave
+        const float time_between = (round_length / new_total) / 2.f;
+
+        log_info("Updating progression, setting new spawn total to {}",
+                 new_total);
+        entity
+            .get<IsSpawner>()  //
+            .set_total(new_total)
+            .set_time_between(time_between);
+        return;
     }
 }
 
@@ -1933,6 +2141,127 @@ void cart_management(Entity& entity, float) {
     }
 }
 
+void cleanup_old_store_options() {
+    OptEntity cart_area =
+        EntityQuery()
+            .whereHasComponent<IsFloorMarker>()
+            .whereLambda([](const Entity& entity) {
+                if (entity.is_missing<IsFloorMarker>()) return false;
+                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
+            })
+            .include_store_entities()
+            .gen_first();
+
+    OptEntity locked_area =
+        EntityQuery()
+            .whereHasComponent<IsFloorMarker>()
+            .whereLambda([](const Entity& entity) {
+                if (entity.is_missing<IsFloorMarker>()) return false;
+                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
+                return fm.type == IsFloorMarker::Type::Store_LockedArea;
+            })
+            .include_store_entities()
+            .gen_first();
+
+    for (Entity& entity : EntityQuery()
+                              .whereHasComponent<IsStoreSpawned>()
+                              .include_store_entities()
+                              .gen()) {
+        // ignore antyhing in the cart
+        if (cart_area) {
+            if (cart_area->get<IsFloorMarker>().is_marked(entity.id)) {
+                continue;
+            }
+        }
+
+        // ignore anything locked
+        if (locked_area) {
+            if (locked_area->get<IsFloorMarker>().is_marked(entity.id)) {
+                continue;
+            }
+        }
+
+        entity.cleanup = true;
+
+        // Also cleanup the item its holding if it has one
+        if (entity.is_missing<CanHoldItem>()) continue;
+        CanHoldItem& chi = entity.get<CanHoldItem>();
+        if (!chi.is_holding_item()) continue;
+        chi.item().cleanup = true;
+    }
+}
+
+void generate_store_options() {
+    // Figure out what kinds of things we can spawn generally
+    // - what is spawnable?
+    // - are they capped by progression? (alcohol / fruits for sure
+    // right?) choose a couple options to spawn
+    // - how many?
+    // spawn them
+    // - use the place machine thing
+
+    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
+        IsFloorMarker::Type::Store_SpawnArea);
+
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsProgressionManager& ipp = sophie.get<IsProgressionManager>();
+    const EntityTypeSet& unlocked = ipp.enabled_entity_types();
+    IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+    int num_to_spawn = irsm.get<int>(ConfigKey::NumStoreSpawns);
+
+    // NOTE: areas expand outward so as2() refers to the center
+    // so we have to go back half the size
+    Transform& area_transform = spawn_area->get<Transform>();
+    vec2 area_origin = area_transform.as2();
+    float half_width = area_transform.sizex() / 2.f;
+    float half_height = area_transform.sizez() / 2.f;
+    float reset_x = area_origin.x - half_width;
+    float reset_y = area_origin.y - half_height;
+
+    vec2 spawn_position = vec2{reset_x, reset_y};
+
+    while (num_to_spawn) {
+        int entity_type_id = bitset_utils::get_random_enabled_bit(unlocked);
+        EntityType etype = magic_enum::enum_value<EntityType>(entity_type_id);
+        if (get_price_for_entity_type(etype) <= 0) continue;
+
+        log_info("generate_store_options: random: {}",
+                 magic_enum::enum_name<EntityType>(etype));
+
+        auto& entity = EntityHelper::createEntity();
+        entity.addComponent<IsStoreSpawned>();
+        bool success = convert_to_type(etype, entity, spawn_position);
+        if (success) {
+            num_to_spawn--;
+        } else {
+            entity.cleanup = true;
+        }
+
+        spawn_position.x += 2;
+
+        if (spawn_position.x > (area_origin.x + half_width)) {
+            spawn_position.x = reset_x;
+            spawn_position.y += 2;
+        } else if (spawn_position.y > (area_origin.y + half_height)) {
+            reset_x += 1;
+            spawn_position.x = reset_x;
+            spawn_position.y = reset_y;
+        }
+    }
+}
+
+void open_store_doors() {
+    for (RefEntity door :
+         EntityQuery()
+             .whereType(EntityType::Door)
+             .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
+             .gen()) {
+        door.get().removeComponentIfExists<IsSolid>();
+    }
+}
+
 void move_purchased_furniture() {
     // Grab the overlap area so we can see what it marked
     OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
@@ -1989,6 +2318,18 @@ void move_purchased_furniture() {
 }
 
 }  // namespace store
+
+namespace upgrade {
+
+void on_round_finished(Entity& entity, float) {
+    if (entity.is_missing<IsRoundSettingsManager>()) return;
+    IsRoundSettingsManager& irsm = entity.get<IsRoundSettingsManager>();
+
+    irsm.ran_for_hour = -1;
+    irsm.config.this_hours_mods.clear();
+}
+
+}  // namespace upgrade
 
 }  // namespace system_manager
 
