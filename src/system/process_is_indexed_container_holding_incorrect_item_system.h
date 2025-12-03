@@ -11,6 +11,9 @@ namespace system_manager {
 struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
     : public afterhours::System<Indexer, CanHoldItem> {
     virtual bool should_run(const float) override {
+        // Model Test should always run this
+        if (GameState::get().is(game::State::ModelTest)) return true;
+
         if (!GameState::get().is_game_like()) return false;
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);

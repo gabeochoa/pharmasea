@@ -134,27 +134,6 @@ struct GameLikeUpdateSystem : public afterhours::System<> {
     }
 };
 
-// Model test update system - processes entities during model test state
-struct ModelTestUpdateSystem : public afterhours::System<> {
-    virtual ~ModelTestUpdateSystem() = default;
-
-    virtual bool should_run(const float) override {
-        return GameState::get().is(game::State::ModelTest);
-    }
-
-    virtual void for_each_with(Entity& entity, float dt) override {
-        // should move all the container functions into its own
-        // function?
-        process_is_container_and_should_update_item(entity, dt);
-        // This one should be after the other container ones
-        // TODO before you migrate this, we need to look at the should_run logic
-        // since the existing System<> uses is_nighttime
-        process_is_indexed_container_holding_incorrect_item(entity, dt);
-
-        process_is_container_and_should_backfill_item(entity, dt);
-    }
-};
-
 // In-round update system - processes entities during in-round (nighttime)
 struct InRoundUpdateSystem : public afterhours::System<> {
     virtual ~InRoundUpdateSystem() = default;

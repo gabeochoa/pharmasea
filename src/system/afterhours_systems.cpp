@@ -142,9 +142,24 @@ void SystemManager::register_day_night_transition_systems() {
         std::make_unique<system_manager::ResetHasDayNightChanged>());
 }
 
+// Model test update system - processes entities during model test state
 void SystemManager::register_modeltest_systems() {
+    // should move all the container functions into its own
+    // function?
     systems.register_update_system(
-        std::make_unique<system_manager::ModelTestUpdateSystem>());
+        std::make_unique<
+            system_manager::ProcessIsContainerAndShouldUpdateItemSystem>());
+    // This one should be after the other container ones
+    // TODO before you migrate this, we need to look at the should_run logic
+    // since the existing System<> uses is_nighttime
+    systems.register_update_system(
+        std::make_unique<
+            system_manager::
+                ProcessIsIndexedContainerHoldingIncorrectItemSystem>());
+
+    systems.register_update_system(
+        std::make_unique<
+            system_manager::ProcessIsContainerAndShouldBackfillItemSystem>());
 }
 
 void SystemManager::register_inround_systems() {
