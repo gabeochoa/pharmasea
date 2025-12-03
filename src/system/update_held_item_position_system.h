@@ -12,18 +12,6 @@ namespace system_manager {
 vec3 get_new_held_position_custom(Entity& entity);
 vec3 get_new_held_position_default(Entity& entity);
 
-struct UpdateHeldItemPositionSystem
-    : public afterhours::System<CanHoldItem, Transform> {
-    virtual void for_each_with(Entity& entity, CanHoldItem& can_hold_item,
-                               Transform&, float) override {
-        if (can_hold_item.empty()) return;
-
-        vec3 new_pos = entity.has<CustomHeldItemPosition>()
-                           ? get_new_held_position_custom(entity)
-                           : get_new_held_position_default(entity);
-
-        can_hold_item.item().get<Transform>().update(new_pos);
-    }
-};
+// Struct definition moved to afterhours_sixtyfps_systems.cpp
 
 }  // namespace system_manager

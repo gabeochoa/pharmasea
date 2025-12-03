@@ -1,5 +1,3 @@
-#pragma once
-
 #include "../ah.h"
 #include "../building_locations.h"
 #include "../components/can_hold_item.h"
@@ -7,7 +5,9 @@
 #include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
 #include "../components/has_day_night_timer.h"
+#include "../components/has_name.h"
 #include "../components/has_progression.h"
+#include "../components/has_waiting_queue.h"
 #include "../components/is_item.h"
 #include "../components/is_item_container.h"
 #include "../components/is_round_settings_manager.h"
@@ -16,11 +16,13 @@
 #include "../components/is_store_spawned.h"
 #include "../components/is_toilet.h"
 #include "../components/responds_to_day_night.h"
+#include "../components/transform.h"
 #include "../engine/bitset_utils.h"
 #include "../engine/log.h"
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
+#include "../network/server.h"
 #include "magic_enum/magic_enum.hpp"
 #include "store_management_helpers.h"
 #include "system_manager.h"
@@ -329,4 +331,226 @@ struct OnRoundFinishedTriggerSystem
     }
 };
 
+// Struct definitions from process_night_start_system.h moved here
+
+struct CleanUpOldStoreOptionsSystem : public afterhours::System<> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_nighttime();
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void once(float) override { store::cleanup_old_store_options(); }
+};
+
+struct OnDayEndedSystem : public afterhours::System<RespondsToDayNight> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_nighttime();
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+                               float) override {
+        rtdn.call_day_ended();
+    }
+};
+
+struct CloseBuildingsWhenNightSystem
+    : public afterhours::System<IsSolid,
+                                afterhours::tags::All<EntityType::Door>> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_nighttime();
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void for_each_with(Entity& entity, IsSolid& issolid,
+                               float) override {
+        if (!CheckCollisionBoxes(entity.get<Transform>().bounds(),
+                                 STORE_BUILDING.bounds))
+            return;
+        if (!entity.has<IsSolid>()) {
+            entity.addComponent<IsSolid>();
+        }
+    }
+};
+
+struct OnNightStartedSystem : public afterhours::System<RespondsToDayNight> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_nighttime();
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+                               float) override {
+        rtdn.call_night_started();
+    }
+};
+
+struct ReleaseMopBuddyAtStartOfDaySystem
+    : public afterhours::System<IsItem,
+                                afterhours::tags::All<EntityType::MopBuddy>> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void for_each_with(Entity& entity, IsItem& isitem, float) override {
+        if (isitem.is_held()) {
+            // Force drop the mop buddy
+            isitem.drop();
+        }
+    }
+};
+
+struct DeleteTrashWhenLeavingPlanningSystem
+    : public afterhours::System<IsStoreSpawned> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void for_each_with(Entity& entity, IsStoreSpawned& isss,
+                               float) override {
+        // Only delete if it's not being held
+        if (entity.has<IsItem>() && !entity.get<IsItem>().is_held()) {
+            entity.cleanup = true;
+        }
+    }
+};
+
+struct ResetRegisterQueueWhenLeavingInRoundSystem
+    : public afterhours::System<HasWaitingQueue> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void for_each_with(Entity&, HasWaitingQueue& hwq, float) override {
+        hwq.queue.clear();
+    }
+};
+
+// Struct definition from reset_has_day_night_changed_system.h moved here
+
+// System that resets the needs_to_process_change flag after all transition
+// systems have run
+struct ResetHasDayNightChanged : public afterhours::System<HasDayNightTimer> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            // Only run when the flag is set (meaning transition systems ran)
+            return timer.needs_to_process_change;
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void for_each_with(Entity&, HasDayNightTimer& timer,
+                               float) override {
+        // Reset the flag after all transition systems have run
+        timer.needs_to_process_change = false;
+    }
+};
+
 }  // namespace system_manager
+
+void SystemManager::register_day_night_transition_systems() {
+    // Day/night transition systems - all check needs_to_process_change in
+    // should_run(), reset clears the flag after processing
+    {
+        // Day start systems
+        {
+            systems.register_update_system(
+                std::make_unique<system_manager::GenerateStoreOptionsSystem>());
+            systems.register_update_system(
+                std::make_unique<system_manager::OpenStoreDoorsSystem>());
+            systems.register_update_system(
+                std::make_unique<
+                    system_manager::
+                        DeleteFloatingItemsWhenLeavingInRoundSystem>());
+            systems.register_update_system(
+                std::make_unique<system_manager::TellCustomersToLeaveSystem>());
+
+            systems.register_update_system(
+                std::make_unique<
+                    system_manager::ResetToiletWhenLeavingInRoundSystem>());
+            systems.register_update_system(
+                std::make_unique<
+                    system_manager::
+                        ResetCustomerSpawnerWhenLeavingInRoundSystem>());
+            systems.register_update_system(
+                std::make_unique<
+                    system_manager::UpdateNewMaxCustomersSystem>());
+            systems.register_update_system(
+                std::make_unique<system_manager::OnNightEndedTriggerSystem>());
+            systems.register_update_system(
+                std::make_unique<system_manager::OnDayStartedTriggerSystem>());
+            systems.register_update_system(
+                std::make_unique<
+                    system_manager::OnRoundFinishedTriggerSystem>());
+        }
+        systems.register_update_system(
+            std::make_unique<system_manager::CleanUpOldStoreOptionsSystem>());
+        systems.register_update_system(
+            std::make_unique<system_manager::OnDayEndedSystem>());
+        systems.register_update_system(
+            std::make_unique<
+                system_manager::ResetRegisterQueueWhenLeavingInRoundSystem>());
+        systems.register_update_system(
+            std::make_unique<system_manager::CloseBuildingsWhenNightSystem>());
+        systems.register_update_system(
+            std::make_unique<system_manager::OnNightStartedSystem>());
+        systems.register_update_system(
+            std::make_unique<
+                system_manager::ReleaseMopBuddyAtStartOfDaySystem>());
+        systems.register_update_system(
+            std::make_unique<
+                system_manager::DeleteTrashWhenLeavingPlanningSystem>());
+    }
+    // This one needs to run after the transition systems to clear the flag
+    systems.register_update_system(
+        std::make_unique<system_manager::ResetHasDayNightChanged>());
+}
