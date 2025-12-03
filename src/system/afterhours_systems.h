@@ -83,27 +83,4 @@ void on_round_finished(Entity& entity, float dt);
 void in_round_update(Entity& entity, float dt);
 }  // namespace upgrade
 
-// In-round update system - processes entities during in-round (nighttime)
-struct InRoundUpdateSystem : public afterhours::System<> {
-    virtual ~InRoundUpdateSystem() = default;
-
-    virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            // Don't run during transitions to avoid spawners creating entities
-            // before transition logic completes
-            if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
-        } catch (...) {
-            return false;
-        }
-    }
-
-    virtual void for_each_with(Entity& entity, float dt) override {
-        upgrade::in_round_update(entity, dt);
-    }
-};
-
 }  // namespace system_manager

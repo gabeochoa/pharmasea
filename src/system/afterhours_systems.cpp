@@ -159,9 +159,6 @@ void SystemManager::register_modeltest_systems() {
 
 void SystemManager::register_inround_systems() {
     systems.register_update_system(
-        std::make_unique<system_manager::InRoundUpdateSystem>());
-
-    systems.register_update_system(
         std::make_unique<
             system_manager::ResetCustomersThatNeedResettingSystem>());
     systems.register_update_system(
