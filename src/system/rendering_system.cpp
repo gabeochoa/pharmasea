@@ -881,7 +881,7 @@ void render_floor_marker(const Entity& entity, float) {
         case IsFloorMarker::Store_SpawnArea:
             break;
         case IsFloorMarker::Planning_TrashArea:
-            render_icon_for_marked_items(ifm, "trash_can");
+            render_icon_for_marked_items(ifm, "trashcan");
             break;
         case IsFloorMarker::Store_PurchaseArea:
             render_icon_for_marked_items(ifm, "dollar_sign");
