@@ -83,57 +83,6 @@ void on_round_finished(Entity& entity, float dt);
 void in_round_update(Entity& entity, float dt);
 }  // namespace upgrade
 
-// Simple proof-of-concept system: Timer system that processes entities with
-// HasDayNightTimer
-struct TimerSystem : public afterhours::System<HasDayNightTimer> {
-    virtual ~TimerSystem() = default;
-
-    virtual void for_each_with([[maybe_unused]] Entity& entity,
-                               [[maybe_unused]] HasDayNightTimer& timer,
-                               [[maybe_unused]] float dt) override {
-        // This is called automatically for all entities with HasDayNightTimer
-        // component We can add the timer logic here later For now, this is just
-        // a proof of concept
-    }
-};
-
-// Sixty FPS update system - processes entities at 60fps
-struct SixtyFpsUpdateSystem : public afterhours::System<> {
-    virtual ~SixtyFpsUpdateSystem() = default;
-
-    // This system should run in all states (lobby, game, model test, etc.)
-    // because it handles trigger areas and other essential updates
-    // Note: We run every frame for better responsiveness (especially for
-    // trigger areas), which is acceptable since these operations are
-    // lightweight. The original ran at 60fps (when timePassed >= 0.016f), but
-    // running every frame ensures trigger areas and other interactions feel
-    // more responsive.
-    virtual bool should_run(const float) override { return true; }
-
-    virtual void for_each_with([[maybe_unused]] Entity& entity,
-                               [[maybe_unused]] float dt) override {
-        // All functions have been migrated to individual systems
-    }
-};
-
-// Game-like update system - processes entities during game-like states
-struct GameLikeUpdateSystem : public afterhours::System<> {
-    virtual ~GameLikeUpdateSystem() = default;
-
-    virtual bool should_run(const float) override {
-        return GameState::get().is_game_like();
-    }
-
-    virtual void for_each_with(Entity& entity,
-                               [[maybe_unused]] float dt) override {
-        // Day/night transition logic has been moved to separate systems:
-        // ComputeHasDayNightChanged, ProcessDayStartSystem,
-        // ProcessNightStartSystem, and ResetHasDayNightChanged
-        (void) entity;
-        (void) dt;
-    }
-};
-
 // In-round update system - processes entities during in-round (nighttime)
 struct InRoundUpdateSystem : public afterhours::System<> {
     virtual ~InRoundUpdateSystem() = default;

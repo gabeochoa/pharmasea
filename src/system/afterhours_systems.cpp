@@ -101,8 +101,6 @@ void SystemManager::register_sixtyfps_systems() {
             system_manager::UpdateVisualsForSettingsChangerSystem>());
     systems.register_update_system(
         std::make_unique<system_manager::ProcessSquirterSystem>());
-    systems.register_update_system(
-        std::make_unique<system_manager::SixtyFpsUpdateSystem>());
 }
 
 void SystemManager::register_gamelike_systems() {
@@ -123,9 +121,6 @@ void SystemManager::register_gamelike_systems() {
             system_manager::EndOfRoundCompletionValidationSystem>());
 
     register_day_night_transition_systems();
-
-    systems.register_update_system(
-        std::make_unique<system_manager::GameLikeUpdateSystem>());
 }
 
 void SystemManager::register_day_night_transition_systems() {
