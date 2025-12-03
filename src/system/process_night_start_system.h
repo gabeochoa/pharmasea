@@ -16,6 +16,7 @@
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../network/server.h"
+#include "store_management_helpers.h"
 #include "system_manager.h"
 
 namespace system_manager {
@@ -119,61 +120,6 @@ inline void on_night_started(Entity& entity) {
 }
 
 }  // namespace day_night
-
-namespace store {
-
-inline void cleanup_old_store_options() {
-    OptEntity cart_area =
-        EntityQuery()
-            .whereHasComponent<IsFloorMarker>()
-            .whereLambda([](const Entity& entity) {
-                if (entity.is_missing<IsFloorMarker>()) return false;
-                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-                return fm.type == IsFloorMarker::Type::Store_PurchaseArea;
-            })
-            .include_store_entities()
-            .gen_first();
-
-    OptEntity locked_area =
-        EntityQuery()
-            .whereHasComponent<IsFloorMarker>()
-            .whereLambda([](const Entity& entity) {
-                if (entity.is_missing<IsFloorMarker>()) return false;
-                const IsFloorMarker& fm = entity.get<IsFloorMarker>();
-                return fm.type == IsFloorMarker::Type::Store_LockedArea;
-            })
-            .include_store_entities()
-            .gen_first();
-
-    for (Entity& entity : EntityQuery()
-                              .whereHasComponent<IsStoreSpawned>()
-                              .include_store_entities()
-                              .gen()) {
-        // ignore antyhing in the cart
-        if (cart_area) {
-            if (cart_area->get<IsFloorMarker>().is_marked(entity.id)) {
-                continue;
-            }
-        }
-
-        // ignore anything locked
-        if (locked_area) {
-            if (locked_area->get<IsFloorMarker>().is_marked(entity.id)) {
-                continue;
-            }
-        }
-
-        entity.cleanup = true;
-
-        // Also cleanup the item its holding if it has one
-        if (entity.is_missing<CanHoldItem>()) continue;
-        CanHoldItem& chi = entity.get<CanHoldItem>();
-        if (!chi.is_holding_item()) continue;
-        chi.item().cleanup = true;
-    }
-}
-
-}  // namespace store
 
 struct CleanUpOldStoreOptionsSystem : public afterhours::System<> {
     virtual bool should_run(const float) override {

@@ -3,6 +3,7 @@
 #include "system_manager.h"
 
 #include "afterhours_systems.h"
+#include "store_management_helpers.h"
 
 ///
 #include "../building_locations.h"
