@@ -104,7 +104,7 @@ $(OBJ_DIR)/%.o: %.cpp makefile $(PCH_GCH)
 # is present next to the header path.
 # Note: PCH will be rebuilt automatically by make when pch.hpp or makefile changes.
 # If vendor files change and PCH becomes stale, run 'make clean' or delete $(PCH_GCH) manually.
-$(PCH_GCH): $(PCH_HEADER) makefile src/bitsery_include.h src/std_include.h src/log/log.h
+$(PCH_GCH): $(PCH_HEADER) makefile src/bitsery_include.h src/std_include.h src/engine/log.h
 	$(CXX) $(FLAGS) $(INCLUDES) -DFMT_HEADER_ONLY -DFMT_USE_NONTYPE_TEMPLATE_PARAMETERS=0 -DFMT_CONSTEVAL= -Wno-deprecated-literal-operator -Wno-invalid-utf8 -Wno-implicit-float-conversion -Wno-c99-extensions -x c++-header -o $@ $<
 
 clean:

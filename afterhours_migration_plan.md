@@ -16,11 +16,23 @@ These phases are **complete** and don't need any more work:
 
 ## What Still Needs To Be Done
 
-### Task 1: Move Functions Out of `system_manager.cpp` (Easy)
+### Task 1: Move Functions Out of `system_manager.cpp` ✅ DONE
 
-**Goal**: Move function implementations from `system_manager.cpp` into their matching `*_system.h` files.
+**Status**: Complete. Reduced `system_manager.cpp` from 2489 to 2148 lines (-341 lines).
 
-**Why**: Right now `system_manager.cpp` is 2500 lines. The functions are declared in `afterhours_systems.h` and called from `*_system.h` files, but their code is still in `system_manager.cpp`. Moving them makes the code easier to find.
+**What was done**:
+- Moved night-start functions to `process_night_start_system.h`:
+  - `close_buildings_when_night`, `release_mop_buddy_at_start_of_day`, `delete_trash_when_leaving_planning`, `reset_register_queue_when_leaving_inround`
+  - `day_night::on_day_ended`, `day_night::on_night_started`
+  - `store::cleanup_old_store_options`
+  - `move_player_out_of_building_SERVER_ONLY` (helper)
+- Moved day-start functions to `process_day_start_system.h`:
+  - `delete_floating_items_when_leaving_inround`, `delete_held_items_when_leaving_inround`, `reset_max_gen_when_after_deletion`
+  - `tell_customers_to_leave`, `reset_toilet_when_leaving_inround`, `reset_customer_spawner_when_leaving_inround`, `update_new_max_customers`
+  - `day_night::on_night_ended`, `day_night::on_day_started`
+  - `store::generate_store_options`, `store::open_store_doors`
+  - `upgrade::on_round_finished`
+- Updated `afterhours_systems.h` to remove moved declarations
 
 **How to do it**:
 
@@ -276,7 +288,7 @@ After each change:
 
 **Remaining work in priority order**:
 
-1. ⬜ **Task 1**: Move functions out of `system_manager.cpp` - Makes code easier to navigate
+1. ✅ **Task 1**: Move functions out of `system_manager.cpp` - Makes code easier to navigate
 2. ⬜ **Task 2**: Replace `for_each_old` with proper patterns - Cleaner system code
 3. ⬜ **Task 3**: Migrate EntityHelper - Use smart pointers
 4. ⬜ **Task 4**: Migrate Bitset Utils - Simple find/replace
