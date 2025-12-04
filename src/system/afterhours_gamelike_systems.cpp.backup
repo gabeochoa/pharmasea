@@ -1,8 +1,7 @@
+#include "system_manager.h"
+#include "afterhours_systems.h"
 #include "../components/can_hold_item.h"
 #include "../components/is_item_container.h"
-#include "../entity_helper.h"
-#include "afterhours_systems.h"
-#include "system_manager.h"
 
 // Individual system headers for gamelike systems
 #include "end_of_round_completion_validation_system.h"
@@ -37,11 +36,16 @@ struct ProcessIsContainerAndShouldBackfillItemSystem
                                CanHoldItem& canHold, float dt) override {
         (void) iic;      // Unused parameter
         (void) canHold;  // Unused parameter
-        process_is_container_and_should_backfill_item(entity, dt);
+        system_manager::process_is_container_and_should_backfill_item(entity, dt);
     }
 };
 
 }  // namespace system_manager
+
+// Forward declaration for system defined in system_manager namespace
+namespace system_manager {
+struct ProcessIsContainerAndShouldBackfillItemSystem;
+}
 
 void SystemManager::register_gamelike_systems() {
     systems.register_update_system(

@@ -367,8 +367,7 @@ struct OnDayEndedSystem : public afterhours::System<RespondsToDayNight> {
 };
 
 struct CloseBuildingsWhenNightSystem
-    : public afterhours::System<IsSolid,
-                                afterhours::tags::All<EntityType::Door>> {
+    : public afterhours::System<afterhours::tags::All<EntityType::Door>> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {
@@ -380,14 +379,12 @@ struct CloseBuildingsWhenNightSystem
         }
     }
 
-    virtual void for_each_with(Entity& entity, IsSolid& issolid,
-                               float) override {
+    virtual void for_each_with(Entity& entity, float) override {
         if (!CheckCollisionBoxes(entity.get<Transform>().bounds(),
-                                 STORE_BUILDING.bounds))
+                                 STORE_BUILDING.bounds)) {
             return;
-        if (!entity.has<IsSolid>()) {
-            entity.addComponent<IsSolid>();
         }
+        entity.addComponentIfMissing<IsSolid>();
     }
 };
 
@@ -424,9 +421,10 @@ struct ReleaseMopBuddyAtStartOfDaySystem
     }
 
     virtual void for_each_with(Entity& entity, IsItem& isitem, float) override {
+        (void) entity;  // Unused parameter
         if (isitem.is_held()) {
             // Force drop the mop buddy
-            isitem.drop();
+            isitem.set_held_by(EntityType::Unknown, -1);
         }
     }
 };
@@ -446,6 +444,7 @@ struct DeleteTrashWhenLeavingPlanningSystem
 
     virtual void for_each_with(Entity& entity, IsStoreSpawned& isss,
                                float) override {
+        (void) isss;  // Unused parameter
         // Only delete if it's not being held
         if (entity.has<IsItem>() && !entity.get<IsItem>().is_held()) {
             entity.cleanup = true;
@@ -467,7 +466,7 @@ struct ResetRegisterQueueWhenLeavingInRoundSystem
     }
 
     virtual void for_each_with(Entity&, HasWaitingQueue& hwq, float) override {
-        hwq.queue.clear();
+        hwq.clear();
     }
 };
 

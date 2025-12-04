@@ -1,10 +1,9 @@
-#include "../components/can_hold_item.h"
+#include "system_manager.h"
+#include "afterhours_systems.h"
 #include "../components/indexer.h"
+#include "../components/can_hold_item.h"
 #include "../components/is_item_container.h"
 #include "../components/transform.h"
-#include "../entity_helper.h"
-#include "afterhours_systems.h"
-#include "system_manager.h"
 
 // Individual system headers for inround systems
 #include "pass_time_for_active_fishing_games_system.h"
@@ -49,9 +48,11 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
         (void) iic;        // Unused parameter
         (void) indexer;    // Unused parameter
         (void) canHold;    // Unused parameter
-        process_is_container_and_should_update_item(entity, dt);
+        system_manager::process_is_container_and_should_update_item(entity, dt);
     }
 };
+
+}  // namespace system_manager
 
 // System for processing indexed containers holding incorrect items during
 // in-round updates
@@ -78,11 +79,15 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
                                CanHoldItem& canHold, float dt) override {
         (void) indexer;  // Unused parameter
         (void) canHold;  // Unused parameter
-        process_is_indexed_container_holding_incorrect_item(entity, dt);
+        system_manager::process_is_indexed_container_holding_incorrect_item(entity, dt);
     }
 };
 
-}  // namespace system_manager
+// Forward declarations for systems defined in system_manager namespace
+namespace system_manager {
+struct ProcessIsContainerAndShouldUpdateItemSystem;
+struct ProcessIsIndexedContainerHoldingIncorrectItemSystem;
+}
 
 void SystemManager::register_inround_systems() {
     systems.register_update_system(
