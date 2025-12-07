@@ -203,10 +203,11 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 to_delete.cleanup = true;
             }
 
-            SystemManager::get().for_each_old([](Entity& e) {
-                if (!check_type(e, EntityType::Player)) return;
-                move_player_SERVER_ONLY(e, game::State::Lobby);
-            });
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::Lobby);
+            }
         } break;
         case IsTriggerArea::Lobby_ModelTest: {
             GameState::get().transition_to_model_test();
@@ -217,18 +218,20 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     ->game_info.generate_model_test_map();
             }
 
-            SystemManager::get().for_each_old([](Entity& e) {
-                if (!check_type(e, EntityType::Player)) return;
-                move_player_SERVER_ONLY(e, game::State::ModelTest);
-            });
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::ModelTest);
+            }
         } break;
 
         case IsTriggerArea::Lobby_PlayGame: {
             GameState::get().transition_to_game();
-            SystemManager::get().for_each_old([](Entity& e) {
-                if (!check_type(e, EntityType::Player)) return;
-                move_player_SERVER_ONLY(e, game::State::InGame);
-            });
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::InGame);
+            }
         } break;
         case IsTriggerArea::Progression_Option1:
             _choose_option(0);

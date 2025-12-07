@@ -17,12 +17,10 @@ namespace progression {
 
 inline void skip_upgrade_visit() {
     GameState::get().transition_to_game();
-    SystemManager::get().for_each_old([](Entity& e) {
-        if (check_type(e, EntityType::Player)) {
-            move_player_SERVER_ONLY(e, game::State::InGame);
-            return;
-        }
-    });
+    for (RefEntity player :
+         EQ(SystemManager::get().oldAll).whereType(EntityType::Player).gen()) {
+        move_player_SERVER_ONLY(player, game::State::InGame);
+    }
 }
 
 inline bool collect_drink_options(IsProgressionManager& ipm) {

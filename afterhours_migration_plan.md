@@ -289,7 +289,7 @@ After each change:
 **Remaining work in priority order**:
 
 1. ✅ **Task 1**: Move functions out of `system_manager.cpp` - Makes code easier to navigate
-2. ⬜ **Task 2**: Replace `for_each_old` with proper patterns - Cleaner system code
+2. ✅ **Task 2**: Replace `for_each_old` with proper patterns - Cleaner system code
 3. ⬜ **Task 3**: Migrate EntityHelper - Use smart pointers
 4. ✅ **Task 4**: Migrate Bitset Utils - Simple find/replace (all call sites use afterhours helpers; old header removed)
 5. ✅ **Task 5**: Migrate Library pattern - Better error handling
