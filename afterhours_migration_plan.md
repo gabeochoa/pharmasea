@@ -291,10 +291,11 @@ After each change:
 1. ✅ **Task 1**: Move functions out of `system_manager.cpp` - Makes code easier to navigate
 2. ⬜ **Task 2**: Replace `for_each_old` with proper patterns - Cleaner system code
 3. ⬜ **Task 3**: Migrate EntityHelper - Use smart pointers
-4. ⬜ **Task 4**: Migrate Bitset Utils - Simple find/replace
-5. ⬜ **Task 5**: Migrate Library pattern - Better error handling
+4. ✅ **Task 4**: Migrate Bitset Utils - Simple find/replace (all call sites use afterhours helpers; old header removed)
+5. ✅ **Task 5**: Migrate Library pattern - Better error handling
 6. ⬜ **Task 6**: Standardize includes - Consistency
 7. ⬜ **Task 7**: Process trash TODO - Cleanup
+8. ⬜ **Task 8**: RNG unification - Route remaining thread_local mt19937 users through `RandomEngine::rng()`
 
 **Time estimate**: Tasks 1, 4, 6, 7 are ~30 mins each. Tasks 2, 3, 5 are ~1-2 hours each.
 

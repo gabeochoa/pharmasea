@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "ah.h"
 #include "dataclass/settings.h"
-#include "engine/library.h"
 #include "engine/singleton.h"
 
 SINGLETON_FWD(ConfigValueLibrary)
@@ -36,7 +36,7 @@ struct ConfigValueLibrary {
     [[nodiscard]] auto end() const { return impl.end(); }
 
    private:
-    struct ConfigValueLibraryImpl : Library<ConfigValue> {
+    struct ConfigValueLibraryImpl : afterhours::Library<ConfigValue> {
         virtual ConfigValue convert_filename_to_object(const char*,
                                                        const char*) override {
             return ConfigValue{};

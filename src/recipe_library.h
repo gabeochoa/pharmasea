@@ -2,7 +2,6 @@
 
 #include "ah.h"
 #include "dataclass/ingredient.h"
-#include "engine/library.h"
 #include "engine/singleton.h"
 #include "entity_type.h"
 
@@ -46,7 +45,7 @@ struct RecipeLibrary {
     [[nodiscard]] auto end() const { return impl.end(); }
 
    private:
-    struct RecipeLibraryImpl : Library<Recipe> {
+    struct RecipeLibraryImpl : afterhours::Library<Recipe> {
         virtual Recipe convert_filename_to_object(const char*,
                                                   const char*) override {
             return Recipe{};

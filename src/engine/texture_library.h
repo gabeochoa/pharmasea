@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "library.h"
+#include "../ah.h"
 #include "singleton.h"
 
 SINGLETON_FWD(TextureLibrary)
@@ -28,7 +28,7 @@ struct TextureLibrary {
     }
 
    private:
-    struct TextureLibraryImpl : Library<raylib::Texture2D> {
+    struct TextureLibraryImpl : afterhours::Library<raylib::Texture2D> {
         virtual raylib::Texture2D convert_filename_to_object(
             const char*, const char* filename) override {
             return raylib::LoadTexture(filename);

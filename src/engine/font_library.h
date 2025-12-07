@@ -1,6 +1,6 @@
 #pragma once
 
-#include "library.h"
+#include "../ah.h"
 #include "singleton.h"
 
 struct FontLoadingInfo {
@@ -35,7 +35,7 @@ struct FontLibrary {
     }
 
    private:
-    struct FontLibraryImpl : Library<raylib::Font> {
+    struct FontLibraryImpl : afterhours::Library<raylib::Font> {
         FontLoadingInfo fli;
 
         void store_fli(const FontLoadingInfo& _fli) { fli = _fli; }

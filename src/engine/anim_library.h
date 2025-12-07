@@ -4,7 +4,7 @@
 // Note move to cpp if we create one
 #include "files.h"
 //
-#include "library.h"
+#include "../ah.h"
 #include "singleton.h"
 
 constexpr int MAX_ANIM_NAME_LENGTH = 100;
@@ -68,7 +68,7 @@ struct AnimLibrary {
     void unload_all() { impl.unload_all(); }
 
    private:
-    struct AnimLibraryImpl : Library<Animation> {
+    struct AnimLibraryImpl : afterhours::Library<Animation> {
         virtual Animation convert_filename_to_object(
             const char*, const char* filename) override {
             unsigned int temp_num_anims;

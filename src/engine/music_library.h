@@ -1,6 +1,6 @@
 #pragma once
 
-#include "library.h"
+#include "../ah.h"
 #include "singleton.h"
 
 SINGLETON_FWD(MusicLibrary)
@@ -38,7 +38,7 @@ struct MusicLibrary {
     // allows us to locally cache the most recent volume and handle it here
     float current_volume = 1.f;
 
-    struct MusicLibraryImpl : Library<raylib::Music> {
+    struct MusicLibraryImpl : afterhours::Library<raylib::Music> {
         virtual raylib::Music convert_filename_to_object(
             const char*, const char* filename) override {
             return raylib::LoadMusicStream(filename);
@@ -46,7 +46,8 @@ struct MusicLibrary {
 
         void update_volume(float new_v) {
             for (const auto& kv : storage) {
-                log_trace("updating music volume for {} to {}", kv.first, new_v);
+                log_trace("updating music volume for {} to {}", kv.first,
+                          new_v);
                 raylib::SetMusicVolume(kv.second, new_v);
             }
         }

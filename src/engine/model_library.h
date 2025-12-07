@@ -4,8 +4,8 @@
 // Note move to cpp if we create one
 #include "files.h"
 //
+#include "../ah.h"
 #include "graphics.h"
-#include "library.h"
 #include "singleton.h"
 
 // TODO enforce it on object creation?
@@ -63,7 +63,7 @@ struct ModelLibrary {
     [[nodiscard]] auto size() { return impl.size(); }
 
    private:
-    struct ModelLibraryImpl : Library<raylib::Model> {
+    struct ModelLibraryImpl : afterhours::Library<raylib::Model> {
         virtual raylib::Model convert_filename_to_object(
             const char*, const char* filename) override {
             auto model = raylib::LoadModel(filename);
@@ -126,7 +126,7 @@ struct ModelInfoLibrary {
     [[nodiscard]] auto size() { return impl.size(); }
 
    private:
-    struct ModelInfoLibraryImpl : Library<ModelInfo> {
+    struct ModelInfoLibraryImpl : afterhours::Library<ModelInfo> {
         virtual ModelInfo convert_filename_to_object(const char* name,
                                                      const char*) override {
             return ModelInfo{

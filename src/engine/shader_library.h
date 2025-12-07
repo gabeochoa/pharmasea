@@ -1,6 +1,6 @@
 #pragma once
 
-#include "library.h"
+#include "../ah.h"
 #include "singleton.h"
 
 SINGLETON_FWD(ShaderLibrary)
@@ -20,7 +20,7 @@ struct ShaderLibrary {
     void unload_all() { impl.unload_all(); }
 
    private:
-    struct ShaderLibraryImpl : Library<raylib::Shader> {
+    struct ShaderLibraryImpl : afterhours::Library<raylib::Shader> {
         virtual raylib::Shader convert_filename_to_object(
             const char*, const char* filename) override {
             // TODO null first param sets default vertex shader, do we want
