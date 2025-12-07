@@ -40,6 +40,7 @@ void RandomEngine::_set_seed(const std::string& new_seed) {
              hashed_seed);
     // reset the local engine
     rng_engine = pcg32(hashed_seed);
+    rng_std.seed(static_cast<unsigned int>(hashed_seed));
     int_dist = std::uniform_int_distribution<int>(1, 1000);
     float_dist = std::uniform_real_distribution<float>(0, 1);
 }
@@ -72,4 +73,13 @@ vec2 RandomEngine::get_vec(float mn_a, float mx_a, float mn_b, float mx_b) {
     float a = get_float(mn_a, mx_a);
     float b = get_float(mn_b, mx_b);
     return vec2{a, b};
+}
+
+std::mt19937& RandomEngine::rng() {
+    if (!created) {
+        log_warn("Creating random engine manually...");
+        create();
+        set_seed(instance.seed);
+    }
+    return instance.rng_std;
 }

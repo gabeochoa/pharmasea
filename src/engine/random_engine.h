@@ -55,12 +55,14 @@ struct RandomEngine {
     }
 
     [[nodiscard]] static pcg32 generator() { return instance.rng_engine; }
+    [[nodiscard]] static std::mt19937& rng();
 
    private:
     void _set_seed(const std::string& new_seed);
     std::string seed = "default_seed";
     size_t hashed_seed;
     pcg32 rng_engine;
+    std::mt19937 rng_std;
     std::uniform_int_distribution<int> int_dist;
     std::uniform_real_distribution<float> float_dist;
 

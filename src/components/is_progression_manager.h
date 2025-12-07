@@ -5,6 +5,7 @@
 #include <random>
 
 #include "../ah.h"
+#include "../engine/random_engine.h"
 //
 #include "../dataclass/ingredient.h"
 #include "../dataclass/settings.h"
@@ -93,9 +94,8 @@ struct IsProgressionManager : public BaseComponent {
     }
 
     Drink get_random_unlocked_drink() const {
-        // TODO switch to RandomEngine once afterhours RNG hook exists
         log_trace("get random: {} {}", enabledDrinks, enabledIngredients);
-        static thread_local std::mt19937 rng{std::random_device{}()};
+        static thread_local std::mt19937 rng{RandomEngine::rng()};
         int drinkSetBit =
             bitset_utils::get_random_enabled_bit(enabledDrinks, rng);
         if (drinkSetBit == -1) {

@@ -9,6 +9,7 @@
 #include "../components/is_round_settings_manager.h"
 #include "../config_key_library.h"
 #include "../engine/log.h"
+#include "../engine/random_engine.h"
 #include "../entity_query.h"
 #include "../entity_type.h"
 
@@ -97,11 +98,9 @@ inline void generate_store_options() {
 
     vec2 spawn_position = vec2{reset_x, reset_y};
 
-    // TODO swap to RandomEngine once afterhours RNG hook exists
-    static thread_local std::mt19937 rng{std::random_device{}()};
     while (num_to_spawn) {
         int entity_type_id =
-            bitset_utils::get_random_enabled_bit(unlocked, rng);
+            bitset_utils::get_random_enabled_bit(unlocked, RandomEngine::rng());
         EntityType etype = magic_enum::enum_value<EntityType>(entity_type_id);
         if (get_price_for_entity_type(etype) <= 0) continue;
 
