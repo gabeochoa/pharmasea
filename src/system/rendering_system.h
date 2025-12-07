@@ -18,7 +18,14 @@
 #include "../engine/log.h"
 #include "../engine/time.h"
 
+namespace afterhours {
+struct SystemManager;
+}  // namespace afterhours
+
 namespace system_manager {
+
+void register_render_systems(afterhours::SystemManager& systems);
+
 namespace render_manager {
 
 void draw_valid_colored_box(const Transform& transform,
