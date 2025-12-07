@@ -2,9 +2,13 @@
 #pragma once
 
 // Note move to cpp if we create one
+#include <algorithm>
+#include <string>
+
 #include "files.h"
 //
 #include "../ah.h"
+#include "gltf_loader.h"
 #include "graphics.h"
 #include "singleton.h"
 
@@ -66,6 +70,29 @@ struct ModelLibrary {
     struct ModelLibraryImpl : afterhours::Library<raylib::Model> {
         virtual raylib::Model convert_filename_to_object(
             const char*, const char* filename) override {
+            std::string path(filename);
+            std::string lower = path;
+            std::transform(lower.begin(), lower.end(), lower.begin(),
+                           ::tolower);
+
+            const bool is_gltf =
+                lower.ends_with(".gltf") || lower.ends_with(".glb");
+
+            if (is_gltf) {
+                std::string warn;
+                std::string err;
+                auto loaded = gltf_loader::load_model(path, warn, err);
+                if (!warn.empty()) {
+                    log_warn("gltf warning {}: {}", filename, warn);
+                }
+                if (loaded.has_value()) {
+                    log_info("Loaded GLTF model {}", filename);
+                    return loaded.value();
+                }
+                log_warn("gltf load failed for {}: {} — using fallback cube",
+                         filename, err);
+            }
+
             auto model = raylib::LoadModel(filename);
             const bool looksInvalid =
                 (model.meshes == nullptr) || (model.meshCount <= 0);

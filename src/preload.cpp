@@ -315,25 +315,6 @@ void Preload::load_models() {
             log_trace("attempting loading {} as {} ", modelInfo.filename,
                       modelInfo.library_name);
 
-            // NOTE: GLB/GLTF support is temporarily disabled after upgrading to
-            // raylib 5.5. Some GLB/GLTF models that worked in raylib 4 may have
-            // compatibility issues. To re-enable: remove this block and test
-            // each GLB/GLTF model individually. GLTF support is enabled in
-            // raylib config (SUPPORT_FILEFORMAT_GLTF), but specific assets may
-            // need validation or conversion.
-            {
-                std::string lower = modelInfo.filename;
-                std::transform(lower.begin(), lower.end(), lower.begin(),
-                               ::tolower);
-                if (lower.ends_with(".glb") || lower.ends_with(".gltf")) {
-                    log_warn(
-                        "Skipping model {} (GLB/GLTF temporarily disabled for "
-                        "raylib 5.5 compatibility)",
-                        lower);
-                    continue;
-                }
-            }
-
             // Load the ModelLoadingInfo into the ModelInfoLibrary
             ModelInfoLibrary::get().load({
                 .folder = modelInfo.folder,
