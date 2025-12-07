@@ -11,6 +11,7 @@
 #include "../components/has_name.h"
 #include "../components/is_drink.h"
 #include "../components/is_floor_marker.h"
+#include "../components/is_nux_manager.h"
 #include "../components/is_pnumatic_pipe.h"
 #include "../components/is_round_settings_manager.h"
 #include "../components/is_snappable.h"
@@ -23,16 +24,19 @@
 #include "../components/uses_character_model.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/bitset_utils.h"
+#include "../engine/statemanager.h"
 #include "../entity_helper.h"
 #include "../entity_makers.h"
 #include "../entity_query.h"
 #include "../external_include.h"
 #include "../vec_util.h"
-#include "process_nux_updates_system.h"
 #include "process_trigger_area_system.h"
 #include "system_manager.h"
 
 namespace system_manager {
+
+bool _create_nuxes(Entity& entity);
+void process_nux_updates(Entity& entity, float dt);
 
 vec3 get_new_held_position_custom(Entity& entity) {
     const Transform& transform = entity.get<Transform>();
