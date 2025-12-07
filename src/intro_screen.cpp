@@ -19,7 +19,8 @@ constexpr float RAYLIB_FADE_DURATION = RAYLIB_ANIMATION_DURATION * 0.8F;
 constexpr float RAYLIB_FADE_START = RAYLIB_ANIMATION_DURATION * 4.0F;
 constexpr const char* POWERED_BY_TEXT = "POWERED BY";
 constexpr const char* RAYLIB_TEXT = "raylib";
-constexpr int CHOICEHONEY_FRAMES = 12;
+constexpr int CHOICEHONEY_FRAMES = 52;
+constexpr int CHOICEHONEY_COLUMNS = 5;
 constexpr float LOGO_TOTAL_DURATION = 1.5F;  // seconds for pepper animation
 }  // namespace
 
@@ -36,13 +37,16 @@ IntroScreen::IntroScreen(const raylib::Font& font, bool show_raylib)
       displayFont(font) {
     const std::string atlas_path =
         (Files::get().resource_folder() /
-         std::filesystem::path("images/choicehoney_intro_atlas.png"))
+         std::filesystem::path("images/playful_intro_atlas.png"))
             .string();
     if (std::filesystem::exists(atlas_path)) {
         choiceAtlas = raylib::LoadTexture(atlas_path.c_str());
         has_choicehoney = choiceAtlas.id > 0;
         if (!has_choicehoney) {
             log_warn("Failed to load choicehoney atlas {}", atlas_path);
+        } else {
+            log_info("Loaded intro atlas {} size {}x{} frames {}", atlas_path,
+                     choiceAtlas.width, choiceAtlas.height, CHOICEHONEY_FRAMES);
         }
     } else {
         log_warn("Missing choicehoney atlas at {}", atlas_path);
@@ -171,12 +175,17 @@ void IntroScreen::draw_logo(float logo_progress) {
         return;
     }
 
-    int frameWidth = choiceAtlas.width / CHOICEHONEY_FRAMES;
-    int frameHeight = choiceAtlas.height;
     int frameIndex =
         std::clamp(static_cast<int>(logo_progress * (CHOICEHONEY_FRAMES - 1)),
                    0, CHOICEHONEY_FRAMES - 1);
-    raylib::Rectangle src{static_cast<float>(frameIndex * frameWidth), 0,
+    int columns = std::max(1, CHOICEHONEY_COLUMNS);
+    int rows = (CHOICEHONEY_FRAMES + columns - 1) / columns;
+    int frameWidth = choiceAtlas.width / columns;
+    int frameHeight = choiceAtlas.height / rows;
+    int col = frameIndex % columns;
+    int row = frameIndex / columns;
+    raylib::Rectangle src{static_cast<float>(col * frameWidth),
+                          static_cast<float>(row * frameHeight),
                           static_cast<float>(frameWidth),
                           static_cast<float>(frameHeight)};
     float scale = std::min(widthF * 0.65F / static_cast<float>(frameWidth),
@@ -223,10 +232,9 @@ void IntroScreen::draw_primary(float progress) {
         primaryColor);
     raylib::Color fillColor{100, 220, 255, 255};
     float fillWidth = barWidth * clampedProgress;
-    raylib::DrawRectangle(static_cast<int>(barPos.x),
-                          static_cast<int>(barPos.y),
-                          static_cast<int>(fillWidth),
-                          static_cast<int>(barHeight), fillColor);
+    raylib::DrawRectangle(
+        static_cast<int>(barPos.x), static_cast<int>(barPos.y),
+        static_cast<int>(fillWidth), static_cast<int>(barHeight), fillColor);
 }
 
 void IntroScreen::draw_raylib() {
