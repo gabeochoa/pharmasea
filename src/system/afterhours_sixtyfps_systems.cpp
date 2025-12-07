@@ -30,13 +30,18 @@
 #include "../entity_query.h"
 #include "../external_include.h"
 #include "../vec_util.h"
-#include "process_trigger_area_system.h"
 #include "system_manager.h"
 
 namespace system_manager {
 
 bool _create_nuxes(Entity& entity);
 void process_nux_updates(Entity& entity, float dt);
+void update_dynamic_trigger_area_settings(Entity& entity, float dt);
+void count_all_possible_trigger_area_entrants(Entity& entity, float dt);
+void count_in_building_trigger_area_entrants(Entity& entity, float dt);
+void count_trigger_area_entrants(Entity& entity, float dt);
+void update_trigger_area_percent(Entity& entity, float dt);
+void trigger_cb_on_full_progress(Entity& entity, float dt);
 
 vec3 get_new_held_position_custom(Entity& entity) {
     const Transform& transform = entity.get<Transform>();
