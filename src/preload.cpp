@@ -2,6 +2,8 @@
 #include "preload.h"
 
 #include <istream>
+#include <memory>
+#include <utility>
 
 #include "afterhours/src/font_helper.h"
 #include "config_key_library.h"
@@ -10,7 +12,10 @@
 #include "engine/font_library.h"
 #include "engine/keymap.h"
 #include "engine/ui/theme.h"
-#include "intro_screen.h"
+#include "intro/intro_runner.h"
+#include "intro/logo_intro_scene.h"
+#include "intro/primary_intro_scene.h"
+#include "intro/raylib_intro_scene.h"
 #include "magic_enum/magic_enum.hpp"
 #include "map_generation.h"
 #include "recipe_library.h"
@@ -292,37 +297,82 @@ void Preload::load_config() {
 }
 
 namespace {
+std::vector<std::unique_ptr<IntroScene>> make_intro_scenes(
+    const raylib::Font& font, bool show_intro_animations,
+    PrimaryIntroScene*& primary_out) {
+    std::vector<std::unique_ptr<IntroScene>> scenes;
+    if (show_intro_animations) {
+        scenes.push_back(std::make_unique<RaylibIntroScene>(font));
+        scenes.push_back(std::make_unique<LogoIntroScene>());
+    }
+    std::unique_ptr<PrimaryIntroScene> primary_scene =
+        std::make_unique<PrimaryIntroScene>(font);
+    primary_out = primary_scene.get();
+    scenes.push_back(std::move(primary_scene));
+    return scenes;
+}
+
+std::vector<std::unique_ptr<IntroScene>> make_logo_intro_scenes(
+    const raylib::Font& font, bool show_intro_animations) {
+    std::vector<std::unique_ptr<IntroScene>> scenes;
+    if (!show_intro_animations) {
+        return scenes;
+    }
+    scenes.push_back(std::make_unique<RaylibIntroScene>(font));
+    scenes.push_back(std::make_unique<LogoIntroScene>());
+    return scenes;
+}
+
+void run_intro_animations(const raylib::Font& font,
+                          bool show_intro_animations) {
+    IntroRunner runner(make_logo_intro_scenes(font, show_intro_animations));
+    while (!runner.empty()) {
+        float dt = raylib::GetFrameTime();
+        runner.update(dt, 0.0F);
+        if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
+            runner.finish_all();
+            break;
+        }
+    }
+}
+
 struct LoadingProgress {
-    IntroScreen intro;
+    PrimaryIntroScene* primary_scene = nullptr;
+    IntroRunner runner;
     int total_units = 0;
     int completed = 0;
 
-    explicit LoadingProgress(const raylib::Font& font, bool show_raylib)
-        : intro(font, show_raylib) {
-        intro.start();
-        while (intro.is_raylib_active()) {
-            intro.update(0.0F);
-        }
-        while (intro.is_logo_active()) {
-            intro.update(0.0F);
-        }
-        log_info("intro phases completed before loading begins");
-    }
+    LoadingProgress(const raylib::Font& font)
+        : primary_scene(nullptr),
+          runner(make_intro_scenes(font, false, primary_scene)),
+          total_units(0),
+          completed(0) {}
+
+    void render_initial_frame() { runner.update(raylib::GetFrameTime(), 0.0F); }
 
     void set_total(int total) { total_units = total; }
-    void set_status(const std::string& text) { intro.set_status_text(text); }
+
+    void set_status(const std::string& text) {
+        if (primary_scene != nullptr) {
+            primary_scene->set_status_text(text);
+        }
+    }
 
     void tick() {
-        if (total_units <= 0) return;
+        if (total_units <= 0) {
+            return;
+        }
         float progress =
             static_cast<float>(completed) / static_cast<float>(total_units);
-        intro.update(progress);
+        float dt = raylib::GetFrameTime();
+        runner.update(dt, progress);
         completed += 1;
     }
 
     void finish() {
-        intro.update(1.0F);
-        intro.finish();
+        float dt = raylib::GetFrameTime();
+        runner.update(dt, 1.0F);
+        runner.finish_all();
     }
 };
 }  // namespace
@@ -331,7 +381,9 @@ Preload::Preload() {
     reload_config();
 
     log_info("preload: show_raylib_intro={}", SHOW_RAYLIB_INTRO);
-    LoadingProgress progress(this->font, SHOW_RAYLIB_INTRO);
+    run_intro_animations(this->font, SHOW_RAYLIB_INTRO);
+
+    LoadingProgress progress(this->font);
 
     // Count work units
     int total_units = 0;
@@ -393,6 +445,7 @@ Preload::Preload() {
     }
 
     progress.set_total(total_units);
+    progress.render_initial_frame();
 
     progress.set_status("Loading shaders");
     load_shaders([&]() { progress.tick(); });

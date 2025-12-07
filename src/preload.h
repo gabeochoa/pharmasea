@@ -18,7 +18,6 @@
 #include "engine/sound_library.h"
 #include "engine/texture_library.h"
 #include "globals.h"
-#include "intro_screen.h"
 #include "resources/fonts/Karmina_Regular_256.h"
 
 inline raylib::Font load_karmina_regular() {

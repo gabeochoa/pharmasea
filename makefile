@@ -19,7 +19,7 @@ FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
 		  -Wno-implicit-int-float-conversion -Werror
-INCLUDES = -I$(GNS_INC) -Ivendor/ 
+INCLUDES = -I$(GNS_INC) -Ivendor/ -Isrc
 LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
 # backward-cpp (Debug only)
@@ -119,6 +119,7 @@ clean:
 	mkdir -p $(OBJ_DIR)/src/components/
 	mkdir -p $(OBJ_DIR)/src/engine/ui/
 	mkdir -p $(OBJ_DIR)/src/system/
+	mkdir -p $(OBJ_DIR)/src/intro/
 	mkdir -p $(OBJ_DIR)/vendor/tracy/
 	mkdir -p $(OBJ_DIR)/vendor/backward/
 
