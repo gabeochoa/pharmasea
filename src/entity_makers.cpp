@@ -3,6 +3,7 @@
 
 #include <ranges>
 
+#include "ah.h"
 #include "components/ai_clean_vomit.h"
 #include "components/ai_close_tab.h"
 #include "components/ai_drinking.h"
@@ -33,7 +34,6 @@
 #include "components/responds_to_day_night.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
-#include "engine/bitset_utils.h"
 #include "engine/sound_library.h"
 #include "engine/ui/color.h"
 #include "engine/util.h"

@@ -1,7 +1,7 @@
 
 #include "entity.h"
 
-#include "engine/bitset_utils.h"
+#include "ah.h"
 #include "entity_type.h"
 
 bool check_type(const Entity& entity, EntityType type) {

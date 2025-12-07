@@ -13,6 +13,9 @@
 #include <fmt/ostream.h>
 #include <fmt/xchar.h>
 
+// afterhours helpers
+#include "afterhours/src/bitset_utils.h"
+
 // nlohmann json
 #include <nlohmann/json.hpp>
 

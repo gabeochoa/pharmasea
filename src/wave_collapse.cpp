@@ -1,6 +1,6 @@
 #include "wave_collapse.h"
 
-#include "engine/bitset_utils.h"
+#include "ah.h"
 
 namespace wfc {
 size_t WaveCollapse::pat_size() const { return patterns[0].pat.size(); }

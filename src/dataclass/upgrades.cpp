@@ -1,7 +1,7 @@
 
 #include "upgrades.h"
 
-#include "../engine/bitset_utils.h"
+#include "../ah.h"
 #include "ingredient.h"
 #include "settings.h"
 #include "upgrade_class.h"

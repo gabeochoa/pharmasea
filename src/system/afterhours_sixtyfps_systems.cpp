@@ -25,7 +25,6 @@
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
 #include "../dataclass/ingredient.h"
-#include "../engine/bitset_utils.h"
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
 #include "../entity_makers.h"

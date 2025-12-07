@@ -5,6 +5,7 @@
 #include <iterator>
 #include <tuple>
 
+#include "../ah.h"
 #include "../building_locations.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/collects_customer_feedback.h"
@@ -17,7 +18,6 @@
 #include "../components/transform.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/assert.h"
-#include "../engine/bitset_utils.h"
 #include "../engine/pathfinder.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"

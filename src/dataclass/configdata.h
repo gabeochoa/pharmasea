@@ -4,8 +4,8 @@
 #include <string>
 #include <variant>
 
+#include "../ah.h"
 #include "../components/is_progression_manager.h"
-#include "../engine/bitset_utils.h"
 #include "../engine/type_name.h"
 #include "settings.h"
 #include "upgrade_class.h"
@@ -335,7 +335,7 @@ struct ConfigData {
 
     void mark_upgrade_unlocked(const UpgradeClass& uc);
     void for_each_unlocked(
-        const std::function<bitset_utils::ForEachFlow(UpgradeClass)> cb) const;
+        const std::function<bitset_utils::ForEachFlow(UpgradeClass)>& cb) const;
 
     std::vector<std::shared_ptr<UpgradeImpl>> get_possible_upgrades(
         const IsProgressionManager&);

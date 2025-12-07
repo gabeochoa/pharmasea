@@ -3,6 +3,7 @@
 
 #include <bitset>
 
+#include "../ah.h"
 #include "../dataclass/ingredient.h"
 #include "../recipe_library.h"
 #include "../vendor_include.h"

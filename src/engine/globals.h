@@ -16,7 +16,7 @@ template<typename Str>
     size_t result = 0xcbf29ce484222325;  // FNV offset basis
 
     for (char c : toHash) {
-        result ^= c;
+        result ^= static_cast<size_t>(c);
         result *= 1099511628211;  // FNV prime
     }
     return result;
@@ -28,7 +28,7 @@ template<typename Str>
     size_t result = 0xcbf29ce484222325;  // FNV offset basis
     const char* temp = toHash;
     while (*temp) {
-        result ^= *temp;
+        result ^= static_cast<size_t>(*temp);
         result *= 1099511628211;  // FNV prime
         ++temp;
     }

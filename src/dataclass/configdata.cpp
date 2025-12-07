@@ -24,7 +24,7 @@ void ConfigData::mark_upgrade_unlocked(const UpgradeClass& uc) {
 }
 
 void ConfigData::for_each_unlocked(
-    const std::function<bitset_utils::ForEachFlow(UpgradeClass)> cb) const {
+    const std::function<bitset_utils::ForEachFlow(UpgradeClass)>& cb) const {
     bitset_utils::for_each_enabled_bit(unlocked_upgrades, [&](size_t index) {
         UpgradeClass uc = magic_enum::enum_value<UpgradeClass>(index);
         return cb(uc);

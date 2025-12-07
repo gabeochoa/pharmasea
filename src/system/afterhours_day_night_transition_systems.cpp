@@ -17,7 +17,6 @@
 #include "../components/is_toilet.h"
 #include "../components/responds_to_day_night.h"
 #include "../components/transform.h"
-#include "../engine/bitset_utils.h"
 #include "../engine/log.h"
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"

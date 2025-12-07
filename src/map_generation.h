@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "engine/bitset_utils.h"
+#include "ah.h"
 #include "engine/pathfinder.h"
 #include "entity_helper.h"
 #include "entity_query.h"

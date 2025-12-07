@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include <functional>
+#include <vector>
+
 #include "../ah.h"
 #include "../engine/keymap.h"
 #include "../engine/singleton.h"
@@ -48,19 +51,8 @@ struct SystemManager {
 
     void process_inputs(const Entities& entities, const UserInputs& inputs);
 
-    void for_each_old(const std::function<void(Entity&)>& cb) {
-        std::ranges::for_each(oldAll, [cb](std::shared_ptr<Entity> entity) {
-            if (!entity) return;
-            cb(*entity);
-        });
-    }
-
-    void for_each_old(const std::function<void(Entity&)>& cb) const {
-        std::ranges::for_each(oldAll, [cb](std::shared_ptr<Entity> entity) {
-            if (!entity) return;
-            cb(*entity);
-        });
-    }
+    void for_each_old(const std::function<void(Entity&)>& cb);
+    void for_each_old(const std::function<void(Entity&)>& cb) const;
 
     bool is_daytime() const;
     bool is_nighttime() const;
@@ -79,52 +71,6 @@ struct SystemManager {
     void register_planning_systems();
     void register_render_systems();
     void register_day_night_transition_systems();
-
-    // // TODO this probably shouldnt be const but it can be since it holds
-    // // shared_ptrs
-    // void for_each(const Entities& entities, float dt,
-    //               const std::function<void(Entity&, float)>& cb) {
-    //     for (const auto& entity : entities) {
-    //         if (!entity) continue;
-    //         // Check if entity is marked for cleanup before processing
-    //         if (entity->cleanup) continue;
-    //         // Additional safety: check if entity ID is valid (should always
-    //         be
-    //         // >= 0)
-    //         if (entity->id < 0) continue;
-    //         try {
-    //             cb(*entity, dt);
-    //         } catch (...) {
-    //             // Skip entities that cause exceptions (likely
-    //             // invalid/destroyed) Log for debugging but don't crash
-    //             log_warn("Exception processing entity {} in for_each",
-    //                      entity->id);
-    //         }
-    //     }
-    // }
-
-    // void for_each(const Entities& entities, float dt,
-    //               const std::function<void(const Entity&, float)>& cb) const
-    //               {
-    //     for (const auto& entity : entities) {
-    //         if (!entity) continue;
-    //         // Check if entity is marked for cleanup before processing
-    //         if (entity->cleanup) continue;
-    //         // Additional safety: check if entity ID is valid (should always
-    //         be
-    //         // >= 0)
-    //         if (entity->id < 0) continue;
-    //         try {
-    //             cb(*entity, dt);
-    //         } catch (...) {
-    //             // Skip entities that cause exceptions (likely
-    //             // invalid/destroyed) Log for debugging but don't crash
-    //             log_warn("Exception processing entity {} in for_each
-    //             (const)",
-    //                      entity->id);
-    //         }
-    //     }
-    // }
 
     void process_state_change(const Entities& entities, float dt);
     void every_frame_update(const Entities& entity_list, float dt);

@@ -1,6 +1,7 @@
 
 #include "level_info.h"
 
+#include "ah.h"
 #include "building_locations.h"
 #include "camera.h"
 #include "components/can_change_settings_interactively.h"
@@ -14,7 +15,6 @@
 #include "components/is_trigger_area.h"
 #include "components/transform.h"
 #include "dataclass/ingredient.h"
-#include "engine/bitset_utils.h"
 #include "engine/globals.h"
 #include "engine/random_engine.h"
 #include "engine/texture_library.h"

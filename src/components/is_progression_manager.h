@@ -2,7 +2,9 @@
 
 #pragma once
 
-#include "../engine/bitset_utils.h"
+#include <random>
+
+#include "../ah.h"
 //
 #include "../dataclass/ingredient.h"
 #include "../dataclass/settings.h"
@@ -48,7 +50,8 @@ struct IsProgressionManager : public BaseComponent {
                 Ingredient ig = magic_enum::enum_value<Ingredient>(index);
 
                 log_warn(
-                    "You are unlocking drink {} but were missing unlocking {}",
+                    "You are unlocking drink {} but were missing unlocking "
+                    "{}",
                     magic_enum::enum_name<Drink>(drink),
                     magic_enum::enum_name<Ingredient>(ig));
 
@@ -90,8 +93,11 @@ struct IsProgressionManager : public BaseComponent {
     }
 
     Drink get_random_unlocked_drink() const {
+        // TODO switch to RandomEngine once afterhours RNG hook exists
         log_trace("get random: {} {}", enabledDrinks, enabledIngredients);
-        int drinkSetBit = bitset_utils::get_random_enabled_bit(enabledDrinks);
+        static thread_local std::mt19937 rng{std::random_device{}()};
+        int drinkSetBit =
+            bitset_utils::get_random_enabled_bit(enabledDrinks, rng);
         if (drinkSetBit == -1) {
             log_warn("generated {} but we had {} enabled drinks", drinkSetBit,
                      enabledDrinks.count());
