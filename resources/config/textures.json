@@ -52,6 +52,11 @@
         },
         {
             "folder": "images",
+            "filename": "character_gabe_mug.png",
+            "library_name": "character_efb_mug"
+        },
+        {
+            "folder": "images",
             "filename": "hand.png",
             "library_name": "hand"
         },

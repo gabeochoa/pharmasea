@@ -123,14 +123,15 @@ constexpr const char* CHARACTER_ROGUE = "character_rogue";
 constexpr const char* CHARACTER_GABE = "character_gabe";
 constexpr const char* CHARACTER_GABE2 = "character_gabe2";
 constexpr const char* CHARACTER_RUTH = "character_ruth";
+constexpr const char* CHARACTER_EFB = "character_efb";
 
 }  // namespace model
 
-constexpr std::array<std::string_view, 7> character_models = {
+constexpr std::array<std::string_view, 8> character_models = {
     strings::model::CHARACTER_BEAR, strings::model::CHARACTER_DOG,
     strings::model::CHARACTER_DUCK, strings::model::CHARACTER_ROGUE,
     strings::model::CHARACTER_GABE, strings::model::CHARACTER_GABE2,
-    strings::model::CHARACTER_RUTH,
+    strings::model::CHARACTER_RUTH, strings::model::CHARACTER_EFB,
 };
 
 namespace sounds {
@@ -151,17 +152,28 @@ enum struct SoundId : uint8_t {
 
 inline const char* to_name(SoundId id) {
     switch (id) {
-        case SoundId::None: return "";
-        case SoundId::ROBLOX: return "roblox";
-        case SoundId::VOMIT: return "vom";
-        case SoundId::SELECT: return "select";
-        case SoundId::CLICK: return "click";
-        case SoundId::WATER: return "water";
-        case SoundId::BLENDER: return "blender";
-        case SoundId::SOLID: return "solid";
-        case SoundId::ICE: return "ice";
-        case SoundId::PICKUP: return "pickup";
-        case SoundId::PLACE: return "place";
+        case SoundId::None:
+            return "";
+        case SoundId::ROBLOX:
+            return "roblox";
+        case SoundId::VOMIT:
+            return "vom";
+        case SoundId::SELECT:
+            return "select";
+        case SoundId::CLICK:
+            return "click";
+        case SoundId::WATER:
+            return "water";
+        case SoundId::BLENDER:
+            return "blender";
+        case SoundId::SOLID:
+            return "solid";
+        case SoundId::ICE:
+            return "ice";
+        case SoundId::PICKUP:
+            return "pickup";
+        case SoundId::PLACE:
+            return "place";
     }
     return "";
 }

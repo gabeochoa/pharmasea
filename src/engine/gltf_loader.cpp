@@ -10,9 +10,8 @@
 
 #define TINYGLTF_IMPLEMENTATION
 #define TINYGLTF_NO_INCLUDE_JSON
-#define TINYGLTF_NO_STB_IMAGE
+#define STB_IMAGE_IMPLEMENTATION
 #define TINYGLTF_NO_STB_IMAGE_WRITE
-
 #include <nlohmann/json.hpp>
 
 #include "../../vendor/tinygltf/tiny_gltf.h"
@@ -264,15 +263,6 @@ raylib::Mesh make_raylib_mesh(const MeshBuffers& buffers) {
     return mesh;
 }
 
-raylib::Matrix compose_node_transform(const tinygltf::Model& model,
-                                      int node_index) {
-    if (node_index < 0) {
-        return raylib::MatrixIdentity();
-    }
-    const tinygltf::Node& node = model.nodes[static_cast<size_t>(node_index)];
-    return to_matrix(node);
-}
-
 std::string mime_to_ext(const std::string& mime) {
     if (mime == "image/png") return "png";
     if (mime == "image/jpeg" || mime == "image/jpg") return "jpg";
@@ -285,9 +275,7 @@ LoadedTexture load_texture_from_image(const tinygltf::Image& image,
                                       const std::string& base_dir) {
     LoadedTexture result{};
 
-    std::vector<unsigned char> bytes;
-    std::string mime = image.mimeType;
-
+    // External image referenced by URI
     if (!image.uri.empty()) {
         const std::string path = base_dir + "/" + image.uri;
         raylib::Image img = raylib::LoadImage(path.c_str());
@@ -300,29 +288,64 @@ LoadedTexture load_texture_from_image(const tinygltf::Image& image,
         return result;
     }
 
+    // Embedded image data (GLB/base64). Prefer encoded bytes; fall back to raw.
+    std::vector<unsigned char> bytes;
     if (!image.image.empty()) {
         bytes = image.image;
-    } else if (image.bufferView >= 0) {
     }
 
-    if (bytes.empty()) {
+    // Try encoded load first (common for GLB).
+    if (!bytes.empty()) {
+        std::string mime = image.mimeType;
+        std::vector<std::string> exts_to_try;
+        const std::string hinted = mime_to_ext(mime);
+        if (!hinted.empty()) {
+            exts_to_try.push_back(hinted);
+        }
+        // Fallback attempts
+        exts_to_try.push_back("png");
+        exts_to_try.push_back("jpg");
+        exts_to_try.push_back("jpeg");
+        exts_to_try.push_back("bmp");
+        exts_to_try.push_back("tga");
+
+        for (const auto& ext : exts_to_try) {
+            raylib::Image img = raylib::LoadImageFromMemory(
+                ext.c_str(), bytes.data(), static_cast<int>(bytes.size()));
+            if (img.data != nullptr) {
+                result.texture = raylib::LoadTextureFromImage(img);
+                raylib::UnloadImage(img);
+                result.valid = result.texture.id != 0;
+                if (result.valid) {
+                    return result;
+                }
+            }
+        }
+    }
+
+    // Raw pixel fallback: tinygltf may have already decoded into RGBA
+    if (!image.image.empty() && image.width > 0 && image.height > 0 &&
+        (image.component == 3 || image.component == 4)) {
+        raylib::Image img{};
+        img.data =
+            raylib::MemAlloc(static_cast<unsigned int>(image.image.size()));
+        if (img.data == nullptr) {
+            return result;
+        }
+        std::memcpy(img.data, image.image.data(), image.image.size());
+        img.width = image.width;
+        img.height = image.height;
+        img.mipmaps = 1;
+        img.format = (image.component == 4)
+                         ? raylib::PIXELFORMAT_UNCOMPRESSED_R8G8B8A8
+                         : raylib::PIXELFORMAT_UNCOMPRESSED_R8G8B8;
+
+        result.texture = raylib::LoadTextureFromImage(img);
+        raylib::MemFree(img.data);
+        result.valid = result.texture.id != 0;
         return result;
     }
 
-    std::string ext = mime_to_ext(mime);
-    if (ext.empty()) {
-        ext = "png";
-    }
-
-    raylib::Image img = raylib::LoadImageFromMemory(
-        ext.c_str(), bytes.data(), static_cast<int>(bytes.size()));
-    if (img.data == nullptr) {
-        return result;
-    }
-
-    result.texture = raylib::LoadTextureFromImage(img);
-    raylib::UnloadImage(img);
-    result.valid = result.texture.id != 0;
     return result;
 }
 
@@ -357,18 +380,6 @@ std::optional<raylib::Model> load_model(const std::string& filename,
     tinygltf::Model gltf_model;
     tinygltf::TinyGLTF loader;
 
-    loader.SetImageLoader(
-        [](tinygltf::Image* image, const int, std::string*, std::string*, int,
-           int, const unsigned char* bytes, int size, void*) -> bool {
-            image->image.resize(static_cast<size_t>(size));
-            if (size > 0 && bytes != nullptr) {
-                std::memcpy(image->image.data(), bytes,
-                            static_cast<size_t>(size));
-            }
-            return true;
-        },
-        nullptr);
-
     const bool is_glb = filename.size() >= 4 && (filename.ends_with(".glb") ||
                                                  filename.ends_with(".GLB"));
 
@@ -397,6 +408,42 @@ std::optional<raylib::Model> load_model(const std::string& filename,
     }
     for (const auto& img : gltf_model.images) {
         textures.push_back(load_texture_from_image(img, base_dir));
+    }
+
+    // Precompute global transforms per node (scene hierarchy aware)
+    std::vector<raylib::Matrix> node_globals(gltf_model.nodes.size(),
+                                             raylib::MatrixIdentity());
+    std::vector<bool> visited(gltf_model.nodes.size(), false);
+    std::function<void(int, raylib::Matrix)> dfs = [&](int node_idx,
+                                                       raylib::Matrix parent) {
+        if (node_idx < 0 ||
+            node_idx >= static_cast<int>(gltf_model.nodes.size())) {
+            return;
+        }
+        const tinygltf::Node& node =
+            gltf_model.nodes[static_cast<size_t>(node_idx)];
+        raylib::Matrix local = to_matrix(node);
+        raylib::Matrix global = raylib::MatrixMultiply(parent, local);
+        node_globals[static_cast<size_t>(node_idx)] = global;
+        visited[static_cast<size_t>(node_idx)] = true;
+        for (int child : node.children) {
+            dfs(child, global);
+        }
+    };
+    int scene_index =
+        (gltf_model.defaultScene >= 0) ? gltf_model.defaultScene : 0;
+    if (scene_index >= 0 &&
+        scene_index < static_cast<int>(gltf_model.scenes.size())) {
+        for (int root :
+             gltf_model.scenes[static_cast<size_t>(scene_index)].nodes) {
+            dfs(root, raylib::MatrixIdentity());
+        }
+    }
+    // Fallback: any unvisited nodes get identity parent
+    for (size_t i = 0; i < gltf_model.nodes.size(); ++i) {
+        if (!visited[i]) {
+            dfs(static_cast<int>(i), raylib::MatrixIdentity());
+        }
     }
 
     // Materials
@@ -447,7 +494,8 @@ std::optional<raylib::Model> load_model(const std::string& filename,
         if (node.mesh < 0) {
             continue;
         }
-        const raylib::Matrix transform = to_matrix(node);
+        const raylib::Matrix transform =
+            node_globals[static_cast<size_t>(&node - gltf_model.nodes.data())];
         const tinygltf::Mesh& mesh =
             gltf_model.meshes[static_cast<size_t>(node.mesh)];
 

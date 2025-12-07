@@ -142,8 +142,8 @@
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/converted",
-            "filename": "me.obj",
+            "folder": "models",
+            "filename": "me.glb",
             "library_name": "character_gabe",
             "size_scale": 2.5,
             "position_offset": [
@@ -154,8 +154,8 @@
             "rotation_angle": 180.0
         },
         {
-            "folder": "models/converted",
-            "filename": "me2.obj",
+            "folder": "models",
+            "filename": "me2.glb",
             "library_name": "character_gabe2",
             "size_scale": 2.5,
             "position_offset": [
@@ -166,9 +166,21 @@
             "rotation_angle": 180.0
         },
         {
-            "folder": "models/converted",
-            "filename": "ruth.obj",
+            "folder": "models",
+            "filename": "ruth.glb",
             "library_name": "character_ruth",
+            "size_scale": 2.5,
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models",
+            "filename": "efb.glb",
+            "library_name": "character_efb",
             "size_scale": 2.5,
             "position_offset": [
                 0,
