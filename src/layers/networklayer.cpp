@@ -110,6 +110,7 @@ void NetworkLayer::draw_username_picker(float) {
     if (username_screen.button("SaveButton",
                                TranslatableString(strings::i18n::LOCK_IN))) {
         network_info->lock_in_username();
+        Settings::get().write_save_file();
     }
 
     if (username_screen.button(
