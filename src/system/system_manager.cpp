@@ -1622,25 +1622,6 @@ void run_timer(Entity& entity, float dt) {
     ht.start_day();
 }
 
-void process_soda_fountain(Entity& entity, float) {
-    if (!check_type(entity, EntityType::SodaFountain)) return;
-    CanHoldItem& sfCHI = entity.get<CanHoldItem>();
-
-    // If we arent holding anything, nothing to squirt into
-    if (sfCHI.empty()) return;
-
-    if (sfCHI.item().is_missing<IsDrink>()) return;
-
-    Entity& drink = sfCHI.item();
-
-    // Already has soda in it
-    if (bitset_utils::test(drink.get<IsDrink>().ing(), Ingredient::Soda)) {
-        return;
-    }
-
-    items::_add_ingredient_to_drink_NO_VALIDATION(drink, Ingredient::Soda);
-}
-
 void process_squirter(Entity& entity, float dt) {
     if (!check_type(entity, EntityType::Squirter)) return;
     IsSquirter& is_squirter = entity.get<IsSquirter>();

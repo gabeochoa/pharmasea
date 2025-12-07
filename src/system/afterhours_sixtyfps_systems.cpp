@@ -19,12 +19,14 @@
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
+#include "../dataclass/ingredient.h"
+#include "../engine/bitset_utils.h"
 #include "../entity_helper.h"
+#include "../entity_makers.h"
 #include "../entity_query.h"
 #include "../external_include.h"
 #include "../vec_util.h"
 #include "process_nux_updates_system.h"
-#include "process_soda_fountain_system.h"
 #include "process_trigger_area_system.h"
 #include "system_manager.h"
 #include "update_held_item_position_system.h"
@@ -122,20 +124,24 @@ struct ProcessNuxUpdatesSystem
     }
 };
 
-struct ProcessSodaFountainSystem : public afterhours::System<CanHoldItem> {
+struct ProcessSodaFountainSystem
+    : public afterhours::System<
+          CanHoldItem, afterhours::tags::All<EntityType::SodaFountain>> {
     virtual bool should_run(const float) override { return true; }
 
-    virtual void for_each_with(Entity& entity, CanHoldItem& sfCHI,
-                               float) override {
-        if (!check_type(entity, EntityType::SodaFountain)) return;
-
+    virtual void for_each_with(Entity&, CanHoldItem& sfCHI, float) override {
         // If we arent holding anything, nothing to squirt into
         if (sfCHI.empty()) return;
 
         if (sfCHI.item().is_missing<IsDrink>()) return;
 
-        // Forward to full implementation
-        process_soda_fountain(entity, 0.0f);
+        Entity& drink = sfCHI.item();
+        // Already has soda in it
+        if (bitset_utils::test(drink.get<IsDrink>().ing(), Ingredient::Soda)) {
+            return;
+        }
+
+        items::_add_ingredient_to_drink_NO_VALIDATION(drink, Ingredient::Soda);
     }
 };
 
