@@ -305,6 +305,7 @@ struct LoadingProgress {
     }
 
     void set_total(int total) { total_units = total; }
+    void set_status(const std::string& text) { intro.set_status_text(text); }
 
     void tick() {
         if (total_units <= 0) return;
@@ -324,82 +325,111 @@ struct LoadingProgress {
 Preload::Preload() {
     reload_config();
 
-    LoadingProgress progress(this->font);
+    if (SHOW_INTRO) {
+        LoadingProgress progress(this->font);
 
-    // Count work units
-    int total_units = 0;
+        // Count work units
+        int total_units = 0;
 
-    // shaders
-    total_units += 2;  // see load_shaders
+        // shaders
+        total_units += 2;  // see load_shaders
 
-    // textures
-    {
-        int texture_count = 0;
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "drinks",
-            [&](const std::string&, const std::string&) { texture_count++; });
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "external",
-            [&](const std::string&, const std::string&) { texture_count++; });
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "upgrade",
-            [&](const std::string&, const std::string&) { texture_count++; });
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "controls/keyboard_default",
-            [&](const std::string&, const std::string&) { texture_count++; });
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "controls/xbox_default",
-            [&](const std::string&, const std::string&) { texture_count++; });
-        load_json_config_file("textures.json", [&](const nlohmann::json& c) {
-            texture_count += static_cast<int>(c["textures"].size());
-        });
-        total_units += texture_count;
+        // textures
+        {
+            int texture_count = 0;
+            Files::get().for_resources_in_folder(
+                strings::settings::IMAGES, "drinks",
+                [&](const std::string&, const std::string&) {
+                    texture_count++;
+                });
+            Files::get().for_resources_in_folder(
+                strings::settings::IMAGES, "external",
+                [&](const std::string&, const std::string&) {
+                    texture_count++;
+                });
+            Files::get().for_resources_in_folder(
+                strings::settings::IMAGES, "upgrade",
+                [&](const std::string&, const std::string&) {
+                    texture_count++;
+                });
+            Files::get().for_resources_in_folder(
+                strings::settings::IMAGES, "controls/keyboard_default",
+                [&](const std::string&, const std::string&) {
+                    texture_count++;
+                });
+            Files::get().for_resources_in_folder(
+                strings::settings::IMAGES, "controls/xbox_default",
+                [&](const std::string&, const std::string&) {
+                    texture_count++;
+                });
+            load_json_config_file(
+                "textures.json", [&](const nlohmann::json& c) {
+                    texture_count += static_cast<int>(c["textures"].size());
+                });
+            total_units += texture_count;
+        }
+
+        // sounds + music
+        if (ENABLE_SOUND) {
+            int sound_units = 0;
+            sound_units += 8;  // fixed loads
+            Files::get().for_resources_in_folder(
+                strings::settings::SOUNDS, "pa_announcements",
+                [&](const std::string&, const std::string&) { sound_units++; });
+            total_units += sound_units;
+            total_units += 2;  // music tracks
+        }
+
+        // models
+        {
+            int model_units = 0;
+            load_json_config_file("models.json", [&](const nlohmann::json& c) {
+                model_units = static_cast<int>(c["models"].size());
+            });
+            total_units += model_units;
+        }
+
+        // drink recipes
+        {
+            int recipe_units = 0;
+            load_json_config_file("drinks.json", [&](const nlohmann::json& c) {
+                recipe_units = static_cast<int>(c["drinks"].size());
+            });
+            total_units += recipe_units;
+        }
+
+        progress.set_total(total_units);
+
+        progress.set_status("Loading shaders");
+        load_shaders([&]() { progress.tick(); });
+        progress.set_status("Loading textures");
+        load_textures([&]() { progress.tick(); });
+
+        if (ENABLE_SOUND) {
+            ext::init_audio_device();
+            progress.set_status("Loading sounds");
+            load_sounds([&]() { progress.tick(); });
+            progress.set_status("Loading music");
+            load_music([&]() { progress.tick(); });
+        }
+
+        progress.set_status("Loading models");
+        load_models([&]() { progress.tick(); });
+        progress.set_status("Loading recipes");
+        load_drink_recipes([&]() { progress.tick(); });
+
+        progress.finish();
+    } else {
+        load_shaders(nullptr);
+        load_textures(nullptr);
+        if (ENABLE_SOUND) {
+            ext::init_audio_device();
+            load_sounds(nullptr);
+            load_music(nullptr);
+        }
+        load_models(nullptr);
+        load_drink_recipes(nullptr);
     }
-
-    // sounds + music
-    if (ENABLE_SOUND) {
-        int sound_units = 0;
-        sound_units += 8;  // fixed loads
-        Files::get().for_resources_in_folder(
-            strings::settings::SOUNDS, "pa_announcements",
-            [&](const std::string&, const std::string&) { sound_units++; });
-        total_units += sound_units;
-        total_units += 2;  // music tracks
-    }
-
-    // models
-    {
-        int model_units = 0;
-        load_json_config_file("models.json", [&](const nlohmann::json& c) {
-            model_units = static_cast<int>(c["models"].size());
-        });
-        total_units += model_units;
-    }
-
-    // drink recipes
-    {
-        int recipe_units = 0;
-        load_json_config_file("drinks.json", [&](const nlohmann::json& c) {
-            recipe_units = static_cast<int>(c["drinks"].size());
-        });
-        total_units += recipe_units;
-    }
-
-    progress.set_total(total_units);
-
-    load_shaders([&]() { progress.tick(); });
-    load_textures([&]() { progress.tick(); });
-
-    if (ENABLE_SOUND) {
-        ext::init_audio_device();
-        load_sounds([&]() { progress.tick(); });
-        load_music([&]() { progress.tick(); });
-    }
-
-    load_models([&]() { progress.tick(); });
-    load_drink_recipes([&]() { progress.tick(); });
-
-    progress.finish();
     completed_preload_once = true;
 }
 

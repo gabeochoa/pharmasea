@@ -83,6 +83,10 @@ void IntroScreen::finish() {
 
 bool IntroScreen::is_raylib_active() const { return phase == Phase::Raylib; }
 
+void IntroScreen::set_status_text(const std::string& text) {
+    statusText = text;
+}
+
 void IntroScreen::draw(float progress) {
     raylib::BeginDrawing();
     raylib::ClearBackground(raylib::BLACK);
@@ -116,7 +120,7 @@ void IntroScreen::draw_primary(float progress) {
     raylib::DrawTextEx(displayFont, title.c_str(), titlePos, titleSize, 1.0F,
                        primaryColor);
 
-    const char* loadingText = "Loading models";
+    const char* loadingText = statusText.c_str();
     float infoSize = titleSize * 0.25F;
     vec2 infoSizeVec =
         raylib::MeasureTextEx(displayFont, loadingText, infoSize, 1.0F);

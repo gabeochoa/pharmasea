@@ -80,6 +80,7 @@ long long return_ping = 0;
 
 // Define BYPASS_MENU (declared as extern in globals.h)
 bool BYPASS_MENU = false;
+bool SHOW_INTRO = true;
 
 void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues
@@ -216,6 +217,11 @@ void process_dev_flags(char* argv[]) {
             "Bypass: --bypass-menu flag detected, BYPASS_MENU set to true");
     }
 
+    if (cmdl[{"--intro"}]) {
+        SHOW_INTRO = true;
+        log_info("--intro flag detected, forcing intro screen");
+    }
+
 #endif
 }
 
@@ -236,6 +242,14 @@ int main(int, char* argv[]) {
 
     log_info("Executable Path: {}", fs::current_path());
     log_info("Canon Path: {}", fs::canonical(fs::current_path()));
+
+    bool has_save = Settings::get().load_save_file();
+    if (has_save && !SHOW_INTRO) {
+        log_info("Skipping intro (save file detected)");
+    }
+    if (!has_save) {
+        SHOW_INTRO = true;
+    }
 
     startup();
 

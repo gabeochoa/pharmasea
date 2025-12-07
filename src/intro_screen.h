@@ -11,6 +11,7 @@ struct IntroScreen {
     void update(float progress);
     void finish();
     bool is_raylib_active() const;
+    void set_status_text(const std::string& text);
 
    private:
     Phase phase = Phase::Primary;
@@ -22,6 +23,7 @@ struct IntroScreen {
     int width = 0;
     int height = 0;
     raylib::Font displayFont{};
+    std::string statusText = "Loading models";
 
     void draw(float progress);
     void draw_primary(float progress);
