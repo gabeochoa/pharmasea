@@ -3,20 +3,25 @@
 #include "engine/graphics.h"
 
 struct IntroScreen {
-    enum struct Phase { Primary, Raylib, Done };
+    enum struct Phase { Raylib, Logo, Primary, Done };
 
     explicit IntroScreen(const raylib::Font& font, bool show_raylib);
+    ~IntroScreen();
 
     void start();
     void update(float progress);
     void finish();
     bool is_raylib_active() const;
+    bool is_logo_active() const;
     void set_status_text(const std::string& text);
 
    private:
     Phase phase = Phase::Primary;
     bool show_raylib = true;
     bool logged_raylib = false;
+    bool logged_logo = false;
+    bool has_choicehoney = false;
+    float logoElapsed = 0.0F;
     float primaryElapsed = 0.0F;
     float raylibElapsed = 0.0F;
     float holdAfterComplete = 0.0F;
@@ -25,9 +30,11 @@ struct IntroScreen {
     int width = 0;
     int height = 0;
     raylib::Font displayFont{};
+    raylib::Texture choiceAtlas{};
     std::string statusText = "Loading models";
 
     void draw(float progress);
+    void draw_logo(float logo_progress);
     void draw_primary(float progress);
     void draw_raylib();
     raylib::Color white_alpha(float start, float duration) const;

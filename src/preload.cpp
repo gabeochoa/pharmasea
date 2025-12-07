@@ -303,6 +303,10 @@ struct LoadingProgress {
         while (intro.is_raylib_active()) {
             intro.update(0.0F);
         }
+        while (intro.is_logo_active()) {
+            intro.update(0.0F);
+        }
+        log_info("intro phases completed before loading begins");
     }
 
     void set_total(int total) { total_units = total; }

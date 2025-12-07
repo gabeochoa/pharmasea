@@ -2,8 +2,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <filesystem>
 #include <string>
 
+#include "engine/files.h"
+#include "engine/texture_library.h"
 #include "globals.h"
 #include "strings.h"
 
@@ -16,10 +19,12 @@ constexpr float RAYLIB_FADE_DURATION = RAYLIB_ANIMATION_DURATION * 0.8F;
 constexpr float RAYLIB_FADE_START = RAYLIB_ANIMATION_DURATION * 4.0F;
 constexpr const char* POWERED_BY_TEXT = "POWERED BY";
 constexpr const char* RAYLIB_TEXT = "raylib";
+constexpr int CHOICEHONEY_FRAMES = 12;
+constexpr float LOGO_TOTAL_DURATION = 1.5F;  // seconds for pepper animation
 }  // namespace
 
 IntroScreen::IntroScreen(const raylib::Font& font, bool show_raylib)
-    : phase(Phase::Primary),
+    : phase(show_raylib ? Phase::Raylib : Phase::Logo),
       show_raylib(show_raylib),
       primaryElapsed(0.0F),
       raylibElapsed(0.0F),
@@ -28,14 +33,36 @@ IntroScreen::IntroScreen(const raylib::Font& font, bool show_raylib)
       finished(false),
       width(WIN_W()),
       height(WIN_H()),
-      displayFont(font) {}
+      displayFont(font) {
+    const std::string atlas_path =
+        (Files::get().resource_folder() /
+         std::filesystem::path("images/choicehoney_intro_atlas.png"))
+            .string();
+    if (std::filesystem::exists(atlas_path)) {
+        choiceAtlas = raylib::LoadTexture(atlas_path.c_str());
+        has_choicehoney = choiceAtlas.id > 0;
+        if (!has_choicehoney) {
+            log_warn("Failed to load choicehoney atlas {}", atlas_path);
+        }
+    } else {
+        log_warn("Missing choicehoney atlas at {}", atlas_path);
+    }
+}
+
+IntroScreen::~IntroScreen() {
+    if (has_choicehoney) {
+        raylib::UnloadTexture(choiceAtlas);
+        has_choicehoney = false;
+    }
+}
 
 void IntroScreen::start() {
     started = true;
     finished = false;
-    phase = show_raylib ? Phase::Raylib : Phase::Primary;
+    phase = show_raylib ? Phase::Raylib : Phase::Logo;
     primaryElapsed = 0.0F;
     raylibElapsed = 0.0F;
+    logoElapsed = 0.0F;
     holdAfterComplete = 0.0F;
     log_info("intro_screen start: show_raylib={}, phase={}", show_raylib,
              static_cast<int>(phase));
@@ -58,6 +85,17 @@ void IntroScreen::update(float progress) {
             logged_raylib = true;
         }
         if (raylibElapsed > RAYLIB_TOTAL_DURATION) {
+            phase = Phase::Logo;
+            logoElapsed = 0.0F;
+            log_info("intro_screen switched to logo phase");
+        }
+    } else if (phase == Phase::Logo) {
+        logoElapsed += dt;
+        if (!logged_logo) {
+            log_info("intro_screen logo phase active");
+            logged_logo = true;
+        }
+        if (logoElapsed >= LOGO_TOTAL_DURATION) {
             phase = Phase::Primary;
             primaryElapsed = 0.0F;
             holdAfterComplete = 0.0F;
@@ -86,6 +124,10 @@ void IntroScreen::finish() {
         return;
     }
     if (phase == Phase::Raylib) {
+        phase = Phase::Logo;
+        logoElapsed = LOGO_TOTAL_DURATION;
+    }
+    if (phase == Phase::Logo) {
         phase = Phase::Primary;
         primaryElapsed = PRIMARY_MIN_TIME;
         holdAfterComplete = PRIMARY_COMPLETE_HOLD;
@@ -98,6 +140,7 @@ void IntroScreen::finish() {
 }
 
 bool IntroScreen::is_raylib_active() const { return phase == Phase::Raylib; }
+bool IntroScreen::is_logo_active() const { return phase == Phase::Logo; }
 
 void IntroScreen::set_status_text(const std::string& text) {
     statusText = text;
@@ -109,11 +152,41 @@ void IntroScreen::draw(float progress) {
 
     if (phase == Phase::Primary) {
         draw_primary(progress);
+    } else if (phase == Phase::Logo) {
+        float logo_progress =
+            std::clamp(logoElapsed / LOGO_TOTAL_DURATION, 0.0F, 1.0F);
+        draw_logo(logo_progress);
     } else if (phase == Phase::Raylib) {
         draw_raylib();
     }
 
     raylib::EndDrawing();
+}
+
+void IntroScreen::draw_logo(float logo_progress) {
+    float widthF = static_cast<float>(width);
+    float heightF = static_cast<float>(height);
+    if (!has_choicehoney || choiceAtlas.id == 0) {
+        draw_primary(logo_progress);
+        return;
+    }
+
+    int frameWidth = choiceAtlas.width / CHOICEHONEY_FRAMES;
+    int frameHeight = choiceAtlas.height;
+    int frameIndex =
+        std::clamp(static_cast<int>(logo_progress * (CHOICEHONEY_FRAMES - 1)),
+                   0, CHOICEHONEY_FRAMES - 1);
+    raylib::Rectangle src{static_cast<float>(frameIndex * frameWidth), 0,
+                          static_cast<float>(frameWidth),
+                          static_cast<float>(frameHeight)};
+    float scale = std::min(widthF * 0.65F / static_cast<float>(frameWidth),
+                           heightF * 0.4F / static_cast<float>(frameHeight));
+    float destW = static_cast<float>(frameWidth) * scale;
+    float destH = static_cast<float>(frameHeight) * scale;
+    vec2 destPos{widthF * 0.5F - destW * 0.5F, heightF * 0.5F - destH * 0.5F};
+    raylib::Rectangle dest{destPos.x, destPos.y, destW, destH};
+    raylib::DrawTexturePro(choiceAtlas, src, dest, vec2{0, 0}, 0.0F,
+                           raylib::WHITE);
 }
 
 void IntroScreen::draw_primary(float progress) {
@@ -126,16 +199,13 @@ void IntroScreen::draw_primary(float progress) {
         raylib::MeasureTextEx(displayFont, title.c_str(), titleSize, 1.0F);
     vec2 titlePos{widthF * 0.5F - titleSizeVec.x * 0.5F,
                   heightF * 0.38F - titleSizeVec.y * 0.5F};
-
     float pulse = std::sin(primaryElapsed * 2.4F) * 0.5F + 0.5F;
     pulse = std::clamp(pulse, 0.0F, 1.0F);
     unsigned char baseAlpha =
         static_cast<unsigned char>(200.0F + 55.0F * pulse);
     raylib::Color primaryColor{255, 255, 255, baseAlpha};
-
     raylib::DrawTextEx(displayFont, title.c_str(), titlePos, titleSize, 1.0F,
                        primaryColor);
-
     const char* loadingText = statusText.c_str();
     float infoSize = titleSize * 0.25F;
     vec2 infoSizeVec =
@@ -144,7 +214,6 @@ void IntroScreen::draw_primary(float progress) {
                  titlePos.y + titleSizeVec.y + infoSize * 0.8F};
     raylib::DrawTextEx(displayFont, loadingText, infoPos, infoSize, 1.0F,
                        primaryColor);
-
     float clampedProgress = std::clamp(progress, 0.0F, 1.0F);
     float barWidth = widthF * 0.5F;
     float barHeight = heightF * 0.02F;
@@ -154,9 +223,10 @@ void IntroScreen::draw_primary(float progress) {
         primaryColor);
     raylib::Color fillColor{100, 220, 255, 255};
     float fillWidth = barWidth * clampedProgress;
-    raylib::DrawRectangle(
-        static_cast<int>(barPos.x), static_cast<int>(barPos.y),
-        static_cast<int>(fillWidth), static_cast<int>(barHeight), fillColor);
+    raylib::DrawRectangle(static_cast<int>(barPos.x),
+                          static_cast<int>(barPos.y),
+                          static_cast<int>(fillWidth),
+                          static_cast<int>(barHeight), fillColor);
 }
 
 void IntroScreen::draw_raylib() {
