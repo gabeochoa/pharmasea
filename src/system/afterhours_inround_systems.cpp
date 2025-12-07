@@ -31,6 +31,7 @@
 #include "../vendor_include.h"
 #include "afterhours_systems.h"
 #include "ingredient_helper.h"
+#include "input_process_manager.h"
 #include "system_manager.h"
 
 namespace system_manager {
@@ -330,30 +331,6 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
     }
 };
 
-struct PassTimeForActiveFishingGamesSystem
-    : public afterhours::System<HasFishingGame> {
-    virtual ~PassTimeForActiveFishingGamesSystem() = default;
-
-    virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            // Don't run during transitions to avoid spawners creating entities
-            // before transition logic completes
-            if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
-        } catch (...) {
-            return false;
-        }
-    }
-
-    virtual void for_each_with(Entity&, HasFishingGame& fishingGame,
-                               float dt) override {
-        fishingGame.pass_time(dt);
-    }
-};
-
 struct ProcessGrabberFilterSystem : public afterhours::System<> {
     virtual ~ProcessGrabberFilterSystem() = default;
 
@@ -537,35 +514,6 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
             // we are done recieving
             entity.get<IsPnumaticPipe>().recieving = false;
         }
-    }
-};
-
-struct ResetEmptyWorkFurnitureSystem
-    : public afterhours::System<HasWork, CanHoldItem> {
-    virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            // Don't run during transitions to avoid spawners creating entities
-            // before transition logic completes
-            if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
-        } catch (...) {
-            return false;
-        }
-    }
-
-    void for_each_with(Entity&, HasWork& hasWork, CanHoldItem& chi,
-                       float) override {
-        if (!hasWork.should_reset_on_empty()) return;
-        if (chi.empty()) {
-            hasWork.reset_pct();
-            return;
-        }
-
-        // if its not empty, we have to see if its an item that can be
-        // worked
     }
 };
 
@@ -831,11 +779,7 @@ void SystemManager::register_inround_systems() {
     systems.register_update_system(
         std::make_unique<system_manager::ProcessSpawnerSystem>());
     systems.register_update_system(
-        std::make_unique<system_manager::ResetEmptyWorkFurnitureSystem>());
-    systems.register_update_system(
         std::make_unique<system_manager::ReduceImpatientCustomersSystem>());
-
-    systems.register_update_system(
-        std::make_unique<
-            system_manager::PassTimeForActiveFishingGamesSystem>());
+    system_manager::input_process_manager::inround::register_input_systems(
+        systems);
 }
