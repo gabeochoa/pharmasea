@@ -541,7 +541,7 @@
             "folder": "models/shapes",
             "filename": "mojito.obj",
             "library_name": "mojito",
-            "size_scale": 2.0,
+            "size_scale": 0.6,
             "position_offset": [
                 0,
                 0,
