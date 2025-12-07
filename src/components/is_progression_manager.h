@@ -95,9 +95,8 @@ struct IsProgressionManager : public BaseComponent {
 
     Drink get_random_unlocked_drink() const {
         log_trace("get random: {} {}", enabledDrinks, enabledIngredients);
-        static thread_local std::mt19937 rng{RandomEngine::rng()};
-        int drinkSetBit =
-            bitset_utils::get_random_enabled_bit(enabledDrinks, rng);
+        int drinkSetBit = bitset_utils::get_random_enabled_bit(
+            enabledDrinks, RandomEngine::rng());
         if (drinkSetBit == -1) {
             log_warn("generated {} but we had {} enabled drinks", drinkSetBit,
                      enabledDrinks.count());

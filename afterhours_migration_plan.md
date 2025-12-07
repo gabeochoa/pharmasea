@@ -295,7 +295,7 @@ After each change:
 5. ✅ **Task 5**: Migrate Library pattern - Better error handling
 6. ⬜ **Task 6**: Standardize includes - Consistency
 7. ⬜ **Task 7**: Process trash TODO - Cleanup
-8. ⬜ **Task 8**: RNG unification - Route remaining thread_local mt19937 users through `RandomEngine::rng()`
+8. ✅ **Task 8**: RNG unification - Route remaining thread_local mt19937 users through `RandomEngine::rng()`
 
 **Time estimate**: Tasks 1, 4, 6, 7 are ~30 mins each. Tasks 2, 3, 5 are ~1-2 hours each.
 
