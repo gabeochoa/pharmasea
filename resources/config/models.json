@@ -196,7 +196,7 @@
             "size_scale": 1.5,
             "position_offset": [
                 0,
-                0,
+                -0.5,
                 0
             ],
             "rotation_angle": 180.0
@@ -208,7 +208,7 @@
             "size_scale": 1.5,
             "position_offset": [
                 0,
-                0,
+                -0.5,
                 0
             ],
             "rotation_angle": 180.0
@@ -220,7 +220,7 @@
             "size_scale": 1.5,
             "position_offset": [
                 0,
-                0,
+                -0.5,
                 0
             ],
             "rotation_angle": 180.0
@@ -232,7 +232,7 @@
             "size_scale": 1.5,
             "position_offset": [
                 0,
-                0,
+                -0.5,
                 0
             ],
             "rotation_angle": 180.0
