@@ -1,4 +1,5 @@
 #include "../ah.h"
+#include "../building_locations.h"
 #include "../components/can_be_highlighted.h"
 #include "../components/can_change_settings_interactively.h"
 #include "../components/can_highlight_others.h"
@@ -9,6 +10,7 @@
 #include "../components/custom_item_position.h"
 #include "../components/has_dynamic_model_name.h"
 #include "../components/has_name.h"
+#include "../components/is_bank.h"
 #include "../components/is_drink.h"
 #include "../components/is_floor_marker.h"
 #include "../components/is_nux_manager.h"
@@ -29,19 +31,320 @@
 #include "../entity_makers.h"
 #include "../entity_query.h"
 #include "../external_include.h"
+#include "../network/server.h"
 #include "../vec_util.h"
+#include "progression.h"
+#include "store_management_helpers.h"
 #include "system_manager.h"
 
 namespace system_manager {
 
 bool _create_nuxes(Entity& entity);
 void process_nux_updates(Entity& entity, float dt);
+void generate_machines_for_new_upgrades();
+void spawn_machines_for_newly_unlocked_drink_DONOTCALL(IsProgressionManager&,
+                                                       Drink);
+namespace progression {
+void update_upgrade_variables();
+}  // namespace progression
+namespace store {
+void cleanup_old_store_options();
+void generate_store_options();
+void move_purchased_furniture();
+}  // namespace store
 void update_dynamic_trigger_area_settings(Entity& entity, float dt);
 void count_all_possible_trigger_area_entrants(Entity& entity, float dt);
 void count_in_building_trigger_area_entrants(Entity& entity, float dt);
 void count_trigger_area_entrants(Entity& entity, float dt);
 void update_trigger_area_percent(Entity& entity, float dt);
 void trigger_cb_on_full_progress(Entity& entity, float dt);
+
+void count_all_possible_trigger_area_entrants(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+
+    size_t count = EQ(SystemManager::get().oldAll)
+                       .whereType(EntityType::Player)
+                       .gen_count();
+
+    entity.get<IsTriggerArea>().update_all_entrants(static_cast<int>(count));
+}
+
+void count_trigger_area_entrants(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+
+    size_t count = EQ(SystemManager::get().oldAll)
+                       .whereType(EntityType::Player)
+                       .whereCollides(entity.get<Transform>().expanded_bounds(
+                           {0, TILESIZE, 0}))
+                       .gen_count();
+
+    entity.get<IsTriggerArea>().update_entrants(static_cast<int>(count));
+}
+
+void count_in_building_trigger_area_entrants(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+
+    std::optional<Building> building = entity.get<IsTriggerArea>().building;
+    if (!building) return;
+
+    size_t count =
+        EQ(SystemManager::get().oldAll)
+            .whereType(EntityType::Player)
+            .whereInside(building.value().min(), building.value().max())
+            .gen_count();
+
+    entity.get<IsTriggerArea>().update_entrants_in_building(
+        static_cast<int>(count));
+}
+
+void update_trigger_area_percent(Entity& entity, float dt) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+    IsTriggerArea& ita = entity.get<IsTriggerArea>();
+
+    ita.should_wave()  //
+        ? ita.increase_progress(dt)
+        : ita.decrease_progress(dt);
+
+    if (!ita.should_progress()) ita.decrease_cooldown(dt);
+}
+
+void trigger_cb_on_full_progress(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+    IsTriggerArea& ita = entity.get<IsTriggerArea>();
+    if (ita.progress() < 1.f) return;
+
+    ita.reset_cooldown();
+
+    const auto _choose_option = [](int option_chosen) {
+        for (RefEntity door : EntityQuery()
+                                  .whereType(EntityType::Door)
+                                  .whereInside(PROGRESSION_BUILDING.min(),
+                                               PROGRESSION_BUILDING.max())
+                                  .gen()) {
+            door.get().addComponentIfMissing<IsSolid>();
+        }
+
+        GameState::get().transition_to_game();
+
+        for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                    .whereType(EntityType::Player)
+                                    .whereInside(PROGRESSION_BUILDING.min(),
+                                                 PROGRESSION_BUILDING.max())
+                                    .gen()) {
+            move_player_SERVER_ONLY(player, game::State::InGame);
+        }
+
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+        IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+        switch (ipm.upgrade_type()) {
+            case UpgradeType::None:
+                break;
+            case UpgradeType::Upgrade: {
+                const UpgradeClass& option =
+                    (option_chosen == 0 ? ipm.upgradeOption1
+                                        : ipm.upgradeOption2);
+                auto optionImpl = make_upgrade(option);
+                optionImpl->onUnlock(irsm.config, ipm);
+                irsm.selected_upgrades.push_back(optionImpl);
+                irsm.config.mark_upgrade_unlocked(option);
+                generate_machines_for_new_upgrades();
+            } break;
+            case UpgradeType::Drink: {
+                Drink option =
+                    option_chosen == 0 ? ipm.drinkOption1 : ipm.drinkOption2;
+
+                ipm.unlock_drink(option);
+                auto possibleNewIGs = get_req_ingredients_for_drink(option);
+                bitset_utils::for_each_enabled_bit(
+                    possibleNewIGs, [&ipm](size_t index) {
+                        Ingredient ig =
+                            magic_enum::enum_value<Ingredient>(index);
+                        ipm.unlock_ingredient(ig);
+                        return bitset_utils::ForEachFlow::NormalFlow;
+                    });
+
+                spawn_machines_for_newly_unlocked_drink_DONOTCALL(ipm, option);
+            } break;
+        }
+
+        ipm.next_round();
+        system_manager::progression::update_upgrade_variables();
+    };
+
+    switch (ita.type) {
+        case IsTriggerArea::Store_Reroll: {
+            system_manager::store::cleanup_old_store_options();
+            system_manager::store::generate_store_options();
+            OptEntity sophie =
+                EntityQuery().whereType(EntityType::Sophie).gen_first();
+            if (sophie.valid()) {
+                IsBank& bank = sophie->get<IsBank>();
+                IsRoundSettingsManager& irsm =
+                    sophie->get<IsRoundSettingsManager>();
+                int reroll_price = irsm.get<int>(ConfigKey::StoreRerollPrice);
+                bank.withdraw(reroll_price);
+                irsm.config.permanently_modify(ConfigKey::StoreRerollPrice,
+                                               Operation::Add, 25);
+            }
+
+        } break;
+        case IsTriggerArea::Unset:
+            log_warn("Completed trigger area wait time but was Unset type");
+            break;
+        case IsTriggerArea::ModelTest_BackToLobby: {
+            GameState::get().transition_to_lobby();
+
+            const auto ents = EntityHelper::getAllInRange(
+                MODEL_TEST_BUILDING.min(), MODEL_TEST_BUILDING.max());
+
+            for (Entity& to_delete : ents) {
+                if (to_delete.has<IsTriggerArea>()) continue;
+                to_delete.cleanup = true;
+            }
+
+            SystemManager::get().for_each_old([](Entity& e) {
+                if (!check_type(e, EntityType::Player)) return;
+                move_player_SERVER_ONLY(e, game::State::Lobby);
+            });
+        } break;
+        case IsTriggerArea::Lobby_ModelTest: {
+            GameState::get().transition_to_model_test();
+            if (is_server()) {
+                network::Server* server =
+                    GLOBALS.get_ptr<network::Server>("server");
+                server->get_map_SERVER_ONLY()
+                    ->game_info.generate_model_test_map();
+            }
+
+            SystemManager::get().for_each_old([](Entity& e) {
+                if (!check_type(e, EntityType::Player)) return;
+                move_player_SERVER_ONLY(e, game::State::ModelTest);
+            });
+        } break;
+
+        case IsTriggerArea::Lobby_PlayGame: {
+            GameState::get().transition_to_game();
+            SystemManager::get().for_each_old([](Entity& e) {
+                if (!check_type(e, EntityType::Player)) return;
+                move_player_SERVER_ONLY(e, game::State::InGame);
+            });
+        } break;
+        case IsTriggerArea::Progression_Option1:
+            _choose_option(0);
+            break;
+        case IsTriggerArea::Progression_Option2:
+            _choose_option(1);
+            break;
+        case IsTriggerArea::Store_BackToPlanning: {
+            system_manager::store::move_purchased_furniture();
+
+            GameState::get().transition_to_game();
+
+            for (RefEntity player :
+                 EQ(SystemManager::get().oldAll)
+                     .whereType(EntityType::Player)
+                     .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
+                     .gen()) {
+                move_player_SERVER_ONLY(player, game::State::InGame);
+            }
+        } break;
+    }
+}
+
+void update_dynamic_trigger_area_settings(Entity& entity, float) {
+    if (entity.is_missing<IsTriggerArea>()) return;
+    IsTriggerArea& ita = entity.get<IsTriggerArea>();
+
+    if (ita.type == IsTriggerArea::Unset) {
+        log_warn("You created a trigger area without a type");
+        TranslatableString not_configured_ts =
+            TODO_TRANSLATE("Not Configured", TodoReason::UserFacingError);
+        ita.update_title(not_configured_ts);
+        return;
+    }
+
+    switch (ita.type) {
+        case IsTriggerArea::ModelTest_BackToLobby: {
+            ita.update_title(NO_TRANSLATE("Back To Lobby"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            return;
+        } break;
+        case IsTriggerArea::Lobby_ModelTest: {
+            ita.update_title(NO_TRANSLATE("Model Testing"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            return;
+        } break;
+        case IsTriggerArea::Lobby_PlayGame: {
+            ita.update_title(TranslatableString(strings::i18n::START_GAME));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            return;
+        } break;
+        case IsTriggerArea::Store_BackToPlanning: {
+            ita.update_title(
+                TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
+            ita.update_subtitle(
+                TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
+            return;
+        } break;
+        case IsTriggerArea::Store_Reroll: {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const IsRoundSettingsManager& irsm =
+                sophie.get<IsRoundSettingsManager>();
+            int reroll_cost = irsm.get<int>(ConfigKey::StoreRerollPrice);
+            auto str =
+                TranslatableString(strings::i18n::StoreReroll)
+                    .set_param(strings::i18nParam::RerollCost, reroll_cost);
+
+            ita.update_title(str);
+            ita.update_subtitle(str);
+            return;
+        } break;
+        case IsTriggerArea::Unset:
+        case IsTriggerArea::Progression_Option1:
+        case IsTriggerArea::Progression_Option2:
+            break;
+    }
+
+    TranslatableString internal_ts =
+        TODO_TRANSLATE("(internal)", TodoReason::UserFacingError);
+    switch (ita.type) {
+        case IsTriggerArea::Progression_Option1:  // fall through
+        case IsTriggerArea::Progression_Option2: {
+            ita.update_title(internal_ts);
+            ita.update_subtitle(internal_ts);
+
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const IsProgressionManager& ipm =
+                sophie.get<IsProgressionManager>();
+
+            if (!ipm.collectedOptions) {
+                ita.update_title(internal_ts);
+                ita.update_subtitle(internal_ts);
+                return;
+            }
+
+            bool isOption1 = ita.type == IsTriggerArea::Progression_Option1;
+
+            ita.update_title(ipm.get_option_title(isOption1));
+            ita.update_subtitle(ipm.get_option_subtitle(isOption1));
+            return;
+        } break;
+        default:
+            break;
+    }
+
+    TranslatableString not_configured_ts =
+        TODO_TRANSLATE("Not Configured", TodoReason::UserFacingError);
+
+    ita.update_title(not_configured_ts);
+    ita.update_subtitle(not_configured_ts);
+    log_warn(
+        "Trying to update trigger area title but type {} not handled "
+        "anywhere",
+        ita.type);
+}
 
 vec3 get_new_held_position_custom(Entity& entity) {
     const Transform& transform = entity.get<Transform>();
