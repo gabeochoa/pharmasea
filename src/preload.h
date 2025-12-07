@@ -18,6 +18,7 @@
 #include "engine/sound_library.h"
 #include "engine/texture_library.h"
 #include "globals.h"
+#include "intro_screen.h"
 #include "resources/fonts/Karmina_Regular_256.h"
 
 inline raylib::Font load_karmina_regular() {
@@ -34,23 +35,7 @@ struct Preload {
     bool completed_preload_once = false;
     raylib::Font font;
 
-    Preload() {
-        reload_config();
-
-        // TODO :BE: right now these arent reloadable yet but should be soon
-        // add support an move them to reload_config()
-
-        load_translations();
-        load_shaders();
-
-        load_textures();
-        if (ENABLE_SOUND) {
-            ext::init_audio_device();
-            load_sounds();
-            load_music();
-        }
-        completed_preload_once = true;
-    }
+    Preload();
 
     ~Preload() {
         if (ENABLE_SOUND) {
@@ -72,10 +57,7 @@ struct Preload {
         load_map_generation_info();
         load_config();
         load_keymapping();
-        load_models();
-
-        // drinks use models, so let those load first
-        load_drink_recipes();
+        load_translations();
     }
 
     void update_ui_theme(const std::string& theme);
@@ -96,16 +78,16 @@ struct Preload {
     const char* get_font_for_lang(const char* lang_name);
     void load_fonts(const nlohmann::json& data);
 
-    void load_textures();
-    void load_models();
+    void load_textures(const std::function<void()>& tick);
+    void load_models(const std::function<void()>& tick);
     auto load_json_config_file(
         const char* filename,
         const std::function<void(nlohmann::json)>& processor);
     void write_json_config_file(const char* filename,
                                 const nlohmann::json& data);
     void load_settings_config();
-    void load_drink_recipes();
-    void load_sounds();
-    void load_music();
-    void load_shaders();
+    void load_drink_recipes(const std::function<void()>& tick);
+    void load_sounds(const std::function<void()>& tick);
+    void load_music(const std::function<void()>& tick);
+    void load_shaders(const std::function<void()>& tick);
 };

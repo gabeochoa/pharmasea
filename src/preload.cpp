@@ -291,17 +291,122 @@ void Preload::load_config() {
     });
 }
 
-void Preload::load_models() {
+namespace {
+struct LoadingProgress {
+    IntroScreen intro;
+    int total_units = 0;
+    int completed = 0;
+
+    explicit LoadingProgress(const raylib::Font& font) : intro(font) {
+        intro.start();
+        while (intro.is_raylib_active()) {
+            intro.update(0.0F);
+        }
+    }
+
+    void set_total(int total) { total_units = total; }
+
+    void tick() {
+        if (total_units <= 0) return;
+        float progress =
+            static_cast<float>(completed) / static_cast<float>(total_units);
+        intro.update(progress);
+        completed += 1;
+    }
+
+    void finish() {
+        intro.update(1.0F);
+        intro.finish();
+    }
+};
+}  // namespace
+
+Preload::Preload() {
+    reload_config();
+
+    LoadingProgress progress(this->font);
+
+    // Count work units
+    int total_units = 0;
+
+    // shaders
+    total_units += 2;  // see load_shaders
+
+    // textures
+    {
+        int texture_count = 0;
+        Files::get().for_resources_in_folder(
+            strings::settings::IMAGES, "drinks",
+            [&](const std::string&, const std::string&) { texture_count++; });
+        Files::get().for_resources_in_folder(
+            strings::settings::IMAGES, "external",
+            [&](const std::string&, const std::string&) { texture_count++; });
+        Files::get().for_resources_in_folder(
+            strings::settings::IMAGES, "upgrade",
+            [&](const std::string&, const std::string&) { texture_count++; });
+        Files::get().for_resources_in_folder(
+            strings::settings::IMAGES, "controls/keyboard_default",
+            [&](const std::string&, const std::string&) { texture_count++; });
+        Files::get().for_resources_in_folder(
+            strings::settings::IMAGES, "controls/xbox_default",
+            [&](const std::string&, const std::string&) { texture_count++; });
+        load_json_config_file("textures.json", [&](const nlohmann::json& c) {
+            texture_count += static_cast<int>(c["textures"].size());
+        });
+        total_units += texture_count;
+    }
+
+    // sounds + music
+    if (ENABLE_SOUND) {
+        int sound_units = 0;
+        sound_units += 8;  // fixed loads
+        Files::get().for_resources_in_folder(
+            strings::settings::SOUNDS, "pa_announcements",
+            [&](const std::string&, const std::string&) { sound_units++; });
+        total_units += sound_units;
+        total_units += 2;  // music tracks
+    }
+
+    // models
+    {
+        int model_units = 0;
+        load_json_config_file("models.json", [&](const nlohmann::json& c) {
+            model_units = static_cast<int>(c["models"].size());
+        });
+        total_units += model_units;
+    }
+
+    // drink recipes
+    {
+        int recipe_units = 0;
+        load_json_config_file("drinks.json", [&](const nlohmann::json& c) {
+            recipe_units = static_cast<int>(c["drinks"].size());
+        });
+        total_units += recipe_units;
+    }
+
+    progress.set_total(total_units);
+
+    load_shaders([&]() { progress.tick(); });
+    load_textures([&]() { progress.tick(); });
+
+    if (ENABLE_SOUND) {
+        ext::init_audio_device();
+        load_sounds([&]() { progress.tick(); });
+        load_music([&]() { progress.tick(); });
+    }
+
+    load_models([&]() { progress.tick(); });
+    load_drink_recipes([&]() { progress.tick(); });
+
+    progress.finish();
+    completed_preload_once = true;
+}
+
+void Preload::load_models(const std::function<void()>& tick) {
     if (!ENABLE_MODELS) {
         log_warn("Skipping Model Loading");
         return;
-    }
-
-    IntroScreen intro(this->font);
-    intro.start();
-
-    while (intro.is_raylib_active()) {
-        intro.update(0.0F);
     }
 
     std::vector<ModelInfoLibrary::ModelLoadingInfo> modelInfos;
@@ -327,11 +432,6 @@ void Preload::load_models() {
 
     int total = static_cast<int>(modelInfos.size());
     for (int index = 0; index < total; ++index) {
-        float progress =
-            total > 0 ? static_cast<float>(index) / static_cast<float>(total)
-                      : 1.0F;
-        intro.update(progress);
-
         const auto& modelInfo = modelInfos[index];
 
         log_trace("attempting loading {} as {} ", modelInfo.filename,
@@ -353,20 +453,17 @@ void Preload::load_models() {
         log_trace("loaded {} as {} ", modelInfo.filename,
                   modelInfo.library_name);
 
-        float afterProgress = total > 0 ? static_cast<float>(index + 1) /
-                                              static_cast<float>(total)
-                                        : 1.0F;
-        intro.update(afterProgress);
+        if (tick) {
+            tick();
+        }
     }
-
-    intro.finish();
 
     log_info("Loaded model json successfully, {} models",
              ModelLibrary::get().size());
 }
 
-void Preload::load_drink_recipes() {
-    load_json_config_file("drinks.json", [](const nlohmann::json& contents) {
+void Preload::load_drink_recipes(const std::function<void()>& tick) {
+    load_json_config_file("drinks.json", [&](const nlohmann::json& contents) {
         auto models = contents["drinks"];
         for (auto object : models) {
             auto base_name = object["name"].get<std::string>();
@@ -424,6 +521,7 @@ void Preload::load_drink_recipes() {
                 "INVALID", base_name.c_str());
 
             log_trace("loaded recipe {} ", base_name);
+            if (tick) tick();
         }
     });
 
@@ -431,7 +529,7 @@ void Preload::load_drink_recipes() {
              RecipeLibrary::get().size());
 }
 
-void Preload::load_textures() {
+void Preload::load_textures(const std::function<void()>& tick) {
     // TODO add a warning for when you are loading two images with the same name
     // because we dont distinguish between folders this is more likely than youd
     // think
@@ -439,39 +537,44 @@ void Preload::load_textures() {
 
     Files::get().for_resources_in_folder(
         strings::settings::IMAGES, "drinks",
-        [](const std::string& name, const std::string& filename) {
+        [&](const std::string& name, const std::string& filename) {
             TextureLibrary::get().load(filename.c_str(), name.c_str());
+            if (tick) tick();
         });
 
     Files::get().for_resources_in_folder(
         strings::settings::IMAGES, "external",
-        [](const std::string& name, const std::string& filename) {
+        [&](const std::string& name, const std::string& filename) {
             TextureLibrary::get().load(filename.c_str(), name.c_str());
+            if (tick) tick();
         });
 
     Files::get().for_resources_in_folder(
         strings::settings::IMAGES, "upgrade",
-        [](const std::string& name, const std::string& filename) {
+        [&](const std::string& name, const std::string& filename) {
             TextureLibrary::get().load(filename.c_str(), name.c_str());
+            if (tick) tick();
         });
 
     // TODO how safe is the path combination here esp for mac vs windows
     Files::get().for_resources_in_folder(
         strings::settings::IMAGES, "controls/keyboard_default",
-        [](const std::string& name, const std::string& filename) {
+        [&](const std::string& name, const std::string& filename) {
             TextureLibrary::get().load(filename.c_str(), name.c_str());
+            if (tick) tick();
         });
 
     // TODO how safe is the path combination here esp for mac vs windows
     Files::get().for_resources_in_folder(
         strings::settings::IMAGES, "controls/xbox_default",
-        [](const std::string& name, const std::string& filename) {
+        [&](const std::string& name, const std::string& filename) {
             TextureLibrary::get().load(filename.c_str(), name.c_str());
+            if (tick) tick();
         });
 
     // Now load the one off ones
 
-    load_json_config_file("textures.json", [](const nlohmann::json& contents) {
+    load_json_config_file("textures.json", [&](const nlohmann::json& contents) {
         auto textures = contents["textures"];
 
         for (auto object : textures) {
@@ -484,6 +587,7 @@ void Preload::load_textures() {
                 library_name.c_str());
 
             log_trace("loaded texture {} ", library_name);
+            if (tick) tick();
         }
 
         log_info("Loaded texture json successfully, {} textures",
@@ -543,92 +647,64 @@ void Preload::load_map_generation_info() {
         });
 }
 
-void Preload::load_sounds() {
-    SoundLibrary::get().load(
-        Files::get()
-            .fetch_resource_path(strings::settings::SOUNDS, "roblox_oof.ogg")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::ROBLOX));
+void Preload::load_sounds(const std::function<void()>& tick) {
+    auto load_and_tick = [&](const char* file, const char* name) {
+        SoundLibrary::get().load(
+            Files::get()
+                .fetch_resource_path(strings::settings::SOUNDS, file)
+                .c_str(),
+            name);
+        if (tick) tick();
+    };
 
-    SoundLibrary::get().load(
-        Files::get()
-            .fetch_resource_path(strings::settings::SOUNDS, "vom.wav")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::VOMIT));
-
-    SoundLibrary::get().load(
-        Files::get()
-            .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::SELECT));
-
-    SoundLibrary::get().load(
-        Files::get()
-            // TODO replace sound
-            .fetch_resource_path(strings::settings::SOUNDS, "select.ogg")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::CLICK));
-
-    SoundLibrary::get().load(
-        Files::get()
-            .fetch_resource_path(strings::settings::SOUNDS, "water.ogg")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::WATER));
-
-    SoundLibrary::get().load(
-        Files::get()
-            .fetch_resource_path(strings::settings::SOUNDS, "blender.ogg")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::BLENDER));
-
-    SoundLibrary::get().load(
-        Files::get()
-            .fetch_resource_path(strings::settings::SOUNDS, "solid.ogg")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::SOLID));
-
-    SoundLibrary::get().load(
-        Files::get()
-            .fetch_resource_path(strings::settings::SOUNDS, "ice.ogg")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::ICE));
-
-    SoundLibrary::get().load(
-        Files::get()
-            .fetch_resource_path(strings::settings::SOUNDS, "pickup.ogg")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::PICKUP));
-
-    SoundLibrary::get().load(
-        Files::get()
-            .fetch_resource_path(strings::settings::SOUNDS, "place.ogg")
-            .c_str(),
-        strings::sounds::to_name(strings::sounds::SoundId::PLACE));
+    load_and_tick("roblox_oof.ogg",
+                  strings::sounds::to_name(strings::sounds::SoundId::ROBLOX));
+    load_and_tick("vom.wav",
+                  strings::sounds::to_name(strings::sounds::SoundId::VOMIT));
+    load_and_tick("select.ogg",
+                  strings::sounds::to_name(strings::sounds::SoundId::SELECT));
+    load_and_tick("select.ogg",
+                  strings::sounds::to_name(strings::sounds::SoundId::CLICK));
+    load_and_tick("water.ogg",
+                  strings::sounds::to_name(strings::sounds::SoundId::WATER));
+    load_and_tick("blender.ogg",
+                  strings::sounds::to_name(strings::sounds::SoundId::BLENDER));
+    load_and_tick("solid.ogg",
+                  strings::sounds::to_name(strings::sounds::SoundId::SOLID));
+    load_and_tick("ice.ogg",
+                  strings::sounds::to_name(strings::sounds::SoundId::ICE));
+    load_and_tick("pickup.ogg",
+                  strings::sounds::to_name(strings::sounds::SoundId::PICKUP));
+    load_and_tick("place.ogg",
+                  strings::sounds::to_name(strings::sounds::SoundId::PLACE));
 
     Files::get().for_resources_in_folder(
         strings::settings::SOUNDS, "pa_announcements",
-        [](const std::string& name, const std::string& filename) {
+        [&](const std::string& name, const std::string& filename) {
             SoundLibrary::get().load(
                 filename.c_str(),
                 fmt::format("pa_announcements_{}", name).c_str());
+            if (tick) tick();
         });
 }
 
-void Preload::load_music() {
+void Preload::load_music(const std::function<void()>& tick) {
     MusicLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::MUSIC, "jaunt.ogg")
             .c_str(),
         "supermarket");
+    if (tick) tick();
 
     MusicLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::MUSIC, "theme.ogg")
             .c_str(),
         "theme");
+    if (tick) tick();
 }
 
-void Preload::load_shaders() {
+void Preload::load_shaders(const std::function<void()>& tick) {
     const std::tuple<const char*, const char*, const char*> shaders[] = {
         {strings::settings::SHADERS, "post_processing.fs", "post_processing"},
         {strings::settings::SHADERS, "discard_alpha.fs", "discard_alpha"},
@@ -640,6 +716,7 @@ void Preload::load_shaders() {
                 .fetch_resource_path(std::get<0>(s), std::get<1>(s))
                 .c_str(),
             std::get<2>(s));
+        if (tick) tick();
     }
 }
 
