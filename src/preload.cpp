@@ -10,6 +10,7 @@
 #include "engine/font_library.h"
 #include "engine/keymap.h"
 #include "engine/ui/theme.h"
+#include "intro_screen.h"
 #include "magic_enum/magic_enum.hpp"
 #include "map_generation.h"
 #include "recipe_library.h"
@@ -296,9 +297,18 @@ void Preload::load_models() {
         return;
     }
 
-    load_json_config_file("models.json", [](const nlohmann::json& contents) {
-        auto models = contents["models"];
-        for (auto object : models) {
+    IntroScreen intro(this->font);
+    intro.start();
+
+    while (intro.is_raylib_active()) {
+        intro.update(0.0F);
+    }
+
+    std::vector<ModelInfoLibrary::ModelLoadingInfo> modelInfos;
+    load_json_config_file("models.json", [&](const nlohmann::json& contents) {
+        const nlohmann::json& models = contents["models"];
+        modelInfos.reserve(models.size());
+        for (const nlohmann::json& object : models) {
             ModelInfoLibrary::ModelLoadingInfo modelInfo;
             modelInfo.folder = object["folder"].get<std::string>();
             modelInfo.filename = object["filename"].get<std::string>();
@@ -311,28 +321,45 @@ void Preload::load_models() {
             modelInfo.position_offset.z =
                 object["position_offset"][2].get<float>();
             modelInfo.rotation_angle = object["rotation_angle"].get<float>();
-
-            log_trace("attempting loading {} as {} ", modelInfo.filename,
-                      modelInfo.library_name);
-
-            // Load the ModelLoadingInfo into the ModelInfoLibrary
-            ModelInfoLibrary::get().load({
-                .folder = modelInfo.folder,
-                .filename = modelInfo.filename,
-                .library_name = modelInfo.library_name,
-                .size_scale = modelInfo.size_scale,
-                .position_offset = modelInfo.position_offset,
-                .rotation_angle = modelInfo.rotation_angle,
-            });
-            ModelLibrary::get().load({
-                .folder = modelInfo.folder.c_str(),
-                .filename = modelInfo.filename.c_str(),
-                .libraryname = modelInfo.library_name.c_str(),
-            });
-            log_trace("loaded {} as {} ", modelInfo.filename,
-                      modelInfo.library_name);
+            modelInfos.push_back(modelInfo);
         }
     });
+
+    int total = static_cast<int>(modelInfos.size());
+    for (int index = 0; index < total; ++index) {
+        float progress =
+            total > 0 ? static_cast<float>(index) / static_cast<float>(total)
+                      : 1.0F;
+        intro.update(progress);
+
+        const auto& modelInfo = modelInfos[index];
+
+        log_trace("attempting loading {} as {} ", modelInfo.filename,
+                  modelInfo.library_name);
+
+        ModelInfoLibrary::get().load({
+            .folder = modelInfo.folder,
+            .filename = modelInfo.filename,
+            .library_name = modelInfo.library_name,
+            .size_scale = modelInfo.size_scale,
+            .position_offset = modelInfo.position_offset,
+            .rotation_angle = modelInfo.rotation_angle,
+        });
+        ModelLibrary::get().load({
+            .folder = modelInfo.folder.c_str(),
+            .filename = modelInfo.filename.c_str(),
+            .libraryname = modelInfo.library_name.c_str(),
+        });
+        log_trace("loaded {} as {} ", modelInfo.filename,
+                  modelInfo.library_name);
+
+        float afterProgress = total > 0 ? static_cast<float>(index + 1) /
+                                              static_cast<float>(total)
+                                        : 1.0F;
+        intro.update(afterProgress);
+    }
+
+    intro.finish();
 
     log_info("Loaded model json successfully, {} models",
              ModelLibrary::get().size());
