@@ -18,16 +18,27 @@ constexpr const char* POWERED_BY_TEXT = "POWERED BY";
 constexpr const char* RAYLIB_TEXT = "raylib";
 }  // namespace
 
-IntroScreen::IntroScreen(const raylib::Font& font)
-    : width(WIN_W()), height(WIN_H()), displayFont(font) {}
+IntroScreen::IntroScreen(const raylib::Font& font, bool show_raylib)
+    : phase(Phase::Primary),
+      show_raylib(show_raylib),
+      primaryElapsed(0.0F),
+      raylibElapsed(0.0F),
+      holdAfterComplete(0.0F),
+      started(false),
+      finished(false),
+      width(WIN_W()),
+      height(WIN_H()),
+      displayFont(font) {}
 
 void IntroScreen::start() {
     started = true;
     finished = false;
-    phase = Phase::Raylib;
+    phase = show_raylib ? Phase::Raylib : Phase::Primary;
     primaryElapsed = 0.0F;
     raylibElapsed = 0.0F;
     holdAfterComplete = 0.0F;
+    log_info("intro_screen start: show_raylib={}, phase={}", show_raylib,
+             static_cast<int>(phase));
 }
 
 void IntroScreen::update(float progress) {
@@ -42,10 +53,15 @@ void IntroScreen::update(float progress) {
 
     if (phase == Phase::Raylib) {
         raylibElapsed += dt;
+        if (!logged_raylib) {
+            log_info("intro_screen raylib phase active, progress={}", progress);
+            logged_raylib = true;
+        }
         if (raylibElapsed > RAYLIB_TOTAL_DURATION) {
             phase = Phase::Primary;
             primaryElapsed = 0.0F;
             holdAfterComplete = 0.0F;
+            log_info("intro_screen switched to primary phase");
         }
     } else if (phase == Phase::Primary) {
         primaryElapsed += dt;

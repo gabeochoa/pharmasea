@@ -31,6 +31,7 @@ static bool TESTS_ONLY = false;
 static bool ENABLE_UI_TEST = false;
 extern bool BYPASS_MENU;
 extern bool SHOW_INTRO;
+extern bool SHOW_RAYLIB_INTRO;
 
 // TODO :BE: is there a way for us to move these to engine
 // and then let the game pass them in or something _while_ staying const?

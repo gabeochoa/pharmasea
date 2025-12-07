@@ -5,7 +5,7 @@
 struct IntroScreen {
     enum struct Phase { Primary, Raylib, Done };
 
-    explicit IntroScreen(const raylib::Font& font);
+    explicit IntroScreen(const raylib::Font& font, bool show_raylib);
 
     void start();
     void update(float progress);
@@ -15,6 +15,8 @@ struct IntroScreen {
 
    private:
     Phase phase = Phase::Primary;
+    bool show_raylib = true;
+    bool logged_raylib = false;
     float primaryElapsed = 0.0F;
     float raylibElapsed = 0.0F;
     float holdAfterComplete = 0.0F;
