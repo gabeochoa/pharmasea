@@ -1,8 +1,82 @@
 #include "wave_collapse.h"
 
+#include <fmt/core.h>
+
+#include <fstream>
+#include <iostream>
+#include <optional>
+#include <utility>
+
 #include "ah.h"
+#include "magic_enum/magic_enum.hpp"
+#include "nlohmann/json.hpp"
 
 namespace wfc {
+template<typename... Args>
+static void wfc_log(const char* format, Args&&... args) {
+    std::string message = fmt::format(format, std::forward<Args>(args)...);
+    std::cout << message << '\n';
+    std::cout.flush();
+}
+
+void ensure_map_generation_info_loaded() {
+    if (MAP_GEN_INFO.rows > 0 && MAP_GEN_INFO.cols > 0 &&
+        !MAP_GEN_INFO.patterns.empty()) {
+        return;
+    }
+
+    const std::string path = "resources/config/map_generator_input.json";
+    std::ifstream ifs(path);
+    if (!ifs.good()) {
+        wfc_log("Failed to open {}", path);
+        return;
+    }
+
+    nlohmann::json contents;
+    try {
+        contents = nlohmann::json::parse(ifs, nullptr, true, true);
+    } catch (const std::exception& e) {
+        wfc_log("Failed to parse {}: {}", path, e.what());
+        return;
+    }
+
+    MAP_GEN_INFO.rows = contents.value("max_rows", 3);
+    MAP_GEN_INFO.cols = contents.value("max_cols", 3);
+
+    if (!contents.contains("patterns")) {
+        wfc_log("map_generator_input.json missing patterns");
+        return;
+    }
+
+    const nlohmann::json jpatterns = contents["patterns"];
+    MAP_GEN_INFO.patterns.clear();
+    MAP_GEN_INFO.patterns.reserve(jpatterns.size());
+
+    int id = 0;
+    for (const nlohmann::json& jpat : jpatterns) {
+        Connections connections;
+        for (const nlohmann::json& c : jpat["connections"]) {
+            const std::optional<Rose> maybe =
+                magic_enum::enum_cast<Rose>(c.get<std::string>());
+            if (maybe.has_value()) {
+                connections.insert(maybe.value());
+            }
+        }
+
+        Pattern pattern;
+        pattern.id = id;
+        pattern.pat = jpat["pat"].get<std::vector<std::string>>();
+        pattern.connections = std::move(connections);
+        pattern.required = jpat.value("required", false);
+        pattern.any_connection = jpat.value("any_connection", false);
+        pattern.max_count = jpat.value("max_count", -1);
+        pattern.edge_only = jpat.value("edge_only", false);
+
+        MAP_GEN_INFO.patterns.push_back(pattern);
+        id++;
+    }
+}
+
 size_t WaveCollapse::pat_size() const { return patterns[0].pat.size(); }
 
 std::vector<std::string> WaveCollapse::get_lines() {
@@ -33,7 +107,7 @@ std::vector<std::string> WaveCollapse::get_lines() {
     }
 
     for (auto line : lines) {
-        log_clean(LogLevel::LOG_INFO, "{}", line);
+        wfc_log("{}", line);
     }
 
     return lines;
@@ -66,7 +140,7 @@ void WaveCollapse::_dump() const {
     lines.push_back("");
 
     for (auto line : lines) {
-        log_clean(LogLevel::LOG_INFO, "{}", line);
+        wfc_log("{}", line);
     }
 }
 
@@ -95,8 +169,8 @@ bool WaveCollapse::_eligible_pattern(int x, int y, int pattern_id) const {
 
 void WaveCollapse::_place_pattern(int x, int y, int pattern_id) {
     const auto _print_pattern_and_name = [&]() {
-        log_clean(LogLevel::LOG_INFO, "Selected Pattern {}({})", pattern_id,
-                  (char) (pattern_id + 'A'));
+        wfc_log("Selected Pattern {}({})", pattern_id,
+                (char) (pattern_id + 'A'));
 
         for (size_t i = 0; i < patterns[pattern_id].pat.size(); i++) {
             for (size_t j = 0; j < patterns[pattern_id].pat[i].size(); j++) {
@@ -235,11 +309,10 @@ void WaveCollapse::_place_required() {
 void WaveCollapse::run() {
     const auto _dump_and_print = [&](const std::string& msg) {
         _dump();
-        log_clean(LogLevel::LOG_INFO, "{}", msg);
+        wfc_log("{}", msg);
     };
 
-    log_clean(LogLevel::LOG_INFO,
-              "starting generation with {} rows and {} cols", rows, cols);
+    wfc_log("starting generation with {} rows and {} cols", rows, cols);
 
     // double check if we have any common errors with our patterns
     _validate_patterns();
@@ -258,7 +331,7 @@ void WaveCollapse::run() {
     _dump_and_print("completed initial manual placements");
 
     get_lines();
-    log_clean(LogLevel::LOG_INFO, "{}", "starting wfc");
+    wfc_log("{}", "starting wfc");
 
     // If we filled everything then we are done
     while (_has_non_collapsed()) {
@@ -270,7 +343,7 @@ void WaveCollapse::run() {
         _collapse(x, y);
     }
 
-    log_clean(LogLevel::LOG_INFO, "{}", "completed wfc");
+    wfc_log("{}", "completed wfc");
 }
 
 Rose WaveCollapse::_get_opposite_connection(Rose r) const {

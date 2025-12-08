@@ -6,6 +6,7 @@
 #include "engine/random_engine.h"
 #include "engine/ui/svg.h"
 #include "map_generation.h"
+#include "wave_collapse.h"
 
 // TODO removing this include would speed up
 // compilation times of this file by probably 1.6 seconds
@@ -258,14 +259,15 @@ int main(int, char* argv[]) {
 
 #endif
 
+    // wfc::ensure_map_generation_info_loaded();
+    // wfc::WaveCollapse wc(static_cast<unsigned
+    // int>(hashString("WVZ_ORYYVAV"))); wc.run(); wc.get_lines(); return 0;
+
     log_info("Executable Path: {}", fs::current_path());
     log_info("Canon Path: {}", fs::canonical(fs::current_path()));
 
     startup();
 
-    // wfc::WaveCollapse wc(static_cast<unsigned
-    // int>(hashString("WVZ_ORYYVAV"))); wc.run(); wc.get_lines(); return 0;
-    //
     try {
         App::get().run();
     } catch (const std::exception& e) {

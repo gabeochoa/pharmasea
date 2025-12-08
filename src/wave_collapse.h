@@ -154,4 +154,6 @@ struct WaveCollapse {
     void _initial_cleanup();
 };
 
+void ensure_map_generation_info_loaded();
+
 }  // namespace wfc
