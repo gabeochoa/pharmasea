@@ -83,6 +83,7 @@ long long return_ping = 0;
 bool BYPASS_MENU = false;
 bool SHOW_INTRO = false;
 bool SHOW_RAYLIB_INTRO = false;
+bool TEST_MAP_GENERATION = false;
 
 void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues
@@ -241,6 +242,10 @@ void process_dev_flags(char* argv[]) {
         log_info("--intro flag detected, forcing intro screen");
     }
 
+    if (cmdl[{"--test_map_generation"}]) {
+        TEST_MAP_GENERATION = true;
+    }
+
 #endif
 }
 
@@ -259,9 +264,14 @@ int main(int, char* argv[]) {
 
 #endif
 
-    // wfc::ensure_map_generation_info_loaded();
-    // wfc::WaveCollapse wc(static_cast<unsigned
-    // int>(hashString("WVZ_ORYYVAV"))); wc.run(); wc.get_lines(); return 0;
+    if (TEST_MAP_GENERATION) {
+        wfc::ensure_map_generation_info_loaded();
+        wfc::WaveCollapse wc(
+            static_cast<unsigned int>(hashString("WVZ_ORYYVAV")));
+        wc.run();
+        wc.get_lines();
+        return 0;
+    }
 
     log_info("Executable Path: {}", fs::current_path());
     log_info("Canon Path: {}", fs::canonical(fs::current_path()));
