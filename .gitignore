@@ -6,6 +6,7 @@
 **/.vs
 .vscode/
 log
+!src/log/
 game.obj
 WinPharmaSea/**/
 pharmasea/WinPharmaSea/**/

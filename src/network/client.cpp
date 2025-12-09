@@ -4,6 +4,7 @@
 
 #include "../building_locations.h"
 #include "../engine/globals_register.h"
+#include "../engine/time.h"
 #include "../engine/log.h"
 #include "../engine/sound_library.h"
 #include "network.h"

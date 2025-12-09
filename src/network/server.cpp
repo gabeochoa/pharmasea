@@ -5,6 +5,7 @@
 
 #include "../building_locations.h"
 #include "../globals.h"  // for HASHED_VERSION
+#include "../engine/time.h"
 #include "../system/system_manager.h"
 #include "serialization.h"
 

@@ -1,6 +1,7 @@
 
 #include "random_engine.h"
 
+#include "globals.h"
 #include "log.h"
 
 RandomEngine RandomEngine::instance;

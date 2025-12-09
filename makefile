@@ -2,10 +2,12 @@
 
 RAYLIB_FLAGS := `pkg-config --cflags raylib`
 RAYLIB_LIB := `pkg-config --libs raylib`
+GLFW_LIB := `pkg-config --libs glfw3`
 
 # Local GameNetworkingSockets paths (built from ~/p/GameNetworkingSockets)
-GNS_INC := /Users/gabe/p/GameNetworkingSockets/include
-GNS_LIBDIR := /Users/gabe/p/GameNetworkingSockets/build/bin
+# Default to vendored copy; override if you have a local build.
+GNS_INC := vendor
+GNS_LIBDIR := vendor
 
 RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) -DNDEBUG 
 
@@ -20,7 +22,7 @@ NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
 		  -Wno-implicit-int-float-conversion -Werror
 INCLUDES = -I$(GNS_INC) -Ivendor/ -Isrc
-LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
+LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB) $(GLFW_LIB)
 
 # backward-cpp (Debug only)
 UNAME_S := $(shell uname -s)
@@ -77,7 +79,7 @@ post-build: main-build
 
 
 $(OUTPUT_EXE): $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(LIBS) $(OBJ_FILES) -o $(OUTPUT_EXE) 
+	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(OBJ_FILES) $(LIBS) -o $(OUTPUT_EXE) 
 
 release: FLAGS=$(RELEASE_FLAGS)
 release: NOFLAGS=
