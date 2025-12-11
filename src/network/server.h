@@ -24,6 +24,7 @@ struct Server {
     static void queue_packet(const ClientPacket& p);
     static void forward_packet(const ClientPacket& p);
     static void stop();
+    ~Server();
 
     static void play_sound(vec2 position, strings::sounds::SoundId sound);
 

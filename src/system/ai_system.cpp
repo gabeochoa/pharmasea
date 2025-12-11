@@ -221,7 +221,7 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
     CanHoldItem& regCHI = reg.get<CanHoldItem>();
 
     if (regCHI.empty()) {
-        log_trace("my drink isnt ready yet");
+        log_info("ai: {} drink not ready yet", entity.id);
         aiwait.reset();
         return;
     }
@@ -233,12 +233,17 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
         return;
     }
 
-    log_info("i got **A** drink ");
+    std::string drink_name = drink.get<IsDrink>().underlying.has_value()
+                                 ? std::string(magic_enum::enum_name(
+                                       drink.get<IsDrink>().underlying.value()))
+                                 : "unknown";
+    log_info("ai: {} picked up drink {}", entity.id, drink_name);
 
     Drink orderdDrink = canOrderDrink.order();
     bool was_drink_correct = validate_drink_order(entity, orderdDrink, drink);
     if (!was_drink_correct) {
-        log_info("this isnt what i ordered");
+        log_info("ai: {} drink incorrect ordered={} got={}", entity.id,
+                 magic_enum::enum_name(orderdDrink), drink_name);
         aiwait.reset();
         return;
     }
@@ -261,7 +266,8 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
     ourCHI.update(EntityHelper::getEntityAsSharedPtr(regCHI.item()), entity.id);
     regCHI.update(nullptr, -1);
 
-    log_info("got it");
+    log_info("ai: {} accepted drink={} price={} tip={}", entity.id, drink_name,
+             price, tip);
     aiwait.line_wait.leave_line(reg, entity);
 
     // TODO Should move to system

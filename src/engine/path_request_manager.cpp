@@ -59,6 +59,11 @@ std::thread PathRequestManager::start() {
         std::bind(&PathRequestManager::run, g_path_request_manager.get()));
 }
 
+void PathRequestManager::stop() {
+    if (!g_path_request_manager) return;
+    g_path_request_manager->running = false;
+}
+
 bool PathRequestManager::is_walkable(const vec2& pos) {
     bool hit_impassable = false;
     std::lock_guard<std::mutex> lock(g_path_request_manager->entities_mutex_);

@@ -8,7 +8,7 @@
 #include "../event.h"
 #include "../font_sizer.h"
 #include "../gamepad_axis_with_dir.h"
-#include "../input_injector.h"
+#include "../simulated_input/simulated_input.h"
 #include "../keymap.h"
 #include "../log.h"
 #include "../statemanager.h"

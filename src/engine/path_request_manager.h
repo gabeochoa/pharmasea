@@ -33,6 +33,7 @@ struct PathRequestManager {
 
     static void process_responses(
         const std::vector<std::shared_ptr<Entity>>& entities);
+    static void stop();
 
     //////////////
     //////////////

@@ -89,6 +89,7 @@ using Color = afterhours::Color;
 // Forward declaration for synthetic key state (bypass functionality)
 namespace input_injector {
 bool is_key_synthetically_down(int keycode);
+bool consume_synthetic_press(int keycode);
 }
 
 namespace ext {
@@ -120,7 +121,13 @@ inline void set_clipboard_text(const char* text) {
 }
 
 [[nodiscard]] inline bool is_key_pressed(int keycode) {
-    return raylib::IsKeyPressed(keycode);
+    bool synthetic = input_injector::consume_synthetic_press(keycode);
+    bool real = raylib::IsKeyPressed(keycode);
+    if (keycode == raylib::KEY_SPACE) {
+        log_info("ext::is_key_pressed space synthetic={} real={}", synthetic,
+                 real);
+    }
+    return synthetic || real;
 }
 
 [[nodiscard]] inline bool is_key_down(int keycode) {

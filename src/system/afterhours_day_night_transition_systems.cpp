@@ -2,6 +2,7 @@
 #include "../building_locations.h"
 #include "../components/can_hold_item.h"
 #include "../components/can_order_drink.h"
+#include "../components/bypass_automation_state.h"
 #include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
 #include "../components/has_day_night_timer.h"
@@ -17,10 +18,13 @@
 #include "../components/is_toilet.h"
 #include "../components/responds_to_day_night.h"
 #include "../components/transform.h"
+#include "../engine/app.h"
+#include "../engine/simulated_input/simulated_input.h"
 #include "../engine/log.h"
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
+#include "../globals.h"
 #include "../network/server.h"
 #include "magic_enum/magic_enum.hpp"
 #include "store_management_helpers.h"
@@ -330,6 +334,74 @@ struct OnRoundFinishedTriggerSystem
     }
 };
 
+#if ENABLE_DEV_FLAGS
+struct BypassInitSystem : public afterhours::System<BypassAutomationState> {
+    virtual bool should_run(const float) override {
+        if (!BYPASS_MENU && BYPASS_ROUNDS <= 0) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            sophie.addComponentIfMissing<BypassAutomationState>();
+            return true;
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void for_each_with(Entity&, BypassAutomationState& state,
+                               float) override {
+        if (state.initialized) return;
+        int rounds_to_run = BYPASS_ROUNDS;
+        if (rounds_to_run < 1 && BYPASS_MENU) {
+            rounds_to_run = 1;
+        }
+        if (rounds_to_run <= 0) return;
+        state.configure(rounds_to_run, EXIT_ON_BYPASS_COMPLETE, RECORD_INPUTS);
+        BYPASS_MENU = state.bypass_enabled;
+    }
+};
+
+struct BypassRoundTrackerSystem : public afterhours::System<BypassAutomationState> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        if (!BYPASS_MENU && BYPASS_ROUNDS <= 0) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            sophie.addComponentIfMissing<BypassAutomationState>();
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_daytime();
+        } catch (...) {
+            return false;
+        }
+    }
+
+    virtual void for_each_with(Entity&, BypassAutomationState& state,
+                               float) override {
+        if (!state.initialized && (BYPASS_MENU || BYPASS_ROUNDS > 0)) {
+            int rounds_to_run = BYPASS_ROUNDS;
+            if (rounds_to_run < 1 && BYPASS_MENU) {
+                rounds_to_run = 1;
+            }
+            state.configure(rounds_to_run, EXIT_ON_BYPASS_COMPLETE,
+                            RECORD_INPUTS);
+        }
+        if (!state.bypass_enabled || state.completed) {
+            BYPASS_MENU = false;
+            return;
+        }
+
+        state.mark_round_complete();
+        if (state.completed) {
+            BYPASS_MENU = false;
+            if (state.exit_on_complete || EXIT_ON_BYPASS_COMPLETE) {
+                App::get().close();
+            }
+        } else {
+            simulated_input::start_round_replay();
+        }
+    }
+};
+#endif
+
 // Struct definitions from process_night_start_system.h moved here
 
 struct CleanUpOldStoreOptionsSystem : public afterhours::System<> {
@@ -499,6 +571,10 @@ void SystemManager::register_day_night_transition_systems() {
     // Day/night transition systems - all check needs_to_process_change in
     // should_run(), reset clears the flag after processing
     {
+#if ENABLE_DEV_FLAGS
+        systems.register_update_system(
+            std::make_unique<system_manager::BypassInitSystem>());
+#endif
         // Day start systems
         {
             systems.register_update_system(
@@ -529,6 +605,10 @@ void SystemManager::register_day_night_transition_systems() {
             systems.register_update_system(
                 std::make_unique<
                     system_manager::OnRoundFinishedTriggerSystem>());
+#if ENABLE_DEV_FLAGS
+            systems.register_update_system(
+                std::make_unique<system_manager::BypassRoundTrackerSystem>());
+#endif
         }
         systems.register_update_system(
             std::make_unique<system_manager::CleanUpOldStoreOptionsSystem>());

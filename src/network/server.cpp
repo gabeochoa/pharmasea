@@ -13,6 +13,19 @@ namespace network {
 
 static std::unique_ptr<Server> g_server;
 
+Server::~Server() {
+    log_info("Server destructor called");
+    running = false;
+    PathRequestManager::stop();
+    if (pathfinding_thread.joinable()) {
+        log_info("Joining pathfinding thread");
+        pathfinding_thread.join();
+        log_info("Pathfinding thread joined");
+    } else {
+        log_warn("Pathfinding thread not joinable at shutdown");
+    }
+}
+
 // TODO once clang supports jthread replace with jthread and remove "running
 // = true" to use stop_token
 std::thread Server::start(int port) {
@@ -60,6 +73,7 @@ void Server::stop() {
     if (g_server) {
         log_info("Setting g_server->running = false");
         g_server->running = false;
+        PathRequestManager::stop();
     } else {
         log_warn("Server::stop() called but g_server is null");
     }

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "engine/globals.h"
+#include <string>
 
 // steam networking uses an "app id" that we dont have
 // also the code isnt written yet :)
@@ -30,6 +31,11 @@ static bool ENABLE_SOUND = true;
 static bool TESTS_ONLY = false;
 static bool ENABLE_UI_TEST = false;
 extern bool BYPASS_MENU;
+extern int BYPASS_ROUNDS;
+extern bool EXIT_ON_BYPASS_COMPLETE;
+extern bool RECORD_INPUTS;
+extern std::string REPLAY_NAME;
+extern bool REPLAY_ENABLED;
 extern bool SHOW_INTRO;
 extern bool SHOW_RAYLIB_INTRO;
 

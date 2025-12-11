@@ -3,6 +3,7 @@
 #include "game.h"
 
 #include "engine/assert.h"
+#include "engine/simulated_input/simulated_input.h"
 #include "engine/random_engine.h"
 #include "engine/ui/svg.h"
 #include "map_generation.h"
@@ -81,6 +82,11 @@ long long return_ping = 0;
 
 // Define BYPASS_MENU (declared as extern in globals.h)
 bool BYPASS_MENU = false;
+int BYPASS_ROUNDS = 0;
+bool EXIT_ON_BYPASS_COMPLETE = false;
+bool RECORD_INPUTS = false;
+std::string REPLAY_NAME = "";
+bool REPLAY_ENABLED = false;
 bool SHOW_INTRO = false;
 bool SHOW_RAYLIB_INTRO = false;
 bool TEST_MAP_GENERATION = false;
@@ -110,6 +116,8 @@ void startup() {
         strings::GAME_FOLDER,
         SETTINGS_FILE_NAME,
     });
+
+    simulated_input::init();
 
     // Load save file so username is ready for when network starts
     // Load before preload incase we need to read file names or fonts from
@@ -188,9 +196,48 @@ void startup() {
     }});
 }
 
-void process_dev_flags(char* argv[]) {
+void process_dev_flags(int argc, char* argv[]) {
 #if ENABLE_DEV_FLAGS
-    argh::parser cmdl(argv);
+    // Early reject unknown flags so we don't run with unintended args.
+    auto is_known_flag = [](const std::string& arg) {
+        static const std::set<std::string> no_value = {
+            "--gabe", "-g", "--tests-only", "-t", "--disable-all", "-d",
+            "--models", "-m", "--disable-models", "-M", "--sound", "-s",
+            "--disable-sound", "-S", "--bypass-menu", "--exit-on-bypass-complete",
+            "--record-input", "--intro", "--test_map_generation"};
+        static const std::set<std::string> with_value = {
+            "--replay", "--bypass-rounds"};
+
+        // Accept --flag=value form for value flags.
+        if (arg.rfind("--", 0) == 0) {
+            size_t eq = arg.find('=');
+            if (eq != std::string::npos) {
+                std::string head = arg.substr(0, eq);
+                return with_value.count(head) > 0;
+            }
+        }
+        if (no_value.count(arg) > 0) return true;
+        if (with_value.count(arg) > 0) return true;
+        return false;
+    };
+
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i] ? argv[i] : "";
+        if (arg.empty() || arg[0] != '-') continue;
+        if (is_known_flag(arg)) {
+            // If this flag expects a value, skip the next token.
+            if ((arg == "--replay" || arg == "--bypass-rounds") && i + 1 < argc) {
+                ++i;
+            }
+            continue;
+        }
+        log_error("Unknown flag '{}'; exiting.", arg);
+        std::exit(1);
+    }
+
+    argh::parser cmdl(argc, argv);
+    log_info("DevFlags: argc={} argv0='{}'", argc,
+             (argc > 0 && argv && argv[0]) ? argv[0] : "");
 
     network::ENABLE_REMOTE_IP = true;
 
@@ -236,6 +283,58 @@ void process_dev_flags(char* argv[]) {
             "Bypass: --bypass-menu flag detected, BYPASS_MENU set to true");
     }
 
+    if (cmdl({"--replay"})) {
+        std::string name;
+        cmdl({"--replay"}) >> name;
+        if (!name.empty()) {
+            REPLAY_NAME = name;
+            REPLAY_ENABLED = true;
+            log_info("Replay: will load recorded_inputs/{}.txt", REPLAY_NAME);
+        }
+    }
+
+    // Fallback manual argv scan in case argh misses parameters
+    auto try_set_replay = [](const std::string& val) {
+        if (val.empty()) return;
+        REPLAY_NAME = val;
+        REPLAY_ENABLED = true;
+        log_info("Replay: parsed via argv fallback '{}'", REPLAY_NAME);
+    };
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i] ? argv[i] : "";
+        const std::string prefix = "--replay=";
+        if (arg.rfind(prefix, 0) == 0) {
+            try_set_replay(arg.substr(prefix.size()));
+            continue;
+        }
+        if (arg == "--replay" && i + 1 < argc) {
+            try_set_replay(argv[i + 1] ? argv[i + 1] : "");
+            ++i;  // consume value
+        }
+    }
+
+    if (cmdl({"--bypass-rounds"})) {
+        int parsed_rounds = 1;
+        cmdl({"--bypass-rounds"}) >> parsed_rounds;
+        if (parsed_rounds < 1) parsed_rounds = 1;
+        BYPASS_ROUNDS = parsed_rounds;
+        BYPASS_MENU = true;
+        log_info("Bypass: --bypass-rounds set to {}", BYPASS_ROUNDS);
+    }
+
+    if (cmdl[{"--exit-on-bypass-complete"}]) {
+        EXIT_ON_BYPASS_COMPLETE = true;
+        log_info("--exit-on-bypass-complete enabled");
+    }
+
+    if (cmdl[{"--record-input"}]) {
+        RECORD_INPUTS = true;
+        log_info("--record-input enabled; inputs will be captured");
+    }
+
+    log_info("DevFlags: replay_enabled={} replay_name='{}' bypass_menu={}",
+             REPLAY_ENABLED, REPLAY_NAME, BYPASS_MENU);
+
     if (cmdl[{"--intro"}]) {
         SHOW_INTRO = true;
         SHOW_RAYLIB_INTRO = true;
@@ -251,8 +350,8 @@ void process_dev_flags(char* argv[]) {
 
 #include "engine/util.h"
 
-int main(int, char* argv[]) {
-    process_dev_flags(argv);
+int main(int argc, char* argv[]) {
+    process_dev_flags(argc, argv);
 
 #if ENABLE_TESTS
     tests::run_all();

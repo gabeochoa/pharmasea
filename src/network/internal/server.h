@@ -65,26 +65,26 @@ struct Server {
         log_info(
             "internal::Server destructor called, running: {}, interface: {}",
             running ? "true" : "false", (void *) interface);
-        if (interface) {
-            log_info("Cleaning up {} client connections", clients.size());
-            for (auto it : clients) {
-                send_announcement_to_client(it.first, "server shutdown",
-                                            InternalServerAnnouncement::Warn);
-                interface->CloseConnection(it.first, 0, "server shutdown",
-                                           true);
-            }
-            clients.clear();
-            log_info("Closing listen socket");
-            interface->CloseListenSocket(listen_sock);
-            listen_sock = k_HSteamListenSocket_Invalid;
-            log_info("Destroying poll group");
-            interface->DestroyPollGroup(poll_group);
-            poll_group = k_HSteamNetPollGroup_Invalid;
-            log_info("internal::Server destructor cleanup completed");
-        } else {
+        running = false;
+        if (!interface) {
             log_info("No interface to clean up, clearing clients");
             clients.clear();
+            return;
         }
+
+        log_info("Cleaning up {} client connections (no announcements)",
+                 clients.size());
+        for (auto it : clients) {
+            interface->CloseConnection(it.first, 0, "server shutdown", true);
+        }
+        clients.clear();
+        log_info("Closing listen socket");
+        interface->CloseListenSocket(listen_sock);
+        listen_sock = k_HSteamListenSocket_Invalid;
+        log_info("Destroying poll group");
+        interface->DestroyPollGroup(poll_group);
+        poll_group = k_HSteamNetPollGroup_Invalid;
+        log_info("internal::Server destructor cleanup completed");
     }
 
     void send_announcement_to_client(HSteamNetConnection conn,

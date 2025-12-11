@@ -13,7 +13,7 @@
 #include "raylib.h"
 //
 
-#include "bypass_helper.h"
+#include "simulated_input/simulated_input.h"
 #include "log.h"
 #include "settings.h"
 #include "shader_library.h"
@@ -151,6 +151,7 @@ void App::processEvent(Event& e) {
     TRACY_ZONE_SCOPED;
 
     this->onEvent(e);
+    input_recorder::record(e);
     if (e.handled) {
         return;
     }
@@ -189,6 +190,7 @@ void App::run() {
         float dt = raylib::GetFrameTime();
         this->loop(dt);
     }
+    simulated_input::stop();
     raylib::CloseWindow();
 }
 
@@ -199,12 +201,8 @@ void App::loop(float dt) {
         if (layer) layer->onUpdate(dt);
     }
 
-    // Auto-bypass: inject clicks via event system (before draw so buttons see
-    // them)
-    bypass_helper::inject_clicks_for_bypass(dt);
-
-    // Update key hold state for bypass
-    input_injector::update_key_hold(dt);
+    // Replay recorded input and handle bypass injections/holds
+    simulated_input::update(dt);
 
     draw_all_to_texture(dt);
     render_to_screen();

@@ -126,9 +126,13 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
             }
             log_info("Stopping server and joining thread");
             Server::stop();
-            log_info("Waiting for server thread to join");
-            server_thread.join();
-            log_info("Server thread joined successfully");
+            if (server_thread.joinable()) {
+                log_info("Waiting for server thread to join");
+                server_thread.join();
+                log_info("Server thread joined successfully");
+            } else {
+                log_warn("Server thread not joinable at shutdown");
+            }
         }
         log_info("network::Info destructor completed");
     }

@@ -13,6 +13,7 @@
 #include "../components/ai_wait_in_queue.h"
 #include "../components/ai_wandering.h"
 #include "../components/base_component.h"
+#include "../components/bypass_automation_state.h"
 #include "../components/can_be_ghost_player.h"
 #include "../components/can_be_held.h"
 #include "../components/can_be_highlighted.h"
@@ -225,6 +226,8 @@ struct SelectSerializeFnc<AIWaitInQueue> : UseMemberFnc {};
 //
 template<>
 struct SelectSerializeFnc<CanBeHeld_HT> : UseMemberFnc {};
+template<>
+struct SelectSerializeFnc<BypassAutomationState> : UseMemberFnc {};
 
 namespace ext {
 
@@ -247,7 +250,8 @@ struct PolymorphicBaseClass<BaseComponent>
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
           CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback, IsSquirter, CanBeHeld
+          CollectsCustomerFeedback, IsSquirter, CanBeHeld,
+          BypassAutomationState
           // END
           > {};
 
@@ -273,7 +277,8 @@ struct PolymorphicBaseClass<afterhours::BaseComponent>
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
           CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback, IsSquirter, CanBeHeld> {};
+          CollectsCustomerFeedback, IsSquirter, CanBeHeld,
+          BypassAutomationState> {};
 // If you add anything here ^^ then you should add that component to
 // register_all_components in entity.h
 

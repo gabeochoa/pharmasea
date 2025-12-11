@@ -190,7 +190,10 @@ void collect_user_input(Entity& entity, float dt) {
 
     bool pickup =
         KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
-    if (pickup) cui.write(InputName::PlayerPickup, 1.f);
+    if (pickup) {
+        log_info("input: PlayerPickup (space) requested for entity {}", entity.id);
+        cui.write(InputName::PlayerPickup, 1.f);
+    }
 
     bool handtruck_interact = KeyMap::is_event_once_DO_NOT_USE(
         state, InputName::PlayerHandTruckInteract);
@@ -882,6 +885,8 @@ void handle_drop(Entity& player) {
         furnCHI.update(EntityHelper::getEntityAsSharedPtr(item),
                        closest_furniture->id);
         player.get<CanHoldItem>().update(nullptr, -1);
+        log_info("pickup: placed item {} onto furniture {}", item.id,
+                 closest_furniture->id);
         return true;
     };
 
@@ -949,6 +954,8 @@ void handle_grab(Entity& player) {
         playerCHI.update(EntityHelper::getEntityAsSharedPtr(item), player.id);
         item.get<Transform>().update(player.get<Transform>().snap_position());
         furnCanHold.update(nullptr, -1);
+        log_info("pickup: player {} picked item {} from furniture {}", player.id,
+                 item.id, closest_furniture->id);
 
         // In certain cases, we need to reset the progress when you pick up an
         // item. im not sure exactly when this needs to be, but im sure over
@@ -988,6 +995,8 @@ void handle_grab(Entity& player) {
 
     player.get<CanHoldItem>().update(
         EntityHelper::getEntityAsSharedPtr(closest_item), player.id);
+    log_info("pickup: player {} picked loose item {}", player.id,
+             closest_item->id);
 
     // TODO :PICKUP: i dont like that these are spread everywhere,
     network::Server::play_sound(player.get<Transform>().as2(),
@@ -1162,12 +1171,27 @@ void process_input(Entity& entity, const UserInput& input) {
                 case InputName::PlayerPickup:
                     // grab_or_drop(entity);
                     {
+                        bool has_item = entity.has<CanHoldItem>()
+                                            ? !entity.get<CanHoldItem>().empty()
+                                            : false;
+                        bool has_handtruck = entity.has<CanHoldHandTruck>()
+                                                 ? entity.get<CanHoldHandTruck>()
+                                                       .is_holding()
+                                                 : false;
+                        log_info(
+                            "pickup: PlayerPickup dispatch game_like={} daytime={} "
+                            "has_item={} has_handtruck={}",
+                            GameState::get().is_game_like(),
+                            SystemManager::get().is_daytime(), has_item,
+                            has_handtruck);
                         if (GameState::get().is_game_like()) {
                             // Planning mode is when it's daytime, in-round mode
                             // is when it's nighttime
                             if (SystemManager::get().is_daytime()) {
+                                log_info("pickup: using planning grab/drop");
                                 planning::handle_grab_or_drop(entity);
                             } else {
+                                log_info("pickup: using inround grab/drop");
                                 inround::handle_grab_or_drop(entity);
                             }
                         } else {

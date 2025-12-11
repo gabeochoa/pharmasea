@@ -11,6 +11,7 @@
 #include "components/ai_use_bathroom.h"
 #include "components/ai_wait_in_queue.h"
 #include "components/ai_wandering.h"
+#include "components/bypass_automation_state.h"
 #include "components/can_change_settings_interactively.h"
 #include "components/can_hold_handtruck.h"
 #include "components/can_pathfind.h"
@@ -161,7 +162,7 @@ void register_all_components() {
         //
         HasWaitingQueue, HasSubtype, HasSpeechBubble, HasWork, HasBaseSpeed,
         HasRopeToItem, HasProgression, HasPatience, HasFishingGame,
-        HasLastInteractedCustomer, HasDayNightTimer,
+        HasLastInteractedCustomer, HasDayNightTimer, BypassAutomationState,
         // render
         ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer,
         // responds to
