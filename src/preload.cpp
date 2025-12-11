@@ -1,7 +1,6 @@
 
 #include "preload.h"
 
-#include <chrono>
 #include <istream>
 #include <memory>
 #include <utility>
@@ -492,34 +491,64 @@ void Preload::load_models(const std::function<void()>& tick) {
         return;
     }
 
-    std::vector<ModelInfoLibrary::ModelLoadingInfo> modelInfos;
+    struct ModelConfig {
+        ModelInfoLibrary::ModelLoadingInfo info;
+        bool lazy_load = false;
+    };
+
+    std::vector<ModelConfig> modelConfigs;
     load_json_config_file("models.json", [&](const nlohmann::json& contents) {
         const nlohmann::json& models = contents["models"];
-        modelInfos.reserve(models.size());
+        modelConfigs.reserve(models.size());
         for (const nlohmann::json& object : models) {
-            ModelInfoLibrary::ModelLoadingInfo modelInfo;
-            modelInfo.folder = object["folder"].get<std::string>();
-            modelInfo.filename = object["filename"].get<std::string>();
-            modelInfo.library_name = object["library_name"].get<std::string>();
-            modelInfo.size_scale = object["size_scale"].get<float>();
-            modelInfo.position_offset.x =
+            ModelConfig config;
+            config.info.folder = object["folder"].get<std::string>();
+            config.info.filename = object["filename"].get<std::string>();
+            config.info.library_name = object["library_name"].get<std::string>();
+            config.info.size_scale = object["size_scale"].get<float>();
+            config.info.position_offset.x =
                 object["position_offset"][0].get<float>();
-            modelInfo.position_offset.y =
+            config.info.position_offset.y =
                 object["position_offset"][1].get<float>();
-            modelInfo.position_offset.z =
+            config.info.position_offset.z =
                 object["position_offset"][2].get<float>();
-            modelInfo.rotation_angle = object["rotation_angle"].get<float>();
-            modelInfos.push_back(modelInfo);
+            config.info.rotation_angle = object["rotation_angle"].get<float>();
+            config.lazy_load = object.value("lazy_load", false);
+            modelConfigs.push_back(config);
         }
     });
 
-    int total = static_cast<int>(modelInfos.size());
+    int total = static_cast<int>(modelConfigs.size());
+
     for (int index = 0; index < total; ++index) {
-        const auto& modelInfo = modelInfos[index];
+        const auto& modelConfig = modelConfigs[index];
+        const auto& modelInfo = modelConfig.info;
 
         log_trace("attempting loading {} as {} ", modelInfo.filename,
                   modelInfo.library_name);
 
+        // Check if this model should be lazy loaded
+        if (modelConfig.lazy_load) {
+            // Register the lazy model with ModelLibrary for on-demand loading
+            ModelLibrary::get().register_lazy_model(modelInfo.library_name, {
+                .folder = modelInfo.folder.c_str(),
+                .filename = modelInfo.filename.c_str(),
+                .libraryname = modelInfo.library_name.c_str(),
+            });
+            // Still load the metadata but skip the actual model data
+            ModelInfoLibrary::get().load({
+                .folder = modelInfo.folder,
+                .filename = modelInfo.filename,
+                .library_name = modelInfo.library_name,
+                .size_scale = modelInfo.size_scale,
+                .position_offset = modelInfo.position_offset,
+                .rotation_angle = modelInfo.rotation_angle,
+            });
+            // Skip ModelLibrary::get().load() for the actual model data
+            continue;
+        }
+
+        // Load all models normally
         ModelInfoLibrary::get().load({
             .folder = modelInfo.folder,
             .filename = modelInfo.filename,

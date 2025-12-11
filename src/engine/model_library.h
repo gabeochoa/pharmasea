@@ -57,16 +57,40 @@ struct ModelLibrary {
         return impl.get(name);
     }
 
+    [[nodiscard]] bool contains(const std::string& name) const {
+        return impl.contains(name);
+    }
+
     void load(ModelLoadingInfo mli) {
         const auto full_filename =
             Files::get().fetch_resource_path(mli.folder, mli.filename);
         impl.load(full_filename.c_str(), mli.libraryname);
     }
 
+    // Lazy loading support
+    void register_lazy_model(const std::string& name, ModelLoadingInfo info) {
+        lazy_model_configs[name] = info;
+    }
+    void ensure_loaded(const std::string& name) {
+        if (!impl.contains(name)) {
+            auto it = lazy_model_configs.find(name);
+            if (it != lazy_model_configs.end()) {
+                log_info("Loading lazy model {} on-demand", name);
+                load(it->second);
+            }
+        }
+    }
+    [[nodiscard]] raylib::Model get_and_load_if_needed(const std::string& name) {
+        ensure_loaded(name);
+        return get(name);
+    }
+
     void unload_all() { impl.unload_all(); }
     [[nodiscard]] auto size() { return impl.size(); }
 
    private:
+    // Storage for lazy-loaded model configurations
+    std::unordered_map<std::string, ModelLoadingInfo> lazy_model_configs;
     struct ModelLibraryImpl : afterhours::Library<raylib::Model> {
         virtual raylib::Model convert_filename_to_object(
             const char*, const char* filename) override {
@@ -111,6 +135,7 @@ struct ModelLibrary {
         }
     } impl;
 };
+
 
 SINGLETON_FWD(ModelInfoLibrary)
 struct ModelInfoLibrary {

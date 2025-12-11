@@ -151,7 +151,8 @@
                 -0.5,
                 0
             ],
-            "rotation_angle": 180.0
+            "rotation_angle": 180.0,
+            "lazy_load": true
         },
         {
             "folder": "models",
@@ -163,7 +164,8 @@
                 -0.5,
                 0
             ],
-            "rotation_angle": 180.0
+            "rotation_angle": 180.0,
+            "lazy_load": true
         },
         {
             "folder": "models",
@@ -175,7 +177,8 @@
                 -0.5,
                 0
             ],
-            "rotation_angle": 180.0
+            "rotation_angle": 180.0,
+            "lazy_load": true
         },
         {
             "folder": "models",
@@ -187,7 +190,8 @@
                 -0.5,
                 0
             ],
-            "rotation_angle": 180.0
+            "rotation_angle": 180.0,
+            "lazy_load": true
         },
         {
             "folder": "models/kaykit",

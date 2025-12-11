@@ -25,7 +25,7 @@ struct ModelRenderer : public BaseComponent {
         return ModelInfoLibrary::get().get(model_name);
     }
     [[nodiscard]] raylib::Model model() const {
-        return ModelLibrary::get().get(model_name);
+        return ModelLibrary::get().get_and_load_if_needed(model_name);
     }
     [[nodiscard]] const std::string& name() const { return model_name; }
 
