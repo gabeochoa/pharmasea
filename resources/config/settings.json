@@ -1,5 +1,5 @@
 {
-  "LOG_LEVEL": 2,
+  "LOG_LEVEL": 3,
   "DEADZONE": 0.25,
   "theme": "default",
   "fonts": {

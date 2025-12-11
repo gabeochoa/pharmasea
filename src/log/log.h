@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <utility>
 
+#include "../engine/globals.h"
 #include "log_level.h"
 
 namespace log_internal {
@@ -32,6 +33,9 @@ template <typename... Args>
 inline void log_with_level(LogLevel level,
                            fmt::format_string<Args...> fmt_str,
                            Args&&... args) {
+    if (static_cast<int>(level) < LOG_LEVEL) {
+        return;
+    }
     const auto message =
         fmt::format(fmt_str, std::forward<Args>(args)...);
     const char* label = log_internal::level_label(level);

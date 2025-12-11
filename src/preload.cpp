@@ -36,7 +36,7 @@ std::vector<UpgradeType> upgrade_rounds = {{
 int __WIN_H = 720;
 int __WIN_W = 1280;
 float DEADZONE = 0.25f;
-int LOG_LEVEL = 2;
+int LOG_LEVEL = 3;
 std::vector<std::string> EXAMPLE_MAP;
 
 namespace strings {
@@ -267,7 +267,7 @@ void Preload::load_config() {
     };
 
     load_json_config_file("settings.json", [&](const nlohmann::json& contents) {
-        LOG_LEVEL = contents.value("LOG_LEVEL", 2);
+        LOG_LEVEL = contents.value("LOG_LEVEL", 3);
         log_trace("LOG_LEVEL read from file: {}", LOG_LEVEL);
 
         DEADZONE = contents.value("DEADZONE", 0.25f);
