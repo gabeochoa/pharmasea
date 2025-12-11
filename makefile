@@ -2,7 +2,6 @@
 
 RAYLIB_FLAGS := `pkg-config --cflags raylib`
 RAYLIB_LIB := `pkg-config --libs raylib`
-GLFW_LIB := `pkg-config --libs glfw3`
 
 # Local GameNetworkingSockets paths (built from ~/p/GameNetworkingSockets)
 # Default to vendored copy; override if you have a local build.
@@ -22,7 +21,7 @@ NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
 		  -Wno-implicit-int-float-conversion -Werror
 INCLUDES = -I$(GNS_INC) -Ivendor/ -Isrc
-LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB) $(GLFW_LIB)
+LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
 # backward-cpp (Debug only)
 UNAME_S := $(shell uname -s)
