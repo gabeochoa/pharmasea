@@ -1,6 +1,7 @@
 
 #include "preload.h"
 
+#include <chrono>
 #include <istream>
 #include <memory>
 #include <utility>
@@ -47,6 +48,9 @@ std::map<i18n, std::string> pre_translation;
 #include "translations/translation_en_us.h"
 #include "translations/translation_es_la.h"
 #include "translations/translation_ko_kr.h"
+
+// Store fonts configuration for on-demand loading
+static nlohmann::json cached_fonts_config;
 
 namespace wfc {
 MapGenerationInformation MAP_GEN_INFO;
@@ -120,23 +124,24 @@ void Preload::load_fonts(const nlohmann::json& fonts) {
     // Font loading must happen after InitWindow
 
     const auto& font_object = fonts.get<nlohmann::json::object_t>();
-    // TODO we load every font on startup, even though 99% of the time
-    //      the user isnt going to change from the language they already have
-    //      selected
-    //      we could instead just load the new file when they try to change the
-    //      language
+    // Cache fonts config for on-demand loading
+    cached_fonts_config = fonts;
 
-    for (const auto& font_kv : font_object) {
-        std::string language = font_kv.first;
-        std::string font_name = font_kv.second;
+    // OPTIMIZATION: Only load the current language's font on startup
+    // Previously loaded all fonts, but 99% of the time users don't change languages
 
-        log_info("loading font {} for language {}", font_name, language);
+    // Default to en_us (same as load_translations)
+    const std::string current_language = "en_us";
 
-        _load_font_from_name(font_name, language);
+    if (font_object.contains(current_language)) {
+        std::string font_name = font_object.at(current_language);
+        log_info("loading font {} for language {}", font_name, current_language);
+        _load_font_from_name(font_name, current_language);
+        font = FontLibrary::get().get(current_language);
+    } else {
+        log_warn("Default language 'en_us' not found in fonts config, using fallback");
+        font = load_karmina_regular();
     }
-
-    // default to en us
-    font = FontLibrary::get().get("en_us");
 
     // font = load_karmina_regular();
 
@@ -187,9 +192,19 @@ void Preload::on_language_change(const char* lang_name, const char* fn) {
     }
 
     if (!FontLibrary::get().contains(lang_name)) {
-        log_warn("Couldnt find a font for {}, using en_us instead", lang_name);
-        font = FontLibrary::get().get("en_us");
-        return;
+        // Try to load the font for this language from cached config
+        if (!cached_fonts_config.is_null() && cached_fonts_config.contains(lang_name)) {
+            std::string font_name = cached_fonts_config[lang_name];
+            log_info("Loading font {} for language {} on demand", font_name, lang_name);
+            _load_font_from_name(font_name, lang_name);
+        }
+
+        // Check again if we now have the font
+        if (!FontLibrary::get().contains(lang_name)) {
+            log_warn("Couldnt find/load a font for {}, using en_us instead", lang_name);
+            font = FontLibrary::get().get("en_us");
+            return;
+        }
     }
 
     // Once reloaded load correct font for language
@@ -449,6 +464,8 @@ Preload::Preload() {
 
     progress.set_status("Loading shaders");
     load_shaders([&]() { progress.tick(); });
+
+    // Load assets sequentially (parallel loading caused thread safety issues with raylib)
     progress.set_status("Loading textures");
     load_textures([&]() { progress.tick(); });
 
