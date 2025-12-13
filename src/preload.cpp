@@ -10,6 +10,7 @@
 #include "dataclass/ingredient.h"
 #include "dataclass/settings.h"
 #include "engine/font_library.h"
+#include "engine/settings.h"
 #include "engine/keymap.h"
 #include "engine/ui/theme.h"
 #include "intro/intro_runner.h"
@@ -129,8 +130,8 @@ void Preload::load_fonts(const nlohmann::json& fonts) {
     // OPTIMIZATION: Only load the current language's font on startup
     // Previously loaded all fonts, but 99% of the time users don't change languages
 
-    // Default to en_us (same as load_translations)
-    const std::string current_language = "en_us";
+    // Get the actual current language from settings
+    const std::string current_language = Settings::get().data.lang_name;
 
     if (font_object.contains(current_language)) {
         std::string font_name = font_object.at(current_language);
