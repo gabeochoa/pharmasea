@@ -1,29 +1,35 @@
 
 
-RAYLIB_FLAGS := `pkg-config --cflags raylib`
-RAYLIB_LIB := `pkg-config --libs raylib`
+RAYLIB_FLAGS := $(shell pkg-config --cflags raylib)
+RAYLIB_LIB := $(shell pkg-config --libs raylib)
 
 # Local GameNetworkingSockets paths (built from ~/p/GameNetworkingSockets)
 # Default to vendored copy; override if you have a local build.
 GNS_INC := vendor
 GNS_LIBDIR := vendor
 
-RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) -DNDEBUG 
+RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) -DNDEBUG
 
 # TIMEFLAG = -ftime-trace
-TIMEFLAG = 
+TIMEFLAG =
 
-FLAGS = -std=c++2a -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
-		-Wconversion -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TIMEFLAG)
+# Optimized flags for debug builds (fewer expensive warnings)
+DEBUG_WARNING_FLAGS = -Wall -Wextra -Wuninitialized -Wshadow -Wno-conversion \
+                      -Wno-pedantic -Wno-sign-conversion -Wno-implicit-int-float-conversion
+
+# Full flags for release builds
+RELEASE_WARNING_FLAGS = -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
+                        -Wconversion
+
+FLAGS = -std=c++2a $(DEBUG_WARNING_FLAGS) -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TIMEFLAG)
 
 # LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
-		  -Wno-c99-extensions -Wno-unused-function -Wno-sign-conversion \
-		  -Wno-implicit-int-float-conversion -Werror
+		  -Wno-c99-extensions -Wno-unused-function -Werror
 INCLUDES = -I$(GNS_INC) -Ivendor/ -Isrc
 LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
-# backward-cpp (Debug only)
+# backward-cpp (Debug only) - cache pkg-config calls
 UNAME_S := $(shell uname -s)
 BACKWARD_DW_LIBS := $(shell pkg-config --libs libdw 2>/dev/null)
 BACKWARD_DW_CFLAGS := $(shell pkg-config --cflags libdw 2>/dev/null)
@@ -55,6 +61,12 @@ OUTPUT_EXE := pharmasea.exe
 CXX := clang++
 # CXX := clang++ --analyze
 # CXX := include-what-you-use
+
+# Use ccache if available for faster recompilation
+CCACHE := $(shell command -v ccache 2>/dev/null)
+ifdef CCACHE
+    CXX := ccache $(CXX)
+endif
 
 OUTPUT_LOG = $(OBJ_DIR)/build.log
 GAME_LOG = $(OBJ_DIR)/game.log
@@ -95,7 +107,7 @@ modeltest:
 	$(CXX) -std=c++2a -g $(RAYLIB_FLAGS) $(RAYLIB_LIB) -Ivendor/ model_test.cpp;./a.out
 
 $(OBJ_DIR)/%.o: %.cpp makefile $(PCH_GCH)
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -Wno-deprecated-literal-operator -Wno-invalid-utf8 -Wno-implicit-float-conversion -Wno-c99-extensions -c $< -o $@ -MMD -MF $(@:.o=.d) 
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -Wno-deprecated-literal-operator -Wno-invalid-utf8 -Wno-implicit-float-conversion -Wno-c99-extensions -c $< -o $@ -MMD -MF $(@:.o=.d)
 
 %.d: %.cpp
 	$(MAKEDEPEND)
@@ -109,7 +121,7 @@ $(PCH_GCH): $(PCH_HEADER) makefile src/bitsery_include.h src/std_include.h src/l
 	$(CXX) $(FLAGS) $(INCLUDES) -DFMT_HEADER_ONLY -DFMT_USE_NONTYPE_TEMPLATE_PARAMETERS=0 -DFMT_CONSTEVAL= -Wno-deprecated-literal-operator -Wno-invalid-utf8 -Wno-implicit-float-conversion -Wno-c99-extensions -x c++-header -o $@ $<
 
 clean:
-	rm -r $(OBJ_DIR)
+	rm -rf $(OBJ_DIR)
 	rm -f $(PCH_GCH)
 	mkdir -p $(OBJ_DIR)/src/network/
 	mkdir -p $(OBJ_DIR)/src/network/internal/
@@ -117,6 +129,7 @@ clean:
 	mkdir -p $(OBJ_DIR)/src/dataclass/
 	mkdir -p $(OBJ_DIR)/src/engine/
 	mkdir -p $(OBJ_DIR)/src/engine/network/
+	mkdir -p $(OBJ_DIR)/src/engine/simulated_input/
 	mkdir -p $(OBJ_DIR)/src/components/
 	mkdir -p $(OBJ_DIR)/src/engine/ui/
 	mkdir -p $(OBJ_DIR)/src/system/
