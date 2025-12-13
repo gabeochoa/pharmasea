@@ -5,7 +5,7 @@
   "fonts": {
       "en_rev": "constan.ttf",
       "en_us": "Gaegu-bold.ttf",
-      "ko_kr": "NotoSansKR.ttf"
+      "ko_kr": "유설체.ttf"
   },
   "themes" : {
       "grayscale": {

@@ -27,9 +27,12 @@ Models from
 Consider Looking Into: 
 - https://github.com/eyalz800/zpp_bits 
 
+Font
+- https://m.blog.naver.com/bibimseol/222303267518 
 
-Save Files get stored to:  
-- Mac: "/Users/<user>/Library/Application Support/pharmasea/settings.bin" 
+
+Save Files get stored to: 
+- Mac: "/Users/<user>/Library/Application Support/pharmasea/settings.bin"
 - Windows: My Documents / My Games / Pharmasea/settings.bin
 
 
