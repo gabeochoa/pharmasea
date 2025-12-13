@@ -55,6 +55,7 @@ struct Data {
     bool enable_postprocessing = true;
     bool snapCameraTo90 = false;
     bool isFullscreen = false;
+    bool vsync_enabled = true;
 
    private:
     friend bitsery::Access;
@@ -69,6 +70,7 @@ struct Data {
         s.value1b(snapCameraTo90);
         s.value1b(enable_postprocessing);
         s.value1b(isFullscreen);
+        s.value1b(vsync_enabled);
 
         s.text1b(username, network::MAX_NAME_LENGTH);
         s.text1b(last_ip_joined, 25);
@@ -94,6 +96,7 @@ struct Data {
         os << "lang name: " << data.lang_name << std::endl;
         os << "ui_theme: " << data.ui_theme << std::endl;
         os << "should snap camera: " << data.snapCameraTo90 << std::endl;
+        os << "vsync enabled: " << data.vsync_enabled << std::endl;
         os << ")" << std::endl;
         return os;
     }
@@ -148,6 +151,7 @@ struct Settings {
     void update_sound_volume(float nv);
     void update_streamer_safe_box(bool sssb);
     void update_post_processing_enabled(bool pp_enabled);
+    void update_vsync_enabled(bool vsync_enabled);
     [[nodiscard]] int get_current_resolution_index() const;
     [[nodiscard]] std::vector<std::string> resolution_options() const;
     [[nodiscard]] std::string last_used_ip() const;

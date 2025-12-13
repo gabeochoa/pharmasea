@@ -117,6 +117,16 @@ void Settings::update_post_processing_enabled(bool pp_enabled) {
     data.enable_postprocessing = pp_enabled;
 }
 
+void Settings::update_vsync_enabled(bool vsync_enabled) {
+    data.vsync_enabled = vsync_enabled;
+    // Apply the setting immediately
+    if (vsync_enabled) {
+        raylib::SetWindowState(raylib::FLAG_VSYNC_HINT);
+    } else {
+        raylib::ClearWindowState(raylib::FLAG_VSYNC_HINT);
+    }
+}
+
 [[nodiscard]] int Settings::get_current_resolution_index() const {
     int index = rez::ResolutionExplorer::get().index(data.resolution);
     // If we somehow got a resolution enabled that isnt in our valid
@@ -268,4 +278,5 @@ void Settings::refresh_settings() {
     update_language_name(data.lang_name);
     update_ui_theme(data.ui_theme);
     update_fullscreen(data.isFullscreen);
+    update_vsync_enabled(data.vsync_enabled);
 }

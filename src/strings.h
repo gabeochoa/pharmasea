@@ -340,6 +340,7 @@ enum struct i18n {
     SHOW_SAFE_BOX,
     ENABLE_PPS,
     SNAP_CAMERA,
+    VSYNC_ENABLED,
     MASTER_VOLUME,
     MUSIC_VOLUME,
     SOUND_VOLUME,

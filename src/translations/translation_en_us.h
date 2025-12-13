@@ -104,6 +104,7 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::THEME, "Theme"},
         {i18n::LANGUAGE, "Language"},
         {i18n::FULLSCREEN, "Fullscreen?"},
+        {i18n::VSYNC_ENABLED, "Enable VSync"},
 
         {i18n::EXIT_AND_SAVE, "Save and exit"},
         {i18n::EXIT_NO_SAVE, "Exit without Saving"},

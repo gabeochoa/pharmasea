@@ -86,6 +86,7 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::THEME, "Tema"},
         {i18n::LANGUAGE, "Idioma"},
         {i18n::FULLSCREEN, "Pantalla completa"},
+        {i18n::VSYNC_ENABLED, "Habilitar VSync"},
         {i18n::EXIT_AND_SAVE, "Guardar y salir"},
         {i18n::EXIT_NO_SAVE, "Salir sin guardar"},
         {i18n::RESET_ALL_SETTINGS, "Restablecer todos los ajustes"},

@@ -102,6 +102,7 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::THEME, "emehT"},
         {i18n::LANGUAGE, "egaugnaL"},
         {i18n::FULLSCREEN, "?neercslluF"},
+        {i18n::VSYNC_ENABLED, "?cnysV elbanE"},
 
         {i18n::EXIT_AND_SAVE, "evaS dna tixe"},
         {i18n::EXIT_NO_SAVE, "tixE tuohtiw gnivaS"},

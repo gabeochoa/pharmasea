@@ -134,8 +134,8 @@ void SettingsLayer::draw_base_screen(float) {
 
     {
         auto [master_vol, music_vol, sfx_vol, ui_theme, resolution, language,
-              streamer, postprocessing, snapCamera, fullscreen] =
-            rect::hsplit<10>(rect::bpad(rows, 85), 20);
+              streamer, postprocessing, snapCamera, vsync, fullscreen] =
+            rect::hsplit<11>(rect::bpad(rows, 85), 20);
 
         {
             auto [label, control] = rect::vsplit(master_vol, 30);
@@ -288,6 +288,29 @@ void SettingsLayer::draw_base_screen(float) {
                                      Settings::get().data.isFullscreen});
                 result) {
                 Settings::get().update_fullscreen(result.as<bool>());
+            }
+        }
+
+        {
+            auto [label, control] = rect::vsplit(vsync, 30);
+            control = rect::rpad(control, 10);
+
+            text(Widget{label}, TranslatableString(strings::i18n::VSYNC_ENABLED));
+
+            if (auto result = checkbox(
+                    Widget{control},
+                    CheckboxData{.selected =
+                                     Settings::get().data.vsync_enabled});
+                result) {
+                Settings::get().data.vsync_enabled = (result.as<bool>());
+                // Apply VSync setting immediately
+                if (Settings::get().data.vsync_enabled) {
+                    raylib::SetWindowState(raylib::FLAG_VSYNC_HINT);
+                    log_info("VSync enabled via settings UI");
+                } else {
+                    raylib::ClearWindowState(raylib::FLAG_VSYNC_HINT);
+                    log_info("VSync disabled via settings UI");
+                }
             }
         }
     }
