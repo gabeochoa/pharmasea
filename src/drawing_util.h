@@ -180,10 +180,10 @@ static void DrawFloatingText(const vec3& position, const Font& font,
     text_size /= 3.f;
 
     rlPushMatrix();
-    rlTranslatef(                  //
-        position.x - text_size.x,  //
-        position.y,                //
-        position.z                 //
+    rlTranslatef(                      //
+        position.x - text_size.x / 2,  //
+        position.y,                    //
+        position.z                     //
     );
 
     if (!texture_name.empty()) {
