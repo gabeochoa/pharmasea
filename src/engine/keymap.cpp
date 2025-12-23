@@ -92,11 +92,6 @@ bool KeyMap::is_event_once_DO_NOT_USE(const menu::State& state,
                 [](auto) {}},
             input);
     }
-    if (name == InputName::PlayerPickup) {
-        int keycode = get_key_code(state, name);
-        log_info("pickup: KeyMap result={} keycode={}", matches_named_event,
-                 keycode);
-    }
     return matches_named_event;
 }
 
