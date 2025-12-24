@@ -7,6 +7,11 @@
 
 namespace mapgen {
 
+enum class LayoutSource {
+    Simple,
+    Wfc,
+};
+
 enum class BarArchetype {
     OpenHall,
     MultiRoom,
@@ -17,6 +22,7 @@ enum class BarArchetype {
 struct GenerationContext {
     int rows = 20;
     int cols = 20;
+    LayoutSource layout_source = LayoutSource::Simple;
 };
 
 struct GeneratedAscii {
