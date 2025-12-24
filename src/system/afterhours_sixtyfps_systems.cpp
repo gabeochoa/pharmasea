@@ -1,5 +1,6 @@
 #include "../ah.h"
 #include "../building_locations.h"
+#include <filesystem>
 #include "../components/can_be_highlighted.h"
 #include "../components/can_change_settings_interactively.h"
 #include "../components/can_highlight_others.h"
@@ -33,6 +34,7 @@
 #include "../external_include.h"
 #include "../network/server.h"
 #include "../client_server_comm.h"
+#include "../save_game/save_game.h"
 #include "../vec_util.h"
 #include "progression.h"
 #include "store_management_helpers.h"
@@ -40,7 +42,6 @@
 
 namespace system_manager {
 
-static constexpr const char* kLoadSaveDeleteModeKey = "load_save_delete_mode";
 static bool g_load_save_delete_mode = false;
 
 bool _create_nuxes(Entity& entity);
@@ -332,12 +333,35 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         } break;
 
         case IsTriggerArea::Planning_SaveSlot: {
-            if (!SystemManager::get().is_daytime()) break;
+            if (!SystemManager::get().is_daytime()) {
+                network::Server::forward_packet(network::ClientPacket{
+                    .channel = Channel::RELIABLE,
+                    .client_id = network::SERVER_CLIENT_ID,
+                    .msg_type = network::ClientPacket::MsgType::Announcement,
+                    .msg = network::ClientPacket::AnnouncementInfo{
+                        .message = "Can't save right now (planning/daytime only).",
+                        .type = AnnouncementType::Warning,
+                    },
+                });
+                break;
+            }
             int slot_num = entity.has<HasSubtype>()
                                ? entity.get<HasSubtype>().get_type_index()
                                : 1;
             if (slot_num < 1) slot_num = 1;
-            (void) server_only::save_game_to_slot(slot_num);
+            bool ok = server_only::save_game_to_slot(slot_num);
+            network::Server::forward_packet(network::ClientPacket{
+                .channel = Channel::RELIABLE,
+                .client_id = network::SERVER_CLIENT_ID,
+                .msg_type = network::ClientPacket::MsgType::Announcement,
+                .msg = network::ClientPacket::AnnouncementInfo{
+                    .message = ok ? fmt::format("Saved to slot {:02d}", slot_num)
+                                  : fmt::format("Failed to save slot {:02d}",
+                                                slot_num),
+                    .type = ok ? AnnouncementType::Message
+                               : AnnouncementType::Error,
+                },
+            });
         } break;
     }
 }
@@ -418,7 +442,28 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
         case IsTriggerArea::Progression_Option2:
             break;
         case IsTriggerArea::LoadSave_LoadSlot:
+        {
+            // Keep colors up to date:
+            // - empty slots are grey
+            // - loadable slots are green
+            // - in delete mode, all slots are red
+            bool delete_mode = g_load_save_delete_mode;
+            int slot_num = entity.has<HasSubtype>()
+                               ? entity.get<HasSubtype>().get_type_index()
+                               : 1;
+            if (slot_num < 1) slot_num = 1;
+
+            bool exists = std::filesystem::exists(
+                save_game::SaveGameManager::slot_path(slot_num));
+
+            Color c = delete_mode ? ui::color::red
+                                  : (exists ? ui::color::green_apple
+                                            : ui::color::grey);
+            if (entity.has<SimpleColoredBoxRenderer>()) {
+                entity.get<SimpleColoredBoxRenderer>().update_face(c).update_base(c);
+            }
             return;
+        }
     }
 
     TranslatableString internal_ts =
@@ -949,9 +994,6 @@ struct UpdateVisualsForSettingsChangerSystem
 }  // namespace system_manager
 
 void SystemManager::register_sixtyfps_systems() {
-    // Initialize global variables
-    GLOBALS.set(system_manager::kLoadSaveDeleteModeKey, &system_manager::g_load_save_delete_mode);
-
     // This system should run in all states (lobby, game, model test, etc.)
     // because it handles trigger areas and other essential updates
     // Note: We run every frame for better responsiveness (especially for

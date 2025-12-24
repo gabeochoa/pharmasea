@@ -490,11 +490,11 @@ void LevelInfo::generate_load_save_room_map() {
             }
             ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
 
-            // Color hint: green = loadable, red = empty/unreadable.
+            // Color hint: green = loadable, grey = empty.
             auto ok = slot.header.has_value();
             entity.get<SimpleColoredBoxRenderer>()
-                .update_face(ok ? ui::color::green_apple : ui::color::red)
-                .update_base(ok ? ui::color::green_apple : ui::color::red);
+                .update_face(ok ? ui::color::green_apple : ui::color::grey)
+                .update_base(ok ? ui::color::green_apple : ui::color::grey);
         }
     }
 }
