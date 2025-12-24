@@ -18,12 +18,7 @@ struct HasDayNightTimer : public BaseComponent {
     [[nodiscard]] bool is_round_over() const { return current_length <= 0.f; }
 
     auto& pass_time(float dt) {
-        if (current_length >= 0) {
-            current_length -= dt;
-            // Clamp to zero so callers can safely "hold" a transition at the
-            // end of the phase (e.g. while the bar is in an invalid state).
-            if (current_length < 0.f) current_length = 0.f;
-        }
+        if (current_length >= 0) current_length -= dt;
         return *this;
     }
 

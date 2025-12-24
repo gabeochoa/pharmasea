@@ -64,20 +64,6 @@ struct RunTimerSystem : public afterhours::System<HasDayNightTimer> {
         if (!ht.is_round_over()) return;
 
         if (ht.is_daytime()) {
-            // Planning -> InRound transition gate:
-            // Players can move/remove furniture. If the bar is in an invalid
-            // state (no path to register, missing required machines, etc.),
-            // we should keep them in planning until it's fixed.
-            if (entity.has<CollectsCustomerFeedback>()) {
-                const CollectsCustomerFeedback& feedback =
-                    entity.get<CollectsCustomerFeedback>();
-                if (feedback.block_state_change_reasons.any()) {
-                    // Stay in planning. The timer is clamped to 0 in
-                    // HasDayNightTimer::pass_time().
-                    return;
-                }
-            }
-
             ht.start_night();
 
             // TODO we assume that this entity is the same one which should be

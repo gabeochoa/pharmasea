@@ -15,9 +15,6 @@ std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(
         case Soda: {
             {
                 std::vector<EntityType> ets;
-                // Soda can be provided either by the "fountain" directly, or
-                // (legacy/alternate) by the soda machine + spout setup.
-                ets.push_back(EntityType::SodaFountain);
                 ets.push_back(EntityType::SodaMachine);
                 settings.push_back(EntityTuple{.igs = ets});
             }
@@ -145,8 +142,7 @@ bool IngredientHelper::has_machines_required_for_ingredient(
 
     switch (ig) {
         case Soda: {
-            return doesAnyExistWithType(EntityType::SodaFountain) ||
-                   doesAnyExistWithType(EntityType::SodaMachine);
+            return doesAnyExistWithType(EntityType::SodaMachine);
         } break;
         case Beer: {
             return doesAnyExistWithType(EntityType::DraftTap);
