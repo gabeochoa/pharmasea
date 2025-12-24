@@ -37,6 +37,7 @@ vec3 progression_origin = PROGRESSION_BUILDING.to3();
 vec3 model_test_origin = MODEL_TEST_BUILDING.to3();
 vec3 store_origin = STORE_BUILDING.to3();
 vec3 load_save_origin = LOAD_SAVE_BUILDING.to3();
+vec3 bar_origin = BAR_BUILDING.to3();
 
 namespace wfc {
 extern Rectangle SPAWN_AREA;
@@ -441,6 +442,15 @@ void LevelInfo::generate_load_save_room_map() {
             IsTriggerArea::LoadSave_BackToLobby);
     }
 
+    // Single trigger area that toggles delete mode. When enabled, selecting a
+    // slot deletes it instead of loading it.
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_trigger_area(
+            entity, load_save_origin + vec3{10, TILESIZE / -2.f, 10}, 8, 3,
+            IsTriggerArea::LoadSave_ToggleDeleteMode);
+    }
+
     const auto slots = save_game::SaveGameManager::enumerate_slots(
         save_game::SaveGameManager::kDefaultNumSlots);
 
@@ -469,6 +479,7 @@ void LevelInfo::generate_load_save_room_map() {
             auto& ita = entity.get<IsTriggerArea>();
             if (slot.header.has_value()) {
                 const auto& h = slot.header.value();
+                // TODO(i18n): translate this (needs a formatted i18n string).
                 ita.update_title(NO_TRANSLATE(fmt::format(
                     "Slot {:02d} — Day {} — seed '{}' — v{}",
                     slot.slot, h.day_count, h.seed,
@@ -484,23 +495,6 @@ void LevelInfo::generate_load_save_room_map() {
             entity.get<SimpleColoredBoxRenderer>()
                 .update_face(ok ? ui::color::green_apple : ui::color::red)
                 .update_base(ok ? ui::color::green_apple : ui::color::red);
-        }
-
-        // Delete pedestal (placed slightly behind).
-        {
-            auto& entity = EntityHelper::createEntity();
-            furniture::make_trigger_area(
-                entity, vec::to3(pos2) + vec3{0, TILESIZE / -2.f, 3.5f}, 4, 2,
-                IsTriggerArea::LoadSave_DeleteSlot);
-            entity.addComponent<HasSubtype>(0, 100, slot.slot);
-
-            auto& ita = entity.get<IsTriggerArea>();
-            ita.update_title(
-                NO_TRANSLATE(fmt::format("Delete Slot {:02d}", slot.slot)));
-            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
-            entity.get<SimpleColoredBoxRenderer>()
-                .update_face(ui::color::ugly_yellow)
-                .update_base(ui::color::ugly_yellow);
         }
     }
 }
@@ -713,14 +707,10 @@ void LevelInfo::add_outside_triggers(vec2 origin) {
                                      IsFloorMarker::Type::Planning_TrashArea);
     }
 
-    // Phase 1: simple planning-only save station (slot 1).
     {
         auto& entity = EntityHelper::createPermanentEntity();
-        vec3 position = {
-            origin.x + wfc::SPAWN_AREA.x + (wfc::SPAWN_AREA.width / 2.f),
-            TILESIZE / -2.f,
-            origin.y + wfc::SPAWN_AREA.y + (wfc::SPAWN_AREA.height / 2.f) + 5.f,
-        };
+        // Place in the bar building (planning is shown/treated as "in bar").
+        vec3 position = bar_origin + vec3{0, TILESIZE / -2.f, 0};
         furniture::make_trigger_area(entity, position, 6, 3,
                                      IsTriggerArea::Planning_SaveSlot);
         entity.addComponent<HasSubtype>(0, 100, 1);

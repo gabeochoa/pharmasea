@@ -30,7 +30,7 @@ struct IsTriggerArea : public BaseComponent {
 
         // Load/Save room actions (slot number stored in HasSubtype.type_index).
         LoadSave_LoadSlot,
-        LoadSave_DeleteSlot,
+        LoadSave_ToggleDeleteMode,
 
         // Planning-only save station (slot number stored in HasSubtype.type_index).
         Planning_SaveSlot,

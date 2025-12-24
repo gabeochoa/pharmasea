@@ -40,6 +40,8 @@
 
 namespace system_manager {
 
+static constexpr const char* kLoadSaveDeleteModeKey = "load_save_delete_mode";
+
 bool _create_nuxes(Entity& entity);
 void process_nux_updates(Entity& entity, float dt);
 void generate_machines_for_new_upgrades();
@@ -291,6 +293,28 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                                : 1;
             if (slot_num < 1) slot_num = 1;
 
+            const bool delete_mode =
+                GLOBALS.get_or_default<bool>(kLoadSaveDeleteModeKey, false);
+            if (delete_mode) {
+                bool ok = server_only::delete_game_slot(slot_num);
+                if (!ok) break;
+
+                // Refresh room by clearing entities in the building and regenerating.
+                const auto ents = EntityHelper::getAllInRange(
+                    LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
+                for (Entity& to_delete : ents) {
+                    to_delete.cleanup = true;
+                }
+                network::Server* server =
+                    GLOBALS.get_ptr<network::Server>("server");
+                if (server) {
+                    server->get_map_SERVER_ONLY()
+                        ->game_info.generate_load_save_room_map();
+                    server->force_send_map_state();
+                }
+                break;
+            }
+
             bool ok = server_only::load_game_from_slot(slot_num);
             if (!ok) break;
 
@@ -303,27 +327,10 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             }
         } break;
 
-        case IsTriggerArea::LoadSave_DeleteSlot: {
-            int slot_num = entity.has<HasSubtype>()
-                               ? entity.get<HasSubtype>().get_type_index()
-                               : 1;
-            if (slot_num < 1) slot_num = 1;
-
-            bool ok = server_only::delete_game_slot(slot_num);
-            if (!ok) break;
-
-            // Refresh room by clearing entities in the building and regenerating.
-            const auto ents = EntityHelper::getAllInRange(
-                LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
-            for (Entity& to_delete : ents) {
-                to_delete.cleanup = true;
-            }
-            network::Server* server = GLOBALS.get_ptr<network::Server>("server");
-            if (server) {
-                server->get_map_SERVER_ONLY()
-                    ->game_info.generate_load_save_room_map();
-                server->force_send_map_state();
-            }
+        case IsTriggerArea::LoadSave_ToggleDeleteMode: {
+            bool current =
+                GLOBALS.get_or_default<bool>(kLoadSaveDeleteModeKey, false);
+            GLOBALS.set(kLoadSaveDeleteModeKey, !current);
         } break;
 
         case IsTriggerArea::Planning_SaveSlot: {
@@ -382,6 +389,14 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
+        case IsTriggerArea::LoadSave_ToggleDeleteMode: {
+            const bool delete_mode =
+                GLOBALS.get_or_default<bool>(kLoadSaveDeleteModeKey, false);
+            ita.update_title(delete_mode ? NO_TRANSLATE("Delete Mode: ON")
+                                         : NO_TRANSLATE("Delete Mode: OFF"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            return;
+        } break;
         case IsTriggerArea::Planning_SaveSlot: {
             // If you'd like slot-specific text, set it at spawn-time.
             ita.update_title(NO_TRANSLATE("Save Game"));
@@ -405,9 +420,7 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
         case IsTriggerArea::Progression_Option1:
         case IsTriggerArea::Progression_Option2:
             break;
-        // Titles are set when the Load/Save room is generated.
         case IsTriggerArea::LoadSave_LoadSlot:
-        case IsTriggerArea::LoadSave_DeleteSlot:
             return;
     }
 
