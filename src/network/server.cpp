@@ -1,11 +1,18 @@
 #include "server.h"
 
+#include <algorithm>
+#include <cctype>
 #include <chrono>
 #include <thread>
 
 #include "../building_locations.h"
 #include "../globals.h"  // for HASHED_VERSION
+#include "../client_server_comm.h"
+#include "../save_game/save_game.h"
 #include "../engine/time.h"
+#include "../engine/files.h"
+#include "../engine/random_engine.h"
+#include "../entity_helper.h"
 #include "../system/system_manager.h"
 #include "serialization.h"
 
@@ -94,6 +101,8 @@ void Server::send_map_state() {
 
     send_client_packet_to_all(map_packet);
 }
+
+void Server::force_send_map_state() { send_map_state(); }
 
 void Server::send_player_rare_data() {
     for (const auto& player : players) {
@@ -286,6 +295,56 @@ void Server::process_map_update(float dt) {
     // No need to do anything if we are still in the menu
     if (!MenuState::get().in_game()) return;
 
+    // Phase 1 CLI hook: allow loading a save once the authoritative server
+    // thread is running. This is intentionally server-only.
+    static bool cli_load_applied = false;
+    if (!cli_load_applied && LOAD_SAVE_ENABLED && !LOAD_SAVE_TARGET.empty()) {
+        bool ok = false;
+        // slot number?
+        bool all_digits =
+            std::all_of(LOAD_SAVE_TARGET.begin(), LOAD_SAVE_TARGET.end(),
+                        [](char c) { return std::isdigit((unsigned char) c); });
+        if (all_digits) {
+            int slot = 1;
+            try {
+                slot = std::stoi(LOAD_SAVE_TARGET);
+            } catch (...) {
+                slot = 1;
+            }
+            ok = server_only::load_game_from_slot(slot);
+        } else {
+            save_game::SaveGameFile loaded;
+            fs::path p = fs::path(LOAD_SAVE_TARGET);
+            if (p.is_relative()) {
+                // Prefer saves folder, then fall back to CWD.
+                fs::path in_saves = save_game::SaveGameManager::saves_folder() / p;
+                if (fs::exists(in_saves)) {
+                    p = in_saves;
+                }
+            }
+
+            if (save_game::SaveGameManager::load_file(p, loaded)) {
+                // Apply snapshot (same logic as server_only::load_game_from_slot).
+                server_entities_DO_NOT_USE = loaded.map_snapshot.game_info.entities;
+
+                pharmacy_map->game_info = loaded.map_snapshot.game_info;
+                pharmacy_map->showMinimap = loaded.map_snapshot.showMinimap;
+                pharmacy_map->seed = loaded.map_snapshot.game_info.seed;
+                pharmacy_map->game_info.was_generated = true;
+                RandomEngine::set_seed(pharmacy_map->seed);
+                EntityHelper::invalidateCaches();
+                force_send_map_state();
+                ok = true;
+            }
+        }
+
+        if (ok) {
+            // Per design: always land in planning.
+            GameState::get().transition_to_game();
+        }
+        cli_load_applied = true;
+    }
+
     // TODO right now we have the run update on all the server players
     // this kinda makes sense but most of the game doesnt need this.
     //
@@ -476,6 +535,9 @@ void Server::process_player_join_packet(
                 return {0.f, 0.f, 0.f};
             case game::ModelTest: {
                 return MODEL_TEST_BUILDING.to3();
+            }
+            case game::LoadSaveRoom: {
+                return LOAD_SAVE_BUILDING.to3();
             }
         }
 

@@ -1,5 +1,7 @@
 #include "../ah.h"
 #include "../building_locations.h"
+#include <filesystem>
+#include <unordered_set>
 #include "../components/can_be_highlighted.h"
 #include "../components/can_change_settings_interactively.h"
 #include "../components/can_highlight_others.h"
@@ -20,6 +22,7 @@
 #include "../components/is_solid.h"
 #include "../components/is_squirter.h"
 #include "../components/is_trigger_area.h"
+#include "../components/has_subtype.h"
 #include "../components/model_renderer.h"
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
@@ -31,12 +34,31 @@
 #include "../entity_query.h"
 #include "../external_include.h"
 #include "../network/server.h"
+#include "../client_server_comm.h"
+#include "../save_game/save_game.h"
 #include "../vec_util.h"
 #include "progression.h"
 #include "store_management_helpers.h"
 #include "system_manager.h"
 
 namespace system_manager {
+
+static bool g_load_save_delete_mode = false;
+// Some triggers should only fire once per "standing on it" (until you step off).
+static std::unordered_set<int> g_trigger_fired_while_occupied;
+
+static bool should_gate_trigger_fires(const IsTriggerArea& ita) {
+    switch (ita.type) {
+        case IsTriggerArea::LoadSave_ToggleDeleteMode:
+        case IsTriggerArea::Planning_SaveSlot:
+            return true;
+        case IsTriggerArea::LoadSave_LoadSlot:
+            // Prevent repeated deletes while standing on a slot pedestal.
+            return g_load_save_delete_mode;
+        default:
+            return false;
+    }
+}
 
 bool _create_nuxes(Entity& entity);
 void process_nux_updates(Entity& entity, float dt);
@@ -111,6 +133,13 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
+
+    if (should_gate_trigger_fires(ita) && ita.active_entrants() > 0) {
+        if (g_trigger_fired_while_occupied.contains(entity.id)) {
+            return;
+        }
+        g_trigger_fired_while_occupied.insert(entity.id);
+    }
 
     ita.reset_cooldown();
 
@@ -224,6 +253,20 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 move_player_SERVER_ONLY(player, game::State::ModelTest);
             }
         } break;
+        case IsTriggerArea::Lobby_LoadSave: {
+            GameState::get().set(game::State::LoadSaveRoom);
+            if (is_server()) {
+                network::Server* server =
+                    GLOBALS.get_ptr<network::Server>("server");
+                server->get_map_SERVER_ONLY()
+                    ->game_info.generate_load_save_room_map();
+            }
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::LoadSaveRoom);
+            }
+        } break;
 
         case IsTriggerArea::Lobby_PlayGame: {
             GameState::get().transition_to_game();
@@ -252,12 +295,118 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 move_player_SERVER_ONLY(player, game::State::InGame);
             }
         } break;
+
+        case IsTriggerArea::LoadSave_BackToLobby: {
+            GameState::get().transition_to_lobby();
+
+            const auto ents = EntityHelper::getAllInRange(
+                LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
+            for (Entity& to_delete : ents) {
+                to_delete.cleanup = true;
+            }
+
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::Lobby);
+            }
+        } break;
+
+        case IsTriggerArea::LoadSave_LoadSlot: {
+            int slot_num = entity.has<HasSubtype>()
+                               ? entity.get<HasSubtype>().get_type_index()
+                               : 1;
+            if (slot_num < 1) slot_num = 1;
+
+            const bool delete_mode = g_load_save_delete_mode;
+            if (delete_mode) {
+                bool ok = server_only::delete_game_slot(slot_num);
+                if (!ok) break;
+
+                // Refresh room by clearing entities in the building and regenerating.
+                const auto ents = EntityHelper::getAllInRange(
+                    LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
+                for (Entity& to_delete : ents) {
+                    to_delete.cleanup = true;
+                }
+                network::Server* server =
+                    GLOBALS.get_ptr<network::Server>("server");
+                if (server) {
+                    server->get_map_SERVER_ONLY()
+                        ->game_info.generate_load_save_room_map();
+                    server->force_send_map_state();
+                }
+                break;
+            }
+
+            bool ok = server_only::load_game_from_slot(slot_num);
+            if (!ok) break;
+
+            // Always land in planning (InGame).
+            GameState::get().transition_to_game();
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::InGame);
+            }
+        } break;
+
+        case IsTriggerArea::LoadSave_ToggleDeleteMode: {
+            g_load_save_delete_mode = !g_load_save_delete_mode;
+            network::Server::forward_packet(network::ClientPacket{
+                .channel = Channel::RELIABLE,
+                .client_id = network::SERVER_CLIENT_ID,
+                .msg_type = network::ClientPacket::MsgType::Announcement,
+                .msg = network::ClientPacket::AnnouncementInfo{
+                    .message = g_load_save_delete_mode ? "Delete mode ON"
+                                                      : "Delete mode OFF",
+                    .type = g_load_save_delete_mode ? AnnouncementType::Warning
+                                                    : AnnouncementType::Message,
+                },
+            });
+        } break;
+
+        case IsTriggerArea::Planning_SaveSlot: {
+            if (!SystemManager::get().is_daytime()) {
+                network::Server::forward_packet(network::ClientPacket{
+                    .channel = Channel::RELIABLE,
+                    .client_id = network::SERVER_CLIENT_ID,
+                    .msg_type = network::ClientPacket::MsgType::Announcement,
+                    .msg = network::ClientPacket::AnnouncementInfo{
+                        .message = "Can't save right now (planning/daytime only).",
+                        .type = AnnouncementType::Warning,
+                    },
+                });
+                break;
+            }
+            int slot_num = entity.has<HasSubtype>()
+                               ? entity.get<HasSubtype>().get_type_index()
+                               : 1;
+            if (slot_num < 1) slot_num = 1;
+            bool ok = server_only::save_game_to_slot(slot_num);
+            network::Server::forward_packet(network::ClientPacket{
+                .channel = Channel::RELIABLE,
+                .client_id = network::SERVER_CLIENT_ID,
+                .msg_type = network::ClientPacket::MsgType::Announcement,
+                .msg = network::ClientPacket::AnnouncementInfo{
+                    .message = ok ? fmt::format("Saved to slot {:02d}", slot_num)
+                                  : fmt::format("Failed to save slot {:02d}",
+                                                slot_num),
+                    .type = ok ? AnnouncementType::Message
+                               : AnnouncementType::Error,
+                },
+            });
+        } break;
     }
 }
 
 void update_dynamic_trigger_area_settings(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
+
+    if (should_gate_trigger_fires(ita) && ita.active_entrants() == 0) {
+        g_trigger_fired_while_occupied.erase(entity.id);
+    }
 
     if (ita.type == IsTriggerArea::Unset) {
         log_warn("You created a trigger area without a type");
@@ -283,11 +432,48 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
+        case IsTriggerArea::Lobby_LoadSave: {
+            ita.update_title(NO_TRANSLATE("Load / Save"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            return;
+        } break;
         case IsTriggerArea::Store_BackToPlanning: {
             ita.update_title(
                 TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
             ita.update_subtitle(
                 TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
+            return;
+        } break;
+        case IsTriggerArea::LoadSave_BackToLobby: {
+            ita.update_title(NO_TRANSLATE("Back To Lobby"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            return;
+        } break;
+        case IsTriggerArea::LoadSave_ToggleDeleteMode: {
+            const bool delete_mode = g_load_save_delete_mode;
+            ita.update_title(delete_mode ? NO_TRANSLATE("Delete Mode: ON")
+                                         : NO_TRANSLATE("Delete Mode: OFF"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            return;
+        } break;
+        case IsTriggerArea::Planning_SaveSlot: {
+            int slot_num = entity.has<HasSubtype>()
+                               ? entity.get<HasSubtype>().get_type_index()
+                               : 1;
+            if (slot_num < 1) slot_num = 1;
+
+            const bool is_saving =
+                ita.active_entrants() > 0 && ita.progress() > 0.f &&
+                ita.should_progress();
+            if (is_saving) {
+                ita.update_title(NO_TRANSLATE("Saving..."));
+                ita.update_subtitle(
+                    NO_TRANSLATE(fmt::format("Slot {:02d}", slot_num)));
+            } else {
+                ita.update_title(
+                    NO_TRANSLATE(fmt::format("Slot {:02d}", slot_num)));
+                ita.update_subtitle(NO_TRANSLATE("Save Game"));
+            }
             return;
         } break;
         case IsTriggerArea::Store_Reroll: {
@@ -307,6 +493,28 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
         case IsTriggerArea::Progression_Option1:
         case IsTriggerArea::Progression_Option2:
             break;
+        case IsTriggerArea::LoadSave_LoadSlot:
+        {
+            // Keep colors up to date:
+            // - empty slots are grey
+            // - loadable slots are green
+            // - in delete mode, loadable slots are red (empty slots remain grey)
+            bool delete_mode = g_load_save_delete_mode;
+            int slot_num = entity.has<HasSubtype>()
+                               ? entity.get<HasSubtype>().get_type_index()
+                               : 1;
+            if (slot_num < 1) slot_num = 1;
+
+            bool exists = std::filesystem::exists(
+                save_game::SaveGameManager::slot_path(slot_num));
+
+            Color c = exists ? (delete_mode ? ui::color::red : ui::color::green_apple)
+                             : ui::color::grey;
+            if (entity.has<SimpleColoredBoxRenderer>()) {
+                entity.get<SimpleColoredBoxRenderer>().update_face(c).update_base(c);
+            }
+            return;
+        }
     }
 
     TranslatableString internal_ts =

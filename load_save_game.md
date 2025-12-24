@@ -1,6 +1,36 @@
 # Load Save Game System Plan (with Diagetic “PS2 Save Select” Room + Replay Validation)
 Date: 2025-12-24
 
+## Status (as of 2025-12-24)
+
+### Implemented (Phase 1: snapshot pipeline)
+- **Save file format**: Bitsery-based `SaveGameHeader` + full snapshot payload (`Map` / `LevelInfo`) written per-slot.
+- **Slot discovery**: enumerate slots + read header only for UI metadata.
+- **Authoritative apply**: load installs snapshot on **server thread**, marks `was_generated = true`, invalidates caches, and forces a map sync to clients.
+- **Diagetic Load/Save room**:
+  - Lobby trigger → `LoadSaveRoom`
+  - Room generator spawns **Back to Lobby**, **Delete Mode toggle**, and **slot pedestals**
+  - Slot labels are **multi-line**; slot label font reduced slightly for readability
+  - **Empty slots** are **grey**
+  - **Delete mode**: occupied slots render **red**; empty stays **grey**
+- **Delete UX**: single slot trigger per slot; selecting either **loads** or **deletes** depending on delete-mode toggle.
+- **Planning-only save**: planning save trigger exists (slot number via `HasSubtype`), and attempts outside planning/daytime are rejected with announcement/toast.
+- **Toasts**: announcement packets now surface as in-game toasts (host included).
+
+### Crash fixes / hard lessons learned
+- **Named entity cache double-free**: fixed by ensuring `named_entities_DO_NOT_USE` stores the owning `shared_ptr` (never create a new control block from raw `Entity*`).
+- **Dynamic model callback crash on load**:
+  - `HasDynamicModelName` is serialized but its runtime `std::function` fetcher is not; calling it after load can throw `std::bad_function_call`.
+  - Current approach: **post-load reinitialization pass** (`reinit_dynamic_model_names_after_load()`) recreates dynamic model-name fetchers for known entity types.
+  - A small safety guard in `HasDynamicModelName::fetch()` prevents crashing when uninitialized / fetcher missing (should be upgraded to `log_error` once we’re confident the post-load reinit covers all cases).
+  - **Known gap**: `FruitJuice` dynamic model name still can’t be reconstructed correctly (needs persisted subtype/state).
+
+### Still to do (Phase 1 follow-ups)
+- Expand slot count to **12** (or confirm desired count) and finalize room layout.
+- Replace temp planning save trigger placement/logic with the final intended station (current is marked TODO to remove).
+- Add a proper “replay-from-save” flow and validation wiring (currently only the `--load-save` hook is in place).
+- Decide whether `HasDynamicModelName` should be **excluded from save serialization** (runtime glue) and always reconstructed post-load.
+
 ## Decisions (confirmed)
 - **World persistence**: **Hybrid** (persist player-altered state; regenerate baseline from seed).
 - **Save timing**: **Only allow saving in Planning mode** (daytime).
@@ -15,7 +45,7 @@ Date: 2025-12-24
 - **Hybrid scope v1**: **Furniture placements only** (items do not persist; they respawn from furniture).
 - **Future scope**: likely expands toward “C” (broader saveable set), but start narrow.
 - **Saving UX**: both **diagetic Save Station** + **menu button** (enabled only in Planning).
-- **Delete UX**: **hold-to-delete** (long press) for now.
+- **Delete UX**: **toggle delete mode** + select slot (no separate delete pedestal).
 - **Thumbnail previews**: prefer **minimap-style preview** (similar in spirit to seed UI), with a **screenshot fallback** if minimap render is non-trivial.
 
 ## Goals
@@ -99,11 +129,11 @@ Use Bitsery, but add a small header for **versioning + UI metadata**.
 
 ### “Apply Save” algorithm (server thread)
 1. Read save header and payload from disk.
-2. Generate baseline world from `seed` (deterministic):
-   - Ensure map generator runs once on server to create baseline entities.
-3. Apply delta from save:
-   - Create/update/delete entities that represent player-altered state.
-   - Apply progression/settings/bank/day-night state to the authoritative entities (e.g., Sophie, timer entity).
+2. **Phase 1 (implemented)**: install snapshot directly:
+   - Replace authoritative entity list with the saved snapshot
+   - Set `was_generated = true` so procedural generation doesn’t wipe it
+   - Update server map fields (`seed`, `showMinimap`, etc.)
+   - Reinit runtime-only callbacks that aren’t serialized (ex: `HasDynamicModelName` fetchers)
 4. Invalidate caches:
    - `EntityHelper::invalidateCaches()` and any other caches required (path/walkable).
 5. Sync to clients:
@@ -160,12 +190,13 @@ Don’t load full worlds just to show text:
 
 ### Slot interaction behavior
 When player interacts with pedestal:
-- Server loads and applies the save (authoritative).
+- Server loads and applies the save (authoritative) **or deletes the slot**, depending on delete mode.
 - Clients receive sync.
 - Transition to **Planning** and place players at planning spawn.
 
 ### Delete behavior (v1)
-- In the room, provide **hold-to-delete** (long press) on the slot pedestal.
+- In the room, provide a **Delete Mode toggle**.
+- When Delete Mode is ON, selecting a slot pedestal **deletes** it (empty slots stay grey).
 - Delete removes the save file (and thumbnail file if present) and refreshes the room list.
 
 Fast shipping version:
@@ -202,11 +233,12 @@ Wire failures via `replay_validation::add_failure()` and fail in `end_replay()`.
 
 ## Implementation Phases (recommended)
 ### Phase 1 — Ship the pipeline (snapshot-based)
-- Implement save header + slot enumeration + delete
-- Implement “apply loaded world” using a full snapshot payload (fast correctness)
-- Add Load Save room (8–12 slots) + lobby trigger + transitions
-- Add planning-only save restriction
-- Add CLI `--load-save` and replay end-state validation hooks
+- ✅ Implement save header + slot enumeration + delete
+- ✅ Implement “apply loaded world” using a full snapshot payload (fast correctness)
+- ✅ Add Load Save room + lobby trigger + transitions
+- ✅ Add planning-only save restriction + user feedback (toast/announcement)
+- ✅ Add CLI `--load-save` hook
+- ⛔ Replay end-state validation hooks (still pending)
 
 ### Phase 2 — Convert to true hybrid delta
 - Decide baseline vs player-altered classification (tags/component or entity-type whitelist)

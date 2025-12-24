@@ -37,7 +37,24 @@ OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
                 break;
         }
         if (!e_ptr) return {};
-        named_entities_DO_NOT_USE.insert(std::make_pair(name, e_ptr));
+
+        // IMPORTANT: never construct a new shared_ptr from a raw Entity* here.
+        // Entities are already owned by the main entity list. Creating a new
+        // control block would cause double-free when caches are cleared.
+        std::shared_ptr<Entity> owned;
+        for (const auto& sp : EntityHelper::get_entities_for_mod()) {
+            if (sp && sp.get() == e_ptr) {
+                owned = sp;
+                break;
+            }
+        }
+        if (!owned) {
+            log_error(
+                "Named entity cache could not find owning shared_ptr for {} (id {})",
+                magic_enum::enum_name<NamedEntity>(name), e_ptr->id);
+            return {};
+        }
+        named_entities_DO_NOT_USE.insert(std::make_pair(name, owned));
     }
     return *(named_entities_DO_NOT_USE[name]);
 }

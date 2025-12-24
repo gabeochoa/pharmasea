@@ -42,6 +42,7 @@ struct Server {
     }
 
     std::unique_ptr<Map>& get_map_SERVER_ONLY() { return pharmacy_map; }
+    void force_send_map_state();
 
    private:
     AtomicQueue<ClientMessage> incoming_message_queue;

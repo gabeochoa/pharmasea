@@ -13,10 +13,13 @@
 #include "components/is_round_settings_manager.h"
 #include "components/is_store_spawned.h"
 #include "components/is_trigger_area.h"
+#include "components/has_subtype.h"
+#include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "dataclass/ingredient.h"
 #include "engine/globals.h"
 #include "engine/random_engine.h"
+#include "engine/ui/color.h"
 #include "engine/texture_library.h"
 #include "entity_helper.h"
 #include "entity_makers.h"
@@ -24,6 +27,7 @@
 #include "entity_type.h"
 #include "map_generation/in_game_map_generation.h"
 #include "recipe_library.h"
+#include "save_game/save_game.h"
 #include "strings.h"
 #include "system/system_manager.h"
 #include "vec_util.h"
@@ -32,6 +36,8 @@ vec3 lobby_origin = LOBBY_BUILDING.to3();
 vec3 progression_origin = PROGRESSION_BUILDING.to3();
 vec3 model_test_origin = MODEL_TEST_BUILDING.to3();
 vec3 store_origin = STORE_BUILDING.to3();
+vec3 load_save_origin = LOAD_SAVE_BUILDING.to3();
+vec3 bar_origin = BAR_BUILDING.to3();
 
 namespace wfc {
 extern Rectangle SPAWN_AREA;
@@ -167,6 +173,13 @@ void LevelInfo::generate_lobby_map() {
         furniture::make_trigger_area(
             entity, lobby_origin + vec3{0, TILESIZE / -2.f, 10}, 8, 3,
             IsTriggerArea::Lobby_ModelTest);
+    }
+
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        furniture::make_trigger_area(
+            entity, lobby_origin + vec3{0, TILESIZE / -2.f, 15}, 8, 3,
+            IsTriggerArea::Lobby_LoadSave);
     }
 
     // We explicitly spawn this in the bar because its not actually a lobby item
@@ -416,6 +429,76 @@ void LevelInfo::generate_model_test_map() {
     // {EntityType::Drink},
 }
 
+void LevelInfo::generate_load_save_room_map() {
+    // Simple standalone showroom. We keep it lightweight: trigger-areas as the
+    // pedestals, and we read only the save header to populate labels.
+    generate_walls_for_building(LOAD_SAVE_BUILDING);
+
+    // Back to Lobby trigger.
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_trigger_area(
+            entity, load_save_origin + vec3{-10, TILESIZE / -2.f, 10}, 8, 3,
+            IsTriggerArea::LoadSave_BackToLobby);
+    }
+
+    // Single trigger area that toggles delete mode. When enabled, selecting a
+    // slot deletes it instead of loading it.
+    {
+        auto& entity = EntityHelper::createEntity();
+        furniture::make_trigger_area(
+            entity, load_save_origin + vec3{10, TILESIZE / -2.f, 10}, 8, 3,
+            IsTriggerArea::LoadSave_ToggleDeleteMode);
+    }
+
+    const auto slots = save_game::SaveGameManager::enumerate_slots(
+        save_game::SaveGameManager::kDefaultNumSlots);
+
+    // 4x2 grid.
+    vec2 start = vec::to2(load_save_origin) + vec2{-10.f, -4.f};
+    const int cols = 4;
+    const float xspace = 5.f;
+    const float yspace = 6.f;
+
+    for (const auto& slot : slots) {
+        int idx = slot.slot - 1;
+        int cx = idx % cols;
+        int cy = idx / cols;
+        vec2 pos2 = start + vec2{cx * xspace, -cy * yspace};
+
+        // Load pedestal.
+        {
+            auto& entity = EntityHelper::createEntity();
+            furniture::make_trigger_area(
+                entity, vec::to3(pos2) + vec3{0, TILESIZE / -2.f, 0}, 4, 3,
+                IsTriggerArea::LoadSave_LoadSlot);
+            // store slot number directly
+            entity.addComponent<HasSubtype>(0, 100, slot.slot);
+
+            // Set a static label for this room instance.
+            auto& ita = entity.get<IsTriggerArea>();
+            if (slot.header.has_value()) {
+                const auto& h = slot.header.value();
+                // TODO(i18n): translate this (needs a formatted i18n string).
+                ita.update_title(NO_TRANSLATE(fmt::format(
+                    "Slot {:02d}\nDay {}\nseed '{}'\nv{}",
+                    slot.slot, h.day_count, h.seed,
+                    std::string_view(VERSION))));
+            } else {
+                ita.update_title(
+                    NO_TRANSLATE(fmt::format("Slot {:02d}\nEmpty", slot.slot)));
+            }
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+
+            // Color hint: green = loadable, grey = empty.
+            auto ok = slot.header.has_value();
+            entity.get<SimpleColoredBoxRenderer>()
+                .update_face(ok ? ui::color::green_apple : ui::color::grey)
+                .update_base(ok ? ui::color::green_apple : ui::color::grey);
+        }
+    }
+}
+
 void LevelInfo::generate_progression_map() {
     generate_walls_for_building(PROGRESSION_BUILDING);
 
@@ -622,6 +705,16 @@ void LevelInfo::add_outside_triggers(vec2 origin) {
         furniture::make_floor_marker(entity, position, wfc::TRASH_AREA.width,
                                      wfc::TRASH_AREA.height,
                                      IsFloorMarker::Type::Planning_TrashArea);
+    }
+
+    {
+        auto& entity = EntityHelper::createPermanentEntity();
+        // TODO(load-save): come back later and remove this (temp planning save station).
+        // Place in the bar building (planning is shown/treated as "in bar").
+        vec3 position = bar_origin + vec3{0, TILESIZE / -2.f, 0};
+        furniture::make_trigger_area(entity, position, 6, 3,
+                                     IsTriggerArea::Planning_SaveSlot);
+        entity.addComponent<HasSubtype>(0, 100, 1);
     }
 }
 

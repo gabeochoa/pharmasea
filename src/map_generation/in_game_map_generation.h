@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../ah.h"
+#include "external_include.h"
 
 namespace mapgen {
 
@@ -20,4 +21,3 @@ vec2 generate_default_seed(const std::vector<std::string>& example_map);
 vec2 generate_in_game_map(const std::string& seed);
 
 }  // namespace mapgen
-

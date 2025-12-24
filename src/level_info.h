@@ -32,6 +32,8 @@ struct LevelInfo {
 
     // called by the server sometimes
     void generate_model_test_map();
+    // called by the server sometimes
+    void generate_load_save_room_map();
 
    private:
     void generate_lobby_map();
