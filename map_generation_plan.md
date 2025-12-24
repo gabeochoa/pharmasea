@@ -21,6 +21,84 @@ This document is a **planning note only**. It outlines a roadmap to update map g
   - “Speakeasy” is **visual only** (not locked; still pathable).
 - **Prefer openness / capacity**: leave room for late-game content (teleporters, conveyors, more machines/ingredients).
 
+## Code-informed MVP constraints (what the game enforces today)
+
+This section captures constraints observed directly in the current code so the
+next generator matches real gameplay assumptions.
+
+### Required entities for a playable start (MVP)
+
+From your requirements + current in-game generator defaults, the starting bar
+should include:
+
+- `CustomerSpawner`
+- Exactly **one** `Register`
+- `SodaMachine` (this matches the current day-1 assumption you confirmed)
+- `Cupboard` (cups)
+- `Trash`
+- `FastForward`
+- `Sophie` (must exist, location not gameplay-critical)
+- At least **one** `Table`
+
+### Register queue rule (must not be blocked)
+
+Sophie’s lightweight map validation checks queue tiles in front of each register:
+
+- Queue length is `HasWaitingQueue::max_queue_size` (**currently 3**).
+- For each register, it requires all positions `Transform::tile_infront(i+1)`
+  to be walkable for `i ∈ [0..max_queue_size-1]`.
+- It also checks pathability from `CustomerSpawner` → `Register::tile_directly_infront()`.
+
+Therefore, placement should:
+
+- Pick a register tile, then **try 4 facings/rotations** and choose a facing
+  where the full queue strip is clear.
+
+### Register must be “inside BAR_BUILDING” (keep as-is for MVP)
+
+Sophie filters valid registers using:
+
+- `whereInside(BAR_BUILDING.min(), BAR_BUILDING.max())`
+
+`BAR_BUILDING` is currently a fixed rectangle in `src/building_locations.h`.
+For MVP we should place the register inside that rectangle to avoid runtime
+`REGISTER_NOT_INSIDE` failures even if the register is “in the plot”.
+
+### Pathfinding has a hard distance cutoff (treat as hard failure)
+
+The BFS-based pathfinder has a built-in maximum range:
+
+- `bfs::MAX_PATH_LENGTH = 50` (used as a distance-squared cutoff)
+
+So if spawner→register would require more than ~50 tiles of travel, pathing may
+fail. Treat this as a **hard invalid map** in generation/validation for now.
+
+### Coordinate / “right wall” interpretation
+
+The ASCII grid is mapped into world space such that:
+
+- Row index `i` maps to world **X** (`x = i * TILESIZE`)
+- Column index `j` maps to world **Y/Z** (`y = j * TILESIZE`)
+
+So “entrance on the right (+x) wall” corresponds to the **last row** of the
+ASCII building boundary, not the last column.
+
+## Current DEFAULT_MAP notes (entrance + symbols)
+
+`DEFAULT_MAP` is loaded from `resources/config/settings.json`.
+
+- It includes `S` (SodaMachine), `d` (Cupboard), `g` (Trash), `f` (FastForward),
+  `R` (Register), `C` (CustomerSpawner), `+` (Sophie), and many `t` (Tables).
+- The building boundary uses `#` walls with an “entrance gap” near the bottom.
+- In the current `DEFAULT_MAP`, the main gap appears in the second-to-last wall
+  row as:
+  - `######...########`
+  which is a **3-tile-wide** opening leading into the outside walkable row
+  beneath it (`.....f.........C+`).
+
+For MVP you indicated the entrance can be 1–2 tiles wide; consider keeping this
+flexible (1–3) initially so existing expectations remain easy to match.
+
 ## Guiding principle
 
 Keep **ASCII (`std::vector<std::string>`) as the intermediate representation**:
