@@ -18,7 +18,7 @@
 #include "intro/primary_intro_scene.h"
 #include "intro/raylib_intro_scene.h"
 #include "magic_enum/magic_enum.hpp"
-#include "map_generation.h"
+#include "map_generation/map_generation.h"
 #include "recipe_library.h"
 #include "strings.h"
 

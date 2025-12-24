@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 
-#include "ah.h"
-#include "engine/pathfinder.h"
-#include "entity_helper.h"
+#include "../ah.h"
+#include "../engine/pathfinder.h"
+#include "../entity_helper.h"
 
 namespace wfc {
 

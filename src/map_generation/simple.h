@@ -4,7 +4,7 @@
 #include <queue>
 #include <vector>
 
-#include "engine/random_engine.h"
+#include "../engine/random_engine.h"
 #include "map_generation.h"
 
 struct Room {

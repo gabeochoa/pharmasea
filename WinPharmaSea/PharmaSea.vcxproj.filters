@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -446,7 +446,10 @@
     <ClInclude Include="..\src\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\map_generation.h">
+    <ClInclude Include="..\src\map_generation\map_generation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map_generation\in_game_map_generation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\network\internal\channel.h">
@@ -560,7 +563,7 @@
     <ClInclude Include="..\src\tests\rect_split_tests.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\wave_collapse.h">
+    <ClInclude Include="..\src\map_generation\wave_collapse.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\system\ingredient_helper.h">
@@ -656,7 +659,7 @@
     <ClInclude Include="..\src\local_ui.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\simple.h">
+    <ClInclude Include="..\src\map_generation\simple.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\translation_en_rev.h">
@@ -778,7 +781,10 @@
     <ClCompile Include="..\src\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\wave_collapse.cpp">
+    <ClCompile Include="..\src\map_generation\wave_collapse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\map_generation\in_game_map_generation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\system\ingredient_helper.cpp">

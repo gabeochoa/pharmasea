@@ -210,7 +210,8 @@
     <ClInclude Include="..\src\level_info.h" />
     <ClInclude Include="..\src\local_ui.h" />
     <ClInclude Include="..\src\map.h" />
-    <ClInclude Include="..\src\map_generation.h" />
+    <ClInclude Include="..\src\map_generation\map_generation.h" />
+    <ClInclude Include="..\src\map_generation\in_game_map_generation.h" />
     <ClInclude Include="..\src\network\client.h" />
     <ClInclude Include="..\src\network\internal\channel.h" />
     <ClInclude Include="..\src\network\internal\client.h" />
@@ -221,7 +222,7 @@
     <ClInclude Include="..\src\network\shared.h" />
     <ClInclude Include="..\src\preload.h" />
     <ClInclude Include="..\src\recipe_library.h" />
-    <ClInclude Include="..\src\simple.h" />
+    <ClInclude Include="..\src\map_generation\simple.h" />
     <ClInclude Include="..\src\spawner.h" />
     <ClInclude Include="..\src\std_include.h" />
     <ClInclude Include="..\src\strings.h" />
@@ -251,7 +252,7 @@
     <ClInclude Include="..\src\upgrade_library.h" />
     <ClInclude Include="..\src\vec_util.h" />
     <ClInclude Include="..\src\vendor_include.h" />
-    <ClInclude Include="..\src\wave_collapse.h" />
+    <ClInclude Include="..\src\map_generation\wave_collapse.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\camera.cpp" />
@@ -289,6 +290,7 @@
     <ClCompile Include="..\src\network\server.cpp" />
     <ClCompile Include="..\src\preload.cpp" />
     <ClCompile Include="..\src\recipe_library.cpp" />
+    <ClCompile Include="..\src\map_generation\in_game_map_generation.cpp" />
     <ClCompile Include="..\src\system\ai_system.cpp" />
     <ClCompile Include="..\src\system\ingredient_helper.cpp" />
     <ClCompile Include="..\src\system\input_process_manager.cpp" />
@@ -296,7 +298,7 @@
     <ClCompile Include="..\src\system\sophie.cpp" />
     <ClCompile Include="..\src\system\system_manager.cpp" />
     <ClCompile Include="..\src\system\ui_rendering_system.cpp" />
-    <ClCompile Include="..\src\wave_collapse.cpp" />
+    <ClCompile Include="..\src\map_generation\wave_collapse.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
