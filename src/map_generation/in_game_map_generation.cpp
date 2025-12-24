@@ -42,6 +42,12 @@ vec2 generate_in_game_map(const std::string& /*seed*/) {
         tmp.clear();
     }
 
+    // NOTE: This “required entities strip” is a debug/placeholder behavior and
+    // is not spec-compliant long-term (it creates disconnected regions and does
+    // not ensure runtime constraints like register-inside-building or queue
+    // strip clearance).
+    //
+    // Phase-1 spec doc: `docs/map_playability_spec.md`
     std::vector<char> required = {{
         generation::CUST_SPAWNER,
         generation::SODA_MACHINE,
