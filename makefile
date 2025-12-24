@@ -1,7 +1,10 @@
 
 
-RAYLIB_FLAGS := $(shell pkg-config --cflags raylib)
-RAYLIB_LIB := $(shell pkg-config --libs raylib)
+# Prefer system raylib if available; otherwise fall back to vendored headers.
+# (Vendored repo includes headers but not a Linux lib, so full linking may still
+# require a system raylib install.)
+RAYLIB_FLAGS := $(shell pkg-config --cflags raylib 2>/dev/null) -Ivendor/raylib
+RAYLIB_LIB := $(shell pkg-config --libs raylib 2>/dev/null)
 
 # Local GameNetworkingSockets paths (built from ~/p/GameNetworkingSockets)
 # Default to vendored copy; override if you have a local build.
@@ -26,7 +29,10 @@ FLAGS = -std=c++2a $(DEBUG_WARNING_FLAGS) -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TI
 # LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 		  -Wno-c99-extensions -Wno-unused-function -Werror
-INCLUDES = -I$(GNS_INC) -Ivendor/ -Isrc
+# IMPORTANT (Linux): avoid colliding with libc's <strings.h>.
+# Using -iquote keeps project headers available for `#include "..."` without
+# letting system headers accidentally resolve to `src/strings.h`.
+INCLUDES = -I$(GNS_INC) -Ivendor/ -iquote src
 LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
 # backward-cpp (Debug only) - cache pkg-config calls

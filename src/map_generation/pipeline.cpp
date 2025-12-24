@@ -2,16 +2,30 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <optional>
+#include <random>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "../engine/globals.h"
-#include "map_generation.h"
-#include "simple.h"
+#include "playability_spec.h"
+#include "ascii_grid.h"
+#include "day1_required_placement.h"
+#include "day1_validation.h"
+#include "layout_simple.h"
+#include "layout_wfc.h"
 
 namespace mapgen {
 
 namespace {
+
+static std::string_view lstrip_prefix(std::string_view s,
+                                      std::string_view prefix) {
+    if (s.size() < prefix.size()) return s;
+    if (s.substr(0, prefix.size()) != prefix) return s;
+    return s.substr(prefix.size());
+}
 
 BarArchetype pick_archetype_from_seed(const std::string& seed) {
     size_t h = hashString(seed);
@@ -22,83 +36,76 @@ BarArchetype pick_archetype_from_seed(const std::string& seed) {
     return BarArchetype::LoopRing;
 }
 
-int num_seeds_for_archetype(BarArchetype archetype, const GenerationContext& ctx,
-                            const std::string& seed) {
-    int base = std::max(1, static_cast<int>((ctx.rows * ctx.cols) / 100));
-    size_t h = hashString(seed);
-    int jitter = static_cast<int>(h % 3);
-    if (archetype == BarArchetype::OpenHall) return std::max(1, base - 1 + jitter);
-    if (archetype == BarArchetype::MultiRoom) return base + 2 + jitter;
-    if (archetype == BarArchetype::BackRoom) return base + 1 + jitter;
-    return base + 3 + jitter;
-}
-
-std::vector<std::string> grid_to_lines(const std::vector<char>& grid, int rows,
-                                       int cols) {
-    std::vector<std::string> lines;
-    lines.reserve(static_cast<size_t>(rows));
-    for (int i = 0; i < rows; i++) {
-        std::string line;
-        line.reserve(static_cast<size_t>(cols));
-        for (int j = 0; j < cols; j++) {
-            line.push_back(grid[static_cast<size_t>(i * cols + j)]);
-        }
-        lines.push_back(std::move(line));
-    }
-    return lines;
-}
-
-std::vector<std::string> stage_layout(const std::string& seed,
-                                      const GenerationContext& ctx,
-                                      BarArchetype archetype) {
-    int num_seeds = num_seeds_for_archetype(archetype, ctx, seed);
-    std::vector<char> grid = something(ctx.cols, ctx.rows, num_seeds, false);
-    return grid_to_lines(grid, ctx.rows, ctx.cols);
-}
-
-std::vector<std::string> stage_required_placement(std::vector<std::string> lines,
-                                                  int rows) {
-    std::vector<char> required = {{
-        generation::CUST_SPAWNER,
-        generation::SODA_MACHINE,
-        generation::TRASH,
-        generation::REGISTER,
-        generation::ORIGIN,
-        generation::SOPHIE,
-        generation::FAST_FORWARD,
-        generation::CUPBOARD,
-        generation::TABLE,
-        generation::TABLE,
-        generation::TABLE,
-        generation::TABLE,
-    }};
-
-    std::string tmp;
-    tmp.reserve(static_cast<size_t>(rows));
-    for (char c : required) {
-        tmp.push_back(c);
-        if (tmp.size() == static_cast<size_t>(rows)) {
-            lines.push_back(tmp);
-            tmp.clear();
-        }
-    }
-    if (!tmp.empty()) lines.push_back(tmp);
-    return lines;
-}
-
-std::vector<std::string> stage_decoration(std::vector<std::string> lines) {
-    return lines;
-}
-
 }  // namespace
 
 GeneratedAscii generate_ascii(const std::string& seed,
                              const GenerationContext& context) {
-    BarArchetype archetype = pick_archetype_from_seed(seed);
+    // Optional seed prefixes for selecting the layout provider without adding
+    // new settings plumbing:
+    // - "wfc:" forces WFC layout
+    // - "simple:" forces simple layout
+    LayoutSource layout_source = context.layout_source;
+    std::string normalized_seed = seed;
+    {
+        std::string_view s = seed;
+        if (lstrip_prefix(s, "wfc:") != s) {
+            layout_source = LayoutSource::Wfc;
+            normalized_seed = std::string(lstrip_prefix(s, "wfc:"));
+        } else if (lstrip_prefix(s, "simple:") != s) {
+            layout_source = LayoutSource::Simple;
+            normalized_seed = std::string(lstrip_prefix(s, "simple:"));
+        }
+    }
+    if (normalized_seed.empty()) normalized_seed = "seed";
 
-    std::vector<std::string> lines = stage_layout(seed, context, archetype);
-    lines = stage_required_placement(std::move(lines), context.rows);
-    lines = stage_decoration(std::move(lines));
+    BarArchetype archetype = pick_archetype_from_seed(normalized_seed);
+
+    const auto attempt_generate_with_layout = [&](LayoutSource src)
+        -> std::optional<std::vector<std::string>> {
+        for (int attempt = 0; attempt < playability::DEFAULT_REROLL_ATTEMPTS;
+             attempt++) {
+            std::vector<std::string> lines;
+            if (src == LayoutSource::Wfc) {
+                lines = generate_layout_wfc(normalized_seed, context, attempt);
+            } else {
+                lines = generate_layout_simple(normalized_seed, context, archetype,
+                                               attempt);
+            }
+
+            grid::normalize_dims(lines, context.rows, context.cols);
+
+            std::mt19937 rng(static_cast<unsigned int>(hashString(fmt::format(
+                "{}:place:{}",
+                normalized_seed,
+                attempt))));
+
+            if (!place_required_day1(lines, rng)) continue;
+            if (!validate_day1_ascii_plus_routing(lines)) continue;
+            return lines;
+        }
+        return std::nullopt;
+    };
+
+    std::optional<std::vector<std::string>> maybe_lines =
+        attempt_generate_with_layout(layout_source);
+
+    // Fallback: if WFC fails too often, try simple layout so gameplay always
+    // gets a valid start-of-day map.
+    if (!maybe_lines.has_value() && layout_source == LayoutSource::Wfc) {
+        log_warn("[mapgen] WFC failed all attempts for seed {}, falling back to simple layout",
+                 normalized_seed);
+        maybe_lines = attempt_generate_with_layout(LayoutSource::Simple);
+    }
+
+    // Last-ditch: generate something and hope runtime repair/manual reroll is used.
+    std::vector<std::string> lines;
+    if (maybe_lines.has_value()) {
+        lines = std::move(*maybe_lines);
+    } else {
+        lines = generate_layout_simple(normalized_seed, context, archetype, 0);
+        grid::normalize_dims(lines, context.rows, context.cols);
+        grid::ensure_single_origin(lines);
+    }
 
     GeneratedAscii out;
     out.lines = std::move(lines);
