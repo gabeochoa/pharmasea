@@ -5,10 +5,10 @@
 #include <string>
 #include <vector>
 
-#include "ah.h"
-#include "engine/pathfinder.h"
-#include "entity_helper.h"
-#include "entity_query.h"
+#include "../ah.h"
+#include "../engine/pathfinder.h"
+#include "../entity_helper.h"
+#include "../entity_query.h"
 #include "wave_collapse.h"
 
 namespace generation {

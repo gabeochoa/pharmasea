@@ -22,13 +22,11 @@
 #include "entity_makers.h"
 #include "entity_query.h"
 #include "entity_type.h"
-#include "map_generation.h"
+#include "map_generation/in_game_map_generation.h"
 #include "recipe_library.h"
-#include "simple.h"
 #include "strings.h"
 #include "system/system_manager.h"
 #include "vec_util.h"
-#include "wave_collapse.h"
 
 vec3 lobby_origin = LOBBY_BUILDING.to3();
 vec3 progression_origin = PROGRESSION_BUILDING.to3();
@@ -594,74 +592,11 @@ void LevelInfo::generate_store_map() {
 }
 
 void LevelInfo::generate_default_seed() {
-    generation::helper helper(EXAMPLE_MAP);
-    helper.generate();
-    helper.validate();
-    EntityHelper::invalidateCaches();
+    mapgen::generate_default_seed(EXAMPLE_MAP);
 }
 
-vec2 generate_in_game_map_wfc(const std::string&) {
-    // int rows = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
-    // int cols = gen_rand(MIN_MAP_SIZE, MAX_MAP_SIZE);
-    // int rows = 5;
-    // int cols = 5;
-
-    // wfc::WaveCollapse wc(static_cast<unsigned int>(hashString(seed)));
-    // wc.run();
-    // generation::helper helper(wc.get_lines());
-
-    int rows = 20;
-    int cols = 20;
-    std::vector<char> chars = something(rows, cols);
-
-    std::vector<std::string> lines;
-    std::string tmp;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            tmp.push_back(chars[i * rows + j]);
-        }
-        lines.push_back(tmp);
-        tmp.clear();
-    }
-
-    std::vector<char> required = {{
-        generation::CUST_SPAWNER,
-        generation::SODA_MACHINE,
-        generation::TRASH,
-        generation::REGISTER,
-        generation::ORIGIN,
-        generation::SOPHIE,
-        generation::FAST_FORWARD,
-        generation::CUPBOARD,
-
-        generation::TABLE,
-        generation::TABLE,
-        generation::TABLE,
-        generation::TABLE,
-    }};
-    tmp.clear();
-    for (auto c : required) {
-        tmp.push_back(c);
-        if (tmp.size() == (size_t) rows) {
-            lines.push_back(tmp);
-            tmp.clear();
-        }
-    }
-    lines.push_back(tmp);
-
-    for (const auto& c : lines) {
-        std::cout << c;
-        std::cout << std::endl;
-    }
-
-    generation::helper helper(lines);
-    vec2 max_location = helper.generate();
-    helper.validate();
-    EntityHelper::invalidateCaches();
-
-    log_info("max location {}", max_location);
-
-    return max_location;
+vec2 generate_in_game_map_wfc(const std::string& seed) {
+    return mapgen::generate_in_game_map(seed);
 }
 
 void LevelInfo::add_outside_triggers(vec2 origin) {
@@ -707,155 +642,6 @@ void LevelInfo::generate_in_game_map() {
     add_outside_triggers(mx);
 
     return;
-
-    std::vector<std::string> lines;
-
-    int rows = RandomEngine::get().get_int(MIN_MAP_SIZE, MAX_MAP_SIZE);
-    int cols = RandomEngine::get().get_int(MIN_MAP_SIZE, MAX_MAP_SIZE);
-
-    const auto _is_inside = [lines](int i, int j) -> bool {
-        if (i < 0 || j < 0 || i >= (int) lines.size() ||
-            j >= (int) lines[i].size())
-            return false;
-        return true;
-    };
-
-    const auto get_char = [lines, _is_inside](int i, int j) -> char {
-        if (_is_inside(i, j)) return lines[i][j];
-        return '.';
-    };
-
-    const auto _is_empty = [get_char, lines](int i, int j) -> bool {
-        // TODO probably should allow caller to set default on fail
-        return get_char(i, j) == '.';
-    };
-
-    const auto _get_random_empty = [_is_empty, rows,
-                                    cols]() -> std::pair<int, int> {
-        int tries = 0;
-        int x;
-        int y;
-        do {
-            x = RandomEngine::get().get_int(1, rows - 1);
-            y = RandomEngine::get().get_int(1, cols - 1);
-            if (tries++ > 100) {
-                x = 0;
-                y = 0;
-                break;
-            }
-        } while (  //
-            !_is_empty(x, y));
-        return {x, y};
-    };
-
-    const auto _get_empty_neighbor = [_is_empty](int i,
-                                                 int j) -> std::pair<int, int> {
-        auto ns = vec::get_neighbors_i(i, j);
-        std::shuffle(std::begin(ns), std::end(ns), RandomEngine::generator());
-
-        for (auto n : ns) {
-            if (_is_empty(n.first, n.second)) {
-                return n;
-            }
-        }
-        return ns[0];
-    };
-
-    const auto _get_valid_register_location = [_is_empty, rows,
-                                               cols]() -> std::pair<int, int> {
-        int tries = 0;
-        int x;
-        int y;
-        do {
-            x = RandomEngine::get().get_int(1, rows - 1);
-            y = RandomEngine::get().get_int(1, cols - 1);
-            if (tries++ > 100) {
-                x = 0;
-                y = 0;
-                break;
-            }
-        } while (  //
-            !_is_empty(x, y) && !_is_empty(x, y + 1));
-        return {x, y};
-    };
-
-    // setup_lines
-    {
-        for (int i = 0; i < rows + 5; i++) {
-            std::string l(cols + 10, '.');
-            lines.push_back(l);
-        }
-    }
-
-    // setup_boundary_walls
-    {
-        for (int i = 0; i < rows; i++) {
-            if (i == 0 || i == rows - 1) {
-                lines[i] = std::string(cols, '#');
-                continue;
-            }
-            lines[i][0] = generation::WALL;
-            lines[i][cols] = generation::WALL;
-        }
-
-        // Add one empty spot so that we can get into the box
-        int y = RandomEngine::get().get_int(1, rows - 1);
-        lines[y][cols] = '.';
-    }
-
-    // add_customer_spawner + sophie
-    {
-        lines[1][cols + 1] = generation::CUST_SPAWNER;
-        lines[2][cols + 1] = generation::SOPHIE;
-        lines[3][cols + 1] = generation::FAST_FORWARD;
-    }
-
-    {
-        auto [x, y] = _get_random_empty();
-        lines[x][y] = generation::MOP_HOLDER;
-    }
-
-    int num_tables = std::min(rows, cols);
-    for (int i = 0; i < num_tables; i++) {
-        auto [x, y] = _get_random_empty();
-        do {
-            // place table
-            lines[x][y] = generation::TABLE;
-            // move over one spot
-            auto p = _get_empty_neighbor(x, y);
-            x = p.first;
-            y = p.second;
-            // was it empty? okay place and go back
-        } while (_is_inside(x, y) && _is_empty(x, y));
-    }
-
-    {
-        // using soda machine here to enforce that we have these two next to
-        // eachother
-        auto [x, y] = _get_valid_register_location();
-        lines[x][y] = generation::SODA_MACHINE;
-        lines[x][y + 1] = generation::CUPBOARD;
-    }
-
-    // place register last so that we guarantee it remains valid
-    // ie the place infront of it isnt full
-    {
-        auto [x, y] = _get_valid_register_location();
-        lines[x][y] = generation::REGISTER;
-    }
-
-    for (auto line : lines) {
-        log_info("{}", line);
-    }
-
-    //////////
-    //////////
-    //////////
-
-    generation::helper helper(lines);
-    helper.generate();
-    helper.validate();
-    EntityHelper::invalidateCaches();
 }
 
 auto LevelInfo::get_rand_walkable() {

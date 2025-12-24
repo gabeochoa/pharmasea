@@ -6,8 +6,8 @@
 #include "engine/simulated_input/simulated_input.h"
 #include "engine/random_engine.h"
 #include "engine/ui/svg.h"
-#include "map_generation.h"
-#include "wave_collapse.h"
+#include "map_generation/map_generation.h"
+#include "map_generation/wave_collapse.h"
 
 // TODO removing this include would speed up
 // compilation times of this file by probably 1.6 seconds
