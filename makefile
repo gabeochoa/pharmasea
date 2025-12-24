@@ -107,6 +107,7 @@ modeltest:
 	$(CXX) -std=c++2a -g $(RAYLIB_FLAGS) $(RAYLIB_LIB) -Ivendor/ model_test.cpp;./a.out
 
 $(OBJ_DIR)/%.o: %.cpp makefile $(PCH_GCH)
+	@mkdir -p $(dir $@)
 	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -Wno-deprecated-literal-operator -Wno-invalid-utf8 -Wno-implicit-float-conversion -Wno-c99-extensions -c $< -o $@ -MMD -MF $(@:.o=.d)
 
 %.d: %.cpp
