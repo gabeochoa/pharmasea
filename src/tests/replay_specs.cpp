@@ -3,7 +3,6 @@
 #include "../components/has_day_night_timer.h"
 #include "../engine/assert.h"
 #include "../entity_query.h"
-#include "../entity_type.h"
 
 namespace {
 
@@ -13,12 +12,13 @@ struct RegisterReplaySpecsOnce {
             .name = "completed_first_day",
             .on_end =
                 [](replay_validation::Context&) {
-                    OptEntity sophie =
-                        EntityQuery().whereType(EntityType::Sophie).gen_first();
-                    VALIDATE(sophie.valid(),
-                             "replay validation requires Sophie to exist");
+                    // Use EQ() so this works in both host/client contexts.
+                    OptEntity e =
+                        EQ().whereHasComponent<HasDayNightTimer>().gen_first();
+                    VALIDATE(e.valid(),
+                             "replay validation requires HasDayNightTimer to exist");
                     const int day_count =
-                        sophie->get<HasDayNightTimer>().days_passed();
+                        e->get<HasDayNightTimer>().days_passed();
 
                     // For the "complete first day" replay we expect to be in
                     // Day 1 by the end (HasDayNightTimer increments at day
