@@ -307,6 +307,11 @@ Suggested placement algorithm for registers:
 2) Try 4 rotations; accept the first where the queue strip tiles are all walkable.  
 3) Validate spawner→queue-front path (respecting BFS cutoff); otherwise move/rotate.  
 
+Note: ASCII does not currently encode register orientation (only grabbers have
+explicit rotated tokens). So “try 4 rotations” is a **spawn-time placement
+behavior**, not a different ASCII character, until/unless we add oriented
+register tokens later.
+
 ### Decoration stage contract
 
 - **Input**: validated “required-placed” grid
