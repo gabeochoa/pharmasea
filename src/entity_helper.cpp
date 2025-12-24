@@ -89,7 +89,7 @@ Entity& EntityHelper::createPermanentEntity() {
 }
 
 Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
-    std::shared_ptr<Entity> e(new Entity());
+    auto e = std::make_shared<Entity>();
     get_entities_for_mod().push_back(e);
 
     invalidatePathCache();
