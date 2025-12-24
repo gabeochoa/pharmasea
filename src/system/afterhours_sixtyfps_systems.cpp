@@ -382,9 +382,6 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
-        // Deprecated: old save station trigger.
-        case IsTriggerArea::Planning_SaveSlot01:
-            break;
         case IsTriggerArea::Planning_SaveSlot: {
             // If you'd like slot-specific text, set it at spawn-time.
             ita.update_title(NO_TRANSLATE("Save Game"));
