@@ -3,8 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "../ah.h"
-#include "../engine/graphics.h"
+#include "external_include.h"
 
 namespace mapgen {
 

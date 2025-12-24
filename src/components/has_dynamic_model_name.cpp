@@ -5,8 +5,10 @@
 #include "../system/system_manager.h"
 
 std::string HasDynamicModelName::fetch(const Entity& owner) const {
-    if (!initialized)
+    if (!initialized) {
         log_warn("calling HasDynamicModelName::fetch() without initializing");
+        return base_name;  // Return default when not initialized
+    }
 
     switch (dynamic_type) {
         case OpenClosed: {
@@ -21,7 +23,15 @@ std::string HasDynamicModelName::fetch(const Entity& owner) const {
         case Ingredients:
         case EmptyFull:
         case Subtype: {
-            return fetcher(owner, base_name);
+            if (fetcher) {
+                return fetcher(owner, base_name);
+            } else {
+                log_warn(
+                    "HasDynamicModelName fetcher is null for dynamic_type {}, "
+                    "returning base_name",
+                    (int) dynamic_type);
+                return base_name;
+            }
         } break;
     }
     return base_name;

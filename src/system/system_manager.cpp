@@ -122,6 +122,9 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
         case game::ModelTest: {
             position = MODEL_TEST_BUILDING.to3();
         } break;
+        case game::LoadSaveRoom: {
+            position = LOAD_SAVE_BUILDING.to3();
+        } break;
     }
 
     Transform& transform = entity.get<Transform>();

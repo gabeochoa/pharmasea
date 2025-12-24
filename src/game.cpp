@@ -94,6 +94,8 @@ bool SHOW_RAYLIB_INTRO = false;
 bool TEST_MAP_GENERATION = false;
 bool GENERATE_MAP = false;
 std::string GENERATE_MAP_SEED = "";
+std::string LOAD_SAVE_TARGET = "";
+bool LOAD_SAVE_ENABLED = false;
 
 void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues
@@ -211,7 +213,11 @@ void process_dev_flags(int argc, char* argv[]) {
             "--record-input", "--intro", "--test_map_generation",
             "--replay-validate"};
         static const std::set<std::string> with_value = {
-            "--replay", "--bypass-rounds", "--generate-map"};
+            "--replay",
+            "--bypass-rounds",
+            "--generate-map",
+            "--load-save",
+        };
 
         // Accept --flag=value form for value flags.
         if (arg.rfind("--", 0) == 0) {
@@ -232,7 +238,7 @@ void process_dev_flags(int argc, char* argv[]) {
         if (is_known_flag(arg)) {
             // If this flag expects a value, skip the next token.
             if ((arg == "--replay" || arg == "--bypass-rounds" ||
-                 arg == "--generate-map") &&
+                 arg == "--generate-map" || arg == "--load-save") &&
                 i + 1 < argc) {
                 ++i;
             }
@@ -300,12 +306,28 @@ void process_dev_flags(int argc, char* argv[]) {
         }
     }
 
+    if (cmdl({"--load-save"})) {
+        std::string target;
+        cmdl({"--load-save"}) >> target;
+        if (!target.empty()) {
+            LOAD_SAVE_TARGET = target;
+            LOAD_SAVE_ENABLED = true;
+            log_info("LoadSave: requested '{}'", LOAD_SAVE_TARGET);
+        }
+    }
+
     // Fallback manual argv scan in case argh misses parameters
     auto try_set_replay = [](const std::string& val) {
         if (val.empty()) return;
         REPLAY_NAME = val;
         REPLAY_ENABLED = true;
         log_info("Replay: parsed via argv fallback '{}'", REPLAY_NAME);
+    };
+    auto try_set_load_save = [](const std::string& val) {
+        if (val.empty()) return;
+        LOAD_SAVE_TARGET = val;
+        LOAD_SAVE_ENABLED = true;
+        log_info("LoadSave: parsed via argv fallback '{}'", LOAD_SAVE_TARGET);
     };
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i] ? argv[i] : "";
@@ -314,8 +336,17 @@ void process_dev_flags(int argc, char* argv[]) {
             try_set_replay(arg.substr(prefix.size()));
             continue;
         }
+        const std::string load_prefix = "--load-save=";
+        if (arg.rfind(load_prefix, 0) == 0) {
+            try_set_load_save(arg.substr(load_prefix.size()));
+            continue;
+        }
         if (arg == "--replay" && i + 1 < argc) {
             try_set_replay(argv[i + 1] ? argv[i + 1] : "");
+            ++i;  // consume value
+        }
+        if (arg == "--load-save" && i + 1 < argc) {
+            try_set_load_save(argv[i + 1] ? argv[i + 1] : "");
             ++i;  // consume value
         }
     }

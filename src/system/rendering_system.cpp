@@ -619,6 +619,12 @@ void render_trigger_area(const Entity& entity, float dt) {
     // place the english
     auto fsize_per_width = 62.f;
     auto fsize = fsize_per_width * size.x;
+    // Save slot labels are intentionally more verbose (multi-line), so render
+    // them a bit smaller to avoid overflowing.
+    if (ita.type == IsTriggerArea::LoadSave_LoadSlot ||
+        ita.type == IsTriggerArea::Planning_SaveSlot) {
+        fsize *= 0.78f;
+    }
 
     TranslatableString title = entity.get<IsTriggerArea>().title();
     log_ifx(title.empty(), LogLevel::LOG_WARN,
@@ -771,6 +777,11 @@ void render_trigger_area(const Entity& entity, float dt) {
         case IsTriggerArea::Store_BackToPlanning:
         case IsTriggerArea::ModelTest_BackToLobby:
         case IsTriggerArea::Store_Reroll:
+        case IsTriggerArea::Lobby_LoadSave:
+        case IsTriggerArea::LoadSave_BackToLobby:
+        case IsTriggerArea::LoadSave_LoadSlot:
+        case IsTriggerArea::LoadSave_ToggleDeleteMode:
+        case IsTriggerArea::Planning_SaveSlot:
             break;
         case IsTriggerArea::Progression_Option1:
         case IsTriggerArea::Progression_Option2:

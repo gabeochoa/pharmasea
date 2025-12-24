@@ -23,6 +23,15 @@ struct IsTriggerArea : public BaseComponent {
         Store_BackToPlanning,
         Store_Reroll,
         ModelTest_BackToLobby,
+
+        Lobby_LoadSave,
+        LoadSave_BackToLobby,
+
+        // Load/Save room actions (slot number stored in HasSubtype.type_index).
+        LoadSave_LoadSlot,
+        LoadSave_ToggleDeleteMode,
+
+        Planning_SaveSlot,
     } type = Unset;
 
     enum struct EntrantsRequired {
