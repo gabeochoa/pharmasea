@@ -182,35 +182,77 @@ This avoids divergence where generation says “valid” but runtime checks imme
 - **Back-room vibe**: front area + back room connected by a single narrow connection; visually “in the back” but still accessible.
 - **Loop/ring**: interior circulation loop for interesting movement and robust pathing.
 
-## Milestones
+## Phased roadmap (tasks + deliverables)
 
-### 1) Document the Playability Spec
+### Phase 1 — Lock the “start-of-day playable” spec
+
+#### Task 1 — Write the Playability Spec (one source of truth)
 
 Produce a concise spec (bulleted rules) covering:
 
 - Required entities for day-1 (and how that evolves with progression)
 - Spawner outside requirement
-- Spawner → register path requirement
+- Spawner → register path requirement (including the 50-tile cutoff)
 - Register queue tile rules (walkability strip in front of register)
 - Fixed shell constraints (20×20, outside wall ring consistent)
+- Connectivity rule (4-neighbor connectivity; no diagonal-only connections)
 
-### 2) Add archetype selection (no generator swap yet)
+**Deliverable:** `Playability Spec` section in this doc (or a small companion doc) that generator code and tests can reference.
 
-Add a concept of “bar style” selection (weighted/random by seed), even if it initially maps to variations of the current generator.
+#### Task 2 — Define failure taxonomy + retry policy
 
-### 3) Split generation into explicit stages
+Define which failures are:
+
+- **Repairable** (local fix; e.g., blocked queue tile) vs
+- **Reroll-only** (structural; e.g., disconnected interior),
+
+and set a deterministic retry policy: `seed + attempt_index`, bounded by a configurable max attempts.
+
+**Deliverable:** A short “Validation outcomes” note describing repair vs reroll, plus a default retry cap.
+
+### Phase 2 — Refactor to an explicit pipeline (no new generator yet)
+
+#### Task 1 — Introduce a tiny generator interface
+
+Define an interface that returns the ASCII tile map:
+
+- `generate(seed, context) -> std::vector<std::string>`
+
+Keep the “ASCII seam” and keep “instantiate + validate” as a single downstream step.
+
+**Deliverable:** A single entry point that current in-game generation can call, regardless of the layout source.
+
+#### Task 2 — Split into stages (keep ASCII between stages)
 
 Refactor conceptually into:
 
 - layout → required placement → decoration → validate → repair/retry
 
-Keep ASCII between stages.
+**Deliverable:** Code structure that makes the stage boundaries obvious, even if early versions still reuse existing layout logic.
 
-### 4) Bring WFC under the same interface
+#### Task 3 — Add archetype selection (still using current layout logic)
 
-Treat WFC as an alternative **layout source** that still feeds the same placement + validation pipeline.
+Add a concept of “bar style” selection (weighted/random by seed), even if it initially maps to parameter variations of the existing generator.
 
-### 5) Add deterministic regression coverage
+**Deliverable:** Seeds produce consistent archetype choices; archetype is visible in the resulting layout.
+
+### Phase 3 — Bring WFC under the same pipeline
+
+#### Task 1 — Treat WFC as a layout provider only
+
+Wrap WFC so it produces only the layout (ASCII lines), then feed it into the shared placement + validation stages.
+
+**Deliverable:** WFC is selectable as a layout source without bypassing required placement or playability validation.
+
+#### Task 2 — Ensure WFC layouts obey the Playability Spec via shared validation
+
+If WFC outputs fail often, rely on deterministic repair/retry first; only then consider changing pattern sets or constraints.
+
+**Deliverable:** WFC maps either pass validation or fail deterministically with a clear reason code (repair vs reroll).
+
+### Phase 4 — Add deterministic regression coverage
+
+#### Task 1 — Create a seed suite
 
 Create a seed list and basic properties:
 
@@ -218,9 +260,11 @@ Create a seed list and basic properties:
 - Connectivity and required counts hold
 - No immediate “invalid queue tiles” cases
 
-## 6) Investigate new map generators (choose a short-list)
+**Deliverable:** A minimal regression test suite that runs in CI and guards against accidental playability regressions.
 
-### Evaluation criteria (decide before comparing)
+### Phase 5 — Choose the next generator (short-list + decision)
+
+#### Task 1 — Lock evaluation criteria (before comparing)
 
 - **Hard guarantees**: can it reliably satisfy spawner outside + path to a register + queue tile constraints?
 - **Variety**: can it produce the desired bar types (open/multi-room/back-room vibe)?
@@ -228,10 +272,10 @@ Create a seed list and basic properties:
 - **Determinism**: stable outputs from seed (across platforms/compilers if needed).
 - **Iteration/debuggability**: can failures be diagnosed and fixed quickly?
 
-### Candidate approaches to evaluate
+#### Task 2 — Evaluate candidate approaches against the criteria
 
 - **Room-graph / BSP + rasterization**:
-  - Strong for “bar archetypes”, connectivity guarantees, and fixed footprint.
+  - Strong for archetypes, connectivity guarantees, and fixed footprint.
   - Usually easiest to keep layouts open while still varied.
 - **Constraint-based layout + placer**:
   - Generate mostly-open floorplan, then apply constraints for partitions/features.
@@ -245,33 +289,33 @@ Create a seed list and basic properties:
   - High variety, but pattern sets can overconstrain and increase failure rates.
   - Best positioned as **layout-only** feeding shared placement + validation stages.
 
-### Deliverable for step 6
+#### Task 3 — Write the decision note
 
-A short decision note selecting:
+Select:
 
 - 1 default generator to implement next
 - 1 secondary generator to keep as an alternate (optional)
-- Rationale mapped to the evaluation criteria above
+- Rationale mapped to the evaluation criteria
 
-## 7) Implement the chosen generator (behind the pipeline)
+**Deliverable:** A short decision note (in this doc or `docs/`) explaining the choice and the “why”.
 
-### Implementation constraints
+### Phase 6 — Implement the chosen generator behind the pipeline
 
-- Preserve the **ASCII seam** and keep “instantiate + validate” as a single downstream step.
-- Plug into in-game map generation via a **small generator interface**:
-  - `generate(seed, context) -> std::vector<std::string>`
-- Use deterministic repair/retry so **day-1 is always playable**.
+#### Task 1 — Implement layout-only first
 
-### Recommended implementation order
+Get the new generator to output layouts that respect:
 
-- Implement the new generator as **layout-only** first.
-- Reuse a shared **required placement** stage to satisfy hard constraints.
-- Reuse a shared **validation + retry** stage.
-- Add archetype tuning knobs (room count, back-room chance, openness target).
+- Fixed shell / footprint
+- Archetype knobs (room count, back-room chance, openness target)
+- 4-neighbor connectivity (or a deterministic repair step that enforces it)
 
-### Definition of done
+#### Task 2 — Reuse shared required placement + validation + retry
 
-- A set of fixed seeds consistently produces valid day-1 maps.
-- Multiple archetypes appear across seeds (visible structural variety).
-- Layout preserves enough open space to accommodate late-game machines/items.
+Do not duplicate playability logic per generator. Use the shared stages.
+
+#### Task 3 — Definition of done (DoD) gates
+
+- A set of fixed seeds consistently produces valid day-1 maps
+- Multiple archetypes appear across seeds (visible structural variety)
+- Layout preserves enough open space to accommodate late-game machines/items
 
