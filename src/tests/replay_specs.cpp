@@ -1,7 +1,6 @@
-#include "../engine/simulated_input/replay_validation.h"
-
 #include "../components/has_day_night_timer.h"
 #include "../engine/assert.h"
+#include "../engine/simulated_input/replay_validation.h"
 #include "../entity_query.h"
 
 namespace {
@@ -15,8 +14,9 @@ struct RegisterReplaySpecsOnce {
                     // Use EQ() so this works in both host/client contexts.
                     OptEntity e =
                         EQ().whereHasComponent<HasDayNightTimer>().gen_first();
-                    VALIDATE(e.valid(),
-                             "replay validation requires HasDayNightTimer to exist");
+                    VALIDATE(
+                        e.valid(),
+                        "replay validation requires HasDayNightTimer to exist");
                     const int day_count =
                         e->get<HasDayNightTimer>().days_passed();
 
@@ -33,4 +33,3 @@ struct RegisterReplaySpecsOnce {
 static RegisterReplaySpecsOnce gRegisterReplaySpecsOnce;
 
 }  // namespace
-
