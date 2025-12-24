@@ -44,7 +44,7 @@ vec2 generate_in_game_map(const std::string& /*seed*/) {
 
     std::vector<char> required = {{
         generation::CUST_SPAWNER,
-        generation::SODA_MACHINE,
+        generation::SODA_FOUNTAIN,
         generation::TRASH,
         generation::REGISTER,
         generation::ORIGIN,

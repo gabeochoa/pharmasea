@@ -258,13 +258,23 @@ struct helper {
             VALIDATE(get_first_matching(et),
                      fmt::format("{} needs to be there ", et));
         };
+        const auto validate_exist_any = [get_first_matching](
+                                            std::initializer_list<EntityType>
+                                                types,
+                                            const char* debug_name) {
+            for (const EntityType et : types) {
+                if (get_first_matching(et).valid()) return;
+            }
+            VALIDATE(false, fmt::format("{} needs to be there", debug_name));
+        };
 
         validate_exist(EntityType::Sophie);
         validate_exist(EntityType::Register);
         validate_exist(EntityType::CustomerSpawner);
         validate_exist(EntityType::FastForward);
         validate_exist(EntityType::Cupboard);
-        validate_exist(EntityType::SodaMachine);
+        validate_exist_any({EntityType::SodaFountain, EntityType::SodaMachine},
+                           "Soda fountain");
         validate_exist(EntityType::Trash);
 
         // ensure customers can make it to the register
