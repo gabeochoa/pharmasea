@@ -1,6 +1,7 @@
 #include "../ah.h"
 #include "../building_locations.h"
 #include <filesystem>
+#include <unordered_set>
 #include "../components/can_be_highlighted.h"
 #include "../components/can_change_settings_interactively.h"
 #include "../components/can_highlight_others.h"
@@ -43,6 +44,21 @@
 namespace system_manager {
 
 static bool g_load_save_delete_mode = false;
+// Some triggers should only fire once per "standing on it" (until you step off).
+static std::unordered_set<int> g_trigger_fired_while_occupied;
+
+static bool should_gate_trigger_fires(const IsTriggerArea& ita) {
+    switch (ita.type) {
+        case IsTriggerArea::LoadSave_ToggleDeleteMode:
+        case IsTriggerArea::Planning_SaveSlot:
+            return true;
+        case IsTriggerArea::LoadSave_LoadSlot:
+            // Prevent repeated deletes while standing on a slot pedestal.
+            return g_load_save_delete_mode;
+        default:
+            return false;
+    }
+}
 
 bool _create_nuxes(Entity& entity);
 void process_nux_updates(Entity& entity, float dt);
@@ -117,6 +133,13 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
     if (ita.progress() < 1.f) return;
+
+    if (should_gate_trigger_fires(ita) && ita.active_entrants() > 0) {
+        if (g_trigger_fired_while_occupied.contains(entity.id)) {
+            return;
+        }
+        g_trigger_fired_while_occupied.insert(entity.id);
+    }
 
     ita.reset_cooldown();
 
@@ -381,6 +404,10 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
     IsTriggerArea& ita = entity.get<IsTriggerArea>();
 
+    if (should_gate_trigger_fires(ita) && ita.active_entrants() == 0) {
+        g_trigger_fired_while_occupied.erase(entity.id);
+    }
+
     if (ita.type == IsTriggerArea::Unset) {
         log_warn("You created a trigger area without a type");
         TranslatableString not_configured_ts =
@@ -435,9 +462,18 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
                                : 1;
             if (slot_num < 1) slot_num = 1;
 
-            ita.update_title(NO_TRANSLATE("Save Game"));
-            ita.update_subtitle(
-                NO_TRANSLATE(fmt::format("Slot {:02d}", slot_num)));
+            const bool is_saving =
+                ita.active_entrants() > 0 && ita.progress() > 0.f &&
+                ita.should_progress();
+            if (is_saving) {
+                ita.update_title(NO_TRANSLATE("Saving..."));
+                ita.update_subtitle(
+                    NO_TRANSLATE(fmt::format("Slot {:02d}", slot_num)));
+            } else {
+                ita.update_title(
+                    NO_TRANSLATE(fmt::format("Slot {:02d}", slot_num)));
+                ita.update_subtitle(NO_TRANSLATE("Save Game"));
+            }
             return;
         } break;
         case IsTriggerArea::Store_Reroll: {
