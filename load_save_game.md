@@ -16,7 +16,7 @@ Date: 2025-12-24
 - **Future scope**: likely expands toward “C” (broader saveable set), but start narrow.
 - **Saving UX**: both **diagetic Save Station** + **menu button** (enabled only in Planning).
 - **Delete UX**: **hold-to-delete** (long press) for now.
-- **Thumbnail previews**: prefer **minimap-style preview** (similar in spirit to seed UI), if feasible.
+- **Thumbnail previews**: prefer **minimap-style preview** (similar in spirit to seed UI), with a **screenshot fallback** if minimap render is non-trivial.
 
 ## Goals
 - **Load an existing save file** and reconstruct the **authoritative world/map** to match it.
@@ -61,7 +61,9 @@ Use Bitsery, but add a small header for **versioning + UI metadata**.
   - playtime seconds (or hh:mm)
   - coins/balance + cart (if relevant)
   - unlocks/progression summary (compact)
-  - **optional**: thumbnail path or embedded thumbnail bytes (stretch)
+  - **optional**: thumbnail(s) (stretch)
+    - `slot_XX_minimap.png` (preferred)
+    - `slot_XX_screenshot.png` (fallback if easier)
 
 **Payload (hybrid model)**
 - Baseline: `seed` (used to regenerate the deterministic base map)
@@ -194,7 +196,9 @@ Wire failures via `replay_validation::add_failure()` and fail in `end_replay()`.
 - Save delta + apply delta on top of regenerated baseline
 
 ### Phase 3 — Thumbnail previews (stretch)
-- On save: capture a small **minimap-style preview** and write `slot_XX.png`
+- On save: capture previews (pick easiest first):
+  - **Fast path**: simple screenshot → `slot_XX_screenshot.png`
+  - **Preferred**: minimap-style render → `slot_XX_minimap.png`
 - In room: load and display thumbnail on pedestal (keep it cheap: cache textures)
 
 ## Acceptance Criteria
