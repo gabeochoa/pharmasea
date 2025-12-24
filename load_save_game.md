@@ -11,6 +11,12 @@ Date: 2025-12-24
 - **Replay validation**: **End-state assertions only** (no per-frame checks); replay remains **CLI-driven** for now.
 - **Multiplayer**: **Host authoritative** load (clients sync + teleport).
 - **Room features**: **Load + Delete** in-room for v1; **Replay UI later** (CLI flag now).
+-
+- **Hybrid scope v1**: **Furniture placements only** (items do not persist; they respawn from furniture).
+- **Future scope**: likely expands toward “C” (broader saveable set), but start narrow.
+- **Saving UX**: both **diagetic Save Station** + **menu button** (enabled only in Planning).
+- **Delete UX**: **hold-to-delete** (long press) for now.
+- **Thumbnail previews**: prefer **minimap-style preview** (similar in spirit to seed UI), if feasible.
 
 ## Goals
 - **Load an existing save file** and reconstruct the **authoritative world/map** to match it.
@@ -60,8 +66,7 @@ Use Bitsery, but add a small header for **versioning + UI metadata**.
 **Payload (hybrid model)**
 - Baseline: `seed` (used to regenerate the deterministic base map)
 - Delta: “player-altered state”, e.g.
-  - moved/placed furniture
-  - items that should persist across planning
+  - moved/placed **furniture** (v1 scope)
   - progression + round settings + bank + day/night timer state
   - any other state designers consider “save-worthy”
 
@@ -93,6 +98,9 @@ Use Bitsery, but add a small header for **versioning + UI metadata**.
 ### Saving (planning-only)
 - Only allow save writes while in Planning mode (daytime).
 - Attempting to save outside Planning should be a no-op with clear feedback (toast/log).
+- UX sources:
+  - Diagetic **Save Station** in Planning (recommended primary)
+  - Menu button (only enabled in Planning) as a convenient shortcut
 
 ### Save locations & slots
 Use a predictable folder under the game folder:
@@ -137,9 +145,7 @@ When player interacts with pedestal:
 - Transition to **Planning** and place players at planning spawn.
 
 ### Delete behavior (v1)
-- In the room, provide a simple delete interaction:
-  - either a dedicated “Delete” station that arms delete mode
-  - or a secondary interaction on slot pedestal (safer if it requires confirm)
+- In the room, provide **hold-to-delete** (long press) on the slot pedestal.
 - Delete removes the save file (and thumbnail file if present) and refreshes the room list.
 
 Fast shipping version:
@@ -188,7 +194,7 @@ Wire failures via `replay_validation::add_failure()` and fail in `end_replay()`.
 - Save delta + apply delta on top of regenerated baseline
 
 ### Phase 3 — Thumbnail previews (stretch)
-- On save: capture a small screenshot or minimap render and write `slot_XX.png`
+- On save: capture a small **minimap-style preview** and write `slot_XX.png`
 - In room: load and display thumbnail on pedestal (keep it cheap: cache textures)
 
 ## Acceptance Criteria
