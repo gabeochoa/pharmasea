@@ -16,6 +16,7 @@
 #include "rect_split_tests.h"
 #include "size_ents.h"
 #include "test_entity_serialization.h"
+#include "test_map_playability.h"
 #include "test_pathing.h"
 #include "test_ui_widget.h"
 
@@ -68,6 +69,7 @@ inline void run_all() {
     all_tests();
 
     lerp_test();
+    test_map_playability();
     test_all_pathing();
 
     size_test();

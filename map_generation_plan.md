@@ -385,7 +385,10 @@ Produce a concise spec (bulleted rules) covering:
 - Fixed shell constraints (20×20, outside wall ring consistent)
 - Connectivity rule (4-neighbor connectivity; no diagonal-only connections)
 
-**Deliverable:** `Playability Spec` section in this doc (or a small companion doc) that generator code and tests can reference.
+**Deliverable:** A single spec that code/tests can reference.
+
+- Canonical doc: `docs/map_playability_spec.md`
+- (This doc keeps an embedded “Playability Spec” section for context, but the companion doc is the source of truth.)
 
 #### Task 2 — Define failure taxonomy + retry policy
 
@@ -397,6 +400,8 @@ Define which failures are:
 and set a deterministic retry policy: `seed + attempt_index`, bounded by a configurable max attempts.
 
 **Deliverable:** A short “Validation outcomes” note describing repair vs reroll, plus a default retry cap.
+
+- Canonical doc: `docs/map_playability_spec.md` (includes default retry cap: 25)
 
 ### Phase 2 — Refactor to an explicit pipeline (no new generator yet)
 
