@@ -87,6 +87,7 @@ bool EXIT_ON_BYPASS_COMPLETE = false;
 bool RECORD_INPUTS = false;
 std::string REPLAY_NAME = "";
 bool REPLAY_ENABLED = false;
+bool REPLAY_VALIDATE = false;
 bool SHOW_INTRO = false;
 bool SHOW_RAYLIB_INTRO = false;
 bool TEST_MAP_GENERATION = false;
@@ -204,7 +205,8 @@ void process_dev_flags(int argc, char* argv[]) {
             "--gabe", "-g", "--tests-only", "-t", "--disable-all", "-d",
             "--models", "-m", "--disable-models", "-M", "--sound", "-s",
             "--disable-sound", "-S", "--bypass-menu", "--exit-on-bypass-complete",
-            "--record-input", "--intro", "--test_map_generation"};
+            "--record-input", "--intro", "--test_map_generation",
+            "--replay-validate"};
         static const std::set<std::string> with_value = {
             "--replay", "--bypass-rounds"};
 
@@ -325,6 +327,11 @@ void process_dev_flags(int argc, char* argv[]) {
     if (cmdl[{"--exit-on-bypass-complete"}]) {
         EXIT_ON_BYPASS_COMPLETE = true;
         log_info("--exit-on-bypass-complete enabled");
+    }
+
+    if (cmdl[{"--replay-validate"}]) {
+        REPLAY_VALIDATE = true;
+        log_info("--replay-validate enabled");
     }
 
     if (cmdl[{"--record-input"}]) {
