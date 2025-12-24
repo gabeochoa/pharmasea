@@ -1,6 +1,17 @@
 # Load Save Game System Plan (with Diagetic “PS2 Save Select” Room + Replay Validation)
 Date: 2025-12-24
 
+## Decisions (confirmed)
+- **World persistence**: **Hybrid** (persist player-altered state; regenerate baseline from seed).
+- **Save timing**: **Only allow saving in Planning mode** (daytime).
+- **Load destination**: After load, land in **Planning mode**.
+- **Slots/UI**: Show a **PS2-style grid** (8–12 slots) in a diagetic Load Save room.
+- **Versioning**: **Backwards-compatible additions** (versioned reads).
+- **Preview metadata**: Include **seed/day/playtime/coins/unlocks summary**; **thumbnail preview is a stretch goal**.
+- **Replay validation**: **End-state assertions only** (no per-frame checks); replay remains **CLI-driven** for now.
+- **Multiplayer**: **Host authoritative** load (clients sync + teleport).
+- **Room features**: **Load + Delete** in-room for v1; **Replay UI later** (CLI flag now).
+
 ## Goals
 - **Load an existing save file** and reconstruct the **authoritative world/map** to match it.
 - Ensure loading does **not** get overwritten by procedural generation (`ensure_generated_map`).
@@ -40,12 +51,23 @@ Use Bitsery, but add a small header for **versioning + UI metadata**.
 - display_name (optional)
 - preview fields for showroom:
   - seed (string)
-  - day count (if available)
-  - any progression summary you want visible
+  - day count (planning day index)
+  - playtime seconds (or hh:mm)
+  - coins/balance + cart (if relevant)
+  - unlocks/progression summary (compact)
+  - **optional**: thumbnail path or embedded thumbnail bytes (stretch)
 
-**Payload**
-- Option A (recommended): `Map` (includes `LevelInfo`, hence entities, seed, was_generated)
-- Option B: `LevelInfo` only (if you want saves independent of UI flags)
+**Payload (hybrid model)**
+- Baseline: `seed` (used to regenerate the deterministic base map)
+- Delta: “player-altered state”, e.g.
+  - moved/placed furniture
+  - items that should persist across planning
+  - progression + round settings + bank + day/night timer state
+  - any other state designers consider “save-worthy”
+
+**Implementation note (practical)**
+- Phase 1 can ship using a full snapshot payload (`Map` / `LevelInfo`) to prove correctness end-to-end.
+- Phase 2 refactors to true hybrid delta (filter + stable identifiers), once load/apply is solid.
 
 ## Authoritative Load: Apply Save → World Reconstruction
 
@@ -56,17 +78,21 @@ Use Bitsery, but add a small header for **versioning + UI metadata**.
 
 ### “Apply Save” algorithm (server thread)
 1. Read save header and payload from disk.
-2. Deserialize payload into `Map`/`LevelInfo` using the same Bitsery polymorphic setup used by networking (`MyPolymorphicClasses` registration).
-3. Install loaded state:
-   - Replace server’s entity list with the loaded `entities`.
-   - Ensure `was_generated = true`.
-   - Ensure `seed` and `hashed_seed` match and are set.
+2. Generate baseline world from `seed` (deterministic):
+   - Ensure map generator runs once on server to create baseline entities.
+3. Apply delta from save:
+   - Create/update/delete entities that represent player-altered state.
+   - Apply progression/settings/bank/day-night state to the authoritative entities (e.g., Sophie, timer entity).
 4. Invalidate caches:
    - `EntityHelper::invalidateCaches()` and any other caches required (path/walkable).
 5. Sync to clients:
    - Reuse existing map broadcast path (`Server::send_map_state()` already snapshots via `grab_things()` and sends the map).
 6. Move players if needed:
-   - Teleport players to appropriate spawn for the restored state (planning spawn marker, lobby origin, etc.).
+   - Teleport players to **Planning spawn** (target outcome: load always lands in Planning mode).
+
+### Saving (planning-only)
+- Only allow save writes while in Planning mode (daytime).
+- Attempting to save outside Planning should be a no-op with clear feedback (toast/log).
 
 ### Save locations & slots
 Use a predictable folder under the game folder:
@@ -93,7 +119,7 @@ In `LevelInfo::generate_lobby_map()`:
 Add `LevelInfo::generate_load_save_room_map()` (pattern after `generate_model_test_map()`):
 - Spawn:
   - “Back to Lobby” trigger
-  - A grid of N save slot pedestals (e.g., 8 or 12 like a PS2 card screen)
+  - A grid of N save slot pedestals (**8–12**) like a PS2 card screen
   - Optional extra stations:
     - “Delete Save”
     - “Rename Save”
@@ -108,7 +134,13 @@ Don’t load full worlds just to show text:
 When player interacts with pedestal:
 - Server loads and applies the save (authoritative).
 - Clients receive sync.
-- Return players to a sensible location/state (or stay in room but now representing loaded world, depending on UX).
+- Transition to **Planning** and place players at planning spawn.
+
+### Delete behavior (v1)
+- In the room, provide a simple delete interaction:
+  - either a dedicated “Delete” station that arms delete mode
+  - or a secondary interaction on slot pedestal (safer if it requires confirm)
+- Delete removes the save file (and thumbnail file if present) and refreshes the room list.
 
 Fast shipping version:
 - Start with **3 fixed slots** (A/B/C) as pedestals.
@@ -141,6 +173,23 @@ Suggested high-signal checks:
 - selected component values that matter for “settings in right spot”
 
 Wire failures via `replay_validation::add_failure()` and fail in `end_replay()`.
+
+## Implementation Phases (recommended)
+### Phase 1 — Ship the pipeline (snapshot-based)
+- Implement save header + slot enumeration + delete
+- Implement “apply loaded world” using a full snapshot payload (fast correctness)
+- Add Load Save room (8–12 slots) + lobby trigger + transitions
+- Add planning-only save restriction
+- Add CLI `--load-save` and replay end-state validation hooks
+
+### Phase 2 — Convert to true hybrid delta
+- Decide baseline vs player-altered classification (tags/component or entity-type whitelist)
+- Add stable identifiers for delta entities (so we can match/update them across regen)
+- Save delta + apply delta on top of regenerated baseline
+
+### Phase 3 — Thumbnail previews (stretch)
+- On save: capture a small screenshot or minimap render and write `slot_XX.png`
+- In room: load and display thumbnail on pedestal (keep it cheap: cache textures)
 
 ## Acceptance Criteria
 - Loading a save results in a world that persists (no regen wipe) and matches the file.
