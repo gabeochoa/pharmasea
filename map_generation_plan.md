@@ -99,6 +99,26 @@ ASCII building boundary, not the last column.
 For MVP you indicated the entrance can be 1–2 tiles wide; consider keeping this
 flexible (1–3) initially so existing expectations remain easy to match.
 
+## Additional clarified requirements (from Q&A)
+
+- **Entrance width**: allow **1–3 tiles** (to match current `DEFAULT_MAP`).
+- **Entrance location**: randomize along the right (+x) wall, as long as
+  spawner→register pathing succeeds under the 50-tile cap.
+- **Multiple entrances**: sometimes allow more than one entrance (suggested
+  starting probability: **~10%** of runs), still respecting pathing/queue rules.
+- **Interior wall thickness**: **1 tile**.
+- **No diagonal-only connectivity**: treat diagonal-only connections as invalid
+  (players can’t traverse them). Generation and validation should ensure the
+  walkable interior is connected under **4-neighbor** adjacency, even if the
+  current BFS considers 8 neighbors.
+- **Table density**: soft target of **~2 tables per room** (with a floor of ≥1
+  table total).
+- **Wall density / openness**: avoid too many interior walls because players
+  can’t move walls. Prefer open layouts with a configurable openness target
+  (currently **~70%** walkable interior).
+- **Reroll behavior**: silently retry failed generations up to a configurable
+  cap (deterministic seed + attempt index), then fail/ask for reroll.
+
 ## Guiding principle
 
 Keep **ASCII (`std::vector<std::string>`) as the intermediate representation**:
