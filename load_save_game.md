@@ -4,32 +4,36 @@ Date: 2025-12-24
 ## Status (as of 2025-12-24)
 
 ### Implemented (Phase 1: snapshot pipeline)
-- **Save file format**: Bitsery-based `SaveGameHeader` + full snapshot payload (`Map` / `LevelInfo`) written per-slot.
-- **Slot discovery**: enumerate slots + read header only for UI metadata.
-- **Authoritative apply**: load installs snapshot on **server thread**, marks `was_generated = true`, invalidates caches, and forces a map sync to clients.
+- **Save file format**: Bitsery-based `SaveGameHeader` + `SaveGameFile` (full snapshot payload `Map`/`LevelInfo`) per slot, with `"PHARMSAVE"` magic and build/version fields.
+- **Save location**: `Files::get().game_folder()/saves/slot_XX.bin` (atomic write via `*.tmp` + rename).
+- **Slot discovery**: enumerate `kDefaultNumSlots` (currently **8**) and read **header only** to populate UI metadata.
+- **Authoritative apply (server-only)**: load installs snapshot on the **server thread**, sets `was_generated = true`, invalidates caches, and forces a map sync to clients (`force_send_map_state()`).
+- **Load destination**: after load, players are moved to `game::State::InGame` (planning spawn via `Planning_SpawnArea` floor marker).
 - **Diagetic Load/Save room**:
-  - Lobby trigger → `LoadSaveRoom`
-  - Room generator spawns **Back to Lobby**, **Delete Mode toggle**, and **slot pedestals**
-  - Slot labels are **multi-line**; slot label font reduced slightly for readability
+  - Lobby trigger → `game::State::LoadSaveRoom`
+  - Room generator spawns **Back to Lobby**, **Delete Mode toggle**, and **slot pedestals** (trigger areas with slot id in `HasSubtype`)
+  - Slot labels are **multi-line**; slot label font is reduced for `LoadSave_LoadSlot` and `Planning_SaveSlot` trigger areas
   - **Empty slots** are **grey**
   - **Delete mode**: occupied slots render **red**; empty stays **grey**
-- **Delete UX**: single slot trigger per slot; selecting either **loads** or **deletes** depending on delete-mode toggle.
-- **Planning-only save**: planning save trigger exists (slot number via `HasSubtype`), and attempts outside planning/daytime are rejected with announcement/toast.
-- **Toasts**: announcement packets now surface as in-game toasts (host included).
+- **Delete UX**: selecting a slot pedestal either **loads** or **deletes** depending on delete-mode toggle; deletion regenerates the room list.
+- **Planning-only save**: a temporary Planning save trigger exists (currently hard-coded to slot 01), and attempts outside planning/daytime are rejected with an announcement (surfaced as a toast).
+- **Toasts**: announcement packets are displayed as in-game toasts (host included).
 
 ### Crash fixes / hard lessons learned
 - **Named entity cache double-free**: fixed by ensuring `named_entities_DO_NOT_USE` stores the owning `shared_ptr` (never create a new control block from raw `Entity*`).
 - **Dynamic model callback crash on load**:
-  - `HasDynamicModelName` is serialized but its runtime `std::function` fetcher is not; calling it after load can throw `std::bad_function_call`.
-  - Current approach: **post-load reinitialization pass** (`reinit_dynamic_model_names_after_load()`) recreates dynamic model-name fetchers for known entity types.
-  - A small safety guard in `HasDynamicModelName::fetch()` prevents crashing when uninitialized / fetcher missing (should be upgraded to `log_error` once we’re confident the post-load reinit covers all cases).
-  - **Known gap**: `FruitJuice` dynamic model name still can’t be reconstructed correctly (needs persisted subtype/state).
+  - `HasDynamicModelName` contains runtime-only `std::function` glue. Its serializer currently only serializes the base component (it does **not** persist `dynamic_type`, `base_name`, or the fetcher), so loaded entities will have an uninitialized/empty dynamic-model-name component unless we reconstruct it.
+  - Current approach: **post-load reinitialization pass** (`reinit_dynamic_model_names_after_load()`) removes and recreates dynamic model-name fetchers for known entity types.
+  - `HasDynamicModelName::fetch()` has guards for uninitialized / missing fetcher (returns the base name and logs a warning) to avoid hard crashes.
+  - **Known gap**: `FruitJuice` dynamic model name still can’t be reconstructed correctly (missing persisted subtype/state).
+  - **Known gap (CLI path)**: the `--load-save <path>` load path currently applies the snapshot but does **not** run the post-load dynamic-model-name reinit pass (slot-number loads do).
 
 ### Still to do (Phase 1 follow-ups)
 - Expand slot count to **12** (or confirm desired count) and finalize room layout.
 - Replace temp planning save trigger placement/logic with the final intended station (current is marked TODO to remove).
-- Add a proper “replay-from-save” flow and validation wiring (currently only the `--load-save` hook is in place).
-- Decide whether `HasDynamicModelName` should be **excluded from save serialization** (runtime glue) and always reconstructed post-load.
+- Ensure the CLI `--load-save <path>` code path also runs the post-load reinit (same as slot loads) to avoid missing dynamic model names.
+- Add remaining header metadata (optional but useful): `display_name` and `playtime_seconds` are not filled yet in Phase 1.
+- Clarify snapshot-vs-hybrid scope: Phase 1 snapshot saves **all entities** (including transient items); Phase 2 should narrow to a stable, intended “hybrid delta” subset.
 
 ## Decisions (confirmed)
 - **World persistence**: **Hybrid** (persist player-altered state; regenerate baseline from seed).
@@ -42,7 +46,7 @@ Date: 2025-12-24
 - **Multiplayer**: **Host authoritative** load (clients sync + teleport).
 - **Room features**: **Load + Delete** in-room for v1; **Replay UI later** (CLI flag now).
 -
-- **Hybrid scope v1**: **Furniture placements only** (items do not persist; they respawn from furniture).
+- **Hybrid scope v1 (design intent)**: **Furniture placements only**. Note: Phase 1 snapshot implementation currently saves **all entities** (including transient items); Phase 2 should narrow this to an intended delta.
 - **Future scope**: likely expands toward “C” (broader saveable set), but start narrow.
 - **Saving UX**: both **diagetic Save Station** + **menu button** (enabled only in Planning).
 - **Delete UX**: **toggle delete mode** + select slot (no separate delete pedestal).
@@ -62,12 +66,14 @@ Date: 2025-12-24
 - `Map` serializes `LevelInfo` (`src/map.h`).
 - Networking already serializes `Map` inside `ClientPacket::MapInfo` (`src/network/serialization.h`).
 
-### The missing piece: “apply loaded map to runtime”
-- `Map::update_map()` currently only copies `showMinimap` (`src/map.cpp`).
-- `Map::_onUpdate()` always calls `game_info.ensure_generated_map(seed)` (`src/map.cpp`).
-- `LevelInfo::ensure_generated_map()` deletes entities + regenerates unless `was_generated == true` (`src/level_info.cpp`).
-
-Conclusion: even though `Map`/`LevelInfo` can be serialized, the codebase lacks a robust “install this world state” path.
+### Authoritative apply exists (Phase 1 snapshot install)
+- Server-only save/load helpers live in `src/client_server_comm.cpp`:
+  - `server_only::save_game_to_slot(int)`
+  - `server_only::load_game_from_slot(int)`
+  - `server_only::delete_game_slot(int)`
+- Save/load file IO + header-only reads live in `src/save_game/save_game.*`.
+- The apply path installs the snapshot into the authoritative server state, sets `was_generated = true`, invalidates caches, and forces a map sync.
+- Important note: `Map::update_map()` is still minimal, but Phase 1 does not rely on it; we directly replace `Map::game_info` on the authoritative server map.
 
 ### Replay/validation already exists
 - Replays load from `recorded_inputs/*.txt` and inject input (`src/engine/simulated_input/input_replay.cpp`).
@@ -93,7 +99,7 @@ This project has a clear split:
 Use Bitsery, but add a small header for **versioning + UI metadata**.
 
 **Header** (fixed-ish, quick to read without deserializing the world):
-- magic: `"PHARMSAVE"` (or similar)
+- magic: `"PHARMSAVE"`
 - save_version: integer
 - build/version identifier: `HASHED_VERSION` (or `VERSION`)
 - timestamp
