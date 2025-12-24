@@ -430,9 +430,14 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             return;
         } break;
         case IsTriggerArea::Planning_SaveSlot: {
-            // If you'd like slot-specific text, set it at spawn-time.
+            int slot_num = entity.has<HasSubtype>()
+                               ? entity.get<HasSubtype>().get_type_index()
+                               : 1;
+            if (slot_num < 1) slot_num = 1;
+
             ita.update_title(NO_TRANSLATE("Save Game"));
-            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            ita.update_subtitle(
+                NO_TRANSLATE(fmt::format("Slot {:02d}", slot_num)));
             return;
         } break;
         case IsTriggerArea::Store_Reroll: {

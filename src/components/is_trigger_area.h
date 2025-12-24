@@ -24,7 +24,6 @@ struct IsTriggerArea : public BaseComponent {
         Store_Reroll,
         ModelTest_BackToLobby,
 
-        // NOTE: Append-only (serialized). Do not reorder existing values.
         Lobby_LoadSave,
         LoadSave_BackToLobby,
 
@@ -32,7 +31,6 @@ struct IsTriggerArea : public BaseComponent {
         LoadSave_LoadSlot,
         LoadSave_ToggleDeleteMode,
 
-        // Planning-only save station (slot number stored in HasSubtype.type_index).
         Planning_SaveSlot,
     } type = Unset;
 

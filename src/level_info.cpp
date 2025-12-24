@@ -709,6 +709,7 @@ void LevelInfo::add_outside_triggers(vec2 origin) {
 
     {
         auto& entity = EntityHelper::createPermanentEntity();
+        // TODO(load-save): come back later and remove this (temp planning save station).
         // Place in the bar building (planning is shown/treated as "in bar").
         vec3 position = bar_origin + vec3{0, TILESIZE / -2.f, 0};
         furniture::make_trigger_area(entity, position, 6, 3,

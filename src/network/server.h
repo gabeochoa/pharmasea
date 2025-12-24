@@ -42,7 +42,6 @@ struct Server {
     }
 
     std::unique_ptr<Map>& get_map_SERVER_ONLY() { return pharmacy_map; }
-    // For events like load/save where we want clients updated immediately.
     void force_send_map_state();
 
    private:
