@@ -6,9 +6,52 @@ This document is a **planning note only**. It outlines a roadmap to update map g
 
 - **ASCII seam**: Map generators ultimately produce a `std::vector<std::string>` “tile map”. A single step (ASCII → entities) spawns entities and then validates.
 - **Generators available**:
-  - **Room/region generator** (currently wired for gameplay): produces a `std::vector<char>` and is converted into ASCII lines.
-  - **WFC (Wave Function Collapse)** (currently more standalone/testing): driven by `resources/config/map_generator_input.json`.
+  - **Room/region generator** (currently wired for gameplay): `src/map_generation/simple.h::something(rows, cols)` produces a `std::vector<char>` and is converted into ASCII lines.
+    - **Important note**: current `mapgen::generate_in_game_map()` also appends a “required entities strip” as extra ASCII rows (debug/placeholder behavior, not a real layout).
+  - **WFC (Wave Function Collapse)** (available but not currently used for in-game generation): `wfc::WaveCollapse` driven by `resources/config/map_generator_input.json`.
+    - Map-gen config loading exists in **two places** today:
+      - `Preload::load_map_generation_info()` (loads patterns, and also computes outside marker rectangles).
+      - `wfc::ensure_map_generation_info_loaded()` (lazy-loads the same JSON directly).
 - **Trigger point**: In-game map-gen is triggered from gameplay (`LevelInfo::generate_in_game_map()`), which delegates to the in-game map generation entry points.
+
+## ASCII legend (current, code-defined)
+
+These are the characters currently recognized by `generation::helper` (`src/map_generation/map_generation.h`) and converted into entity spawns. This is the **authoritative legend** for any generator that outputs ASCII.
+
+### Walkable / structural
+
+- `.`: empty / walkable
+- `#` or `w`: wall / solid
+- `0`: origin marker (does not spawn an entity)
+- `?`: “unknown / unresolved” (ignored by entity spawning; currently used by WFC debug output)
+- ` ` (space): ignored (treated similarly to empty for spawning)
+
+### Required for “day-1 playable” (current defaults)
+
+- `C`: `CustomerSpawner`
+- `R`: `Register`
+- `S`: `SodaMachine`
+- `d`: `Cupboard`
+- `g`: `Trash`
+- `f`: `FastForward`
+- `+`: `Sophie`
+- `t`: `Table`
+
+### Additional supported symbols (not required day-1)
+
+- Grabbers: `^ < > v` (rotates entity facing based on arrow)
+- `G`: `FilteredGrabber`
+- `p`: `PnumaticPipe`
+- `q`: `Squirter`
+- `b`: `Blender`
+- `s`: `SodaFountain`
+- `I`: `IceMachine`
+- `T`: `Toilet`
+- `H`: `HandTruck`
+- `M`: `AlcoholCabinet`
+- `F`: `FruitBasket`
+- `m`: `MopHolder`
+- `B`: `MopBuddyHolder`
 
 ## Hard constraints (from design requirements)
 
@@ -83,6 +126,21 @@ The ASCII grid is mapped into world space such that:
 So “entrance on the right (+x) wall” corresponds to the **last row** of the
 ASCII building boundary, not the last column.
 
+#### Origin marker note (current quirk)
+
+`generation::helper::generate()` subtracts an “origin” vector computed by
+`generation::helper::find_origin()` (looks for the `0` character).
+
+- Intended behavior: the `0` tile becomes world `(0,0)` after offsetting.
+- Current code quirk: `find_origin()` computes origin using swapped indices
+  (`origin = {j*TILESIZE, i*TILESIZE}`), while tile positions are generated as
+  `{i*TILESIZE, j*TILESIZE}`. This means the `0` tile does **not** land at
+  `(0,0)` unless `i == j`, and offsets can feel “transposed”.
+
+This plan keeps the existing contract (“generator emits `0` as an anchor”) but
+we should treat origin handling as a **known sharp edge** when validating
+outside marker placement and “entrance on right wall” logic.
+
 ## Current DEFAULT_MAP notes (entrance + symbols)
 
 `DEFAULT_MAP` is loaded from `resources/config/settings.json`.
@@ -128,6 +186,60 @@ Keep **ASCII (`std::vector<std::string>`) as the intermediate representation**:
 
 This keeps gameplay insulated from generator changes.
 
+## Playability Spec (start-of-day) — one source of truth
+
+This is the **minimum guarantee** map generation must provide so the game can
+start a day without immediately failing Sophie/runtime checks.
+
+### Hard requirements (must hold on first frame of Day-1)
+
+- **Footprint / shell**
+  - Overall size is **~20×20** for MVP (exact shape may include “outside” area).
+  - The **outside-facing shell** is stable over progression (same outer walls
+    and exterior silhouette), even if interiors change.
+- **Required entities exist**
+  - At least one `CustomerSpawner` (`C`) that is **outside** the bar interior.
+  - At least one `Register` (`R`) placed such that Sophie accepts it:
+    - It must be **inside** `BAR_BUILDING` (current code filter).
+  - `SodaMachine` (`S`), `Cupboard` (`d`), `Trash` (`g`), `FastForward` (`f`),
+    and `Sophie` (`+`) exist.
+  - At least one `Table` (`t`) exists.
+- **Spawner → register is pathable**
+  - There exists at least one register where:
+    - `pathfinder::find_path(spawner_pos, register_tile_infront)` returns non-empty.
+  - Treat `bfs::MAX_PATH_LENGTH` as a hard cap: if the spawner→register route is
+    “too long”, the pathfinder can return empty and the map should be rejected.
+- **Register queue strip is clear**
+  - For at least one register that Sophie considers “inside”, all tiles
+    `tile_infront(1..HasWaitingQueue::max_queue_size)` are walkable.
+  - Today `HasWaitingQueue::max_queue_size == 3`.
+
+### Soft requirements (should hold for good UX / future scaling)
+
+- **Openness / capacity**
+  - Target interior walkable ratio ~**70%** (tunable by archetype).
+  - Preserve “expansion lanes” for conveyors/pipes and late-game furniture.
+- **No diagonal-only connectivity**
+  - Generator should ensure the interior is connected under **4-neighbor**
+    adjacency even if the current BFS uses **8-neighbor** steps.
+- **Table placement**
+  - Aim for ~**2 tables per room** (or per “zone”) with a floor of ≥1 total.
+- **Entrance**
+  - Entrance opening width 1–3 tiles; may allow multiple entrances (~10%) if
+    playability is preserved.
+
+### Validation outcomes (taxonomy)
+
+Define failures as:
+
+- **Repairable**: fixable by a small local edit without changing the overall
+  archetype (example: rotate/move a register to clear its queue strip).
+- **Reroll-only**: structural issues where repair is likely to cascade
+  (example: disconnected interior regions).
+
+Retry policy should be deterministic: `seed + attempt_index`, bounded by a
+configurable max attempts (default suggestion: 25).
+
 ## Target pipeline (generator-agnostic)
 
 ### 1) Layout
@@ -162,6 +274,59 @@ Validate the ASCII map (and/or instantiated entities) against a playability spec
 - Prefer **deterministic retries**: same seed + attempt index (bounded tries).
 - Use **repair** for local issues (e.g., blocked queue tile), **reroll** for structural issues (e.g., disconnected interior).
 
+## Stage contracts (what each stage consumes/produces)
+
+Defining these contracts up front prevents “generator-specific hacks” from
+leaking into gameplay and keeps WFC / room-gen interchangeable.
+
+### Layout stage contract
+
+- **Input**: `(seed, footprint, archetype knobs)`
+- **Output**: ASCII grid containing only structural tiles:
+  - `.` for walkable
+  - `#`/`w` for walls
+  - `0` origin marker (exactly one)
+  - optional “style tags” only if they are ignored by spawning (today `?` is ignored)
+- **Must guarantee**:
+  - Fixed shell rules (outer walls consistent over progression).
+  - At least one connected walkable region large enough to place required items.
+
+### Required placement stage contract
+
+- **Input**: layout grid + progression context (what items must exist)
+- **Output**: same grid with required entity characters placed.
+- **Must guarantee** (for Day-1):
+  - At least one register that is (a) inside `BAR_BUILDING`, (b) pathable from
+    spawner, (c) has an unblocked queue strip.
+  - Spawner is outside; entrance exists; interior has a clear route from
+    entrance → register queue front.
+
+Suggested placement algorithm for registers:
+
+1) Choose candidate tiles “near” the entrance but inside the bar interior.  
+2) Try 4 rotations; accept the first where the queue strip tiles are all walkable.  
+3) Validate spawner→queue-front path (respecting BFS cutoff); otherwise move/rotate.  
+
+### Decoration stage contract
+
+- **Input**: validated “required-placed” grid
+- **Output**: decorated grid (tables, props, optional partitions) that does not
+  break any hard constraint.
+- **Rule**: decoration may only consume **non-critical** floor tiles; never place
+  solids on:
+  - queue strip tiles,
+  - the shortest path corridor (or any tile in a protected “route envelope”),
+  - entrance throat tiles.
+
+### Instantiate + validate stage contract (the “ASCII seam”)
+
+- Instantiate via `generation::helper(lines).generate()`.
+- Validate at two levels:
+  - **Map-gen validation**: checks the Playability Spec directly on ASCII.
+  - **Runtime validation parity**: ensure we match `generation::helper::validate()`
+    and Sophie’s `lightweight_map_validation()` expectations (register-in-building,
+    queue strip, pathability).
+
 ## Aligning validation with “Sophie” / runtime realities
 
 Players can move items during the game, so **runtime checks** will still matter.
@@ -174,6 +339,24 @@ For map generation specifically, the goal is:
   - At **phase transitions / runtime** (UI feedback / blockers)
 
 This avoids divergence where generation says “valid” but runtime checks immediately disagree.
+
+## Outside markers / planning zones (spawn + trash)
+
+The planning UI uses floor markers:
+
+- `IsFloorMarker::Planning_SpawnArea`
+- `IsFloorMarker::Planning_TrashArea`
+
+Today these are placed by `LevelInfo::add_outside_triggers(origin)` using
+rectangles derived from WFC config (`wfc::SPAWN_AREA`, `wfc::TRASH_AREA`).
+
+Implications for map-gen:
+
+- Any generator (not just WFC) needs to produce a consistent “outside” region
+  where these markers make sense.
+- The generator’s return value should be treated as an **origin/offset** used to
+  place these markers. (Currently some call paths return `{0,0}` or “max
+  location”; this is an inconsistency to resolve during Phase 2 refactor.)
 
 ## Bar styles (archetypes) to support
 
@@ -318,4 +501,27 @@ Do not duplicate playability logic per generator. Use the shared stages.
 - A set of fixed seeds consistently produces valid day-1 maps
 - Multiple archetypes appear across seeds (visible structural variety)
 - Layout preserves enough open space to accommodate late-game machines/items
+
+## Practical next “flesh-out” items (doc-driven, no code required yet)
+
+These are concrete details that should be decided/documented so implementation
+work is straightforward and less risky:
+
+- **Define “inside vs outside” in ASCII**
+  - Decide whether outside is represented by a ring of `.` beyond the shell, or
+    whether outside is “implied” and only exists via markers/triggers.
+  - Decide whether the entrance gap must always connect to outside walkable
+    tiles in the ASCII grid (recommended for future-proofing).
+- **Define a canonical coordinate convention**
+  - Canonical rule: `grid[i][j]` corresponds to world `(x=i*TILESIZE, y=j*TILESIZE)`.
+  - Require that the single `0` origin marker maps to world `(0,0)` after offset.
+  - Record current origin-index swap as tech debt to resolve.
+- **Document the “protected tiles” concept**
+  - Explicitly define which tiles are protected from decoration and from future
+    “auto-placement” systems (register queue strip, entrance throat, critical routes).
+- **Seed determinism**
+  - Document how `seed` is hashed into RNG seeds per stage:
+    - `layout_seed`, `placement_seed`, `decor_seed`, `repair_seed`.
+  - Ensure attempt index is included only where intended (layout reroll vs small repairs).
+
 
