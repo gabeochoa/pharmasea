@@ -3,7 +3,7 @@
 
 #include "log/log.h"
 //
-#include "afterhours/ah.h"
+#include "ah.h"
 using afterhours::Entity;
 #include "engine/assert.h"
 #include "external_include.h"

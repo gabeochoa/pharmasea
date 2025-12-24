@@ -4,7 +4,7 @@
 #include "log/log.h"
 //
 
-#include "afterhours/ah.h"
+#include "ah.h"
 using afterhours::Entity;
 using afterhours::OptEntity;
 using afterhours::RefEntity;

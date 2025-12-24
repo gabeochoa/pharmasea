@@ -2,7 +2,7 @@
 
 #include "../camera.h"
 #include "../engine/layer.h"
-#include "afterhours/ah.h"
+#include "ah.h"
 
 struct GameLayer : public Layer {
     std::shared_ptr<afterhours::Entity> active_player;

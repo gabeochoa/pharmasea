@@ -3,7 +3,7 @@
 
 #include "../bitsery_include.h"
 #include "../globals.h"
-#include "afterhours/ah.h"
+#include "ah.h"
 
 using afterhours::Entity;
 using afterhours::EntityID;
