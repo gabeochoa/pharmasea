@@ -41,7 +41,7 @@ The core of the late-game experience is automating the chaotic manual loop into 
 - **Auto-Cleaning**: 
     - **Mop & Holder**: Basic manual spill cleanup.
     - **Roomba (MopBuddy)**: Automated cleaning bot that patrols for spills/vomit.
-    - **Bidet**: High-end toilet upgrade that auto-cleans but doubles customer visit frequency.
+    - **Bidet**: Bathroom upgrade that increases the number of uses before cleaning is required, reducing overall mess frequency.
 - **Handtruck**: Specialized tool for moving multiple boxes or large furniture items simultaneously, critical for during-round layout adjustments.
 
 ### 🍸 Bar & Service Mechanics
@@ -54,7 +54,6 @@ The core of the late-game experience is automating the chaotic manual loop into 
     - **Pitchers**: Can hold up to 10x the same drink, allowing for group serving.
     - **Flights**: Holds 4 unique liquids for high-end craft beer orders.
     - **Champagne**: Requires a sword-swinging QTE to open; perfect timing yields higher tips.
-- **Inventory Cycle**: Choose between **Reusable Cups** (higher profit via bottle deposits) vs. **Barcoded Cups** (stops illegal refills but halves profit).
 
 ### 👥 Customer AI & Systems
 Customers possess varying attributes that dictate the bar's "vibe" and challenge level:
@@ -67,7 +66,7 @@ Customers possess varying attributes that dictate the bar's "vibe" and challenge
 - **Bladder System**: Bladder size is hidden initially; "Break the Seal" halves bladder size after the first use, creating a "bathroom rush."
 
 ### 📈 Roguelite Upgrades & Progression
-- **The Rent**: A weekly (multi-round) mounting financial target. Failure ends the run.
+- **The Rent**: A weekly (multi-round) mounting financial target. Failure ends the run unless the **Credit Line** upgrade is active.
 - **The Locker**: Persistent storage vault allowing players to save high-value items or one drink between rounds.
 - **Scaling Upgrades**:
     - **Happy Hour**: 2x customer spawns, 0.75x drink cost. Occurs at mid-day.
@@ -79,32 +78,23 @@ Customers possess varying attributes that dictate the bar's "vibe" and challenge
 ### 🎭 Seasonal & Themed Modifiers
 - **Themed Nights**:
     - **Karaoke**: Customers order the *same* drink as the person before them in line.
-    - **Trivia Night**: Customers "quiz" the player, requiring a specific interaction or answer provided with the drink.
     - **Live Music**: Increased re-order frequency, but the band consumes physical floor space and blocks paths.
-- **Weather Effects**:
-    - **Heatwave**: 2x demand for Sodas, Mocktails, and "Frosty Tips" (Frozen drinks).
-    - **Rain/Storm**: Customers seek shelter inside (spawn rush) and prefer warm drinks (Coffee/Tea).
 
 ---
 
 ## Aesthetic & Vibe
 Urban, chaotic, and energetic. A realistic city bar reflected through a systemic lens. High-volume, high-stress, high-reward.
 
-## Aesthetic & Vibe
-Urban, chaotic, and energetic. A realistic city bar reflected through a systemic lens. High-volume, high-stress, high-reward.
-
 ---
 
-## � Economy & Strategy Math
+##  Economy & Strategy Math
 The game's economy is designed for high-volume systemic scaling.
 
 - **Drink Pricing**: Calculated dynamically based on complexity.
     - `Base Price = (Number of Ingredients * 5) + (Number of Prereqs * 10)`
 - **Tipping Logic**: Tips are highly dependent on speed of service.
     - `Tip = CEIL(Drink Price * 0.8 * Patience Percentage)`
-- **Speakeasy Multiplier**: If the "Speakeasy" upgrade is active:
-    - `Total Price = Price * (1.0 + (0.01 * Pathfinding Distance Tiles))`
-    - *Strategy: Rewarding complex bar layouts that force customers to walk further.*
+- **Speakeasy Multiplier**: If the "Speakeasy" upgrade is active, prices scale based on pathfinding distance.
 
 ---
 
@@ -116,13 +106,21 @@ All upgrades permanently modify the global `ConfigData` state.
 | **Longer Day** | `RoundLength` x2.0 | Doubles time available to earn rent. |
 | **Unlock Toilet** | `MaxNumOrders` x2.0 | Unlocks `is_toilet.h` loop; required for "Big Bladders." |
 | **Big Bladders** | `PissTimer` x2.0, `BladderSize` x2 | Customers stay in bathroom longer but go less often. |
+| **Bidet** | Mess Reduction | Increases uses before cleaning required. |
 | **Main Street** | `CustomerSpawn` x2.0 | Massive volume increase; high pressure. |
 | **Break the Seal** | `BladderSize` / 2 after 1st visit | Higher bathroom frequency as the night goes on. |
 | **Speakeasy** | Tip % scales with distance | Encourages long, winding bar layouts. |
 | **Membership Card** | Flat cash upfront | Increases `MinCustomerSpawn` for 3 days. |
 | **$10k Beer** | `CustomerSpawn` x0.25, `DrinkCost` x2 | Extreme low-volume, high-margin luxury niche. |
+| **Utility Billing** | Machine Cost x0.75 | Machines are 25% cheaper but incur daily operational costs. |
+| **Credit Line** | Enable Debt Recovery | Missing rent triggers the **Loan Shark** instead of Game Over. |
 | **Automatic Maker** | Automation Tier 3 | Station builds recipes from raw ingredients. |
 | **Vacuum Sealer** | Inventory Persistence | Save 1 drink across day transitions. |
+| **Priority Register** | Intelligent Routing | Special register that only accepts specific drink types. |
+| **VIP Red Carpet** | Target Marketing | Customers on rug pay 3x but only order most complex drinks. |
+| **Flash Sale Board** | Targeted Volume | Place a finished drink here to boost that order frequency +50%. |
+| **Ingredient Silos** | (Maybe) Bulk Storage | Connected via pipes; removes manual refilling. |
+| **Fragrance Diffuser** | (Maybe) Patience Buff | Slower patience decay / Faster bladder fill. |
 
 ---
 
@@ -159,18 +157,17 @@ This list tracks the implementation status of all "Locked" features.
 - [ ] Tractor Beams (Magnetic loading zones)
 - [ ] Auto-Cleaning Suite
     - [x] **Roomba (MopBuddy)** (`ai_clean_vomit.h`)
-    - [ ] Bidet (Auto-clean + frequency multiplier)
+    - [ ] Bidet (Mess-reduction capacity upgrade)
 - [x] **Handtruck** (`can_hold_handtruck.h`)
 
 ### 🍸 Bar & Service
 - [ ] Rhythm Mixing System (Diagetic Trigger + "Overclock")
 - [ ] Advanced Recipe Support (Flights, Sword-Saber QTE)
 - [ ] **Red Carpet / VIP Area** (Most expensive drink orders only)
+- [ ] **Priority Register** (Specific drink-type filtering)
+- [ ] **Flash Sale Chalkboard** (Drink-priority display)
 - [x] **Recipe Book System** (`recipe_library.h`)
 - [x] **Machine Suite** (Juice Press, Soda Fountain)
-- [ ] **Cup Lifecycle**:
-    - [ ] Bottle Deposit (Return for cash)
-    - [ ] Barcoded Cups (No returns, profit penalty)
 
 ### 👥 AI & Systems
 - [x] **Core Customer AI** (Drink -> Wander -> Bathroom -> Pay)
@@ -179,6 +176,7 @@ This list tracks the implementation status of all "Locked" features.
 - [ ] **Bladder System** (Break the Seal hidden state)
 - [ ] **Metal Detectors** (Thief detection furniture)
 - [ ] **Fire Code Logic** (Max capacity / wait-outside queue)
+- [ ] **Fragrance Diffuser** (Patience/Bladder scaling system)
 
 ### 📈 Upgrades & Modifiers
 - [ ] **Scaling Logic** (Happy Hour, Dynamic Pricing)
