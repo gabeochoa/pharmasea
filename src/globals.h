@@ -39,6 +39,8 @@ extern bool REPLAY_ENABLED;
 extern bool REPLAY_VALIDATE;
 extern bool SHOW_INTRO;
 extern bool SHOW_RAYLIB_INTRO;
+extern std::string LOAD_SAVE_TARGET;
+extern bool LOAD_SAVE_ENABLED;
 
 // TODO :BE: is there a way for us to move these to engine
 // and then let the game pass them in or something _while_ staying const?

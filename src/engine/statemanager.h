@@ -113,6 +113,7 @@ enum State {
     InGame = 2,
     Paused = 4,
     ModelTest = 7,
+    LoadSaveRoom = 8,
 };
 
 inline std::ostream& operator<<(std::ostream& os, const State& state) {

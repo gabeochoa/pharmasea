@@ -31,6 +31,7 @@
 #include "../entity_query.h"
 #include "../external_include.h"
 #include "../network/server.h"
+#include "../client_server_comm.h"
 #include "../vec_util.h"
 #include "progression.h"
 #include "store_management_helpers.h"
@@ -224,6 +225,20 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 move_player_SERVER_ONLY(player, game::State::ModelTest);
             }
         } break;
+        case IsTriggerArea::Lobby_LoadSave: {
+            GameState::get().set(game::State::LoadSaveRoom);
+            if (is_server()) {
+                network::Server* server =
+                    GLOBALS.get_ptr<network::Server>("server");
+                server->get_map_SERVER_ONLY()
+                    ->game_info.generate_load_save_room_map();
+            }
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::LoadSaveRoom);
+            }
+        } break;
 
         case IsTriggerArea::Lobby_PlayGame: {
             GameState::get().transition_to_game();
@@ -251,6 +266,134 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                      .gen()) {
                 move_player_SERVER_ONLY(player, game::State::InGame);
             }
+        } break;
+
+        case IsTriggerArea::LoadSave_BackToLobby: {
+            GameState::get().transition_to_lobby();
+
+            const auto ents = EntityHelper::getAllInRange(
+                LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
+            for (Entity& to_delete : ents) {
+                to_delete.cleanup = true;
+            }
+
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::Lobby);
+            }
+        } break;
+
+        // Load slots (Phase 1 fixed slots).
+        case IsTriggerArea::LoadSave_Slot01:
+        case IsTriggerArea::LoadSave_Slot02:
+        case IsTriggerArea::LoadSave_Slot03:
+        case IsTriggerArea::LoadSave_Slot04:
+        case IsTriggerArea::LoadSave_Slot05:
+        case IsTriggerArea::LoadSave_Slot06:
+        case IsTriggerArea::LoadSave_Slot07:
+        case IsTriggerArea::LoadSave_Slot08: {
+            int slot_num = 1;
+            switch (ita.type) {
+                case IsTriggerArea::LoadSave_Slot01:
+                    slot_num = 1;
+                    break;
+                case IsTriggerArea::LoadSave_Slot02:
+                    slot_num = 2;
+                    break;
+                case IsTriggerArea::LoadSave_Slot03:
+                    slot_num = 3;
+                    break;
+                case IsTriggerArea::LoadSave_Slot04:
+                    slot_num = 4;
+                    break;
+                case IsTriggerArea::LoadSave_Slot05:
+                    slot_num = 5;
+                    break;
+                case IsTriggerArea::LoadSave_Slot06:
+                    slot_num = 6;
+                    break;
+                case IsTriggerArea::LoadSave_Slot07:
+                    slot_num = 7;
+                    break;
+                case IsTriggerArea::LoadSave_Slot08:
+                    slot_num = 8;
+                    break;
+                default:
+                    break;
+            }
+
+            bool ok = server_only::load_game_from_slot(slot_num);
+            if (!ok) break;
+
+            // Always land in planning (InGame).
+            GameState::get().transition_to_game();
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::InGame);
+            }
+        } break;
+
+        // Delete slots (Phase 1 fixed slots).
+        case IsTriggerArea::LoadSave_DeleteSlot01:
+        case IsTriggerArea::LoadSave_DeleteSlot02:
+        case IsTriggerArea::LoadSave_DeleteSlot03:
+        case IsTriggerArea::LoadSave_DeleteSlot04:
+        case IsTriggerArea::LoadSave_DeleteSlot05:
+        case IsTriggerArea::LoadSave_DeleteSlot06:
+        case IsTriggerArea::LoadSave_DeleteSlot07:
+        case IsTriggerArea::LoadSave_DeleteSlot08: {
+            int slot_num = 1;
+            switch (ita.type) {
+                case IsTriggerArea::LoadSave_DeleteSlot01:
+                    slot_num = 1;
+                    break;
+                case IsTriggerArea::LoadSave_DeleteSlot02:
+                    slot_num = 2;
+                    break;
+                case IsTriggerArea::LoadSave_DeleteSlot03:
+                    slot_num = 3;
+                    break;
+                case IsTriggerArea::LoadSave_DeleteSlot04:
+                    slot_num = 4;
+                    break;
+                case IsTriggerArea::LoadSave_DeleteSlot05:
+                    slot_num = 5;
+                    break;
+                case IsTriggerArea::LoadSave_DeleteSlot06:
+                    slot_num = 6;
+                    break;
+                case IsTriggerArea::LoadSave_DeleteSlot07:
+                    slot_num = 7;
+                    break;
+                case IsTriggerArea::LoadSave_DeleteSlot08:
+                    slot_num = 8;
+                    break;
+                default:
+                    break;
+            }
+
+            bool ok = server_only::delete_game_slot(slot_num);
+            if (!ok) break;
+
+            // Refresh room by clearing entities in the building and regenerating.
+            const auto ents = EntityHelper::getAllInRange(
+                LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
+            for (Entity& to_delete : ents) {
+                to_delete.cleanup = true;
+            }
+            network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+            if (server) {
+                server->get_map_SERVER_ONLY()
+                    ->game_info.generate_load_save_room_map();
+                server->force_send_map_state();
+            }
+        } break;
+
+        case IsTriggerArea::Planning_SaveSlot01: {
+            if (!SystemManager::get().is_daytime()) break;
+            (void) server_only::save_game_to_slot(1);
         } break;
     }
 }
@@ -283,11 +426,26 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
+        case IsTriggerArea::Lobby_LoadSave: {
+            ita.update_title(NO_TRANSLATE("Load / Save"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            return;
+        } break;
         case IsTriggerArea::Store_BackToPlanning: {
             ita.update_title(
                 TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
             ita.update_subtitle(
                 TranslatableString(strings::i18n::TRIGGERAREA_PURCHASE_FINISH));
+            return;
+        } break;
+        case IsTriggerArea::LoadSave_BackToLobby: {
+            ita.update_title(NO_TRANSLATE("Back To Lobby"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
+            return;
+        } break;
+        case IsTriggerArea::Planning_SaveSlot01: {
+            ita.update_title(NO_TRANSLATE("Save Slot 01"));
+            ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
         case IsTriggerArea::Store_Reroll: {
@@ -307,6 +465,24 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
         case IsTriggerArea::Progression_Option1:
         case IsTriggerArea::Progression_Option2:
             break;
+        // Titles are set when the Load/Save room is generated.
+        case IsTriggerArea::LoadSave_Slot01:
+        case IsTriggerArea::LoadSave_Slot02:
+        case IsTriggerArea::LoadSave_Slot03:
+        case IsTriggerArea::LoadSave_Slot04:
+        case IsTriggerArea::LoadSave_Slot05:
+        case IsTriggerArea::LoadSave_Slot06:
+        case IsTriggerArea::LoadSave_Slot07:
+        case IsTriggerArea::LoadSave_Slot08:
+        case IsTriggerArea::LoadSave_DeleteSlot01:
+        case IsTriggerArea::LoadSave_DeleteSlot02:
+        case IsTriggerArea::LoadSave_DeleteSlot03:
+        case IsTriggerArea::LoadSave_DeleteSlot04:
+        case IsTriggerArea::LoadSave_DeleteSlot05:
+        case IsTriggerArea::LoadSave_DeleteSlot06:
+        case IsTriggerArea::LoadSave_DeleteSlot07:
+        case IsTriggerArea::LoadSave_DeleteSlot08:
+            return;
     }
 
     TranslatableString internal_ts =

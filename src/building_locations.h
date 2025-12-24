@@ -12,6 +12,7 @@ enum BuildingType {
     Store,
     Progression,
     Bar,
+    LoadSave,
 };
 
 struct Building {
@@ -86,3 +87,8 @@ const Building STORE_BUILDING =  //
 const Building BAR_BUILDING =  //
     Building()                 //
         .set_area({-25.f, -5.f, 29.f, 30.f});
+
+// Diagetic "memory card" showroom.
+const Building LOAD_SAVE_BUILDING =  //
+    Building()                       //
+        .set_area({150.f, -10.f, 30.f, 30.f});

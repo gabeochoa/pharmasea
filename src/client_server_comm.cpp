@@ -2,6 +2,9 @@
 #include "client_server_comm.h"
 
 #include "network/server.h"
+#include "save_game/save_game.h"
+#include "engine/random_engine.h"
+#include "entity_helper.h"
 
 namespace server_only {
 void play_sound(const vec2& location, strings::sounds::SoundId sound_id) {
@@ -44,5 +47,69 @@ std::string get_current_seed() {
     }
     network::Server* server = GLOBALS.get_ptr<network::Server>("server");
     return server->get_map_SERVER_ONLY()->seed;
+}
+
+bool save_game_to_slot(int slot) {
+    if (!is_server()) {
+        log_warn("save_game_to_slot called from non-server context");
+        return false;
+    }
+    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    if (!server) return false;
+
+    // Capture snapshot from authoritative state.
+    server->get_map_SERVER_ONLY()->grab_things();
+    Map snapshot = *(server->get_map_SERVER_ONLY());
+    snapshot.game_info.was_generated = true;
+
+    bool ok = save_game::SaveGameManager::save_slot(slot, snapshot);
+    if (ok) {
+        log_info("Saved game to slot {}", slot);
+    } else {
+        log_warn("Failed to save game to slot {}", slot);
+    }
+    return ok;
+}
+
+bool delete_game_slot(int slot) {
+    if (!is_server()) return false;
+    bool ok = save_game::SaveGameManager::delete_slot(slot);
+    if (!ok) log_warn("Failed to delete save slot {}", slot);
+    return ok;
+}
+
+bool load_game_from_slot(int slot) {
+    if (!is_server()) {
+        log_warn("load_game_from_slot called from non-server context");
+        return false;
+    }
+    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    if (!server) return false;
+
+    save_game::SaveGameFile loaded;
+    if (!save_game::SaveGameManager::load_slot(slot, loaded)) {
+        log_warn("Failed to load save slot {}", slot);
+        return false;
+    }
+
+    // Install entities into the authoritative entity list and mark generated
+    // so the generator does not wipe the loaded snapshot.
+    server_entities_DO_NOT_USE = loaded.map_snapshot.game_info.entities;
+
+    Map& server_map = *(server->get_map_SERVER_ONLY());
+    server_map.game_info = loaded.map_snapshot.game_info;
+    server_map.showMinimap = loaded.map_snapshot.showMinimap;
+
+    server_map.seed = loaded.map_snapshot.game_info.seed;
+    server_map.game_info.was_generated = true;
+    RandomEngine::set_seed(server_map.seed);
+
+    EntityHelper::invalidateCaches();
+
+    // Push an update quickly so clients snap to the new world.
+    server->force_send_map_state();
+
+    log_info("Loaded save slot {} (seed='{}')", slot, server_map.seed);
+    return true;
 }
 }  // namespace server_only
