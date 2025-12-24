@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <queue>
 #include <vector>
@@ -278,7 +279,8 @@ inline void addOrigin(std::vector<char>& grid, int width, int height) {
     grid[midx * width + midy] = generation::ORIGIN;
 }
 
-inline std::vector<char> something(int width, int height) {
+inline std::vector<char> something(int width, int height, int num_seeds_in,
+                                   bool should_print) {
     char a = 48;
 
     std::vector<char> grid;
@@ -289,7 +291,7 @@ inline std::vector<char> something(int width, int height) {
 
     // get seeds
     std::vector<vec2> seeds;
-    int num_seeds = (int) ((width * height) / 100);
+    int num_seeds = std::max(1, num_seeds_in);
     seeds.reserve(num_seeds);
     for (int i = 0; i < num_seeds; i++) {
         seeds.push_back(RandomEngine::get().get_vec(0, width, 0, height));
@@ -317,7 +319,7 @@ inline std::vector<char> something(int width, int height) {
         std::cout << std::endl;
     };
 
-    print_g();
+    if (should_print) print_g();
 
     while (any_empty(grid, width, height)) {
         int not_expanded = 0;
@@ -344,7 +346,12 @@ inline std::vector<char> something(int width, int height) {
 
     makeEntrance(grid, width, height);
     addOrigin(grid, width, height);
-    print_g();
+    if (should_print) print_g();
 
     return grid;
+}
+
+inline std::vector<char> something(int width, int height) {
+    int default_num_seeds = (int) ((width * height) / 100);
+    return something(width, height, default_num_seeds, false);
 }

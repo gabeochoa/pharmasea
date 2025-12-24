@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-#include "../ah.h"
 #include "external_include.h"
 
 namespace mapgen {
