@@ -771,6 +771,11 @@ void render_trigger_area(const Entity& entity, float dt) {
         case IsTriggerArea::Store_BackToPlanning:
         case IsTriggerArea::ModelTest_BackToLobby:
         case IsTriggerArea::Store_Reroll:
+        case IsTriggerArea::Lobby_LoadSave:
+        case IsTriggerArea::LoadSave_BackToLobby:
+        case IsTriggerArea::LoadSave_LoadSlot:
+        case IsTriggerArea::LoadSave_ToggleDeleteMode:
+        case IsTriggerArea::Planning_SaveSlot:
             break;
         case IsTriggerArea::Progression_Option1:
         case IsTriggerArea::Progression_Option2:

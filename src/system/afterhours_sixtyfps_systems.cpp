@@ -41,6 +41,7 @@
 namespace system_manager {
 
 static constexpr const char* kLoadSaveDeleteModeKey = "load_save_delete_mode";
+static bool g_load_save_delete_mode = false;
 
 bool _create_nuxes(Entity& entity);
 void process_nux_updates(Entity& entity, float dt);
@@ -293,8 +294,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                                : 1;
             if (slot_num < 1) slot_num = 1;
 
-            const bool delete_mode =
-                GLOBALS.get_or_default<bool>(kLoadSaveDeleteModeKey, false);
+            const bool delete_mode = g_load_save_delete_mode;
             if (delete_mode) {
                 bool ok = server_only::delete_game_slot(slot_num);
                 if (!ok) break;
@@ -328,9 +328,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         } break;
 
         case IsTriggerArea::LoadSave_ToggleDeleteMode: {
-            bool current =
-                GLOBALS.get_or_default<bool>(kLoadSaveDeleteModeKey, false);
-            GLOBALS.set(kLoadSaveDeleteModeKey, !current);
+            g_load_save_delete_mode = !g_load_save_delete_mode;
         } break;
 
         case IsTriggerArea::Planning_SaveSlot: {
@@ -390,8 +388,7 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             return;
         } break;
         case IsTriggerArea::LoadSave_ToggleDeleteMode: {
-            const bool delete_mode =
-                GLOBALS.get_or_default<bool>(kLoadSaveDeleteModeKey, false);
+            const bool delete_mode = g_load_save_delete_mode;
             ita.update_title(delete_mode ? NO_TRANSLATE("Delete Mode: ON")
                                          : NO_TRANSLATE("Delete Mode: OFF"));
             ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
@@ -952,6 +949,9 @@ struct UpdateVisualsForSettingsChangerSystem
 }  // namespace system_manager
 
 void SystemManager::register_sixtyfps_systems() {
+    // Initialize global variables
+    GLOBALS.set(system_manager::kLoadSaveDeleteModeKey, &system_manager::g_load_save_delete_mode);
+
     // This system should run in all states (lobby, game, model test, etc.)
     // because it handles trigger areas and other essential updates
     // Note: We run every frame for better responsiveness (especially for
