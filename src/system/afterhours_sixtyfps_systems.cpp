@@ -20,6 +20,7 @@
 #include "../components/is_solid.h"
 #include "../components/is_squirter.h"
 #include "../components/is_trigger_area.h"
+#include "../components/has_subtype.h"
 #include "../components/model_renderer.h"
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
@@ -284,44 +285,11 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             }
         } break;
 
-        // Load slots (Phase 1 fixed slots).
-        case IsTriggerArea::LoadSave_Slot01:
-        case IsTriggerArea::LoadSave_Slot02:
-        case IsTriggerArea::LoadSave_Slot03:
-        case IsTriggerArea::LoadSave_Slot04:
-        case IsTriggerArea::LoadSave_Slot05:
-        case IsTriggerArea::LoadSave_Slot06:
-        case IsTriggerArea::LoadSave_Slot07:
-        case IsTriggerArea::LoadSave_Slot08: {
-            int slot_num = 1;
-            switch (ita.type) {
-                case IsTriggerArea::LoadSave_Slot01:
-                    slot_num = 1;
-                    break;
-                case IsTriggerArea::LoadSave_Slot02:
-                    slot_num = 2;
-                    break;
-                case IsTriggerArea::LoadSave_Slot03:
-                    slot_num = 3;
-                    break;
-                case IsTriggerArea::LoadSave_Slot04:
-                    slot_num = 4;
-                    break;
-                case IsTriggerArea::LoadSave_Slot05:
-                    slot_num = 5;
-                    break;
-                case IsTriggerArea::LoadSave_Slot06:
-                    slot_num = 6;
-                    break;
-                case IsTriggerArea::LoadSave_Slot07:
-                    slot_num = 7;
-                    break;
-                case IsTriggerArea::LoadSave_Slot08:
-                    slot_num = 8;
-                    break;
-                default:
-                    break;
-            }
+        case IsTriggerArea::LoadSave_LoadSlot: {
+            int slot_num = entity.has<HasSubtype>()
+                               ? entity.get<HasSubtype>().get_type_index()
+                               : 1;
+            if (slot_num < 1) slot_num = 1;
 
             bool ok = server_only::load_game_from_slot(slot_num);
             if (!ok) break;
@@ -335,44 +303,11 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             }
         } break;
 
-        // Delete slots (Phase 1 fixed slots).
-        case IsTriggerArea::LoadSave_DeleteSlot01:
-        case IsTriggerArea::LoadSave_DeleteSlot02:
-        case IsTriggerArea::LoadSave_DeleteSlot03:
-        case IsTriggerArea::LoadSave_DeleteSlot04:
-        case IsTriggerArea::LoadSave_DeleteSlot05:
-        case IsTriggerArea::LoadSave_DeleteSlot06:
-        case IsTriggerArea::LoadSave_DeleteSlot07:
-        case IsTriggerArea::LoadSave_DeleteSlot08: {
-            int slot_num = 1;
-            switch (ita.type) {
-                case IsTriggerArea::LoadSave_DeleteSlot01:
-                    slot_num = 1;
-                    break;
-                case IsTriggerArea::LoadSave_DeleteSlot02:
-                    slot_num = 2;
-                    break;
-                case IsTriggerArea::LoadSave_DeleteSlot03:
-                    slot_num = 3;
-                    break;
-                case IsTriggerArea::LoadSave_DeleteSlot04:
-                    slot_num = 4;
-                    break;
-                case IsTriggerArea::LoadSave_DeleteSlot05:
-                    slot_num = 5;
-                    break;
-                case IsTriggerArea::LoadSave_DeleteSlot06:
-                    slot_num = 6;
-                    break;
-                case IsTriggerArea::LoadSave_DeleteSlot07:
-                    slot_num = 7;
-                    break;
-                case IsTriggerArea::LoadSave_DeleteSlot08:
-                    slot_num = 8;
-                    break;
-                default:
-                    break;
-            }
+        case IsTriggerArea::LoadSave_DeleteSlot: {
+            int slot_num = entity.has<HasSubtype>()
+                               ? entity.get<HasSubtype>().get_type_index()
+                               : 1;
+            if (slot_num < 1) slot_num = 1;
 
             bool ok = server_only::delete_game_slot(slot_num);
             if (!ok) break;
@@ -391,9 +326,13 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             }
         } break;
 
-        case IsTriggerArea::Planning_SaveSlot01: {
+        case IsTriggerArea::Planning_SaveSlot: {
             if (!SystemManager::get().is_daytime()) break;
-            (void) server_only::save_game_to_slot(1);
+            int slot_num = entity.has<HasSubtype>()
+                               ? entity.get<HasSubtype>().get_type_index()
+                               : 1;
+            if (slot_num < 1) slot_num = 1;
+            (void) server_only::save_game_to_slot(slot_num);
         } break;
     }
 }
@@ -443,8 +382,12 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
-        case IsTriggerArea::Planning_SaveSlot01: {
-            ita.update_title(NO_TRANSLATE("Save Slot 01"));
+        // Deprecated: old save station trigger.
+        case IsTriggerArea::Planning_SaveSlot01:
+            break;
+        case IsTriggerArea::Planning_SaveSlot: {
+            // If you'd like slot-specific text, set it at spawn-time.
+            ita.update_title(NO_TRANSLATE("Save Game"));
             ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
             return;
         } break;
@@ -466,22 +409,8 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
         case IsTriggerArea::Progression_Option2:
             break;
         // Titles are set when the Load/Save room is generated.
-        case IsTriggerArea::LoadSave_Slot01:
-        case IsTriggerArea::LoadSave_Slot02:
-        case IsTriggerArea::LoadSave_Slot03:
-        case IsTriggerArea::LoadSave_Slot04:
-        case IsTriggerArea::LoadSave_Slot05:
-        case IsTriggerArea::LoadSave_Slot06:
-        case IsTriggerArea::LoadSave_Slot07:
-        case IsTriggerArea::LoadSave_Slot08:
-        case IsTriggerArea::LoadSave_DeleteSlot01:
-        case IsTriggerArea::LoadSave_DeleteSlot02:
-        case IsTriggerArea::LoadSave_DeleteSlot03:
-        case IsTriggerArea::LoadSave_DeleteSlot04:
-        case IsTriggerArea::LoadSave_DeleteSlot05:
-        case IsTriggerArea::LoadSave_DeleteSlot06:
-        case IsTriggerArea::LoadSave_DeleteSlot07:
-        case IsTriggerArea::LoadSave_DeleteSlot08:
+        case IsTriggerArea::LoadSave_LoadSlot:
+        case IsTriggerArea::LoadSave_DeleteSlot:
             return;
     }
 

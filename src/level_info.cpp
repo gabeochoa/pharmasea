@@ -13,6 +13,7 @@
 #include "components/is_round_settings_manager.h"
 #include "components/is_store_spawned.h"
 #include "components/is_trigger_area.h"
+#include "components/has_subtype.h"
 #include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "dataclass/ingredient.h"
@@ -455,56 +456,14 @@ void LevelInfo::generate_load_save_room_map() {
         int cy = idx / cols;
         vec2 pos2 = start + vec2{cx * xspace, -cy * yspace};
 
-        auto type_for_slot = [&](int slot_num) {
-            switch (slot_num) {
-                case 1:
-                    return IsTriggerArea::LoadSave_Slot01;
-                case 2:
-                    return IsTriggerArea::LoadSave_Slot02;
-                case 3:
-                    return IsTriggerArea::LoadSave_Slot03;
-                case 4:
-                    return IsTriggerArea::LoadSave_Slot04;
-                case 5:
-                    return IsTriggerArea::LoadSave_Slot05;
-                case 6:
-                    return IsTriggerArea::LoadSave_Slot06;
-                case 7:
-                    return IsTriggerArea::LoadSave_Slot07;
-                case 8:
-                    return IsTriggerArea::LoadSave_Slot08;
-            }
-            return IsTriggerArea::LoadSave_Slot01;
-        };
-
-        auto delete_type_for_slot = [&](int slot_num) {
-            switch (slot_num) {
-                case 1:
-                    return IsTriggerArea::LoadSave_DeleteSlot01;
-                case 2:
-                    return IsTriggerArea::LoadSave_DeleteSlot02;
-                case 3:
-                    return IsTriggerArea::LoadSave_DeleteSlot03;
-                case 4:
-                    return IsTriggerArea::LoadSave_DeleteSlot04;
-                case 5:
-                    return IsTriggerArea::LoadSave_DeleteSlot05;
-                case 6:
-                    return IsTriggerArea::LoadSave_DeleteSlot06;
-                case 7:
-                    return IsTriggerArea::LoadSave_DeleteSlot07;
-                case 8:
-                    return IsTriggerArea::LoadSave_DeleteSlot08;
-            }
-            return IsTriggerArea::LoadSave_DeleteSlot01;
-        };
-
         // Load pedestal.
         {
             auto& entity = EntityHelper::createEntity();
             furniture::make_trigger_area(
                 entity, vec::to3(pos2) + vec3{0, TILESIZE / -2.f, 0}, 4, 3,
-                type_for_slot(slot.slot));
+                IsTriggerArea::LoadSave_LoadSlot);
+            // store slot number directly
+            entity.addComponent<HasSubtype>(0, 100, slot.slot);
 
             // Set a static label for this room instance.
             auto& ita = entity.get<IsTriggerArea>();
@@ -532,7 +491,8 @@ void LevelInfo::generate_load_save_room_map() {
             auto& entity = EntityHelper::createEntity();
             furniture::make_trigger_area(
                 entity, vec::to3(pos2) + vec3{0, TILESIZE / -2.f, 3.5f}, 4, 2,
-                delete_type_for_slot(slot.slot));
+                IsTriggerArea::LoadSave_DeleteSlot);
+            entity.addComponent<HasSubtype>(0, 100, slot.slot);
 
             auto& ita = entity.get<IsTriggerArea>();
             ita.update_title(
@@ -762,7 +722,8 @@ void LevelInfo::add_outside_triggers(vec2 origin) {
             origin.y + wfc::SPAWN_AREA.y + (wfc::SPAWN_AREA.height / 2.f) + 5.f,
         };
         furniture::make_trigger_area(entity, position, 6, 3,
-                                     IsTriggerArea::Planning_SaveSlot01);
+                                     IsTriggerArea::Planning_SaveSlot);
+        entity.addComponent<HasSubtype>(0, 100, 1);
     }
 }
 

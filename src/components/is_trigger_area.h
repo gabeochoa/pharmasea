@@ -28,7 +28,8 @@ struct IsTriggerArea : public BaseComponent {
         Lobby_LoadSave,
         LoadSave_BackToLobby,
 
-        // Load/Save room actions (Phase 1: fixed slots).
+        // Deprecated: Load/Save room actions (Phase 1 fixed slots).
+        // Keep for network compatibility, but don't add more of these.
         LoadSave_Slot01,
         LoadSave_Slot02,
         LoadSave_Slot03,
@@ -47,8 +48,15 @@ struct IsTriggerArea : public BaseComponent {
         LoadSave_DeleteSlot07,
         LoadSave_DeleteSlot08,
 
-        // Planning-only save station (Phase 1: slot 1).
+        // Deprecated: Planning-only save station (Phase 1: slot 1).
         Planning_SaveSlot01,
+
+        // Load/Save room actions (slot number stored in HasSubtype.type_index).
+        LoadSave_LoadSlot,
+        LoadSave_DeleteSlot,
+
+        // Planning-only save station (slot number stored in HasSubtype.type_index).
+        Planning_SaveSlot,
     } type = Unset;
 
     enum struct EntrantsRequired {
