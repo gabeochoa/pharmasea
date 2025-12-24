@@ -330,6 +330,17 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
         case IsTriggerArea::LoadSave_ToggleDeleteMode: {
             g_load_save_delete_mode = !g_load_save_delete_mode;
+            network::Server::forward_packet(network::ClientPacket{
+                .channel = Channel::RELIABLE,
+                .client_id = network::SERVER_CLIENT_ID,
+                .msg_type = network::ClientPacket::MsgType::Announcement,
+                .msg = network::ClientPacket::AnnouncementInfo{
+                    .message = g_load_save_delete_mode ? "Delete mode ON"
+                                                      : "Delete mode OFF",
+                    .type = g_load_save_delete_mode ? AnnouncementType::Warning
+                                                    : AnnouncementType::Message,
+                },
+            });
         } break;
 
         case IsTriggerArea::Planning_SaveSlot: {
@@ -446,7 +457,7 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             // Keep colors up to date:
             // - empty slots are grey
             // - loadable slots are green
-            // - in delete mode, all slots are red
+            // - in delete mode, loadable slots are red (empty slots remain grey)
             bool delete_mode = g_load_save_delete_mode;
             int slot_num = entity.has<HasSubtype>()
                                ? entity.get<HasSubtype>().get_type_index()
@@ -456,9 +467,8 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             bool exists = std::filesystem::exists(
                 save_game::SaveGameManager::slot_path(slot_num));
 
-            Color c = delete_mode ? ui::color::red
-                                  : (exists ? ui::color::green_apple
-                                            : ui::color::grey);
+            Color c = exists ? (delete_mode ? ui::color::red : ui::color::green_apple)
+                             : ui::color::grey;
             if (entity.has<SimpleColoredBoxRenderer>()) {
                 entity.get<SimpleColoredBoxRenderer>().update_face(c).update_base(c);
             }

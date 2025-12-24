@@ -481,12 +481,12 @@ void LevelInfo::generate_load_save_room_map() {
                 const auto& h = slot.header.value();
                 // TODO(i18n): translate this (needs a formatted i18n string).
                 ita.update_title(NO_TRANSLATE(fmt::format(
-                    "Slot {:02d} — Day {} — seed '{}' — v{}",
+                    "Slot {:02d}\nDay {}\nseed '{}'\nv{}",
                     slot.slot, h.day_count, h.seed,
                     std::string_view(VERSION))));
             } else {
                 ita.update_title(
-                    NO_TRANSLATE(fmt::format("Slot {:02d} — Empty", slot.slot)));
+                    NO_TRANSLATE(fmt::format("Slot {:02d}\nEmpty", slot.slot)));
             }
             ita.update_subtitle(TranslatableString(strings::i18n::LOADING));
 

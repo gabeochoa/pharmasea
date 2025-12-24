@@ -7,6 +7,7 @@
 #include "../engine/time.h"
 #include "../engine/log.h"
 #include "../engine/sound_library.h"
+#include "../engine/toastmanager.h"
 #include "network.h"
 #include "serialization.h"
 
@@ -213,6 +214,8 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::AnnouncementInfo info =
                 std::get<ClientPacket::AnnouncementInfo>(packet.msg);
             announcements.push_back(info);
+            // Also surface immediately as an in-game toast.
+            TOASTS.push_back({.msg = info.message, .type = info.type, .timeToShow = 5});
         } break;
         case ClientPacket::MsgType::PlayerLeave: {
             ClientPacket::PlayerLeaveInfo info =
