@@ -44,6 +44,19 @@ Conclusion: even though `Map`/`LevelInfo` can be serialized, the codebase lacks 
 - Validation hooks exist (`replay_validation::*`) and can fail hard at end (`src/engine/simulated_input/replay_validation.*`).
 - One example validation spec exists: `completed_first_day` checks `HasDayNightTimer` (`src/tests/replay_specs.cpp`).
 
+## Authority Model (important for intern)
+This project has a clear split:
+- **Server thread** is the **authoritative simulation** (it runs `SystemManager::update_all_entities()`; client thread early-returns).
+- **Client thread** is primarily **input/UI/render** and should be driven by server sync snapshots.
+
+**Save/Load rule (v1):**
+- **Only the host may Save/Load**, and the action must run on the **host’s server thread**.
+- Clients (including the host’s own client thread) should treat incoming world data as **render/sync state**, not as authoritative gameplay state.
+
+**Implication for design:**
+- We may choose to serialize/send only what’s needed to render (a “RenderSnapshot”) over the network.
+- Save files, however, must be sourced from the authoritative server state so we can restore correctly (IDs, references, progression, etc.).
+
 ## Save File Format (what we’ll persist)
 
 ### SaveGame file structure (binary)
@@ -82,6 +95,7 @@ Use Bitsery, but add a small header for **versioning + UI metadata**.
 - Load must run **server-side** (authoritative) so the world is consistent for multiplayer and for replay.
 - Loading must ensure `LevelInfo.was_generated = true` so the generator doesn’t wipe the loaded world.
 - After installing entities, we must invalidate caches (named entity cache, walkable/path caches).
+- **Host-only**: only host server thread can apply saves; clients are synced afterward.
 
 ### “Apply Save” algorithm (server thread)
 1. Read save header and payload from disk.
@@ -103,6 +117,10 @@ Use Bitsery, but add a small header for **versioning + UI metadata**.
 - UX sources:
   - Diagetic **Save Station** in Planning (recommended primary)
   - Menu button (only enabled in Planning) as a convenient shortcut
+
+### Save source-of-truth (host-only)
+- Save is captured from the **server-thread authoritative state**, then written to disk.
+- After writing, clients do not need to “agree”; they will receive state via normal sync.
 
 ### Save locations & slots
 Use a predictable folder under the game folder:
