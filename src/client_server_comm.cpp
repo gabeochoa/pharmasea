@@ -1,18 +1,21 @@
 
 #include "client_server_comm.h"
 
-#include "network/server.h"
-#include "save_game/save_game.h"
-#include "engine/random_engine.h"
-#include "entity_helper.h"
 #include "components/has_dynamic_model_name.h"
 #include "components/has_fishing_game.h"
 #include "components/has_subtype.h"
 #include "components/is_drink.h"
 #include "dataclass/ingredient.h"
+#include "engine/random_engine.h"
+#include "entity_helper.h"
+#include "entity_type.h"
+#include "network/server.h"
 #include "recipe_library.h"
+#include "save_game/save_game.h"
 
 namespace server_only {
+// TODO look into a way to handle this for each type, why do they need to be
+// dynamic
 static void reinit_dynamic_model_names_after_load() {
     // Loaded saves restore ECS data, but many components contain runtime-only
     // callbacks (std::function) that are not serialized. Recreate the dynamic
@@ -25,7 +28,7 @@ static void reinit_dynamic_model_names_after_load() {
             e.removeComponent<HasDynamicModelName>();
         }
 
-        switch (e.entity_type) {
+        switch (static_cast<EntityType>(e.entity_type)) {
             case EntityType::Cupboard: {
                 e.addComponent<HasDynamicModelName>().init(
                     EntityType::Cupboard,
@@ -43,7 +46,8 @@ static void reinit_dynamic_model_names_after_load() {
             } break;
             case EntityType::Alcohol: {
                 e.addComponent<HasDynamicModelName>().init(
-                    EntityType::Alcohol, HasDynamicModelName::DynamicType::Subtype,
+                    EntityType::Alcohol,
+                    HasDynamicModelName::DynamicType::Subtype,
                     [](const Entity& owner, const std::string&) -> std::string {
                         const HasSubtype& hst = owner.get<HasSubtype>();
                         Ingredient bottle = get_ingredient_from_index(
@@ -55,10 +59,12 @@ static void reinit_dynamic_model_names_after_load() {
             } break;
             case EntityType::Fruit: {
                 e.addComponent<HasDynamicModelName>().init(
-                    EntityType::Fruit, HasDynamicModelName::DynamicType::Subtype,
+                    EntityType::Fruit,
+                    HasDynamicModelName::DynamicType::Subtype,
                     [](const Entity& owner, const std::string&) -> std::string {
                         const HasSubtype& hst = owner.get<HasSubtype>();
-                        Ingredient fruit = ingredient::Fruits[0 + hst.get_type_index()];
+                        Ingredient fruit =
+                            ingredient::Fruits[0 + hst.get_type_index()];
                         return util::convertToSnakeCase<Ingredient>(fruit);
                     });
             } break;
@@ -68,12 +74,14 @@ static void reinit_dynamic_model_names_after_load() {
                     HasDynamicModelName::DynamicType::Ingredients,
                     [](const Entity& owner, const std::string&) -> std::string {
                         const IsDrink& isdrink = owner.get<IsDrink>();
-                        constexpr auto drinks = magic_enum::enum_values<Drink>();
+                        constexpr auto drinks =
+                            magic_enum::enum_values<Drink>();
                         for (Drink d : drinks) {
                             if (isdrink.matches_drink(d))
                                 return get_model_name_for_drink(d);
                         }
-                        return util::convertToSnakeCase<EntityType>(EntityType::Drink);
+                        return util::convertToSnakeCase<EntityType>(
+                            EntityType::Drink);
                     });
             } break;
             case EntityType::Pitcher: {
@@ -82,12 +90,14 @@ static void reinit_dynamic_model_names_after_load() {
                     HasDynamicModelName::DynamicType::Ingredients,
                     [](const Entity& owner, const std::string&) -> std::string {
                         const IsDrink& isdrink = owner.get<IsDrink>();
-                        constexpr auto drinks = magic_enum::enum_values<Drink>();
+                        constexpr auto drinks =
+                            magic_enum::enum_values<Drink>();
                         for (Drink d : drinks) {
                             if (isdrink.matches_drink(d))
                                 return get_model_name_for_drink(d);
                         }
-                        return util::convertToSnakeCase<EntityType>(EntityType::DraftTap);
+                        return util::convertToSnakeCase<EntityType>(
+                            EntityType::DraftTap);
                     });
             } break;
             case EntityType::FruitJuice: {
@@ -95,7 +105,8 @@ static void reinit_dynamic_model_names_after_load() {
                 // captured lambda at spawn-time). Leave this without a dynamic
                 // model name for now, and log loudly so we can fix it properly.
                 log_error(
-                    "Loaded FruitJuice without persisted subtype; dynamic model name can't be restored yet (entity id {})",
+                    "Loaded FruitJuice without persisted subtype; dynamic "
+                    "model name can't be restored yet (entity id {})",
                     e.id);
             } break;
             default: {
