@@ -7,6 +7,7 @@
 #include "engine/random_engine.h"
 #include "engine/ui/svg.h"
 #include "map_generation/map_generation.h"
+#include "map_generation/pipeline.h"
 #include "map_generation/wave_collapse.h"
 
 // TODO removing this include would speed up
@@ -91,6 +92,8 @@ bool REPLAY_VALIDATE = false;
 bool SHOW_INTRO = false;
 bool SHOW_RAYLIB_INTRO = false;
 bool TEST_MAP_GENERATION = false;
+bool GENERATE_MAP = false;
+std::string GENERATE_MAP_SEED = "";
 
 void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues
@@ -208,7 +211,7 @@ void process_dev_flags(int argc, char* argv[]) {
             "--record-input", "--intro", "--test_map_generation",
             "--replay-validate"};
         static const std::set<std::string> with_value = {
-            "--replay", "--bypass-rounds"};
+            "--replay", "--bypass-rounds", "--generate-map"};
 
         // Accept --flag=value form for value flags.
         if (arg.rfind("--", 0) == 0) {
@@ -228,7 +231,9 @@ void process_dev_flags(int argc, char* argv[]) {
         if (arg.empty() || arg[0] != '-') continue;
         if (is_known_flag(arg)) {
             // If this flag expects a value, skip the next token.
-            if ((arg == "--replay" || arg == "--bypass-rounds") && i + 1 < argc) {
+            if ((arg == "--replay" || arg == "--bypass-rounds" ||
+                 arg == "--generate-map") &&
+                i + 1 < argc) {
                 ++i;
             }
             continue;
@@ -315,6 +320,24 @@ void process_dev_flags(int argc, char* argv[]) {
         }
     }
 
+    auto try_set_generate_map = [](const std::string& val) {
+        if (val.empty()) return;
+        GENERATE_MAP = true;
+        GENERATE_MAP_SEED = val;
+    };
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i] ? argv[i] : "";
+        const std::string prefix = "--generate-map=";
+        if (arg.rfind(prefix, 0) == 0) {
+            try_set_generate_map(arg.substr(prefix.size()));
+            continue;
+        }
+        if (arg == "--generate-map" && i + 1 < argc) {
+            try_set_generate_map(argv[i + 1] ? argv[i + 1] : "");
+            ++i;
+        }
+    }
+
     if (cmdl({"--bypass-rounds"})) {
         int parsed_rounds = 1;
         cmdl({"--bypass-rounds"}) >> parsed_rounds;
@@ -369,6 +392,38 @@ int main(int argc, char* argv[]) {
     }
 
 #endif
+
+    if (GENERATE_MAP) {
+        const auto archetype_to_string = [](mapgen::BarArchetype archetype) {
+            switch (archetype) {
+                case mapgen::BarArchetype::OpenHall:
+                    return "OpenHall";
+                case mapgen::BarArchetype::MultiRoom:
+                    return "MultiRoom";
+                case mapgen::BarArchetype::BackRoom:
+                    return "BackRoom";
+                case mapgen::BarArchetype::LoopRing:
+                    return "LoopRing";
+            }
+            return "Unknown";
+        };
+
+        if (GENERATE_MAP_SEED.empty()) {
+            log_error("--generate-map requires a non-empty seed");
+            return 1;
+        }
+
+        RandomEngine::set_seed(GENERATE_MAP_SEED);
+        mapgen::GenerationContext ctx;
+        mapgen::GeneratedAscii out = mapgen::generate_ascii(GENERATE_MAP_SEED, ctx);
+        std::cout << "[mapgen] seed=" << GENERATE_MAP_SEED
+                  << " archetype=" << archetype_to_string(out.archetype)
+                  << " rows=" << ctx.rows << " cols=" << ctx.cols << std::endl;
+        for (const std::string& line : out.lines) {
+            std::cout << line << std::endl;
+        }
+        return 0;
+    }
 
     if (TEST_MAP_GENERATION) {
         wfc::ensure_map_generation_info_loaded();
