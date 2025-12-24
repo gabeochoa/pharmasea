@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "../app.h"
+#include "replay_validation.h"
 #include "../event.h"
 #include "../log.h"
 #include "../statemanager.h"
@@ -132,6 +133,7 @@ void dispatch(const ReplayEvent& ev) {
 
 void start(const std::filesystem::path& path) {
     state = ReplayState{};
+    replay_validation::start_replay(path.stem().string());
     std::ifstream file(path);
     if (!file.is_open()) {
         log_error("Input replay: failed to open {}", path.string());
@@ -239,6 +241,7 @@ void update(float) {
 
     if (state.idx >= state.events.size()) {
         state.active = false;
+        replay_validation::end_replay();
         if (EXIT_ON_BYPASS_COMPLETE) {
             log_info("replay: completed all events; exit-on-bypass-complete set, closing app");
             App::get().close();

@@ -36,6 +36,7 @@ extern bool EXIT_ON_BYPASS_COMPLETE;
 extern bool RECORD_INPUTS;
 extern std::string REPLAY_NAME;
 extern bool REPLAY_ENABLED;
+extern bool REPLAY_VALIDATE;
 extern bool SHOW_INTRO;
 extern bool SHOW_RAYLIB_INTRO;
 
