@@ -112,7 +112,7 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -150,7 +150,7 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -187,7 +187,7 @@ void SystemManager::register_modeltest_systems() {
             system_manager::ProcessIsContainerAndShouldUpdateItemSystem>());
     // This one should be after the other container ones
     // TODO before you migrate this, we need to look at the should_run logic
-    // since the existing System<> uses is_nighttime
+    // since the existing System<> uses is_bar_closed
     systems.register_update_system(
         std::make_unique<
             system_manager::

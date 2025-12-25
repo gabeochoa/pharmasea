@@ -96,7 +96,7 @@ void GameDebugLayer::draw_debug_ui(float dt) {
     }
 
     // Round Info
-    if (SystemManager::get().is_nighttime()) {
+    if (SystemManager::get().is_bar_closed()) {
         if (map_ptr) {
             const HasDayNightTimer& hasTimer =
                 EntityQuery()

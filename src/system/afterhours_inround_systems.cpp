@@ -51,7 +51,7 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -83,7 +83,7 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -112,7 +112,7 @@ struct ProcessGrabberItemsSystem
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -177,7 +177,7 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -342,7 +342,7 @@ struct ProcessGrabberFilterSystem : public afterhours::System<> {
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -374,7 +374,7 @@ struct ProcessSpawnerSystem : public afterhours::System<Transform, IsSpawner> {
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -429,7 +429,7 @@ struct ReduceImpatientCustomersSystem : public afterhours::System<HasPatience> {
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -462,7 +462,7 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -528,7 +528,7 @@ struct ProcessHasRopeSystem : public afterhours::System<> {
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -617,7 +617,7 @@ struct ResetCustomersThatNeedResettingSystem
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -671,7 +671,7 @@ struct UpgradeInRoundUpdateSystem
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }

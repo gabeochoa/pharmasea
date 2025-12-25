@@ -54,8 +54,8 @@ struct SystemManager {
     void for_each_old(const std::function<void(Entity&)>& cb);
     void for_each_old(const std::function<void(Entity&)>& cb) const;
 
-    bool is_daytime() const;
-    bool is_nighttime() const;
+    bool is_bar_open() const;
+    bool is_bar_closed() const;
 
     bool is_some_player_near(vec2 spot, float distance = 4.f) const;
 

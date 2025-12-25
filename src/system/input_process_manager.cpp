@@ -329,7 +329,7 @@ struct CartManagementSystem
         try {
             sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& hastimer = sophie->get<HasDayNightTimer>();
-            return hastimer.is_daytime();
+            return hastimer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -373,7 +373,7 @@ struct PopOutWhenCollidingSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            return hastimer.is_daytime();
+            return hastimer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -444,7 +444,7 @@ struct UpdateHeldFurniturePositionSystem
 
         Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-        return hastimer.is_daytime();
+        return hastimer.is_bar_closed();
     }
 
     virtual void for_each_with([[maybe_unused]] Entity& entity,
@@ -483,7 +483,7 @@ void register_input_systems(afterhours::SystemManager& systems) {
 
 void rotate_furniture(const Entity& player) {
     // TODO decide if we care about rotate outside planning mode
-    // if (SystemManager::get().is_nighttime()) return;
+    // if (SystemManager::get().is_bar_closed()) return;
 
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
@@ -609,7 +609,7 @@ struct ResetEmptyWorkFurnitureSystem
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -635,7 +635,7 @@ struct PassTimeForActiveFishingGamesSystem
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
             if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_nighttime();
+            return hastimer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -1182,12 +1182,12 @@ void process_input(Entity& entity, const UserInput& input) {
                             "pickup: PlayerPickup dispatch game_like={} daytime={} "
                             "has_item={} has_handtruck={}",
                             GameState::get().is_game_like(),
-                            SystemManager::get().is_daytime(), has_item,
+                            SystemManager::get().is_bar_closed(), has_item,
                             has_handtruck);
                         if (GameState::get().is_game_like()) {
                             // Planning mode is when it's daytime, in-round mode
                             // is when it's nighttime
-                            if (SystemManager::get().is_daytime()) {
+                            if (SystemManager::get().is_bar_closed()) {
                                 log_info("pickup: using planning grab/drop");
                                 planning::handle_grab_or_drop(entity);
                             } else {

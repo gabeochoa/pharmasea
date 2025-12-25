@@ -1228,7 +1228,7 @@ void render_normal(const Entity& entity, float dt) {
     //  planning state.
     //
     //  They kept trying to grab the cups and start making drinks
-    else if (SystemManager::get().is_daytime()) {
+    else if (SystemManager::get().is_bar_closed()) {
         render_machine_name(entity, 100);
     }
     // ^ adding an "else" because otherwise itll show two names when in the

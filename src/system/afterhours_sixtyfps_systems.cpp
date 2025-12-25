@@ -367,7 +367,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         } break;
 
         case IsTriggerArea::Planning_SaveSlot: {
-            if (!SystemManager::get().is_daytime()) {
+            if (SystemManager::get().is_bar_closed()) {
                 network::Server::forward_packet(network::ClientPacket{
                     .channel = Channel::RELIABLE,
                     .client_id = network::SERVER_CLIENT_ID,

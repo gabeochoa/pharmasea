@@ -680,7 +680,7 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
     container.addComponent<Indexer>((int) ingredient::AlcoholsInCycle.size());
     container.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                               Entity&, float dt) {
-        if (SystemManager::get().is_daytime()) return;
+        if (SystemManager::get().is_bar_open()) return;
         const Indexer& indexer = owner.get<Indexer>();
         if (indexer.max() < 2) return;
 
@@ -941,7 +941,7 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
 
     vomit.addComponent<HasWork>().init(
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
-            // if (SystemManager::get().is_daytime()) return;
+            // if (SystemManager::get().is_bar_open()) return;
 
             const auto validate =
                 [](const Entity& entity) -> std::pair<bool, float> {
@@ -1056,7 +1056,7 @@ void make_mop(Item& mop, vec3 pos) {
 void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
                            float dt) {
     // TODO should we only allow making drinks during the night time?
-    // if (SystemManager::get().is_daytime()) return;
+    // if (SystemManager::get().is_bar_open()) return;
     //
     if (drink.is_missing<IsItem>()) return;
     if (drink.is_missing<IsDrink>()) return;
@@ -1246,7 +1246,7 @@ void make_fruit(Item& fruit, vec3 pos, int index) {
         });
     fruit.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                           Entity& /* person */, float dt) {
-        if (SystemManager::get().is_daytime()) return;
+        if (SystemManager::get().is_bar_open()) return;
         const IsItem& ii = owner.get<IsItem>();
         const HasSubtype& hasSubtype = owner.get<HasSubtype>();
         Ingredient fruit_type = ingredient::Fruits[hasSubtype.get_type_index()];

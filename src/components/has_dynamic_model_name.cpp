@@ -12,8 +12,8 @@ std::string HasDynamicModelName::fetch(const Entity& owner) const {
 
     switch (dynamic_type) {
         case OpenClosed: {
-            bool is_daytime = SystemManager::get().is_daytime();
-            if (!is_daytime) return base_name;
+            bool is_bar_open = SystemManager::get().is_bar_open();
+            if (!is_bar_open) return base_name;
             return fmt::format("open_{}", base_name);
         } break;
             // TODO eventually id like the logic to live in here assuming we

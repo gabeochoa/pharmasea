@@ -210,8 +210,8 @@ RoundTimerLocation get_round_timer_location() {
 }
 
 TranslatableString get_status_text(const HasDayNightTimer& ht) {
-    const bool is_closing = ht.is_nighttime() && ht.pct() <= 0.1f;
-    const bool is_open = ht.is_nighttime() && !is_closing;
+    const bool is_closing = ht.is_bar_open() && ht.pct() <= 0.1f;
+    const bool is_open = ht.is_bar_open() && !is_closing;
     const int dayCount = ht.days_passed();
 
     auto status_text =
@@ -271,7 +271,7 @@ void render_rent_info_when_player_in_bar(const Entity& sophie) {
     const auto rtl = get_round_timer_location();
 
     // Only show the customer count during planning
-    const bool is_daytime = SystemManager::get().is_daytime();
+    const bool is_planning = SystemManager::get().is_bar_closed();
 
     Entity& spawner =
         (EntityQuery().whereType(EntityType::CustomerSpawner).gen_first())
@@ -297,7 +297,7 @@ void render_rent_info_when_player_in_bar(const Entity& sophie) {
 
     render_rent_due_progress_bar(sophie, rtl.rounded_rect);
 
-    if (is_daytime &&
+    if (is_planning &&
         BAR_BUILDING.is_inside(local_player->get<Transform>().as2())) {
         int average_drink_price = get_average_unlocked_drink_cost();
         int estimated_profit = iss.get_max_spawned() * average_drink_price;
@@ -324,7 +324,7 @@ void render_round_timer(const Entity& entity, float) {
 
     const auto rtl = get_round_timer_location();
 
-    const bool is_day = ht.is_daytime();
+    const bool is_bar_open = ht.is_bar_open();
     const float pct = ht.pct();
     const float angle = util::deg2rad(util::lerp(170, 365, 1 - pct));
 
@@ -336,10 +336,10 @@ void render_round_timer(const Entity& entity, float) {
     // Hide it when its below the rect
     if (angle >= M_PI)
         raylib::DrawCircle((int) pos.x, (int) pos.y, rtl.radius,
-                           is_day ? YELLOW : GRAY);
+                           is_bar_open ? YELLOW : GRAY);
 
     div(::ui::Widget{rtl.rounded_rect},
-        is_day ? ::ui::theme::Primary : ::ui::theme::Background);
+        is_bar_open ? ::ui::theme::Primary : ::ui::theme::Background);
     text(::ui::Widget{rtl.rounded_rect}, get_status_text(ht));
 
     render_rent_info_when_player_in_bar(entity);

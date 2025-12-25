@@ -63,8 +63,8 @@ struct RunTimerSystem : public afterhours::System<HasDayNightTimer> {
         ht.pass_time(dt);
         if (!ht.is_round_over()) return;
 
-        if (ht.is_daytime()) {
-            ht.start_night();
+        if (ht.is_bar_open()) {
+            ht.close_bar();
 
             // TODO we assume that this entity is the same one which should be
             // the case if so then we should be using the System filtering to
@@ -98,7 +98,7 @@ struct RunTimerSystem : public afterhours::System<HasDayNightTimer> {
 
         // TODO theoretically we shouldnt start until after you choose upgrades
         // but we are gonna change how this works later anyway i think
-        ht.start_day();
+        ht.open_bar();
     }
 };
 
@@ -230,7 +230,7 @@ struct EndOfRoundCompletionValidationSystem
             GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
 
         // TODO i dont like that this is copy paste from layers/round_end
-        if (SystemManager::get().is_nighttime() &&
+        if (SystemManager::get().is_bar_closed() &&
             ht.get_current_length() > 0 && !debug_mode_on)
             return;
 

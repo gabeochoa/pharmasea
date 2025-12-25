@@ -400,7 +400,7 @@ void update_sophie(Entity& entity, float dt) {
     CollectsCustomerFeedback& feedback = entity.get<CollectsCustomerFeedback>();
 
     // TODO i dont like that this is copy paste from layers/round_end
-    if (SystemManager::get().is_nighttime() && ht.get_current_length() > 0 &&
+    if (SystemManager::get().is_bar_closed() && ht.get_current_length() > 0 &&
         !debug_mode_on)
         return;
 

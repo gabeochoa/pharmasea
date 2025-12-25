@@ -13,8 +13,8 @@ struct HasDayNightTimer : public BaseComponent {
 
     [[nodiscard]] int days_passed() const { return day_count; }
 
-    [[nodiscard]] bool is_daytime() const { return is_day; }
-    [[nodiscard]] bool is_nighttime() const { return !is_daytime(); }
+    [[nodiscard]] bool is_bar_open() const { return !is_day; }
+    [[nodiscard]] bool is_bar_closed() const { return is_day; }
     [[nodiscard]] bool is_round_over() const { return current_length <= 0.f; }
 
     auto& pass_time(float dt) {
@@ -25,7 +25,7 @@ struct HasDayNightTimer : public BaseComponent {
     [[nodiscard]] float get_current_length() const { return current_length; }
 
     [[nodiscard]] float get_total_length() const {
-        return is_daytime() ? day_length : night_length;
+        return is_bar_open() ? night_length : day_length;
     }
 
     // slowly going down
@@ -36,18 +36,18 @@ struct HasDayNightTimer : public BaseComponent {
     void set_day_length(float trt) { day_length = trt; }
     void set_night_length(float trt) { night_length = trt; }
 
-    void start_day() {
-        is_day = true;
+    void open_bar() {
+        is_day = false;
         day_count++;
-        current_length += day_length;
+        current_length += night_length;
         needs_to_process_change = true;
 
         days_until_rent_due--;
     }
 
-    void start_night() {
-        is_day = false;
-        current_length += night_length;
+    void close_bar() {
+        is_day = true;
+        current_length += day_length;
         needs_to_process_change = true;
     }
 

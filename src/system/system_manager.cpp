@@ -438,7 +438,7 @@ void update_visuals_for_settings_changer(Entity& entity, float) {
 }
 
 bool _create_nuxes(Entity&) {
-    if (SystemManager::get().is_nighttime()) return false;
+    if (SystemManager::get().is_bar_closed()) return false;
 
     OptEntity player = EQ(SystemManager::get().oldAll)
                            .whereType(EntityType::Player)
@@ -1084,8 +1084,8 @@ void SystemManager::update_all_entities(const Entities& players, float dt) {
 
         // NOTE: System updates are now handled by afterhours systems:
         // - ModelTestUpdateSystem (runs when State::ModelTest)
-        // - InRoundUpdateSystem (runs when is_game_like() && is_nighttime())
-        // - PlanningUpdateSystem (runs when is_game_like() && is_daytime())
+        // - InRoundUpdateSystem (runs when is_game_like() && is_bar_open())
+        // - PlanningUpdateSystem (runs when is_game_like() && is_bar_closed())
         // - GameLikeUpdateSystem (runs when is_game_like())
         // - SixtyFpsUpdateSystem (runs in all states)
         // All systems have should_run() methods that match the original
@@ -1158,14 +1158,14 @@ void SystemManager::render_ui(const Entities& entities, float dt) const {
     system_manager::ui::render_normal(entities, dt);
 }
 
-bool SystemManager::is_daytime() const {
+bool SystemManager::is_bar_open() const {
     for (const auto& entity : oldAll) {
         if (entity->is_missing<HasDayNightTimer>()) continue;
-        return entity->get<HasDayNightTimer>().is_daytime();
+        return entity->get<HasDayNightTimer>().is_bar_open();
     }
     return false;
 }
-bool SystemManager::is_nighttime() const { return !is_daytime(); }
+bool SystemManager::is_bar_closed() const { return !is_bar_open(); }
 
 bool SystemManager::is_some_player_near(vec2 spot, float distance) const {
     bool someone_close = false;

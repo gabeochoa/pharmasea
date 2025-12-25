@@ -1,8 +1,8 @@
 #include "../ah.h"
 #include "../building_locations.h"
+#include "../components/bypass_automation_state.h"
 #include "../components/can_hold_item.h"
 #include "../components/can_order_drink.h"
-#include "../components/bypass_automation_state.h"
 #include "../components/can_pathfind.h"
 #include "../components/can_perform_job.h"
 #include "../components/has_day_night_timer.h"
@@ -19,8 +19,8 @@
 #include "../components/responds_to_day_night.h"
 #include "../components/transform.h"
 #include "../engine/app.h"
-#include "../engine/simulated_input/simulated_input.h"
 #include "../engine/log.h"
+#include "../engine/simulated_input/simulated_input.h"
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
@@ -105,7 +105,7 @@ struct GenerateStoreOptionsSystem : public afterhours::System<> {
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -121,7 +121,7 @@ struct OpenStoreDoorsSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -141,7 +141,7 @@ struct DeleteFloatingItemsWhenLeavingInRoundSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -178,7 +178,7 @@ struct TellCustomersToLeaveSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -199,7 +199,7 @@ struct ResetToiletWhenLeavingInRoundSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -221,7 +221,7 @@ struct ResetCustomerSpawnerWhenLeavingInRoundSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -245,7 +245,8 @@ struct UpdateNewMaxCustomersSystem
         irsm = &sophie.get<IsRoundSettingsManager>();
         hasTimer = &sophie.get<HasDayNightTimer>();
         try {
-            return hasTimer->needs_to_process_change && hasTimer->is_daytime();
+            return hasTimer->needs_to_process_change &&
+                   hasTimer->is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -286,7 +287,7 @@ struct OnNightEndedTriggerSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_nighttime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -304,7 +305,7 @@ struct OnDayStartedTriggerSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -322,7 +323,7 @@ struct OnRoundFinishedTriggerSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -360,7 +361,8 @@ struct BypassInitSystem : public afterhours::System<BypassAutomationState> {
     }
 };
 
-struct BypassRoundTrackerSystem : public afterhours::System<BypassAutomationState> {
+struct BypassRoundTrackerSystem
+    : public afterhours::System<BypassAutomationState> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         if (!BYPASS_MENU && BYPASS_ROUNDS <= 0) return false;
@@ -368,7 +370,7 @@ struct BypassRoundTrackerSystem : public afterhours::System<BypassAutomationStat
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             sophie.addComponentIfMissing<BypassAutomationState>();
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -410,7 +412,7 @@ struct CleanUpOldStoreOptionsSystem : public afterhours::System<> {
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_nighttime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -425,7 +427,7 @@ struct OnDayEndedSystem : public afterhours::System<RespondsToDayNight> {
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_nighttime();
+            return timer.needs_to_process_change && timer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -444,7 +446,7 @@ struct CloseBuildingsWhenNightSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_nighttime();
+            return timer.needs_to_process_change && timer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -465,7 +467,7 @@ struct OnNightStartedSystem : public afterhours::System<RespondsToDayNight> {
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_nighttime();
+            return timer.needs_to_process_change && timer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -485,7 +487,7 @@ struct ReleaseMopBuddyAtStartOfDaySystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_open();
         } catch (...) {
             return false;
         }
@@ -507,7 +509,7 @@ struct DeleteTrashWhenLeavingPlanningSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
@@ -530,7 +532,7 @@ struct ResetRegisterQueueWhenLeavingInRoundSystem
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_daytime();
+            return timer.needs_to_process_change && timer.is_bar_open();
         } catch (...) {
             return false;
         }
