@@ -1429,9 +1429,10 @@ void make_item_type(Item& item, EntityType type, vec3 location, int index) {
         case EntityType::Trash:
             break;
     }
-    log_warn(
+    log_error(
         "Trying to make item with item type {} but not handled in "
-        "make_item_type()",
+        "make_item_type() - this indicates a serialization bug or incorrect "
+        "entity setup",
         util::convertToSnakeCase<EntityType>(type));
 }
 
