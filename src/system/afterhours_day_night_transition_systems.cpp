@@ -494,11 +494,27 @@ struct ReleaseMopBuddyAtStartOfDaySystem
     }
 
     virtual void for_each_with(Entity& entity, IsItem& isitem, float) override {
-        (void) entity;  // Unused parameter
-        if (isitem.is_held()) {
-            // Force drop the mop buddy
-            isitem.set_held_by(EntityType::Unknown, -1);
+        if (!isitem.is_held()) {
+            return;
         }
+
+        OptEntity holder = EntityHelper::getEntityForID(isitem.holder());
+        if (!holder) {
+            return;
+        }
+
+        // Update the holder's CanHoldItem to release the mop buddy
+        CanHoldItem& canHold = holder->get<CanHoldItem>();
+        if (!canHold.is_holding_item()) {
+            return;
+        }
+        if (canHold.item().id != entity.id) {
+            return;
+        }
+        canHold.update(nullptr, -1);
+
+        // Force drop the mop buddy
+        isitem.set_held_by(EntityType::Unknown, -1);
     }
 };
 
