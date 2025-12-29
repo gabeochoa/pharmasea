@@ -22,10 +22,11 @@ struct LightingTuning {
     Color night_indoor_lift = Color{40, 35, 25, 140};
 
     // Bar spill light
-    float bar_cone_length = 10.0f;
-    float bar_cone_angle_deg = 85.0f;
+    float bar_cone_length = 22.0f;
+    float bar_cone_angle_deg = 95.0f;
     int bar_cone_segments = 18;
-    Color bar_cone_color = Color{255, 190, 120, 90};  // warm, additive
+    Color bar_cone_color = Color{255, 190, 120, 200};  // warm, additive (debug-strong)
+    bool debug_draw_light_gizmos = true;
 
     // Ground Y to project from (most gameplay uses TILESIZE/-2)
     float ground_y = -TILESIZE / 2.f;
@@ -93,8 +94,21 @@ void draw_bar_spill_cone(const raylib::Camera3D& cam) {
         {1.15f, static_cast<unsigned char>(LIGHTING.bar_cone_color.a * 0.40f)},
     };
 
+    const vec2 door_screen =
+        project_to_screen({door.x, LIGHTING.ground_y, door.y}, cam);
+    const vec2 outside_screen =
+        project_to_screen({outside.x, LIGHTING.ground_y, outside.y}, cam);
     const vec2 origin_screen =
         project_to_screen({origin2.x, LIGHTING.ground_y, origin2.y}, cam);
+
+    if (LIGHTING.debug_draw_light_gizmos) {
+        // Quick sanity markers so we can see where the code *thinks* the door is.
+        raylib::DrawCircle((int) door_screen.x, (int) door_screen.y, 10.f, GREEN);
+        raylib::DrawCircle((int) outside_screen.x, (int) outside_screen.y, 8.f, YELLOW);
+        raylib::DrawLine((int) door_screen.x, (int) door_screen.y,
+                         (int) outside_screen.x, (int) outside_screen.y, RED);
+        raylib::DrawCircle((int) origin_screen.x, (int) origin_screen.y, 6.f, ORANGE);
+    }
 
     for (const Layer& layer : layers) {
         Color col = LIGHTING.bar_cone_color;
