@@ -14,8 +14,9 @@ using afterhours::Entities;
 namespace system_manager {
 
 void move_player_SERVER_ONLY(Entity& entity, game::State location);
+void fix_container_item_type(Entity& entity);
 
-}
+}  // namespace system_manager
 
 SINGLETON_FWD(SystemManager)
 struct SystemManager {

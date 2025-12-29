@@ -3,6 +3,7 @@
 #include "system_manager.h"
 
 #include "afterhours_systems.h"
+#include "entity.h"
 #include "store_management_helpers.h"
 
 ///
@@ -163,6 +164,56 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
 
     // TODO do we need shared pointer here? (vs just id?)
     canHold.update(EntityHelper::getEntityAsSharedPtr(item), entity.id);
+}
+
+void fix_container_item_type(Entity& entity) {
+    if (entity.is_missing<IsItemContainer>()) return;
+
+    IsItemContainer& iic = entity.get<IsItemContainer>();
+    EntityType entity_type = get_entity_type(entity);
+
+    // Map container entity types to the item types they should hold
+    switch (entity_type) {
+        case EntityType::FruitBasket:
+            iic.set_item_type(EntityType::Fruit).set_uses_indexer(true);
+            break;
+        case EntityType::MopHolder:
+            iic.set_item_type(EntityType::Mop).set_max_generations(1);
+            break;
+        case EntityType::MopBuddyHolder:
+            iic.set_item_type(EntityType::MopBuddy);
+            break;
+        case EntityType::SimpleSyrupHolder:
+            iic.set_item_type(EntityType::SimpleSyrup);
+            break;
+        case EntityType::ChampagneHolder:
+            iic.set_item_type(EntityType::Champagne);
+            break;
+        case EntityType::AlcoholCabinet:
+            iic.set_item_type(EntityType::Alcohol).set_uses_indexer(true);
+            break;
+        case EntityType::Cupboard:
+            iic.set_item_type(EntityType::Pitcher);
+            break;
+        case EntityType::PitcherCupboard:
+            iic.set_item_type(EntityType::Pitcher);
+            break;
+        case EntityType::SodaMachine:
+            iic.set_item_type(EntityType::SodaSpout);
+            break;
+        case EntityType::Blender:
+            iic.set_item_type(EntityType::Drink);
+            break;
+        case EntityType::DraftTap:
+            iic.set_item_type(EntityType::Alcohol);
+            break;
+        case EntityType::Trash:
+            iic.set_item_type(EntityType::Trash);
+            break;
+        default:
+            // Unknown container type, leave as Unknown
+            break;
+    }
 }
 
 void process_is_container_and_should_backfill_item(Entity& entity, float) {
