@@ -40,17 +40,55 @@
 
 Two viable implementations; both can coexist with the current `mainRT` → post-processing workflow.
 
-#### Option A (fastest): Draw lighting directly onto `mainRT` after world render
+#### Option A (start here): Draw lighting directly onto `mainRT` after world render
 
-- **How**:
-  - After `GameLayer::draw_world(dt)` (still inside the render-to-texture pass), draw a fullscreen “darkness overlay”.
-  - Use blend modes to “cut holes” (additive/alpha) for lights and to draw shadow shapes.
-- **Pros**:
-  - Minimal pipeline changes (no extra texture sampling in shaders required).
-  - Easy to iterate visually.
-- **Cons**:
-  - Harder to do nice soft shadows/blur without an extra RT.
-  - Some blending modes can be finicky across platforms/drivers.
+This option treats lighting as a **2D overlay pass** rendered *after* the 3D world has already been drawn into the frame’s render target. It’s the least invasive path given the current “unlit” world rendering.
+
+##### Where it runs (exact draw order)
+
+The goal is: **world is affected, UI is not**.
+
+- **World pass**: `GameLayer::draw_world(dt)` draws all 3D content.
+- **Lighting pass (new)**: immediately after `draw_world(dt)` returns (so we are *not* inside `BeginMode3D`), draw screen-space overlays (ambient, lights, shadows).
+- **UI pass**: `map_ptr->onDrawUI(dt)` runs last, so UI stays crisp/unaltered.
+
+In pseudocode (structure only):
+
+```cpp
+GameLayer::onDraw(dt):
+  clear_background(...)
+  draw_world(dt)            // BeginMode3D/EndMode3D happens inside
+  draw_lighting_overlay(dt) // 2D overlays on top of world
+  draw_ui(dt)               // existing
+```
+
+##### How it “darkens” and “lights” pixels (blend modes)
+
+We’ll rely on standard blend modes rather than rewriting materials:
+
+- **Ambient darkening**: multiplicative blend (preferred) or alpha-black overlay (fallback).
+  - Multiply is conceptually “brightness *= ambient”.
+- **Local lights** (bar spill, windows): additive blend (adds light on top of the darkened world).
+- **Shadows**: multiplicative darkening *only outdoors*.
+
+In raylib terms this maps to blend modes roughly like:
+
+- `BLEND_MULTIPLIED` for ambient/shadows
+- `BLEND_ADDITIVE` (or `BLEND_ADD_COLORS`) for lights
+- `BLEND_ALPHA` as a fallback if multiplied blending isn’t reliable on a target GPU
+
+##### Key technical requirement: drawing shaped masks (not just rectangles)
+
+To do “indoors vs outdoors” and to draw sun shadows, we need to draw **filled quads/polygons** in screen space:
+
+- Convert world-space points to screen-space points using camera projection (raylib supports world→screen projection, e.g. `GetWorldToScreen*` equivalents).
+- Render filled triangles via `rlgl` (already included in the project).
+
+This is how we’ll draw:
+
+- a roof rectangle mask (project 4 corners, draw 2 triangles),
+- a sun shadow polygon (project points, triangulate),
+- a bar light cone fan (project arc/fan points, draw triangle fan).
 
 #### Option B (more flexible): Add a dedicated `lightRT` and composite in a shader
 
@@ -94,15 +132,33 @@ Two viable implementations; both can coexist with the current `mainRT` → post-
 
 #### Implementation sketch
 
-- Add a small lighting module (e.g., `src/engine/lighting/…`) that exposes:
-  - `LightingState { float outdoorAmbient; float indoorAmbient; vec3 sunDir; Color tint; }`
-  - `Lighting::computeFromDayNightTimer(...)`
-  - `Lighting::drawAmbientMask(...)`
-- In the draw pipeline:
-  - Draw world normally.
-  - Apply ambient via either:
-    - Option A: a fullscreen translucent overlay + “restore brightness” over indoor rectangles.
-    - Option B: write ambient into `lightRT` as a base layer.
+**Option A implementation detail (practical and incremental)**:
+
+1. **Compute lighting state from `HasDayNightTimer`**:
+   - `is_day = timer.is_bar_closed()` (daytime)
+   - `t = 1 - timer.pct()` (progress through the current phase; optional smoothing)
+   - Derive:
+     - `ambient_outdoor` (0..1)
+     - `ambient_indoor` (0..1)
+     - `night_tint` (optional; subtle blue at night)
+
+2. **Apply a base ambient to the entire screen**:
+   - Prefer: multiply whole screen by **outdoor** ambient at night (or ~1.0 at day).
+   - This guarantees “outside looks like night” without needing per-object lighting.
+
+3. **Make indoors different from outdoors** (without needing per-pixel classification):
+   - We have building rectangles (`Building::area`) which represent “roofed zones”.
+   - We project each building’s roof rectangle corners to screen and draw a filled quad mask.
+   - Because multiply cannot brighten above the current value, the easiest stable layering is:
+     - **Base pass**: multiply whole screen by `ambient_outdoor`.
+     - **Indoor lift pass**: add a small indoor ambient “fill light” *inside roof rectangles only* using additive blending (or a lighter multiply if we choose base = indoor).
+
+4. **Implementation for the roof mask quad**
+   - Compute 4 world corners on the ground plane (XZ), using the building rectangle:
+     - `(minX, y, minZ)`, `(maxX, y, minZ)`, `(maxX, y, maxZ)`, `(minX, y, maxZ)`
+   - Use a consistent `y` (e.g., ground plane height used for your world).
+   - Project each corner to screen with the active `Camera3D`.
+   - Draw as 2 triangles (0-1-2 and 0-2-3) with `rlgl`.
 
 ---
 
@@ -127,11 +183,34 @@ There are 2 robust ways; pick one:
 
 #### Light rendering style
 
-- Render lights into the lightmask as:
-  - **Radial** falloff circles (cheap) for window/fixture glows.
-  - **Cone** falloff (directional) for door spill:
-    - Use a triangle/sector in world space projected to screen, with a soft gradient.
-- Use a warm color temperature at night (yellow/orange), and keep intensity modest to avoid “overexposed bloom”.
+**Option A implementation detail**:
+
+We render the bar light as an **additive cone/fan** in screen space, generated from world-space points near the bar entrance.
+
+- **Choose an origin point** (world space):
+  - For the initial version: derive a door point from `BAR_BUILDING` rectangle edge (add a door location like the store does).
+  - Origin should sit slightly outside the bar boundary to sell “light spilling out”.
+
+- **Generate cone geometry in world space**:
+  - Define a direction vector pointing “out of the bar”.
+  - Define:
+    - `coneAngle` (e.g., 60–100 degrees)
+    - `coneLength` (world units; how far it spills)
+    - `numSegments` (e.g., 12–24)
+  - Sample points along an arc at distance `coneLength` from origin.
+
+- **Project to screen and draw**
+  - Project origin + arc points to screen using the camera.
+  - Draw a triangle fan: `(origin, p[i], p[i+1])`.
+
+- **Make it soft**
+  - Draw the cone multiple times from inside-out:
+    - smaller cone, higher alpha
+    - larger cone, lower alpha
+  - This approximates a radial falloff without any blur pass.
+
+- **Clamp to outdoors (avoid lighting “inside”)**
+  - Simplest: do not draw any cone triangles whose centroid projects from a world point that is inside a roof rectangle (using `Building::is_inside` on the world-space sample points).
 
 #### Occlusion (what blocks the light)
 
@@ -155,14 +234,32 @@ If we want quick occlusion later:
 
 ##### 3.1 Building roof shadows (cheap + high impact)
 
-- Treat each roofed building rectangle as an occluder casting a shadow onto the ground.
-- Compute a projected shadow polygon on the XZ plane:
-  - Take the rectangle corners in world space.
-  - Offset them along \(-sunDir\) by a configurable “shadow length”.
-  - Build a quad strip polygon (or a conservative trapezoid) and fill it.
-- **Apply only outdoors**:
-  - Do not draw any shadow pixels that lie inside roofed rectangles.
-  - Easiest method: draw shadow, then “erase” it inside roofed regions (mask pass).
+**Option A implementation detail (outdoor-only “roof shadow” illusion)**:
+
+We treat each building rectangle as if it has an invisible roof that blocks sun, so the roof casts a shadow onto the ground outside.
+
+1. **Define a sun direction on the ground plane**
+   - Use a normalized 2D vector on XZ, e.g. `sunDirXZ = normalize(vec2(-1, -0.5))`.
+   - Convert to 3D for sampling: `sunDir = vec3(sunDirXZ.x, 0, sunDirXZ.y)`.
+
+2. **Compute a shadow polygon in world space**
+   - Start from the 4 roof corners (same corners we use for the indoor mask).
+   - Offset each corner by `(-sunDir * shadowLength)`.
+   - Form a quad strip polygon connecting original edge(s) to offset edge(s).
+   - Initial simplification (good enough visually):
+     - Use a trapezoid built from the two corners on the “sun-facing” edge and their offsets.
+
+3. **Project and draw as filled triangles**
+   - Project the polygon vertices to screen.
+   - Draw it as 2–4 triangles via `rlgl`.
+
+4. **Apply only outdoors**
+   - Since shadows are drawn as an overlay, we enforce “outdoors-only” by masking:
+     - Draw shadows first (multiply darkening).
+     - Then draw the indoor roof rectangles as a “shadow cancel” mask:
+       - Either by redrawing indoors with no shadow effect (alpha blend),
+       - Or by simply *not* drawing shadow triangles whose sample points are inside any roof rectangle.
+   - Start with the simple rule: **skip shadow triangles whose world-space centroid is inside any roofed building**.
 
 ##### 3.2 Prop/entity shadows (optional)
 
@@ -173,9 +270,9 @@ If we want quick occlusion later:
 
 Once the hard-edged shadows look correct:
 
-- Blur the shadow/light edges:
-  - Option A: multi-pass draw of slightly expanded translucent polygons.
-  - Option B: blur `lightRT` at half/quarter resolution, then composite.
+- Blur/soften without extra textures (Option A):
+  - **Lights**: multiple additive cones/circles with decreasing alpha.
+  - **Shadows**: draw 2–3 slightly offset/expanded shadow polygons with decreasing alpha to fake penumbra.
 
 ---
 
@@ -195,7 +292,26 @@ Once the hard-edged shadows look correct:
 
 **Planned hook**:
 
-- Add a “lighting overlay / lightRT generation” step immediately after the world draw and before UI draw, so UI remains unaffected by world lighting unless desired.
+- Add a “lighting overlay” step immediately after the world draw and before UI draw (still within the same render-to-texture frame), so UI remains unaffected by world lighting unless desired.
+
+---
+
+## Option A: concrete pass breakdown (what gets drawn, in what order)
+
+This is the intended minimal pass sequence:
+
+1. **World**: draw 3D scene normally.
+2. **Ambient base**:
+   - At night: multiply whole screen by `ambient_outdoor` (darken everything).
+   - At day: either no-op or a very subtle warm tint.
+3. **Indoor lift**:
+   - For each roofed building: draw a filled quad over its projected roof area using additive blend to lift brightness indoors.
+4. **Night lights** (only at night):
+   - Bar door cone (triangle fan, additive).
+   - Optional window glows (small radial sprites/fans).
+5. **Day shadows** (only at day, outdoors only):
+   - Building roof shadows (projected polygons, multiplied darkening), skipping triangles that would land indoors.
+6. **UI**: draw UI last.
 
 ---
 
