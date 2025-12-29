@@ -149,3 +149,28 @@ Decision rule: do not invest in serialization adapters until a pilot shows real 
 
 If you want a single first bet: **prototype persistent UI state** and judge the developer-experience and performance impact before considering anything deeper.
 
+## Afterhours ECS check (vendor submodule)
+I pulled `vendor/afterhours` (it’s a git submodule) and skimmed the core ECS + its immediate-mode UI plugin.
+
+### What afterhours is doing today
+- **Entity storage**: `EntityHelper` stores `Entities` as `std::vector<std::shared_ptr<Entity>>`, plus a `temp_entities` vector that gets merged after systems run.
+- **Component storage**: each `Entity` owns an `std::array<std::unique_ptr<BaseComponent>, max_num_components>` and a bitset to track presence.
+- **System iteration**: systems iterate the entity vector and call `entity.get<T>()` / `entity.addComponent<T>()` mutating in place.
+- **Queries**: `EntityQuery` builds a temporary `RefEntities` vector by scanning all entities, then filters via `std::partition`.
+- **UI (in afterhours)**: the “immediate mode” UI keeps a global `std::map<UI_UUID, EntityID> existing_ui_elements` to reuse UI entities across frames.
+
+### Would `immer` help inside afterhours?
+**Mostly no**, for the same reason it didn’t look compelling for the main game ECS:
+- The ECS is **fundamentally mutable**, pointer-backed, and optimized around “update in place.” Persistent containers shine when the *data itself* is treated as immutable and updates produce new values.
+- Swapping `std::vector`/`std::map` for `immer` containers inside the ECS would add template/allocator complexity and likely **increase overhead** without enabling the main benefits (cheap snapshots and safe multi-reader concurrency), because:
+  - components are still `unique_ptr` to mutable objects
+  - entity identity is pointer/ID based and frequently mutated
+
+### Narrow cases where `immer` could matter (only if you want these features)
+- **Lock-free “publish/subscribe” snapshots** of small metadata (e.g., UI element registry map, a debug overlay model, or a read-only “view” of some derived state) by swapping whole persistent values.
+- **Editor-style undo/redo / time-travel** for UI/layout configuration, *if* afterhours UI state is refactored to be value-oriented rather than stored in ECS components.
+- **Rollback** would require far more than containers: you’d need component values to be immutable (or copy-on-write) and a deterministic update model.
+
+### Practical conclusion for this repo
+If you already feel “it doesn’t seem worth it,” the afterhours internals reinforce that: **adopting `immer` inside the ECS is unlikely to pay off** unless you’re explicitly pursuing a value-oriented architecture (time-travel/undo/rollback/concurrent-read snapshots) and are willing to reshape how component data is represented.
+
