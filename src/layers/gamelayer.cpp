@@ -17,6 +17,23 @@
 
 namespace {
 
+// These live here so lighting debug works even if DebugSettingsLayer isn't loaded.
+static bool g_lighting_debug_enabled = false;
+static bool g_lighting_debug_overlay_only = false;
+static bool g_lighting_debug_force_enable = false;
+
+inline void ensure_lighting_debug_globals_registered() {
+    if (!GLOBALS.contains("lighting_debug_enabled")) {
+        GLOBALS.set("lighting_debug_enabled", &g_lighting_debug_enabled);
+    }
+    if (!GLOBALS.contains("lighting_debug_overlay_only")) {
+        GLOBALS.set("lighting_debug_overlay_only", &g_lighting_debug_overlay_only);
+    }
+    if (!GLOBALS.contains("lighting_debug_force_enable")) {
+        GLOBALS.set("lighting_debug_force_enable", &g_lighting_debug_force_enable);
+    }
+}
+
 inline vec2 world_to_screen(const vec3& world, const raylib::Camera3D& cam) {
     return raylib::GetWorldToScreen(world, cam);
 }
@@ -50,8 +67,9 @@ void draw_projected_building_rect_outline(const Building& b,
 struct Phase1LightingTuning {
     // Night ambience: alpha-black tint over whole screen.
     unsigned char night_outdoor_dark_alpha = 190;
-    // Indoor lift: additive warm fill over roof rectangles.
-    Color night_indoor_lift = Color{60, 50, 35, 120};
+    // Indoor lift: make it obvious (Phase 1). This is intentionally strong.
+    // Later we can move back toward subtle additive "lift".
+    Color night_indoor_tint = Color{255, 190, 120, 70};
     // Optional: day tint (kept subtle; can be turned off by setting alpha=0).
     Color day_tint = Color{255, 240, 220, 10};
     // Projection height used for building masks.
@@ -61,6 +79,7 @@ struct Phase1LightingTuning {
 static const Phase1LightingTuning PHASE1{};
 
 void draw_phase1_lighting_overlay(const GameCam& game_cam) {
+    ensure_lighting_debug_globals_registered();
     const bool enabled =
         GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
     if (!enabled) return;
@@ -91,8 +110,8 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
                               Color{0, 0, 0, PHASE1.night_outdoor_dark_alpha});
         raylib::EndBlendMode();
 
-        // Night: lift indoors so it stays readable
-        raylib::BeginBlendMode(raylib::BLEND_ADDITIVE);
+        // Night: make indoors visually distinct (tinted roof mask)
+        raylib::BeginBlendMode(raylib::BLEND_ALPHA);
         const auto cam = game_cam.camera;
         const float y = PHASE1.mask_y;
 
@@ -105,7 +124,7 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
             const vec2 p1 = world_to_screen({x1, y, z0}, cam);
             const vec2 p2 = world_to_screen({x1, y, z1}, cam);
             const vec2 p3 = world_to_screen({x0, y, z1}, cam);
-            draw_screen_quad(p0, p1, p2, p3, PHASE1.night_indoor_lift);
+            draw_screen_quad(p0, p1, p2, p3, PHASE1.night_indoor_tint);
         };
 
         draw_roof_fill(LOBBY_BUILDING);
@@ -172,6 +191,33 @@ bool GameLayer::onKeyPressed(KeyPressedEvent& event) {
         // SoundLibrary::get().play_random_match("pa_announcements_");
         return true;
     }
+
+    // Phase 0/1: lighting debug toggles live here so they work even if the
+    // debug settings layer isn't loaded.
+    ensure_lighting_debug_globals_registered();
+    if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleLightingDebug) ==
+        event.keycode) {
+        bool v = GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
+        GLOBALS.update("lighting_debug_enabled", !v);
+        return true;
+    }
+    if (KeyMap::get_key_code(menu::State::Game,
+                             InputName::ToggleLightingOverlayOnly) ==
+        event.keycode) {
+        bool v =
+            GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
+        GLOBALS.update("lighting_debug_overlay_only", !v);
+        return true;
+    }
+    if (KeyMap::get_key_code(menu::State::Game,
+                             InputName::ToggleLightingForceEnable) ==
+        event.keycode) {
+        bool v =
+            GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
+        GLOBALS.update("lighting_debug_force_enable", !v);
+        return true;
+    }
+
     return false;
 }
 

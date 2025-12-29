@@ -18,18 +18,12 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     bool debug_ui_enabled = false;
     bool no_clip_enabled = false;
     bool skip_ingredient_match = false;
-    // Lighting dev toggles (Phase 0)
-    bool lighting_debug_enabled = false;
-    bool lighting_debug_overlay_only = false;
-    bool lighting_debug_force_enable = false;
+    // Lighting dev toggles are stored in GLOBALS (owned elsewhere).
 
     DebugSettingsLayer() : BaseGameRendererLayer("DebugSettings") {
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
         GLOBALS.set("no_clip_enabled", &no_clip_enabled);
         GLOBALS.set("skip_ingredient_match", &skip_ingredient_match);
-        GLOBALS.set("lighting_debug_enabled", &lighting_debug_enabled);
-        GLOBALS.set("lighting_debug_overlay_only", &lighting_debug_overlay_only);
-        GLOBALS.set("lighting_debug_force_enable", &lighting_debug_force_enable);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
@@ -63,23 +57,26 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) override {
-        // Phase 0: lighting debug toggles (wired through KeyMap)
+        // Phase 0+: lighting debug toggles (wired through KeyMap)
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::ToggleLightingDebug) ==
             event.keycode) {
-            lighting_debug_enabled = !lighting_debug_enabled;
+            bool v = GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
+            GLOBALS.update("lighting_debug_enabled", !v);
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::ToggleLightingOverlayOnly) ==
             event.keycode) {
-            lighting_debug_overlay_only = !lighting_debug_overlay_only;
+            bool v = GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
+            GLOBALS.update("lighting_debug_overlay_only", !v);
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::ToggleLightingForceEnable) ==
             event.keycode) {
-            lighting_debug_force_enable = !lighting_debug_force_enable;
+            bool v = GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
+            GLOBALS.update("lighting_debug_force_enable", !v);
             return true;
         }
 
@@ -249,6 +246,12 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         {
             Rectangle hint = {content.x, content.y + content.height - 30,
                               content.width, 30};
+            bool lighting_debug_enabled =
+                GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
+            bool lighting_debug_overlay_only =
+                GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
+            bool lighting_debug_force_enable =
+                GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
             text(Widget{hint},
                  NO_TRANSLATE(fmt::format(
                      "Lighting debug: {} | overlay-only: {} | force: {} "
