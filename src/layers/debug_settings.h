@@ -18,11 +18,18 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     bool debug_ui_enabled = false;
     bool no_clip_enabled = false;
     bool skip_ingredient_match = false;
+    // Lighting dev toggles (Phase 0)
+    bool lighting_debug_enabled = false;
+    bool lighting_debug_overlay_only = false;
+    bool lighting_debug_force_enable = false;
 
     DebugSettingsLayer() : BaseGameRendererLayer("DebugSettings") {
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
         GLOBALS.set("no_clip_enabled", &no_clip_enabled);
         GLOBALS.set("skip_ingredient_match", &skip_ingredient_match);
+        GLOBALS.set("lighting_debug_enabled", &lighting_debug_enabled);
+        GLOBALS.set("lighting_debug_overlay_only", &lighting_debug_overlay_only);
+        GLOBALS.set("lighting_debug_force_enable", &lighting_debug_force_enable);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
@@ -56,6 +63,23 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) override {
+        // Phase 0: quick lighting debug toggles (no keymap plumbing yet)
+        // F6: toggle lighting debug overlay
+        // F7: toggle overlay-only view (hides world, shows only overlay)
+        // F8: force-enable (ignore day/night gating when we add it later)
+        if (event.keycode == raylib::KEY_F6) {
+            lighting_debug_enabled = !lighting_debug_enabled;
+            return true;
+        }
+        if (event.keycode == raylib::KEY_F7) {
+            lighting_debug_overlay_only = !lighting_debug_overlay_only;
+            return true;
+        }
+        if (event.keycode == raylib::KEY_F8) {
+            lighting_debug_force_enable = !lighting_debug_force_enable;
+            return true;
+        }
+
         if (should_show_overlay &&
             KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
                 event.keycode) {
@@ -159,6 +183,9 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         if (!debug_ui_enabled) {
             DrawTextEx(Preload::get().font, "Press \\ to toggle debug UI",
                        vec2{200, 70}, 20, 0, RED);
+            DrawTextEx(Preload::get().font,
+                       "Lighting debug: F6 enable, F7 overlay-only, F8 force",
+                       vec2{200, 110}, 18, 0, DARKGRAY);
             return;
         }
 
@@ -214,5 +241,17 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         }
 
         draw_game_state_controls(game_state);
+
+        // Lighting controls (Phase 0): keep simple, tied to debug UI being on.
+        {
+            Rectangle hint = {content.x, content.y + content.height - 30,
+                              content.width, 30};
+            text(Widget{hint},
+                 NO_TRANSLATE(fmt::format(
+                     "Lighting debug: {} | overlay-only: {} | force: {} "
+                     "(F6/F7/F8)",
+                     lighting_debug_enabled, lighting_debug_overlay_only,
+                     lighting_debug_force_enable)));
+        }
     }
 };
