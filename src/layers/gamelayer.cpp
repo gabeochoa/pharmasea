@@ -5,194 +5,14 @@
 #include "../drawing_util.h"
 #include "../engine/ui/color.h"
 #include "../external_include.h"
+//
 #include "../globals.h"
+//
 #include "../camera.h"
 #include "../engine.h"
 #include "../engine/layer.h"
 #include "../map.h"
-#include "../system/system_manager.h"
 #include "raylib.h"
-
-namespace {
-
-struct LightingTuning {
-    // Night ambience
-    float night_outdoor_ambient = 0.35f;  // multiplied over entire scene
-    // Indoor "lift" applied additively inside roof rectangles
-    Color night_indoor_lift = Color{40, 35, 25, 140};
-
-    // Bar spill light
-    float bar_cone_length = 22.0f;
-    float bar_cone_angle_deg = 95.0f;
-    int bar_cone_segments = 18;
-    Color bar_cone_color = Color{255, 190, 120, 200};  // warm, additive (debug-strong)
-    bool debug_draw_light_gizmos = true;
-
-    // Ground Y to project from (most gameplay uses TILESIZE/-2)
-    float ground_y = -TILESIZE / 2.f;
-};
-
-static const LightingTuning LIGHTING{};
-
-inline vec2 project_to_screen(const vec3& world, const raylib::Camera3D& cam) {
-    return raylib::GetWorldToScreen(world, cam);
-}
-
-inline void draw_screen_quad(const vec2& a, const vec2& b, const vec2& c,
-                             const vec2& d, Color col) {
-    raylib::DrawTriangle(a, b, c, col);
-    raylib::DrawTriangle(a, c, d, col);
-}
-
-inline void draw_building_roof_quad(const Building& b,
-                                    const raylib::Camera3D& cam, float y,
-                                    Color col) {
-    const float x0 = b.area.x;
-    const float z0 = b.area.y;
-    const float x1 = b.area.x + b.area.width;
-    const float z1 = b.area.y + b.area.height;
-
-    const vec2 p0 = project_to_screen({x0, y, z0}, cam);
-    const vec2 p1 = project_to_screen({x1, y, z0}, cam);
-    const vec2 p2 = project_to_screen({x1, y, z1}, cam);
-    const vec2 p3 = project_to_screen({x0, y, z1}, cam);
-
-    draw_screen_quad(p0, p1, p2, p3, col);
-}
-
-inline vec2 normalize2(vec2 v) {
-    float len = std::sqrt(v.x * v.x + v.y * v.y);
-    if (len <= 0.00001f) return {0.f, 1.f};
-    return {v.x / len, v.y / len};
-}
-
-inline float deg2rad(float deg) { return deg * DEG2RAD; }
-
-void draw_bar_spill_cone(const raylib::Camera3D& cam) {
-    if (BAR_BUILDING.doors.empty()) return;
-
-    // Pick the "center" door tile from add_door() (the first push is center).
-    const vec2 door = BAR_BUILDING.doors[0];
-    const vec2 outside = BAR_BUILDING.vomit_location;
-
-    vec2 dir = normalize2(outside - door);
-    vec2 origin2 = door + (dir * 0.75f);
-
-    const float base_angle = std::atan2(dir.y, dir.x);
-    const float half = deg2rad(LIGHTING.bar_cone_angle_deg) * 0.5f;
-
-    const int segs = std::max(4, LIGHTING.bar_cone_segments);
-
-    // Soft falloff via a few layered cones (cheap “blur”).
-    struct Layer {
-        float length_mul;
-        unsigned char alpha;
-    };
-    const Layer layers[] = {
-        {0.85f, static_cast<unsigned char>(LIGHTING.bar_cone_color.a)},
-        {1.00f, static_cast<unsigned char>(LIGHTING.bar_cone_color.a * 0.65f)},
-        {1.15f, static_cast<unsigned char>(LIGHTING.bar_cone_color.a * 0.40f)},
-    };
-
-    const vec2 door_screen =
-        project_to_screen({door.x, LIGHTING.ground_y, door.y}, cam);
-    const vec2 outside_screen =
-        project_to_screen({outside.x, LIGHTING.ground_y, outside.y}, cam);
-    const vec2 origin_screen =
-        project_to_screen({origin2.x, LIGHTING.ground_y, origin2.y}, cam);
-
-    if (LIGHTING.debug_draw_light_gizmos) {
-        // Quick sanity markers so we can see where the code *thinks* the door is.
-        raylib::DrawCircle((int) door_screen.x, (int) door_screen.y, 10.f, GREEN);
-        raylib::DrawCircle((int) outside_screen.x, (int) outside_screen.y, 8.f, YELLOW);
-        raylib::DrawLine((int) door_screen.x, (int) door_screen.y,
-                         (int) outside_screen.x, (int) outside_screen.y, RED);
-        raylib::DrawCircle((int) origin_screen.x, (int) origin_screen.y, 6.f, ORANGE);
-    }
-
-    for (const Layer& layer : layers) {
-        Color col = LIGHTING.bar_cone_color;
-        col.a = layer.alpha;
-
-        const float length = LIGHTING.bar_cone_length * layer.length_mul;
-
-        // Triangle fan around the arc edge.
-        for (int i = 0; i < segs; i++) {
-            const float t0 = (float) i / (float) segs;
-            const float t1 = (float) (i + 1) / (float) segs;
-
-            const float a0 = base_angle - half + (2.f * half) * t0;
-            const float a1 = base_angle - half + (2.f * half) * t1;
-
-            const vec2 p0w =
-                origin2 + vec2{std::cos(a0), std::sin(a0)} * length;
-            const vec2 p1w =
-                origin2 + vec2{std::cos(a1), std::sin(a1)} * length;
-
-            const vec2 p0s =
-                project_to_screen({p0w.x, LIGHTING.ground_y, p0w.y}, cam);
-            const vec2 p1s =
-                project_to_screen({p1w.x, LIGHTING.ground_y, p1w.y}, cam);
-
-            raylib::DrawTriangle(origin_screen, p0s, p1s, col);
-        }
-    }
-}
-
-void draw_lighting_overlay(const GameCam& game_cam) {
-    // TEMP DEBUG: force-enable overlay so it's obvious it runs.
-    // Once verified in-game, we should switch back to night-only.
-    const bool force_enable = true;
-
-    // Night in this codebase == bar open (in-round).
-    const bool is_night = SystemManager::get().is_bar_open();
-    if (!force_enable && !is_night) return;
-
-    const auto cam = game_cam.camera;
-
-    const int w = raylib::GetScreenWidth();
-    const int h = raylib::GetScreenHeight();
-
-    // 1) Ambient darken (outdoors baseline)
-    {
-        // Use a plain alpha tint for now (more obvious / more compatible).
-        // At night: strong darken. At day (debug): slight darken.
-        const unsigned char alpha = is_night ? 190 : 60;
-        raylib::BeginBlendMode(raylib::BLEND_ALPHA);
-        raylib::DrawRectangle(0, 0, w, h, Color{0, 0, 0, alpha});
-        raylib::EndBlendMode();
-    }
-
-    // 2) Indoor lift (roofed rectangles are treated as “indoors/covered”)
-    {
-        raylib::BeginBlendMode(raylib::BLEND_ADDITIVE);
-        draw_building_roof_quad(BAR_BUILDING, cam, LIGHTING.ground_y,
-                                LIGHTING.night_indoor_lift);
-        draw_building_roof_quad(STORE_BUILDING, cam, LIGHTING.ground_y,
-                                LIGHTING.night_indoor_lift);
-        draw_building_roof_quad(PROGRESSION_BUILDING, cam, LIGHTING.ground_y,
-                                LIGHTING.night_indoor_lift);
-        draw_building_roof_quad(LOBBY_BUILDING, cam, LIGHTING.ground_y,
-                                LIGHTING.night_indoor_lift);
-        draw_building_roof_quad(MODEL_TEST_BUILDING, cam, LIGHTING.ground_y,
-                                LIGHTING.night_indoor_lift);
-        draw_building_roof_quad(LOAD_SAVE_BUILDING, cam, LIGHTING.ground_y,
-                                LIGHTING.night_indoor_lift);
-        raylib::EndBlendMode();
-    }
-
-    // 3) Bar spill light (warm additive cone)
-    {
-        raylib::BeginBlendMode(raylib::BLEND_ADDITIVE);
-        draw_bar_spill_cone(cam);
-        raylib::EndBlendMode();
-    }
-
-    // Debug label (top-left) so we know this ran.
-    raylib::DrawText("LIGHTING OVERLAY ACTIVE (debug)", 20, 20, 20, RED);
-}
-
-}  // namespace
 
 GameLayer::~GameLayer() { raylib::UnloadRenderTexture(game_render_texture); }
 
@@ -333,7 +153,6 @@ void GameLayer::onDraw(float dt) {
 
     ext::clear_background(Color{200, 200, 200, 255});
     draw_world(dt);
-    draw_lighting_overlay(*cam);
 
     // note: for ui stuff
     if (map_ptr) map_ptr->onDrawUI(dt);
