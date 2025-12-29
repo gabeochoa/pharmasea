@@ -64,18 +64,18 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
 
     bool onKeyPressed(KeyPressedEvent& event) override {
         // Phase 0: quick lighting debug toggles (no keymap plumbing yet)
-        // F6: toggle lighting debug overlay
-        // F7: toggle overlay-only view (hides world, shows only overlay)
-        // F8: force-enable (ignore day/night gating when we add it later)
-        if (event.keycode == raylib::KEY_F6) {
+        // H: toggle lighting debug overlay
+        // J: toggle overlay-only view (hides world, shows only overlay)
+        // K: force-enable (ignore day/night gating when we add it later)
+        if (event.keycode == raylib::KEY_H) {
             lighting_debug_enabled = !lighting_debug_enabled;
             return true;
         }
-        if (event.keycode == raylib::KEY_F7) {
+        if (event.keycode == raylib::KEY_J) {
             lighting_debug_overlay_only = !lighting_debug_overlay_only;
             return true;
         }
-        if (event.keycode == raylib::KEY_F8) {
+        if (event.keycode == raylib::KEY_K) {
             lighting_debug_force_enable = !lighting_debug_force_enable;
             return true;
         }
@@ -184,7 +184,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
             DrawTextEx(Preload::get().font, "Press \\ to toggle debug UI",
                        vec2{200, 70}, 20, 0, RED);
             DrawTextEx(Preload::get().font,
-                       "Lighting debug: F6 enable, F7 overlay-only, F8 force",
+                       "Lighting debug: H enable, J overlay-only, K force",
                        vec2{200, 110}, 18, 0, DARKGRAY);
             return;
         }
@@ -249,7 +249,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
             text(Widget{hint},
                  NO_TRANSLATE(fmt::format(
                      "Lighting debug: {} | overlay-only: {} | force: {} "
-                     "(F6/F7/F8)",
+                     "(H/J/K)",
                      lighting_debug_enabled, lighting_debug_overlay_only,
                      lighting_debug_force_enable)));
         }

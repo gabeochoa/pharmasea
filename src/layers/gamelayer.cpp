@@ -66,7 +66,7 @@ void draw_lighting_debug_overlay(const GameCam& game_cam) {
 
     // Label
     raylib::DrawText(
-        fmt::format("LIGHTING DEBUG (F6/F7/F8) overlay_only={} force={}",
+        fmt::format("LIGHTING DEBUG (H/J/K) overlay_only={} force={}",
                     overlay_only, force_enable)
             .c_str(),
         20, 20, 18, WHITE);
