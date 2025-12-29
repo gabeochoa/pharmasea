@@ -2,6 +2,9 @@
 #include "preload.h"
 
 #include <istream>
+
+// Extern declaration for the disable-models flag
+extern bool disable_models_flag;
 #include <memory>
 #include <utility>
 
@@ -10,8 +13,8 @@
 #include "dataclass/ingredient.h"
 #include "dataclass/settings.h"
 #include "engine/font_library.h"
-#include "engine/settings.h"
 #include "engine/keymap.h"
+#include "engine/settings.h"
 #include "engine/ui/theme.h"
 #include "intro/intro_runner.h"
 #include "intro/logo_intro_scene.h"
@@ -128,18 +131,22 @@ void Preload::load_fonts(const nlohmann::json& fonts) {
     cached_fonts_config = fonts;
 
     // OPTIMIZATION: Only load the current language's font on startup
-    // Previously loaded all fonts, but 99% of the time users don't change languages
+    // Previously loaded all fonts, but 99% of the time users don't change
+    // languages
 
     // Get the actual current language from settings
     const std::string current_language = Settings::get().data.lang_name;
 
     if (font_object.contains(current_language)) {
         std::string font_name = font_object.at(current_language);
-        log_info("loading font {} for language {}", font_name, current_language);
+        log_info("loading font {} for language {}", font_name,
+                 current_language);
         _load_font_from_name(font_name, current_language);
         font = FontLibrary::get().get(current_language);
     } else {
-        log_warn("Default language 'en_us' not found in fonts config, using fallback");
+        log_warn(
+            "Default language 'en_us' not found in fonts config, using "
+            "fallback");
         font = load_karmina_regular();
     }
 
@@ -193,15 +200,18 @@ void Preload::on_language_change(const char* lang_name, const char* fn) {
 
     if (!FontLibrary::get().contains(lang_name)) {
         // Try to load the font for this language from cached config
-        if (!cached_fonts_config.is_null() && cached_fonts_config.contains(lang_name)) {
+        if (!cached_fonts_config.is_null() &&
+            cached_fonts_config.contains(lang_name)) {
             std::string font_name = cached_fonts_config[lang_name];
-            log_info("Loading font {} for language {} on demand", font_name, lang_name);
+            log_info("Loading font {} for language {} on demand", font_name,
+                     lang_name);
             _load_font_from_name(font_name, lang_name);
         }
 
         // Check again if we now have the font
         if (!FontLibrary::get().contains(lang_name)) {
-            log_warn("Couldnt find/load a font for {}, using en_us instead", lang_name);
+            log_warn("Couldnt find/load a font for {}, using en_us instead",
+                     lang_name);
             font = FontLibrary::get().get("en_us");
             return;
         }
@@ -465,7 +475,8 @@ Preload::Preload() {
     progress.set_status("Loading shaders");
     load_shaders([&]() { progress.tick(); });
 
-    // Load assets sequentially (parallel loading caused thread safety issues with raylib)
+    // Load assets sequentially (parallel loading caused thread safety issues
+    // with raylib)
     progress.set_status("Loading textures");
     load_textures([&]() { progress.tick(); });
 
@@ -487,8 +498,20 @@ Preload::Preload() {
 }
 
 void Preload::load_models(const std::function<void()>& tick) {
+    // Check if --disable-models flag was used and reapply it if needed
+    extern bool disable_models_flag;
+    log_info("load_models: disable_models_flag = {}, ENABLE_MODELS = {}",
+             disable_models_flag, ENABLE_MODELS);
+    if (disable_models_flag) {
+        ENABLE_MODELS = false;
+        log_info("load_models: Set ENABLE_MODELS = false due to flag");
+    }
+
     if (!ENABLE_MODELS) {
-        log_warn("Skipping Model Loading");
+        log_warn("Skipping Model Loading (--disable-models flag detected)");
+        // Still load model metadata for ModelInfoLibrary even when models are
+        // disabled
+        load_model_metadata_only(tick);
         return;
     }
 
@@ -505,7 +528,8 @@ void Preload::load_models(const std::function<void()>& tick) {
             ModelConfig config;
             config.info.folder = object["folder"].get<std::string>();
             config.info.filename = object["filename"].get<std::string>();
-            config.info.library_name = object["library_name"].get<std::string>();
+            config.info.library_name =
+                object["library_name"].get<std::string>();
             config.info.size_scale = object["size_scale"].get<float>();
             config.info.position_offset.x =
                 object["position_offset"][0].get<float>();
@@ -531,11 +555,13 @@ void Preload::load_models(const std::function<void()>& tick) {
         // Check if this model should be lazy loaded
         if (modelConfig.lazy_load) {
             // Register the lazy model with ModelLibrary for on-demand loading
-            ModelLibrary::get().register_lazy_model(modelInfo.library_name, {
-                .folder = modelInfo.folder.c_str(),
-                .filename = modelInfo.filename.c_str(),
-                .libraryname = modelInfo.library_name.c_str(),
-            });
+            ModelLibrary::get().register_lazy_model(
+                modelInfo.library_name,
+                {
+                    .folder = modelInfo.folder.c_str(),
+                    .filename = modelInfo.filename.c_str(),
+                    .libraryname = modelInfo.library_name.c_str(),
+                });
             // Still load the metadata but skip the actual model data
             ModelInfoLibrary::get().load({
                 .folder = modelInfo.folder,
@@ -573,6 +599,66 @@ void Preload::load_models(const std::function<void()>& tick) {
 
     log_info("Loaded model json successfully, {} models",
              ModelLibrary::get().size());
+}
+
+void Preload::load_model_metadata_only(const std::function<void()>& tick) {
+    struct ModelConfig {
+        ModelInfoLibrary::ModelLoadingInfo info;
+        bool lazy_load = false;
+    };
+
+    std::vector<ModelConfig> modelConfigs;
+    load_json_config_file("models.json", [&](const nlohmann::json& contents) {
+        const nlohmann::json& models = contents["models"];
+        modelConfigs.reserve(models.size());
+        for (const nlohmann::json& object : models) {
+            ModelConfig config;
+            config.info.folder = object["folder"].get<std::string>();
+            config.info.filename = object["filename"].get<std::string>();
+            config.info.library_name =
+                object["library_name"].get<std::string>();
+            config.info.size_scale = object["size_scale"].get<float>();
+            config.info.position_offset = vec3{
+                object["position_offset"][0].get<float>(),
+                object["position_offset"][1].get<float>(),
+                object["position_offset"][2].get<float>(),
+            };
+            config.info.rotation_angle = object["rotation_angle"].get<float>();
+            config.lazy_load = object.value("lazy_load", false);
+            modelConfigs.push_back(config);
+
+            if (tick) {
+                tick();
+            }
+        }
+    });
+
+    // Load metadata for all models (but not the actual model data)
+    for (const auto& modelConfig : modelConfigs) {
+        const auto& modelInfo = modelConfig.info;
+
+        // Load the metadata into ModelInfoLibrary
+        ModelInfoLibrary::get().load({
+            .folder = modelInfo.folder,
+            .filename = modelInfo.filename,
+            .library_name = modelInfo.library_name,
+            .size_scale = modelInfo.size_scale,
+            .position_offset = modelInfo.position_offset,
+            .rotation_angle = modelInfo.rotation_angle,
+        });
+
+        // Register as lazy model so get_and_load_if_needed can work if needed
+        ModelLibrary::get().register_lazy_model(
+            modelInfo.library_name,
+            {
+                .folder = modelInfo.folder.c_str(),
+                .filename = modelInfo.filename.c_str(),
+                .libraryname = modelInfo.library_name.c_str(),
+            });
+    }
+
+    log_info("Loaded model metadata only, {} model infos",
+             ModelInfoLibrary::get().size());
 }
 
 void Preload::load_drink_recipes(const std::function<void()>& tick) {

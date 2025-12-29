@@ -237,21 +237,32 @@ void draw_valid_colored_box(const Transform& transform,
 bool draw_transform_with_model(const Transform& transform,
                                const ModelRenderer& renderer, Color color) {
     if (renderer.missing()) return false;
+
+    // If no models were loaded, force ENABLE_MODELS to false
+    if (ModelLibrary::get().size() == 0) {
+        ENABLE_MODELS = false;
+    }
+
     ModelInfo& model_info = renderer.model_info();
 
     float rotation_angle = 180.f + transform.facing;
+    vec3 position = {
+        transform.pos().x + transform.viz_x() + model_info.position_offset.x,
+        transform.pos().y + transform.viz_y() + model_info.position_offset.y,
+        transform.pos().z + transform.viz_z() + model_info.position_offset.z,
+    };
 
-    DrawModelEx(renderer.model(),
-                {
-                    transform.pos().x + transform.viz_x() +
-                        model_info.position_offset.x,
-                    transform.pos().y + transform.viz_y() +
-                        model_info.position_offset.y,
-                    transform.pos().z + transform.viz_z() +
-                        model_info.position_offset.z,
-                },
-                vec3{0.f, 1.f, 0.f}, model_info.rotation_angle + rotation_angle,
-                transform.size() * model_info.size_scale, color);
+    if (ENABLE_MODELS) {
+        log_info("Drawing actual model for entity");
+        DrawModelEx(renderer.model(), position, vec3{0.f, 1.f, 0.f},
+                    model_info.rotation_angle + rotation_angle,
+                    transform.size() * model_info.size_scale, color);
+    } else {
+        // Draw a cube as fallback when models are disabled
+        vec3 size = transform.size() * model_info.size_scale * 0.8f;
+        DrawCubeV(position, size,
+                  RED);  // Use red color to make them more visible
+    }
 
     return true;
 }
@@ -480,7 +491,6 @@ bool render_model_highlighted(const Entity& entity, float) {
 }
 
 bool render_model_normal(const Entity& entity, float) {
-    if (!ENABLE_MODELS) return false;
     return draw_internal_model(entity, WHITE);
 }
 
@@ -1034,15 +1044,22 @@ void render_speech_bubble(const Entity& entity, float) {
                               0.75f * TILESIZE, raylib::WHITE);
     }
 
+    // Render 3D models or fallback cubes
     const auto model_name = get_model_name_for_drink(cod.get_order());
-    const auto model = ModelLibrary::get().get(model_name);
     const ModelInfo& model_info = ModelInfoLibrary::get().get(model_name);
-
+    vec3 model_position = icon_position + model_info.position_offset;
+    vec3 model_size = transform.size() * model_info.size_scale;
     float rotation_angle = 180.f + transform.facing;
-    raylib::DrawModelEx(
-        model, icon_position + model_info.position_offset, vec3{0, 1, 0},
-        model_info.rotation_angle + rotation_angle,
-        transform.size() * model_info.size_scale, WHITE /*base_color*/);
+
+    if (ENABLE_MODELS) {
+        const auto model = ModelLibrary::get().get(model_name);
+        raylib::DrawModelEx(model, model_position, vec3{0, 1, 0},
+                            model_info.rotation_angle + rotation_angle,
+                            model_size, WHITE /*base_color*/);
+    } else {
+        // Draw a cube as fallback when models are disabled
+        DrawCubeV(model_position, model_size, WHITE);
+    }
 }
 
 void render_waiting_queue(const Entity& entity, float) {

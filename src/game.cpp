@@ -3,8 +3,11 @@
 #include "game.h"
 
 #include "engine/assert.h"
-#include "engine/simulated_input/simulated_input.h"
+
+// Global flag storage for re-application after settings load
+bool disable_models_flag = false;
 #include "engine/random_engine.h"
+#include "engine/simulated_input/simulated_input.h"
 #include "engine/ui/svg.h"
 #include "map_generation/map_generation.h"
 #include "map_generation/pipeline.h"
@@ -207,10 +210,25 @@ void process_dev_flags(int argc, char* argv[]) {
     // Early reject unknown flags so we don't run with unintended args.
     auto is_known_flag = [](const std::string& arg) {
         static const std::set<std::string> no_value = {
-            "--gabe", "-g", "--tests-only", "-t", "--disable-all", "-d",
-            "--models", "-m", "--disable-models", "-M", "--sound", "-s",
-            "--disable-sound", "-S", "--bypass-menu", "--exit-on-bypass-complete",
-            "--record-input", "--intro", "--test_map_generation",
+            "--gabe",
+            "-g",
+            "--tests-only",
+            "-t",
+            "--disable-all",
+            "-d",
+            "--models",
+            "-m",
+            "--disable-models",
+            "-M",
+            "--sound",
+            "-s",
+            "--disable-sound",
+            "-S",
+            "--bypass-menu",
+            "--exit-on-bypass-complete",
+            "--record-input",
+            "--intro",
+            "--test_map_generation",
             "--replay-validate"};
         static const std::set<std::string> with_value = {
             "--replay",
@@ -249,10 +267,10 @@ void process_dev_flags(int argc, char* argv[]) {
     }
 
     argh::parser cmdl(argc, argv);
-    log_info("DevFlags: argc={} argv0='{}'", argc,
-             (argc > 0 && argv && argv[0]) ? argv[0] : "");
-
     network::ENABLE_REMOTE_IP = true;
+
+    // Store flag values for re-application after settings load
+    disable_models_flag = cmdl[{"--disable-models", "-M"}];
 
     if (cmdl[{"--gabe", "-g"}]) {
         ENABLE_MODELS = true;
@@ -279,7 +297,7 @@ void process_dev_flags(int argc, char* argv[]) {
         ENABLE_MODELS = true;
     }
 
-    if (cmdl[{"--disable-models", "-M"}]) {
+    if (disable_models_flag) {
         ENABLE_MODELS = false;
     }
     if (cmdl[{"--sound", "-s"}]) {
@@ -446,7 +464,8 @@ int main(int argc, char* argv[]) {
 
         RandomEngine::set_seed(GENERATE_MAP_SEED);
         mapgen::GenerationContext ctx;
-        mapgen::GeneratedAscii out = mapgen::generate_ascii(GENERATE_MAP_SEED, ctx);
+        mapgen::GeneratedAscii out =
+            mapgen::generate_ascii(GENERATE_MAP_SEED, ctx);
         std::cout << "[mapgen] seed=" << GENERATE_MAP_SEED
                   << " archetype=" << archetype_to_string(out.archetype)
                   << " rows=" << ctx.rows << " cols=" << ctx.cols << std::endl;
