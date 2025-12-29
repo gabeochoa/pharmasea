@@ -126,9 +126,13 @@ void draw_bar_spill_cone(const raylib::Camera3D& cam) {
 }
 
 void draw_lighting_overlay(const GameCam& game_cam) {
+    // TEMP DEBUG: force-enable overlay so it's obvious it runs.
+    // Once verified in-game, we should switch back to night-only.
+    const bool force_enable = true;
+
     // Night in this codebase == bar open (in-round).
     const bool is_night = SystemManager::get().is_bar_open();
-    if (!is_night) return;
+    if (!force_enable && !is_night) return;
 
     const auto cam = game_cam.camera;
 
@@ -137,12 +141,11 @@ void draw_lighting_overlay(const GameCam& game_cam) {
 
     // 1) Ambient darken (outdoors baseline)
     {
-        const unsigned char a =
-            static_cast<unsigned char>(255.f * LIGHTING.night_outdoor_ambient);
-        Color mul = Color{a, a, a, 255};
-
-        raylib::BeginBlendMode(raylib::BLEND_MULTIPLIED);
-        raylib::DrawRectangle(0, 0, w, h, mul);
+        // Use a plain alpha tint for now (more obvious / more compatible).
+        // At night: strong darken. At day (debug): slight darken.
+        const unsigned char alpha = is_night ? 190 : 60;
+        raylib::BeginBlendMode(raylib::BLEND_ALPHA);
+        raylib::DrawRectangle(0, 0, w, h, Color{0, 0, 0, alpha});
         raylib::EndBlendMode();
     }
 
@@ -170,6 +173,9 @@ void draw_lighting_overlay(const GameCam& game_cam) {
         draw_bar_spill_cone(cam);
         raylib::EndBlendMode();
     }
+
+    // Debug label (top-left) so we know this ran.
+    raylib::DrawText("LIGHTING OVERLAY ACTIVE (debug)", 20, 20, 20, RED);
 }
 
 }  // namespace
