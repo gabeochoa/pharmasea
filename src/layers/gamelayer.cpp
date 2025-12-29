@@ -12,6 +12,7 @@
 #include "../engine.h"
 #include "../engine/layer.h"
 #include "../map.h"
+#include "../system/system_manager.h"
 #include "raylib.h"
 
 namespace {
@@ -20,8 +21,15 @@ inline vec2 world_to_screen(const vec3& world, const raylib::Camera3D& cam) {
     return raylib::GetWorldToScreen(world, cam);
 }
 
-void draw_projected_building_rect(const Building& b, const raylib::Camera3D& cam,
-                                  float y, Color col) {
+inline void draw_screen_quad(const vec2& p0, const vec2& p1, const vec2& p2,
+                             const vec2& p3, Color col) {
+    raylib::DrawTriangle(p0, p1, p2, col);
+    raylib::DrawTriangle(p0, p2, p3, col);
+}
+
+void draw_projected_building_rect_outline(const Building& b,
+                                          const raylib::Camera3D& cam, float y,
+                                          Color col) {
     const float x0 = b.area.x;
     const float z0 = b.area.y;
     const float x1 = b.area.x + b.area.width;
@@ -39,7 +47,20 @@ void draw_projected_building_rect(const Building& b, const raylib::Camera3D& cam
     raylib::DrawLine((int) p3.x, (int) p3.y, (int) p0.x, (int) p0.y, col);
 }
 
-void draw_lighting_debug_overlay(const GameCam& game_cam) {
+struct Phase1LightingTuning {
+    // Night ambience: alpha-black tint over whole screen.
+    unsigned char night_outdoor_dark_alpha = 190;
+    // Indoor lift: additive warm fill over roof rectangles.
+    Color night_indoor_lift = Color{60, 50, 35, 120};
+    // Optional: day tint (kept subtle; can be turned off by setting alpha=0).
+    Color day_tint = Color{255, 240, 220, 10};
+    // Projection height used for building masks.
+    float mask_y = -TILESIZE / 2.f;
+};
+
+static const Phase1LightingTuning PHASE1{};
+
+void draw_phase1_lighting_overlay(const GameCam& game_cam) {
     const bool enabled =
         GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
     if (!enabled) return;
@@ -52,34 +73,76 @@ void draw_lighting_debug_overlay(const GameCam& game_cam) {
     const int w = raylib::GetScreenWidth();
     const int h = raylib::GetScreenHeight();
 
-    // Overlay-only mode: fully cover the world so we can verify order.
+    // Overlay-only mode: fully cover the world so we can verify order/draw path.
     if (overlay_only) {
         raylib::BeginBlendMode(raylib::BLEND_ALPHA);
         raylib::DrawRectangle(0, 0, w, h, Color{0, 0, 0, 255});
         raylib::EndBlendMode();
     }
 
-    // Always draw a visible tint so we know this ran.
-    raylib::BeginBlendMode(raylib::BLEND_ALPHA);
-    raylib::DrawRectangle(0, 0, w, h, Color{180, 0, 255, 50});
-    raylib::EndBlendMode();
+    const bool is_night = SystemManager::get().is_bar_open();
+    const bool should_apply = force_enable || is_night;
 
-    // Label
+    // Phase 1: global ambience (night vs day)
+    if (should_apply) {
+        // Night: darken overall
+        raylib::BeginBlendMode(raylib::BLEND_ALPHA);
+        raylib::DrawRectangle(0, 0, w, h,
+                              Color{0, 0, 0, PHASE1.night_outdoor_dark_alpha});
+        raylib::EndBlendMode();
+
+        // Night: lift indoors so it stays readable
+        raylib::BeginBlendMode(raylib::BLEND_ADDITIVE);
+        const auto cam = game_cam.camera;
+        const float y = PHASE1.mask_y;
+
+        const auto draw_roof_fill = [&](const Building& b) {
+            const float x0 = b.area.x;
+            const float z0 = b.area.y;
+            const float x1 = b.area.x + b.area.width;
+            const float z1 = b.area.y + b.area.height;
+            const vec2 p0 = world_to_screen({x0, y, z0}, cam);
+            const vec2 p1 = world_to_screen({x1, y, z0}, cam);
+            const vec2 p2 = world_to_screen({x1, y, z1}, cam);
+            const vec2 p3 = world_to_screen({x0, y, z1}, cam);
+            draw_screen_quad(p0, p1, p2, p3, PHASE1.night_indoor_lift);
+        };
+
+        draw_roof_fill(LOBBY_BUILDING);
+        draw_roof_fill(MODEL_TEST_BUILDING);
+        draw_roof_fill(PROGRESSION_BUILDING);
+        draw_roof_fill(STORE_BUILDING);
+        draw_roof_fill(BAR_BUILDING);
+        draw_roof_fill(LOAD_SAVE_BUILDING);
+
+        raylib::EndBlendMode();
+    } else {
+        // Day: optional very subtle warmth (can be disabled via alpha=0)
+        if (PHASE1.day_tint.a > 0) {
+            raylib::BeginBlendMode(raylib::BLEND_ALPHA);
+            raylib::DrawRectangle(0, 0, w, h, PHASE1.day_tint);
+            raylib::EndBlendMode();
+        }
+    }
+
+    // Debug label (always on when enabled)
     raylib::DrawText(
-        fmt::format("LIGHTING DEBUG (H/J/K) overlay_only={} force={}",
-                    overlay_only, force_enable)
+        fmt::format(
+            "LIGHTING (Phase 1) [H]enable [J]overlay-only [K]force | night={} "
+            "apply={} overlay_only={}",
+            is_night, should_apply, overlay_only)
             .c_str(),
         20, 20, 18, WHITE);
 
     // Project building rectangles so we can validate world->screen projection.
-    const float y = -TILESIZE / 2.f;
+    const float y = PHASE1.mask_y;
     const auto cam = game_cam.camera;
-    draw_projected_building_rect(LOBBY_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect(MODEL_TEST_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect(PROGRESSION_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect(STORE_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect(BAR_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect(LOAD_SAVE_BUILDING, cam, y, GREEN);
+    draw_projected_building_rect_outline(LOBBY_BUILDING, cam, y, GREEN);
+    draw_projected_building_rect_outline(MODEL_TEST_BUILDING, cam, y, GREEN);
+    draw_projected_building_rect_outline(PROGRESSION_BUILDING, cam, y, GREEN);
+    draw_projected_building_rect_outline(STORE_BUILDING, cam, y, GREEN);
+    draw_projected_building_rect_outline(BAR_BUILDING, cam, y, GREEN);
+    draw_projected_building_rect_outline(LOAD_SAVE_BUILDING, cam, y, GREEN);
 }
 
 }  // namespace
@@ -223,8 +286,8 @@ void GameLayer::onDraw(float dt) {
 
     ext::clear_background(Color{200, 200, 200, 255});
     draw_world(dt);
-    // Phase 0: instrumentation only (no real lighting yet)
-    draw_lighting_debug_overlay(*cam);
+    // Phase 1: baseline ambience + indoor mask (still debug-toggled)
+    draw_phase1_lighting_overlay(*cam);
 
     // note: for ui stuff
     if (map_ptr) map_ptr->onDrawUI(dt);
