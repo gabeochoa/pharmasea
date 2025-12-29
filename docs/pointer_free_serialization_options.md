@@ -204,3 +204,105 @@ This keeps the “Afterhours ergonomics” (queries returning `RefEntity`, code 
    - Replace serialized `RefEntity` / `Entity*` / `shared_ptr<Entity>` references with `EntityHandle` (or equivalent handle fields).
 
 This gives you pointer-free serialization **and** preserves the “pointers are fast” runtime behavior by using array indexing for both iteration and lookups, without maintaining a `map<>`.
+
+---
+
+## Implementation phases (detailed work breakdown)
+
+The goal is to migrate without breaking gameplay systems, network sync, or saves. The phases below are ordered to keep changes local early, then widen scope once the core storage model is proven.
+
+### Phase 0 — Inventory & constraints (1 short pass)
+- **Identify all serialized pointers**
+  - `RefEntity` serialization (`src/entity.h`)
+  - Any `Entity* parent` being serialized in components
+  - Any `shared_ptr<Entity>` fields serialized as relationships (e.g. `CanHoldItem::held_item`)
+- **Identify all reference “shapes” in gameplay**
+  - Places that store entity references as `EntityID`, `RefEntity`, `OptEntity`, `Entity*`, `shared_ptr<Entity>`
+  - Places that require *fast repeated resolution* (AI, pathfinding, interaction, inventory/holding)
+- **Define null / invalid semantics**
+  - Pick one invalid handle value (`slot=0,gen=0` or a dedicated `bool valid()`).
+  - Decide “missing target” behavior (ignore, clear, or assert) per subsystem.
+
+### Phase 1 — Add the handle type + resolver APIs (no behavior change yet)
+- **Add `EntityHandle`**
+  - `slot` + `gen` (two 32-bit fields is simplest and portable).
+  - Add helper methods: `valid()`, `==`, `!=`.
+- **Add serialization support for `EntityHandle`**
+  - Serialize as two `value4b` fields (or packed `value8b` if you want, but two fields is easiest to version).
+- **Add `EntityHelper` entry points (thin wrapper first)**
+  - `EntityHandle EntityHelper::handle_of(const Entity&)` (initially can be stubbed/temporary until slots exist)
+  - `OptEntity EntityHelper::resolve(EntityHandle)` (initially can fall back to old lookup while you bring up slots)
+  - `void EntityHelper::destroy(EntityHandle)` (temporary forwarding)
+
+Deliverable for Phase 1: handle type exists, compiles, can be serialized, and code can start referring to handles without committing to the new storage yet.
+
+### Phase 2 — Introduce stable slots + dense list (keep current entity iteration working)
+- **Create internal storage**
+  - `slots[]` of `{ owner ptr, gen, dense_index }`
+  - `free_list[]` of reusable slot indices
+  - `dense[]` of live slot indices for iteration
+- **Wire entity creation**
+  - Update `EntityHelper::createEntity*()` to allocate a slot + push to `dense[]`.
+  - Decide ownership: `shared_ptr` vs `unique_ptr`
+    - If you keep `shared_ptr` for now, keep it only as the owning pointer in the slot.
+- **Wire entity deletion**
+  - `destroy(handle)` implements:
+    - validate handle (gen match)
+    - swap-remove from `dense[]` and update moved slot’s `dense_index`
+    - clear owner ptr, increment gen, push slot index to `free_list`
+- **Keep existing iteration sites stable**
+  - Provide a new `EntityHelper::forEachEntity(...)` that iterates `dense[]`.
+  - If existing code uses `EntityHelper::get_entities()` heavily:
+    - either change it to return a lightweight view/iterator adapter over `dense[]`, or
+    - provide a parallel API (`get_dense_entities_view`) and migrate call sites gradually.
+
+Deliverable for Phase 2: the world runs with the new storage model, systems still iterate efficiently (dense), and you can resolve handles in O(1).
+
+### Phase 3 — Bridge Afterhours ergonomics (`OptEntity` / `RefEntity`) to handles
+- **Resolution helpers**
+  - `OptEntity EntityHelper::resolve(EntityHandle)` uses slot resolve → `Entity*` → `OptEntity`.
+- **Optional: embed handle/slot index on the entity**
+  - If Afterhours `Entity` can be extended, store `slot_index` (or a handle) inside the entity for cheap `handle_of(entity)`.
+  - If you can’t, maintain a side mapping from `Entity*` to `slot_index` (but prefer storing it directly).
+- **Update query code paths**
+  - Keep queries returning `RefEntity`/`OptEntity` for now, but ensure any long-lived references are stored as handles instead of `RefEntity`.
+
+Deliverable for Phase 3: gameplay code can keep using Afterhours-friendly types locally, but persistent references switch to `EntityHandle`.
+
+### Phase 4 — Convert gameplay relationships to handle fields (incremental, component-by-component)
+- **Replace stored references**
+  - Replace `RefEntity` members and `Entity*` members that represent relationships with `EntityHandle`.
+  - Replace `shared_ptr<Entity>` relationship fields (like `held_item`) with `EntityHandle held_item`.
+- **Add “cached pointer” only if profiling demands it**
+  - Pattern:
+    - store `EntityHandle` as the truth
+    - resolve on demand
+    - optionally cache `Entity*` for a frame with invalidation rules if needed
+- **Define lifecycle rules**
+  - On delete of a referenced entity, resolution fails; code must clear the handle or treat it as missing.
+
+Deliverable for Phase 4: most gameplay no longer relies on pointer identity for references; it relies on handles.
+
+### Phase 5 — Make serialization fully pointer-free (and remove pointer context where possible)
+- **Stop serializing `parent` pointers**
+  - Remove `parent` from component serialization entirely.
+  - Ensure `parent` is rebound during component attach / post-load fixup.
+- **Replace `RefEntity` serialization**
+  - Do not serialize raw pointers for `RefEntity`.
+  - Prefer not serializing `RefEntity` at all; serialize `EntityHandle` wherever you need a reference.
+- **Remove pointer-related Bitsery extensions from contexts**
+  - Once no pointer types are serialized, remove `PointerLinkingContext` from network/save contexts.
+  - This shrinks format complexity and avoids pointer-related reader errors.
+
+Deliverable for Phase 5: network packets and save files contain **zero pointer values** and no pointer-linking context is required.
+
+### Phase 6 — Hardening, performance, and tooling
+- **Correctness**
+  - Add asserts/logging for stale handles in debug builds.
+  - Add small validation for network inputs (handle bounds, generation checks).
+- **Performance**
+  - Confirm hot loops iterate over `dense[]` only (no slot scanning).
+  - Confirm handle resolves are O(1) and not falling back to linear search.
+- **Debuggability**
+  - Provide helper to print handles and resolve them to names/types when valid.
+  - Optional: generation/slot stats (free list length, dense size, slot capacity).
