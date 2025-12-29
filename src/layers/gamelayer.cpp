@@ -73,7 +73,9 @@ struct Phase1LightingTuning {
     // Optional: day tint (kept subtle; can be turned off by setting alpha=0).
     Color day_tint = Color{255, 240, 220, 10};
     // Projection height used for building masks.
-    float mask_y = -TILESIZE / 2.f;
+    // NOTE: The world ground plane is drawn at y = -TILESIZE (see draw_world()).
+    // Projecting at y = -TILESIZE/2 causes the mask to float above the ground.
+    float mask_y = -TILESIZE;
 };
 
 static const Phase1LightingTuning PHASE1{};
@@ -102,6 +104,31 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
     const bool is_night = SystemManager::get().is_bar_open();
     const bool should_apply = force_enable || is_night;
 
+    // Throttled debug logging to validate projection alignment.
+    // We log one building's corners in both world + screen coordinates.
+    {
+        static double last_log_time = 0.0;
+        const double now_s = raylib::GetTime();
+        if (now_s - last_log_time > 2.0) {
+            last_log_time = now_s;
+            const auto& b = BAR_BUILDING;
+            const float y = PHASE1.mask_y;
+            const float x0 = b.area.x;
+            const float z0 = b.area.y;
+            const float x1 = b.area.x + b.area.width - 1.f;
+            const float z1 = b.area.y + b.area.height - 1.f;
+            const auto cam = game_cam.camera;
+            const vec2 p0 = world_to_screen({x0, y, z0}, cam);
+            const vec2 p1 = world_to_screen({x1, y, z0}, cam);
+            const vec2 p2 = world_to_screen({x1, y, z1}, cam);
+            const vec2 p3 = world_to_screen({x0, y, z1}, cam);
+            log_info(
+                "lighting mask_y={} bar rect world corners=({},{})->({},{}) "
+                "screen p0={} p1={} p2={} p3={} cam_pos={} cam_target={}",
+                y, x0, z0, x1, z1, p0, p1, p2, p3, cam.position, cam.target);
+        }
+    }
+
     // Phase 1: global ambience (night vs day)
     if (should_apply) {
         // Night: darken overall
@@ -118,8 +145,9 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
         const auto draw_roof_fill = [&](const Building& b) {
             const float x0 = b.area.x;
             const float z0 = b.area.y;
-            const float x1 = b.area.x + b.area.width;
-            const float z1 = b.area.y + b.area.height;
+            // Match Building::is_inside() bounds behavior (max is exclusive by 1 tile)
+            const float x1 = b.area.x + b.area.width - 1.f;
+            const float z1 = b.area.y + b.area.height - 1.f;
             const vec2 p0 = world_to_screen({x0, y, z0}, cam);
             const vec2 p1 = world_to_screen({x1, y, z0}, cam);
             const vec2 p2 = world_to_screen({x1, y, z1}, cam);
@@ -148,8 +176,8 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
     raylib::DrawText(
         fmt::format(
             "LIGHTING (Phase 1) [H]enable [J]overlay-only [K]force | night={} "
-            "apply={} overlay_only={}",
-            is_night, should_apply, overlay_only)
+            "apply={} overlay_only={} mask_y={}",
+            is_night, should_apply, overlay_only, PHASE1.mask_y)
             .c_str(),
         20, 20, 18, WHITE);
 
