@@ -63,19 +63,22 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) override {
-        // Phase 0: quick lighting debug toggles (no keymap plumbing yet)
-        // H: toggle lighting debug overlay
-        // J: toggle overlay-only view (hides world, shows only overlay)
-        // K: force-enable (ignore day/night gating when we add it later)
-        if (event.keycode == raylib::KEY_H) {
+        // Phase 0: lighting debug toggles (wired through KeyMap)
+        if (KeyMap::get_key_code(menu::State::Game,
+                                 InputName::ToggleLightingDebug) ==
+            event.keycode) {
             lighting_debug_enabled = !lighting_debug_enabled;
             return true;
         }
-        if (event.keycode == raylib::KEY_J) {
+        if (KeyMap::get_key_code(menu::State::Game,
+                                 InputName::ToggleLightingOverlayOnly) ==
+            event.keycode) {
             lighting_debug_overlay_only = !lighting_debug_overlay_only;
             return true;
         }
-        if (event.keycode == raylib::KEY_K) {
+        if (KeyMap::get_key_code(menu::State::Game,
+                                 InputName::ToggleLightingForceEnable) ==
+            event.keycode) {
             lighting_debug_force_enable = !lighting_debug_force_enable;
             return true;
         }
