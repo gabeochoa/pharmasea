@@ -86,7 +86,10 @@ const Building STORE_BUILDING =  //
         .add_door(Building::DoorLocation::BottomRight);
 const Building BAR_BUILDING =  //
     Building()                 //
-        .set_area({-25.f, -5.f, 29.f, 30.f});
+        .set_area({-25.f, -5.f, 29.f, 30.f})
+        // Used for lighting spill direction/origin and (optionally) wall/door gen.
+        // Pick a single, stable entrance until we make bar entrances data-driven.
+        .add_door(Building::DoorLocation::Bottom);
 
 // Diagetic "memory card" showroom.
 const Building LOAD_SAVE_BUILDING =  //
