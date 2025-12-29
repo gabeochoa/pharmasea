@@ -298,20 +298,45 @@ Once the hard-edged shadows look correct:
 
 ## Option A: concrete pass breakdown (what gets drawn, in what order)
 
-This is the intended minimal pass sequence:
+This is the intended minimal pass sequence (written as a checklist your teammate can implement top-to-bottom):
 
-1. **World**: draw 3D scene normally.
-2. **Ambient base**:
-   - At night: multiply whole screen by `ambient_outdoor` (darken everything).
-   - At day: either no-op or a very subtle warm tint.
-3. **Indoor lift**:
-   - For each roofed building: draw a filled quad over its projected roof area using additive blend to lift brightness indoors.
-4. **Night lights** (only at night):
-   - Bar door cone (triangle fan, additive).
-   - Optional window glows (small radial sprites/fans).
-5. **Day shadows** (only at day, outdoors only):
-   - Building roof shadows (projected polygons, multiplied darkening), skipping triangles that would land indoors.
-6. **UI**: draw UI last.
+1. **World pass**
+   - Render the 3D world normally (whatever is currently in `draw_world(dt)` / map draw).
+
+2. **Ambient base (night/day)**
+   - Apply a fullscreen darkening/tint over the world.
+   - **Night**: strong darken (prefer **multiply**, fallback to alpha-black tint if multiply doesn’t show reliably).
+   - **Day**: either no-op or very subtle warm tint.
+
+3. **Indoor lift (roofed regions)**
+   - Treat each `Building::area` rectangle as a “roofed/indoor” region.
+   - Project the 4 rectangle corners (world XZ) to screen and draw a filled quad (2 triangles).
+   - Apply an **additive** “lift” color inside these quads so interiors are readable at night.
+
+4. **Night local lights**
+   - **Bar spill cone**:
+     - Pick an origin near the bar entrance (door point pushed slightly outward).
+     - Determine cone direction (door → outside).
+     - Generate a triangle fan (arc points) and draw with **additive** blending.
+     - Fake softness by drawing 2–3 layered cones with decreasing alpha / increasing radius.
+   - Optional: window/fixture glows as small additive circles/fans.
+
+5. **Day shadows (outdoor-only)**
+   - Choose `sunDirXZ` (fixed direction is fine).
+   - For each roofed building rectangle:
+     - Build a shadow polygon by offsetting corners opposite sun direction.
+     - Project to screen and draw filled triangles with **multiply** blending.
+   - Enforce **outdoor-only**:
+     - Skip any shadow triangles whose sampled/centroid world point lies inside any roofed rectangle, OR
+     - Draw shadows first, then “cancel” indoors by overdrawing roof quads with a mask.
+
+6. **UI pass**
+   - Draw UI after lighting so UI is not darkened/tinted (unless explicitly desired).
+
+7. **Debug tooling (highly recommended while building)**
+   - Toggle to force-enable overlay in daytime.
+   - Toggle to show projected roof quads + door/outside points + cone direction line.
+   - Optional: show just the overlay (ambient/lights/shadows) for inspection.
 
 ---
 
