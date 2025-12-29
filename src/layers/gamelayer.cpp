@@ -74,8 +74,9 @@ struct Phase1LightingTuning {
     Color day_tint = Color{255, 240, 220, 10};
     // Projection height used for building masks.
     // NOTE: The world ground plane is drawn at y = -TILESIZE (see draw_world()).
-    // Projecting at y = -TILESIZE/2 causes the mask to float above the ground.
-    float mask_y = -TILESIZE;
+    // Most cubes/entities are centered at y=0 with size ~1, so their bottom is ~-0.5.
+    // For Phase 1, project at "entity base" so the mask aligns with visible ground contact.
+    float mask_y = -TILESIZE / 2.f;
 };
 
 static const Phase1LightingTuning PHASE1{};
@@ -105,27 +106,36 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
     const bool should_apply = force_enable || is_night;
 
     // Throttled debug logging to validate projection alignment.
-    // We log one building's corners in both world + screen coordinates.
+    // We log one building's corners at multiple Y levels (ground/base/center).
     {
         static double last_log_time = 0.0;
         const double now_s = raylib::GetTime();
         if (now_s - last_log_time > 2.0) {
             last_log_time = now_s;
             const auto& b = BAR_BUILDING;
-            const float y = PHASE1.mask_y;
             const float x0 = b.area.x;
             const float z0 = b.area.y;
-            const float x1 = b.area.x + b.area.width - 1.f;
-            const float z1 = b.area.y + b.area.height - 1.f;
             const auto cam = game_cam.camera;
-            const vec2 p0 = world_to_screen({x0, y, z0}, cam);
-            const vec2 p1 = world_to_screen({x1, y, z0}, cam);
-            const vec2 p2 = world_to_screen({x1, y, z1}, cam);
-            const vec2 p3 = world_to_screen({x0, y, z1}, cam);
+            // Match how draw_building() draws the debug cube: [x0..x0+width], [z0..z0+height]
+            const float x1 = b.area.x + b.area.width;
+            const float z1 = b.area.y + b.area.height;
+
+            const float y_ground = -TILESIZE;
+            const float y_base = -TILESIZE / 2.f;
+            const float y_center = 0.f;
+
+            const vec2 g0 = world_to_screen({x0, y_ground, z0}, cam);
+            const vec2 g1 = world_to_screen({x1, y_ground, z0}, cam);
+            const vec2 b0s = world_to_screen({x0, y_base, z0}, cam);
+            const vec2 b1s = world_to_screen({x1, y_base, z0}, cam);
+            const vec2 c0 = world_to_screen({x0, y_center, z0}, cam);
+            const vec2 c1 = world_to_screen({x1, y_center, z0}, cam);
+
             log_info(
-                "lighting mask_y={} bar rect world corners=({},{})->({},{}) "
-                "screen p0={} p1={} p2={} p3={} cam_pos={} cam_target={}",
-                y, x0, z0, x1, z1, p0, p1, p2, p3, cam.position, cam.target);
+                "lighting mask: bar rect world corners=({},{})->({},{}) "
+                "cam_pos={} cam_target={} | y_ground=-1 p0={} p1={} | y_base=-0.5 p0={} p1={} | y_center=0 p0={} p1={}",
+                x0, z0, x1, z1, cam.position, cam.target, g0, g1, b0s, b1s, c0,
+                c1);
         }
     }
 
@@ -145,9 +155,9 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
         const auto draw_roof_fill = [&](const Building& b) {
             const float x0 = b.area.x;
             const float z0 = b.area.y;
-            // Match Building::is_inside() bounds behavior (max is exclusive by 1 tile)
-            const float x1 = b.area.x + b.area.width - 1.f;
-            const float z1 = b.area.y + b.area.height - 1.f;
+            // Match draw_building() debug cube footprint extents.
+            const float x1 = b.area.x + b.area.width;
+            const float z1 = b.area.y + b.area.height;
             const vec2 p0 = world_to_screen({x0, y, z0}, cam);
             const vec2 p1 = world_to_screen({x1, y, z0}, cam);
             const vec2 p2 = world_to_screen({x1, y, z1}, cam);
@@ -190,6 +200,13 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
     draw_projected_building_rect_outline(STORE_BUILDING, cam, y, GREEN);
     draw_projected_building_rect_outline(BAR_BUILDING, cam, y, GREEN);
     draw_projected_building_rect_outline(LOAD_SAVE_BUILDING, cam, y, GREEN);
+
+    // Extra alignment debug: draw BAR_BUILDING outline at 3 Y levels.
+    // This helps visually pick the correct mask plane.
+    draw_projected_building_rect_outline(BAR_BUILDING, cam, -TILESIZE, RED);
+    draw_projected_building_rect_outline(BAR_BUILDING, cam, -TILESIZE / 2.f,
+                                         BLUE);
+    draw_projected_building_rect_outline(BAR_BUILDING, cam, 0.f, YELLOW);
 }
 
 }  // namespace
