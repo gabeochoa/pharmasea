@@ -40,87 +40,6 @@ So if you move to ID-based references without improving lookup, you will pay an 
 
 ---
 
-## Option 1: Serialize **EntityID / Handle IDs**, rebuild pointers after load (most common, minimal change)
-
-### Idea
-Store **stable identifiers** in the serialized data (e.g. `EntityID`), not `Entity*` / `RefEntity` pointers or `shared_ptr` graphs. After deserialization, run a **fixup pass** that restores any runtime-only fast links (if desired).
-
-### What it looks like in this codebase
-- **Stop serializing `Entity* parent`**
-  - For components like `RespondsToDayNight`, `AddsIngredient`, `CanPathfind`, the `parent` pointer is *derivable runtime state* (the entity that owns the component).
-  - After load/deserialize, you can set `parent` during component attachment/registration (or a post-load pass).
-
-- **Replace `RefEntity` pointer serialization with ID serialization**
-  - Today `RefEntity` is effectively “a reference to an entity” but is serialized as an observed pointer.
-  - Instead, serialize a numeric identity such as `EntityID` (and treat missing targets as null/invalid).
-
-- **Replace smart-pointer relationships with IDs where appropriate**
-  - Example: `CanHoldItem` currently stores `std::shared_ptr<Entity> held_item` and serializes it.
-  - A pointer-free approach stores `EntityID held_item_id` (plus optional cached pointer for runtime speed).
-
-### Performance implications
-- **Serialization/Deserialization**
-  - Usually **faster and smaller** than pointer-linking:
-    - Less bookkeeping (no pointer linking context needed for references).
-    - Less risk of “invalid pointer” errors on load.
-  - Network validation is easier (IDs are plain integers; you can clamp/validate).
-
-- **Runtime**
-  - The performance trade-off depends on how you resolve IDs:
-    - With the current `getEntityForID` (linear scan), ID resolution is **O(n)** and can be much slower than pointer dereference.
-    - With an index, resolution becomes effectively **O(1)**:
-      - `std::unordered_map<EntityID, Entity*>` (fast average, some hashing overhead)
-      - A dense table (fastest: array indexing + great cache locality) if IDs are mostly dense/reused in a controlled way.
-  - A common pattern is:
-    - **Serialize only IDs**
-    - Keep an **optional cached pointer** in memory that is rebuilt and invalidated safely.
-
-### Pros
-- Minimal conceptual shift: still “entity references”, just expressed as IDs on disk/on wire.
-- Removes pointer values from serialized blobs entirely.
-- Easier compatibility/versioning: IDs are stable data, pointers are not.
-
-### Cons
-- Requires a **post-load fixup** step (or consistent “rebind parent / resolve references” logic).
-- Requires **fast ID→Entity lookup** to avoid performance regression.
-
----
-
-## Option 2: Serialize **table indices** (object tables), not IDs (fastest decode for full snapshots)
-
-### Idea
-Serialize the world/snapshot as **arrays** (“tables”) and store references as **indices into those arrays**. An index is still pointer-free, but it resolves to a target in constant time without hashing.
-
-### What it looks like in this codebase
-- When serializing a map snapshot (network or save):
-  - Emit an `entities[]` array in a deterministic order.
-  - Any “entity reference” is stored as `int32 index` into `entities[]` (or `-1` for null).
-- On deserialize:
-  - Read `entities[]`, construct them, then resolve all indices in a fixup pass.
-
-### Performance implications
-- **Serialization size**
-  - Very compact (an index can be 32-bit).
-- **Deserialize speed**
-  - Typically **excellent**:
-    - Resolving references is `entities[index]` (no hashing, no scanning).
-    - Great cache locality during fixup.
-- **Runtime**
-  - You can still end up with pointers in memory if you want (just not in serialized form), or you can keep indices/handles as runtime references.
-
-### Pros
-- Great fit for **frequent network snapshots** (fast encode/decode).
-- Avoids “global ID” concerns inside a single serialized blob.
-- Deterministic and simple to validate (bounds checks).
-
-### Cons
-- Indices are only meaningful **within that blob**.
-  - Harder to do partial updates/deltas unless you design stable ordering rules.
-- Requires serializer/deserializer to agree on ordering.
-- Can be more invasive than Option 1 if the game code assumes global `EntityID` everywhere.
-
----
-
 ## Option 3: Adopt a true **handle system** (index + generation) and stop using pointers for references (largest safety/perf win, biggest refactor)
 
 ### Idea
@@ -268,46 +187,20 @@ This keeps the “Afterhours ergonomics” (queries returning `RefEntity`, code 
 
 ---
 
-## Option 4 (hybrid): IDs for persistence + table indices for snapshots
-
-### Idea
-Use different reference encodings depending on the product need:
-- **Save game**: store stable `EntityID` references (good for long-lived persistence, easier compatibility).
-- **Network snapshots**: store indices into a snapshot-local `entities[]` table (fastest decode/encode).
-
-### Performance implications
-- Lets you optimize for:
-  - **fastest network replication**, and
-  - **most stable save format**
-  without forcing one approach everywhere.
-
-### Pros
-- Best of both worlds if you frequently ship full map snapshots.
-- Keeps save file more stable across versions.
-
-### Cons
-- Two formats to maintain (but often worth it).
-
----
-
 ## Recommendation (for this repo)
 
-### Recommended path: Option 1 now, with a fast lookup index; consider Option 4 next
+### Recommended path: implement Option 3 (stable slots + free list + dense iteration), then remove pointer serialization
 
-1) **Immediately remove non-essential pointer serialization**
-   - **Do not serialize component `parent` pointers** at all (they are runtime-derived; rebuild them after load).
-   - Replace `RefEntity` pointer serialization with an **ID-based representation**.
+1) **Introduce the handle + storage model**
+   - Add a project-level `EntityHandle { slot, gen }`.
+   - Store entities in `slots[]` with `free_list` reuse, and keep a separate `dense[]` list for per-frame system iteration.
 
-2) **Switch relationship fields to ID-based references**
-   - Anywhere you currently serialize `Entity*`, `RefEntity`, `std::shared_ptr<Entity>`, etc. as a relationship, prefer `EntityID` (plus an optional runtime cache).
+2) **Route all “find entity” logic through handle resolution**
+   - Replace “search by ID” patterns used for references with `resolve(handle)` (O(1) slot lookup + generation check).
+   - Keep per-frame loops iterating `dense[]` so iteration remains compact and cache-friendly.
 
-3) **Fix the performance cliff by replacing linear scans**
-   - Replace/augment `EntityHelper::getEntityForID` with an O(1) lookup (hash map or dense table).
-   - This preserves the “pointers are faster” benefit in practice, while keeping serialized data pointer-free.
+3) **Make serialization pointer-free**
+   - Stop serializing component `parent` pointers (rebind after load).
+   - Replace serialized `RefEntity` / `Entity*` / `shared_ptr<Entity>` references with `EntityHandle` (or equivalent handle fields).
 
-4) **If network snapshots are a performance hotspot**
-   - Add Option 2 semantics for the network path (Option 4 hybrid):
-     - table indices for snapshots (fastest decode/encode)
-     - stable IDs for saves (best long-term compatibility)
-
-This path gives you the biggest near-term win (pointer-free serialized data + simpler correctness) while keeping runtime performance high by addressing the real bottleneck (current O(n) ID lookup).
+This gives you pointer-free serialization **and** preserves the “pointers are fast” runtime behavior by using array indexing for both iteration and lookups, without maintaining a `map<>`.
