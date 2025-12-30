@@ -21,7 +21,13 @@ struct CanHoldItem : public BaseComponent {
 
     virtual ~CanHoldItem() {}
 
-    [[nodiscard]] bool empty() const { return held_item_handle.is_invalid(); }
+    // NOTE: A handle can be "syntactically valid" (slot != INVALID_SLOT) but
+    // still be stale (entity deleted / generation bumped). Treat stale handles
+    // as empty so gameplay doesn't crash or spin on error paths.
+    [[nodiscard]] bool empty() const {
+        if (held_item_handle.is_invalid()) return true;
+        return !EntityHelper::resolve(held_item_handle).has_value();
+    }
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
@@ -31,7 +37,7 @@ struct CanHoldItem : public BaseComponent {
     }
 
     CanHoldItem& update(Entity& item, int entity_id) {
-        held_item_handle = afterhours::EntityHelper::handle_for(item);
+        held_item_handle = EntityHelper::handle_for(item);
         item.get<IsItem>().set_held_by(held_by, entity_id);
         last_held_handle = held_item_handle;
         if (held_by == EntityType::Unknown) {
@@ -54,7 +60,7 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] EntityHandle item_handle() const { return held_item_handle; }
     // Legacy compatibility - resolve handle to get ID
     [[nodiscard]] EntityID item_id() const {
-        auto opt = afterhours::EntityHelper::resolve(held_item_handle);
+        auto opt = EntityHelper::resolve(held_item_handle);
         return opt ? opt->id : entity_id::INVALID;
     }
 
@@ -88,7 +94,7 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] EntityHandle last_handle() const { return last_held_handle; }
     // Legacy compatibility
     [[nodiscard]] EntityID last_id() const {
-        auto opt = afterhours::EntityHelper::resolve(last_held_handle);
+        auto opt = EntityHelper::resolve(last_held_handle);
         return opt ? opt->id : entity_id::INVALID;
     }
 

@@ -1399,7 +1399,7 @@ void render_held_furniture_preview(const Entity& entity, float) {
 
     if (walkable) {
         Entity& hf =
-            afterhours::EntityHelper::resolveEnforced(chf.furniture_handle());
+            EntityHelper::resolveEnforced(chf.furniture_handle());
         if (hf.has<IsStoreSpawned>()) {
             if (!STORE_BUILDING.is_inside({drop_location.x, drop_location.z})) {
                 // TODO add a message or something to show you cant drop it

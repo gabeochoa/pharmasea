@@ -13,7 +13,8 @@ struct CanHoldFurniture : public BaseComponent {
     virtual ~CanHoldFurniture() {}
 
     [[nodiscard]] bool empty() const {
-        return held_furniture_handle.is_invalid();
+        if (held_furniture_handle.is_invalid()) return true;
+        return !EntityHelper::resolve(held_furniture_handle).has_value();
     }
     [[nodiscard]] bool is_holding_furniture() const { return !empty(); }
 
@@ -27,7 +28,7 @@ struct CanHoldFurniture : public BaseComponent {
     }
     // Legacy compatibility
     [[nodiscard]] EntityID furniture_id() const {
-        auto opt = afterhours::EntityHelper::resolve(held_furniture_handle);
+        auto opt = EntityHelper::resolve(held_furniture_handle);
         return opt ? opt->id : entity_id::INVALID;
     }
     [[nodiscard]] vec3 picked_up_at() const { return pos; }

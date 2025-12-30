@@ -1,10 +1,10 @@
 
 #pragma once
 
+#include <cstdint>
 #include <thread>
 
 #include "assert.h"
-#include "components/can_hold_item.h"
 #include "components/is_floor_marker.h"
 #include "components/transform.h"
 #include "external_include.h"
@@ -40,6 +40,15 @@ extern std::set<int> permanant_ids;
 extern std::map<vec2, bool> cache_is_walkable;
 
 struct EntityHelper {
+    // Slot+generation handle store for PharmaSea-managed entities.
+    // We intentionally do NOT rely on afterhours' internal EntityHelper singleton
+    // (PharmaSea maintains its own entity list), but we still use the same
+    // `afterhours::EntityHandle` POD type for storage/serialization.
+    struct Slot {
+        std::shared_ptr<Entity> ent{};
+        uint32_t gen = 1;
+    };
+
     struct CreationOptions {
         bool is_permanent;
     };
@@ -114,6 +123,10 @@ struct EntityHelper {
     static Entity& getEnforcedEntityForID(EntityID id);
 
     static EntityHandle getHandleForID(EntityID id);
+
+    static EntityHandle handle_for(const Entity& e);
+    static OptEntity resolve(EntityHandle h);
+    static RefEntity resolveEnforced(EntityHandle h);
 
     static OptEntity getClosestOfType(const Entity& entity,
                                       const EntityType& type,
