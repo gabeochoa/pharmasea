@@ -551,6 +551,10 @@ Afterhours today strongly implies a two-step lifecycle:
 
 **Your stated preference**: preserve existing behavior by default, so **A is the default** and **B is opt-in** via a macro / option.
 
+**Decision (confirmed)**:
+- **Default**: assign handles only after `merge_entity_arrays()` (Option A).
+- **Later (opt-in)**: allow handles to be assigned immediately on create (Option B) behind a macro/flag.
+
 ### 2) `RefEntity` / `OptEntity`
 Decision: keep them as “real refs” by default (non-owning reference wrappers).
 - **Implication**: no existing projects break on update.
@@ -581,6 +585,9 @@ From the code:
 - There is at least one plugin (`plugins/pathfinding.h`) that can start a background thread and uses mutexes for its own internal queues.
 
 **Implication**: you can implement slots/free_list/dense assuming entity creation/deletion happens on the main thread (today’s model). If you later want cross-thread entity access, you’ll need explicit rules or synchronization.
+
+**Decision (confirmed)**:
+- Treat entity lifetime management (create/merge/cleanup + slot bookkeeping) as **main-thread only**.
 
 ### 7) Serialization
 Decision:
