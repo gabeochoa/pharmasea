@@ -13,7 +13,8 @@ struct CanHoldHandTruck : public BaseComponent {
     virtual ~CanHoldHandTruck() {}
 
     [[nodiscard]] bool empty() const {
-        return held_hand_truck_handle.is_invalid();
+        if (held_hand_truck_handle.is_invalid()) return true;
+        return !EntityHelper::resolve(held_hand_truck_handle).has_value();
     }
     [[nodiscard]] bool is_holding() const { return !empty(); }
 

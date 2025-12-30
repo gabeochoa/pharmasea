@@ -13,7 +13,8 @@ struct CanHoldFurniture : public BaseComponent {
     virtual ~CanHoldFurniture() {}
 
     [[nodiscard]] bool empty() const {
-        return held_furniture_handle.is_invalid();
+        if (held_furniture_handle.is_invalid()) return true;
+        return !EntityHelper::resolve(held_furniture_handle).has_value();
     }
     [[nodiscard]] bool is_holding_furniture() const { return !empty(); }
 
