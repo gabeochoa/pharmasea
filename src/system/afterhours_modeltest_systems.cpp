@@ -128,7 +128,7 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
             if (held_opt) {
                 held_opt->cleanup = true;
             }
-            canHold.update(nullptr, -1);
+            canHold.update(nullptr, EntityID::INVALID);
         }
 
         auto pos = transform.pos();
@@ -169,14 +169,14 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
         int current_value = indexer.value();
         OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
         if (!held_opt) {
-            canHold.update(nullptr, -1);
+            canHold.update(nullptr, EntityID::INVALID);
             return;
         }
         int item_value = held_opt->get<HasSubtype>().get_type_index();
 
         if (current_value != item_value) {
             held_opt->cleanup = true;
-            canHold.update(nullptr, -1);
+            canHold.update(nullptr, EntityID::INVALID);
         }
     }
 };

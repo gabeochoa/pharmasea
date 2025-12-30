@@ -120,7 +120,7 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
         }
     }
 
-    AddsIngredient& addsIG = toadd.get<AddsIngredient>().set_parent(&toadd);
+    AddsIngredient& addsIG = toadd.get<AddsIngredient>().set_parent(toadd.id);
     IngredientBitSet ingredients = addsIG.get(toadd);
 
     bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
@@ -1051,7 +1051,7 @@ void make_soda_spout(Item& soda_spout, vec3 pos) {
             [](const Entity&, Entity&) -> IngredientBitSet {
                 return IngredientBitSet().reset().set(Ingredient::Soda);
             })
-        .set_parent(&soda_spout);
+        .set_parent(soda_spout.id);
 }
 
 void make_mop(Item& mop, vec3 pos) {
@@ -1135,7 +1135,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
             hasWork.reset_pct();
 
             bool cleaned_up = _add_item_to_drink_NO_VALIDATION(drink, item);
-            if (cleaned_up) playerCHI.update(nullptr, -1);
+            if (cleaned_up) playerCHI.update(nullptr, EntityID::INVALID);
         }
     };
 
@@ -1156,7 +1156,7 @@ void make_champagne(Item& alc, vec3 pos) {
             // Only allow adding the ingredient if you opened the bottle
             return bottle.get<HasFishingGame>().has_score();
         })
-        .set_parent(&alc)
+        .set_parent(alc.id)
         .set_num_uses(3);
 
     alc.addComponent<HasDynamicModelName>().init(
@@ -1181,7 +1181,7 @@ void make_alcohol(Item& alc, vec3 pos, int index) {
                return IngredientBitSet().reset().set(get_ingredient_from_index(
                    ingredient::AlcoholsInCycle[0] + hst.get_type_index()));
            })
-        .set_parent(&alc)
+        .set_parent(alc.id)
         .set_num_uses(1);
 
     alc.addComponent<HasDynamicModelName>().init(
@@ -1202,7 +1202,7 @@ void make_simple_syrup(Item& simple_syrup, vec3 pos) {
             [](const Entity&, Entity&) -> IngredientBitSet {
                 return IngredientBitSet().reset().set(Ingredient::SimpleSyrup);
             })
-        .set_parent(&simple_syrup)
+        .set_parent(simple_syrup.id)
         .set_num_uses(-1);
 
     // Since theres only one of these and its inf uses, dont let it get deleted
@@ -1222,7 +1222,7 @@ void make_juice(Item& juice, vec3 pos, Ingredient fruit) {
                 return IngredientBitSet().reset().set(
                     ingredient::BlendConvert.at(fruit));
             })
-        .set_parent(&juice)
+        .set_parent(juice.id)
         .set_num_uses(1);
 
     juice.addComponent<HasDynamicModelName>().init(
@@ -1245,7 +1245,7 @@ void make_fruit(Item& fruit, vec3 pos, int index) {
                 return IngredientBitSet().reset().set(
                     ingredient::Fruits[0 + hst.get_type_index()]);
             })
-        .set_parent(&fruit)
+        .set_parent(fruit.id)
         .set_num_uses(1);
 
     fruit.addComponent<HasDynamicModelName>().init(
@@ -1329,7 +1329,7 @@ void make_pitcher(Item& pitcher, vec3 pos) {
             [](const Entity& pitcher, Entity&) -> IngredientBitSet {
                 return pitcher.get<IsDrink>().ing();
             })
-        .set_parent(&pitcher)
+        .set_parent(pitcher.id)
         .set_validator([](const Entity& pitcher, const Entity& drink) -> bool {
             if (drink.is_missing<IsDrink>()) return false;
             const IsDrink& into_isdrink = drink.get<IsDrink>();

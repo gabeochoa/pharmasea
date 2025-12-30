@@ -60,7 +60,7 @@ struct RespondsToDayNight : public BaseComponent {
     }
 
     auto& set_parent(Entity* p) {
-        parent_id = p ? p->id : -1;
+        parent_id = p ? p->id : EntityID::INVALID;
         return *this;
     }
 
@@ -71,7 +71,7 @@ struct RespondsToDayNight : public BaseComponent {
     OnNightStartedFn onNightStartedFn = nullptr;
     OnNightEndedFn onNightEndedFn = nullptr;
 
-    EntityID parent_id = -1;
+    EntityID parent_id = EntityID::INVALID;
 
     friend bitsery::Access;
     template<typename S>

@@ -68,7 +68,7 @@ struct CanPathfind : public BaseComponent {
     }
 
     auto& set_parent(Entity* p) {
-        parent_id = p ? p->id : -1;
+        parent_id = p ? p->id : EntityID::INVALID;
         return *this;
     }
 
@@ -143,7 +143,7 @@ struct CanPathfind : public BaseComponent {
     std::deque<vec2> path;
     size_t max_path_length = 0;
 
-    EntityID parent_id = -1;
+    EntityID parent_id = EntityID::INVALID;
 
     friend bitsery::Access;
     template<typename S>

@@ -164,7 +164,7 @@ struct ProcessGrabberItemsSystem
         OptEntity held_opt = EntityHelper::getEntityForID(matchCHI.item_id());
         if (!held_opt) return;
         ourCHI.update(&held_opt.asE(), entity.id);
-        matchCHI.update(nullptr, -1);
+        matchCHI.update(nullptr, EntityID::INVALID);
 
         conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
     }
@@ -286,7 +286,7 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
         if (!held_opt) return;
         matchCHI.update(&held_opt.asE(), entity.id);
 
-        ourCHI.update(nullptr, -1);
+        ourCHI.update(nullptr, EntityID::INVALID);
 
         canBeTakenFrom.update(
             true);  // we are ready to have someone grab from us
@@ -520,7 +520,7 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
 
             // take it
             our_chi.update(&held_opt.asE(), entity.id);
-            other_chi.update(nullptr, -1);
+            other_chi.update(nullptr, EntityID::INVALID);
 
             // we are done recieving
             entity.get<IsPnumaticPipe>().recieving = false;

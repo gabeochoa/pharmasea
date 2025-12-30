@@ -18,14 +18,14 @@ struct CanHoldItem : public BaseComponent {
 
     virtual ~CanHoldItem() {}
 
-    [[nodiscard]] bool empty() const { return held_item_id == -1; }
+    [[nodiscard]] bool empty() const { return held_item_id == EntityID::INVALID; }
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
     // Store entity references as IDs (stable handles) instead of owning pointers.
     // The pointer parameter is only used transiently to update the item's IsItem.
     CanHoldItem& update(Entity* item, EntityID entity_id) {
-        held_item_id = item ? item->id : -1;
+        held_item_id = item ? item->id : EntityID::INVALID;
         if (item) {
             item->get<IsItem>().set_held_by(held_by, entity_id);
             last_held_id = item->id;
@@ -71,8 +71,8 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] EntityID last_id() const { return last_held_id; }
 
    private:
-    EntityID last_held_id = -1;
-    EntityID held_item_id = -1;
+    EntityID last_held_id = EntityID::INVALID;
+    EntityID held_item_id = EntityID::INVALID;
     EntityType held_by;
     EntityFilter filter;
 

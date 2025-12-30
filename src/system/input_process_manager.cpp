@@ -677,7 +677,7 @@ void handle_drop(Entity& player) {
 
         // Just drop him wherever we are
         item.get<IsItem>().set_held_by(EntityType::Unknown, -1);
-        player.get<CanHoldItem>().update(nullptr, -1);
+        player.get<CanHoldItem>().update(nullptr, EntityID::INVALID);
         return true;
     };
 
@@ -893,13 +893,13 @@ void handle_drop(Entity& player) {
             // if theres nothing there, then we do the normal drop logic
             if (furnCHI.is_holding_item()) {
                 held_opt->cleanup = true;
-                playerCHI.update(nullptr, -1);
+                playerCHI.update(nullptr, EntityID::INVALID);
                 return true;
             }
         }
 
         furnCHI.update(&item, closest_furniture->id);
-        playerCHI.update(nullptr, -1);
+        playerCHI.update(nullptr, EntityID::INVALID);
         log_info("pickup: placed item {} onto furniture {}", item.id,
                  closest_furniture->id);
         return true;
@@ -974,7 +974,7 @@ void handle_grab(Entity& player) {
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         playerCHI.update(&item, player.id);
         item.get<Transform>().update(player.get<Transform>().snap_position());
-        furnCanHold.update(nullptr, -1);
+        furnCanHold.update(nullptr, EntityID::INVALID);
         log_info("pickup: player {} picked item {} from furniture {}", player.id,
                  item.id, closest_furniture->id);
 

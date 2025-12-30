@@ -844,7 +844,8 @@ struct ProcessSquirterSystem
 
         bool cleanup = items::_add_item_to_drink_NO_VALIDATION(drink, item);
         if (cleanup) {
-            closest_furniture->get<CanHoldItem>().update(nullptr, -1);
+            closest_furniture->get<CanHoldItem>().update(nullptr,
+                                                         EntityID::INVALID);
         }
     }
 };
@@ -862,7 +863,7 @@ struct ProcessTrashSystem : public afterhours::System<CanHoldItem> {
         OptEntity held_opt = EntityHelper::getEntityForID(trashCHI.item_id());
         if (!held_opt) return;
         held_opt->cleanup = true;
-        trashCHI.update(nullptr, -1);
+        trashCHI.update(nullptr, EntityID::INVALID);
     }
 };
 

@@ -55,9 +55,8 @@ struct AddsIngredient : public BaseComponent {
         return validation(parent_entity, entity);
     }
 
-    // Keep the existing API, but store the handle (id) instead of the pointer.
-    auto& set_parent(Entity* p) {
-        parent = p ? p->id : EntityID::INVALID;
+    auto& set_parent(EntityID id) {
+        parent = id;
         return *this;
     }
 

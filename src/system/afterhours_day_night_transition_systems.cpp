@@ -43,7 +43,7 @@ inline void delete_held_items_when_leaving_inround(Entity& entity) {
     OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
     if (!held_opt) return;
     held_opt->cleanup = true;
-    canHold.update(nullptr, -1);
+    canHold.update(nullptr, EntityID::INVALID);
 }
 
 inline void reset_max_gen_when_after_deletion(Entity& entity) {
@@ -512,7 +512,7 @@ struct ReleaseMopBuddyAtStartOfDaySystem
         if (canHold.item_id() != entity.id) {
             return;
         }
-        canHold.update(nullptr, -1);
+        canHold.update(nullptr, EntityID::INVALID);
 
         // Force drop the mop buddy
         isitem.set_held_by(EntityType::Unknown, -1);

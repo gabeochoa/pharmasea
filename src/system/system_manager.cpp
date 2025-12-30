@@ -269,7 +269,7 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
         if (held_opt) {
             held_opt->cleanup = true;
         }
-        canHold.update(nullptr, -1);
+        canHold.update(nullptr, EntityID::INVALID);
     }
 
     auto pos = entity.get<Transform>().pos();
@@ -296,14 +296,14 @@ void process_is_indexed_container_holding_incorrect_item(Entity& entity,
     int current_value = indexer.value();
     OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
     if (!held_opt) {
-        canHold.update(nullptr, -1);
+        canHold.update(nullptr, EntityID::INVALID);
         return;
     }
     int item_value = held_opt->get<HasSubtype>().get_type_index();
 
     if (current_value != item_value) {
         held_opt->cleanup = true;
-        canHold.update(nullptr, -1);
+        canHold.update(nullptr, EntityID::INVALID);
     }
 }
 

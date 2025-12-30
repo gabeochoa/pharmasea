@@ -270,7 +270,7 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
     ourCHI.update(&drink, entity.id);
-    regCHI.update(nullptr, -1);
+    regCHI.update(nullptr, EntityID::INVALID);
 
     log_info("ai: {} accepted drink={} price={} tip={}", entity.id, drink_name,
              price, tip);
@@ -392,7 +392,7 @@ void process_ai_drinking(Entity& entity, float dt) {
     if (held_opt) {
         held_opt->cleanup = true;
     }
-    chi.update(nullptr, -1);
+    chi.update(nullptr, EntityID::INVALID);
 
     // Mark our current order finished
     cod.on_order_finished();
