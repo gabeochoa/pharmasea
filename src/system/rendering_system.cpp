@@ -26,6 +26,7 @@
 #include "../dataclass/upgrades.h"
 #include "../drawing_util.h"
 #include "../engine/texture_library.h"
+#include "../engine/settings.h"
 #include "../engine/ui/theme.h"
 #include "../engine/util.h"
 #include "../entity_helper.h"
@@ -246,10 +247,22 @@ bool draw_transform_with_model(const Transform& transform,
     // NOTE: ModelRenderer::model() returns a copy; we must set the shader on the
     // library-owned model reference to persist.
     auto& model_ref = ModelLibrary::get().get(renderer.name());
-    auto& lighting_shader = ShaderLibrary::get().get("lighting");
-    for (int i = 0; i < model_ref.materialCount; i++) {
-        if (model_ref.materials[i].shader.id != lighting_shader.id) {
-            model_ref.materials[i].shader = lighting_shader;
+    const bool lighting_enabled = Settings::get().data.enable_lighting;
+    if (lighting_enabled) {
+        auto& lighting_shader = ShaderLibrary::get().get("lighting");
+        for (int i = 0; i < model_ref.materialCount; i++) {
+            if (model_ref.materials[i].shader.id != lighting_shader.id) {
+                model_ref.materials[i].shader = lighting_shader;
+            }
+        }
+    } else {
+        raylib::Shader default_shader{};
+        default_shader.id = raylib::rlGetShaderIdDefault();
+        default_shader.locs = raylib::rlGetShaderLocsDefault();
+        for (int i = 0; i < model_ref.materialCount; i++) {
+            if (model_ref.materials[i].shader.id != default_shader.id) {
+                model_ref.materials[i].shader = default_shader;
+            }
         }
     }
 

@@ -94,6 +94,7 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::SAFE_ZONE, "efas enoz"},
         {i18n::SHOW_SAFE_BOX, "wohS remaertS efaS xoB"},
         {i18n::ENABLE_PPS, "elbanE gnissecorP-tsoP sredahS"},
+        {i18n::ENABLE_LIGHTING, "elbanE gnithgiL"},
         {i18n::SNAP_CAMERA, "panS aremaC"},
         {i18n::MASTER_VOLUME, "retsaM emuloV"},
         {i18n::MUSIC_VOLUME, "cisuM emuloV"},

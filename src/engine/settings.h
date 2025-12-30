@@ -53,6 +53,7 @@ struct Data {
     std::string ui_theme;
     bool show_streamer_safe_box = false;
     bool enable_postprocessing = true;
+    bool enable_lighting = true;
     bool snapCameraTo90 = false;
     bool isFullscreen = false;
     bool vsync_enabled = true;
@@ -69,6 +70,7 @@ struct Data {
         s.value1b(show_streamer_safe_box);
         s.value1b(snapCameraTo90);
         s.value1b(enable_postprocessing);
+        s.value1b(enable_lighting);
         s.value1b(isFullscreen);
         s.value1b(vsync_enabled);
 
@@ -92,6 +94,7 @@ struct Data {
         os << "Safe box: " << data.show_streamer_safe_box << std::endl;
         os << "username: " << data.username << std::endl;
         os << "post_processing: " << data.enable_postprocessing << std::endl;
+        os << "lighting: " << data.enable_lighting << std::endl;
         os << "last ip joined: " << data.last_ip_joined << std::endl;
         os << "lang name: " << data.lang_name << std::endl;
         os << "ui_theme: " << data.ui_theme << std::endl;
@@ -151,6 +154,7 @@ struct Settings {
     void update_sound_volume(float nv);
     void update_streamer_safe_box(bool sssb);
     void update_post_processing_enabled(bool pp_enabled);
+    void update_lighting_enabled(bool lighting_enabled);
     void update_vsync_enabled(bool vsync_enabled);
     [[nodiscard]] int get_current_resolution_index() const;
     [[nodiscard]] std::vector<std::string> resolution_options() const;

@@ -78,6 +78,7 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::SAFE_ZONE, "zona segura"},
         {i18n::SHOW_SAFE_BOX, "Mostrar caja de streamer segura"},
         {i18n::ENABLE_PPS, "Habilitar sombras posteriores"},
+        {i18n::ENABLE_LIGHTING, "Habilitar iluminación"},
         {i18n::SNAP_CAMERA, "Cámara de fotos"},
         {i18n::MASTER_VOLUME, "Volumen principal"},
         {i18n::MUSIC_VOLUME, "Volumen de música"},

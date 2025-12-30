@@ -339,6 +339,7 @@ enum struct i18n {
     SAFE_ZONE,
     SHOW_SAFE_BOX,
     ENABLE_PPS,
+    ENABLE_LIGHTING,
     SNAP_CAMERA,
     VSYNC_ENABLED,
     MASTER_VOLUME,
