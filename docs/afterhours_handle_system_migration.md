@@ -235,3 +235,93 @@ Afterhours supporting handles just makes that migration cleaner (you can use Aft
 2) **Internally implement slot bookkeeping** while keeping `entities_DO_NOT_USE` dense and public methods stable (compat-first)
 3) Add an opt-in query mode (new APIs) that returns handles if you want long-lived references without dangling refs
 4) Only in a major version bump: consider changing `RefEntity`/`OptEntity` semantics (API-breaking) if desired
+
+---
+
+## Make breaking pieces opt-in (so existing users can upgrade safely)
+
+The goal: an existing Afterhours user should be able to:
+- bump the submodule / dependency version,
+- rebuild,
+- and have everything work **without changing their code**.
+
+Then, when they’re ready, they can opt into the new semantics incrementally.
+
+### Principle: additive-first, switches second, defaults last
+- **Additive-first**: new types/APIs exist alongside old ones.
+- **Switches second**: provide compile-time flags to opt into new behavior per-project.
+- **Defaults last**: only after most users have migrated (and likely in a major version) consider flipping defaults.
+
+### Opt-in mechanisms (recommended)
+
+#### 1) Feature macro to enable handle-based refs (keeps old default)
+Provide a macro like:
+- `AFTER_HOURS_USE_HANDLE_REFS`
+
+Behavior:
+- Default (macro off): `RefEntity`/`OptEntity` remain reference-wrapper based (current behavior).
+- Opt-in (macro on): expose handle-based reference types and APIs, and optionally alias `RefEntity`/`OptEntity` to them (see “strict vs soft opt-in” below).
+
+This mirrors existing Afterhours patterns (it already uses compile-time flags like `AFTER_HOURS_DEBUG`, `AFTER_HOURS_MAX_COMPONENTS`, etc.).
+
+#### 2) Parallel types: keep `RefEntity` stable; add new handle-native types
+Even better for compatibility is to **not** change `RefEntity` at all initially.
+
+Add new types such as:
+- `struct HandleRefEntity { EntityHandle h; ... };`  (resolves to `Entity*` or `OptEntity`)
+- `struct OptHandleEntity { std::optional<EntityHandle> h; ... };`
+
+And add parallel query APIs:
+- `EntityQuery::gen()` (existing): returns `std::vector<RefEntity>`
+- `EntityQuery::gen_handles()` (new): returns `std::vector<EntityHandle>`
+- `EntityQuery::gen_handle_refs()` (new): returns `std::vector<HandleRefEntity>` (optional)
+
+This is the least risky way to let users migrate “leaf-by-leaf”:
+- systems can still use `Entity&` locally
+- long-lived relationships can store handles
+
+#### 3) Strict vs soft opt-in (two modes)
+If you do want `RefEntity` to eventually become handle-based, do it in two steps:
+
+- **Soft opt-in (recommended early)**
+  - `RefEntity` stays as-is.
+  - Handle-based refs are new types.
+  - Users migrate by changing their own stored fields and a few call sites.
+
+- **Strict opt-in (for users who want full adoption)**
+  - Under `AFTER_HOURS_USE_HANDLE_REFS`, you can:
+    - `using RefEntity = HandleRefEntity;`
+    - `using OptEntity = OptHandleEntity;`
+  - This will surface compile errors immediately where code assumes reference-wrapper semantics.
+  - It’s still opt-in (so existing users are unaffected).
+
+#### 4) Versioned namespace (optional, but clean for big transitions)
+Another approach (less common in game libs, but very explicit) is to ship:
+- `namespace afterhours::v1` (current semantics)
+- `namespace afterhours::v2` (handle-based refs)
+
+And keep `namespace afterhours` aliased to v1 by default:
+- `namespace afterhours = afterhours::v1;`
+
+Projects can opt into v2 by defining:
+- `AFTER_HOURS_API_VERSION=2` (or similar) before including headers.
+
+This avoids macro-magic type aliasing surprises, but increases surface area.
+
+### What should remain stable by default (to avoid forced migrations)
+To ensure “pull new version and build as normal”:
+- Keep `RefEntity` and `OptEntity` semantics unchanged by default.
+- Keep `EntityHelper::get_entities()` returning `const Entities&` by default.
+- Keep `EntityQuery` working unchanged by default.
+
+All handle-related additions should be additive, and any aliasing of existing names should be behind an explicit flag.
+
+### Deprecation guidance (how to encourage migration without breaking)
+Once handles exist:
+- Mark `getEntityForID` as “debug/tools” (or keep it, but document it as slow / not for hot paths).
+- Add docs and examples showing:
+  - query returns refs for short-lived use
+  - persistent relationships store handles
+
+Then, only when the ecosystem is ready:
+- introduce a new major version or opt-in strict mode to make handle-based refs the default for new projects.
