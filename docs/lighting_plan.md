@@ -21,13 +21,13 @@
 
 ### Lighting approaches (high-level)
 
-- **Option A (start)**: screen-space lighting overlay
-  - Apply night/day ambience via fullscreen tint/multiply.
-  - Add local lights via additive shapes (cone/circles).
-  - Add outdoor-only shadows via projected polygons + indoor masking.
-  - Best for speed and for enforcing “outdoor-only” constraints.
-- **Option B (later)**: render a `lightRT` and composite in a shader
-  - Cleaner pipeline and easier softening/blur, but more plumbing.
+- **Option A (start, shader-based)**: real lighting (Half-Lambert + Blinn-Phong)
+  - Use a lighting shader for **models + cube geometry** (requires normals).
+  - “Sun” as **directional** (recommended) or **point** (stylized).
+  - Indoor/outdoor is enforced via a **roof rectangle mask** in the shader (disable direct sun indoors).
+  - Shadows can come later (cheap projected shadows or shadow maps).
+- **Option B (later)**: hybrid / compositing
+  - Optional `lightRT` + post composite for additional stylization (vignette, bloom, fog, night grading).
 
 ### Raylib-style “real” lighting (what it would look like here)
 
@@ -67,33 +67,37 @@ The buildings/walls “never change after spawn”, so we can convert their cube
 
 ### Phase 1 — Option A baseline ambience (night/day + indoor/outdoor)
 
-- **Add a world lighting overlay pass**
-  - After `draw_world(dt)` and before `onDrawUI(dt)`.
-- **Ambient**
-  - Night: multiply or alpha-tint to darken the world.
-  - Day: no-op or subtle warm tint.
-- **Indoor mask**
-  - Use `Building::area` rectangles as “roofed” zones.
-  - Project roof rectangles to screen and lift indoors (additive) so interiors remain readable at night.
+**Replace overlay lighting with shader lighting**:
+
+- **Add lighting shaders**
+  - `resources/shaders/lighting.vs` / `resources/shaders/lighting.fs`
+  - Implement Half-Lambert diffuse + Blinn-Phong specular.
+- **Ensure normals exist**
+  - Update `DrawCubeCustom(...)` to submit per-face normals via `rlNormal3f(...)`.
+  - Ensure models use normals (most do).
+- **Apply shader to geometry**
+  - Wrap the 3D world draw in `BeginShaderMode(lightingShader)` so immediate-mode cubes/planes are lit.
+  - Assign `lightingShader` to each model material so `DrawModelEx(...)` is lit too.
+- **Sun + ambient uniforms**
+  - Set `viewPos`, `ambientColor`, `lightType`, `lightPos`/`lightDir`, `lightColor`, `shininess`, `useHalfLambert` each frame.
+- **Indoor/outdoor rule (“roof exists”)**
+  - Pass `roofRects[]` (minX/minZ/maxX/maxZ) into the shader.
+  - In fragment, disable **direct sun** indoors (keep ambient).
 
 ### Phase 2 — Option A night local lights (bar spill first)
 
-- **Bar spill cone**
-  - Use a stable bar entrance origin (either building door metadata or a door entity transform).
-  - Draw an additive cone fan in screen space (layered cones for softness).
-  - Clamp to outdoors (skip cone samples inside roof rectangles).
-- **Optional**
-  - Window/fixture glows (small additive circles/fans).
+- **Add bar lights as additional shader lights**
+  - Add 1–N point lights near the bar entrance/window fixtures.
+  - Pass as an array of light structs/uniform arrays (position, color, radius, enabled).
+  - Apply only during night, and optionally only outdoors (or attenuate indoors).
 
 ### Phase 3 — Option A day sun + outdoor-only shadows
 
-- **Sun direction**
-  - Start fixed (top-left) and optionally vary slightly with time.
-- **Roof/building shadows**
-  - Treat roofed rectangles as occluders and draw projected shadow polygons onto the ground.
-  - Apply shadows only outdoors by masking/skipping triangles that land indoors.
-- **Softening**
-  - Fake penumbra by layering a few expanded/offset shadow polygons with lower alpha.
+- **Sun direction/position**
+  - Prefer directional sun; optionally keep point-sun for stylization.
+- **Shadows (choose one)**
+  - **Cheap**: project roof/building shadows onto ground using simple geometry and blend (works well with “invisible roofs”).
+  - **Real**: shadow mapping (extra render pass + shader sampling + bias tuning).
 
 ### Phase 4 — Static geometry batching v1 (convert wall cubes → static meshes)
 
@@ -127,11 +131,6 @@ The buildings/walls “never change after spawn”, so we can convert their cube
 
 ### Phase 6 — Optional: shader-based 3D lighting for meshes/models (raylib-style)
 
-- **Models**
-  - Apply a lighting shader to model materials; feed uniforms for sun + bar light.
-- **Static batched meshes**
-  - Apply the same shader to the batched environment mesh material.
-- **Keep the roof rule**
-  - Continue using the indoor/outdoor mask (Option A or a lightRT) so “sun shadows outdoors only” still holds even if roofs aren’t rendered.
+Folded into Phase 1 now (Phase 6 becomes “polish and expand light types/shadows”).
 
 

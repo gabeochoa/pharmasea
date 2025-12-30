@@ -13,12 +13,13 @@
 #include "../engine/layer.h"
 #include "../map.h"
 #include "../system/system_manager.h"
+#include "../engine/shader_library.h"
 #include "raylib.h"
 
 namespace {
 
 // These live here so lighting debug works even if DebugSettingsLayer isn't loaded.
-static bool g_lighting_debug_enabled = false;
+static bool g_lighting_debug_enabled = true;
 static bool g_lighting_debug_overlay_only = false;
 static bool g_lighting_debug_force_enable = false;
 
@@ -65,22 +66,22 @@ void draw_projected_building_rect_outline(const Building& b,
 }
 
 struct Phase1LightingTuning {
-    // Night ambience: alpha-black tint over whole screen.
-    unsigned char night_outdoor_dark_alpha = 190;
-    // Indoor tint: intentionally obvious for validation.
-    // Later we can replace with a subtle "lift" once placement is correct.
-    Color night_indoor_tint = Color{255, 165, 0, 140};
-    // Optional: day tint (kept subtle; can be turned off by setting alpha=0).
-    Color day_tint = Color{255, 240, 220, 10};
-    // Projection height used for debug screen-space outlines.
-    // NOTE: The world ground plane is drawn at y = -TILESIZE (see draw_world()).
-    // If we project at -0.5, the mask can read like it's floating above the ground.
-    // For correctness, stick to the actual ground plane.
-    float mask_y = -TILESIZE;
+    // Ambient term
+    vec3 ambient = {0.20f, 0.20f, 0.22f};
 
-    // World-space mask Y: draw a translucent plane slightly above the ground to
-    // avoid Z-fighting with the ground plane.
-    float world_mask_y = (-TILESIZE) + 0.02f;
+    // "Sun": user requested point-light-like sun (stylized).
+    // Note: physically, the sun should be directional. We can swap later.
+    int light_type = 1;  // 0=directional, 1=point
+    vec3 sun_dir = {-1.0f, -1.0f, -0.3f};     // used if directional
+    vec3 sun_pos = {0.0f, 40.0f, 0.0f};       // used if point
+    vec3 sun_color = {1.0f, 0.98f, 0.92f};    // warm-ish
+
+    // Shading controls
+    float shininess = 48.0f;
+    bool use_half_lambert = true;
+
+    // Debug outlines plane
+    float debug_outline_y = -TILESIZE;
 };
 
 static const Phase1LightingTuning PHASE1{};
@@ -100,36 +101,81 @@ inline bool phase1_force_enable() {
     return GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
 }
 
-inline bool phase1_should_apply() {
-    // Night in this codebase == bar open (in-round).
-    return phase1_force_enable() || SystemManager::get().is_bar_open();
+inline void set_vec3(raylib::Shader& s, int loc, const vec3& v) {
+    raylib::SetShaderValue(s, loc, &v, raylib::SHADER_UNIFORM_VEC3);
 }
 
-void draw_phase1_indoor_mask_worldspace() {
-    if (!phase1_enabled()) return;
-    if (!phase1_should_apply()) return;
+inline void set_int(raylib::Shader& s, int loc, int v) {
+    raylib::SetShaderValue(s, loc, &v, raylib::SHADER_UNIFORM_INT);
+}
 
-    // In overlay-only mode we intentionally hide the world, so skip world-space mask.
-    if (phase1_overlay_only()) return;
+inline void set_float(raylib::Shader& s, int loc, float v) {
+    raylib::SetShaderValue(s, loc, &v, raylib::SHADER_UNIFORM_FLOAT);
+}
 
-    raylib::BeginBlendMode(raylib::BLEND_ALPHA);
+inline void set_bool(raylib::Shader& s, int loc, bool v) {
+    int iv = v ? 1 : 0;
+    raylib::SetShaderValue(s, loc, &iv, raylib::SHADER_UNIFORM_INT);
+}
 
-    const auto draw_building_plane = [&](const Building& b) {
-        const float cx = b.area.x + (b.area.width / 2.f);
-        const float cz = b.area.y + (b.area.height / 2.f);
-        // DrawPlane takes size in XZ.
-        raylib::DrawPlane({cx, PHASE1.world_mask_y, cz},
-                          {b.area.width, b.area.height}, PHASE1.night_indoor_tint);
+struct LightingUniforms {
+    int viewPos = -1;
+    int lightType = -1;
+    int lightDir = -1;
+    int lightPos = -1;
+    int lightColor = -1;
+    int ambientColor = -1;
+    int shininess = -1;
+    int useHalfLambert = -1;
+    int roofRectCount = -1;
+    int roofRects = -1;
+};
+
+inline LightingUniforms get_lighting_uniforms(raylib::Shader& s) {
+    LightingUniforms u;
+    u.viewPos = raylib::GetShaderLocation(s, "viewPos");
+    u.lightType = raylib::GetShaderLocation(s, "lightType");
+    u.lightDir = raylib::GetShaderLocation(s, "lightDir");
+    u.lightPos = raylib::GetShaderLocation(s, "lightPos");
+    u.lightColor = raylib::GetShaderLocation(s, "lightColor");
+    u.ambientColor = raylib::GetShaderLocation(s, "ambientColor");
+    u.shininess = raylib::GetShaderLocation(s, "shininess");
+    u.useHalfLambert = raylib::GetShaderLocation(s, "useHalfLambert");
+    u.roofRectCount = raylib::GetShaderLocation(s, "roofRectCount");
+    u.roofRects = raylib::GetShaderLocation(s, "roofRects");
+    return u;
+}
+
+inline void update_lighting_shader(raylib::Shader& shader,
+                                  const raylib::Camera3D& cam) {
+    static LightingUniforms u = get_lighting_uniforms(shader);
+
+    // Camera
+    set_vec3(shader, u.viewPos, cam.position);
+
+    // Sun
+    set_int(shader, u.lightType, PHASE1.light_type);
+    set_vec3(shader, u.lightDir, PHASE1.sun_dir);
+    set_vec3(shader, u.lightPos, PHASE1.sun_pos);
+    set_vec3(shader, u.lightColor, PHASE1.sun_color);
+    set_vec3(shader, u.ambientColor, PHASE1.ambient);
+
+    set_float(shader, u.shininess, PHASE1.shininess);
+    set_bool(shader, u.useHalfLambert, PHASE1.use_half_lambert);
+
+    // Roof rectangles: disable direct sun indoors.
+    // vec4(minX, minZ, maxX, maxZ)
+    const vec4 rects[] = {
+        {LOBBY_BUILDING.min().x, LOBBY_BUILDING.min().y, LOBBY_BUILDING.max().x, LOBBY_BUILDING.max().y},
+        {MODEL_TEST_BUILDING.min().x, MODEL_TEST_BUILDING.min().y, MODEL_TEST_BUILDING.max().x, MODEL_TEST_BUILDING.max().y},
+        {PROGRESSION_BUILDING.min().x, PROGRESSION_BUILDING.min().y, PROGRESSION_BUILDING.max().x, PROGRESSION_BUILDING.max().y},
+        {STORE_BUILDING.min().x, STORE_BUILDING.min().y, STORE_BUILDING.max().x, STORE_BUILDING.max().y},
+        {BAR_BUILDING.min().x, BAR_BUILDING.min().y, BAR_BUILDING.max().x, BAR_BUILDING.max().y},
+        {LOAD_SAVE_BUILDING.min().x, LOAD_SAVE_BUILDING.min().y, LOAD_SAVE_BUILDING.max().x, LOAD_SAVE_BUILDING.max().y},
     };
-
-    draw_building_plane(LOBBY_BUILDING);
-    draw_building_plane(MODEL_TEST_BUILDING);
-    draw_building_plane(PROGRESSION_BUILDING);
-    draw_building_plane(STORE_BUILDING);
-    draw_building_plane(BAR_BUILDING);
-    draw_building_plane(LOAD_SAVE_BUILDING);
-
-    raylib::EndBlendMode();
+    const int count = 6;
+    set_int(shader, u.roofRectCount, count);
+    raylib::SetShaderValueV(shader, u.roofRects, rects, raylib::SHADER_UNIFORM_VEC4, count);
 }
 
 void draw_phase1_lighting_overlay(const GameCam& game_cam) {
@@ -148,72 +194,20 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
         raylib::EndBlendMode();
     }
 
+    // Phase 1 is now shader-based lighting; overlay just shows debug info.
     const bool is_night = SystemManager::get().is_bar_open();
     const bool should_apply = force_enable || is_night;
-
-    // Throttled debug logging to validate projection alignment.
-    // We log one building's corners at multiple Y levels (ground/base/center).
-    {
-        static double last_log_time = 0.0;
-        const double now_s = raylib::GetTime();
-        if (now_s - last_log_time > 2.0) {
-            last_log_time = now_s;
-            const auto& b = BAR_BUILDING;
-            const float x0 = b.area.x;
-            const float z0 = b.area.y;
-            const auto cam = game_cam.camera;
-            // Match how draw_building() draws the debug cube: [x0..x0+width], [z0..z0+height]
-            const float x1 = b.area.x + b.area.width;
-            const float z1 = b.area.y + b.area.height;
-
-            const float y_ground = -TILESIZE;
-            const float y_base = -TILESIZE / 2.f;
-            const float y_center = 0.f;
-
-            const vec2 g0 = world_to_screen({x0, y_ground, z0}, cam);
-            const vec2 g1 = world_to_screen({x1, y_ground, z0}, cam);
-            const vec2 b0s = world_to_screen({x0, y_base, z0}, cam);
-            const vec2 b1s = world_to_screen({x1, y_base, z0}, cam);
-            const vec2 c0 = world_to_screen({x0, y_center, z0}, cam);
-            const vec2 c1 = world_to_screen({x1, y_center, z0}, cam);
-
-            log_info(
-                "lighting mask: bar rect world corners=({},{})->({},{}) "
-                "cam_pos={} cam_target={} | y_ground=-1 p0={} p1={} | y_base=-0.5 p0={} p1={} | y_center=0 p0={} p1={}",
-                x0, z0, x1, z1, cam.position, cam.target, g0, g1, b0s, b1s, c0,
-                c1);
-        }
-    }
-
-    // Phase 1: global ambience (night vs day).
-    // IMPORTANT: indoor masking is drawn in-world during the 3D pass to avoid
-    // the "floating rectangle in the sky" artifact from screen-space overlays.
-    if (should_apply) {
-        // Night: darken overall
-        raylib::BeginBlendMode(raylib::BLEND_ALPHA);
-        raylib::DrawRectangle(0, 0, w, h,
-                              Color{0, 0, 0, PHASE1.night_outdoor_dark_alpha});
-        raylib::EndBlendMode();
-    } else {
-        // Day: optional very subtle warmth (can be disabled via alpha=0)
-        if (PHASE1.day_tint.a > 0) {
-            raylib::BeginBlendMode(raylib::BLEND_ALPHA);
-            raylib::DrawRectangle(0, 0, w, h, PHASE1.day_tint);
-            raylib::EndBlendMode();
-        }
-    }
 
     // Debug label (always on when enabled)
     raylib::DrawText(
         fmt::format(
-            "LIGHTING (Phase 1) [H]enable [J]overlay-only [K]force | night={} "
-            "apply={} overlay_only={} mask_y={} world_mask_y={}",
-            is_night, should_apply, overlay_only, PHASE1.mask_y, PHASE1.world_mask_y)
+            "LIGHTING (Phase 1 shader) [H]enable [J]overlay-only [K]force | night={} apply={} overlay_only={}",
+            is_night, should_apply, overlay_only)
             .c_str(),
         20, 20, 18, WHITE);
 
     // Project building rectangles so we can validate world->screen projection.
-    const float y = PHASE1.mask_y;
+    const float y = PHASE1.debug_outline_y;
     const auto cam = game_cam.camera;
     draw_projected_building_rect_outline(LOBBY_BUILDING, cam, y, GREEN);
     draw_projected_building_rect_outline(MODEL_TEST_BUILDING, cam, y, GREEN);
@@ -221,9 +215,6 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
     draw_projected_building_rect_outline(STORE_BUILDING, cam, y, GREEN);
     draw_projected_building_rect_outline(BAR_BUILDING, cam, y, GREEN);
     draw_projected_building_rect_outline(LOAD_SAVE_BUILDING, cam, y, GREEN);
-    // Extra alignment debug: draw BAR_BUILDING outline at 2 Y levels.
-    // GREEN = active mask_y, RED = ground plane. If these differ a lot, projection is off.
-    draw_projected_building_rect_outline(BAR_BUILDING, cam, -TILESIZE, RED);
 }
 
 }  // namespace
@@ -357,11 +348,35 @@ void GameLayer::draw_world(float dt) {
         map_ptr = GLOBALS.get_ptr<Map>("server_map");
     }
 
+    // Phase 1: shader-based lighting setup (Half-Lambert + Blinn-Phong).
+    // Enable/disable via H (lighting_debug_enabled). J = overlay-only (hide world).
+    ensure_lighting_debug_globals_registered();
+    const bool lighting_enabled =
+        GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
+    const bool overlay_only =
+        GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
+
+    raylib::Shader* lighting_shader_ptr = nullptr;
+    if (lighting_enabled) {
+        lighting_shader_ptr = &ShaderLibrary::get().get("lighting");
+    }
+
     raylib::BeginMode3D((*cam).get());
     {
-        raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
-                          DARKGRAY);
-        if (map_ptr) map_ptr->onDraw(dt);
+        if (!overlay_only) {
+            if (lighting_shader_ptr) {
+                update_lighting_shader(*lighting_shader_ptr, (*cam).get());
+                raylib::BeginShaderMode(*lighting_shader_ptr);
+            }
+
+            raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f},
+                              (vec2){256.0f, 256.0f}, DARKGRAY);
+            if (map_ptr) map_ptr->onDraw(dt);
+
+            if (lighting_shader_ptr) {
+                raylib::EndShaderMode();
+            }
+        }
 
         if (true || GLOBALS.get<bool>("debug_ui_enabled")) {
             draw_building(LOBBY_BUILDING);

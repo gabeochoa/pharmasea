@@ -36,6 +36,7 @@
 #include "system_manager.h"
 //
 #include "../engine/frustum.h"
+#include "../engine/shader_library.h"
 
 namespace system_manager {
 namespace job_system {
@@ -241,7 +242,18 @@ bool draw_transform_with_model(const Transform& transform,
 
     float rotation_angle = 180.f + transform.facing;
 
-    DrawModelEx(renderer.model(),
+    // Apply lighting shader to model materials (Blinn-Phong/Half-Lambert).
+    // NOTE: ModelRenderer::model() returns a copy; we must set the shader on the
+    // library-owned model reference to persist.
+    auto& model_ref = ModelLibrary::get().get(renderer.name());
+    auto& lighting_shader = ShaderLibrary::get().get("lighting");
+    for (int i = 0; i < model_ref.materialCount; i++) {
+        if (model_ref.materials[i].shader.id != lighting_shader.id) {
+            model_ref.materials[i].shader = lighting_shader;
+        }
+    }
+
+    DrawModelEx(model_ref,
                 {
                     transform.pos().x + transform.viz_x() +
                         model_info.position_offset.x,

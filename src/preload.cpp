@@ -831,6 +831,17 @@ void Preload::load_shaders(const std::function<void()>& tick) {
             std::get<2>(s));
         if (tick) tick();
     }
+
+    // Lighting shader (explicit vertex + fragment)
+    ShaderLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SHADERS, "lighting.vs")
+            .c_str(),
+        Files::get()
+            .fetch_resource_path(strings::settings::SHADERS, "lighting.fs")
+            .c_str(),
+        "lighting");
+    if (tick) tick();
 }
 
 void Preload::load_translations() {

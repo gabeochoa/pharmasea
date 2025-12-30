@@ -111,9 +111,12 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     // rlScalef(2.0f, 2.0f, 2.0f);
 
     rlBegin(RL_TRIANGLES);
+    // NOTE: Provide normals so lit shaders (Blinn-Phong/Half-Lambert) work.
+    // Normals are in local space; rotation is applied by the matrix stack.
     rlColor4ub(face_color.r, face_color.g, face_color.b, face_color.a);
 
     // Front Face -----------------------------------------------------
+    rlNormal3f(0.0f, 0.0f, 1.0f);
     rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
     rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
     rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
@@ -124,6 +127,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
 
     rlColor4ub(base_color.r, base_color.g, base_color.b, base_color.a);
     // Back Face ------------------------------------------------------
+    rlNormal3f(0.0f, 0.0f, -1.0f);
     rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Left
     rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
     rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
@@ -133,6 +137,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
 
     // Top Face -------------------------------------------------------
+    rlNormal3f(0.0f, 1.0f, 0.0f);
     rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
     rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Bottom Left
     rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Bottom Right
@@ -142,6 +147,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Bottom Right
 
     // Bottom Face ----------------------------------------------------
+    rlNormal3f(0.0f, -1.0f, 0.0f);
     rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Top Left
     rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
     rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
@@ -151,6 +157,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Top Left
 
     // Right face -----------------------------------------------------
+    rlNormal3f(1.0f, 0.0f, 0.0f);
     rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
     rlVertex3f(x + width / 2, y + height / 2, z - length / 2);  // Top Right
     rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Left
@@ -160,6 +167,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Left
 
     // Left Face ------------------------------------------------------
+    rlNormal3f(-1.0f, 0.0f, 0.0f);
     rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Right
     rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
     rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Right
