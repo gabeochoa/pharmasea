@@ -47,6 +47,18 @@ void run(Entities& entities) {
                         "id {}; clearing",
                         e.id, held);
                     chi.update(nullptr, entity_id::INVALID);
+                } else {
+                    // IsItem doesn't serialize held_by today; re-apply from the
+                    // holder's CanHoldItem state.
+                    Entity& item = chi.item();
+                    if (item.has<IsItem>()) {
+                        item.get<IsItem>().set_held_by(chi.hb_type(), e.id);
+                    } else {
+                        log_error(
+                            "post_deserialize_fixups: entity {} holds item {} "
+                            "but item is missing IsItem",
+                            e.id, held);
+                    }
                 }
             }
         }
