@@ -5,7 +5,6 @@
 #include "engine/util.h"
 #include "entity_query.h"
 #include "entity_type.h"
-#include "external_include.h"
 #include "system/system_manager.h"
 
 #include <array>
