@@ -109,9 +109,8 @@ struct EntityHelper {
 
     static OptEntity getEntityForID(EntityID id);
 
-    // Like getEntityForID, but logs an error when missing.
-    static OptEntity genEntityForIDEnforce(EntityID id,
-                                          const char* context = nullptr);
+    // Like getEntityForID, but asserts when missing.
+    static OptEntity getEnforcedEntityForID(EntityID id);
 
     static OptEntity getClosestOfType(const Entity& entity,
                                       const EntityType& type,

@@ -21,12 +21,11 @@ struct AddsIngredient : public BaseComponent {
 
     virtual ~AddsIngredient() {}
 
-    // NOTE: we store the parent as a handle (EntityID), not a pointer.
     [[nodiscard]] IngredientBitSet get(Entity& entity) const {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");
         }
-        OptEntity opt_parent = parent_enforce("AddsIngredient::get");
+        OptEntity opt_parent = EntityHelper::getEnforcedEntityForID(parent);
         if (!opt_parent) return IngredientBitSet{};
         return fetcher(opt_parent.asE(), entity);
     }
@@ -46,7 +45,7 @@ struct AddsIngredient : public BaseComponent {
     void decrement_uses() {
         num_uses--;
         if (!on_decrement) return;
-        OptEntity opt_parent = parent_enforce("AddsIngredient::decrement_uses");
+        OptEntity opt_parent = EntityHelper::getEnforcedEntityForID(parent);
         if (!opt_parent) return;
         on_decrement(opt_parent.asE());
     }
@@ -54,7 +53,7 @@ struct AddsIngredient : public BaseComponent {
 
     [[nodiscard]] bool validate(Entity& entity) const {
         if (!validation) return true;
-        OptEntity opt_parent = parent_enforce("AddsIngredient::validate");
+        OptEntity opt_parent = EntityHelper::getEnforcedEntityForID(parent);
         if (!opt_parent) return false;
         return validation(opt_parent.asE(), entity);
     }
@@ -66,10 +65,6 @@ struct AddsIngredient : public BaseComponent {
     }
 
    private:
-    OptEntity parent_enforce(const char* context) const {
-        return EntityHelper::genEntityForIDEnforce(parent, context);
-    }
-
     EntityID parent = EntityID::INVALID;
     IngredientFetcherFn fetcher = nullptr;
     ValidationFn validation = nullptr;

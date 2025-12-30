@@ -235,15 +235,11 @@ OptEntity EntityHelper::getEntityForID(EntityID id) {
     return {};
 }
 
-OptEntity EntityHelper::genEntityForIDEnforce(EntityID id, const char* context) {
+OptEntity EntityHelper::getEnforcedEntityForID(EntityID id) {
     OptEntity opt = getEntityForID(id);
     if (!opt) {
-        if (context) {
-            log_error("EntityHelper::genEntityForIDEnforce failed ({}): {}",
-                      context, id);
-        } else {
-            log_error("EntityHelper::genEntityForIDEnforce failed: {}", id);
-        }
+        log_error("EntityHelper::getEnforcedEntityForID failed: {}", id);
+        assert(opt.has_value());
     }
     return opt;
 }
