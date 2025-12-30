@@ -20,6 +20,11 @@ uniform vec3 lightColor; // linear RGB
 
 uniform vec3 ambientColor; // linear RGB
 
+// Intensity controls (used to dial lighting down without changing colors)
+uniform float sunDiffuseIntensity;   // 0..1
+uniform float sunSpecIntensity;      // 0..1
+uniform float pointDiffuseIntensity; // 0..1
+
 // Additional point lights (e.g. indoor fixtures)
 uniform int pointLightCount;
 uniform int lightsPerBuilding; // e.g. 8
@@ -88,7 +93,7 @@ vec3 apply_point_light(vec3 albedoRgb, vec3 N, vec3 pos, vec4 plPosRad, vec3 plC
     float ndl = dot(N, L);
     float diff = (useHalfLambert != 0) ? clamp(ndl * 0.5 + 0.5, 0.0, 1.0) : max(ndl, 0.0);
     // Indoor lights: diffuse only (no spec) so they feel softer/less "pinpoint".
-    return (plColor * diff) * albedoRgb * att;
+    return (plColor * diff) * albedoRgb * att * pointDiffuseIntensity;
 }
 
 void main()
@@ -122,8 +127,8 @@ void main()
     vec3 lit = ambientColor * albedo.rgb;
 
     // Sun contribution (outdoors only)
-    lit += (lightColor * diff * sunMask) * albedo.rgb;
-    lit += (lightColor * spec * sunMask);
+    lit += (lightColor * diff * sunMask) * albedo.rgb * sunDiffuseIntensity;
+    lit += (lightColor * spec * sunMask) * sunSpecIntensity;
 
     // Indoor point lights:
     // - Determine which building we are inside (using lightRects, which can be tighter than roofRects)

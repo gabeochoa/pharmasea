@@ -82,6 +82,10 @@ struct Phase1LightingTuning {
     // Shading controls
     float shininess = 48.0f;
     bool use_half_lambert = true;
+    // Intensity controls (to keep shader lighting subtle)
+    float sun_diffuse_intensity = 0.45f;
+    float sun_spec_intensity = 0.05f;
+    float point_diffuse_intensity = 0.65f;
 
     // Debug outlines plane
     float debug_outline_y = -TILESIZE;
@@ -130,6 +134,9 @@ struct LightingUniforms {
     int ambientColor = -1;
     int shininess = -1;
     int useHalfLambert = -1;
+    int sunDiffuseIntensity = -1;
+    int sunSpecIntensity = -1;
+    int pointDiffuseIntensity = -1;
     int roofRectCount = -1;
     int roofRects = -1;
 
@@ -151,6 +158,9 @@ inline LightingUniforms get_lighting_uniforms(raylib::Shader& s) {
     u.ambientColor = raylib::GetShaderLocation(s, "ambientColor");
     u.shininess = raylib::GetShaderLocation(s, "shininess");
     u.useHalfLambert = raylib::GetShaderLocation(s, "useHalfLambert");
+    u.sunDiffuseIntensity = raylib::GetShaderLocation(s, "sunDiffuseIntensity");
+    u.sunSpecIntensity = raylib::GetShaderLocation(s, "sunSpecIntensity");
+    u.pointDiffuseIntensity = raylib::GetShaderLocation(s, "pointDiffuseIntensity");
     u.roofRectCount = raylib::GetShaderLocation(s, "roofRectCount");
     u.roofRects = raylib::GetShaderLocation(s, "roofRects");
     u.pointLightCount = raylib::GetShaderLocation(s, "pointLightCount");
@@ -306,6 +316,9 @@ inline void update_lighting_shader(raylib::Shader& shader,
 
     set_float(shader, u.shininess, PHASE1.shininess);
     set_bool(shader, u.useHalfLambert, PHASE1.use_half_lambert);
+    set_float(shader, u.sunDiffuseIntensity, PHASE1.sun_diffuse_intensity);
+    set_float(shader, u.sunSpecIntensity, PHASE1.sun_spec_intensity);
+    set_float(shader, u.pointDiffuseIntensity, PHASE1.point_diffuse_intensity);
 
     // Roof rectangles: disable direct sun indoors.
     // vec4(minX, minZ, maxX, maxZ)
