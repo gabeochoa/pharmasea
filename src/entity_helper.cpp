@@ -226,13 +226,26 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
 }
 
 OptEntity EntityHelper::getEntityForID(EntityID id) {
-    if (id == -1) return {};
+    if (id == EntityID::INVALID) return {};
 
     for (const auto& e : get_entities()) {
         if (!e) continue;
         if (e->id == id) return *e;
     }
     return {};
+}
+
+OptEntity EntityHelper::genEntityForIDEnforce(EntityID id, const char* context) {
+    OptEntity opt = getEntityForID(id);
+    if (!opt) {
+        if (context) {
+            log_error("EntityHelper::genEntityForIDEnforce failed ({}): {}",
+                      context, id);
+        } else {
+            log_error("EntityHelper::genEntityForIDEnforce failed: {}", id);
+        }
+    }
+    return opt;
 }
 
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,

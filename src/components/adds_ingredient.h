@@ -26,13 +26,8 @@ struct AddsIngredient : public BaseComponent {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");
         }
-        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
-        if (!opt_parent) {
-            log_error(
-                "calling AddsIngredient::get() but parent_id {} is invalid",
-                parent_id);
-            return IngredientBitSet{};
-        }
+        OptEntity opt_parent = parent_enforce("AddsIngredient::get");
+        if (!opt_parent) return IngredientBitSet{};
         return fetcher(opt_parent.asE(), entity);
     }
     void set(const IngredientFetcherFn& fn) { fetcher = fn; }
@@ -51,7 +46,7 @@ struct AddsIngredient : public BaseComponent {
     void decrement_uses() {
         num_uses--;
         if (!on_decrement) return;
-        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        OptEntity opt_parent = parent_enforce("AddsIngredient::decrement_uses");
         if (!opt_parent) return;
         on_decrement(opt_parent.asE());
     }
@@ -59,19 +54,23 @@ struct AddsIngredient : public BaseComponent {
 
     [[nodiscard]] bool validate(Entity& entity) const {
         if (!validation) return true;
-        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        OptEntity opt_parent = parent_enforce("AddsIngredient::validate");
         if (!opt_parent) return false;
         return validation(opt_parent.asE(), entity);
     }
 
     // Keep the existing API, but store the handle (id) instead of the pointer.
     auto& set_parent(Entity* p) {
-        parent_id = p ? p->id : -1;
+        parent = p ? p->id : EntityID::INVALID;
         return *this;
     }
 
    private:
-    EntityID parent_id = -1;
+    OptEntity parent_enforce(const char* context) const {
+        return EntityHelper::genEntityForIDEnforce(parent, context);
+    }
+
+    EntityID parent = EntityID::INVALID;
     IngredientFetcherFn fetcher = nullptr;
     ValidationFn validation = nullptr;
     OnDecrementFn on_decrement = nullptr;
@@ -82,6 +81,6 @@ struct AddsIngredient : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.value4b(num_uses);
-        s.value4b(parent_id);
+        s.value4b(parent);
     }
 };
