@@ -129,6 +129,10 @@ struct LightingUniforms {
     int useHalfLambert = -1;
     int roofRectCount = -1;
     int roofRects = -1;
+
+    int pointLightCount = -1;
+    int pointLightsPosRadius = -1;
+    int pointLightsColor = -1;
 };
 
 inline LightingUniforms get_lighting_uniforms(raylib::Shader& s) {
@@ -143,6 +147,10 @@ inline LightingUniforms get_lighting_uniforms(raylib::Shader& s) {
     u.useHalfLambert = raylib::GetShaderLocation(s, "useHalfLambert");
     u.roofRectCount = raylib::GetShaderLocation(s, "roofRectCount");
     u.roofRects = raylib::GetShaderLocation(s, "roofRects");
+    u.pointLightCount = raylib::GetShaderLocation(s, "pointLightCount");
+    u.pointLightsPosRadius =
+        raylib::GetShaderLocation(s, "pointLightsPosRadius");
+    u.pointLightsColor = raylib::GetShaderLocation(s, "pointLightsColor");
     return u;
 }
 
@@ -176,6 +184,34 @@ inline void update_lighting_shader(raylib::Shader& shader,
     const int count = 6;
     set_int(shader, u.roofRectCount, count);
     raylib::SetShaderValueV(shader, u.roofRects, rects, raylib::SHADER_UNIFORM_VEC4, count);
+
+    // Phase 1 test: point lights inside MODEL_TEST_BUILDING only.
+    // These are intentionally obvious so you can see indoor lighting working.
+    {
+        const float cx =
+            MODEL_TEST_BUILDING.area.x + (MODEL_TEST_BUILDING.area.width / 2.f);
+        const float cz = MODEL_TEST_BUILDING.area.y +
+                         (MODEL_TEST_BUILDING.area.height / 2.f);
+
+        // Place 3 lights across the room, slightly above eye level.
+        const vec4 pls[] = {
+            {cx - 8.f, 4.0f, cz, 18.0f},
+            {cx, 4.0f, cz, 22.0f},
+            {cx + 8.f, 4.0f, cz, 18.0f},
+        };
+        const vec3 cols[] = {
+            {1.0f, 0.8f, 0.6f},
+            {0.7f, 0.9f, 1.0f},
+            {1.0f, 0.7f, 0.4f},
+        };
+        const int plc = 3;
+
+        set_int(shader, u.pointLightCount, plc);
+        raylib::SetShaderValueV(shader, u.pointLightsPosRadius, pls,
+                                raylib::SHADER_UNIFORM_VEC4, plc);
+        raylib::SetShaderValueV(shader, u.pointLightsColor, cols,
+                                raylib::SHADER_UNIFORM_VEC3, plc);
+    }
 }
 
 void draw_phase1_lighting_overlay(const GameCam& game_cam) {
