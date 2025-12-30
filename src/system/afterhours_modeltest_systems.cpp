@@ -124,10 +124,7 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
 
         // Delete the currently held item
         if (canHold.is_holding_item()) {
-            OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
-            if (held_opt) {
-                held_opt->cleanup = true;
-            }
+            canHold.item().cleanup = true;
             canHold.update(nullptr, EntityID::INVALID);
         }
 
@@ -167,15 +164,10 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
         if (canHold.empty()) return;
 
         int current_value = indexer.value();
-        OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
-        if (!held_opt) {
-            canHold.update(nullptr, EntityID::INVALID);
-            return;
-        }
-        int item_value = held_opt->get<HasSubtype>().get_type_index();
+        int item_value = canHold.item().get<HasSubtype>().get_type_index();
 
         if (current_value != item_value) {
-            held_opt->cleanup = true;
+            canHold.item().cleanup = true;
             canHold.update(nullptr, EntityID::INVALID);
         }
     }

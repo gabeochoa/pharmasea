@@ -64,10 +64,7 @@ inline void cleanup_old_store_options() {
         if (entity.is_missing<CanHoldItem>()) continue;
         CanHoldItem& chi = entity.get<CanHoldItem>();
         if (!chi.is_holding_item()) continue;
-        OptEntity held_opt = EntityHelper::getEntityForID(chi.item_id());
-        if (held_opt) {
-            held_opt->cleanup = true;
-        }
+        chi.item().cleanup = true;
     }
 }
 

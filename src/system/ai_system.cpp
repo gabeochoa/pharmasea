@@ -226,13 +226,7 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
         return;
     }
 
-    OptEntity drink_opt = EntityHelper::getEntityForID(regCHI.item_id());
-    if (!drink_opt) {
-        log_warn("register {} claims held item {} but it no longer exists",
-                 reg.id, regCHI.item_id());
-        return;
-    }
-    Item& drink = drink_opt.asE();
+    Item& drink = regCHI.item();
     if (!check_if_drink(drink)) {
         log_info("this isnt a drink");
         aiwait.reset();
@@ -388,10 +382,7 @@ void process_ai_drinking(Entity& entity, float dt) {
 
     // Done with my drink, delete it
     CanHoldItem& chi = entity.get<CanHoldItem>();
-    OptEntity held_opt = EntityHelper::getEntityForID(chi.item_id());
-    if (held_opt) {
-        held_opt->cleanup = true;
-    }
+    chi.item().cleanup = true;
     chi.update(nullptr, EntityID::INVALID);
 
     // Mark our current order finished
