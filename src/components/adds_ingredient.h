@@ -7,6 +7,8 @@
 #include "../dataclass/ingredient.h"
 #include "../engine/log.h"
 #include "../entity.h"
+#include "../entity_helper.h"
+#include "../entity_id.h"
 #include "base_component.h"
 
 struct AddsIngredient : public BaseComponent {
@@ -24,7 +26,8 @@ struct AddsIngredient : public BaseComponent {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");
         }
-        return fetcher(*parent, entity);
+        Entity& parent_entity = EntityHelper::getEnforcedEntityForID(parent);
+        return fetcher(parent_entity, entity);
     }
     void set(const IngredientFetcherFn& fn) { fetcher = fn; }
     auto& set_validator(const ValidationFn& fn) {
@@ -41,22 +44,25 @@ struct AddsIngredient : public BaseComponent {
     }
     void decrement_uses() {
         num_uses--;
-        if (on_decrement) on_decrement(*parent);
+        if (!on_decrement) return;
+        Entity& parent_entity = EntityHelper::getEnforcedEntityForID(parent);
+        on_decrement(parent_entity);
     }
     [[nodiscard]] int uses_left() const { return num_uses; }
 
     [[nodiscard]] bool validate(Entity& entity) const {
         if (!validation) return true;
-        return validation(*parent, entity);
+        Entity& parent_entity = EntityHelper::getEnforcedEntityForID(parent);
+        return validation(parent_entity, entity);
     }
 
-    auto& set_parent(Entity* p) {
-        parent = p;
+    auto& set_parent(EntityID id) {
+        parent = id;
         return *this;
     }
 
    private:
-    Entity* parent = nullptr;
+    EntityID parent = entity_id::INVALID;
     IngredientFetcherFn fetcher = nullptr;
     ValidationFn validation = nullptr;
     OnDecrementFn on_decrement = nullptr;
@@ -66,8 +72,7 @@ struct AddsIngredient : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.ext(parent, PointerObserver{});
-
         s.value4b(num_uses);
+        s.value4b(parent);
     }
 };

@@ -11,6 +11,7 @@
 #include "../components/transform.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/statemanager.h"
+#include "../entity_id.h"
 #include "../entity_helper.h"
 #include "../entity_type.h"
 
@@ -35,9 +36,9 @@ inline void backfill_empty_container(const EntityType& match_type,
     Entity& item =
         EntityHelper::createItem(iic.type(), pos, std::forward<TArgs>(args)...);
     // ^ cannot be const because converting to SharedPtr v
-
+    //
     // TODO do we need shared pointer here? (vs just id?)
-    canHold.update(EntityHelper::getEntityAsSharedPtr(item), entity.id);
+    canHold.update(item, entity.id);
 }
 
 struct ProcessIsContainerAndShouldBackfillItemSystem
@@ -128,7 +129,7 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
         // Delete the currently held item
         if (canHold.is_holding_item()) {
             canHold.item().cleanup = true;
-            canHold.update(nullptr, -1);
+            canHold.update(nullptr, entity_id::INVALID);
         }
 
         auto pos = transform.pos();
@@ -171,7 +172,7 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
 
         if (current_value != item_value) {
             canHold.item().cleanup = true;
-            canHold.update(nullptr, -1);
+            canHold.update(nullptr, entity_id::INVALID);
         }
     }
 };

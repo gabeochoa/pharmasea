@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "../entity_helper.h"
+#include "../entity_id.h"
 #include "base_component.h"
 
 struct RespondsToDayNight : public BaseComponent {
@@ -32,21 +34,29 @@ struct RespondsToDayNight : public BaseComponent {
     }
 
     void call_day_started() {
-        if (onDayStartedFn && parent) onDayStartedFn(*parent);
+        if (!onDayStartedFn) return;
+        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
+        onDayStartedFn(parent);
     }
     void call_night_started() {
-        if (onNightStartedFn && parent) onNightStartedFn(*parent);
+        if (!onNightStartedFn) return;
+        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
+        onNightStartedFn(parent);
     }
 
     void call_day_ended() {
-        if (onDayEndedFn && parent) onDayEndedFn(*parent);
+        if (!onDayEndedFn) return;
+        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
+        onDayEndedFn(parent);
     }
     void call_night_ended() {
-        if (onNightEndedFn && parent) onNightEndedFn(*parent);
+        if (!onNightEndedFn) return;
+        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
+        onNightEndedFn(parent);
     }
 
-    auto& set_parent(Entity* p) {
-        parent = p;
+    auto& set_parent(EntityID id) {
+        parent_id = id;
         return *this;
     }
 
@@ -57,12 +67,12 @@ struct RespondsToDayNight : public BaseComponent {
     OnNightStartedFn onNightStartedFn = nullptr;
     OnNightEndedFn onNightEndedFn = nullptr;
 
-    Entity* parent = nullptr;
+    EntityID parent_id = entity_id::INVALID;
 
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.ext(parent, PointerObserver{});
+        s.value4b(parent_id);
     }
 };

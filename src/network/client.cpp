@@ -8,6 +8,7 @@
 #include "../engine/log.h"
 #include "../engine/sound_library.h"
 #include "../engine/toastmanager.h"
+#include "../post_deserialize_fixups.h"
 #include "network.h"
 #include "serialization.h"
 
@@ -275,6 +276,8 @@ void Client::client_process_message_string(const std::string& msg) {
 
             client_entities_DO_NOT_USE.clear();
             client_entities_DO_NOT_USE = info.map.entities();
+
+            post_deserialize_fixups::run(client_entities_DO_NOT_USE);
 
             map->update_map(info.map);
 
