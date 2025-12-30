@@ -331,8 +331,41 @@ inline void update_lighting_shader(raylib::Shader& shader,
                             g_indoor_layout.lights_pos_radius.data(),
                             raylib::SHADER_UNIFORM_VEC4,
                             IndoorLightLayout::kTotalLights);
-    raylib::SetShaderValueV(shader, u.pointLightsColor,
-                            g_indoor_layout.lights_color.data(),
+
+    // Lighting behavior tuning:
+    // 1) Make indoor lights bright enough that daytime indoors doesn't feel darker
+    //    than outdoors (since roofs block the sun).
+    // 2) At night, only BAR_BUILDING lights remain on; other buildings are closed.
+    constexpr int bar_building_index = 4;
+    const float day_boost = 3.0f;
+    const float bar_night_boost = 1.25f;
+
+    std::array<vec3, IndoorLightLayout::kTotalLights> colors =
+        g_indoor_layout.lights_color;
+    for (int b = 0; b < IndoorLightLayout::kBuildings; b++) {
+        const int base = b * IndoorLightLayout::kLightsPerBuilding;
+        const bool enabled =
+            (!is_night) || (b == bar_building_index);  // day: all on, night: bar only
+
+        float mul = 1.0f;
+        if (!is_night) {
+            mul = day_boost;
+        } else if (b == bar_building_index) {
+            mul = bar_night_boost;
+        }
+
+        for (int i = 0; i < IndoorLightLayout::kLightsPerBuilding; i++) {
+            const int idx = base + i;
+            if (!enabled) {
+                colors[idx] = vec3{0.0f, 0.0f, 0.0f};
+            } else {
+                colors[idx] = vec3{colors[idx].x * mul, colors[idx].y * mul,
+                                   colors[idx].z * mul};
+            }
+        }
+    }
+
+    raylib::SetShaderValueV(shader, u.pointLightsColor, colors.data(),
                             raylib::SHADER_UNIFORM_VEC3,
                             IndoorLightLayout::kTotalLights);
 }
