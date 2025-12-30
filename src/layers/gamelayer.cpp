@@ -165,7 +165,7 @@ inline LightingUniforms get_lighting_uniforms(raylib::Shader& s) {
 
 struct IndoorLightLayout {
     static constexpr int kBuildings = 6;
-    static constexpr int kLightsPerBuilding = 8;
+    static constexpr int kLightsPerBuilding = 10;
     static constexpr int kTotalLights = kBuildings * kLightsPerBuilding;
 
     bool initialized = false;
@@ -238,8 +238,8 @@ inline void rebuild_indoor_light_layout() {
         const float maxx = rect.z;
         const float maxz = rect.w;
 
-        // 4 x positions, 2 z positions (even-ish distribution).
-        const float xs[4] = {0.18f, 0.38f, 0.62f, 0.82f};
+        // 5 x positions, 2 z positions (10 lights per building).
+        const float xs[5] = {0.12f, 0.30f, 0.50f, 0.70f, 0.88f};
         const float zs[2] = {0.33f, 0.66f};
         const float ly = 4.0f;
         const float r = radius_for_rect(rect);
@@ -256,7 +256,7 @@ inline void rebuild_indoor_light_layout() {
         int base = building_index * IndoorLightLayout::kLightsPerBuilding;
         int k = 0;
         for (int zi = 0; zi < 2; zi++) {
-            for (int xi = 0; xi < 4; xi++) {
+            for (int xi = 0; xi < 5; xi++) {
                 const int idx = base + k;
                 const float jx = jitter(idx * 2 + 1);
                 const float jz = jitter(idx * 2 + 2);
@@ -266,7 +266,10 @@ inline void rebuild_indoor_light_layout() {
                 x = util::clamp(x, minx + 0.25f, maxx - 0.25f);
                 z = util::clamp(z, minz + 0.25f, maxz - 0.25f);
                 g_indoor_layout.lights_pos_radius[idx] = vec4{x, ly, z, r};
-                g_indoor_layout.lights_color[idx] = color;
+                // Base indoor lights are intentionally bright (no runtime "boost").
+                // This keeps daytime interiors from feeling noticeably dimmer.
+                g_indoor_layout.lights_color[idx] =
+                    vec3{color.x * 2.0f, color.y * 2.0f, color.z * 2.0f};
                 k++;
             }
         }
@@ -333,12 +336,8 @@ inline void update_lighting_shader(raylib::Shader& shader,
                             IndoorLightLayout::kTotalLights);
 
     // Lighting behavior tuning:
-    // 1) Make indoor lights bright enough that daytime indoors doesn't feel darker
-    //    than outdoors (since roofs block the sun).
-    // 2) At night, only BAR_BUILDING lights remain on; other buildings are closed.
+    // At night, only BAR_BUILDING lights remain on; other buildings are closed.
     constexpr int bar_building_index = 4;
-    const float day_boost = 3.0f;
-    const float bar_night_boost = 1.25f;
 
     std::array<vec3, IndoorLightLayout::kTotalLights> colors =
         g_indoor_layout.lights_color;
@@ -347,20 +346,10 @@ inline void update_lighting_shader(raylib::Shader& shader,
         const bool enabled =
             (!is_night) || (b == bar_building_index);  // day: all on, night: bar only
 
-        float mul = 1.0f;
-        if (!is_night) {
-            mul = day_boost;
-        } else if (b == bar_building_index) {
-            mul = bar_night_boost;
-        }
-
         for (int i = 0; i < IndoorLightLayout::kLightsPerBuilding; i++) {
             const int idx = base + i;
             if (!enabled) {
                 colors[idx] = vec3{0.0f, 0.0f, 0.0f};
-            } else {
-                colors[idx] = vec3{colors[idx].x * mul, colors[idx].y * mul,
-                                   colors[idx].z * mul};
             }
         }
     }
