@@ -739,9 +739,11 @@ struct ProcessSodaFountainSystem
         // If we arent holding anything, nothing to squirt into
         if (sfCHI.empty()) return;
 
-        if (sfCHI.item().is_missing<IsDrink>()) return;
+        OptEntity drink_opt = EntityHelper::getEntityForID(sfCHI.item_id());
+        if (!drink_opt) return;
+        if (drink_opt->is_missing<IsDrink>()) return;
 
-        Entity& drink = sfCHI.item();
+        Entity& drink = drink_opt.asE();
         // Already has soda in it
         if (bitset_utils::test(drink.get<IsDrink>().ing(), Ingredient::Soda)) {
             return;
@@ -766,7 +768,9 @@ struct ProcessSquirterSystem
         }
 
         // cant squirt into this !
-        if (sqCHI.item().is_missing<IsDrink>()) return;
+        OptEntity drink_opt = EntityHelper::getEntityForID(sqCHI.item_id());
+        if (!drink_opt) return;
+        if (drink_opt->is_missing<IsDrink>()) return;
 
         // so we got something, lets see if anyone around can give us
         // something to use
@@ -777,7 +781,10 @@ struct ProcessSquirterSystem
                 .whereHasComponentAndLambda<CanHoldItem>(
                     [](const CanHoldItem& chi) {
                         if (chi.empty()) return false;
-                        const Item& item = chi.const_item();
+                        OptEntity item_opt =
+                            EntityHelper::getEntityForID(chi.item_id());
+                        if (!item_opt) return false;
+                        const Item& item = item_opt.asE();
                         // TODO should we instead check for <AddsIngredient>?
                         if (!check_type(item, EntityType::Alcohol))
                             return false;
@@ -794,8 +801,11 @@ struct ProcessSquirterSystem
             // working reset
             return;
         }
-        Entity& drink = sqCHI.item();
-        Item& item = closest_furniture->get<CanHoldItem>().item();
+        Entity& drink = drink_opt.asE();
+        CanHoldItem& closest_chi = closest_furniture->get<CanHoldItem>();
+        OptEntity item_opt = EntityHelper::getEntityForID(closest_chi.item_id());
+        if (!item_opt) return;
+        Item& item = item_opt.asE();
 
         if (is_squirter.drink_id() == drink.id) {
             is_squirter.reset();
@@ -849,7 +859,9 @@ struct ProcessTrashSystem : public afterhours::System<CanHoldItem> {
         // If we arent holding anything, nothing to delete
         if (trashCHI.empty()) return;
 
-        trashCHI.item().cleanup = true;
+        OptEntity held_opt = EntityHelper::getEntityForID(trashCHI.item_id());
+        if (!held_opt) return;
+        held_opt->cleanup = true;
         trashCHI.update(nullptr, -1);
     }
 };
@@ -979,7 +991,10 @@ struct UpdateHeldItemPositionSystem
                            ? get_new_held_position_custom(entity)
                            : get_new_held_position_default(entity);
 
-        can_hold_item.item().get<Transform>().update(new_pos);
+        OptEntity held_opt =
+            EntityHelper::getEntityForID(can_hold_item.item_id());
+        if (!held_opt) return;
+        held_opt->get<Transform>().update(new_pos);
     }
 };
 

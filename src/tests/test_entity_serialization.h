@@ -44,14 +44,14 @@ inline void test_entity_serialization_roundtrip() {
     const bool had_tag_1 = entity->hasTag(1);  // Should be false
 
     // Serialize
-    network::Buffer buffer = network::serialize_to_entity(entity.get());
+    network::Buffer buffer = network::serialize_to_entity(*entity);
     VALIDATE(!buffer.empty(), "Serialized buffer should not be empty");
 
     // Create a new entity for deserialization
     auto deserialized_entity = std::make_shared<Entity>();
 
     // Deserialize
-    network::deserialize_to_entity(deserialized_entity.get(), buffer);
+    network::deserialize_to_entity(*deserialized_entity, buffer);
 
     // Verify all fields match
     VALIDATE(deserialized_entity->id == original_id,
@@ -103,9 +103,9 @@ inline void test_entity_serialization_empty_tags() {
     }
 
     // Serialize and deserialize
-    network::Buffer buffer = network::serialize_to_entity(entity.get());
+    network::Buffer buffer = network::serialize_to_entity(*entity);
     auto deserialized_entity = std::make_shared<Entity>();
-    network::deserialize_to_entity(deserialized_entity.get(), buffer);
+    network::deserialize_to_entity(*deserialized_entity, buffer);
 
     // Verify no tags are set after deserialization
     for (size_t i = 0; i < 64; ++i) {
@@ -126,9 +126,9 @@ inline void test_entity_serialization_all_tags() {
     }
 
     // Serialize and deserialize
-    network::Buffer buffer = network::serialize_to_entity(entity.get());
+    network::Buffer buffer = network::serialize_to_entity(*entity);
     auto deserialized_entity = std::make_shared<Entity>();
-    network::deserialize_to_entity(deserialized_entity.get(), buffer);
+    network::deserialize_to_entity(*deserialized_entity, buffer);
 
     // Verify all tags are preserved
     for (size_t i = 0; i < 32; ++i) {

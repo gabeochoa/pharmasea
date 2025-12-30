@@ -138,8 +138,12 @@ struct ProcessGrabberItemsSystem
                 if (furnCHI.empty()) return false;
 
                 // Can we hold the item it has?
-                bool can_hold = entity.get<CanHoldItem>().can_hold(
-                    (furnCHI.const_item()), RespectFilter::All);
+                OptEntity held_opt =
+                    EntityHelper::getEntityForID(furnCHI.item_id());
+                if (!held_opt) return false;
+                bool can_hold =
+                    entity.get<CanHoldItem>().can_hold(held_opt.asE(),
+                                                       RespectFilter::All);
 
                 // we cant
                 if (!can_hold) return false;
@@ -157,8 +161,9 @@ struct ProcessGrabberItemsSystem
         CanHoldItem& matchCHI = match->get<CanHoldItem>();
         CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
-        ourCHI.update(EntityHelper::getEntityAsSharedPtr(matchCHI.item()),
-                      entity.id);
+        OptEntity held_opt = EntityHelper::getEntityForID(matchCHI.item_id());
+        if (!held_opt) return;
+        ourCHI.update(&held_opt.asE(), entity.id);
         matchCHI.update(nullptr, -1);
 
         conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
@@ -221,8 +226,10 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
             if (furnCHI.is_holding_item()) return false;
             // can this furniture hold the item we are passing?
             // some have filters
+            OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
+            if (!held_opt) return false;
             bool can_hold =
-                furnCHI.can_hold(canHold.const_item(), RespectFilter::ReqOnly);
+                furnCHI.can_hold(held_opt.asE(), RespectFilter::ReqOnly);
 
             return can_hold;
         };
@@ -275,8 +282,9 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
         CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
         CanHoldItem& matchCHI = match->get<CanHoldItem>();
-        matchCHI.update(EntityHelper::getEntityAsSharedPtr(ourCHI.item()),
-                        entity.id);
+        OptEntity held_opt = EntityHelper::getEntityForID(ourCHI.item_id());
+        if (!held_opt) return;
+        matchCHI.update(&held_opt.asE(), entity.id);
 
         ourCHI.update(nullptr, -1);
 
@@ -361,7 +369,9 @@ struct ProcessGrabberFilterSystem : public afterhours::System<> {
         // - or we should set the filter
 
         EntityFilter& ef = canHold.get_filter();
-        ef.set_filter_with_entity(canHold.const_item());
+        OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
+        if (!held_opt) return;
+        ef.set_filter_with_entity(held_opt.asE());
     }
 };
 
@@ -502,13 +512,14 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
             if (our_chi.is_holding_item()) return;
 
             // can we hold it?
-            if (!our_chi.can_hold(other_chi.const_item(),
-                                  RespectFilter::ReqOnly))
+            OptEntity held_opt =
+                EntityHelper::getEntityForID(other_chi.item_id());
+            if (!held_opt) return;
+            if (!our_chi.can_hold(held_opt.asE(), RespectFilter::ReqOnly))
                 return;
 
             // take it
-            our_chi.update(EntityHelper::getEntityAsSharedPtr(other_chi.item()),
-                           entity.id);
+            our_chi.update(&held_opt.asE(), entity.id);
             other_chi.update(nullptr, -1);
 
             // we are done recieving
@@ -557,7 +568,9 @@ struct ProcessHasRopeSystem : public afterhours::System<> {
             if (!check_type(*e, EntityType::Player)) continue;
             const CanHoldItem& e_chi = e->get<CanHoldItem>();
             if (!e_chi.is_holding_item()) continue;
-            const Item& i = e_chi.item();
+            OptEntity held_opt = EntityHelper::getEntityForID(e_chi.item_id());
+            if (!held_opt) continue;
+            const Item& i = held_opt.asE();
             // that are holding spouts
             if (!check_type(i, EntityType::SodaSpout)) continue;
             // that match the one we were holding

@@ -34,10 +34,7 @@ inline void backfill_empty_container(const EntityType& match_type,
     // create item
     Entity& item =
         EntityHelper::createItem(iic.type(), pos, std::forward<TArgs>(args)...);
-    // ^ cannot be const because converting to SharedPtr v
-
-    // TODO do we need shared pointer here? (vs just id?)
-    canHold.update(EntityHelper::getEntityAsSharedPtr(item), entity.id);
+    canHold.update(&item, entity.id);
 }
 
 struct ProcessIsContainerAndShouldBackfillItemSystem
@@ -127,7 +124,10 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
 
         // Delete the currently held item
         if (canHold.is_holding_item()) {
-            canHold.item().cleanup = true;
+            OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
+            if (held_opt) {
+                held_opt->cleanup = true;
+            }
             canHold.update(nullptr, -1);
         }
 
@@ -167,10 +167,15 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
         if (canHold.empty()) return;
 
         int current_value = indexer.value();
-        int item_value = canHold.item().get<HasSubtype>().get_type_index();
+        OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
+        if (!held_opt) {
+            canHold.update(nullptr, -1);
+            return;
+        }
+        int item_value = held_opt->get<HasSubtype>().get_type_index();
 
         if (current_value != item_value) {
-            canHold.item().cleanup = true;
+            held_opt->cleanup = true;
             canHold.update(nullptr, -1);
         }
     }

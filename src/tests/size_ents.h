@@ -19,7 +19,7 @@ struct SizeInfo {
 };
 
 inline int compute_size(Entity* entity) {
-    network::Buffer buff = network::serialize_to_entity(entity);
+    network::Buffer buff = network::serialize_to_entity(*entity);
     return (int) buff.size();
 }
 

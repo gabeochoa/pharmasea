@@ -40,8 +40,9 @@ inline void delete_held_items_when_leaving_inround(Entity& entity) {
 
     // Mark it as deletable
     // let go of the item
-    Item& item = canHold.item();
-    item.cleanup = true;
+    OptEntity held_opt = EntityHelper::getEntityForID(canHold.item_id());
+    if (!held_opt) return;
+    held_opt->cleanup = true;
     canHold.update(nullptr, -1);
 }
 
@@ -62,7 +63,7 @@ inline void tell_customers_to_leave(Entity& entity) {
     // Force leaving job
     entity.get<CanPerformJob>().current = JobType::Leaving;
     entity.removeComponentIfExists<CanPathfind>();
-    entity.addComponent<CanPathfind>().set_parent(&entity);
+    entity.addComponent<CanPathfind>();
 }
 
 inline void update_new_max_customers(Entity& entity, float) {
@@ -187,7 +188,7 @@ struct TellCustomersToLeaveSystem
                                float) override {
         cpj.current = JobType::Leaving;
         entity.removeComponentIfExists<CanPathfind>();
-        entity.addComponent<CanPathfind>().set_parent(&entity);
+        entity.addComponent<CanPathfind>();
     }
 };
 
@@ -292,9 +293,9 @@ struct OnNightEndedTriggerSystem
             return false;
         }
     }
-    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+    virtual void for_each_with(Entity& entity, RespondsToDayNight& rtdn,
                                float) override {
-        rtdn.call_night_ended();
+        rtdn.call_night_ended(entity);
     }
 };
 
@@ -310,9 +311,9 @@ struct OnDayStartedTriggerSystem
             return false;
         }
     }
-    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+    virtual void for_each_with(Entity& entity, RespondsToDayNight& rtdn,
                                float) override {
-        rtdn.call_day_started();
+        rtdn.call_day_started(entity);
     }
 };
 
@@ -433,9 +434,9 @@ struct OnDayEndedSystem : public afterhours::System<RespondsToDayNight> {
         }
     }
 
-    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+    virtual void for_each_with(Entity& entity, RespondsToDayNight& rtdn,
                                float) override {
-        rtdn.call_day_ended();
+        rtdn.call_day_ended(entity);
     }
 };
 
@@ -473,9 +474,9 @@ struct OnNightStartedSystem : public afterhours::System<RespondsToDayNight> {
         }
     }
 
-    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
+    virtual void for_each_with(Entity& entity, RespondsToDayNight& rtdn,
                                float) override {
-        rtdn.call_night_started();
+        rtdn.call_night_started(entity);
     }
 };
 
@@ -508,7 +509,7 @@ struct ReleaseMopBuddyAtStartOfDaySystem
         if (!canHold.is_holding_item()) {
             return;
         }
-        if (canHold.item().id != entity.id) {
+        if (canHold.item_id() != entity.id) {
             return;
         }
         canHold.update(nullptr, -1);

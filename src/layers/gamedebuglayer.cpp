@@ -82,10 +82,14 @@ void GameDebugLayer::draw_debug_ui(float dt) {
                 text(Widget{item_div},
                      NO_TRANSLATE(fmt::format(
                          "holding item?: {}",
-                         player->get<CanHoldItem>().is_holding_item()
-                             ? str(get_entity_type(
-                                   player->get<CanHoldItem>().const_item()))
-                             : "Empty")));
+                         [&]() -> std::string {
+                             const CanHoldItem& chi = player->get<CanHoldItem>();
+                             if (!chi.is_holding_item()) return "Empty";
+                             OptEntity held_opt =
+                                 EntityHelper::getEntityForID(chi.item_id());
+                             if (!held_opt) return "Missing";
+                             return str(get_entity_type(held_opt.asE()));
+                         }())));
             } else {
                 text(Widget{player_info},
                      NO_TRANSLATE("No matching player found"));

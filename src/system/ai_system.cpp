@@ -185,6 +185,7 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
+        entity,
         aiwait.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
@@ -226,7 +227,13 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
         return;
     }
 
-    Item& drink = regCHI.item();
+    OptEntity drink_opt = EntityHelper::getEntityForID(regCHI.item_id());
+    if (!drink_opt) {
+        log_warn("register {} claims held item {} but it no longer exists",
+                 reg.id, regCHI.item_id());
+        return;
+    }
+    Item& drink = drink_opt.asE();
     if (!check_if_drink(drink)) {
         log_info("this isnt a drink");
         aiwait.reset();
@@ -263,7 +270,7 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
         drink.get<IsDrink>().get_tip_multiplier());
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
-    ourCHI.update(EntityHelper::getEntityAsSharedPtr(regCHI.item()), entity.id);
+    ourCHI.update(&drink, entity.id);
     regCHI.update(nullptr, -1);
 
     log_info("ai: {} accepted drink={} price={} tip={}", entity.id, drink_name,
@@ -326,6 +333,7 @@ void process_wandering(Entity& entity, float dt) {
         EntityHelper::getEntityForID(aiwandering.target.id());
 
     bool reached = entity.get<CanPathfind>().travel_toward(
+        entity,
         opt_target_pos.asE().get<Transform>().as2(),
         get_speed_for_entity(entity) * dt);
     if (!reached) return;
@@ -371,6 +379,7 @@ void process_ai_drinking(Entity& entity, float dt) {
         EntityHelper::getEntityForID(aidrinking.target.id());
 
     bool reached = entity.get<CanPathfind>().travel_toward(
+        entity,
         opt_drink_pos.asE().get<Transform>().as2(),
         get_speed_for_entity(entity) * dt);
     if (!reached) return;
@@ -382,7 +391,10 @@ void process_ai_drinking(Entity& entity, float dt) {
 
     // Done with my drink, delete it
     CanHoldItem& chi = entity.get<CanHoldItem>();
-    chi.item().cleanup = true;
+    OptEntity held_opt = EntityHelper::getEntityForID(chi.item_id());
+    if (held_opt) {
+        held_opt->cleanup = true;
+    }
     chi.update(nullptr, -1);
 
     // Mark our current order finished
@@ -443,6 +455,7 @@ void process_ai_clean_vomit(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
+        entity,
         vomit->get<Transform>().as2(), get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
@@ -503,6 +516,7 @@ void process_ai_use_bathroom(Entity& entity, float dt) {
 
         // TODO move away from it for a second
         (void) entity.get<CanPathfind>().travel_toward(
+            entity,
             vec2{0, 0}, get_speed_for_entity(entity) * dt);
 
         // We specificaly dont use next_job() here because
@@ -529,6 +543,7 @@ void process_ai_use_bathroom(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
+        entity,
         aibathroom.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
@@ -580,6 +595,7 @@ void process_ai_leaving(Entity& entity, float dt) {
     // I noticed this during profiling :)
     //
     (void) entity.get<CanPathfind>().travel_toward(
+        entity,
         vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
 }
 
@@ -603,6 +619,7 @@ void process_ai_paying(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
+        entity,
         aiclosetab.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
@@ -692,6 +709,7 @@ void process_jukebox_play(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
+        entity,
         ai_play_jukebox.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 

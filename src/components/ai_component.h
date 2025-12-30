@@ -120,7 +120,8 @@ struct AILineWait {
         }
 
         //
-        (void) entity.get<CanPathfind>().travel_toward(position, distance);
+        (void) entity.get<CanPathfind>().travel_toward(entity, position,
+                                                       distance);
 
         int spot_in_line = position_in_line(reg, entity);
         if (spot_in_line != 0) {

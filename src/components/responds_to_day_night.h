@@ -31,23 +31,20 @@ struct RespondsToDayNight : public BaseComponent {
         return *this;
     }
 
-    void call_day_started() {
-        if (onDayStartedFn && parent) onDayStartedFn(*parent);
+    // NOTE: this component no longer stores an Entity* "parent".
+    // Pass the owning entity explicitly to avoid pointer-based state.
+    void call_day_started(Entity& owner) {
+        if (onDayStartedFn) onDayStartedFn(owner);
     }
-    void call_night_started() {
-        if (onNightStartedFn && parent) onNightStartedFn(*parent);
-    }
-
-    void call_day_ended() {
-        if (onDayEndedFn && parent) onDayEndedFn(*parent);
-    }
-    void call_night_ended() {
-        if (onNightEndedFn && parent) onNightEndedFn(*parent);
+    void call_night_started(Entity& owner) {
+        if (onNightStartedFn) onNightStartedFn(owner);
     }
 
-    auto& set_parent(Entity* p) {
-        parent = p;
-        return *this;
+    void call_day_ended(Entity& owner) {
+        if (onDayEndedFn) onDayEndedFn(owner);
+    }
+    void call_night_ended(Entity& owner) {
+        if (onNightEndedFn) onNightEndedFn(owner);
     }
 
    private:
@@ -57,12 +54,9 @@ struct RespondsToDayNight : public BaseComponent {
     OnNightStartedFn onNightStartedFn = nullptr;
     OnNightEndedFn onNightEndedFn = nullptr;
 
-    Entity* parent = nullptr;
-
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.ext(parent, PointerObserver{});
     }
 };

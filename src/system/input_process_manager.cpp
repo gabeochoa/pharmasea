@@ -133,7 +133,11 @@ bool is_collidable(const Entity& entity, OptEntity other) {
         // we are a player that is holding rope
         other->has<CanHoldItem>() &&
         other->get<CanHoldItem>().is_holding_item() &&
-        check_type(other->get<CanHoldItem>().item(), EntityType::SodaSpout)) {
+        [&]() {
+            const CanHoldItem& chi = other->get<CanHoldItem>();
+            OptEntity held_opt = EntityHelper::getEntityForID(chi.item_id());
+            return held_opt && check_type(held_opt.asE(), EntityType::SodaSpout);
+        }()) {
         return false;
     }
 
@@ -311,7 +315,9 @@ void fishing_game(Entity& player, float frame_dt) {
     if (!GameState::get().is_game_like()) return;
     CanHoldItem& chi = player.get<CanHoldItem>();
     if (!chi.is_holding_item()) return;
-    Item& item = chi.item();
+    OptEntity held_opt = EntityHelper::getEntityForID(chi.item_id());
+    if (!held_opt) return;
+    Item& item = held_opt.asE();
     if (item.is_missing<HasFishingGame>()) return;
     if (item.get<HasFishingGame>().has_score()) return;
     item.get<HasFishingGame>().go(frame_dt);
@@ -659,7 +665,11 @@ void handle_drop(Entity& player) {
 
     const auto _place_special_item_onto_ground =
         [&]() -> tl::expected<bool, std::string> {
-        Item& item = player.get<CanHoldItem>().item();
+        CanHoldItem& playerCHI = player.get<CanHoldItem>();
+        if (playerCHI.empty()) return tl::unexpected("not holding an item");
+        OptEntity held_opt = EntityHelper::getEntityForID(playerCHI.item_id());
+        if (!held_opt) return tl::unexpected("held item no longer exists");
+        Item& item = held_opt.asE();
 
         // This is only allowed for special boys
         if (!check_type(item, EntityType::MopBuddy))
@@ -823,7 +833,10 @@ void handle_drop(Entity& player) {
                 const CanHoldItem& furnCanHold = f.get<CanHoldItem>();
                 const CanHoldItem& playerCanHold = player.get<CanHoldItem>();
                 if (!playerCanHold.is_holding_item()) return false;
-                const Item& item = playerCanHold.item();
+                OptEntity held_opt =
+                    EntityHelper::getEntityForID(playerCanHold.item_id());
+                if (!held_opt) return false;
+                const Item& item = held_opt.asE();
 
                 // Handle item containers
                 if (f.has<IsItemContainer>()) {
@@ -865,7 +878,10 @@ void handle_drop(Entity& player) {
         const Transform& furnT = closest_furniture->get<Transform>();
         CanHoldItem& furnCHI = closest_furniture->get<CanHoldItem>();
 
-        Item& item = player.get<CanHoldItem>().item();
+        CanHoldItem& playerCHI = player.get<CanHoldItem>();
+        OptEntity held_opt = EntityHelper::getEntityForID(playerCHI.item_id());
+        if (!held_opt) return tl::unexpected("place_onto: held item missing");
+        Item& item = held_opt.asE();
         item.get<Transform>().update(furnT.snap_position());
 
         if (closest_furniture->has<IsItemContainer>() &&
@@ -876,15 +892,14 @@ void handle_drop(Entity& player) {
             //
             // if theres nothing there, then we do the normal drop logic
             if (furnCHI.is_holding_item()) {
-                player.get<CanHoldItem>().item().cleanup = true;
-                player.get<CanHoldItem>().update(nullptr, -1);
+                held_opt->cleanup = true;
+                playerCHI.update(nullptr, -1);
                 return true;
             }
         }
 
-        furnCHI.update(EntityHelper::getEntityAsSharedPtr(item),
-                       closest_furniture->id);
-        player.get<CanHoldItem>().update(nullptr, -1);
+        furnCHI.update(&item, closest_furniture->id);
+        playerCHI.update(nullptr, -1);
         log_info("pickup: placed item {} onto furniture {}", item.id,
                  closest_furniture->id);
         return true;
@@ -934,7 +949,11 @@ void handle_grab(Entity& player) {
                 // its not holding something
                 if (furn.get<CanHoldItem>().empty()) return false;
 
-                const Item& item = furn.get<CanHoldItem>().const_item();
+                const CanHoldItem& furnCHI = furn.get<CanHoldItem>();
+                OptEntity held_opt =
+                    EntityHelper::getEntityForID(furnCHI.item_id());
+                if (!held_opt) return false;
+                const Item& item = held_opt.asE();
                 // Can we hold the item it has?
                 return player.get<CanHoldItem>().can_hold(item,
                                                           RespectFilter::All);
@@ -945,13 +964,15 @@ void handle_grab(Entity& player) {
 
         // we found a match, grab the item from it
         CanHoldItem& furnCanHold = closest_furniture->get<CanHoldItem>();
-        Item& item = furnCanHold.item();
+        OptEntity held_opt = EntityHelper::getEntityForID(furnCanHold.item_id());
+        if (!held_opt) return false;
+        Item& item = held_opt.asE();
 
         // log_info("Found {} to pick up from {}",
         // item->name(), closest_furniture->name());
 
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
-        playerCHI.update(EntityHelper::getEntityAsSharedPtr(item), player.id);
+        playerCHI.update(&item, player.id);
         item.get<Transform>().update(player.get<Transform>().snap_position());
         furnCanHold.update(nullptr, -1);
         log_info("pickup: player {} picked item {} from furniture {}", player.id,
@@ -993,8 +1014,7 @@ void handle_grab(Entity& player) {
     // nothing found
     if (!closest_item) return;
 
-    player.get<CanHoldItem>().update(
-        EntityHelper::getEntityAsSharedPtr(closest_item), player.id);
+    player.get<CanHoldItem>().update(&closest_item.asE(), player.id);
     log_info("pickup: player {} picked loose item {}", player.id,
              closest_item->id);
 

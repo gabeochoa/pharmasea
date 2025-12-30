@@ -14,34 +14,35 @@ struct CanPathfind : public BaseComponent {
     [[nodiscard]] bool is_path_empty() const { return !!path.empty(); }
     [[nodiscard]] vec2 get_local_target() { return local_target.value(); }
 
-    [[nodiscard]] bool travel_toward(vec2 end, float speed) {
-        if (!parent) return false;
-        if (parent->is_missing<Transform>()) return false;
+    // NOTE: this component no longer stores an Entity* "parent".
+    // Pass the owning entity explicitly to avoid pointer-based state.
+    [[nodiscard]] bool travel_toward(Entity& owner, vec2 end, float speed) {
+        if (owner.is_missing<Transform>()) return false;
 
         // Nothing to do we are already at the goal
-        if (is_at_position(end)) return true;
+        if (is_at_position(owner, end)) return true;
 
         // Waiting for our path request to be resolved
         if (has_active_request) {
             return false;
         }
 
-        Transform& transform = parent->get<Transform>();
+        Transform& transform = owner.get<Transform>();
         vec2 me = transform.as2();
 
         global_target = end;
 
         if (is_path_empty()) {
-            path_to(me, global_target.value());
+            path_to(owner, me, global_target.value());
             return false;
         }
         ensure_active_local_target();
-        move_transform_toward_local_target(speed);
+        move_transform_toward_local_target(owner, speed);
 
         if (local_target.has_value())
             transform.turn_to_face_pos(local_target.value());
 
-        return is_at_position(end);
+        return is_at_position(owner, end);
     }
 
     [[nodiscard]] std::deque<vec2> get_path() const { return path; }
@@ -55,37 +56,30 @@ struct CanPathfind : public BaseComponent {
 
     [[nodiscard]] size_t get_max_length() const { return max_path_length; }
 
-    void update_path(const std::deque<vec2>& new_path) {
+    void update_path(const Entity& owner, const std::deque<vec2>& new_path) {
         path = new_path;
         path_size = (int) path.size();
 
         has_active_request = false;
         max_path_length = std::max(max_path_length, path.size());
-        log_trace("{} recieved a path of length {}", parent->id, path.size());
-    }
-
-    auto& set_parent(Entity* p) {
-        parent = p;
-        return *this;
+        log_trace("{} recieved a path of length {}", owner.id, path.size());
     }
 
    private:
-    [[nodiscard]] bool is_at_position(vec2 position) {
-        if (!parent) return false;
-        if (parent->is_missing<Transform>()) return false;
-        return vec::distance(parent->get<Transform>().as2(), position) <
+    [[nodiscard]] bool is_at_position(const Entity& owner, vec2 position) {
+        if (owner.is_missing<Transform>()) return false;
+        return vec::distance(owner.get<Transform>().as2(), position) <
                (TILESIZE / 2.f);
     }
 
-    void move_transform_toward_local_target(float speed) {
-        if (!parent) return;
-        if (parent->is_missing<Transform>()) return;
+    void move_transform_toward_local_target(Entity& owner, float speed) {
+        if (owner.is_missing<Transform>()) return;
         if (!local_target.has_value()) {
             log_warn("Tried to ensure local target but still dont have one");
             return;
         }
 
-        Transform& transform = parent->get<Transform>();
+        Transform& transform = owner.get<Transform>();
         vec2 new_pos = transform.as2();
         vec2 tar = local_target.value();
         if (tar.x > transform.raw().x) new_pos.x += speed;
@@ -101,8 +95,7 @@ struct CanPathfind : public BaseComponent {
         transform.update(vec::to3(new_pos));
     }
 
-    void path_to(vec2 begin, vec2 end) {
-        if (!parent) return;
+    void path_to(const Entity& owner, vec2 begin, vec2 end) {
         if (has_active_request) {
             // just keep waiting
             return;
@@ -116,10 +109,10 @@ struct CanPathfind : public BaseComponent {
         goal = end;
 
         PathRequestManager::enqueue_request(PathRequestManager::PathRequest{
-            .entity_id = parent->id, .start = start, .end = goal});
+            .entity_id = owner.id, .start = start, .end = goal});
 
         has_active_request = true;
-        log_trace("{} requested path from {} to {} ", parent->id, start, goal);
+        log_trace("{} requested path from {} to {} ", owner.id, start, goal);
     }
 
     void ensure_active_local_target() {
@@ -143,13 +136,10 @@ struct CanPathfind : public BaseComponent {
     std::deque<vec2> path;
     size_t max_path_length = 0;
 
-    Entity* parent = nullptr;
-
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.ext(parent, PointerObserver{});
 
         s.object(start);
         s.object(goal);

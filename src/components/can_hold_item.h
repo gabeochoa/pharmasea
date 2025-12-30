@@ -18,32 +18,19 @@ struct CanHoldItem : public BaseComponent {
 
     virtual ~CanHoldItem() {}
 
-    [[nodiscard]] bool empty() const { return held_item == nullptr; }
+    [[nodiscard]] bool empty() const { return held_item_id == -1; }
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
-    // Note, this is a shared_ptr, because I'm having issues serializing
-    // OptEntity
-    // i dont really want to look up how to use bitsery ExtensionTraits
-    CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
-        if (held_item != nullptr && !held_item->cleanup &&
-            //
-            (held_item->has<IsItem>() && !held_item->get<IsItem>().is_held())
-            //
-        ) {
-            log_warn(
-                "you are updating the held item to null, but the old one isnt "
-                "marked cleanup (and not being held) , this might be an issue "
-                "if you are tring to "
-                "delete it");
+    // Store entity references as IDs (stable handles) instead of owning pointers.
+    // The pointer parameter is only used transiently to update the item's IsItem.
+    CanHoldItem& update(Entity* item, EntityID entity_id) {
+        held_item_id = item ? item->id : -1;
+        if (item) {
+            item->get<IsItem>().set_held_by(held_by, entity_id);
+            last_held_id = item->id;
         }
-
-        held_item = item;
-        if (held_item) {
-            held_item->get<IsItem>().set_held_by(held_by, entity_id);
-            last_held_id = held_item->id;
-        }
-        if (held_item && held_by == EntityType::Unknown) {
+        if (item && held_by == EntityType::Unknown) {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
                 "UNKNOWN",
@@ -52,8 +39,7 @@ struct CanHoldItem : public BaseComponent {
         return *this;
     }
 
-    [[nodiscard]] Entity& item() const { return *held_item; }
-    [[nodiscard]] const Entity& const_item() const { return *held_item; }
+    [[nodiscard]] EntityID item_id() const { return held_item_id; }
 
     CanHoldItem& set_filter(EntityFilter ef) {
         filter = ef;
@@ -86,7 +72,7 @@ struct CanHoldItem : public BaseComponent {
 
    private:
     EntityID last_held_id = -1;
-    std::shared_ptr<Entity> held_item = nullptr;
+    EntityID held_item_id = -1;
     EntityType held_by;
     EntityFilter filter;
 
@@ -95,9 +81,8 @@ struct CanHoldItem : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.value4b(held_by);
-
-        // we only need these for debug info
-        s.ext(held_item, bitsery::ext::StdSmartPtr{});
+        s.value4b(held_item_id);
+        s.value4b(last_held_id);
         s.object(filter);
     }
 };

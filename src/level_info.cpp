@@ -248,8 +248,7 @@ void LevelInfo::generate_model_test_map() {
                                 return bitset_utils::ForEachFlow::NormalFlow;
                             });
 
-                        canHold.update(EntityHelper::getEntityAsSharedPtr(item),
-                                       entity.id);
+                        canHold.update(&item, entity.id);
                     }
 
                     break;
@@ -260,8 +259,7 @@ void LevelInfo::generate_model_test_map() {
                         Entity& item = EntityHelper::createEntity();
                         items::make_juice(item, vec::to3(location),
                                           mtmi.fruit_type.value());
-                        canHold.update(EntityHelper::getEntityAsSharedPtr(item),
-                                       entity.id);
+                        canHold.update(&item, entity.id);
                     } break;
                 }
 

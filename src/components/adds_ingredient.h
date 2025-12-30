@@ -11,7 +11,7 @@
 
 struct AddsIngredient : public BaseComponent {
     using IngredientFetcherFn =
-        std::function<IngredientBitSet(Entity&, Entity&)>;
+        std::function<IngredientBitSet(const Entity&, Entity&)>;
     using ValidationFn = std::function<bool(const Entity&, const Entity&)>;
     using OnDecrementFn = std::function<void(Entity&)>;
 
@@ -20,11 +20,13 @@ struct AddsIngredient : public BaseComponent {
 
     virtual ~AddsIngredient() {}
 
-    [[nodiscard]] IngredientBitSet get(Entity& entity) const {
+    // NOTE: this component no longer stores an Entity* "parent".
+    // Pass the owning entity explicitly to avoid pointer-based state.
+    [[nodiscard]] IngredientBitSet get(const Entity& owner, Entity& entity) const {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");
         }
-        return fetcher(*parent, entity);
+        return fetcher(owner, entity);
     }
     void set(const IngredientFetcherFn& fn) { fetcher = fn; }
     auto& set_validator(const ValidationFn& fn) {
@@ -39,24 +41,18 @@ struct AddsIngredient : public BaseComponent {
         num_uses = nu;
         return *this;
     }
-    void decrement_uses() {
+    void decrement_uses(Entity& owner) {
         num_uses--;
-        if (on_decrement) on_decrement(*parent);
+        if (on_decrement) on_decrement(owner);
     }
     [[nodiscard]] int uses_left() const { return num_uses; }
 
-    [[nodiscard]] bool validate(Entity& entity) const {
+    [[nodiscard]] bool validate(const Entity& owner, const Entity& entity) const {
         if (!validation) return true;
-        return validation(*parent, entity);
-    }
-
-    auto& set_parent(Entity* p) {
-        parent = p;
-        return *this;
+        return validation(owner, entity);
     }
 
    private:
-    Entity* parent = nullptr;
     IngredientFetcherFn fetcher = nullptr;
     ValidationFn validation = nullptr;
     OnDecrementFn on_decrement = nullptr;
@@ -66,8 +62,6 @@ struct AddsIngredient : public BaseComponent {
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.ext(parent, PointerObserver{});
-
         s.value4b(num_uses);
     }
 };
