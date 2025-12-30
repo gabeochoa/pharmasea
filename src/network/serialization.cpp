@@ -6,7 +6,7 @@
 
 namespace network {
 
-Buffer serialize_to_entity(const Entity& entity) {
+Buffer serialize_to_entity(Entity* entity) {
     Buffer buffer;
     TContext ctx{};
 
@@ -22,19 +22,19 @@ Buffer serialize_to_entity(const Entity& entity) {
     fflush(stdout);
 
     BitserySerializer ser{ctx, buffer};
-    ser.object(entity);
+    ser.object(*entity);
     ser.adapter().flush();
 
     return buffer;
 }
 
-void deserialize_to_entity(Entity& entity, const Buffer& msg) {
+void deserialize_to_entity(Entity* entity, const std::string& msg) {
     TContext ctx{};
     std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
         MyPolymorphicClasses{});
 
     BitseryDeserializer des{ctx, msg.begin(), msg.size()};
-    des.object(entity);
+    des.object(*entity);
 
     switch (des.adapter().error()) {
         case bitsery::ReaderError::NoError:

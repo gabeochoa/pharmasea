@@ -39,10 +39,10 @@ Entity* mk_entity() { return make_entity(DebugOptions{.name = "test"}); }
 
 void entity_components() {
     Entity* entity = mk_entity();
-    network::Buffer buff = network::serialize_to_entity(*entity);
+    network::Buffer buff = network::serialize_to_entity(entity);
 
     Entity* entity2 = mk_entity();
-    network::deserialize_to_entity(*entity2, buff);
+    network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
 
@@ -56,14 +56,14 @@ void test_adding_single_component_serialdeserial() {
     Entity* entity = mk_entity();
     entity->addComponent<HasName>();
 
-    network::Buffer buff = network::serialize_to_entity(*entity);
+    network::Buffer buff = network::serialize_to_entity(entity);
 
     Entity* entity2 = mk_entity();
     // VVVVV if you dont have this, then it doesnt correctly serialize
     // but once you have it then the names do get copied over correctly
     // figure out why bitsery isnt serializing this over
     // entity2->addComponent<HasName>();
-    network::deserialize_to_entity(*entity2, buff);
+    network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
 
@@ -86,10 +86,10 @@ void validate_name_change_persisits() {
     M_TEST_EQ(first_name, middle_name,
               "component should have correctly set name");
 
-    network::Buffer buff = network::serialize_to_entity(*entity);
+    network::Buffer buff = network::serialize_to_entity(entity);
     Entity* entity2 = mk_entity();
     // entity2->addComponent<HasName>();
-    network::deserialize_to_entity(*entity2, buff);
+    network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
 
@@ -118,9 +118,9 @@ void validate_custom_hold_position_persisits() {
 
     M_TEST_EQ(position, newpos, "component should have correctly set position");
 
-    network::Buffer buff = network::serialize_to_entity(*entity);
+    network::Buffer buff = network::serialize_to_entity(entity);
     Entity* entity2 = mk_entity();
-    network::deserialize_to_entity(*entity2, buff);
+    network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
 
@@ -149,9 +149,9 @@ void validate_held_item_serialized() {
     M_TEST_NEQ(entity->get<CanHoldItem>().item(), nullptr,
                "component should not have null item");
 
-    network::Buffer buff = network::serialize_to_entity(*entity);
+    network::Buffer buff = network::serialize_to_entity(entity);
     Entity* entity2 = mk_entity();
-    network::deserialize_to_entity(*entity2, buff);
+    network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
 
@@ -178,9 +178,9 @@ void validate_wall_color_serialized() {
     M_TEST_EQ(entity->get<SimpleColoredBoxRenderer>().base(),
               ui::color::saffron, "component should have right color");
 
-    network::Buffer buff = network::serialize_to_entity(*entity);
+    network::Buffer buff = network::serialize_to_entity(entity);
     Entity* entity2 = mk_entity();
-    network::deserialize_to_entity(*entity2, buff);
+    network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
 
@@ -205,9 +205,9 @@ void validate_trigger_area_serialized() {
     M_TEST_EQ(entity->get<IsTriggerArea>().title(), "test",
               "component should have right title");
 
-    network::Buffer buff = network::serialize_to_entity(*entity);
+    network::Buffer buff = network::serialize_to_entity(entity);
     Entity* entity2 = mk_entity();
-    network::deserialize_to_entity(*entity2, buff);
+    network::deserialize_to_entity(entity2, buff);
 
     compare_and_validate_components(entity, entity2);
 

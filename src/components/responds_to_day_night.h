@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../entity_helper.h"
 #include "base_component.h"
 
 struct RespondsToDayNight : public BaseComponent {
@@ -31,20 +32,36 @@ struct RespondsToDayNight : public BaseComponent {
         return *this;
     }
 
-    // NOTE: this component no longer stores an Entity* "parent".
-    // Pass the owning entity explicitly to avoid pointer-based state.
-    void call_day_started(Entity& owner) {
-        if (onDayStartedFn) onDayStartedFn(owner);
+    // Keep the existing API, but store the handle (id) instead of the pointer.
+    void call_day_started() {
+        if (!onDayStartedFn) return;
+        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        if (!opt_parent) return;
+        onDayStartedFn(opt_parent.asE());
     }
-    void call_night_started(Entity& owner) {
-        if (onNightStartedFn) onNightStartedFn(owner);
+    void call_night_started() {
+        if (!onNightStartedFn) return;
+        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        if (!opt_parent) return;
+        onNightStartedFn(opt_parent.asE());
     }
 
-    void call_day_ended(Entity& owner) {
-        if (onDayEndedFn) onDayEndedFn(owner);
+    void call_day_ended() {
+        if (!onDayEndedFn) return;
+        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        if (!opt_parent) return;
+        onDayEndedFn(opt_parent.asE());
     }
-    void call_night_ended(Entity& owner) {
-        if (onNightEndedFn) onNightEndedFn(owner);
+    void call_night_ended() {
+        if (!onNightEndedFn) return;
+        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        if (!opt_parent) return;
+        onNightEndedFn(opt_parent.asE());
+    }
+
+    auto& set_parent(Entity* p) {
+        parent_id = p ? p->id : -1;
+        return *this;
     }
 
    private:
@@ -54,9 +71,12 @@ struct RespondsToDayNight : public BaseComponent {
     OnNightStartedFn onNightStartedFn = nullptr;
     OnNightEndedFn onNightEndedFn = nullptr;
 
+    EntityID parent_id = -1;
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+        s.value4b(parent_id);
     }
 };

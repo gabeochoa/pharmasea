@@ -63,7 +63,7 @@ inline void tell_customers_to_leave(Entity& entity) {
     // Force leaving job
     entity.get<CanPerformJob>().current = JobType::Leaving;
     entity.removeComponentIfExists<CanPathfind>();
-    entity.addComponent<CanPathfind>();
+    entity.addComponent<CanPathfind>().set_parent(&entity);
 }
 
 inline void update_new_max_customers(Entity& entity, float) {
@@ -188,7 +188,7 @@ struct TellCustomersToLeaveSystem
                                float) override {
         cpj.current = JobType::Leaving;
         entity.removeComponentIfExists<CanPathfind>();
-        entity.addComponent<CanPathfind>();
+        entity.addComponent<CanPathfind>().set_parent(&entity);
     }
 };
 
@@ -293,9 +293,9 @@ struct OnNightEndedTriggerSystem
             return false;
         }
     }
-    virtual void for_each_with(Entity& entity, RespondsToDayNight& rtdn,
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
                                float) override {
-        rtdn.call_night_ended(entity);
+        rtdn.call_night_ended();
     }
 };
 
@@ -311,9 +311,9 @@ struct OnDayStartedTriggerSystem
             return false;
         }
     }
-    virtual void for_each_with(Entity& entity, RespondsToDayNight& rtdn,
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
                                float) override {
-        rtdn.call_day_started(entity);
+        rtdn.call_day_started();
     }
 };
 
@@ -434,9 +434,9 @@ struct OnDayEndedSystem : public afterhours::System<RespondsToDayNight> {
         }
     }
 
-    virtual void for_each_with(Entity& entity, RespondsToDayNight& rtdn,
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
                                float) override {
-        rtdn.call_day_ended(entity);
+        rtdn.call_day_ended();
     }
 };
 
@@ -474,9 +474,9 @@ struct OnNightStartedSystem : public afterhours::System<RespondsToDayNight> {
         }
     }
 
-    virtual void for_each_with(Entity& entity, RespondsToDayNight& rtdn,
+    virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
                                float) override {
-        rtdn.call_night_started(entity);
+        rtdn.call_night_started();
     }
 };
 

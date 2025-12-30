@@ -7,11 +7,12 @@
 #include "../dataclass/ingredient.h"
 #include "../engine/log.h"
 #include "../entity.h"
+#include "../entity_helper.h"
 #include "base_component.h"
 
 struct AddsIngredient : public BaseComponent {
     using IngredientFetcherFn =
-        std::function<IngredientBitSet(const Entity&, Entity&)>;
+        std::function<IngredientBitSet(Entity&, Entity&)>;
     using ValidationFn = std::function<bool(const Entity&, const Entity&)>;
     using OnDecrementFn = std::function<void(Entity&)>;
 
@@ -20,13 +21,19 @@ struct AddsIngredient : public BaseComponent {
 
     virtual ~AddsIngredient() {}
 
-    // NOTE: this component no longer stores an Entity* "parent".
-    // Pass the owning entity explicitly to avoid pointer-based state.
-    [[nodiscard]] IngredientBitSet get(const Entity& owner, Entity& entity) const {
+    // NOTE: we store the parent as a handle (EntityID), not a pointer.
+    [[nodiscard]] IngredientBitSet get(Entity& entity) const {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");
         }
-        return fetcher(owner, entity);
+        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        if (!opt_parent) {
+            log_error(
+                "calling AddsIngredient::get() but parent_id {} is invalid",
+                parent_id);
+            return IngredientBitSet{};
+        }
+        return fetcher(opt_parent.asE(), entity);
     }
     void set(const IngredientFetcherFn& fn) { fetcher = fn; }
     auto& set_validator(const ValidationFn& fn) {
@@ -41,18 +48,30 @@ struct AddsIngredient : public BaseComponent {
         num_uses = nu;
         return *this;
     }
-    void decrement_uses(Entity& owner) {
+    void decrement_uses() {
         num_uses--;
-        if (on_decrement) on_decrement(owner);
+        if (!on_decrement) return;
+        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        if (!opt_parent) return;
+        on_decrement(opt_parent.asE());
     }
     [[nodiscard]] int uses_left() const { return num_uses; }
 
-    [[nodiscard]] bool validate(const Entity& owner, const Entity& entity) const {
+    [[nodiscard]] bool validate(Entity& entity) const {
         if (!validation) return true;
-        return validation(owner, entity);
+        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        if (!opt_parent) return false;
+        return validation(opt_parent.asE(), entity);
+    }
+
+    // Keep the existing API, but store the handle (id) instead of the pointer.
+    auto& set_parent(Entity* p) {
+        parent_id = p ? p->id : -1;
+        return *this;
     }
 
    private:
+    EntityID parent_id = -1;
     IngredientFetcherFn fetcher = nullptr;
     ValidationFn validation = nullptr;
     OnDecrementFn on_decrement = nullptr;
@@ -63,5 +82,6 @@ struct AddsIngredient : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.value4b(num_uses);
+        s.value4b(parent_id);
     }
 };

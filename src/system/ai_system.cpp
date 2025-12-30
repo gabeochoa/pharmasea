@@ -185,7 +185,6 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        entity,
         aiwait.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
@@ -333,7 +332,6 @@ void process_wandering(Entity& entity, float dt) {
         EntityHelper::getEntityForID(aiwandering.target.id());
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        entity,
         opt_target_pos.asE().get<Transform>().as2(),
         get_speed_for_entity(entity) * dt);
     if (!reached) return;
@@ -379,7 +377,6 @@ void process_ai_drinking(Entity& entity, float dt) {
         EntityHelper::getEntityForID(aidrinking.target.id());
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        entity,
         opt_drink_pos.asE().get<Transform>().as2(),
         get_speed_for_entity(entity) * dt);
     if (!reached) return;
@@ -455,7 +452,6 @@ void process_ai_clean_vomit(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        entity,
         vomit->get<Transform>().as2(), get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
@@ -515,9 +511,8 @@ void process_ai_use_bathroom(Entity& entity, float dt) {
         istoilet.end_use();
 
         // TODO move away from it for a second
-        (void) entity.get<CanPathfind>().travel_toward(
-            entity,
-            vec2{0, 0}, get_speed_for_entity(entity) * dt);
+        (void) entity.get<CanPathfind>().travel_toward(vec2{0, 0},
+                                                       get_speed_for_entity(entity) * dt);
 
         // We specificaly dont use next_job() here because
         // we dont want to infinite loop
@@ -543,7 +538,6 @@ void process_ai_use_bathroom(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        entity,
         aibathroom.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
@@ -595,7 +589,6 @@ void process_ai_leaving(Entity& entity, float dt) {
     // I noticed this during profiling :)
     //
     (void) entity.get<CanPathfind>().travel_toward(
-        entity,
         vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
 }
 
@@ -619,7 +612,6 @@ void process_ai_paying(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        entity,
         aiclosetab.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
@@ -709,7 +701,6 @@ void process_jukebox_play(Entity& entity, float dt) {
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        entity,
         ai_play_jukebox.line_wait.position, get_speed_for_entity(entity) * dt);
     if (!reached) return;
 

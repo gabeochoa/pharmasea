@@ -34,8 +34,7 @@ void PathRequestManager::process_responses(
 
         OptEntity requester = EntityHelper::getEntityForID(response.entity_id);
         if (requester.has_value()) {
-            requester->get<CanPathfind>().update_path(requester.asE(),
-                                                      response.path);
+            requester->get<CanPathfind>().update_path(response.path);
         } else {
             log_warn("Path requester {} no longer exists", response.entity_id);
         }

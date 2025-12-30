@@ -95,8 +95,8 @@ void serialize(S& s, ClientPacket& packet) {
 }
 
 // Serialization function declarations
-Buffer serialize_to_entity(const Entity& entity);
-void deserialize_to_entity(Entity& entity, const Buffer& msg);
+Buffer serialize_to_entity(Entity* entity);
+void deserialize_to_entity(Entity* entity, const std::string& msg);
 ClientPacket deserialize_to_packet(const std::string& msg);
 Buffer serialize_to_buffer(ClientPacket packet);
 
