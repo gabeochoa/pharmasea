@@ -7,6 +7,16 @@ Extract reusable features from pharmasea into afterhours plugins. Focus on featu
 - Would save significant developer time
 - Follow afterhours plugin patterns
 
+## Status (as of 2025-12-30)
+
+- **Not started in this repo**
+  - No plugin extraction work has landed into an `afterhours` codebase here (there is no `vendor/afterhours/` subtree, and no new `afterhours` plugin headers were added under `vendor/`).
+  - The listed “Files to Extract” still exist in `src/` as game code, and would need to be moved/copied into the actual Afterhours repository (or added here as an explicit dependency/submodule) to begin extraction.
+
+- **Related refactors that *have* happened (but are not extraction)**
+  - Map generation was refactored internally into a pipeline (`src/map_generation/pipeline.*`) with a documented playability spec (`docs/map_playability_spec.md`).
+  - Day/night transitions were refactored into dedicated systems (`src/system/afterhours_day_night_transition_systems.cpp`).
+
 ## Key Findings: Afterhours Current State
 
 ### What Afterhours Already Provides:

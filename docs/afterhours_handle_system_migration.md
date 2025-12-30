@@ -2,6 +2,33 @@
 
 This doc describes what it would take to implement the **stable-slot handle system** (slot index + generation, with a dense live list for iteration) **inside `vendor/afterhours`**, and which parts would be **API-breaking** vs what can be done **without breaking existing public APIs**.
 
+## Recent repo activity (last 10 commits as of 2025-12-30)
+
+This section captures the most recent commit context that impacts the Afterhours handle-store migration plan.
+
+### Last 10 commits (snapshot)
+
+- `355eaed1` (2025-12-30): Update status for multiple refactoring plans
+- `0989e96e` (2025-12-30): Migrates components to use stable entity IDs instead of pointers. (#62)
+- `bc0dbea6` (2025-12-30): Update submodule vendor/afterhours to latest commit
+- `a2d028f3` (2025-12-29): Serialization pointer removal options (#59)
+- `793e3192` (2025-12-29): when disabling models, draw cubes
+- `9352c864` (2025-12-28): refactor save/load: move post-load helpers to dedicated files
+- `a388cceb` (2025-12-25): fix mop buddy auto release
+- `17b717cc` (2025-12-25): rename day night to open closed
+- `7fe6383a` (2025-12-24): erorr instad of warn on item rehydration
+- `006266fb` (2025-12-24): Map generation phase three (#56)
+
+### What changed that affects this plan
+
+- **Project code moved toward stable IDs** (`0989e96e`)
+  - This reduces dependence on pointer-shaped relationships in gameplay code and strengthens the case for a handle-based store inside Afterhours as the next “structural” step (instead of continuing to serialize pointers).
+  - It also means PharmaSea may be able to get most of the pointer-free win *before* fully migrating Afterhours internals, by leaning on IDs + post-deserialize fixups.
+- **Afterhours submodule was updated** (`bc0dbea6`)
+  - Treat this doc’s “current Afterhours APIs” section as needing re-validation against the updated submodule version before implementing the slot store (public API details may differ).
+- **This doc was created/expanded as part of pointer-removal planning** (`a2d028f3`)
+  - This plan is now the canonical “what would it take in Afterhours” reference, and should stay aligned with the actual submodule state.
+
 ---
 
 ## Current Afterhours APIs relevant to this change

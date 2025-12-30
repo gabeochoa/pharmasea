@@ -2,6 +2,33 @@
 
 This document is a **planning note only**. It outlines a roadmap to update map generation without prescribing immediate code changes.
 
+## Status (as of 2025-12-30)
+
+- **Implemented**
+  - **Playability spec doc exists**: `docs/map_playability_spec.md` is present and matches the “Phase 1: one source of truth” goal.
+  - **Playability checks exist in code + tests**:
+    - Spec surface area: `src/map_generation/playability_spec.h` (`mapgen::playability::validate_ascii_day1`)
+    - Regression coverage: `src/tests/test_map_playability.h` (wired into `src/tests/all_tests.h`)
+  - **Explicit pipeline exists** (layout → required placement → validate/reroll):
+    - Entry point: `src/map_generation/pipeline.h/.cpp` (`mapgen::generate_ascii`)
+    - In-game hook: `src/map_generation/in_game_map_generation.cpp` calls the pipeline from gameplay.
+    - Deterministic retry cap: `mapgen::playability::DEFAULT_REROLL_ATTEMPTS` (25).
+  - **Archetypes + determinism**:
+    - Archetype selection by seed: `src/map_generation/pipeline.cpp` (`pick_archetype_from_seed`)
+    - `--generate-map` CLI output for debugging: `src/game.cpp`
+  - **WFC is selectable as a layout provider inside the pipeline**:
+    - Layout wrapper: `src/map_generation/layout_wfc.h/.cpp`
+    - Seed prefix support: `wfc:<seed>` / `simple:<seed>` (see `src/map_generation/pipeline.cpp`)
+    - Fallback behavior: if WFC fails all attempts, pipeline falls back to simple layout.
+
+- **Partially implemented / still outstanding**
+  - **Single-source WFC config loading is still duplicated**:
+    - `Preload::load_map_generation_info()` loads `map_generator_input.json`
+    - `wfc::ensure_map_generation_info_loaded()` also loads `resources/config/map_generator_input.json`
+    - This matches the “two places today” issue described below; it hasn’t been unified yet.
+  - **Seed suite / CI-style regression coverage**:
+    - There are unit tests for the ASCII playability rules, but not yet a curated list of real generation seeds (or a “generate N seeds must pass” suite).
+
 ## Context (current architecture)
 
 - **ASCII seam**: Map generators ultimately produce a `std::vector<std::string>` “tile map”. A single step (ASCII → entities) spawns entities and then validates.
