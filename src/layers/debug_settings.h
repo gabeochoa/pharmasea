@@ -18,7 +18,6 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     bool debug_ui_enabled = false;
     bool no_clip_enabled = false;
     bool skip_ingredient_match = false;
-    
 
     DebugSettingsLayer() : BaseGameRendererLayer("DebugSettings") {
         GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);

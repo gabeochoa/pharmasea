@@ -17,7 +17,6 @@ struct ShaderLibrary {
         impl.load(filename, name);
     }
 
-    // Load a shader with explicit vertex + fragment files.
     void load(const char* vs_filename, const char* fs_filename,
               const char* name) {
         // Store directly by name without any filename encoding.
@@ -33,13 +32,8 @@ struct ShaderLibrary {
    private:
     struct ShaderLibraryImpl : afterhours::Library<raylib::Shader> {
         virtual raylib::Shader convert_filename_to_object(
-            const char* name, const char* filename) override {
-            // Use the library key (first param) as the vertex shader filename.
-            // The library "filename" is treated as the fragment shader filename.
-            // NOTE: This path is not used by our current preload (we load via the
-            // explicit (vs, fs, name) overload), but keeping it consistent helps
-            // if someone uses impl.load(...) directly.
-            return raylib::LoadShader(name, filename);
+            const char* vertex_fn, const char* frag_fn) override {
+            return raylib::LoadShader(vertex_fn, frag_fn);
         }
 
         virtual void unload(raylib::Shader shader) override {
