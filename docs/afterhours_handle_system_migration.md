@@ -516,3 +516,75 @@ These are the key decisions that change implementation details. Answering them u
 7) **Serialization expectations**
    - Do we want Afterhours to provide any built-in serialization hooks for handles, or just keep it as POD and let projects serialize it?
    - Should handle layout be fixed-width for network stability (recommended)?
+
+---
+
+## Answers so far (and implications)
+
+### 1) Temp entities: handle timing + query visibility
+
+You have two knobs here:
+- **When does an entity receive a handle?** (on create vs on merge)
+- **When do queries see the entity?** (before merge vs after merge)
+
+Afterhours today strongly implies a two-step lifecycle:
+- `createEntityWithOptions()` pushes into `temp_entities`
+- `merge_entity_arrays()` moves temp → main
+- `EntityQuery` warns it will miss temp unless forced merge
+- `cleanup()` runs at end-of-frame
+
+#### A) Assign handles only after merge (default; most compatible)
+- **Pros**
+  - Preserves existing behavior and mental model: “not in the world until merged”.
+  - Keeps `EntityQuery` semantics consistent (missing temp is expected).
+  - Makes it easy to reason about: `handle.valid() == true` ⇒ entity is in the main dense list.
+- **Cons**
+  - You can’t create-and-store a handle *immediately* in the same scope unless you force a merge (or delay storing until after merge).
+
+#### B) Assign handles immediately on create (opt-in; more power, more footguns)
+- **Pros**
+  - You can store relationships (handles) to new entities immediately (useful for spawned pairs, inventories, etc.).
+- **Cons**
+  - You must define whether `resolve(handle)` works for temp entities (it probably should), even though queries may still not see them by default.
+  - This can surprise existing code: “handle resolves, but query doesn’t find it” until merge.
+  - If you also make queries see temp by default, you risk behavior changes in existing games.
+
+**Your stated preference**: preserve existing behavior by default, so **A is the default** and **B is opt-in** via a macro / option.
+
+### 2) `RefEntity` / `OptEntity`
+Decision: keep them as “real refs” by default (non-owning reference wrappers).
+- **Implication**: no existing projects break on update.
+- **Implication**: long-lived references should migrate to handles (new types / APIs), but that migration is voluntary.
+
+### 3) Adding slot metadata to `Entity`
+Decision: acceptable to add metadata like `slot_index` to `afterhours::Entity`.
+- **Implication**: `EntityHelper::handle_of(entity)` can be O(1) without a map.
+- **Caller note**: if a project serializes `Entity`, it should treat slot metadata as runtime-only and not persist it as game state (PharmaSea will serialize handles separately).
+
+### 4) Deletion pathways
+Decision: only deletion is “mark `cleanup=true` during the frame, then remove at end of frame”.
+- **Implication**: handle invalidation can be centralized in `EntityHelper::cleanup()` (plus delete-all helpers).
+- **Implementation warning**: because `cleanup()` currently compacts via `erase/remove_if`, it must be rewritten (or followed by a rebuild pass) so slot bookkeeping stays correct.
+
+### 5) Handle stability
+Decision: “handles should always remain the same.”
+
+To make this implementable with high churn, interpret this as:
+- **A handle remains stable for the lifetime of the entity.**
+- After deletion, the handle becomes permanently invalid (generation mismatch), even if the slot is reused.
+
+This is the standard “slot+generation” guarantee and preserves safety under frequent create/delete.
+
+### 6) Threading model (what exists today in Afterhours)
+From the code:
+- The ECS update loop (`SystemManager::run`) iterates entities in a normal loop, merges temp entities after each system step, and runs `cleanup()` once per frame — this is effectively **single-threaded entity lifetime management**.
+- There is at least one plugin (`plugins/pathfinding.h`) that can start a background thread and uses mutexes for its own internal queues.
+
+**Implication**: you can implement slots/free_list/dense assuming entity creation/deletion happens on the main thread (today’s model). If you later want cross-thread entity access, you’ll need explicit rules or synchronization.
+
+### 7) Serialization
+Decision:
+- For now, **callers serialize handles themselves**.
+- Eventually, Afterhours may provide helper serialization utilities.
+
+**Implication**: keep `EntityHandle` as a simple fixed-width POD (two 32-bit integers) and document the recommended wire layout.
