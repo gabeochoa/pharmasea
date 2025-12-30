@@ -332,160 +332,190 @@ Then, only when the ecosystem is ready:
 
 ---
 
-## Intern-facing implementation phases (step-by-step)
+## Intern work plan (phases + tasks + validation checklists)
 
-This section is written as a practical checklist for implementing the change **in Afterhours** while keeping existing users unbroken by default.
+This is the “do the work” plan. Each phase has:
+- **Tasks** (what to change)
+- **Validation** (what must still be true afterward so we know we didn’t break behavior)
 
-### Phase 0 — Read-only prep (understand what must not break)
-- **Read** `vendor/afterhours/PLUGIN_API.md` and treat it as “what must keep working”.
-- Identify which PharmaSea call sites currently use Afterhours APIs:
-  - `EntityHelper::*`
-  - `EntityQuery`
-  - `RefEntity` / `OptEntity`
-- Confirm the repository expectation:
-  - Existing Afterhours consumers should be able to upgrade and compile with no code changes (default behavior).
+### Phase 0 — Ground truth & guardrails
 
-Deliverable: short notes (in the PR description or a scratch doc) listing “must-keep” APIs and any direct field access you found in PharmaSea or plugins.
+**Tasks**
+- Read `vendor/afterhours/PLUGIN_API.md` and treat it as the compatibility contract.
+- Identify any **known consumers** (PharmaSea, Afterhours examples/plugins) that might:
+  - access `EntityHelper` fields directly,
+  - depend on `EntityQuery` behavior around temp entities,
+  - assume `EntityID` monotonic behavior.
+- Write down the default behavior requirements:
+  - `RefEntity`/`OptEntity` remain reference-wrapper based by default.
+  - Temp entities remain “not query-visible unless merged” by default.
+  - Handles are assigned **after merge** by default.
 
-### Phase 1 — Add new handle types (no behavioral changes)
-- Add a new public type in Afterhours:
-  - `struct EntityHandle { uint32_t slot; uint32_t gen; };`
-  - Provide `valid()` and a canonical invalid value.
-- Add helper serialization notes (Afterhours doesn’t ship Bitsery, but we want handle to be trivially serializable).
-- Add a minimal set of helpers (free functions or methods):
-  - `constexpr EntityHandle invalid_handle();`
-  - `bool operator==(EntityHandle, EntityHandle);`
+**Validation**
+- No code changes yet; just confirm understanding.
 
-Where:
-- `vendor/afterhours/src/core/entity.h` is the most discoverable “core types” header.
+---
 
-Deliverable: Afterhours builds; no other code changes required.
+### Phase 1 — Add `EntityHandle` (additive only)
 
-### Phase 2 — Add resolver APIs to `EntityHelper` (still no behavior change)
-- Add new *static* APIs (additive only):
-  - `static EntityHandle handle_of(const Entity& e);` *(can be placeholder initially)*
+**Tasks**
+- Add `struct EntityHandle { uint32_t slot; uint32_t gen; };` to `vendor/afterhours/src/core/entity.h`.
+- Add helpers:
+  - `static constexpr EntityHandle invalid();`
+  - `bool valid() const;`
+  - equality/inequality operators
+- Document: “POD, fixed-width, safe for caller-defined serialization.”
+
+**Validation**
+- Afterhours examples still compile.
+- Existing code that never mentions handles has zero behavior change.
+
+---
+
+### Phase 2 — Add handle APIs to `EntityHelper` (still additive)
+
+**Tasks**
+- Add these static methods in `vendor/afterhours/src/core/entity_helper.h`:
+  - `static EntityHandle handle_of(const Entity& e);`
   - `static Entity* resolve_ptr(EntityHandle h);`
   - `static OptEntity resolve(EntityHandle h);`
-- Add documentation comments:
-  - resolution is O(1) only once slot store is implemented; initially can fallback.
+- Stub them safely at first if needed (e.g., invalid handles / null resolves) while slot storage is not yet implemented.
+- Add docs that resolution becomes O(1) once slots are wired.
 
-Where:
-- `vendor/afterhours/src/core/entity_helper.h`
+**Validation**
+- Existing Afterhours examples/plugins compile.
+- No behavior changes in queries/systems (because nothing uses these APIs yet).
 
-Deliverable: Afterhours builds; existing plugins/projects unaffected; new APIs compile.
+---
 
-### Phase 3 — Implement slot bookkeeping internally (compatibility-first)
+### Phase 3 — Implement slot metadata on `Entity` (decision: allowed)
 
-#### Goal
-Get the benefits (stable handles, O(1) resolve, safe invalidation) while keeping:
-- `Entities` type unchanged (`vector<shared_ptr<Entity>>`)
-- `EntityQuery` unchanged (still iterates dense `Entities`)
-- `EntityHelper::get_entities()` unchanged (still returns `const Entities&`)
+**Tasks**
+- Add runtime-only fields to `afterhours::Entity` (in `vendor/afterhours/src/core/entity.h`) to support O(1) `handle_of`:
+  - `uint32_t ah_slot_index` (or similar name)
+  - optionally `uint32_t ah_slot_gen_snapshot` (optional; generation is usually stored in slots)
+- Initialize them for safety:
+  - temp entities should start as “invalid slot” until merged (default policy).
 
-#### Strategy (recommended): keep `entities_DO_NOT_USE` as the dense live list
-Implement “slots/free_list” as an *additional index* alongside the dense vector.
+**Validation**
+- No existing call sites should require changes (source compatibility).
+- `sizeof(Entity)` changed, but behavior should not.
+- All examples still compile and run.
 
-##### Add storage inside `EntityHelper`
-Add private-ish members (may still be public in the struct, but treat as internal):
-- `struct Slot { EntityType ent; uint32_t gen; uint32_t dense_index; };`
-- `std::vector<Slot> slots;`
-- `std::vector<uint32_t> free_list;`
+---
 
-##### Implement handle assignment
-When an entity becomes “live” (on merge into main list):
-- allocate/reuse a slot
-- set `slots[slot].ent = shared_ptr`
-- set `dense_index` to the index in `entities_DO_NOT_USE`
-- return/store handle `{slot, gen}`
+### Phase 4 — Add slot bookkeeping to `EntityHelper` (compatibility-first design)
 
-##### How to implement `handle_of(const Entity&)` without changing `Entity`
-Pick one of these approaches (do the simplest first):
-- **A (recommended): store slot index on the entity**
-  - Add `uint32_t slot_index` (and maybe `uint32_t slot_gen_snapshot`) to `Entity`.
-  - This is *technically* an API change (struct layout), but source-compatible for almost all code.
-  - It makes `handle_of` O(1).
-- **B: maintain a side map from `Entity* -> slot_index`**
-  - This avoids changing `Entity`, but it reintroduces a map-like structure.
-  - If you really want to avoid maps, prefer A.
+**Tasks**
+- In `vendor/afterhours/src/core/entity_helper.h`, add internal structures:
+  - `struct Slot { EntityType ent; uint32_t gen; uint32_t dense_index; };`
+  - `std::vector<Slot> slots;`
+  - `std::vector<uint32_t> free_list;`
+- Keep `entities_DO_NOT_USE` as the canonical dense live list (compatibility).
+- Implement “allocate slot” helper:
+  - reuse from `free_list` if available, else push new slot
+  - do **not** reset `gen` on reuse; only increment on delete
+- Implement `resolve_ptr(handle)` and `resolve(handle)` using slots + generation check.
 
-##### Implement `resolve_ptr(handle)`
-- Validate bounds: `handle.slot < slots.size()`
-- Validate slot live: `slots[slot].ent != nullptr`
-- Validate generation: `slots[slot].gen == handle.gen`
-- Return `slots[slot].ent.get()` or null if invalid.
+**Validation**
+- `EntityHelper::get_entities()` still returns the same type and still returns a dense list of shared_ptr.
+- `EntityQuery` behavior unchanged (same results given same world state).
+- Handles resolve correctly for merged entities; invalid handles return null/empty.
 
-Deliverable: Afterhours builds and can resolve handles correctly; existing query/iteration behavior unchanged.
+---
 
-### Phase 4 — Deletion/cleanup integration (the correctness trap)
+### Phase 5 — Assign handles on merge (decision: default A)
 
-Afterhours uses the `cleanup` boolean and compacts `entities_DO_NOT_USE` via `erase/remove_if`.
-This is where handles can silently break if you don’t update `dense_index` for moved entities.
+**Tasks**
+- Update `EntityHelper::merge_entity_arrays()`:
+  - when moving each temp entity into `entities_DO_NOT_USE`, allocate a slot and assign:
+    - `slots[slot].ent = shared_ptr`
+    - `slots[slot].dense_index = new index in entities_DO_NOT_USE`
+    - write entity’s `ah_slot_index = slot`
+  - ensure permanent-entity logic remains unchanged.
+- Update `handle_of(entity)`:
+  - if entity has invalid `ah_slot_index` (temp entity), return invalid handle (default behavior).
+  - else return `{slot, slots[slot].gen}`.
 
-#### Required behavior
-Whenever the dense vector removes or moves elements, you must update slot bookkeeping:
-- if you swap-remove manually: update moved entity’s slot `dense_index`
-- if you do bulk `remove_if` compaction: you either:
-  - re-walk the resulting dense vector and recompute every live slot’s `dense_index`, or
-  - stop using bulk `remove_if` and implement explicit swap-removal with slot updates
+**Validation**
+- Temp entities remain temp until merge; `EntityQuery` warnings remain meaningful.
+- After merge, entities have valid handles and `resolve(handle)` returns them.
+- No changes to how systems tick/merge/cleanup are scheduled.
 
-#### Suggested implementation
-- Replace `cleanup()`’s `erase/remove_if` with an explicit loop that:
-  - iterates indices,
-  - swap-removes dead entities,
-  - updates the moved entity’s `dense_index`,
-  - invalidates the removed entity’s slot (clear `ent`, increment `gen`, push slot to `free_list`)
+---
 
-Also update:
-- `delete_all_entities*()`
-- `delete_all_entities(include_permanent)`
-- any other code paths that erase from `entities_DO_NOT_USE`
+### Phase 6 — Rewrite `cleanup()` to preserve slot bookkeeping (critical correctness phase)
 
-Deliverable: deleting entities does not corrupt handles; stale handles reliably fail generation checks.
+**Tasks**
+- Replace `erase/remove_if` compaction with explicit swap-removal so you can update bookkeeping:
+  - for each entity with `cleanup==true`:
+    - find its dense index (from its slot)
+    - swap-remove from `entities_DO_NOT_USE` (dense list)
+    - update the moved entity’s slot `dense_index`
+    - invalidate the removed entity’s slot:
+      - `slots[slot].ent.reset()`
+      - `slots[slot].gen++`
+      - push `slot` into `free_list`
+      - set removed entity’s `ah_slot_index` to invalid (optional, defensive)
+- Ensure `EntityHelper::delete_all_entities*()` also invalidates slots consistently.
+- Ensure `EntityHelper::markIDForCleanup` behavior remains (it just sets `cleanup=true`).
 
-### Phase 5 — Keep temp semantics stable (or add opt-in semantics)
-Current behavior:
-- `createEntityWithOptions` pushes to `temp_entities`
-- queries may miss temp entities unless forced merge
+**Validation**
+- After `cleanup()`, `entities_DO_NOT_USE` is still dense and contains only live entities.
+- Any handle to a deleted entity fails to resolve (generation mismatch or null slot).
+- Any handle to a still-live entity continues to resolve.
+- No leaks / double frees (shared_ptr ownership remains single).
 
-Decide and implement one:
-- **Keep behavior** (recommended first):
-  - temp entities have no valid handle until merged
-  - `handle_of(temp_entity)` returns invalid, or asserts in debug
-- **Opt-in behavior**:
-  - assign handles immediately, but keep the query warnings; temp entities still not returned unless merged
+---
 
-Deliverable: behavior matches existing Afterhours expectations unless a project opts in.
+### Phase 7 — Add opt-in query APIs for handles (non-breaking)
 
-### Phase 6 — Add opt-in query APIs for handles (no break)
-Add new API methods to `EntityQuery`:
-- `std::vector<EntityHandle> gen_handles() const;`
-- `std::optional<EntityHandle> gen_first_handle() const;`
+**Tasks**
+- Add new methods to `EntityQuery` (in `vendor/afterhours/src/core/entity_query.h`):
+  - `std::vector<EntityHandle> gen_handles() const;`
+  - `std::optional<EntityHandle> gen_first_handle() const;`
+- Implement by mapping over existing `gen()` results and calling `EntityHelper::handle_of`.
 
-Implementation approach:
-- call `gen()` (existing), then map `Entity& -> handle_of(entity)` into handles.
+**Validation**
+- Existing `gen()` still returns `RefEntities` and behaves the same.
+- New handle APIs return stable handles for merged entities and invalid for temp (by default).
 
-Deliverable: projects can start storing handles from queries without changing existing `gen()` usage.
+---
 
-### Phase 7 — Opt-in breaking changes (strict mode)
-Introduce a compile-time option (macro) and only apply breaking aliases under it:
-- `AFTER_HOURS_USE_HANDLE_REFS`
+### Phase 8 — Opt-in “handles on create” (future, behind a flag)
 
-Under this macro, you may:
-- alias `RefEntity` and/or `OptEntity` to handle-based wrappers
-- adjust operators to fail safely (return null/optional) or assert
+**Tasks**
+- Add a macro flag (example):
+  - `AFTER_HOURS_ASSIGN_HANDLES_ON_CREATE`
+- If enabled:
+  - allocate a slot at `createEntityWithOptions` time and set `ah_slot_index` immediately
+  - decide whether `resolve(handle)` should work for temp (recommended: yes)
+  - keep `EntityQuery` behavior unchanged by default (still misses temp unless merged) to avoid behavioral breakage
 
-Deliverable: existing users unaffected; early adopters can flip the macro and migrate with compiler help.
+**Validation**
+- With flag **off**: behavior identical to Phase 7.
+- With flag **on**:
+  - newly created entities have valid handles pre-merge
+  - resolving those handles works
+  - existing query warnings still occur (queries still miss temp unless forced merge)
 
-### Phase 8 — Validation & test plan (must do)
-Add basic tests (can live in Afterhours examples/tests) that cover:
-- create N entities → get handles → resolve works
-- mark some for cleanup → cleanup → those handles fail, remaining resolve
-- repeated create/delete reuse slots → old handles fail, new handles resolve
-- compaction correctness → handle resolution still correct after many deletions
-- temp entities behavior remains consistent (based on your decision)
+---
 
-Also add a quick benchmark (optional) showing:
-- linear scan `getEntityForID` vs handle resolve under churn.
+### Phase 9 — Test suite & “nothing changed” checks
+
+**Tasks**
+- Add tests (Afterhours examples/tests) covering:
+  - create → merge → handle resolves
+  - create many → mark some cleanup → cleanup → stale handles fail, live handles resolve
+  - repeated create/delete to ensure slot reuse increments generation
+  - swap-removal correctness (moved entity still resolves after compaction)
+  - permanent entities survive “delete non-permanent” and their handles remain valid
+- Optional: micro-benchmark:
+  - linear `getEntityForID` vs `resolve(handle)` under large N.
+
+**Validation**
+- Existing Afterhours examples still behave the same (except when opting in).
+- Plugin API remains intact: common plugin code compiles unchanged.
 
 ---
 
