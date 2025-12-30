@@ -234,25 +234,29 @@ void update_lighting_shader(raylib::Shader& shader, const raylib::Camera3D& cam)
 
     // Sun
     const bool is_night = SystemManager::get().is_bar_open();
-    const vec3 sun_color = is_night ? vec3{0.0f, 0.0f, 0.0f} : PHASE1.sun_color;
+    vec3 sun_color = is_night ? vec3{0.0f, 0.0f, 0.0f} : PHASE1.sun_color;
     set_int(shader, u.lightType, PHASE1.light_type);
     set_vec3(shader, u.lightDir, PHASE1.sun_dir);
     set_vec3(shader, u.lightPos, PHASE1.sun_pos);
-    set_vec3(shader, u.lightColor, sun_color);
     // Daytime should read as bright. Boost ambient + sun only during the day.
     vec3 ambient = PHASE1.ambient;
     float sun_diffuse_intensity = PHASE1.sun_diffuse_intensity;
     float sun_spec_intensity = PHASE1.sun_spec_intensity;
     if (!is_night) {
         constexpr float kDayAmbientBoost = 1.35f;
-        constexpr float kDaySunDiffuseBoost = 1.55f;
+        constexpr float kDaySunDiffuseBoost = 1.95f;
         constexpr float kDaySunSpecBoost = 1.25f;
+        constexpr float kDaySunColorBoost = 1.20f;
         ambient = vec3{ambient.x * kDayAmbientBoost, ambient.y * kDayAmbientBoost,
                        ambient.z * kDayAmbientBoost};
         sun_diffuse_intensity *= kDaySunDiffuseBoost;
         sun_spec_intensity *= kDaySunSpecBoost;
+        sun_color = vec3{sun_color.x * kDaySunColorBoost,
+                         sun_color.y * kDaySunColorBoost,
+                         sun_color.z * kDaySunColorBoost};
     }
 
+    set_vec3(shader, u.lightColor, sun_color);
     set_vec3(shader, u.ambientColor, ambient);
 
     set_float(shader, u.shininess, PHASE1.shininess);
