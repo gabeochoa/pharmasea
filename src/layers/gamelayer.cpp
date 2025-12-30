@@ -266,10 +266,12 @@ inline void rebuild_indoor_light_layout() {
                 x = util::clamp(x, minx + 0.25f, maxx - 0.25f);
                 z = util::clamp(z, minz + 0.25f, maxz - 0.25f);
                 g_indoor_layout.lights_pos_radius[idx] = vec4{x, ly, z, r};
-                // Base indoor lights are intentionally bright (no runtime "boost").
-                // This keeps daytime interiors from feeling noticeably dimmer.
+                // Base indoor lights: keep intensity modest (no runtime boost).
+                // If you want brighter/dimmer, tune this scalar.
+                constexpr float indoor_intensity = 0.9f;
                 g_indoor_layout.lights_color[idx] =
-                    vec3{color.x * 2.0f, color.y * 2.0f, color.z * 2.0f};
+                    vec3{color.x * indoor_intensity, color.y * indoor_intensity,
+                         color.z * indoor_intensity};
                 k++;
             }
         }
