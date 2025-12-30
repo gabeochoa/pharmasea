@@ -1,5 +1,29 @@
 # Lighting Plan (Day/Night + Bar Spill + Outdoor Sun Shadows)
 
+## Current status (implemented)
+
+- **Shader-based lighting is live and always on**
+  - World rendering is wrapped in `BeginShaderMode(lighting)` in `src/layers/gamelayer.cpp`.
+  - Models are rendered with the lighting shader by assigning it to materials in `src/system/rendering_system.cpp`.
+- **Lighting runtime extracted**
+  - Per-frame uniform updates + indoor light layout generation now live in:
+    - `src/lighting_runtime.h`
+    - `src/lighting_runtime.cpp`
+- **Shaders added**
+  - `resources/shaders/lighting.vs` / `resources/shaders/lighting.fs` implement Half-Lambert diffuse + Blinn-Phong specular (sun) + indoor point lights.
+  - `resources/shaders/screen_quad.vs` exists for screen-space fragment shaders.
+- **Normals for cube geometry**
+  - `DrawCubeCustom(...)` emits per-face normals so cubes participate in lighting (`src/drawing_util.h`).
+- **Indoor/outdoor rule (“roof exists”)**
+  - Shader receives `roofRects[]` (minX/minZ/maxX/maxZ) and disables direct sun indoors.
+- **Indoor point lights**
+  - 6 buildings × 10 lights/building = 60 point lights (within shader cap).
+  - Lights are placed in a grid with deterministic jitter to avoid “pointy” obvious placements.
+  - **At night**: only bar building lights remain on; other buildings are off.
+  - **Performance**: shader-side culling evaluates only the lights for the building rect the fragment is inside (via `lightRects[]` + `lightsPerBuilding`).
+- **Debug keys removed**
+  - No H/J/K lighting toggles remain; no lighting debug UI remains.
+
 ## Ideas
 
 ### Visual goals
@@ -56,18 +80,9 @@ The buildings/walls “never change after spawn”, so we can convert their cube
 
 ## Phases (actual changes needed)
 
-### Phase 0 — Instrumentation & debug (so we can see what’s happening)
-
-- **Add debug toggles**
-  - Force-enable lighting even during day.
-  - Show overlay-only view.
-  - Draw debug gizmos for light origin/direction and indoor roof masks.
-- **Where**
-  - `GameLayer::onDraw()` is the correct place to keep “world lit, UI unlit”.
-
 ### Phase 1 — Option A baseline ambience (night/day + indoor/outdoor)
 
-**Replace overlay lighting with shader lighting**:
+**Status: DONE (shader lighting replaces overlay lighting)**:
 
 - **Add lighting shaders**
   - `resources/shaders/lighting.vs` / `resources/shaders/lighting.fs`
@@ -86,12 +101,18 @@ The buildings/walls “never change after spawn”, so we can convert their cube
 
 ### Phase 2 — Option A night local lights (bar spill first)
 
+**Status: PARTIAL**
+
+- Indoor lights exist (per-building), but **“bar spill outside” is not yet a distinct effect**.
+
 - **Add bar lights as additional shader lights**
   - Add 1–N point lights near the bar entrance/window fixtures.
   - Pass as an array of light structs/uniform arrays (position, color, radius, enabled).
   - Apply only during night, and optionally only outdoors (or attenuate indoors).
 
 ### Phase 3 — Option A day sun + outdoor-only shadows
+
+**Status: NOT STARTED**
 
 - **Sun direction/position**
   - Prefer directional sun; optionally keep point-sun for stylization.
@@ -100,6 +121,8 @@ The buildings/walls “never change after spawn”, so we can convert their cube
   - **Real**: shadow mapping (extra render pass + shader sampling + bias tuning).
 
 ### Phase 4 — Static geometry batching v1 (convert wall cubes → static meshes)
+
+**Status: NOT STARTED**
 
 - **Scope**
   - Batch only walls/building shells first (e.g., `EntityType::Wall`).
@@ -121,6 +144,8 @@ The buildings/walls “never change after spawn”, so we can convert their cube
   - Default to per-building meshes or spatial chunk meshes (e.g., 16×16) to keep culling effective and avoid index limits.
 
 ### Phase 5 — Static geometry batching v2 (reduce triangles + improve culling)
+
+**Status: NOT STARTED**
 
 - **Internal face culling**
   - Skip cube faces that are adjacent to another cube in the batch.
