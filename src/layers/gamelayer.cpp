@@ -162,10 +162,12 @@ inline void update_lighting_shader(raylib::Shader& shader,
     set_vec3(shader, u.viewPos, cam.position);
 
     // Sun
+    const bool is_night = SystemManager::get().is_bar_open();
+    const vec3 sun_color = is_night ? vec3{0.0f, 0.0f, 0.0f} : PHASE1.sun_color;
     set_int(shader, u.lightType, PHASE1.light_type);
     set_vec3(shader, u.lightDir, PHASE1.sun_dir);
     set_vec3(shader, u.lightPos, PHASE1.sun_pos);
-    set_vec3(shader, u.lightColor, PHASE1.sun_color);
+    set_vec3(shader, u.lightColor, sun_color);
     set_vec3(shader, u.ambientColor, PHASE1.ambient);
 
     set_float(shader, u.shininess, PHASE1.shininess);
