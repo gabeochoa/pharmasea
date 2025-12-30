@@ -71,6 +71,12 @@ template<typename S>
 void serialize(S& s, OptEntity opt) {
     s.ext(opt, StdOptional{});
 }
+
+template<typename S>
+void serialize(S& s, EntityHandle& handle) {
+    s.value4b(handle.slot);
+    s.value4b(handle.gen);
+}
 }  // namespace bitsery
 
 bool check_type(const Entity& entity, EntityType type);

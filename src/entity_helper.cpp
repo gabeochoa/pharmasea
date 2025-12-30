@@ -51,7 +51,8 @@ OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
         }
         if (!owned) {
             log_error(
-                "Named entity cache could not find owning shared_ptr for {} (id {})",
+                "Named entity cache could not find owning shared_ptr for {} "
+                "(id {})",
                 magic_enum::enum_name<NamedEntity>(name), e_ptr->id);
             return {};
         }
@@ -242,6 +243,14 @@ Entity& EntityHelper::getEnforcedEntityForID(EntityID id) {
         log_error("EntityHelper::getEnforcedEntityForID failed: {}", id);
     }
     return opt.asE();
+}
+
+EntityHandle EntityHelper::getHandleForID(EntityID id) {
+    OptEntity opt = getEntityForID(id);
+    if (!opt) {
+        return EntityHandle::invalid();
+    }
+    return afterhours::EntityHelper::handle_for(opt.asE());
 }
 
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,
