@@ -595,3 +595,46 @@ Decision:
 - Eventually, Afterhours may provide helper serialization utilities.
 
 **Implication**: keep `EntityHandle` as a simple fixed-width POD (two 32-bit integers) and document the recommended wire layout.
+
+### 8) Save/load identity & fixups (project-level behavior, but should be documented)
+Based on the latest discussion:
+- **EntityID on load**: it’s acceptable to remap IDs on load **as long as** anything storing IDs is updated consistently.
+- **Guardrail before changing anything**: audit “random ints” vs “entity IDs” and make sure entity references are strongly typed/tagged (so we don’t miss a field during fixups).
+- **ENTITY_ID_GEN**: after load, set the generator to `max_loaded_id + 1` (or equivalent) to avoid collisions.
+- **Missing references**: on load, if a reference points to a non-existent entity, **log and clear** (and treat it as data corruption / user-edited save if it happens).
+- **Fixup timing**: still undecided; needs a clear rule (see “Open questions” below).
+
+---
+
+## Open questions (still need an explicit decision)
+
+### Fixup timing
+If a project stores entity references as `EntityID` or `EntityHandle`, you need a consistent rule for when it’s safe to resolve them:
+- Option A: run all fixups immediately after entity list deserialization, before any system tick.
+- Option B: allow a “partially loaded” state and require systems/components to handle missing references until a later pass.
+
+Pick one and document it as a contract; otherwise load order bugs will be hard to reason about.
+
+---
+
+## Clarification: “ID→handle index structure” (what it means)
+
+When you store relationships as `EntityID` (for network or saves), you usually want a fast way to resolve `EntityID -> Entity*` (or `EntityID -> EntityHandle`) at runtime.
+
+There are three broad choices:
+
+1) **Linear scan** (current Afterhours behavior: loop over `Entities`)
+   - Simplest, but O(n) per lookup.
+
+2) **Hash map** (`unordered_map<EntityID, EntityHandle>` or `Entity*`)
+   - O(1) average, but involves hashing, allocations, and rehashing under churn.
+
+3) **Vector-backed index** (not a map; fastest, but can grow)
+   - Keep a vector `id_to_slot_or_handle` where the array index is the `EntityID`.
+   - Example: `id_to_slot[id] = slot_index` (or store a full `EntityHandle`).
+   - Lookup becomes O(1) array indexing, no hashing.
+   - Tradeoff: memory is proportional to the **maximum EntityID ever assigned**, not current live entities.
+     - If your IDs only grow and never reset, this can grow over long sessions.
+     - If you reset IDs on new game/load, memory stays bounded.
+
+This “vector-backed index” is what was meant by #6; it’s a common alternative when you want O(1) without a hash map.
