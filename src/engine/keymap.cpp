@@ -699,17 +699,6 @@ void KeyMap::load_game_keys() {
         raylib::KEY_I,
     };
 
-    // Lighting debug (Phase 0+)
-    game_map[InputName::ToggleLightingDebug] = {
-        raylib::KEY_H,
-    };
-    game_map[InputName::ToggleLightingOverlayOnly] = {
-        raylib::KEY_J,
-    };
-    game_map[InputName::ToggleLightingForceEnable] = {
-        raylib::KEY_K,
-    };
-
     game_map[InputName::RecipeNext] = {
         raylib::KEY_RIGHT,
         raylib::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT,

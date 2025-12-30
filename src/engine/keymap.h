@@ -66,11 +66,6 @@ enum InputName {
     ToggleLobby,
     ToggleDebugSettings,
     SkipIngredientMatch,
-
-    // Lighting debug (Phase 0+)
-    ToggleLightingDebug,
-    ToggleLightingOverlayOnly,
-    ToggleLightingForceEnable,
 };
 
 using InputAmount = float;
