@@ -9,6 +9,7 @@
 //
 #include "../dataclass/entity_filter.h"
 #include "../entity.h"
+#include "../entity_helper.h"
 #include "../entity_id.h"
 #include "../entity_type.h"
 #include "has_subtype.h"
@@ -20,7 +21,7 @@ struct CanHoldItem : public BaseComponent {
 
     virtual ~CanHoldItem() {}
 
-    [[nodiscard]] bool empty() const { return held_item_id == entity_id::INVALID; }
+    [[nodiscard]] bool empty() const { return held_item_handle.is_invalid(); }
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
@@ -30,9 +31,9 @@ struct CanHoldItem : public BaseComponent {
     }
 
     CanHoldItem& update(Entity& item, int entity_id) {
-        held_item_id = item.id;
+        held_item_handle = afterhours::EntityHelper::handle_for(item);
         item.get<IsItem>().set_held_by(held_by, entity_id);
-        last_held_id = item.id;
+        last_held_handle = held_item_handle;
         if (held_by == EntityType::Unknown) {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
@@ -43,14 +44,19 @@ struct CanHoldItem : public BaseComponent {
     }
 
     CanHoldItem& update(std::nullptr_t, int) {
-        held_item_id = entity_id::INVALID;
+        held_item_handle = EntityHandle::invalid();
         return *this;
     }
 
     [[nodiscard]] Entity& item() const;
     [[nodiscard]] const Entity& const_item() const;
 
-    [[nodiscard]] EntityID item_id() const { return held_item_id; }
+    [[nodiscard]] EntityHandle item_handle() const { return held_item_handle; }
+    // Legacy compatibility - resolve handle to get ID
+    [[nodiscard]] EntityID item_id() const {
+        auto opt = afterhours::EntityHelper::resolve(held_item_handle);
+        return opt ? opt->id : entity_id::INVALID;
+    }
 
     CanHoldItem& set_filter(EntityFilter ef) {
         filter = ef;
@@ -79,11 +85,16 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] const EntityFilter& get_filter() const { return filter; }
     [[nodiscard]] EntityType hb_type() const { return held_by; }
 
-    [[nodiscard]] EntityID last_id() const { return last_held_id; }
+    [[nodiscard]] EntityHandle last_handle() const { return last_held_handle; }
+    // Legacy compatibility
+    [[nodiscard]] EntityID last_id() const {
+        auto opt = afterhours::EntityHelper::resolve(last_held_handle);
+        return opt ? opt->id : entity_id::INVALID;
+    }
 
    private:
-    EntityID last_held_id = entity_id::INVALID;
-    EntityID held_item_id = entity_id::INVALID;
+    EntityHandle last_held_handle = EntityHandle::invalid();
+    EntityHandle held_item_handle = EntityHandle::invalid();
     EntityType held_by;
     EntityFilter filter;
 
@@ -92,8 +103,8 @@ struct CanHoldItem : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
         s.value4b(held_by);
-        s.value4b(held_item_id);
-        s.value4b(last_held_id);
+        s.object(held_item_handle);
+        s.object(last_held_handle);
         s.object(filter);
     }
 };

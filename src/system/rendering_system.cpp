@@ -253,7 +253,6 @@ bool draw_transform_with_model(const Transform& transform,
     };
 
     if (ENABLE_MODELS) {
-        log_info("Drawing actual model for entity");
         DrawModelEx(renderer.model(), position, vec3{0.f, 1.f, 0.f},
                     model_info.rotation_angle + rotation_angle,
                     transform.size() * model_info.size_scale, color);
@@ -1399,9 +1398,9 @@ void render_held_furniture_preview(const Entity& entity, float) {
         || (drop_location == chf.picked_up_at());
 
     if (walkable) {
-        EntityID furn_id = chf.furniture_id();
-        OptEntity hf = EntityHelper::getEntityForID(furn_id);
-        if (hf->has<IsStoreSpawned>()) {
+        Entity& hf =
+            afterhours::EntityHelper::resolveEnforced(chf.furniture_handle());
+        if (hf.has<IsStoreSpawned>()) {
             if (!STORE_BUILDING.is_inside({drop_location.x, drop_location.z})) {
                 // TODO add a message or something to show you cant drop it
                 walkable = false;

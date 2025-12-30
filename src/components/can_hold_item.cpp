@@ -3,10 +3,18 @@
 #include "../entity_helper.h"
 
 Entity& CanHoldItem::item() const {
-    return EntityHelper::getEnforcedEntityForID(held_item_id);
+    OptEntity opt = afterhours::EntityHelper::resolve(held_item_handle);
+    if (!opt) {
+        log_error("CanHoldItem::item() - held_item_handle is invalid or stale");
+    }
+    return opt.asE();
 }
 
 const Entity& CanHoldItem::const_item() const {
-    return EntityHelper::getEnforcedEntityForID(held_item_id);
+    OptEntity opt = afterhours::EntityHelper::resolve(held_item_handle);
+    if (!opt) {
+        log_error(
+            "CanHoldItem::const_item() - held_item_handle is invalid or stale");
+    }
+    return opt.asE();
 }
-

@@ -6,6 +6,7 @@
 
 #include "ah.h"
 using afterhours::Entity;
+using afterhours::EntityHandle;
 using afterhours::OptEntity;
 using afterhours::RefEntity;
 
@@ -69,6 +70,12 @@ void serialize(S& s, RefEntity ref) {
 template<typename S>
 void serialize(S& s, OptEntity opt) {
     s.ext(opt, StdOptional{});
+}
+
+template<typename S>
+void serialize(S& s, EntityHandle& handle) {
+    s.value4b(handle.slot);
+    s.value4b(handle.gen);
 }
 }  // namespace bitsery
 

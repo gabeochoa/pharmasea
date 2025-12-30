@@ -28,6 +28,7 @@ enum struct NamedEntity {
 
 using Entities = std::vector<std::shared_ptr<afterhours::Entity>>;
 using RefEntities = std::vector<afterhours::RefEntity>;
+using EntityHandle = afterhours::EntityHandle;
 
 using NamedEntities = std::map<NamedEntity, std::shared_ptr<Entity>>;
 
@@ -111,6 +112,8 @@ struct EntityHelper {
 
     // Like getEntityForID, but asserts when missing.
     static Entity& getEnforcedEntityForID(EntityID id);
+
+    static EntityHandle getHandleForID(EntityID id);
 
     static OptEntity getClosestOfType(const Entity& entity,
                                       const EntityType& type,
