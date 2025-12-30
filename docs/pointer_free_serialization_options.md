@@ -205,6 +205,10 @@ This keeps the “Afterhours ergonomics” (queries returning `RefEntity`, code 
 
 This gives you pointer-free serialization **and** preserves the “pointers are fast” runtime behavior by using array indexing for both iteration and lookups, without maintaining a `map<>`.
 
+**Direction note**:
+- PharmaSea will migrate long-lived gameplay relationships to `EntityHandle`.
+- `EntityID` can remain for compatibility/network/debug, but should not be required for hot-path relationship resolution once the migration is complete.
+
 ---
 
 ## Implementation phases (detailed work breakdown)

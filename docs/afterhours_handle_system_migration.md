@@ -227,6 +227,10 @@ Even with an Afterhours-native handle store, PharmaSea would still need to:
 
 Afterhours supporting handles just makes that migration cleaner (you can use Afterhours’ handle type and resolver rather than having a parallel system in PharmaSea).
 
+**Current direction (confirmed)**:
+- PharmaSea will migrate **long-lived gameplay relationships** to `EntityHandle`.
+- `EntityID` remains for compatibility (and possibly networking/diagnostics), but should not be relied on for hot-path relationship resolution once the migration is complete.
+
 ---
 
 ## Suggested rollout strategy for Afterhours (minimize breakage)
@@ -604,6 +608,12 @@ Based on the latest discussion:
 - **Missing references**: on load, if a reference points to a non-existent entity, **log and clear** (and treat it as data corruption / user-edited save if it happens).
 - **Fixup timing**: still undecided; needs a clear rule (see “Open questions” below).
 
+**Important refinement (because PharmaSea is migrating to handles)**:
+- After the migration, most gameplay state should store **handles**, not IDs.
+- Therefore, the key persistence question becomes: **how do we rehydrate handles on load?**
+  - Practical approach: persist relationships as `EntityID` (or a persistent key) in the save, then rebuild handles and fix up after load.
+  - Alternative approach: persist raw slot-based handles and reconstruct the exact slot layout on load (tighter coupling; usually not worth it).
+
 ---
 
 ## Open questions (still need an explicit decision)
@@ -638,3 +648,7 @@ There are three broad choices:
      - If you reset IDs on new game/load, memory stays bounded.
 
 This “vector-backed index” is what was meant by #6; it’s a common alternative when you want O(1) without a hash map.
+
+**Note for PharmaSea specifically**:
+- Once PharmaSea stores long-lived relationships as `EntityHandle`, it should not need frequent `EntityID -> entity` lookups in hot paths.
+- That means an ID index structure can remain a legacy/interop tool (networking, debug, or transitional migration) rather than something performance-critical long-term.
