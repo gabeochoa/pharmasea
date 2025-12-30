@@ -34,7 +34,10 @@ inline void backfill_empty_container(const EntityType& match_type,
     // create item
     Entity& item =
         EntityHelper::createItem(iic.type(), pos, std::forward<TArgs>(args)...);
-    canHold.update(EntityHelper::getEntityAsSharedPtr(item), entity.id);
+    // ^ cannot be const because converting to SharedPtr v
+    //
+    // TODO do we need shared pointer here? (vs just id?)
+    canHold.update(item, entity.id);
 }
 
 struct ProcessIsContainerAndShouldBackfillItemSystem

@@ -263,7 +263,7 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
         drink.get<IsDrink>().get_tip_multiplier());
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
-    ourCHI.update(EntityHelper::getEntityAsSharedPtr(drink), entity.id);
+    ourCHI.update(drink, entity.id);
     regCHI.update(nullptr, EntityID::INVALID);
 
     log_info("ai: {} accepted drink={} price={} tip={}", entity.id, drink_name,

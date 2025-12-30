@@ -160,7 +160,7 @@ void backfill_empty_container(const EntityType& match_type, Entity& entity,
     // create item
     Entity& item =
         EntityHelper::createItem(iic.type(), pos, std::forward<TArgs>(args)...);
-    canHold.update(EntityHelper::getEntityAsSharedPtr(item), entity.id);
+    canHold.update(item, entity.id);
 }
 
 void fix_container_item_type(Entity& entity) {

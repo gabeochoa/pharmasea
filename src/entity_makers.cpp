@@ -1283,8 +1283,7 @@ void make_fruit(Item& fruit, vec3 pos, int index) {
             make_juice(juice, owner.get<Transform>().pos(), fruit_type);
 
             CanHoldItem& blenderCHI = blender->get<CanHoldItem>();
-            blenderCHI.update(EntityHelper::getEntityAsSharedPtr(juice),
-                              blender->id);
+            blenderCHI.update(juice, blender->id);
         }
     });
 }
