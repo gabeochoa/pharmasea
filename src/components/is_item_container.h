@@ -28,6 +28,11 @@ struct IsItemContainer : public BaseComponent {
         return *this;
     }
 
+    IsItemContainer& set_item_type(EntityType type) {
+        item_type = type;
+        return *this;
+    }
+
     [[nodiscard]] bool hit_max() const {
         return max_gens < 0 ? false : gens >= max_gens;
     }
@@ -54,7 +59,10 @@ struct IsItemContainer : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        // s.text1b(item_type, MAX_ITEM_NAME);
-        // s.value4b(max_gens);
+        s.value4b(gens);
+        s.value4b(max_gens);
+        // item_type, uses_indexer, is_table_when_empty are set by entity type
+        // during creation and don't need to be serialized - containers reset
+        // empty on load
     }
 };

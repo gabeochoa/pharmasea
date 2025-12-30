@@ -69,6 +69,7 @@ struct Preload {
 
     void load_map_generation_info();
     void load_keymapping();
+    void load_model_metadata_only(const std::function<void()>& tick);
 
     void load_translations();
 
