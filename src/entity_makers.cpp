@@ -384,11 +384,9 @@ void process_table_working(Entity& table, HasWork& hasWork, Entity& player,
     CanHoldItem& tableCHI = table.get<CanHoldItem>();
     if (tableCHI.empty()) return;
 
-    OptEntity held_opt = EntityHelper::getEntityForID(tableCHI.item_id());
-    if (!held_opt) return;
-    if (!held_opt->has<HasWork>()) return;
+    if (!tableCHI.const_item().has<HasWork>()) return;
 
-    Item& item = held_opt.asE();
+    Item& item = tableCHI.item();
     // We have to call the item's hasWork because the table
     // doesnt actually do anything, its the item that we are working
     //
@@ -647,9 +645,7 @@ void make_ice_machine(Entity& machine, vec2 pos) {
         [](Entity&, HasWork& hasWork, Entity& player, float dt) {
             CanHoldItem& chi = player.get<CanHoldItem>();
             if (chi.empty()) return;
-            OptEntity held_opt = EntityHelper::getEntityForID(chi.item_id());
-            if (!held_opt) return;
-            Item& item = held_opt.asE();
+            Item& item = chi.item();
             if (!check_if_drink(item)) return;
 
             Ingredient ing = Ingredient::IceCubes;
@@ -881,9 +877,7 @@ void make_draft(Entity& draft, vec2 pos) {
             if (chi.empty()) {
                 return;
             }
-            OptEntity held_opt = EntityHelper::getEntityForID(chi.item_id());
-            if (!held_opt) return;
-            Item& item = held_opt.asE();
+            Item& item = chi.item();
             if (!check_if_drink(item)) {
                 return;
             }
@@ -958,10 +952,7 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
                 const CanHoldItem& playerCHI = entity.get<CanHoldItem>();
                 // not holding anything
                 if (playerCHI.empty()) return {true, 0.25f};
-                OptEntity held_opt =
-                    EntityHelper::getEntityForID(playerCHI.item_id());
-                if (!held_opt) return {true, 0.25f};
-                const Item& item = held_opt.asE();
+                const Item& item = playerCHI.const_item();
                 // Has to be holding mop
                 if (check_type(item, EntityType::Mop)) return {true, 2.f};
 
@@ -1108,9 +1099,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         // not holding anything
         if (playerCHI.empty()) return;
-        OptEntity held_opt = EntityHelper::getEntityForID(playerCHI.item_id());
-        if (!held_opt) return;
-        Item& item = held_opt.asE();
+        Item& item = playerCHI.item();
         // not holding item that adds ingredients
         if (item.is_missing<AddsIngredient>()) return;
         const AddsIngredient& addsIG = item.get<AddsIngredient>();
