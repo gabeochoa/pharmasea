@@ -53,10 +53,7 @@ EQ& EQ::whereIsHoldingItemOfType(EntityType type) {
         add_mod(new WhereHasComponent<CanHoldItem>())
             .add_mod(new WhereLambda([type](const Entity& entity) {
                 const CanHoldItem& chi = entity.get<CanHoldItem>();
-                if (!chi.is_holding_item()) return false;
-                OptEntity held_opt = EntityHelper::getEntityForID(chi.item_id());
-                if (!held_opt) return false;
-                return held_opt->hasTag(type);
+                return chi.is_holding_item() && chi.item().hasTag(type);
             }));
 }
 
@@ -73,8 +70,7 @@ EQ& EQ::whereHeldItemMatches(const std::function<bool(const Entity&)>& fn) {
         add_mod(new WhereLambda([&fn](const Entity& entity) -> bool {
             const CanHoldItem& chf = entity.get<CanHoldItem>();
             if (!chf.is_holding_item()) return false;
-            OptEntity held_opt = EntityHelper::getEntityForID(chf.item_id());
-            if (!held_opt) return false;
-            return fn(held_opt.asE());
+            const Item& item = chf.const_item();
+            return fn(item);
         }));
 }
