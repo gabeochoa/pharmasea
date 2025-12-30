@@ -29,6 +29,7 @@
 #include "../components/uses_character_model.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/statemanager.h"
+#include "../entity_id.h"
 #include "../entity_helper.h"
 #include "../entity_makers.h"
 #include "../entity_query.h"
@@ -739,9 +740,8 @@ struct ProcessSodaFountainSystem
         // If we arent holding anything, nothing to squirt into
         if (sfCHI.empty()) return;
 
-        if (sfCHI.item().is_missing<IsDrink>()) return;
-
         Entity& drink = sfCHI.item();
+        if (drink.is_missing<IsDrink>()) return;
         // Already has soda in it
         if (bitset_utils::test(drink.get<IsDrink>().ing(), Ingredient::Soda)) {
             return;
@@ -766,7 +766,8 @@ struct ProcessSquirterSystem
         }
 
         // cant squirt into this !
-        if (sqCHI.item().is_missing<IsDrink>()) return;
+        Entity& drink = sqCHI.item();
+        if (drink.is_missing<IsDrink>()) return;
 
         // so we got something, lets see if anyone around can give us
         // something to use
@@ -794,8 +795,8 @@ struct ProcessSquirterSystem
             // working reset
             return;
         }
-        Entity& drink = sqCHI.item();
-        Item& item = closest_furniture->get<CanHoldItem>().item();
+        CanHoldItem& closest_chi = closest_furniture->get<CanHoldItem>();
+        Item& item = closest_chi.item();
 
         if (is_squirter.drink_id() == drink.id) {
             is_squirter.reset();
@@ -834,7 +835,8 @@ struct ProcessSquirterSystem
 
         bool cleanup = items::_add_item_to_drink_NO_VALIDATION(drink, item);
         if (cleanup) {
-            closest_furniture->get<CanHoldItem>().update(nullptr, -1);
+            closest_furniture->get<CanHoldItem>().update(nullptr,
+                                                         entity_id::INVALID);
         }
     }
 };
@@ -850,7 +852,7 @@ struct ProcessTrashSystem : public afterhours::System<CanHoldItem> {
         if (trashCHI.empty()) return;
 
         trashCHI.item().cleanup = true;
-        trashCHI.update(nullptr, -1);
+        trashCHI.update(nullptr, entity_id::INVALID);
     }
 };
 

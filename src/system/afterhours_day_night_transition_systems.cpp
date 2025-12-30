@@ -22,6 +22,7 @@
 #include "../engine/log.h"
 #include "../engine/simulated_input/simulated_input.h"
 #include "../engine/statemanager.h"
+#include "../entity_id.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../globals.h"
@@ -40,9 +41,8 @@ inline void delete_held_items_when_leaving_inround(Entity& entity) {
 
     // Mark it as deletable
     // let go of the item
-    Item& item = canHold.item();
-    item.cleanup = true;
-    canHold.update(nullptr, -1);
+    canHold.item().cleanup = true;
+    canHold.update(nullptr, entity_id::INVALID);
 }
 
 inline void reset_max_gen_when_after_deletion(Entity& entity) {
@@ -62,7 +62,7 @@ inline void tell_customers_to_leave(Entity& entity) {
     // Force leaving job
     entity.get<CanPerformJob>().current = JobType::Leaving;
     entity.removeComponentIfExists<CanPathfind>();
-    entity.addComponent<CanPathfind>().set_parent(&entity);
+    entity.addComponent<CanPathfind>().set_parent(entity.id);
 }
 
 inline void update_new_max_customers(Entity& entity, float) {
@@ -187,7 +187,7 @@ struct TellCustomersToLeaveSystem
                                float) override {
         cpj.current = JobType::Leaving;
         entity.removeComponentIfExists<CanPathfind>();
-        entity.addComponent<CanPathfind>().set_parent(&entity);
+        entity.addComponent<CanPathfind>().set_parent(entity.id);
     }
 };
 
@@ -508,10 +508,10 @@ struct ReleaseMopBuddyAtStartOfDaySystem
         if (!canHold.is_holding_item()) {
             return;
         }
-        if (canHold.item().id != entity.id) {
+        if (canHold.item_id() != entity.id) {
             return;
         }
-        canHold.update(nullptr, -1);
+        canHold.update(nullptr, entity_id::INVALID);
 
         // Force drop the mop buddy
         isitem.set_held_by(EntityType::Unknown, -1);

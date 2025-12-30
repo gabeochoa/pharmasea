@@ -70,7 +70,7 @@ EQ& EQ::whereHeldItemMatches(const std::function<bool(const Entity&)>& fn) {
         add_mod(new WhereLambda([&fn](const Entity& entity) -> bool {
             const CanHoldItem& chf = entity.get<CanHoldItem>();
             if (!chf.is_holding_item()) return false;
-            const Item& item = chf.item();
+            const Item& item = chf.const_item();
             return fn(item);
         }));
 }

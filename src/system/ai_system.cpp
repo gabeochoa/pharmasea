@@ -18,6 +18,7 @@
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
 #include "../components/is_toilet.h"
+#include "../entity_id.h"
 
 namespace system_manager::ai {
 
@@ -263,8 +264,8 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
         drink.get<IsDrink>().get_tip_multiplier());
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
-    ourCHI.update(EntityHelper::getEntityAsSharedPtr(regCHI.item()), entity.id);
-    regCHI.update(nullptr, -1);
+    ourCHI.update(drink, entity.id);
+    regCHI.update(nullptr, entity_id::INVALID);
 
     log_info("ai: {} accepted drink={} price={} tip={}", entity.id, drink_name,
              price, tip);
@@ -383,7 +384,7 @@ void process_ai_drinking(Entity& entity, float dt) {
     // Done with my drink, delete it
     CanHoldItem& chi = entity.get<CanHoldItem>();
     chi.item().cleanup = true;
-    chi.update(nullptr, -1);
+    chi.update(nullptr, entity_id::INVALID);
 
     // Mark our current order finished
     cod.on_order_finished();
@@ -502,8 +503,8 @@ void process_ai_use_bathroom(Entity& entity, float dt) {
         istoilet.end_use();
 
         // TODO move away from it for a second
-        (void) entity.get<CanPathfind>().travel_toward(
-            vec2{0, 0}, get_speed_for_entity(entity) * dt);
+        (void) entity.get<CanPathfind>().travel_toward(vec2{0, 0},
+                                                       get_speed_for_entity(entity) * dt);
 
         // We specificaly dont use next_job() here because
         // we dont want to infinite loop

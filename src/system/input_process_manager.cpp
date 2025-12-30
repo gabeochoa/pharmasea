@@ -36,6 +36,7 @@
 #include "../engine/pathfinder.h"
 #include "../entity.h"
 #include "../entity_helper.h"
+#include "../entity_id.h"
 #include "../entity_query.h"
 #include "../entity_type.h"
 #include "../network/server.h"
@@ -191,7 +192,8 @@ void collect_user_input(Entity& entity, float dt) {
     bool pickup =
         KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
     if (pickup) {
-        log_info("input: PlayerPickup (space) requested for entity {}", entity.id);
+        log_info("input: PlayerPickup (space) requested for entity {}",
+                 entity.id);
         cui.write(InputName::PlayerPickup, 1.f);
     }
 
@@ -659,7 +661,9 @@ void handle_drop(Entity& player) {
 
     const auto _place_special_item_onto_ground =
         [&]() -> tl::expected<bool, std::string> {
-        Item& item = player.get<CanHoldItem>().item();
+        CanHoldItem& playerCHI = player.get<CanHoldItem>();
+        if (playerCHI.empty()) return tl::unexpected("not holding an item");
+        Item& item = playerCHI.item();
 
         // This is only allowed for special boys
         if (!check_type(item, EntityType::MopBuddy))
@@ -667,7 +671,7 @@ void handle_drop(Entity& player) {
 
         // Just drop him wherever we are
         item.get<IsItem>().set_held_by(EntityType::Unknown, -1);
-        player.get<CanHoldItem>().update(nullptr, -1);
+        player.get<CanHoldItem>().update(nullptr, entity_id::INVALID);
         return true;
     };
 
@@ -823,7 +827,7 @@ void handle_drop(Entity& player) {
                 const CanHoldItem& furnCanHold = f.get<CanHoldItem>();
                 const CanHoldItem& playerCanHold = player.get<CanHoldItem>();
                 if (!playerCanHold.is_holding_item()) return false;
-                const Item& item = playerCanHold.item();
+                const Item& item = playerCanHold.const_item();
 
                 // Handle item containers
                 if (f.has<IsItemContainer>()) {
@@ -865,7 +869,8 @@ void handle_drop(Entity& player) {
         const Transform& furnT = closest_furniture->get<Transform>();
         CanHoldItem& furnCHI = closest_furniture->get<CanHoldItem>();
 
-        Item& item = player.get<CanHoldItem>().item();
+        CanHoldItem& playerCHI = player.get<CanHoldItem>();
+        Item& item = playerCHI.item();
         item.get<Transform>().update(furnT.snap_position());
 
         if (closest_furniture->has<IsItemContainer>() &&
@@ -882,9 +887,8 @@ void handle_drop(Entity& player) {
             }
         }
 
-        furnCHI.update(EntityHelper::getEntityAsSharedPtr(item),
-                       closest_furniture->id);
-        player.get<CanHoldItem>().update(nullptr, -1);
+        furnCHI.update(item, closest_furniture->id);
+        playerCHI.update(nullptr, entity_id::INVALID);
         log_info("pickup: placed item {} onto furniture {}", item.id,
                  closest_furniture->id);
         return true;
@@ -951,11 +955,11 @@ void handle_grab(Entity& player) {
         // item->name(), closest_furniture->name());
 
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
-        playerCHI.update(EntityHelper::getEntityAsSharedPtr(item), player.id);
+        playerCHI.update(item, player.id);
         item.get<Transform>().update(player.get<Transform>().snap_position());
         furnCanHold.update(nullptr, -1);
-        log_info("pickup: player {} picked item {} from furniture {}", player.id,
-                 item.id, closest_furniture->id);
+        log_info("pickup: player {} picked item {} from furniture {}",
+                 player.id, item.id, closest_furniture->id);
 
         // In certain cases, we need to reset the progress when you pick up an
         // item. im not sure exactly when this needs to be, but im sure over
@@ -993,8 +997,7 @@ void handle_grab(Entity& player) {
     // nothing found
     if (!closest_item) return;
 
-    player.get<CanHoldItem>().update(
-        EntityHelper::getEntityAsSharedPtr(closest_item), player.id);
+    player.get<CanHoldItem>().update(closest_item.asE(), player.id);
     log_info("pickup: player {} picked loose item {}", player.id,
              closest_item->id);
 
@@ -1131,83 +1134,84 @@ void handle_grab_or_drop(Entity& player) {
 }  // namespace inround
 
 void process_input(Entity& entity, const UserInput& input) {
-    const auto _proc_single_input_name =
-        [](Entity& entity, const InputName& input_name, float input_amount,
-           float frame_dt, float cam_angle) {
-            switch (input_name) {
-                case InputName::PlayerLeft:
-                case InputName::PlayerRight:
-                case InputName::PlayerForward:
-                case InputName::PlayerBack:
-                    return process_player_movement_input(
-                        entity, frame_dt, cam_angle, input_name, input_amount);
-                default:
-                    break;
-            }
+    const auto _proc_single_input_name = [](Entity& entity,
+                                            const InputName& input_name,
+                                            float input_amount, float frame_dt,
+                                            float cam_angle) {
+        switch (input_name) {
+            case InputName::PlayerLeft:
+            case InputName::PlayerRight:
+            case InputName::PlayerForward:
+            case InputName::PlayerBack:
+                return process_player_movement_input(
+                    entity, frame_dt, cam_angle, input_name, input_amount);
+            default:
+                break;
+        }
 
-            // Because of predictive input, we run this _proc_single as the
-            // client and as the server
-            //
-            // For the client we only care about player movement, so if we are
-            // not the server then just skip the rest
+        // Because of predictive input, we run this _proc_single as the
+        // client and as the server
+        //
+        // For the client we only care about player movement, so if we are
+        // not the server then just skip the rest
 
-            // TODO we would like to disable this so placing preview works
-            // however it breaks all pickup/drop on non host client...
-            // if (!is_server()) return;
-            //
-            // ^^^ This breaks clientside held furniture, which means the
-            // preview wont work with this
+        // TODO we would like to disable this so placing preview works
+        // however it breaks all pickup/drop on non host client...
+        // if (!is_server()) return;
+        //
+        // ^^^ This breaks clientside held furniture, which means the
+        // preview wont work with this
 
-            switch (input_name) {
-                case InputName::PlayerRotateFurniture:
-                    planning::rotate_furniture(entity);
-                    break;
-                case InputName::PlayerHandTruckInteract:
+        switch (input_name) {
+            case InputName::PlayerRotateFurniture:
+                planning::rotate_furniture(entity);
+                break;
+            case InputName::PlayerHandTruckInteract:
+                if (GameState::get().is_game_like()) {
+                    // inround::handle_hand_truck(entity);
+                    planning::handle_grab_or_drop(entity);
+                }
+                break;
+            case InputName::PlayerPickup:
+                // grab_or_drop(entity);
+                {
+                    bool has_item = entity.has<CanHoldItem>()
+                                        ? !entity.get<CanHoldItem>().empty()
+                                        : false;
+                    bool has_handtruck =
+                        entity.has<CanHoldHandTruck>()
+                            ? entity.get<CanHoldHandTruck>().is_holding()
+                            : false;
+                    log_info(
+                        "pickup: PlayerPickup dispatch game_like={} daytime={} "
+                        "has_item={} has_handtruck={}",
+                        GameState::get().is_game_like(),
+                        SystemManager::get().is_bar_closed(), has_item,
+                        has_handtruck);
                     if (GameState::get().is_game_like()) {
-                        // inround::handle_hand_truck(entity);
-                        planning::handle_grab_or_drop(entity);
-                    }
-                    break;
-                case InputName::PlayerPickup:
-                    // grab_or_drop(entity);
-                    {
-                        bool has_item = entity.has<CanHoldItem>()
-                                            ? !entity.get<CanHoldItem>().empty()
-                                            : false;
-                        bool has_handtruck = entity.has<CanHoldHandTruck>()
-                                                 ? entity.get<CanHoldHandTruck>()
-                                                       .is_holding()
-                                                 : false;
-                        log_info(
-                            "pickup: PlayerPickup dispatch game_like={} daytime={} "
-                            "has_item={} has_handtruck={}",
-                            GameState::get().is_game_like(),
-                            SystemManager::get().is_bar_closed(), has_item,
-                            has_handtruck);
-                        if (GameState::get().is_game_like()) {
-                            // Planning mode is when it's daytime, in-round mode
-                            // is when it's nighttime
-                            if (SystemManager::get().is_bar_closed()) {
-                                log_info("pickup: using planning grab/drop");
-                                planning::handle_grab_or_drop(entity);
-                            } else {
-                                log_info("pickup: using inround grab/drop");
-                                inround::handle_grab_or_drop(entity);
-                            }
+                        // Planning mode is when it's daytime, in-round mode
+                        // is when it's nighttime
+                        if (SystemManager::get().is_bar_closed()) {
+                            log_info("pickup: using planning grab/drop");
+                            planning::handle_grab_or_drop(entity);
                         } else {
-                            // probably want to handle messing around in the
-                            // lobby?
+                            log_info("pickup: using inround grab/drop");
+                            inround::handle_grab_or_drop(entity);
                         }
+                    } else {
+                        // probably want to handle messing around in the
+                        // lobby?
                     }
-                    break;
-                case InputName::PlayerDoWork: {
-                    work_furniture(entity, frame_dt);
-                    fishing_game(entity, frame_dt);
-                } break;
-                default:
-                    break;
-            }
-        };
+                }
+                break;
+            case InputName::PlayerDoWork: {
+                work_furniture(entity, frame_dt);
+                fishing_game(entity, frame_dt);
+            } break;
+            default:
+                break;
+        }
+    };
 
     const InputSet input_set = std::get<0>(input);
     const float frame_dt = std::get<1>(input);

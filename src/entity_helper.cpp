@@ -2,6 +2,7 @@
 
 #include "components/is_floor_marker.h"
 #include "components/is_trigger_area.h"
+#include "entity_id.h"
 #include "entity_query.h"
 #include "entity_type.h"
 #include "system/input_process_manager.h"
@@ -226,13 +227,21 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
 }
 
 OptEntity EntityHelper::getEntityForID(EntityID id) {
-    if (id == -1) return {};
+    if (id == entity_id::INVALID) return {};
 
     for (const auto& e : get_entities()) {
         if (!e) continue;
         if (e->id == id) return *e;
     }
     return {};
+}
+
+Entity& EntityHelper::getEnforcedEntityForID(EntityID id) {
+    OptEntity opt = getEntityForID(id);
+    if (!opt) {
+        log_error("EntityHelper::getEnforcedEntityForID failed: {}", id);
+    }
+    return opt.asE();
 }
 
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,
