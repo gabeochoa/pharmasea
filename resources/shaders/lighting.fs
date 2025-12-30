@@ -23,8 +23,9 @@ uniform vec3 ambientColor; // linear RGB
 // Additional point lights (e.g. indoor fixtures)
 uniform int pointLightCount;
 // vec4(x,y,z,radius)
-uniform vec4 pointLightsPosRadius[8];
-uniform vec3 pointLightsColor[8];
+// NOTE: Kept intentionally generous for testing (e.g. 8 per building).
+uniform vec4 pointLightsPosRadius[64];
+uniform vec3 pointLightsColor[64];
 
 // Shading model controls
 uniform float shininess;      // e.g. 16..128
