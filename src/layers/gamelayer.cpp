@@ -67,16 +67,16 @@ void draw_projected_building_rect_outline(const Building& b,
 struct Phase1LightingTuning {
     // Night ambience: alpha-black tint over whole screen.
     unsigned char night_outdoor_dark_alpha = 190;
-    // Indoor lift: make it obvious (Phase 1). This is intentionally strong.
-    // Later we can move back toward subtle additive "lift".
-    Color night_indoor_tint = Color{255, 190, 120, 70};
+    // Indoor tint: intentionally obvious for validation.
+    // Later we can replace with a subtle "lift" once placement is correct.
+    Color night_indoor_tint = Color{255, 165, 0, 140};
     // Optional: day tint (kept subtle; can be turned off by setting alpha=0).
     Color day_tint = Color{255, 240, 220, 10};
     // Projection height used for building masks.
     // NOTE: The world ground plane is drawn at y = -TILESIZE (see draw_world()).
-    // Most cubes/entities are centered at y=0 with size ~1, so their bottom is ~-0.5.
-    // For Phase 1, project at "entity base" so the mask aligns with visible ground contact.
-    float mask_y = -TILESIZE / 2.f;
+    // If we project at -0.5, the mask can read like it's floating above the ground.
+    // For correctness, stick to the actual ground plane.
+    float mask_y = -TILESIZE;
 };
 
 static const Phase1LightingTuning PHASE1{};
@@ -200,13 +200,9 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
     draw_projected_building_rect_outline(STORE_BUILDING, cam, y, GREEN);
     draw_projected_building_rect_outline(BAR_BUILDING, cam, y, GREEN);
     draw_projected_building_rect_outline(LOAD_SAVE_BUILDING, cam, y, GREEN);
-
-    // Extra alignment debug: draw BAR_BUILDING outline at 3 Y levels.
-    // This helps visually pick the correct mask plane.
+    // Extra alignment debug: draw BAR_BUILDING outline at 2 Y levels.
+    // GREEN = active mask_y, RED = ground plane. If these differ a lot, projection is off.
     draw_projected_building_rect_outline(BAR_BUILDING, cam, -TILESIZE, RED);
-    draw_projected_building_rect_outline(BAR_BUILDING, cam, -TILESIZE / 2.f,
-                                         BLUE);
-    draw_projected_building_rect_outline(BAR_BUILDING, cam, 0.f, YELLOW);
 }
 
 }  // namespace
