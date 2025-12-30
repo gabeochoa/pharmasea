@@ -14,6 +14,9 @@
 #include "../map.h"
 #include "../system/system_manager.h"
 #include "../engine/shader_library.h"
+#include "../entity_query.h"
+#include "../entity_type.h"
+#include "../components/transform.h"
 #include "raylib.h"
 
 namespace {
@@ -131,6 +134,9 @@ struct LightingUniforms {
     int roofRects = -1;
 
     int pointLightCount = -1;
+    int lightsPerBuilding = -1;
+    int lightRectCount = -1;
+    int lightRects = -1;
     int pointLightsPosRadius = -1;
     int pointLightsColor = -1;
 };
@@ -148,10 +154,133 @@ inline LightingUniforms get_lighting_uniforms(raylib::Shader& s) {
     u.roofRectCount = raylib::GetShaderLocation(s, "roofRectCount");
     u.roofRects = raylib::GetShaderLocation(s, "roofRects");
     u.pointLightCount = raylib::GetShaderLocation(s, "pointLightCount");
+    u.lightsPerBuilding = raylib::GetShaderLocation(s, "lightsPerBuilding");
+    u.lightRectCount = raylib::GetShaderLocation(s, "lightRectCount");
+    u.lightRects = raylib::GetShaderLocation(s, "lightRects");
     u.pointLightsPosRadius =
         raylib::GetShaderLocation(s, "pointLightsPosRadius");
     u.pointLightsColor = raylib::GetShaderLocation(s, "pointLightsColor");
     return u;
+}
+
+struct IndoorLightLayout {
+    static constexpr int kBuildings = 6;
+    static constexpr int kLightsPerBuilding = 8;
+    static constexpr int kTotalLights = kBuildings * kLightsPerBuilding;
+
+    bool initialized = false;
+    // Light rects used for indoor lights (can be tighter than roofRects)
+    std::array<vec4, kBuildings> light_rects{};
+    std::array<vec4, kTotalLights> lights_pos_radius{};
+    std::array<vec3, kTotalLights> lights_color{};
+};
+
+static IndoorLightLayout g_indoor_layout{};
+
+inline vec4 building_rect_minmax(const Building& b) {
+    // minX, minZ, maxX, maxZ
+    return {b.min().x, b.min().y, b.max().x, b.max().y};
+}
+
+inline vec4 compute_bar_light_rect_from_walls() {
+    // Bar building can be larger than actual placed walls.
+    // Find wall tiles inside BAR_BUILDING bounds and compute a tight interior rect.
+    const auto walls =
+        EntityQuery()
+            .whereType(EntityType::Wall)
+            .whereInside(BAR_BUILDING.min(), BAR_BUILDING.max())
+            .gen();
+
+    if (walls.empty()) {
+        return building_rect_minmax(BAR_BUILDING);
+    }
+
+    float minx = 1e9f, minz = 1e9f, maxx = -1e9f, maxz = -1e9f;
+    for (const Entity& w : walls) {
+        if (w.is_missing<Transform>()) continue;
+        vec2 p = w.get<Transform>().as2();
+        minx = fmin(minx, p.x);
+        minz = fmin(minz, p.y);
+        maxx = fmax(maxx, p.x);
+        maxz = fmax(maxz, p.y);
+    }
+
+    // Move inward by 1 tile from walls to approximate interior.
+    vec4 r = {minx + 1.f, minz + 1.f, maxx - 1.f, maxz - 1.f};
+
+    // Validate: if invalid (door gaps or weirdness), fall back.
+    if (r.z <= r.x || r.w <= r.y) {
+        return building_rect_minmax(BAR_BUILDING);
+    }
+    return r;
+}
+
+inline void rebuild_indoor_light_layout() {
+    // Build rects (roof rectangles for light placement). Only bar needs special-case today.
+    g_indoor_layout.light_rects[0] = building_rect_minmax(LOBBY_BUILDING);
+    g_indoor_layout.light_rects[1] = building_rect_minmax(MODEL_TEST_BUILDING);
+    g_indoor_layout.light_rects[2] = building_rect_minmax(PROGRESSION_BUILDING);
+    g_indoor_layout.light_rects[3] = building_rect_minmax(STORE_BUILDING);
+    g_indoor_layout.light_rects[4] = compute_bar_light_rect_from_walls();
+    g_indoor_layout.light_rects[5] = building_rect_minmax(LOAD_SAVE_BUILDING);
+
+    const auto radius_for_rect = [](const vec4& r) -> float {
+        float w = r.z - r.x;
+        float h = r.w - r.y;
+        float min_dim = fmin(w, h);
+        return fmax(6.0f, 0.45f * min_dim);
+    };
+
+    const auto fill_building = [&](int building_index, const vec4& rect,
+                                   const vec3& color) {
+        const float minx = rect.x;
+        const float minz = rect.y;
+        const float maxx = rect.z;
+        const float maxz = rect.w;
+
+        // 4 x positions, 2 z positions (even-ish distribution).
+        const float xs[4] = {0.18f, 0.38f, 0.62f, 0.82f};
+        const float zs[2] = {0.33f, 0.66f};
+        const float ly = 4.0f;
+        const float r = radius_for_rect(rect);
+
+        // Add deterministic jitter per light to make positions less "grid obvious".
+        auto jitter = [](int seed) -> float {
+            // Simple hash -> [-0.35, 0.35]
+            uint32_t x = (uint32_t) (seed * 2654435761u);
+            x ^= x >> 16;
+            float t = (x & 1023u) / 1023.0f;
+            return (t - 0.5f) * 0.7f;
+        };
+
+        int base = building_index * IndoorLightLayout::kLightsPerBuilding;
+        int k = 0;
+        for (int zi = 0; zi < 2; zi++) {
+            for (int xi = 0; xi < 4; xi++) {
+                const int idx = base + k;
+                const float jx = jitter(idx * 2 + 1);
+                const float jz = jitter(idx * 2 + 2);
+                float x = util::lerp(minx, maxx, xs[xi]) + (0.35f * jx);
+                float z = util::lerp(minz, maxz, zs[zi]) + (0.35f * jz);
+                // Clamp inside the rect
+                x = util::clamp(x, minx + 0.25f, maxx - 0.25f);
+                z = util::clamp(z, minz + 0.25f, maxz - 0.25f);
+                g_indoor_layout.lights_pos_radius[idx] = vec4{x, ly, z, r};
+                g_indoor_layout.lights_color[idx] = color;
+                k++;
+            }
+        }
+    };
+
+    // Colors per building (can be unified later).
+    fill_building(0, g_indoor_layout.light_rects[0], vec3{0.95f, 0.90f, 1.00f});
+    fill_building(1, g_indoor_layout.light_rects[1], vec3{1.00f, 0.85f, 0.65f});
+    fill_building(2, g_indoor_layout.light_rects[2], vec3{0.80f, 1.00f, 0.85f});
+    fill_building(3, g_indoor_layout.light_rects[3], vec3{0.85f, 0.92f, 1.00f});
+    fill_building(4, g_indoor_layout.light_rects[4], vec3{1.00f, 0.78f, 0.55f});
+    fill_building(5, g_indoor_layout.light_rects[5], vec3{0.95f, 0.85f, 0.70f});
+
+    g_indoor_layout.initialized = true;
 }
 
 inline void update_lighting_shader(raylib::Shader& shader,
@@ -188,61 +317,24 @@ inline void update_lighting_shader(raylib::Shader& shader,
     raylib::SetShaderValueV(shader, u.roofRects, rects, raylib::SHADER_UNIFORM_VEC4, count);
 
     // Indoor point lights (always on, day + night).
-    // 8 lights per building (4x2 grid), for clearer indoor lighting testing.
-    // NOTE: This is intentionally heavier; we can optimize later.
-    constexpr int lights_per_building = 8;
-    constexpr int num_buildings = 6;
-    constexpr int total_lights = lights_per_building * num_buildings;  // 48
+    if (!g_indoor_layout.initialized) {
+        rebuild_indoor_light_layout();
+    }
 
-    std::array<vec4, total_lights> pls{};
-    std::array<vec3, total_lights> cols{};
+    set_int(shader, u.lightsPerBuilding, IndoorLightLayout::kLightsPerBuilding);
+    set_int(shader, u.lightRectCount, IndoorLightLayout::kBuildings);
+    raylib::SetShaderValueV(shader, u.lightRects, g_indoor_layout.light_rects.data(),
+                            raylib::SHADER_UNIFORM_VEC4, IndoorLightLayout::kBuildings);
 
-    const auto radius_for = [](const Building& b) -> float {
-        // Enough to overlap slightly but not flood huge areas.
-        const float min_dim = fmin(b.area.width, b.area.height);
-        return fmax(6.0f, 0.45f * min_dim);
-    };
-
-    const auto fill_building_lights = [&](int building_index, const Building& b,
-                                          const vec3& color) {
-        const float minx = b.area.x;
-        const float minz = b.area.y;
-        const float maxx = b.area.x + b.area.width;
-        const float maxz = b.area.y + b.area.height;
-
-        // 4 x positions, 2 z positions (even-ish distribution).
-        const float xs[4] = {0.2f, 0.4f, 0.6f, 0.8f};
-        const float zs[2] = {0.33f, 0.66f};
-
-        const float ly = 4.0f;  // slightly above typical entity height
-        const float r = radius_for(b);
-
-        int base = building_index * lights_per_building;
-        int k = 0;
-        for (int zi = 0; zi < 2; zi++) {
-            for (int xi = 0; xi < 4; xi++) {
-                const float x = util::lerp(minx, maxx, xs[xi]);
-                const float z = util::lerp(minz, maxz, zs[zi]);
-                pls[base + k] = vec4{x, ly, z, r};
-                cols[base + k] = color;
-                k++;
-            }
-        }
-    };
-
-    // Slightly distinct colors per building so you can tell which lights belong where.
-    fill_building_lights(0, LOBBY_BUILDING, vec3{0.95f, 0.90f, 1.00f});
-    fill_building_lights(1, MODEL_TEST_BUILDING, vec3{1.00f, 0.85f, 0.65f});
-    fill_building_lights(2, PROGRESSION_BUILDING, vec3{0.80f, 1.00f, 0.85f});
-    fill_building_lights(3, STORE_BUILDING, vec3{0.85f, 0.92f, 1.00f});
-    fill_building_lights(4, BAR_BUILDING, vec3{1.00f, 0.78f, 0.55f});
-    fill_building_lights(5, LOAD_SAVE_BUILDING, vec3{0.95f, 0.85f, 0.70f});
-
-    set_int(shader, u.pointLightCount, total_lights);
-    raylib::SetShaderValueV(shader, u.pointLightsPosRadius, pls.data(),
-                            raylib::SHADER_UNIFORM_VEC4, total_lights);
-    raylib::SetShaderValueV(shader, u.pointLightsColor, cols.data(),
-                            raylib::SHADER_UNIFORM_VEC3, total_lights);
+    set_int(shader, u.pointLightCount, IndoorLightLayout::kTotalLights);
+    raylib::SetShaderValueV(shader, u.pointLightsPosRadius,
+                            g_indoor_layout.lights_pos_radius.data(),
+                            raylib::SHADER_UNIFORM_VEC4,
+                            IndoorLightLayout::kTotalLights);
+    raylib::SetShaderValueV(shader, u.pointLightsColor,
+                            g_indoor_layout.lights_color.data(),
+                            raylib::SHADER_UNIFORM_VEC3,
+                            IndoorLightLayout::kTotalLights);
 }
 
 void draw_phase1_lighting_overlay(const GameCam& game_cam) {
