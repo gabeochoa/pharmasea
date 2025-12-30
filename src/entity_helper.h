@@ -28,6 +28,7 @@ enum struct NamedEntity {
 
 using Entities = std::vector<std::shared_ptr<afterhours::Entity>>;
 using RefEntities = std::vector<afterhours::RefEntity>;
+using EntityHandle = afterhours::EntityHandle;
 
 using NamedEntities = std::map<NamedEntity, std::shared_ptr<Entity>>;
 

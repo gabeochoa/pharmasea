@@ -6,6 +6,7 @@
 
 #include "ah.h"
 using afterhours::Entity;
+using afterhours::EntityHandle;
 using afterhours::OptEntity;
 using afterhours::RefEntity;
 
