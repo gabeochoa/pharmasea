@@ -117,6 +117,10 @@ void Settings::update_post_processing_enabled(bool pp_enabled) {
     data.enable_postprocessing = pp_enabled;
 }
 
+void Settings::update_lighting_enabled(bool lighting_enabled) {
+    data.enable_lighting = lighting_enabled;
+}
+
 void Settings::update_vsync_enabled(bool vsync_enabled) {
     data.vsync_enabled = vsync_enabled;
     // Apply the setting immediately
@@ -167,8 +171,19 @@ bool Settings::load_save_file() {
     buffer << ifs.rdbuf();
     auto buf_str = buffer.str();
 
-    bitsery::quickDeserialization<settings::InputAdapter>(
-        {buf_str.begin(), buf_str.size()}, data);
+    // Settings serialization is not version-tolerant yet; if the schema changes
+    // (e.g. adding a new field), older files may fail to deserialize.
+    // In that case, fall back to defaults instead of leaving partially-read data.
+    settings::Data tmp{};
+    const auto [err, ok] = bitsery::quickDeserialization<settings::InputAdapter>(
+        {buf_str.begin(), buf_str.size()}, tmp);
+    if (err != bitsery::ReaderError::NoError || !ok) {
+        log_warn("Settings deserialize failed (err={}, ok={}); resetting to defaults",
+                 (int) err, ok);
+        data = settings::Data();
+    } else {
+        data = tmp;
+    }
 
     refresh_settings();
 

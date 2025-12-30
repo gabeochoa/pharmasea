@@ -11,9 +11,15 @@
 #include "../camera.h"
 #include "../engine.h"
 #include "../engine/layer.h"
+#include "../engine/settings.h"
 #include "../map.h"
+#include "../system/system_manager.h"
+#include "../engine/shader_library.h"
+#include "../entity_query.h"
+#include "../entity_type.h"
+#include "../components/transform.h"
+#include "../lighting_runtime.h"
 #include "raylib.h"
-
 GameLayer::~GameLayer() { raylib::UnloadRenderTexture(game_render_texture); }
 
 bool GameLayer::onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
@@ -116,13 +122,29 @@ void GameLayer::draw_world(float dt) {
         map_ptr = GLOBALS.get_ptr<Map>("server_map");
     }
 
+    // Shader-based lighting (Half-Lambert + Blinn-Phong).
+    const bool lighting_enabled = Settings::get().data.enable_lighting;
+    raylib::Shader* lighting_shader = nullptr;
+    if (lighting_enabled) {
+        lighting_shader = &ShaderLibrary::get().get("lighting");
+    }
+
     raylib::BeginMode3D((*cam).get());
     {
+        if (lighting_shader) {
+            update_lighting_shader(*lighting_shader, (*cam).get());
+            raylib::BeginShaderMode(*lighting_shader);
+        }
+
         raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
                           DARKGRAY);
         if (map_ptr) map_ptr->onDraw(dt);
 
-        if (true || GLOBALS.get<bool>("debug_ui_enabled")) {
+        if (lighting_shader) {
+            raylib::EndShaderMode();
+        }
+
+        if (GLOBALS.get_or_default<bool>("debug_ui_enabled", false)) {
             draw_building(LOBBY_BUILDING);
             draw_building(MODEL_TEST_BUILDING);
             draw_building(PROGRESSION_BUILDING);

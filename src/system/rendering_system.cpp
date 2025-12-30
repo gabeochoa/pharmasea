@@ -26,6 +26,7 @@
 #include "../dataclass/upgrades.h"
 #include "../drawing_util.h"
 #include "../engine/texture_library.h"
+#include "../engine/settings.h"
 #include "../engine/ui/theme.h"
 #include "../engine/util.h"
 #include "../entity_helper.h"
@@ -36,6 +37,7 @@
 #include "system_manager.h"
 //
 #include "../engine/frustum.h"
+#include "../engine/shader_library.h"
 
 namespace system_manager {
 namespace job_system {
@@ -253,8 +255,31 @@ bool draw_transform_with_model(const Transform& transform,
     };
 
     if (ENABLE_MODELS) {
-        log_info("Drawing actual model for entity");
-        DrawModelEx(renderer.model(), position, vec3{0.f, 1.f, 0.f},
+        // Apply lighting shader to model materials (Blinn-Phong/Half-Lambert).
+        // NOTE: ModelRenderer::model() returns a copy; we must set the shader on
+        // the library-owned model reference to persist.
+        auto& model_ref = ModelLibrary::get().get(renderer.name());
+
+        const bool lighting_enabled = Settings::get().data.enable_lighting;
+        if (lighting_enabled) {
+            auto& lighting_shader = ShaderLibrary::get().get("lighting");
+            for (int i = 0; i < model_ref.materialCount; i++) {
+                if (model_ref.materials[i].shader.id != lighting_shader.id) {
+                    model_ref.materials[i].shader = lighting_shader;
+                }
+            }
+        } else {
+            raylib::Shader default_shader{};
+            default_shader.id = raylib::rlGetShaderIdDefault();
+            default_shader.locs = raylib::rlGetShaderLocsDefault();
+            for (int i = 0; i < model_ref.materialCount; i++) {
+                if (model_ref.materials[i].shader.id != default_shader.id) {
+                    model_ref.materials[i].shader = default_shader;
+                }
+            }
+        }
+
+        DrawModelEx(model_ref, position, vec3{0.f, 1.f, 0.f},
                     model_info.rotation_angle + rotation_angle,
                     transform.size() * model_info.size_scale, color);
     } else {

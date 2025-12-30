@@ -27,6 +27,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\bitsery_include.h" />
     <ClInclude Include="..\src\building_locations.h" />
+    <ClInclude Include="..\src\lighting_runtime.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\client_server_comm.h" />
     <ClInclude Include="..\src\components\adds_ingredient.h" />
@@ -277,6 +278,7 @@
     <ClCompile Include="..\src\entity_query.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\job.cpp" />
+    <ClCompile Include="..\src\lighting_runtime.cpp" />
     <ClCompile Include="..\src\layers\gamedebuglayer.cpp" />
     <ClCompile Include="..\src\layers\gamelayer.cpp" />
     <ClCompile Include="..\src\layers\networklayer.cpp" />

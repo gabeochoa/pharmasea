@@ -86,6 +86,7 @@ constexpr CEMap<i18n, const char*, magic_enum::enum_count<i18n>()>
         {i18n::SAFE_ZONE, "안전 구역"},
         {i18n::SHOW_SAFE_BOX, "스트리머 안전 상자 표시"},
         {i18n::ENABLE_PPS, "포스트 프로세싱 셰이더 활성화"},
+        {i18n::ENABLE_LIGHTING, "조명 활성화"},
         {i18n::SNAP_CAMERA, "카메라 스냅"},
         {i18n::MASTER_VOLUME, "마스터 볼륨"},
         {i18n::MUSIC_VOLUME, "음악 볼륨"},

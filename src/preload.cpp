@@ -904,19 +904,36 @@ void Preload::load_music(const std::function<void()>& tick) {
 }
 
 void Preload::load_shaders(const std::function<void()>& tick) {
+    const auto screen_vs = Files::get()
+                               .fetch_resource_path(strings::settings::SHADERS,
+                                                    "screen_quad.vs");
+
     const std::tuple<const char*, const char*, const char*> shaders[] = {
+        // Screen-space shaders (explicit vertex + fragment)
         {strings::settings::SHADERS, "post_processing.fs", "post_processing"},
         {strings::settings::SHADERS, "discard_alpha.fs", "discard_alpha"},
     };
 
     for (const auto& s : shaders) {
         ShaderLibrary::get().load(
+            screen_vs.c_str(),
             Files::get()
                 .fetch_resource_path(std::get<0>(s), std::get<1>(s))
                 .c_str(),
             std::get<2>(s));
         if (tick) tick();
     }
+
+    // Lighting shader (explicit vertex + fragment)
+    ShaderLibrary::get().load(
+        Files::get()
+            .fetch_resource_path(strings::settings::SHADERS, "lighting.vs")
+            .c_str(),
+        Files::get()
+            .fetch_resource_path(strings::settings::SHADERS, "lighting.fs")
+            .c_str(),
+        "lighting");
+    if (tick) tick();
 }
 
 void Preload::load_translations() {
