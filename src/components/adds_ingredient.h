@@ -25,9 +25,8 @@ struct AddsIngredient : public BaseComponent {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");
         }
-        OptEntity opt_parent = EntityHelper::getEnforcedEntityForID(parent);
-        if (!opt_parent) return IngredientBitSet{};
-        return fetcher(opt_parent.asE(), entity);
+        Entity& parent_entity = EntityHelper::getEnforcedEntityForID(parent);
+        return fetcher(parent_entity, entity);
     }
     void set(const IngredientFetcherFn& fn) { fetcher = fn; }
     auto& set_validator(const ValidationFn& fn) {
@@ -45,17 +44,15 @@ struct AddsIngredient : public BaseComponent {
     void decrement_uses() {
         num_uses--;
         if (!on_decrement) return;
-        OptEntity opt_parent = EntityHelper::getEnforcedEntityForID(parent);
-        if (!opt_parent) return;
-        on_decrement(opt_parent.asE());
+        Entity& parent_entity = EntityHelper::getEnforcedEntityForID(parent);
+        on_decrement(parent_entity);
     }
     [[nodiscard]] int uses_left() const { return num_uses; }
 
     [[nodiscard]] bool validate(Entity& entity) const {
         if (!validation) return true;
-        OptEntity opt_parent = EntityHelper::getEnforcedEntityForID(parent);
-        if (!opt_parent) return false;
-        return validation(opt_parent.asE(), entity);
+        Entity& parent_entity = EntityHelper::getEnforcedEntityForID(parent);
+        return validation(parent_entity, entity);
     }
 
     // Keep the existing API, but store the handle (id) instead of the pointer.

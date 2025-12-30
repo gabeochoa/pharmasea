@@ -235,13 +235,13 @@ OptEntity EntityHelper::getEntityForID(EntityID id) {
     return {};
 }
 
-OptEntity EntityHelper::getEnforcedEntityForID(EntityID id) {
+Entity& EntityHelper::getEnforcedEntityForID(EntityID id) {
     OptEntity opt = getEntityForID(id);
     if (!opt) {
         log_error("EntityHelper::getEnforcedEntityForID failed: {}", id);
         assert(opt.has_value());
     }
-    return opt;
+    return opt.asE();
 }
 
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,
