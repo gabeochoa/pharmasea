@@ -203,6 +203,10 @@ void startup() {
         new AboutLayer(),
         new MenuLayer(),
     }});
+
+    // Transition from Loading to Root now that all layers are loaded
+    // and the main menu is ready to be interactable
+    MenuState::get().set(menu::State::Root);
 }
 
 void process_dev_flags(int argc, char* argv[]) {
