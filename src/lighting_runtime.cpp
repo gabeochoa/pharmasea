@@ -239,12 +239,26 @@ void update_lighting_shader(raylib::Shader& shader, const raylib::Camera3D& cam)
     set_vec3(shader, u.lightDir, PHASE1.sun_dir);
     set_vec3(shader, u.lightPos, PHASE1.sun_pos);
     set_vec3(shader, u.lightColor, sun_color);
-    set_vec3(shader, u.ambientColor, PHASE1.ambient);
+    // Daytime should read as bright. Boost ambient + sun only during the day.
+    vec3 ambient = PHASE1.ambient;
+    float sun_diffuse_intensity = PHASE1.sun_diffuse_intensity;
+    float sun_spec_intensity = PHASE1.sun_spec_intensity;
+    if (!is_night) {
+        constexpr float kDayAmbientBoost = 1.35f;
+        constexpr float kDaySunDiffuseBoost = 1.55f;
+        constexpr float kDaySunSpecBoost = 1.25f;
+        ambient = vec3{ambient.x * kDayAmbientBoost, ambient.y * kDayAmbientBoost,
+                       ambient.z * kDayAmbientBoost};
+        sun_diffuse_intensity *= kDaySunDiffuseBoost;
+        sun_spec_intensity *= kDaySunSpecBoost;
+    }
+
+    set_vec3(shader, u.ambientColor, ambient);
 
     set_float(shader, u.shininess, PHASE1.shininess);
     set_bool(shader, u.useHalfLambert, PHASE1.use_half_lambert);
-    set_float(shader, u.sunDiffuseIntensity, PHASE1.sun_diffuse_intensity);
-    set_float(shader, u.sunSpecIntensity, PHASE1.sun_spec_intensity);
+    set_float(shader, u.sunDiffuseIntensity, sun_diffuse_intensity);
+    set_float(shader, u.sunSpecIntensity, sun_spec_intensity);
     set_float(shader, u.pointDiffuseIntensity, PHASE1.point_diffuse_intensity);
 
     // Roof rectangles: disable direct sun indoors.
@@ -295,7 +309,7 @@ void update_lighting_shader(raylib::Shader& shader, const raylib::Camera3D& cam)
     // Daytime goal: make inside/outside feel similar in brightness.
     // Boost only indoor point lights during the day (doesn't affect outdoors due to rect culling).
     if (!is_night) {
-        constexpr float kDayIndoorBoost = 1.35f;
+        constexpr float kDayIndoorBoost = 1.60f;
         for (auto& c : colors) {
             c = vec3{c.x * kDayIndoorBoost, c.y * kDayIndoorBoost,
                      c.z * kDayIndoorBoost};
