@@ -21,53 +21,6 @@
 
 namespace {
 
-// These live here so lighting debug works even if DebugSettingsLayer isn't loaded.
-static bool g_lighting_debug_enabled = true;
-static bool g_lighting_debug_overlay_only = false;
-static bool g_lighting_debug_force_enable = false;
-
-inline void ensure_lighting_debug_globals_registered() {
-    if (!GLOBALS.contains("lighting_debug_enabled")) {
-        GLOBALS.set("lighting_debug_enabled", &g_lighting_debug_enabled);
-    }
-    if (!GLOBALS.contains("lighting_debug_overlay_only")) {
-        GLOBALS.set("lighting_debug_overlay_only", &g_lighting_debug_overlay_only);
-    }
-    if (!GLOBALS.contains("lighting_debug_force_enable")) {
-        GLOBALS.set("lighting_debug_force_enable", &g_lighting_debug_force_enable);
-    }
-}
-
-inline vec2 world_to_screen(const vec3& world, const raylib::Camera3D& cam) {
-    return raylib::GetWorldToScreen(world, cam);
-}
-
-inline void draw_screen_quad(const vec2& p0, const vec2& p1, const vec2& p2,
-                             const vec2& p3, Color col) {
-    raylib::DrawTriangle(p0, p1, p2, col);
-    raylib::DrawTriangle(p0, p2, p3, col);
-}
-
-void draw_projected_building_rect_outline(const Building& b,
-                                          const raylib::Camera3D& cam, float y,
-                                          Color col) {
-    const float x0 = b.area.x;
-    const float z0 = b.area.y;
-    const float x1 = b.area.x + b.area.width;
-    const float z1 = b.area.y + b.area.height;
-
-    const vec2 p0 = world_to_screen({x0, y, z0}, cam);
-    const vec2 p1 = world_to_screen({x1, y, z0}, cam);
-    const vec2 p2 = world_to_screen({x1, y, z1}, cam);
-    const vec2 p3 = world_to_screen({x0, y, z1}, cam);
-
-    // Outline
-    raylib::DrawLine((int) p0.x, (int) p0.y, (int) p1.x, (int) p1.y, col);
-    raylib::DrawLine((int) p1.x, (int) p1.y, (int) p2.x, (int) p2.y, col);
-    raylib::DrawLine((int) p2.x, (int) p2.y, (int) p3.x, (int) p3.y, col);
-    raylib::DrawLine((int) p3.x, (int) p3.y, (int) p0.x, (int) p0.y, col);
-}
-
 struct Phase1LightingTuning {
     // Ambient term
     vec3 ambient = {0.20f, 0.20f, 0.22f};
@@ -86,27 +39,9 @@ struct Phase1LightingTuning {
     float sun_diffuse_intensity = 0.45f;
     float sun_spec_intensity = 0.05f;
     float point_diffuse_intensity = 0.65f;
-
-    // Debug outlines plane
-    float debug_outline_y = -TILESIZE;
 };
 
 static const Phase1LightingTuning PHASE1{};
-
-inline bool phase1_enabled() {
-    ensure_lighting_debug_globals_registered();
-    return GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
-}
-
-inline bool phase1_overlay_only() {
-    ensure_lighting_debug_globals_registered();
-    return GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
-}
-
-inline bool phase1_force_enable() {
-    ensure_lighting_debug_globals_registered();
-    return GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
-}
 
 inline void set_vec3(raylib::Shader& s, int loc, const vec3& v) {
     raylib::SetShaderValue(s, loc, &v, raylib::SHADER_UNIFORM_VEC3);
@@ -374,45 +309,6 @@ inline void update_lighting_shader(raylib::Shader& shader,
                             IndoorLightLayout::kTotalLights);
 }
 
-void draw_phase1_lighting_overlay(const GameCam& game_cam) {
-    if (!phase1_enabled()) return;
-
-    const bool overlay_only = phase1_overlay_only();
-    const bool force_enable = phase1_force_enable();
-
-    const int w = raylib::GetScreenWidth();
-    const int h = raylib::GetScreenHeight();
-
-    // Overlay-only mode: fully cover the world so we can verify order/draw path.
-    if (overlay_only) {
-        raylib::BeginBlendMode(raylib::BLEND_ALPHA);
-        raylib::DrawRectangle(0, 0, w, h, Color{0, 0, 0, 255});
-        raylib::EndBlendMode();
-    }
-
-    // Phase 1 is now shader-based lighting; overlay just shows debug info.
-    const bool is_night = SystemManager::get().is_bar_open();
-    const bool should_apply = force_enable || is_night;
-
-    // Debug label (always on when enabled)
-    raylib::DrawText(
-        fmt::format(
-            "LIGHTING (Phase 1 shader) [H]enable [J]overlay-only [K]force | night={} apply={} overlay_only={}",
-            is_night, should_apply, overlay_only)
-            .c_str(),
-        20, 20, 18, WHITE);
-
-    // Project building rectangles so we can validate world->screen projection.
-    const float y = PHASE1.debug_outline_y;
-    const auto cam = game_cam.camera;
-    draw_projected_building_rect_outline(LOBBY_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect_outline(MODEL_TEST_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect_outline(PROGRESSION_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect_outline(STORE_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect_outline(BAR_BUILDING, cam, y, GREEN);
-    draw_projected_building_rect_outline(LOAD_SAVE_BUILDING, cam, y, GREEN);
-}
-
 }  // namespace
 
 GameLayer::~GameLayer() { raylib::UnloadRenderTexture(game_render_texture); }
@@ -438,32 +334,6 @@ bool GameLayer::onKeyPressed(KeyPressedEvent& event) {
         //  TODO obv need to have this fun on a timer or something instead
         //  of on esc
         // SoundLibrary::get().play_random_match("pa_announcements_");
-        return true;
-    }
-
-    // Phase 0/1: lighting debug toggles live here so they work even if the
-    // debug settings layer isn't loaded.
-    ensure_lighting_debug_globals_registered();
-    if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleLightingDebug) ==
-        event.keycode) {
-        bool v = GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
-        GLOBALS.update("lighting_debug_enabled", !v);
-        return true;
-    }
-    if (KeyMap::get_key_code(menu::State::Game,
-                             InputName::ToggleLightingOverlayOnly) ==
-        event.keycode) {
-        bool v =
-            GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
-        GLOBALS.update("lighting_debug_overlay_only", !v);
-        return true;
-    }
-    if (KeyMap::get_key_code(menu::State::Game,
-                             InputName::ToggleLightingForceEnable) ==
-        event.keycode) {
-        bool v =
-            GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
-        GLOBALS.update("lighting_debug_force_enable", !v);
         return true;
     }
 
@@ -544,37 +414,21 @@ void GameLayer::draw_world(float dt) {
         map_ptr = GLOBALS.get_ptr<Map>("server_map");
     }
 
-    // Phase 1: shader-based lighting setup (Half-Lambert + Blinn-Phong).
-    // Enable/disable via H (lighting_debug_enabled). J = overlay-only (hide world).
-    ensure_lighting_debug_globals_registered();
-    const bool lighting_enabled =
-        GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
-    const bool overlay_only =
-        GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
-
-    raylib::Shader* lighting_shader_ptr = nullptr;
-    if (lighting_enabled) {
-        lighting_shader_ptr = &ShaderLibrary::get().get("lighting");
-    }
+    // Shader-based lighting (Half-Lambert + Blinn-Phong).
+    raylib::Shader& lighting_shader = ShaderLibrary::get().get("lighting");
 
     raylib::BeginMode3D((*cam).get());
     {
-        if (!overlay_only) {
-            if (lighting_shader_ptr) {
-                update_lighting_shader(*lighting_shader_ptr, (*cam).get());
-                raylib::BeginShaderMode(*lighting_shader_ptr);
-            }
+        update_lighting_shader(lighting_shader, (*cam).get());
+        raylib::BeginShaderMode(lighting_shader);
 
-            raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f},
-                              (vec2){256.0f, 256.0f}, DARKGRAY);
-            if (map_ptr) map_ptr->onDraw(dt);
+        raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
+                          DARKGRAY);
+        if (map_ptr) map_ptr->onDraw(dt);
 
-            if (lighting_shader_ptr) {
-                raylib::EndShaderMode();
-            }
-        }
+        raylib::EndShaderMode();
 
-        if (true || GLOBALS.get<bool>("debug_ui_enabled")) {
+        if (GLOBALS.get_or_default<bool>("debug_ui_enabled", false)) {
             draw_building(LOBBY_BUILDING);
             draw_building(MODEL_TEST_BUILDING);
             draw_building(PROGRESSION_BUILDING);
@@ -605,8 +459,6 @@ void GameLayer::onDraw(float dt) {
 
     ext::clear_background(Color{200, 200, 200, 255});
     draw_world(dt);
-    // Phase 1: baseline ambience + indoor mask (still debug-toggled)
-    draw_phase1_lighting_overlay(*cam);
 
     // note: for ui stuff
     if (map_ptr) map_ptr->onDrawUI(dt);

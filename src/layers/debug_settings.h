@@ -56,29 +56,6 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     }
 
     bool onKeyPressed(KeyPressedEvent& event) override {
-        // Phase 0+: lighting debug toggles (wired through KeyMap)
-        if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::ToggleLightingDebug) ==
-            event.keycode) {
-            bool v = GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
-            GLOBALS.update("lighting_debug_enabled", !v);
-            return true;
-        }
-        if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::ToggleLightingOverlayOnly) ==
-            event.keycode) {
-            bool v = GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
-            GLOBALS.update("lighting_debug_overlay_only", !v);
-            return true;
-        }
-        if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::ToggleLightingForceEnable) ==
-            event.keycode) {
-            bool v = GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
-            GLOBALS.update("lighting_debug_force_enable", !v);
-            return true;
-        }
-
         if (should_show_overlay &&
             KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
                 event.keycode) {
@@ -182,9 +159,6 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         if (!debug_ui_enabled) {
             DrawTextEx(Preload::get().font, "Press \\ to toggle debug UI",
                        vec2{200, 70}, 20, 0, RED);
-            DrawTextEx(Preload::get().font,
-                       "Lighting debug: H enable, J overlay-only, K force",
-                       vec2{200, 110}, 18, 0, DARKGRAY);
             return;
         }
 
@@ -240,23 +214,5 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         }
 
         draw_game_state_controls(game_state);
-
-        // Lighting controls (Phase 0): keep simple, tied to debug UI being on.
-        {
-            Rectangle hint = {content.x, content.y + content.height - 30,
-                              content.width, 30};
-            bool lighting_debug_enabled =
-                GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
-            bool lighting_debug_overlay_only =
-                GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
-            bool lighting_debug_force_enable =
-                GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
-            text(Widget{hint},
-                 NO_TRANSLATE(fmt::format(
-                     "Lighting debug: {} | overlay-only: {} | force: {} "
-                     "(H/J/K)",
-                     lighting_debug_enabled, lighting_debug_overlay_only,
-                     lighting_debug_force_enable)));
-        }
     }
 };
