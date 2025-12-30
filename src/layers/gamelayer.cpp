@@ -185,33 +185,52 @@ inline void update_lighting_shader(raylib::Shader& shader,
     set_int(shader, u.roofRectCount, count);
     raylib::SetShaderValueV(shader, u.roofRects, rects, raylib::SHADER_UNIFORM_VEC4, count);
 
-    // Phase 1 test: point lights inside MODEL_TEST_BUILDING only.
-    // These are intentionally obvious so you can see indoor lighting working.
-    {
-        const float cx =
-            MODEL_TEST_BUILDING.area.x + (MODEL_TEST_BUILDING.area.width / 2.f);
-        const float cz = MODEL_TEST_BUILDING.area.y +
-                         (MODEL_TEST_BUILDING.area.height / 2.f);
+    // Indoor point lights (always on, day + night).
+    // At least one per building; keep radii tight to avoid cross-building bleed.
+    const auto center_xz = [](const Building& b) -> vec2 {
+        return {b.area.x + (b.area.width / 2.f), b.area.y + (b.area.height / 2.f)};
+    };
+    const auto radius_for = [](const Building& b) -> float {
+        // Roughly cover the interior without leaking too far.
+        const float r = 0.65f * fmin(b.area.width, b.area.height);
+        return fmax(8.f, r);
+    };
 
-        // Place 3 lights across the room, slightly above eye level.
-        const vec4 pls[] = {
-            {cx - 8.f, 4.0f, cz, 18.0f},
-            {cx, 4.0f, cz, 22.0f},
-            {cx + 8.f, 4.0f, cz, 18.0f},
-        };
-        const vec3 cols[] = {
-            {1.0f, 0.8f, 0.6f},
-            {0.7f, 0.9f, 1.0f},
-            {1.0f, 0.7f, 0.4f},
-        };
-        const int plc = 3;
+    const vec2 c_lobby = center_xz(LOBBY_BUILDING);
+    const vec2 c_model = center_xz(MODEL_TEST_BUILDING);
+    const vec2 c_prog = center_xz(PROGRESSION_BUILDING);
+    const vec2 c_store = center_xz(STORE_BUILDING);
+    const vec2 c_bar = center_xz(BAR_BUILDING);
+    const vec2 c_save = center_xz(LOAD_SAVE_BUILDING);
 
-        set_int(shader, u.pointLightCount, plc);
-        raylib::SetShaderValueV(shader, u.pointLightsPosRadius, pls,
-                                raylib::SHADER_UNIFORM_VEC4, plc);
-        raylib::SetShaderValueV(shader, u.pointLightsColor, cols,
-                                raylib::SHADER_UNIFORM_VEC3, plc);
-    }
+    // Slightly above typical entity height.
+    const float ly = 4.0f;
+
+    const vec4 pls[] = {
+        {c_lobby.x, ly, c_lobby.y, radius_for(LOBBY_BUILDING)},
+        {c_model.x, ly, c_model.y, radius_for(MODEL_TEST_BUILDING)},
+        {c_prog.x, ly, c_prog.y, radius_for(PROGRESSION_BUILDING)},
+        {c_store.x, ly, c_store.y, radius_for(STORE_BUILDING)},
+        {c_bar.x, ly, c_bar.y, radius_for(BAR_BUILDING)},
+        {c_save.x, ly, c_save.y, radius_for(LOAD_SAVE_BUILDING)},
+    };
+    // Colors are intentionally slightly different per building for debugging.
+    // Later we can unify/drive from data.
+    const vec3 cols[] = {
+        {0.95f, 0.90f, 1.00f},  // lobby: cool-white
+        {1.00f, 0.85f, 0.65f},  // model test: warm
+        {0.75f, 0.95f, 0.80f},  // progression: greenish
+        {0.80f, 0.90f, 1.00f},  // store: neutral/cool
+        {1.00f, 0.75f, 0.50f},  // bar: warm
+        {0.95f, 0.85f, 0.70f},  // load/save: warm-neutral
+    };
+    const int plc = 6;
+
+    set_int(shader, u.pointLightCount, plc);
+    raylib::SetShaderValueV(shader, u.pointLightsPosRadius, pls,
+                            raylib::SHADER_UNIFORM_VEC4, plc);
+    raylib::SetShaderValueV(shader, u.pointLightsColor, cols,
+                            raylib::SHADER_UNIFORM_VEC3, plc);
 }
 
 void draw_phase1_lighting_overlay(const GameCam& game_cam) {
