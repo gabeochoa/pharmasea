@@ -72,25 +72,71 @@ struct Phase1LightingTuning {
     Color night_indoor_tint = Color{255, 165, 0, 140};
     // Optional: day tint (kept subtle; can be turned off by setting alpha=0).
     Color day_tint = Color{255, 240, 220, 10};
-    // Projection height used for building masks.
+    // Projection height used for debug screen-space outlines.
     // NOTE: The world ground plane is drawn at y = -TILESIZE (see draw_world()).
     // If we project at -0.5, the mask can read like it's floating above the ground.
     // For correctness, stick to the actual ground plane.
     float mask_y = -TILESIZE;
+
+    // World-space mask Y: draw a translucent plane slightly above the ground to
+    // avoid Z-fighting with the ground plane.
+    float world_mask_y = (-TILESIZE) + 0.02f;
 };
 
 static const Phase1LightingTuning PHASE1{};
 
-void draw_phase1_lighting_overlay(const GameCam& game_cam) {
+inline bool phase1_enabled() {
     ensure_lighting_debug_globals_registered();
-    const bool enabled =
-        GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
-    if (!enabled) return;
+    return GLOBALS.get_or_default<bool>("lighting_debug_enabled", false);
+}
 
-    const bool overlay_only =
-        GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
-    const bool force_enable =
-        GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
+inline bool phase1_overlay_only() {
+    ensure_lighting_debug_globals_registered();
+    return GLOBALS.get_or_default<bool>("lighting_debug_overlay_only", false);
+}
+
+inline bool phase1_force_enable() {
+    ensure_lighting_debug_globals_registered();
+    return GLOBALS.get_or_default<bool>("lighting_debug_force_enable", false);
+}
+
+inline bool phase1_should_apply() {
+    // Night in this codebase == bar open (in-round).
+    return phase1_force_enable() || SystemManager::get().is_bar_open();
+}
+
+void draw_phase1_indoor_mask_worldspace() {
+    if (!phase1_enabled()) return;
+    if (!phase1_should_apply()) return;
+
+    // In overlay-only mode we intentionally hide the world, so skip world-space mask.
+    if (phase1_overlay_only()) return;
+
+    raylib::BeginBlendMode(raylib::BLEND_ALPHA);
+
+    const auto draw_building_plane = [&](const Building& b) {
+        const float cx = b.area.x + (b.area.width / 2.f);
+        const float cz = b.area.y + (b.area.height / 2.f);
+        // DrawPlane takes size in XZ.
+        raylib::DrawPlane({cx, PHASE1.world_mask_y, cz},
+                          {b.area.width, b.area.height}, PHASE1.night_indoor_tint);
+    };
+
+    draw_building_plane(LOBBY_BUILDING);
+    draw_building_plane(MODEL_TEST_BUILDING);
+    draw_building_plane(PROGRESSION_BUILDING);
+    draw_building_plane(STORE_BUILDING);
+    draw_building_plane(BAR_BUILDING);
+    draw_building_plane(LOAD_SAVE_BUILDING);
+
+    raylib::EndBlendMode();
+}
+
+void draw_phase1_lighting_overlay(const GameCam& game_cam) {
+    if (!phase1_enabled()) return;
+
+    const bool overlay_only = phase1_overlay_only();
+    const bool force_enable = phase1_force_enable();
 
     const int w = raylib::GetScreenWidth();
     const int h = raylib::GetScreenHeight();
@@ -139,39 +185,14 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
         }
     }
 
-    // Phase 1: global ambience (night vs day)
+    // Phase 1: global ambience (night vs day).
+    // IMPORTANT: indoor masking is drawn in-world during the 3D pass to avoid
+    // the "floating rectangle in the sky" artifact from screen-space overlays.
     if (should_apply) {
         // Night: darken overall
         raylib::BeginBlendMode(raylib::BLEND_ALPHA);
         raylib::DrawRectangle(0, 0, w, h,
                               Color{0, 0, 0, PHASE1.night_outdoor_dark_alpha});
-        raylib::EndBlendMode();
-
-        // Night: make indoors visually distinct (tinted roof mask)
-        raylib::BeginBlendMode(raylib::BLEND_ALPHA);
-        const auto cam = game_cam.camera;
-        const float y = PHASE1.mask_y;
-
-        const auto draw_roof_fill = [&](const Building& b) {
-            const float x0 = b.area.x;
-            const float z0 = b.area.y;
-            // Match draw_building() debug cube footprint extents.
-            const float x1 = b.area.x + b.area.width;
-            const float z1 = b.area.y + b.area.height;
-            const vec2 p0 = world_to_screen({x0, y, z0}, cam);
-            const vec2 p1 = world_to_screen({x1, y, z0}, cam);
-            const vec2 p2 = world_to_screen({x1, y, z1}, cam);
-            const vec2 p3 = world_to_screen({x0, y, z1}, cam);
-            draw_screen_quad(p0, p1, p2, p3, PHASE1.night_indoor_tint);
-        };
-
-        draw_roof_fill(LOBBY_BUILDING);
-        draw_roof_fill(MODEL_TEST_BUILDING);
-        draw_roof_fill(PROGRESSION_BUILDING);
-        draw_roof_fill(STORE_BUILDING);
-        draw_roof_fill(BAR_BUILDING);
-        draw_roof_fill(LOAD_SAVE_BUILDING);
-
         raylib::EndBlendMode();
     } else {
         // Day: optional very subtle warmth (can be disabled via alpha=0)
@@ -186,8 +207,8 @@ void draw_phase1_lighting_overlay(const GameCam& game_cam) {
     raylib::DrawText(
         fmt::format(
             "LIGHTING (Phase 1) [H]enable [J]overlay-only [K]force | night={} "
-            "apply={} overlay_only={} mask_y={}",
-            is_night, should_apply, overlay_only, PHASE1.mask_y)
+            "apply={} overlay_only={} mask_y={} world_mask_y={}",
+            is_night, should_apply, overlay_only, PHASE1.mask_y, PHASE1.world_mask_y)
             .c_str(),
         20, 20, 18, WHITE);
 
