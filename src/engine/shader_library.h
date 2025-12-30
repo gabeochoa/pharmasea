@@ -33,10 +33,13 @@ struct ShaderLibrary {
    private:
     struct ShaderLibraryImpl : afterhours::Library<raylib::Shader> {
         virtual raylib::Shader convert_filename_to_object(
-            const char*, const char* filename) override {
-            // Fragment-only shader: uses raylib's default vertex shader.
-            // TODO null first param sets default vertex shader, do we want this?
-            return raylib::LoadShader(0, filename);
+            const char* name, const char* filename) override {
+            // Use the library key (first param) as the vertex shader filename.
+            // The library "filename" is treated as the fragment shader filename.
+            // NOTE: This path is not used by our current preload (we load via the
+            // explicit (vs, fs, name) overload), but keeping it consistent helps
+            // if someone uses impl.load(...) directly.
+            return raylib::LoadShader(name, filename);
         }
 
         virtual void unload(raylib::Shader shader) override {
