@@ -302,7 +302,7 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     add_person_components(person, options);
 
     person.addComponent<CanPerformJob>();
-    person.addComponent<CanPathfind>().set_parent(&person);
+    person.addComponent<CanPathfind>().set_parent(person.id);
 }
 
 void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
@@ -1294,7 +1294,8 @@ void make_fruit(Item& fruit, vec3 pos, int index) {
             make_juice(juice, owner.get<Transform>().pos(), fruit_type);
 
             CanHoldItem& blenderCHI = blender->get<CanHoldItem>();
-            blenderCHI.update(&juice, blender->id);
+            blenderCHI.update(EntityHelper::getEntityAsSharedPtr(juice),
+                              blender->id);
         }
     });
 }

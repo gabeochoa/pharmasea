@@ -898,7 +898,8 @@ void handle_drop(Entity& player) {
             }
         }
 
-        furnCHI.update(&item, closest_furniture->id);
+        furnCHI.update(EntityHelper::getEntityAsSharedPtr(item),
+                       closest_furniture->id);
         playerCHI.update(nullptr, EntityID::INVALID);
         log_info("pickup: placed item {} onto furniture {}", item.id,
                  closest_furniture->id);
@@ -972,7 +973,7 @@ void handle_grab(Entity& player) {
         // item->name(), closest_furniture->name());
 
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
-        playerCHI.update(&item, player.id);
+        playerCHI.update(EntityHelper::getEntityAsSharedPtr(item), player.id);
         item.get<Transform>().update(player.get<Transform>().snap_position());
         furnCanHold.update(nullptr, EntityID::INVALID);
         log_info("pickup: player {} picked item {} from furniture {}", player.id,
@@ -1014,7 +1015,8 @@ void handle_grab(Entity& player) {
     // nothing found
     if (!closest_item) return;
 
-    player.get<CanHoldItem>().update(&closest_item.asE(), player.id);
+    player.get<CanHoldItem>().update(EntityHelper::getEntityAsSharedPtr(closest_item),
+                                     player.id);
     log_info("pickup: player {} picked loose item {}", player.id,
              closest_item->id);
 

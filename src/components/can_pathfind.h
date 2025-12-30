@@ -14,7 +14,6 @@ struct CanPathfind : public BaseComponent {
     [[nodiscard]] bool is_path_empty() const { return !!path.empty(); }
     [[nodiscard]] vec2 get_local_target() { return local_target.value(); }
 
-    // Keep the existing API, but store the handle (id) instead of the pointer.
     [[nodiscard]] bool travel_toward(vec2 end, float speed) {
         OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
         if (!opt_parent) return false;
@@ -22,7 +21,7 @@ struct CanPathfind : public BaseComponent {
         if (parent.is_missing<Transform>()) return false;
 
         // Nothing to do we are already at the goal
-        if (is_at_position(parent, end)) return true;
+        if (is_at_position(end)) return true;
 
         // Waiting for our path request to be resolved
         if (has_active_request) {
@@ -35,16 +34,16 @@ struct CanPathfind : public BaseComponent {
         global_target = end;
 
         if (is_path_empty()) {
-            path_to(parent, me, global_target.value());
+            path_to(me, global_target.value());
             return false;
         }
         ensure_active_local_target();
-        move_transform_toward_local_target(parent, speed);
+        move_transform_toward_local_target(speed);
 
         if (local_target.has_value())
             transform.turn_to_face_pos(local_target.value());
 
-        return is_at_position(parent, end);
+        return is_at_position(end);
     }
 
     [[nodiscard]] std::deque<vec2> get_path() const { return path; }
@@ -67,19 +66,25 @@ struct CanPathfind : public BaseComponent {
         log_trace("{} recieved a path of length {}", parent_id, path.size());
     }
 
-    auto& set_parent(Entity* p) {
-        parent_id = p ? p->id : EntityID::INVALID;
+    auto& set_parent(EntityID id) {
+        parent_id = id;
         return *this;
     }
 
    private:
-    [[nodiscard]] bool is_at_position(const Entity& owner, vec2 position) {
+    [[nodiscard]] bool is_at_position(vec2 position) {
+        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        if (!opt_parent) return false;
+        const Entity& owner = opt_parent.asE();
         if (owner.is_missing<Transform>()) return false;
         return vec::distance(owner.get<Transform>().as2(), position) <
                (TILESIZE / 2.f);
     }
 
-    void move_transform_toward_local_target(Entity& owner, float speed) {
+    void move_transform_toward_local_target(float speed) {
+        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
+        if (!opt_parent) return;
+        Entity& owner = opt_parent.asE();
         if (owner.is_missing<Transform>()) return;
         if (!local_target.has_value()) {
             log_warn("Tried to ensure local target but still dont have one");
@@ -102,7 +107,7 @@ struct CanPathfind : public BaseComponent {
         transform.update(vec::to3(new_pos));
     }
 
-    void path_to(const Entity& owner, vec2 begin, vec2 end) {
+    void path_to(vec2 begin, vec2 end) {
         if (has_active_request) {
             // just keep waiting
             return;
@@ -116,10 +121,10 @@ struct CanPathfind : public BaseComponent {
         goal = end;
 
         PathRequestManager::enqueue_request(PathRequestManager::PathRequest{
-            .entity_id = owner.id, .start = start, .end = goal});
+            .entity_id = parent_id, .start = start, .end = goal});
 
         has_active_request = true;
-        log_trace("{} requested path from {} to {} ", owner.id, start, goal);
+        log_trace("{} requested path from {} to {} ", parent_id, start, goal);
     }
 
     void ensure_active_local_target() {

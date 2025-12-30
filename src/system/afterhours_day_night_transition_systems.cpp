@@ -63,7 +63,7 @@ inline void tell_customers_to_leave(Entity& entity) {
     // Force leaving job
     entity.get<CanPerformJob>().current = JobType::Leaving;
     entity.removeComponentIfExists<CanPathfind>();
-    entity.addComponent<CanPathfind>().set_parent(&entity);
+    entity.addComponent<CanPathfind>().set_parent(entity.id);
 }
 
 inline void update_new_max_customers(Entity& entity, float) {
@@ -188,7 +188,7 @@ struct TellCustomersToLeaveSystem
                                float) override {
         cpj.current = JobType::Leaving;
         entity.removeComponentIfExists<CanPathfind>();
-        entity.addComponent<CanPathfind>().set_parent(&entity);
+        entity.addComponent<CanPathfind>().set_parent(entity.id);
     }
 };
 

@@ -34,7 +34,7 @@ inline void backfill_empty_container(const EntityType& match_type,
     // create item
     Entity& item =
         EntityHelper::createItem(iic.type(), pos, std::forward<TArgs>(args)...);
-    canHold.update(&item, entity.id);
+    canHold.update(EntityHelper::getEntityAsSharedPtr(item), entity.id);
 }
 
 struct ProcessIsContainerAndShouldBackfillItemSystem

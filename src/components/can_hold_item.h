@@ -8,6 +8,7 @@
 //
 #include "../dataclass/entity_filter.h"
 #include "../entity.h"
+#include "../entity_helper.h"
 #include "../entity_type.h"
 #include "has_subtype.h"
 #include "is_item.h"
@@ -22,9 +23,8 @@ struct CanHoldItem : public BaseComponent {
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
-    // Store entity references as IDs (stable handles) instead of owning pointers.
-    // The pointer parameter is only used transiently to update the item's IsItem.
-    CanHoldItem& update(Entity* item, EntityID entity_id) {
+    // Keep API: take shared_ptr, but store only the handle (id).
+    CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
         held_item_id = item ? item->id : EntityID::INVALID;
         if (item) {
             item->get<IsItem>().set_held_by(held_by, entity_id);
@@ -37,6 +37,13 @@ struct CanHoldItem : public BaseComponent {
                 item->id, str(get_entity_type(*item)));
         }
         return *this;
+    }
+
+    [[nodiscard]] Entity& item() const {
+        return EntityHelper::getEnforcedEntityForID(held_item_id);
+    }
+    [[nodiscard]] const Entity& const_item() const {
+        return EntityHelper::getEnforcedEntityForID(held_item_id);
     }
 
     [[nodiscard]] EntityID item_id() const { return held_item_id; }
