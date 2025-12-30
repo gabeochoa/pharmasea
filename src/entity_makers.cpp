@@ -4,6 +4,7 @@
 #include <ranges>
 
 #include "ah.h"
+#include "entity_id.h"
 #include "components/ai_clean_vomit.h"
 #include "components/ai_close_tab.h"
 #include "components/ai_drinking.h"
@@ -1124,7 +1125,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
             hasWork.reset_pct();
 
             bool cleaned_up = _add_item_to_drink_NO_VALIDATION(drink, item);
-            if (cleaned_up) playerCHI.update(nullptr, EntityID::INVALID);
+            if (cleaned_up) playerCHI.update(nullptr, entity_id::INVALID);
         }
     };
 

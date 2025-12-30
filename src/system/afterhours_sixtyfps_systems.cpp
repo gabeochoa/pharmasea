@@ -29,6 +29,7 @@
 #include "../components/uses_character_model.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/statemanager.h"
+#include "../entity_id.h"
 #include "../entity_helper.h"
 #include "../entity_makers.h"
 #include "../entity_query.h"
@@ -835,7 +836,7 @@ struct ProcessSquirterSystem
         bool cleanup = items::_add_item_to_drink_NO_VALIDATION(drink, item);
         if (cleanup) {
             closest_furniture->get<CanHoldItem>().update(nullptr,
-                                                         EntityID::INVALID);
+                                                         entity_id::INVALID);
         }
     }
 };
@@ -851,7 +852,7 @@ struct ProcessTrashSystem : public afterhours::System<CanHoldItem> {
         if (trashCHI.empty()) return;
 
         trashCHI.item().cleanup = true;
-        trashCHI.update(nullptr, EntityID::INVALID);
+        trashCHI.update(nullptr, entity_id::INVALID);
     }
 };
 

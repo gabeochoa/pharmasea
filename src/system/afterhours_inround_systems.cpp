@@ -21,6 +21,7 @@
 #include "../dataclass/settings.h"
 #include "../engine/pathfinder.h"
 #include "../engine/statemanager.h"
+#include "../entity_id.h"
 #include "../entity_helper.h"
 #include "../entity_makers.h"
 #include "../entity_query.h"
@@ -158,7 +159,7 @@ struct ProcessGrabberItemsSystem
         CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
         ourCHI.update(matchCHI.item(), entity.id);
-        matchCHI.update(nullptr, EntityID::INVALID);
+        matchCHI.update(nullptr, entity_id::INVALID);
 
         conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
     }
@@ -276,7 +277,7 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
         CanHoldItem& matchCHI = match->get<CanHoldItem>();
         matchCHI.update(ourCHI.item(), entity.id);
 
-        ourCHI.update(nullptr, EntityID::INVALID);
+        ourCHI.update(nullptr, entity_id::INVALID);
 
         canBeTakenFrom.update(
             true);  // we are ready to have someone grab from us
@@ -506,7 +507,7 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
 
             // take it
             our_chi.update(other_chi.item(), entity.id);
-            other_chi.update(nullptr, EntityID::INVALID);
+            other_chi.update(nullptr, entity_id::INVALID);
 
             // we are done recieving
             entity.get<IsPnumaticPipe>().recieving = false;

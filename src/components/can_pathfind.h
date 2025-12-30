@@ -4,6 +4,7 @@
 #include <deque>
 
 #include "../engine/path_request_manager.h"
+#include "../entity_id.h"
 #include "../entity_helper.h"
 #include "../vendor_include.h"
 #include "base_component.h"
@@ -139,7 +140,7 @@ struct CanPathfind : public BaseComponent {
     std::deque<vec2> path;
     size_t max_path_length = 0;
 
-    EntityID parent_id = EntityID::INVALID;
+    EntityID parent_id = entity_id::INVALID;
 
     friend bitsery::Access;
     template<typename S>

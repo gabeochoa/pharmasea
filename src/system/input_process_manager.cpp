@@ -35,6 +35,7 @@
 #include "../engine/log.h"
 #include "../engine/pathfinder.h"
 #include "../entity.h"
+#include "../entity_id.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../entity_type.h"
@@ -669,7 +670,7 @@ void handle_drop(Entity& player) {
 
         // Just drop him wherever we are
         item.get<IsItem>().set_held_by(EntityType::Unknown, -1);
-        player.get<CanHoldItem>().update(nullptr, EntityID::INVALID);
+        player.get<CanHoldItem>().update(nullptr, entity_id::INVALID);
         return true;
     };
 
@@ -885,7 +886,7 @@ void handle_drop(Entity& player) {
         }
 
         furnCHI.update(item, closest_furniture->id);
-        playerCHI.update(nullptr, EntityID::INVALID);
+        playerCHI.update(nullptr, entity_id::INVALID);
         log_info("pickup: placed item {} onto furniture {}", item.id,
                  closest_furniture->id);
         return true;

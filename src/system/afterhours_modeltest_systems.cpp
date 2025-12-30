@@ -11,6 +11,7 @@
 #include "../components/transform.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/statemanager.h"
+#include "../entity_id.h"
 #include "../entity_helper.h"
 #include "../entity_type.h"
 
@@ -128,7 +129,7 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
         // Delete the currently held item
         if (canHold.is_holding_item()) {
             canHold.item().cleanup = true;
-            canHold.update(nullptr, EntityID::INVALID);
+            canHold.update(nullptr, entity_id::INVALID);
         }
 
         auto pos = transform.pos();
@@ -171,7 +172,7 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
 
         if (current_value != item_value) {
             canHold.item().cleanup = true;
-            canHold.update(nullptr, EntityID::INVALID);
+            canHold.update(nullptr, entity_id::INVALID);
         }
     }
 };

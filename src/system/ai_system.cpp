@@ -18,6 +18,7 @@
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
 #include "../components/is_toilet.h"
+#include "../entity_id.h"
 
 namespace system_manager::ai {
 
@@ -264,7 +265,7 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
 
     CanHoldItem& ourCHI = entity.get<CanHoldItem>();
     ourCHI.update(drink, entity.id);
-    regCHI.update(nullptr, EntityID::INVALID);
+    regCHI.update(nullptr, entity_id::INVALID);
 
     log_info("ai: {} accepted drink={} price={} tip={}", entity.id, drink_name,
              price, tip);
@@ -383,7 +384,7 @@ void process_ai_drinking(Entity& entity, float dt) {
     // Done with my drink, delete it
     CanHoldItem& chi = entity.get<CanHoldItem>();
     chi.item().cleanup = true;
-    chi.update(nullptr, EntityID::INVALID);
+    chi.update(nullptr, entity_id::INVALID);
 
     // Mark our current order finished
     cod.on_order_finished();

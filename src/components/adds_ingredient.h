@@ -8,6 +8,7 @@
 #include "../engine/log.h"
 #include "../entity.h"
 #include "../entity_helper.h"
+#include "../entity_id.h"
 #include "base_component.h"
 
 struct AddsIngredient : public BaseComponent {
@@ -61,7 +62,7 @@ struct AddsIngredient : public BaseComponent {
     }
 
    private:
-    EntityID parent = EntityID::INVALID;
+    EntityID parent = entity_id::INVALID;
     IngredientFetcherFn fetcher = nullptr;
     ValidationFn validation = nullptr;
     OnDecrementFn on_decrement = nullptr;

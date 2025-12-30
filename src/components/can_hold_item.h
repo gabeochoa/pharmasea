@@ -1,6 +1,7 @@
 #pragma once
 
 #include <exception>
+#include <memory>
 #include <optional>
 //
 
@@ -8,7 +9,7 @@
 //
 #include "../dataclass/entity_filter.h"
 #include "../entity.h"
-#include "../entity_helper.h"
+#include "../entity_id.h"
 #include "../entity_type.h"
 #include "has_subtype.h"
 #include "is_item.h"
@@ -19,9 +20,14 @@ struct CanHoldItem : public BaseComponent {
 
     virtual ~CanHoldItem() {}
 
-    [[nodiscard]] bool empty() const { return held_item_id == EntityID::INVALID; }
+    [[nodiscard]] bool empty() const { return held_item_id == entity_id::INVALID; }
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
+
+    CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
+        if (!item) return update(nullptr, entity_id);
+        return update(*item, entity_id);
+    }
 
     CanHoldItem& update(Entity& item, int entity_id) {
         held_item_id = item.id;
@@ -37,16 +43,12 @@ struct CanHoldItem : public BaseComponent {
     }
 
     CanHoldItem& update(std::nullptr_t, int) {
-        held_item_id = EntityID::INVALID;
+        held_item_id = entity_id::INVALID;
         return *this;
     }
 
-    [[nodiscard]] Entity& item() const {
-        return EntityHelper::getEnforcedEntityForID(held_item_id);
-    }
-    [[nodiscard]] const Entity& const_item() const {
-        return EntityHelper::getEnforcedEntityForID(held_item_id);
-    }
+    [[nodiscard]] Entity& item() const;
+    [[nodiscard]] const Entity& const_item() const;
 
     [[nodiscard]] EntityID item_id() const { return held_item_id; }
 
@@ -80,8 +82,8 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] EntityID last_id() const { return last_held_id; }
 
    private:
-    EntityID last_held_id = EntityID::INVALID;
-    EntityID held_item_id = EntityID::INVALID;
+    EntityID last_held_id = entity_id::INVALID;
+    EntityID held_item_id = entity_id::INVALID;
     EntityType held_by;
     EntityFilter filter;
 

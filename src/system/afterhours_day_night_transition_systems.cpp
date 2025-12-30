@@ -22,6 +22,7 @@
 #include "../engine/log.h"
 #include "../engine/simulated_input/simulated_input.h"
 #include "../engine/statemanager.h"
+#include "../entity_id.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../globals.h"
@@ -41,7 +42,7 @@ inline void delete_held_items_when_leaving_inround(Entity& entity) {
     // Mark it as deletable
     // let go of the item
     canHold.item().cleanup = true;
-    canHold.update(nullptr, EntityID::INVALID);
+    canHold.update(nullptr, entity_id::INVALID);
 }
 
 inline void reset_max_gen_when_after_deletion(Entity& entity) {
@@ -510,7 +511,7 @@ struct ReleaseMopBuddyAtStartOfDaySystem
         if (canHold.item_id() != entity.id) {
             return;
         }
-        canHold.update(nullptr, EntityID::INVALID);
+        canHold.update(nullptr, entity_id::INVALID);
 
         // Force drop the mop buddy
         isitem.set_held_by(EntityType::Unknown, -1);

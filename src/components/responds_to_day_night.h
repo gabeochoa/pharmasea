@@ -3,6 +3,7 @@
 #pragma once
 
 #include "../entity_helper.h"
+#include "../entity_id.h"
 #include "base_component.h"
 
 struct RespondsToDayNight : public BaseComponent {
@@ -66,7 +67,7 @@ struct RespondsToDayNight : public BaseComponent {
     OnNightStartedFn onNightStartedFn = nullptr;
     OnNightEndedFn onNightEndedFn = nullptr;
 
-    EntityID parent_id = EntityID::INVALID;
+    EntityID parent_id = entity_id::INVALID;
 
     friend bitsery::Access;
     template<typename S>

@@ -8,6 +8,7 @@
 
 ///
 #include "../building_locations.h"
+#include "../entity_id.h"
 #include "../components/adds_ingredient.h"
 #include "../components/ai_wait_in_queue.h"
 #include "../components/base_component.h"
@@ -266,7 +267,7 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
     // Delete the currently held item
     if (canHold.is_holding_item()) {
         canHold.item().cleanup = true;
-        canHold.update(nullptr, EntityID::INVALID);
+        canHold.update(nullptr, entity_id::INVALID);
     }
 
     auto pos = entity.get<Transform>().pos();
@@ -295,7 +296,7 @@ void process_is_indexed_container_holding_incorrect_item(Entity& entity,
 
     if (current_value != item_value) {
         canHold.item().cleanup = true;
-        canHold.update(nullptr, EntityID::INVALID);
+        canHold.update(nullptr, entity_id::INVALID);
     }
 }
 
