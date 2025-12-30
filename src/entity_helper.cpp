@@ -14,6 +14,54 @@ NamedEntities named_entities_DO_NOT_USE;
 std::set<int> permanant_ids;
 std::map<vec2, bool> cache_is_walkable;
 
+namespace {
+struct SlotStore {
+    std::vector<EntityHelper::Slot> slots;
+    std::vector<uint32_t> free_list;
+};
+
+SlotStore& slot_store() {
+    static SlotStore store;
+    return store;
+}
+
+static uint32_t bump_gen(uint32_t gen) {
+    gen += 1;
+    if (gen == 0) gen = 1;
+    return gen;
+}
+
+static uint32_t alloc_slot_index() {
+    auto& store = slot_store();
+    if (!store.free_list.empty()) {
+        const uint32_t slot = store.free_list.back();
+        store.free_list.pop_back();
+        return slot;
+    }
+    store.slots.push_back(EntityHelper::Slot{});
+    return static_cast<uint32_t>(store.slots.size() - 1);
+}
+
+static void invalidate_slot_for_entity_if_any(const std::shared_ptr<Entity>& sp) {
+    if (!sp) return;
+
+    auto& store = slot_store();
+    const uint32_t slot = sp->ah_slot_index;
+    sp->ah_slot_index = EntityHandle::INVALID_SLOT;
+
+    if (slot == EntityHandle::INVALID_SLOT) return;
+    if (slot >= store.slots.size()) return;
+
+    auto& s = store.slots[slot];
+    if (!s.ent) return;
+    if (s.ent.get() != sp.get()) return;
+
+    s.ent.reset();
+    s.gen = bump_gen(s.gen);
+    store.free_list.push_back(slot);
+}
+}  // namespace
+
 ///////////////////////////////////
 ///
 
@@ -111,6 +159,21 @@ Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
     auto e = std::make_shared<Entity>();
     get_entities_for_mod().push_back(e);
 
+    // Assign a stable slot+generation handle for PharmaSea-managed entities.
+    // This enables O(1) handle resolution without relying on afterhours' own
+    // internal EntityHelper singleton (which PharmaSea doesn't use).
+    {
+        auto& store = slot_store();
+        const uint32_t slot = alloc_slot_index();
+        if (slot >= store.slots.size()) {
+            // Should never happen, but keep entity safe.
+            e->ah_slot_index = EntityHandle::INVALID_SLOT;
+        } else {
+            store.slots[slot].ent = e;
+            e->ah_slot_index = slot;
+        }
+    }
+
     invalidatePathCache();
 
     if (options.is_permanent) {
@@ -152,6 +215,13 @@ void EntityHelper::removeEntity(int e_id) {
 
     auto& entities = get_entities_for_mod();
 
+    // Invalidate any handle slots for removed entities.
+    for (const auto& sp : entities) {
+        if (sp && sp->id == e_id) {
+            invalidate_slot_for_entity_if_any(sp);
+        }
+    }
+
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
         [e_id](const auto& entity) { return !entity || entity->id == e_id; });
@@ -174,6 +244,13 @@ void EntityHelper::cleanup() {
     // Cleanup entities marked cleanup
     Entities& entities = get_entities_for_mod();
 
+    // Invalidate handle slots for entities about to be removed.
+    for (const auto& sp : entities) {
+        if (sp && sp->cleanup) {
+            invalidate_slot_for_entity_if_any(sp);
+        }
+    }
+
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
         [](const auto& entity) { return !entity || entity->cleanup; });
@@ -184,6 +261,9 @@ void EntityHelper::cleanup() {
 void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
     Entities& entities = get_entities_for_mod();
     // just clear the whole thing
+    for (const auto& sp : entities) {
+        invalidate_slot_for_entity_if_any(sp);
+    }
     entities.clear();
 }
 
@@ -195,6 +275,12 @@ void EntityHelper::delete_all_entities(bool include_permanent) {
 
     // Only delete non perms
     Entities& entities = get_entities_for_mod();
+
+    for (const auto& sp : entities) {
+        if (sp && !permanant_ids.contains(sp->id)) {
+            invalidate_slot_for_entity_if_any(sp);
+        }
+    }
 
     auto newend = std::remove_if(
         entities.begin(), entities.end(),
@@ -250,7 +336,43 @@ EntityHandle EntityHelper::getHandleForID(EntityID id) {
     if (!opt) {
         return EntityHandle::invalid();
     }
-    return afterhours::EntityHelper::handle_for(opt.asE());
+    return EntityHelper::handle_for(opt.asE());
+}
+
+EntityHandle EntityHelper::handle_for(const Entity& e) {
+    const uint32_t slot = e.ah_slot_index;
+    if (slot == EntityHandle::INVALID_SLOT) return EntityHandle::invalid();
+
+    auto& store = slot_store();
+    if (slot >= store.slots.size()) return EntityHandle::invalid();
+
+    const auto& s = store.slots[slot];
+    if (!s.ent) return EntityHandle::invalid();
+    if (s.ent.get() != &e) return EntityHandle::invalid();
+    return EntityHandle{slot, s.gen};
+}
+
+OptEntity EntityHelper::resolve(EntityHandle h) {
+    if (h.is_invalid()) return {};
+
+    auto& store = slot_store();
+    if (h.slot >= store.slots.size()) return {};
+
+    auto& s = store.slots[h.slot];
+    if (s.gen != h.gen) return {};
+    if (!s.ent) return {};
+    return *s.ent;
+}
+
+RefEntity EntityHelper::resolveEnforced(EntityHandle h) {
+    OptEntity opt = resolve(h);
+    if (!opt) {
+        log_error(
+            "EntityHelper::resolveEnforced: EntityHandle is invalid or stale "
+            "(slot={}, gen={})",
+            h.slot, h.gen);
+    }
+    return opt.asE();
 }
 
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,

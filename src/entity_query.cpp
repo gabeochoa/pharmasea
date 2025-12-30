@@ -31,7 +31,7 @@ EQ& EQ::whereIsHoldingAnyFurnitureThatMatches(
                 const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
                 if (!chf.is_holding_furniture()) return false;
                 OptEntity furniture =
-                    afterhours::EntityHelper::resolve(chf.furniture_handle());
+                    EntityHelper::resolve(chf.furniture_handle());
                 if (!furniture.has_value()) return false;
 
                 return filter(furniture.asE());

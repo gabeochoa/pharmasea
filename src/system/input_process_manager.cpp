@@ -243,7 +243,7 @@ void process_player_movement_input(Entity& entity, float dt,
             const CanHoldHandTruck& chht = entity.get<CanHoldHandTruck>();
             if (chht.is_holding()) {
                 OptEntity hand_truck =
-                    afterhours::EntityHelper::resolve(chht.hand_truck_handle());
+                    EntityHelper::resolve(chht.hand_truck_handle());
                 if (hand_truck) {
                     const CanHoldFurniture& ht_chf =
                         hand_truck->get<CanHoldFurniture>();
@@ -410,13 +410,13 @@ struct PopOutWhenCollidingSystem
         // same as the entity we are colliding with
         if (chht.is_holding()) {
             OptEntity hand_truck =
-                afterhours::EntityHelper::resolve(chht.hand_truck_handle());
+                EntityHelper::resolve(chht.hand_truck_handle());
             if (hand_truck) {
                 if (match->id == hand_truck->id) {
                     // Skip collision with the hand truck itself
                     return;
                 }
-                OptEntity furniture = afterhours::EntityHelper::resolve(
+                OptEntity furniture = EntityHelper::resolve(
                     hand_truck->get<CanHoldFurniture>().furniture_handle());
                 if (furniture && match->id == furniture->id) {
                     // Skip collision with the furniture in the hand truck
@@ -427,7 +427,7 @@ struct PopOutWhenCollidingSystem
 
         if (chf.is_holding_furniture()) return;
         OptEntity held_furniture =
-            afterhours::EntityHelper::resolve(chf.furniture_handle());
+            EntityHelper::resolve(chf.furniture_handle());
         // If we are currently holding this furniture, skip collision
         if (held_furniture && held_furniture->id == match->id) return;
 
@@ -478,7 +478,7 @@ struct UpdateHeldFurniturePositionSystem
             new_pos.x -= TILESIZE;
         }
 
-        OptEntity furniture = afterhours::EntityHelper::resolve(
+        OptEntity furniture = EntityHelper::resolve(
             can_hold_furniture.furniture_handle());
         furniture->get<Transform>().update(new_pos);
     }
@@ -509,7 +509,7 @@ void rotate_furniture(const Entity& player) {
 
 void drop_held_furniture(Entity& player) {
     CanHoldFurniture& ourCHF = player.get<CanHoldFurniture>();
-    OptEntity hf = afterhours::EntityHelper::resolve(ourCHF.furniture_handle());
+    OptEntity hf = EntityHelper::resolve(ourCHF.furniture_handle());
     if (!hf) {
         log_info(" id:{} we'd like to drop but our hands are empty", player.id);
         return;
@@ -589,10 +589,10 @@ void handle_grab_or_drop(Entity& player) {
         if (!closest_furniture) return;
 
         EntityHandle handle =
-            afterhours::EntityHelper::handle_for(closest_furniture.asE());
+            EntityHelper::handle_for(closest_furniture.asE());
         ourCHF.update(handle, closest_furniture->get<Transform>().pos());
         OptEntity furniture =
-            afterhours::EntityHelper::resolve(ourCHF.furniture_handle());
+            EntityHelper::resolve(ourCHF.furniture_handle());
         furniture->get<CanBeHeld>().set_is_being_held(true);
 
         // Note: we expect thatr since ^ set is held is true,
@@ -1019,7 +1019,7 @@ bool handle_drop_hand_truck(Entity& player) {
     Transform& transform = player.get<Transform>();
     CanHoldHandTruck& chht = player.get<CanHoldHandTruck>();
     OptEntity hand_truck =
-        afterhours::EntityHelper::resolve(chht.hand_truck_handle());
+        EntityHelper::resolve(chht.hand_truck_handle());
     if (!hand_truck) {
         log_error(
             "We are supposed to be holding a handtruck but the handle is "
@@ -1099,11 +1099,11 @@ bool handle_hand_truck(Entity& player) {
         if (!closest_handtruck) return false;
 
         EntityHandle handle =
-            afterhours::EntityHelper::handle_for(closest_handtruck.asE());
+            EntityHelper::handle_for(closest_handtruck.asE());
         chht.update(handle, closest_handtruck->get<Transform>().pos());
 
         OptEntity hand_truck =
-            afterhours::EntityHelper::resolve(chht.hand_truck_handle());
+            EntityHelper::resolve(chht.hand_truck_handle());
         hand_truck->get<CanBeHeld_HT>().set_is_being_held(true);
 
         // Note: we expect thatr since ^ set is held is true,
@@ -1130,7 +1130,7 @@ void handle_grab_or_drop(Entity& player) {
     CanHoldHandTruck& chht = player.get<CanHoldHandTruck>();
     if (chht.is_holding()) {
         OptEntity hand_truck =
-            afterhours::EntityHelper::resolve(chht.hand_truck_handle());
+            EntityHelper::resolve(chht.hand_truck_handle());
         planning::handle_grab_or_drop(hand_truck.asE());
         return;
     }

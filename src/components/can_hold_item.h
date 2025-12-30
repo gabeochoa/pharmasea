@@ -31,7 +31,7 @@ struct CanHoldItem : public BaseComponent {
     }
 
     CanHoldItem& update(Entity& item, int entity_id) {
-        held_item_handle = afterhours::EntityHelper::handle_for(item);
+        held_item_handle = EntityHelper::handle_for(item);
         item.get<IsItem>().set_held_by(held_by, entity_id);
         last_held_handle = held_item_handle;
         if (held_by == EntityType::Unknown) {
@@ -54,7 +54,7 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] EntityHandle item_handle() const { return held_item_handle; }
     // Legacy compatibility - resolve handle to get ID
     [[nodiscard]] EntityID item_id() const {
-        auto opt = afterhours::EntityHelper::resolve(held_item_handle);
+        auto opt = EntityHelper::resolve(held_item_handle);
         return opt ? opt->id : entity_id::INVALID;
     }
 
@@ -88,7 +88,7 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] EntityHandle last_handle() const { return last_held_handle; }
     // Legacy compatibility
     [[nodiscard]] EntityID last_id() const {
-        auto opt = afterhours::EntityHelper::resolve(last_held_handle);
+        auto opt = EntityHelper::resolve(last_held_handle);
         return opt ? opt->id : entity_id::INVALID;
     }
 

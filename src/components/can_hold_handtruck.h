@@ -32,7 +32,7 @@ struct CanHoldHandTruck : public BaseComponent {
     }
     // Legacy compatibility
     [[nodiscard]] EntityID hand_truck_id() const {
-        auto opt = afterhours::EntityHelper::resolve(held_hand_truck_handle);
+        auto opt = EntityHelper::resolve(held_hand_truck_handle);
         return opt ? opt->id : entity_id::INVALID;
     }
     [[nodiscard]] vec3 picked_up_at() const { return pos; }

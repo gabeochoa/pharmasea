@@ -27,7 +27,7 @@ struct CanHoldFurniture : public BaseComponent {
     }
     // Legacy compatibility
     [[nodiscard]] EntityID furniture_id() const {
-        auto opt = afterhours::EntityHelper::resolve(held_furniture_handle);
+        auto opt = EntityHelper::resolve(held_furniture_handle);
         return opt ? opt->id : entity_id::INVALID;
     }
     [[nodiscard]] vec3 picked_up_at() const { return pos; }
