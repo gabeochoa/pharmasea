@@ -291,6 +291,17 @@ void update_lighting_shader(raylib::Shader& shader, const raylib::Camera3D& cam)
 
     std::array<vec3, IndoorLightLayout::kTotalLights> colors =
         g_indoor_layout.lights_color;
+
+    // Daytime goal: make inside/outside feel similar in brightness.
+    // Boost only indoor point lights during the day (doesn't affect outdoors due to rect culling).
+    if (!is_night) {
+        constexpr float kDayIndoorBoost = 1.35f;
+        for (auto& c : colors) {
+            c = vec3{c.x * kDayIndoorBoost, c.y * kDayIndoorBoost,
+                     c.z * kDayIndoorBoost};
+        }
+    }
+
     for (int b = 0; b < IndoorLightLayout::kBuildings; b++) {
         const int base = b * IndoorLightLayout::kLightsPerBuilding;
         const bool enabled = (!is_night) || (b == bar_building_index);
