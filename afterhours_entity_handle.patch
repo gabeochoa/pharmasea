@@ -1,0 +1,517 @@
+diff --git a/PLUGIN_API.md b/PLUGIN_API.md
+index f620480..f90ea08 100644
+--- a/PLUGIN_API.md
++++ b/PLUGIN_API.md
+@@ -34,6 +34,8 @@ Plugins may use the following public static methods from `EntityHelper`:
+ - `EntityHelper::getEntityForIDEnforce(const EntityID id)` - Get entity by ID (throws if not found)
+ - `EntityHelper::getEntityAsSharedPtr(const Entity &entity)` - Get shared pointer to entity
+ - `EntityHelper::getEntityAsSharedPtr(const OptEntity entity)` - Get shared pointer from OptEntity
++- `EntityHelper::handle_for(const Entity &entity)` - Get the entity's stable handle (merged entities only by default)
++- `EntityHelper::resolve(const EntityHandle handle)` - Resolve a handle to an entity (returns OptEntity; stale/invalid handles fail)
+ 
+ ### Entity Management
+ - `EntityHelper::merge_entity_arrays()` - Merge temporary entities into main entity array
+@@ -45,6 +47,19 @@ Plugins may use the following public static methods from `EntityHelper`:
+ ### Iteration
+ - `EntityHelper::forEachEntity(const std::function<ForEachFlow(Entity &)> &cb)` - Iterate over all entities
+ 
++### Handle-based Entity Identity (Recommended for long-lived references)
++Plugins may use `EntityHandle` for persistent relationships (instead of storing `Entity&` / `RefEntity` long-term).
++
++- `EntityHandle` (defined in `core/entity_handle.h`, included by `core/entity.h`)
++
++**Important behavior note (default)**:
++- Entities created via `createEntity*()` live in `temp_entities` until `merge_entity_arrays()`.
++- By default, handles are assigned **on merge**, so temp entities will return an **invalid** handle from `handle_for`.
++
++**Optional behavior (opt-in)**:
++- Define `AFTER_HOURS_ASSIGN_HANDLES_ON_CREATE` to assign handles immediately on `createEntity*()`.
++- With this flag, `handle_for` will return a valid handle for temp entities and `resolve(handle)` will work pre-merge.
++
+ ### Internal Access (Use with Caution)
+ - `EntityHelper::get_temp()` - Get temporary entities vector (for advanced use cases)
+ - `EntityHelper::get_entities()` - Get read-only entities vector
+@@ -171,5 +186,6 @@ auto *component = EntityHelper::get_singleton_cmp<MySingleton>();
+ ✅ **Do** use `EntityHelper::get_singleton<Component>()` for singletons
+ ✅ **Do** use `EntityQuery` for querying entities
+ ✅ **Do** use `EntityHelper::createEntity()` for entity creation
++✅ **Do** store `EntityHandle` for long-lived references and call `EntityHelper::resolve(handle)`
+ ✅ **Do** include `ecs.h` for ECS functionality
+ 
+diff --git a/README.md b/README.md
+index 7aa5382..188bc75 100644
+--- a/README.md
++++ b/README.md
+@@ -34,6 +34,32 @@ AFTER_HOURS_INPUT_VALIDATION_<>
+ AFTER_HOURS_ENTITY_ALLOC_DEBUG
+ - turns on log_warn whenever Entities deallocates (and theoretically allocates but unlikely) 
+ 
++AFTER_HOURS_ASSIGN_HANDLES_ON_CREATE
++- (optional) assigns stable `EntityHandle`s at `createEntity*()` time (even while entities are still in `temp_entities`)
++- by default handles are assigned on `merge_entity_arrays()` for maximum behavioral compatibility
++
++## EntityHandle (recommended for long-lived references)
++
++`RefEntity` / `OptEntity` are convenient for short-lived usage (like immediate query results), but **do not store them long-term**.
++
++For persistent relationships, store `EntityHandle` and resolve it when needed:
++
++```cpp
++afterhours::EntityHandle h = afterhours::EntityHelper::handle_for(entity);
++afterhours::OptEntity opt = afterhours::EntityHelper::resolve(h);
++if (opt) {
++  afterhours::Entity& e = opt.asE();
++  // use e...
++}
++```
++
++Default behavior:
++- temp entities (created this frame) live in `temp_entities`
++- handles are assigned on merge, so `handle_for(temp_entity)` returns invalid until merged
++
++Opt-in behavior:
++- define `AFTER_HOURS_ASSIGN_HANDLES_ON_CREATE` to assign handles immediately and allow resolving pre-merge
++
+ 
+ ## Plugins
+ 
+diff --git a/example/tests/makefile b/example/tests/makefile
+index d3485f3..9d7e66b 100644
+--- a/example/tests/makefile
++++ b/example/tests/makefile
+@@ -3,4 +3,5 @@ FLAGS = -std=c++23 -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
+ 		-Wmost -Wconversion -g
+ 
+ all:
+-	clang++ $(FLAGS) main.cpp -o tests.exe && ./tests.exe
++	clang++ $(FLAGS) main.cpp entity_handle_tests.cpp -o tests.exe && ./tests.exe
++	clang++ $(FLAGS) -DAFTER_HOURS_ASSIGN_HANDLES_ON_CREATE main.cpp entity_handle_tests.cpp -o tests_handles_on_create.exe && ./tests_handles_on_create.exe
+diff --git a/src/core/entity.h b/src/core/entity.h
+index 22a6fce..f71dc5c 100644
+--- a/src/core/entity.h
++++ b/src/core/entity.h
+@@ -11,6 +11,7 @@
+ #include "../logging.h"
+ #include "../type_name.h"
+ #include "base_component.h"
++#include "entity_handle.h"
+ 
+ namespace afterhours {
+ #ifndef AFTER_HOURS_MAX_ENTITY_TAGS
+@@ -34,6 +35,11 @@ struct Entity {
+   EntityID id;
+   int entity_type = 0;
+ 
++  // Runtime-only metadata used by the handle-based store. By default, entities
++  // created into `temp_entities` will keep this invalid until they are merged
++  // into the main entity list.
++  uint32_t ah_slot_index = EntityHandle::INVALID_SLOT;
++
+   ComponentBitSet componentSet;
+   ComponentArray componentArray;
+ 
+diff --git a/src/core/entity_helper.h b/src/core/entity_helper.h
+index 33ad2f9..70ec96b 100644
+--- a/src/core/entity_helper.h
++++ b/src/core/entity_helper.h
+@@ -32,6 +32,19 @@ struct EntityHelper {
+   std::set<int> permanant_ids;
+   std::map<ComponentID, Entity *> singletonMap;
+ 
++  // Compatibility-first design:
++  // - `entities_DO_NOT_USE` remains the canonical dense list of live entities
++  //   for iteration and for EntityQuery snapshots.
++  // - Slots provide O(1) handle resolution and safe invalidation via generation.
++  struct Slot {
++    EntityType ent{};
++    uint32_t gen = 1;
++    uint32_t index_into_dense = 0;
++  };
++
++  std::vector<Slot> slots;
++  std::vector<uint32_t> free_list;
++
+   struct CreationOptions {
+     bool is_permanent;
+   };
+@@ -53,6 +66,125 @@ struct EntityHelper {
+   }
+   static const Entities &get_entities() { return get_entities_for_mod(); }
+ 
++  // Default behavior (compatibility-first):
++  // - Temp entities (pre-merge) have invalid handles (until merged).
++  // - Invalid/stale handles resolve to null / empty.
++  static EntityHandle handle_for(const Entity &e) {
++    const uint32_t slot = e.ah_slot_index;
++    if (slot == EntityHandle::INVALID_SLOT) {
++      return EntityHandle::invalid();
++    }
++
++    auto &self = EntityHelper::get();
++    if (slot >= self.slots.size()) {
++      log_error("handle_for: entity id {} has out-of-range slot {} (slots size {})",
++                e.id, slot, self.slots.size());
++      return EntityHandle::invalid();
++    }
++
++    const Slot &s = self.slots[slot];
++    if (!s.ent || s.ent.get() != &e) {
++      log_error(
++          "handle_for: slot {} does not match entity id {} (slot ent: {}, slot ent id: {})",
++          slot, e.id, s.ent ? "non-null" : "null",
++          s.ent ? s.ent->id : -1);
++      return EntityHandle::invalid();
++    }
++
++    return {slot, s.gen};
++  }
++
++  static OptEntity resolve(const EntityHandle h) {
++    if (!h.valid()) {
++      return {};
++    }
++
++    auto &self = EntityHelper::get();
++    if (h.slot >= self.slots.size()) {
++      return {};
++    }
++
++    Slot &s = self.slots[h.slot];
++    if (s.gen != h.gen) {
++      return {};
++    }
++    if (!s.ent) {
++      return {};
++    }
++    return *s.ent;
++  }
++
++  // Allocate a slot index for a newly-merged entity.
++  // NOTE: generation is NOT reset on reuse; it is only incremented on delete.
++  static uint32_t alloc_slot_index() {
++    auto &self = EntityHelper::get();
++    if (!self.free_list.empty()) {
++      const uint32_t slot = self.free_list.back();
++      self.free_list.pop_back();
++      return slot;
++    }
++    self.slots.push_back(Slot{});
++    return static_cast<uint32_t>(self.slots.size() - 1);
++  }
++
++  static uint32_t bump_gen(uint32_t gen) {
++    gen += 1;
++    // If `gen` overflows (uint32 wraparound), it can become 0. Avoid 0 to keep
++    // "0 == default/uninitialized" out of the valid space.
++    if (gen == 0) {
++      gen = 1;
++    }
++    return gen;
++  }
++
++  static void invalidate_slot_for_entity_if_any(const EntityType &sp,
++                                                EntityHelper &self) {
++    if (!sp) {
++      return;
++    }
++    const uint32_t slot = sp->ah_slot_index;
++    sp->ah_slot_index = EntityHandle::INVALID_SLOT;
++
++    if (slot == EntityHandle::INVALID_SLOT) {
++      return;
++    }
++    if (slot >= self.slots.size()) {
++      log_error(
++          "invalidate_slot_for_entity_if_any: entity id {} has out-of-range slot {} (slots size {})",
++          sp->id, slot, self.slots.size());
++      return;
++    }
++
++    Slot &s = self.slots[slot];
++    if (!s.ent) {
++      return;
++    }
++    s.ent.reset();
++    s.gen = bump_gen(s.gen);
++    self.free_list.push_back(slot);
++  }
++
++  // Dense removal that preserves handle bookkeeping:
++  // - invalidates the removed entity's slot (bump generation + free slot)
++  // - swap-removes from the dense `entities_DO_NOT_USE` vector
++  // - updates the moved entity's slot back-pointer to its new dense index
++  static void swap_remove_dense_index(Entities &entities, size_t i,
++                                      EntityHelper &self) {
++    invalidate_slot_for_entity_if_any(entities[i], self);
++
++    if (i != entities.size() - 1) {
++      std::swap(entities[i], entities.back());
++      if (entities[i]) {
++        const uint32_t moved_slot = entities[i]->ah_slot_index;
++        if (moved_slot != EntityHandle::INVALID_SLOT &&
++            moved_slot < self.slots.size()) {
++          self.slots[moved_slot].index_into_dense = static_cast<uint32_t>(i);
++        }
++      }
++    }
++    entities.pop_back();
++  }
++
+   static RefEntities get_ref_entities() {
+     RefEntities matching;
+     for (const auto &e : EntityHelper::get_entities()) {
+@@ -76,6 +208,21 @@ struct EntityHelper {
+       reserve_temp_space();
+ 
+     std::shared_ptr<Entity> e(new Entity());
++
++#if defined(AFTER_HOURS_ASSIGN_HANDLES_ON_CREATE)
++    // Opt-in behavior: assign a stable handle immediately, even while the entity
++    // lives in `temp_entities`. Queries still won't see temp entities unless
++    // force-merged, but `resolve(handle)` will work.
++    {
++      auto &self = EntityHelper::get();
++      const uint32_t slot = alloc_slot_index();
++      Slot &s = self.slots[slot];
++      s.ent = e;
++      s.index_into_dense = 0xFFFFFFFFu; // not in dense list yet
++      e->ah_slot_index = slot;
++    }
++#endif
++
+     get_temp().push_back(e);
+ 
+     if (options.is_permanent) {
+@@ -89,12 +236,31 @@ struct EntityHelper {
+     if (get_temp().empty())
+       return;
+ 
++    auto &self = EntityHelper::get();
+     for (const auto &entity : get_temp()) {
+       if (!entity)
+         continue;
+-      if (entity->cleanup)
++      if (entity->cleanup) {
++#if defined(AFTER_HOURS_ASSIGN_HANDLES_ON_CREATE)
++        // If we assigned a handle on create, make sure to invalidate it for
++        // temp entities that are never merged.
++        invalidate_slot_for_entity_if_any(entity, self);
++#endif
+         continue;
++      }
++
+       get_entities_for_mod().push_back(entity);
++      const uint32_t dense_index =
++          static_cast<uint32_t>(get_entities_for_mod().size() - 1);
++
++      uint32_t slot = entity->ah_slot_index;
++      if (slot == EntityHandle::INVALID_SLOT) {
++        slot = alloc_slot_index();
++        entity->ah_slot_index = slot;
++      }
++      Slot &s = self.slots[slot];
++      s.ent = entity;
++      s.index_into_dense = dense_index;
+     }
+     get_temp().clear();
+   }
+@@ -153,18 +319,54 @@ struct EntityHelper {
+   static void cleanup() {
+     EntityHelper::merge_entity_arrays();
+     Entities &entities = get_entities_for_mod();
++    auto &self = EntityHelper::get();
+ 
+-    const auto newend = std::remove_if(
+-        entities.begin(), entities.end(),
+-        [](const auto &entity) { return !entity || entity->cleanup; });
+-
+-    entities.erase(newend, entities.end());
++    size_t i = 0;
++    while (i < entities.size()) {
++      const auto &sp = entities[i];
++      if (sp && !sp->cleanup) {
++        ++i;
++        continue;
++      }
++      swap_remove_dense_index(entities, i, self);
++    }
+   }
+ 
+   static void delete_all_entities_NO_REALLY_I_MEAN_ALL() {
+     Entities &entities = get_entities_for_mod();
++    auto &self = EntityHelper::get();
++
++    for (auto &sp : entities) {
++      if (sp) {
++        sp->ah_slot_index = EntityHandle::INVALID_SLOT;
++      }
++    }
++    for (auto &sp : self.temp_entities) {
++      if (sp) {
++        sp->ah_slot_index = EntityHandle::INVALID_SLOT;
++      }
++    }
++
++    // Invalidate all slots that currently own an entity, and rebuild the free
++    // list so future allocations can reuse slots safely (with bumped gens).
++    self.free_list.clear();
++    self.free_list.reserve(self.slots.size());
++    for (uint32_t slot = 0; slot < self.slots.size(); ++slot) {
++      Slot &s = self.slots[slot];
++      if (s.ent) {
++        s.ent.reset();
++        s.gen = bump_gen(s.gen);
++      }
++      self.free_list.push_back(slot);
++    }
++
+     entities.clear();
+-    EntityHelper::get().temp_entities.clear();
++    self.temp_entities.clear();
++
++    // Also reset auxiliary bookkeeping. This method is explicitly a "hard
++    // reset", so it's appropriate to clear these too.
++    self.permanant_ids.clear();
++    self.singletonMap.clear();
+   }
+ 
+   static void delete_all_entities(const bool include_permanent) {
+@@ -176,13 +378,19 @@ struct EntityHelper {
+     }
+ 
+     Entities &entities = get_entities_for_mod();
+-
+-    const auto newend = std::remove_if(
+-        entities.begin(), entities.end(), [](const auto &entity) {
+-          return !EntityHelper::get().permanant_ids.contains(entity->id);
+-        });
+-
+-    entities.erase(newend, entities.end());
++    auto &self = EntityHelper::get();
++
++    size_t i = 0;
++    while (i < entities.size()) {
++      const auto &sp = entities[i];
++      if (!sp) {
++        // Treat nulls as deletable.
++      } else if (self.permanant_ids.contains(sp->id)) {
++        ++i;
++        continue;
++      }
++      swap_remove_dense_index(entities, i, self);
++    }
+   }
+ 
+   static void forEachEntity(const std::function<ForEachFlow(Entity &)> &cb) {
+diff --git a/src/core/entity_query.h b/src/core/entity_query.h
+index c558486..9a64613 100644
+--- a/src/core/entity_query.h
++++ b/src/core/entity_query.h
+@@ -311,6 +311,32 @@ struct EntityQuery {
+     return ids;
+   }
+ 
++  // Handle-based query results (non-breaking additive APIs).
++  // NOTE: By default, temp entities are not query-visible unless force_merge is
++  // enabled, so these handles are generally for merged entities only.
++  [[nodiscard]] std::vector<EntityHandle> gen_handles() const {
++    const auto results = gen();
++    std::vector<EntityHandle> handles;
++    handles.reserve(results.size());
++    std::transform(results.begin(), results.end(), std::back_inserter(handles),
++                   [](const RefEntity &ent) -> EntityHandle {
++                     return EntityHelper::handle_for(ent.get());
++                   });
++    return handles;
++  }
++
++  [[nodiscard]] std::optional<EntityHandle> gen_first_handle() const {
++    auto opt = gen_first();
++    if (!opt) {
++      return {};
++    }
++    const EntityHandle h = EntityHelper::handle_for(opt.asE());
++    if (!h.valid()) {
++      return {};
++    }
++    return h;
++  }
++
+   [[nodiscard]] OptEntity gen_random() const {
+     const auto results = gen();
+     if (results.empty()) {
+diff --git a/src/plugins/files.h b/src/plugins/files.h
+index d53b330..69aa64b 100644
+--- a/src/plugins/files.h
++++ b/src/plugins/files.h
+@@ -5,9 +5,9 @@
+ #include <string>
+ 
+ #include "../core/base_component.h"
+-#include "../core/entity_helper.h"
+ #include "../core/system.h"
+ #include "../developer.h"
++#include "../ecs.h"
+ #include "../logging.h"
+ 
+ // Compile-time check: ensure files.cpp is compiled in your project
+diff --git a/src/plugins/pathfinding.h b/src/plugins/pathfinding.h
+index 89c7782..e05e318 100644
+--- a/src/plugins/pathfinding.h
++++ b/src/plugins/pathfinding.h
+@@ -12,9 +12,9 @@
+ #include <vector>
+ 
+ #include "../core/base_component.h"
+-#include "../core/entity_helper.h"
+ #include "../core/system.h"
+ #include "../developer.h"
++#include "../ecs.h"
+ #include "../logging.h"
+ 
+ // Vector2Type is defined in developer.h
+diff --git a/src/plugins/settings.h b/src/plugins/settings.h
+index 2fded6c..f3065b5 100644
+--- a/src/plugins/settings.h
++++ b/src/plugins/settings.h
+@@ -7,9 +7,9 @@
+ #include <string>
+ 
+ #include "../core/base_component.h"
+-#include "../core/entity_helper.h"
+ #include "../core/system.h"
+ #include "../developer.h"
++#include "../ecs.h"
+ #include "../logging.h"
+ #include "files.h"
+ 
+diff --git a/src/plugins/timer.h b/src/plugins/timer.h
+index f9e5cd9..4281718 100644
+--- a/src/plugins/timer.h
++++ b/src/plugins/timer.h
+@@ -1,9 +1,9 @@
+ #pragma once
+ 
+ #include "../core/base_component.h"
+-#include "../core/entity_helper.h"
+ #include "../core/system.h"
+ #include "../developer.h"
++#include "../ecs.h"
+ #include "../logging.h"
+ 
+ namespace afterhours {
+diff --git a/src/plugins/translation.h b/src/plugins/translation.h
+index 4f1b5e1..f79ff00 100644
+--- a/src/plugins/translation.h
++++ b/src/plugins/translation.h
+@@ -1,9 +1,9 @@
+ #pragma once
+ 
+ #include "../core/base_component.h"
+-#include "../core/entity_helper.h"
+ #include "../core/entity_query.h"
+ #include "../developer.h"
++#include "../ecs.h"
+ #include "../logging.h"
+ #include <cstddef>
+ #include <fmt/args.h>
