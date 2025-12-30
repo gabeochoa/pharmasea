@@ -35,28 +35,24 @@ struct RespondsToDayNight : public BaseComponent {
     // Keep the existing API, but store the handle (id) instead of the pointer.
     void call_day_started() {
         if (!onDayStartedFn) return;
-        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
-        if (!opt_parent) return;
-        onDayStartedFn(opt_parent.asE());
+        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
+        onDayStartedFn(parent);
     }
     void call_night_started() {
         if (!onNightStartedFn) return;
-        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
-        if (!opt_parent) return;
-        onNightStartedFn(opt_parent.asE());
+        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
+        onNightStartedFn(parent);
     }
 
     void call_day_ended() {
         if (!onDayEndedFn) return;
-        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
-        if (!opt_parent) return;
-        onDayEndedFn(opt_parent.asE());
+        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
+        onDayEndedFn(parent);
     }
     void call_night_ended() {
         if (!onNightEndedFn) return;
-        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
-        if (!opt_parent) return;
-        onNightEndedFn(opt_parent.asE());
+        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
+        onNightEndedFn(parent);
     }
 
     auto& set_parent(Entity* p) {

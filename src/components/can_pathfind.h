@@ -73,18 +73,14 @@ struct CanPathfind : public BaseComponent {
 
    private:
     [[nodiscard]] bool is_at_position(vec2 position) {
-        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
-        if (!opt_parent) return false;
-        const Entity& owner = opt_parent.asE();
+        const Entity& owner = EntityHelper::getEnforcedEntityForID(parent_id);
         if (owner.is_missing<Transform>()) return false;
         return vec::distance(owner.get<Transform>().as2(), position) <
                (TILESIZE / 2.f);
     }
 
     void move_transform_toward_local_target(float speed) {
-        OptEntity opt_parent = EntityHelper::getEntityForID(parent_id);
-        if (!opt_parent) return;
-        Entity& owner = opt_parent.asE();
+        Entity& owner = EntityHelper::getEnforcedEntityForID(parent_id);
         if (owner.is_missing<Transform>()) return;
         if (!local_target.has_value()) {
             log_warn("Tried to ensure local target but still dont have one");
