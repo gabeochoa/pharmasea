@@ -514,7 +514,7 @@ void make_door(Entity& door, vec2 pos, Color) {
     door.addComponent<RespondsToDayNight>()
         // TODO this is a hack because the parent is not set automatically with
         // afterhours
-        .set_parent(&door)
+        .set_parent(door.id)
         .registerOnDayStarted(
             [](Entity& door) { door.removeComponentIfExists<IsSolid>(); })
         .registerOnNightStarted(

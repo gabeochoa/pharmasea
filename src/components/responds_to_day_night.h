@@ -32,7 +32,6 @@ struct RespondsToDayNight : public BaseComponent {
         return *this;
     }
 
-    // Keep the existing API, but store the handle (id) instead of the pointer.
     void call_day_started() {
         if (!onDayStartedFn) return;
         Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
@@ -55,8 +54,8 @@ struct RespondsToDayNight : public BaseComponent {
         onNightEndedFn(parent);
     }
 
-    auto& set_parent(Entity* p) {
-        parent_id = p ? p->id : EntityID::INVALID;
+    auto& set_parent(EntityID id) {
+        parent_id = id;
         return *this;
     }
 

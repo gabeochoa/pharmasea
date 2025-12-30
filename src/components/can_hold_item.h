@@ -23,7 +23,6 @@ struct CanHoldItem : public BaseComponent {
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
-    // Keep API: take shared_ptr, but store only the handle (id).
     CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
         held_item_id = item ? item->id : EntityID::INVALID;
         if (item) {
