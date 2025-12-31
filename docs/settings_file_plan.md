@@ -99,6 +99,7 @@ comment     := "#" ... EOL | "//" ... EOL
 - Sections are **case-sensitive**.
 - Section names may include **spaces** and **dashes**.
 - If the loader sees multiple section names that differ only by case (e.g. `[Video]` vs `[video]`), it should `log_warn`.
+- If the same section name appears multiple times, treat it as **one logical section** (statements still apply top-to-bottom in file order).
 
 ### Canonical persistence convention
 
@@ -139,6 +140,8 @@ Start with minimal escapes:
 
 Unicode escaping can be deferred until there’s a real need.
 
+Strings may contain comment-like tokens (e.g. `str("//")`); comment parsing must not trigger inside strings.
+
 ---
 
 ## Example: overrides-only settings file
@@ -168,20 +171,24 @@ ui_theme*  = str("pharmasea");
 
 1. If the file does not exist / cannot be read → **use defaults**.
 2. Parse `version`.
+   - If multiple `version:` statements are present → `log_error` and treat the file as invalid → **use defaults**.
 3. If `version != CURRENT_SETTINGS_VERSION` → `log_warn`, discard file → **use defaults**.
 4. Parse statements in order:
    - Section headers only affect grouping/debug logging (optional).
    - Assignments:
      - If key is unknown → `log_warn` and ignore.
-      - Lifecycle handling:
-        - If key is deprecated in this version → `log_warn`, but **accept** it.
-        - If key is removed in this version → `log_error` and ignore.
+     - Lifecycle handling:
+       - If key is deprecated in this version → `log_warn`, but **accept** it.
+       - If key is removed in this version → `log_error` and ignore.
      - If key appears multiple times → `log_warn`, **last one wins**.
      - If a line is malformed (syntax error, bad literal, etc.) → `log_warn`, **skip the line** and continue.
      - If assignment is not starred (a “non-star assignment”):
        - This means the line is a plain `key = literal;` without the `*`.
        - In PSCFG, `*` is what marks “user override”. So non-star assignments should be treated as **non-overrides** and ignored by default (optionally `log_warn` once to help catch user mistakes).
-     - If starred: parse literal, validate type, apply override.
+     - If starred:
+       - Parse the literal.
+       - If the literal type does not match the expected key type → `log_warn` and **keep the default** (skip applying the override).
+       - Otherwise apply the override.
 
 ### Write algorithm
 
@@ -199,10 +206,18 @@ We want the `@vN` / `@vA-B` concept from the notes, but we don’t want those ta
 
 Instead, store lifecycle metadata alongside the schema (in code now; in a DSL later):
 
-- `since`: first version the key exists
-- `until` (optional): last version the key is accepted
+- `since`: first PSCFG version the key exists (inclusive)
+- `deprecated_since` (optional): first PSCFG version the key is deprecated (inclusive; still accepted with `log_warn`)
+- `removed_in_version` (optional): first PSCFG version the key is removed (exclusive end; not accepted at/after this)
 
 Loader uses this metadata to ignore deprecated keys for the active version.
+
+### Renames
+
+To keep the system simple, we do not support aliases in v1.
+
+- Rename is modeled as: **removed old key + added new key**.
+- Old key (if present in a file) will warn (and error once removed), and the new key is the supported replacement.
 
 ---
 
