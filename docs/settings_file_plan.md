@@ -54,6 +54,17 @@ This matches the original intent: quickly skip whole categories / keys that are 
 - Comments are supported:
   - `# comment`
   - `// comment`
+  - inline comments after statements (e.g. `...; // comment`)
+
+### `version:` meaning (schema/versioning)
+
+`version: N;` is the **PSCFG file-format/schema version**.
+
+- When we introduce new keys, change literal rules, or otherwise change what the file can express, we bump this `version`.
+- Each key/value can also carry lifecycle metadata:
+  - version added
+  - version deprecated (optional)
+  - version removed (optional; not supported/accepted after this)
 
 ### Grammar (informal)
 
@@ -61,14 +72,21 @@ This matches the original intent: quickly skip whole categories / keys that are 
 file        := (ws | comment | stmt)*
 stmt        := version_stmt | section_stmt | assign_stmt
 version_stmt:= "version" ":" int ";"
-section_stmt:= "[" ident "]"
+section_stmt:= "[" section_name "]"
 assign_stmt := key ("*")? ws? "=" ws? literal ";"
 
 key         := ident            # snake_case recommended
 ident       := [a-zA-Z_][a-zA-Z0-9_]*
+section_name:= any chars except ']' (single-line)
 int         := ["-"]?[0-9]+
 comment     := "#" ... EOL | "//" ... EOL
 ```
+
+### Sections
+
+- Sections are **case-sensitive**.
+- Section names may include **spaces** and **dashes**.
+- If the loader sees multiple section names that differ only by case (e.g. `[Video]` vs `[video]`), it should `log_warn`.
 
 ### Canonical persistence convention
 
@@ -145,15 +163,19 @@ ui_theme*  = str("pharmasea");
      - If key is unknown → `log_warn` and ignore.
      - If key is known but not valid for this version (deprecated) → `log_warn` and ignore.
      - If key appears multiple times → `log_warn`, **last one wins**.
-     - If assignment is not starred:
-       - In overrides-only mode: ignore it (or warn once). (We can choose strictness later.)
+     - If a line is malformed (syntax error, bad literal, etc.) → `log_warn`, **skip the line** and continue.
+     - If assignment is not starred (a “non-star assignment”):
+       - This means the line is a plain `key = literal;` without the `*`.
+       - In PSCFG, `*` is what marks “user override”. So non-star assignments should be treated as **non-overrides** and ignored by default (optionally `log_warn` once to help catch user mistakes).
      - If starred: parse literal, validate type, apply override.
 
 ### Write algorithm
 
-- Emit deterministic ordering (e.g. by section then key).
-- Emit **only overrides** (starred assignments).
-- Always write `version: CURRENT_SETTINGS_VERSION;` at the top.
+- Goal: **preserve user formatting** as much as practical.
+- Always ensure `version: CURRENT_SETTINGS_VERSION;` exists at the top (update in place if present).
+- Update/insert only the keys that are changing; avoid rewriting unrelated lines.
+- Keep inline and full-line comments intact when possible.
+- When writing a brand-new file, emit a canonical, deterministic ordering.
 
 ---
 
@@ -167,6 +189,26 @@ Instead, store lifecycle metadata alongside the schema (in code now; in a DSL la
 - `until` (optional): last version the key is accepted
 
 Loader uses this metadata to ignore deprecated keys for the active version.
+
+---
+
+## Schema representation in code (near-term)
+
+Instead of a separate DSL file immediately, we can represent the schema in C++ with a small set of structs and use it for:
+
+- key lookup
+- lifecycle checks (added/deprecated/removed)
+- type validation
+- defaults (near-term)
+
+Concept sketch (shape):
+
+- `SettingsValue { name, version_added, version_deprecated, version_removed }`
+- `SettingsSection { name, values[] }`
+
+Example entry:
+
+- `{ "is_fullscreen", v1, null, null }`
 
 ---
 
