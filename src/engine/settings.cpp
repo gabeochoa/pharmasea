@@ -1,6 +1,8 @@
 
 #include "settings.h"
 
+#include <fstream>
+
 #include "../preload.h"
 
 Settings Settings::instance;
@@ -159,7 +161,7 @@ void Settings::update_vsync_enabled(bool vsync_enabled) {
 
 // TODO music volumes only seem to take effect once you open SettingsLayer
 bool Settings::load_save_file() {
-    std::ifstream ifs(Files::get().settings_filepath());
+    std::ifstream ifs(Files::get().settings_filepath(), std::ios::binary);
     if (!ifs.is_open()) {
         log_warn("Failed to find settings file (Read) {}",
                  Files::get().settings_filepath());
@@ -167,19 +169,31 @@ bool Settings::load_save_file() {
     }
 
     log_trace("Reading settings file");
-    std::stringstream buffer;
-    buffer << ifs.rdbuf();
-    auto buf_str = buffer.str();
+    // Read file size first to avoid reading trailing newlines
+    ifs.seekg(0, std::ios::end);
+    auto file_size = ifs.tellg();
+    ifs.seekg(0, std::ios::beg);
+
+    std::string buf_str;
+    buf_str.resize(static_cast<size_t>(file_size));
+    ifs.read(buf_str.data(), file_size);
 
     // Settings serialization is not version-tolerant yet; if the schema changes
     // (e.g. adding a new field), older files may fail to deserialize.
-    // In that case, fall back to defaults instead of leaving partially-read data.
+    // In that case, fall back to defaults instead of leaving partially-read
+    // data.
     settings::Data tmp{};
-    const auto [err, ok] = bitsery::quickDeserialization<settings::InputAdapter>(
-        {buf_str.begin(), buf_str.size()}, tmp);
-    if (err != bitsery::ReaderError::NoError || !ok) {
-        log_warn("Settings deserialize failed (err={}, ok={}); resetting to defaults",
-                 (int) err, ok);
+    const auto [err, ok] =
+        bitsery::quickDeserialization<settings::InputAdapter>(
+            {buf_str.begin(), buf_str.size()}, tmp);
+    // If err is NoError, use the data even if ok is false
+    // (ok=false might be due to trailing data, but the deserialization
+    // succeeded)
+    if (err != bitsery::ReaderError::NoError) {
+        log_warn(
+            "Settings deserialize failed (err={}, ok={}); resetting to "
+            "defaults",
+            (int) err, ok);
         data = settings::Data();
     } else {
         data = tmp;
@@ -197,7 +211,7 @@ bool Settings::load_save_file() {
 // theres a way to write directly to the file
 // https://github.com/fraillt/bitsery/blob/master/examples/file_stream.cpp
 bool Settings::write_save_file() {
-    std::ofstream ofs(Files::get().settings_filepath());
+    std::ofstream ofs(Files::get().settings_filepath(), std::ios::binary);
     if (!ofs.is_open()) {
         log_warn("Failed to find settings file (Write) {}",
                  Files::get().settings_filepath());
@@ -205,7 +219,7 @@ bool Settings::write_save_file() {
     }
     settings::Buffer buffer;
     bitsery::quickSerialization(settings::OutputAdapter{buffer}, data);
-    ofs << buffer << std::endl;
+    ofs.write(buffer.data(), buffer.size());
     ofs.close();
 
     log_info("Wrote Settings File to {}", Files::get().settings_filepath());
