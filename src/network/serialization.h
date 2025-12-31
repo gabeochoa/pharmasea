@@ -7,7 +7,6 @@
 #include "../engine/keymap.h"  // for UserInput, UserInputs, InputName, InputSet, InputAmount
 #include "../entity.h"
 #include "../map.h"
-#include "polymorphic_components.h"
 #include "types.h"
 
 namespace network {

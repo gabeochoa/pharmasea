@@ -3,6 +3,7 @@
 #include "../engine/log.h"
 #include "../entity.h"
 #include "../globals.h"
+#include "polymorphic_components.h"
 
 namespace network {
 
