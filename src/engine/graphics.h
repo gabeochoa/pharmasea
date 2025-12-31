@@ -27,6 +27,36 @@ inline bool operator<(const Vector2& l, const Vector2& r) {
     return (l.x < r.x) || ((l.x == r.x) && (l.y < r.y));
 }
 
+inline bool operator==(const Vector2& a, const Vector2& b) {
+    return a.x == b.x && a.y == b.y;
+}
+inline bool operator!=(const Vector2& a, const Vector2& b) { return !(a == b); }
+
+inline bool operator==(const Vector3& a, const Vector3& b) {
+    return a.x == b.x && a.y == b.y && a.z == b.z;
+}
+inline bool operator!=(const Vector3& a, const Vector3& b) { return !(a == b); }
+
+// Small operator helpers for raylib vector types.
+// raylib exposes plain C structs, so we provide minimal arithmetic used across the codebase.
+inline Vector2 operator+(const Vector2& a, const Vector2& b) {
+    return Vector2{a.x + b.x, a.y + b.y};
+}
+inline Vector2 operator-(const Vector2& a, const Vector2& b) {
+    return Vector2{a.x - b.x, a.y - b.y};
+}
+inline Vector2 operator*(const Vector2& a, float s) { return Vector2{a.x * s, a.y * s}; }
+inline Vector2 operator/(const Vector2& a, float s) { return Vector2{a.x / s, a.y / s}; }
+
+inline Vector3 operator+(const Vector3& a, const Vector3& b) {
+    return Vector3{a.x + b.x, a.y + b.y, a.z + b.z};
+}
+inline Vector3 operator-(const Vector3& a, const Vector3& b) {
+    return Vector3{a.x - b.x, a.y - b.y, a.z - b.z};
+}
+inline Vector3 operator*(const Vector3& a, float s) { return Vector3{a.x * s, a.y * s, a.z * s}; }
+inline Vector3 operator/(const Vector3& a, float s) { return Vector3{a.x / s, a.y / s, a.z / s}; }
+
 // Stream operators to enable logging/formatting via fmt/ostream
 inline std::ostream& operator<<(std::ostream& os, const Vector2& v) {
     os << "(" << v.x << "," << v.y << ")";

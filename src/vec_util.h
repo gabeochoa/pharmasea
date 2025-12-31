@@ -118,7 +118,8 @@ inline float dot2(const vec2& a, const vec2& b) {
 
 inline vec2 norm(const vec2& a) {
     float mag = dot2(a, a);
-    return (a / mag);
+    // raylib's Vector2 is a plain struct; avoid relying on operator overloads.
+    return vec2{a.x / mag, a.y / mag};
 }
 
 constexpr vec3 to3(vec2 position) { return {position.x, 0, position.y}; }
@@ -126,14 +127,14 @@ constexpr vec3 to3(vec2 position) { return {position.x, 0, position.y}; }
 constexpr vec2 to2(vec3 position) { return {position.x, position.z}; }
 
 inline vec2 snap(vec2 position) {
-    return {TILESIZE * round(position.x / TILESIZE),  //
-            TILESIZE * round(position.y / TILESIZE)};
+    return {static_cast<float>(TILESIZE * round(position.x / TILESIZE)),  //
+            static_cast<float>(TILESIZE * round(position.y / TILESIZE))};
 }
 
 inline vec3 snap(vec3 position) {
-    return {TILESIZE * round(position.x / TILESIZE),  //
-            position.y,                               //
-            TILESIZE * round(position.z / TILESIZE)};
+    return {static_cast<float>(TILESIZE * round(position.x / TILESIZE)),  //
+            position.y,                                                   //
+            static_cast<float>(TILESIZE * round(position.z / TILESIZE))};
 }
 
 inline vec2 lerp(vec2 a, vec2 b, float pct) {
