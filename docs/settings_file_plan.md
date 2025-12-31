@@ -107,6 +107,154 @@ Notes:
 
 ---
 
+## Multi-phase implementation plan
+
+This plan is intentionally incremental: early phases can ship value (human-readable, versioned settings) while later phases reduce maintenance overhead (codegen, validation, tests).
+
+### Phase 0 — Decide scope + file conventions (1 short PR)
+
+**Decisions**
+
+- **On-disk filename/extension** (recommended: `settings.psettings` or `settings.cfg` instead of `settings.bin`)
+- **Canonical persistence policy**: overrides-only file vs full dump
+- **Schema version source of truth**: generated from schema file (recommended)
+
+**Deliverables**
+
+- Update this doc with the chosen filename and conventions.
+- Add a stub schema file path (even if empty) so it’s part of the repo.
+
+**Done when**
+
+- There is an agreed file name and format contract.
+
+---
+
+### Phase 1 — Introduce the schema file (no runtime behavior change yet)
+
+**Goal**: create the single source of truth for settings keys + defaults + lifecycle.
+
+**Work**
+
+- Add `resources/config/settings.schema` (or `.yaml`) containing:
+  - `version: N`
+  - Sections + keys + types + defaults
+  - Lifecycle annotations (`@vN`, `@vA-B`)
+- Mirror the current runtime settings (`settings::Data`) so the schema covers all existing user-configurable fields.
+
+**Deliverables**
+
+- Schema file committed and reviewed.
+
+**Done when**
+
+- Every current persisted setting has an entry in the schema.
+
+---
+
+### Phase 2 — Build a minimal runtime parser/writer (manual mapping OK)
+
+**Goal**: validate the text format end-to-end before investing in codegen.
+
+**Work**
+
+- Implement:
+  - Tokenization for: comments, sections, `version:`, `key[*] = value;`
+  - Typed literal parsing for the types you need now (`bool`, `i32`, `str`, `f32`, `i32x2`)
+  - Float bit-cast helpers (`f32(0x...)` ⇄ float)
+- Implement a writer that emits deterministic ordering and overrides-only output.
+
+**Integration**
+
+- Add new code paths:
+  - `Settings::load_save_file_text()` / `Settings::write_save_file_text()`
+- Keep the old binary path intact for now (feature flag / temporary toggle).
+
+**Deliverables**
+
+- A new settings text file can be written and loaded locally.
+
+**Done when**
+
+- Round-trip works: write → read → settings state matches.
+- Invalid syntax fails safely (defaults) with a clear warning.
+
+---
+
+### Phase 3 — Switch production to the text format (break old files intentionally)
+
+**Goal**: make the new text file the canonical persisted settings.
+
+**Work**
+
+- Change the configured settings filename from `settings.bin` to the new text name.
+- Replace `load_save_file()` / `write_save_file()` to use the text format only.
+- Implement version rule:
+  - If file version != `CURRENT_SETTINGS_VERSION`: discard and regenerate defaults.
+
+**Deliverables**
+
+- Shipping build reads/writes the new settings file.
+
+**Done when**
+
+- The app runs cleanly starting from:
+  - No settings file
+  - A valid settings file
+  - An invalid or wrong-version settings file
+
+---
+
+### Phase 4 — Add generator + generated schema table (remove manual mapping)
+
+**Goal**: stop duplicating keys/types/defaults between schema and C++.
+
+**Work**
+
+- Create a generator script (e.g. `scripts/gen_settings_schema.py`) that reads the schema and outputs:
+  - `src/generated/settings_schema.h/.cpp`
+  - Optional `docs/generated_settings_schema.md`
+- Update runtime parsing to:
+  - Resolve keys via generated table
+  - Enforce expected type per key
+  - Enforce lifecycle (`since/until`) for the active version
+- Update writer to iterate the generated table for stable ordering.
+
+**Deliverables**
+
+- Generated files checked in (or generated at build—pick one and document it).
+
+**Done when**
+
+- Adding a new setting requires only:
+  - Editing the schema
+  - Re-running generator
+
+---
+
+### Phase 5 — Hardening: validation, UX, and tests
+
+**Goal**: make it robust and maintainable.
+
+**Work**
+
+- Add validation improvements:
+  - Unknown keys: ignore + log once (with suggestion if similar key exists)
+  - Type mismatch: ignore assignment + warn
+  - Duplicate keys: last-one-wins (or error; choose and document)
+- Add automated tests:
+  - Parser unit tests (valid/invalid cases)
+  - Float hex round-trip tests
+  - Version mismatch behavior test
+- Add a “dump full settings” debug action for troubleshooting (optional).
+
+**Done when**
+
+- Tests cover the parser and float encoding.
+- The loader never leaves settings partially-applied on parse failure.
+
+---
+
 ## On-disk file format (line-based text)
 
 ### Header
