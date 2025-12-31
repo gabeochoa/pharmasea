@@ -20,6 +20,7 @@ using SlotIndex = afterhours::EntityHandle::Slot;
 struct Slot {
     std::shared_ptr<Entity> ent{};
     std::size_t gen = 1;
+    std::size_t dense_index = 0;
 };
 
 struct HandleStore {
@@ -60,7 +61,8 @@ void ensure_id_mapping_size(HandleStore& hs, const EntityID id) {
     }
 }
 
-void assign_slot_to_entity(HandleStore& hs, const std::shared_ptr<Entity>& sp) {
+void assign_slot_to_entity(HandleStore& hs, const std::shared_ptr<Entity>& sp,
+                           std::size_t dense_index) {
     if (!sp) return;
 
     // Already assigned: just ensure the ID mapping is up to date.
@@ -74,6 +76,7 @@ void assign_slot_to_entity(HandleStore& hs, const std::shared_ptr<Entity>& sp) {
         const SlotIndex slot = sp->ah_slot_index;
         if (slot < hs.slots.size()) {
             hs.slots[slot].ent = sp;
+            hs.slots[slot].dense_index = dense_index;
         }
         return;
     }
@@ -81,6 +84,7 @@ void assign_slot_to_entity(HandleStore& hs, const std::shared_ptr<Entity>& sp) {
     const SlotIndex slot = alloc_slot_index(hs);
     if (slot >= hs.slots.size()) return;
     hs.slots[slot].ent = sp;
+    hs.slots[slot].dense_index = dense_index;
     sp->ah_slot_index = slot;
 
     ensure_id_mapping_size(hs, sp->id);
@@ -109,7 +113,34 @@ void invalidate_entity_slot_if_any(HandleStore& hs,
     Slot& s = hs.slots[slot];
     s.ent.reset();
     s.gen = bump_gen(s.gen);
+    s.dense_index = 0;
     hs.free_slots.push_back(slot);
+}
+
+void remove_entity_at_index(Entities& entities, HandleStore& hs,
+                            std::size_t index) {
+    if (index >= entities.size()) return;
+
+    // Invalidate slot/id mapping for the entity being removed.
+    invalidate_entity_slot_if_any(hs, entities[index]);
+
+    // Swap-remove from dense list.
+    const std::size_t last = entities.size() - 1;
+    if (index != last) {
+        std::swap(entities[index], entities[last]);
+        // Update the moved entity's dense index in its slot.
+        const auto& moved = entities[index];
+        if (moved) {
+            const SlotIndex moved_slot = moved->ah_slot_index;
+            if (moved_slot != afterhours::EntityHandle::INVALID_SLOT &&
+                moved_slot < hs.slots.size()) {
+                hs.slots[moved_slot].dense_index = index;
+                // Defensive: ensure slot points at the moved entity.
+                hs.slots[moved_slot].ent = moved;
+            }
+        }
+    }
+    entities.pop_back();
 }
 }  // namespace
 
@@ -207,8 +238,9 @@ Entity& EntityHelper::createPermanentEntity() {
 
 Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
     auto e = std::make_shared<Entity>();
-    get_entities_for_mod().push_back(e);
-    assign_slot_to_entity(handle_store(), e);
+    auto& entities = get_entities_for_mod();
+    entities.push_back(e);
+    assign_slot_to_entity(handle_store(), e, entities.size() - 1);
 
     invalidatePathCache();
 
@@ -250,17 +282,32 @@ void EntityHelper::removeEntity(int e_id) {
     // }
 
     auto& entities = get_entities_for_mod();
-    for (auto& sp : entities) {
-        if (sp && sp->id == e_id) {
-            invalidate_entity_slot_if_any(handle_store(), sp);
+    auto& hs = handle_store();
+
+    if (e_id >= 0) {
+        const auto idx = static_cast<std::size_t>(e_id);
+        if (idx < hs.id_to_slot.size()) {
+            const SlotIndex slot = hs.id_to_slot[idx];
+            if (slot != afterhours::EntityHandle::INVALID_SLOT &&
+                slot < hs.slots.size()) {
+                Slot& s = hs.slots[slot];
+                if (s.ent && s.ent->id == e_id &&
+                    s.dense_index < entities.size() &&
+                    entities[s.dense_index] == s.ent) {
+                    remove_entity_at_index(entities, hs, s.dense_index);
+                    return;
+                }
+            }
         }
     }
 
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [e_id](const auto& entity) { return !entity || entity->id == e_id; });
-
-    entities.erase(newend, entities.end());
+    // Fallback: scan to find the entity and remove it.
+    for (std::size_t i = 0; i < entities.size(); ++i) {
+        if (entities[i] && entities[i]->id == e_id) {
+            remove_entity_at_index(entities, hs, i);
+            return;
+        }
+    }
 }
 
 //  Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
@@ -277,28 +324,26 @@ void EntityHelper::removeEntity(int e_id) {
 void EntityHelper::cleanup() {
     // Cleanup entities marked cleanup
     Entities& entities = get_entities_for_mod();
-    for (auto& sp : entities) {
-        if (!sp || sp->cleanup) {
-            invalidate_entity_slot_if_any(handle_store(), sp);
+    auto& hs = handle_store();
+
+    std::size_t i = 0;
+    while (i < entities.size()) {
+        if (!entities[i] || entities[i]->cleanup) {
+            remove_entity_at_index(entities, hs, i);
+            continue;  // do not increment; we swapped a new element into i
         }
+        ++i;
     }
-
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [](const auto& entity) { return !entity || entity->cleanup; });
-
-    entities.erase(newend, entities.end());
 }
 
 void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
     Entities& entities = get_entities_for_mod();
     auto& hs = handle_store();
-    for (auto& sp : entities) {
-        if (!sp) continue;
-        invalidate_entity_slot_if_any(hs, sp);
+    while (!entities.empty()) {
+        remove_entity_at_index(entities, hs, entities.size() - 1);
     }
-    // just clear the whole thing
-    entities.clear();
+    // Drop all bookkeeping so any old handles fail cleanly (out-of-range).
+    hs = HandleStore{};
 }
 
 void EntityHelper::delete_all_entities(bool include_permanent) {
@@ -307,21 +352,23 @@ void EntityHelper::delete_all_entities(bool include_permanent) {
         return;
     }
 
-    // Only delete non perms
+    // Only delete non perms.
     Entities& entities = get_entities_for_mod();
+    auto& hs = handle_store();
 
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [](const auto& entity) { return !permanant_ids.contains(entity->id); });
-
-    {
-        auto& hs = handle_store();
-        for (auto it = newend; it != entities.end(); ++it) {
-            if (!*it) continue;
-            invalidate_entity_slot_if_any(hs, *it);
+    std::size_t i = 0;
+    while (i < entities.size()) {
+        const auto& sp = entities[i];
+        if (!sp) {
+            remove_entity_at_index(entities, hs, i);
+            continue;
         }
+        if (!permanant_ids.contains(sp->id)) {
+            remove_entity_at_index(entities, hs, i);
+            continue;
+        }
+        ++i;
     }
-    entities.erase(newend, entities.end());
 }
 
 enum ForEachFlow {
