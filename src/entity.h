@@ -6,6 +6,7 @@
 
 #include "ah.h"
 using afterhours::Entity;
+using afterhours::EntityHandle;
 using afterhours::OptEntity;
 using afterhours::RefEntity;
 
@@ -15,6 +16,8 @@ using afterhours::RefEntity;
 //
 #include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
+
+#include <optional>
 
 // TODO memory? we could keep track of deleted entities and reuse those ids if
 // we wanted to we'd have to be pretty disiplined about clearing people who
@@ -60,15 +63,37 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 }
 
 template<typename S>
+void serialize(S& s, EntityHandle& handle) {
+    s.value8b(handle.slot);
+    s.value8b(handle.gen);
+}
+
+template<typename S>
+void serialize(S& s, const EntityHandle& handle) {
+    s.value8b(handle.slot);
+    s.value8b(handle.gen);
+}
+
+template<typename S>
+void serialize(S& s, std::optional<EntityHandle>& opt_handle) {
+    s.ext(opt_handle, StdOptional{},
+          [](S& sv, EntityHandle& h) { serialize(sv, h); });
+}
+
+template<typename S>
 void serialize(S& s, RefEntity ref) {
     Entity& e = ref.get();
-    Entity* eptr = &e;
-    s.ext8b(eptr, PointerObserver{});
+    EntityHandle handle = afterhours::EntityHelper::handle_for(e);
+    serialize(s, handle);
 }
 
 template<typename S>
 void serialize(S& s, OptEntity opt) {
-    s.ext(opt, StdOptional{});
+    std::optional<EntityHandle> opt_handle;
+    if (opt.has_value()) {
+        opt_handle = afterhours::EntityHelper::handle_for(opt.asE());
+    }
+    serialize(s, opt_handle);
 }
 }  // namespace bitsery
 
