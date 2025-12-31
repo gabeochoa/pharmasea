@@ -50,13 +50,6 @@ void serialize(S& s, Entity& entity) {
     s.ext(entity.componentSet, StdBitset{});
     s.ext(entity.tags, StdBitset{});
     s.value1b(entity.cleanup);
-
-    for (size_t i = 0; i < afterhours::max_num_components; ++i) {
-        if (entity.componentSet.test(i)) {
-            auto& ptr = entity.componentArray[i];
-            s.ext(ptr, StdSmartPtr{});
-        }
-    }
 }
 
 template<typename S>

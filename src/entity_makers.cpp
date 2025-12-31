@@ -188,8 +188,10 @@ void register_all_components() {
     // otherwise it will leak the memory
     //
 
-    for (size_t i = 0; i < afterhours::max_num_components; ++i) {
-        entity->componentArray[i].reset();
+    for (afterhours::ComponentID cid = 0; cid < afterhours::max_num_components;
+         ++cid) {
+        if (!entity->componentSet.test(cid)) continue;
+        afterhours::ComponentStore::get().remove_by_component_id(cid, entity->id);
     }
     entity->componentSet.reset();
 

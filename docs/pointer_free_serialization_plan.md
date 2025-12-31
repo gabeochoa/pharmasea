@@ -26,8 +26,8 @@ Even if cross-entity relationships are already mostly `EntityID`-based, the **wo
 
 - **Entities are serialized as `std::shared_ptr<Entity>`**:
   - `src/level_info.h`: `s.ext(entity, bitsery::ext::StdSmartPtr{})`
-- **Entity components are serialized via `StdSmartPtr`**:
-  - `src/entity.h`: `s.ext(ptr, StdSmartPtr{})` for `entity.componentArray[i]`
+- **Entity components are not yet serialized as a snapshot**:
+  - Afterhours now stores live components in `ComponentStore` (not per-entity arrays), so the remaining blocker is switching world/network/save to a pointer-free snapshot payload.
 - **Network/save contexts still include pointer linking**:
   - `src/network/serialization.h`: `TContext` includes `bitsery::ext::PointerLinkingContext`
   - `src/save_game/save_game.cpp`: same tuple context
@@ -98,7 +98,7 @@ This is the core “remove pointer-linking” phase.
     - components stored in pools/stores and serialized by index/handle, not pointer identity
 - **Refactor targets**:
   - `LevelInfo::serialize` should no longer write a `container(shared_ptr<Entity>)`.
-  - `bitsery::serialize(Entity&)` in `src/entity.h` should no longer iterate `componentArray` and serialize smart pointers.
+  - `bitsery::serialize(Entity&)` in `src/entity.h` should remain entity-metadata only; component state must move to the snapshot payload.
 
 **Exit criteria**: you can serialize a full `Map`/`LevelInfo` snapshot without any use of `StdSmartPtr` or pointer-linking context.
 
