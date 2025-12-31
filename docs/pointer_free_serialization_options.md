@@ -2,6 +2,35 @@
 
 This doc summarizes **at least 3 viable options** to remove **all pointers** from the serialization system, with **pros/cons** and **performance implications**, specifically for this codebase.
 
+## Recent repo activity (last 10 commits as of 2025-12-30)
+
+This section captures the most recent commit context that impacts pointer-free serialization / handle migration work.
+
+### Last 10 commits (snapshot)
+
+- `355eaed1` (2025-12-30): Update status for multiple refactoring plans
+- `0989e96e` (2025-12-30): Migrates components to use stable entity IDs instead of pointers. (#62)
+- `bc0dbea6` (2025-12-30): Update submodule vendor/afterhours to latest commit
+- `a2d028f3` (2025-12-29): Serialization pointer removal options (#59)
+- `793e3192` (2025-12-29): when disabling models, draw cubes
+- `9352c864` (2025-12-28): refactor save/load: move post-load helpers to dedicated files
+- `a388cceb` (2025-12-25): fix mop buddy auto release
+- `17b717cc` (2025-12-25): rename day night to open closed
+- `7fe6383a` (2025-12-24): erorr instad of warn on item rehydration
+- `006266fb` (2025-12-24): Map generation phase three (#56)
+
+### What changed that affects this plan
+
+- **Handle/pointer migration work landed** (`0989e96e`)
+  - Multiple components and helper paths were updated away from pointer-shaped references toward stable IDs, reducing the surface area of pointer serialization and making the “pointer-free” end state more attainable without a single huge cutover.
+  - The change touches serialization-adjacent code paths (entity helper/query, load fixups, save/load helpers), so this plan’s later phases should assume “IDs + post-deserialize fixups” are now an established pattern in the repo.
+- **This document (and the Afterhours handle migration doc) were introduced/updated** (`a2d028f3`)
+  - The handle + slot/generation approach described below is now the explicit target direction for pointer-free serialization.
+- **Afterhours submodule moved forward** (`bc0dbea6`)
+  - If your next step is to implement handle storage “inside Afterhours”, confirm what the updated submodule now provides (APIs/types may have shifted). Keep this doc’s recommendations aligned with the submodule’s actual public surface.
+- **Save/load refactors in support of fixups** (`9352c864`, `7fe6383a`)
+  - Post-load fixup plumbing has been made more explicit, which fits the plan’s approach of re-binding relationships after load instead of serializing raw pointers.
+
 ---
 
 ## Current state (why pointers appear in the serialized format)

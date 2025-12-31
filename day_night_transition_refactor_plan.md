@@ -3,6 +3,18 @@
 ## Overview
 Refactor the day/night transition logic from `GameLikeUpdateSystem::after()` into separate systems that run when `needs_to_process_change` is true. The systems will be registered between a "calculate" system (that checks the flag) and a "complete" system (that clears the flag).
 
+## Status (as of 2025-12-30)
+
+- **Implemented**
+  - The day/night transition logic has been split out into discrete update systems gated on `HasDayNightTimer::needs_to_process_change`.
+  - Implementation lives in a consolidated file: `src/system/afterhours_day_night_transition_systems.cpp`.
+  - Systems are registered from gameplay via `SystemManager::register_gamelike_systems()` in `src/system/afterhours_gamelike_systems.cpp` (calls `register_day_night_transition_systems()`).
+  - The “complete/clear flag” step exists as `ResetHasDayNightChanged`, which runs after the other transition systems and sets `needs_to_process_change = false`.
+
+- **Plan vs implementation notes**
+  - The original plan proposed multiple new header files (e.g. `calculate_day_night_change_system.h`, `process_day_start_system.h`, etc.). Instead, the refactor landed as multiple small systems defined in a single `.cpp` for simplicity.
+  - The plan referenced `GameLikeUpdateSystem::after()` as the pre-refactor home. That system is no longer present in the current `src/system/` codebase.
+
 ## Current State
 - `RunTimerSystem` sets `needs_to_process_change = true` when calling `start_day()` or `start_night()`
 - `GameLikeUpdateSystem::after()` checks the flag and runs all transition logic, then sets it to false

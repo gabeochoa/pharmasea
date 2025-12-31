@@ -73,11 +73,12 @@ struct StateManager2 {
 
 namespace menu {
 enum struct State {
-    Root = 0,
-    About = 1,
-    Network = 2,
-    Settings = 3,
-    Game = 4,
+    Loading = 0,
+    Root = 1,
+    About = 2,
+    Network = 3,
+    Settings = 4,
+    Game = 5,
 
     UI = 99,
 };
@@ -94,7 +95,7 @@ struct MenuState : public StateManager2<menu::State> {
     SINGLETON(MenuState)
 
     virtual menu::State default_value() const override {
-        return menu::State::Root;
+        return menu::State::Loading;
     }
 
     [[nodiscard]] bool is_in_menu() const { return is_not(menu::State::Game); }
