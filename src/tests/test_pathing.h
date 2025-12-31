@@ -1,7 +1,7 @@
 
 #include "../engine/pathfinder.h"
 #include "../entity.h"
-#include "../../vendor/afterhours/src/core/component_store.h"
+#include "afterhours/src/core/component_store.h"
 #include "../entity_helper.h"
 #include "../level_info.h"
 #include "../map_generation/map_generation.h"
