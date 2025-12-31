@@ -16,8 +16,26 @@ include makefile
 # due to different diagnostics in vendored headers.
 override CXX := clang++
 
+# Cursor build: don't treat warnings as errors (container toolchains differ).
+# The upstream makefile uses -Werror inside NOFLAGS; drop it here.
+override NOFLAGS := $(filter-out -Werror,$(NOFLAGS))
+
+# Reduce noise from platform/toolchain-specific pragmas/macros in vendored code.
+override FLAGS += -Wno-unknown-pragmas -Wno-macro-redefined
+
 # The default `post-build` recipe runs `install_name_tool` (macOS-only).
 # Override it on Linux to be a no-op while keeping dependency ordering intact.
 post-build: main-build
 	@true
+
+.PHONY: cursor-check
+
+# Compile a small subset to validate recent work without building the full game
+# (which may be platform/toolchain dependent in CI containers).
+cursor-check: $(PCH_GCH)
+	@mkdir -p output/cursor
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -c src/entity.cpp -o output/cursor/entity.o
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -c src/entity_makers.cpp -o output/cursor/entity_makers.o
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -c src/level_info.cpp -o output/cursor/level_info.o
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -c tools/cursor_compile_snapshot.cpp -o output/cursor/cursor_compile_snapshot.o
 

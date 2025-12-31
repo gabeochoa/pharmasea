@@ -8,9 +8,9 @@
 #include "dataclass/ingredient.h"
 #include "entity.h"
 #include "entity_type.h"
+#include "engine/util.h"
 #include "post_deserialize_fixups.h"
 #include "system/system_manager.h"
-#include "util.h"
 
 namespace server_only {
 

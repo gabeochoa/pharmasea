@@ -117,8 +117,8 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
                 vec2 location = vec2{possible_location.value().x,
                                      possible_location.value().y};
 
-                vec2 diff{fabs(player_location.x - location.x),
-                          fabs(player_location.y - location.y)};
+                vec2 diff{std::fabs(player_location.x - location.x),
+                          std::fabs(player_location.y - location.y)};
 
                 const auto location_text = fmt::format("{}", vec::snap(diff));
 
