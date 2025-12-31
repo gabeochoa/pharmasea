@@ -374,7 +374,9 @@ class pscfg_parser {
 
     void parse_assign_stmt(std::string key_ident) {
         Assignment a;
-        a.section = current_section;
+        if (!current_section.empty()) {
+            a.section = current_section;
+        }
         a.key = std::move(key_ident);
         a.line = line;
 

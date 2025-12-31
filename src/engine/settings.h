@@ -35,6 +35,10 @@ using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 
 constexpr int MAX_LANG_LENGTH = 25;
 
+// PSCFG file-format/schema version (see docs/settings_file_plan.md).
+// Keep this colocated with settings::Data while C++ remains authoritative.
+constexpr int SETTINGS_PSCFG_VERSION = 1;
+
 // TODO How do we support multiple versions
 // we dont want to add a new field and break
 // all past save games

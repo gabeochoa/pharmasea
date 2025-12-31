@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -11,9 +12,6 @@
 
 namespace settings_pscfg {
 
-// PSCFG v1 (see docs/settings_file_plan.md)
-constexpr int CURRENT_SETTINGS_VERSION = 1;
-
 struct Message {
     enum class Level { Warn, Error };
 
@@ -23,8 +21,8 @@ struct Message {
 };
 
 struct Assignment {
-    std::string section;  // optional; may be empty
-    std::string key;      // snake_case recommended
+    std::optional<std::string> section;  // section header (if any)
+    std::string key;                    // snake_case recommended
     bool starred = false;
 
     using Value = std::variant<bool, int32_t, float, std::string,
@@ -43,12 +41,12 @@ struct LoadResult {
 // Parse + apply PSCFG settings overrides to defaults.
 LoadResult load_from_string(std::string_view input,
                             const settings::Data& defaults,
-                            int current_version = CURRENT_SETTINGS_VERSION);
+                            int current_version = settings::SETTINGS_PSCFG_VERSION);
 
 // Write overrides-only PSCFG file contents.
 std::string write_overrides_only(const settings::Data& current,
                                  const settings::Data& defaults,
-                                 int current_version = CURRENT_SETTINGS_VERSION);
+                                 int current_version = settings::SETTINGS_PSCFG_VERSION);
 
 }  // namespace settings_pscfg
 

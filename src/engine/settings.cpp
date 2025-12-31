@@ -177,13 +177,13 @@ bool Settings::load_save_file() {
 
     const auto res =
         settings_pscfg::load_from_string(buf_str, defaults,
-                                         settings_pscfg::CURRENT_SETTINGS_VERSION);
+                                         settings::SETTINGS_PSCFG_VERSION);
     for (const auto& m : res.messages) {
-        if (m.level == settings_pscfg::Message::Level::Error) {
-            log_error("Settings PSCFG (line {}): {}", m.line, m.text);
-        } else {
-            log_warn("Settings PSCFG (line {}): {}", m.line, m.text);
-        }
+        const auto level = (m.level == settings_pscfg::Message::Level::Error)
+                               ? LogLevel::LOG_ERROR
+                               : LogLevel::LOG_WARN;
+        // Note: we intentionally avoid log_error() here (it asserts/terminates).
+        log_with_level(level, "Settings PSCFG (line {}): {}", m.line, m.text);
     }
     data = res.data;
 
@@ -208,7 +208,7 @@ bool Settings::write_save_file() {
     const auto defaults = settings::Data();
     const std::string out =
         settings_pscfg::write_overrides_only(data, defaults,
-                                             settings_pscfg::CURRENT_SETTINGS_VERSION);
+                                             settings::SETTINGS_PSCFG_VERSION);
     ofs << out;
     ofs.close();
 
