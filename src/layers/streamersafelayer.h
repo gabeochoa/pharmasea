@@ -28,11 +28,21 @@ struct StreamerSafeLayer : public Layer {
             int y_pos = WIN_H() - streamer_box_size - streamer_box_padd;
             float FS = 20.f;
 
+#if defined(RAYLIB_VERSION_MAJOR) && \
+    ((RAYLIB_VERSION_MAJOR > 4) ||  \
+     (RAYLIB_VERSION_MAJOR == 4 && RAYLIB_VERSION_MINOR >= 6))
             DrawRectangleRoundedLines(
                 Rectangle{(float) x_pos, (float) y_pos,
                           (float) streamer_box_size, (float) streamer_box_size},
                 0.25f /* roundness */, (int) (FS / 4.f) /* segments */,
                 2.0f /* lineThick */, BLACK);
+#else
+            // Older raylib signature (no line thickness parameter).
+            DrawRectangleRoundedLines(
+                Rectangle{(float) x_pos, (float) y_pos,
+                          (float) streamer_box_size, (float) streamer_box_size},
+                0.25f /* roundness */, (int) (FS / 4.f) /* segments */, BLACK);
+#endif
 
             DrawTextEx(
                 Preload::get().font,
