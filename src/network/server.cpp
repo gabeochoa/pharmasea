@@ -6,13 +6,17 @@
 #include <thread>
 
 #include "../building_locations.h"
-#include "../globals.h"  // for HASHED_VERSION
 #include "../client_server_comm.h"
-#include "../save_game/save_game.h"
-#include "../engine/time.h"
+#include "../components/has_client_id.h"
+#include "../components/has_name.h"
+#include "../components/uses_character_model.h"
 #include "../engine/files.h"
+#include "../engine/path_request_manager.h"
 #include "../engine/random_engine.h"
+#include "../engine/time.h"
 #include "../entity_helper.h"
+#include "../globals.h"  // for HASHED_VERSION
+#include "../save_game/save_game.h"
 #include "../system/system_manager.h"
 #include "serialization.h"
 
@@ -317,15 +321,18 @@ void Server::process_map_update(float dt) {
             fs::path p = fs::path(LOAD_SAVE_TARGET);
             if (p.is_relative()) {
                 // Prefer saves folder, then fall back to CWD.
-                fs::path in_saves = save_game::SaveGameManager::saves_folder() / p;
+                fs::path in_saves =
+                    save_game::SaveGameManager::saves_folder() / p;
                 if (fs::exists(in_saves)) {
                     p = in_saves;
                 }
             }
 
             if (save_game::SaveGameManager::load_file(p, loaded)) {
-                // Apply snapshot (same logic as server_only::load_game_from_slot).
-                server_entities_DO_NOT_USE = loaded.map_snapshot.game_info.entities;
+                // Apply snapshot (same logic as
+                // server_only::load_game_from_slot).
+                server_entities_DO_NOT_USE =
+                    loaded.map_snapshot.game_info.entities;
 
                 pharmacy_map->game_info = loaded.map_snapshot.game_info;
                 pharmacy_map->showMinimap = loaded.map_snapshot.showMinimap;
