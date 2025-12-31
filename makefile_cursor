@@ -16,9 +16,13 @@ include makefile
 # due to different diagnostics in vendored headers.
 override CXX := clang++
 
-# Cursor build uses C++23 so <expected> is usable with libstdc++.
-# (The repo's default -std=c++2a is kept in the main makefile.)
-override FLAGS += -std=c++23
+# Match macOS toolchain behavior as closely as possible:
+# - use libc++ (like Apple Clang)
+# - keep the repo's chosen language level from `makefile` (-std=c++2a)
+override FLAGS += -stdlib=libc++
+
+# Ensure our shim headers (e.g. <expected>) take precedence over system headers.
+override INCLUDES := -Itools/cursor_headers $(INCLUDES)
 
 # Cursor build: don't treat warnings as errors (container toolchains differ).
 # The upstream makefile uses -Werror inside NOFLAGS; drop it here.
@@ -38,8 +42,8 @@ post-build: main-build
 # (which may be platform/toolchain dependent in CI containers).
 cursor-check: $(PCH_GCH)
 	@mkdir -p output/cursor
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -c src/entity.cpp -o output/cursor/entity.o
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -c src/entity_makers.cpp -o output/cursor/entity_makers.o
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -c src/level_info.cpp -o output/cursor/level_info.o
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -c tools/cursor_compile_snapshot.cpp -o output/cursor/cursor_compile_snapshot.o
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -include tools/cursor_headers/raylib_ops.h -c src/entity.cpp -o output/cursor/entity.o
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -include tools/cursor_headers/raylib_ops.h -c src/entity_makers.cpp -o output/cursor/entity_makers.o
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -include tools/cursor_headers/raylib_ops.h -c src/level_info.cpp -o output/cursor/level_info.o
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -include tools/cursor_headers/raylib_ops.h -c tools/cursor_compile_snapshot.cpp -o output/cursor/cursor_compile_snapshot.o
 

@@ -1,0 +1,6 @@
+#pragma once
+// Cursor/Linux build shim:
+// Shadow the system <expected> header so Afterhours' `__has_include(<expected>)`
+// path doesn't pull in libstdc++'s std::expected / std::unexpected declarations,
+// which conflict with PharmaSea's `src/ah.h` std::expected shim.
+

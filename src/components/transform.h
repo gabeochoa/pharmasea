@@ -119,7 +119,9 @@ struct Transform : public BaseComponent {
     }
 
     [[nodiscard]] BoundingBox expanded_bounds(vec3 inc) const {
-        return get_bounds(this->raw_position, this->size() + inc);
+        const vec3 s = this->size();
+        return get_bounds(this->raw_position,
+                          vec3{s.x + inc.x, s.y + inc.y, s.z + inc.z});
     }
 
     /*

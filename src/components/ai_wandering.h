@@ -25,7 +25,8 @@ struct AIWandering : public AIComponent {
                 const auto walkable = EntityHelper::isWalkable(new_pos);
 
                 if (walkable) {
-                    position = customer.get<Transform>().as2() + new_pos;
+                    const vec2 base = customer.get<Transform>().as2();
+                    position = vec2{base.x + new_pos.x, base.y + new_pos.y};
                     break;
                 }
             }
