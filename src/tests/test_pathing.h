@@ -100,12 +100,9 @@ inline std::pair<vec2, vec2> setup(const std::string& map) {
 
 inline void teardown() {
     for (auto& entity : ents) {
-        for (afterhours::ComponentID cid = 0; cid < afterhours::max_num_components;
-             ++cid) {
-            if (!entity.componentSet.test(cid)) continue;
-            afterhours::ComponentStore::get().remove_by_component_id(cid, entity.id);
-        }
-        entity.componentSet.reset();
+        // Components live in Afterhours ComponentStore (not per-entity pointers).
+        afterhours::EntityHelper::remove_pooled_components_for(entity);
+        entity.componentSet.reset();  // redundant, but keeps old assumptions safe
     }
 
     ents.clear();
