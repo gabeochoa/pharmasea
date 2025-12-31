@@ -101,7 +101,8 @@ WorldSnapshotV2 capture_from_entities(const Entities& entities) {
     return snap;
 }
 
-void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap) {
+void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap,
+                       const ApplyOptionsV2 options) {
     // Remove ComponentStore-backed component data for the entities we are replacing.
     for (const auto& sp : entities) {
         if (!sp) continue;
@@ -119,8 +120,12 @@ void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap) {
     for (const EntityRecordV2& rec : snap.entities) {
         auto sp = std::make_shared<Entity>();
 
-        // Override id to preserve legacy EntityID-based relationships.
-        sp->id = rec.legacy_id;
+        if (options.preserve_legacy_entity_ids) {
+            // Preserve legacy EntityID-based relationships.
+            // WARNING: unsafe when two worlds live in one process because
+            // ComponentStore is global and keyed by EntityID.
+            sp->id = rec.legacy_id;
+        }
         sp->entity_type = rec.entity_type;
         sp->tags = rec.tags;
         sp->cleanup = rec.cleanup;
