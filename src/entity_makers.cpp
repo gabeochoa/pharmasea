@@ -142,57 +142,81 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 }  // namespace items
 
 void register_all_components() {
-    Entity* entity = new Entity();
-    entity->addAll<  //
-        Transform, HasName,
-        //
-        AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AICloseTab,
-        AIPlayJukebox, AIWandering,
-        // Is
-        IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
-        IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
-        IsFreeInStore, IsToilet, IsRoundSettingsManager, IsStoreSpawned,
-        IsNuxManager, IsNux, IsSquirter,
-        //
-        AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
-        CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
-        CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
-        ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
-        CanOrderDrink, CanPathfind, CanChangeSettingsInteractively,
-        CanHoldHandTruck, CanBeHeld_HT, CollectsCustomerFeedback,
-        //
-        HasWaitingQueue, HasSubtype, HasSpeechBubble, HasWork, HasBaseSpeed,
-        HasRopeToItem, HasProgression, HasPatience, HasFishingGame,
-        HasLastInteractedCustomer, HasDayNightTimer, BypassAutomationState,
-        // render
-        ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer,
-        // responds to
-        RespondsToDayNight
-        //
-        >();
-    // TODO now that we have removeComponent we could remove some instead
-    // for example AddsIngredient could be removed when it runs out
-    // there might be some logic that relies on this not being removed though
-    // so be aware
-
-    // TODO test remove_all_components at some point
-    // VALIDATE(entity->has<ModelRenderer>(), "entity should have all
-    // components"); entity->removeComponent<ModelRenderer>();
-    // VALIDATE(entity->is_missing<ModelRenderer>(),
-    // "entity should not have all components");
-
-    // Now that they are all registered we can delete them
+    // New ECS model: components are stored in Afterhours ComponentStore, not as
+    // per-entity pointers. We only need to force registration of component type
+    // IDs here (for polymorphic serialization tables, etc.), without allocating
+    // any live component instances.
     //
-    // since we dont have a destructor today TODO because we are copying
-    // components we have to delete these manually before the ent delete because
-    // otherwise it will leak the memory
-    //
+    // NOTE: `get_type_id<T>()` is the canonical registration side-effect.
+    (void) afterhours::components::get_type_id<Transform>();
+    (void) afterhours::components::get_type_id<HasName>();
 
-    // Components live in Afterhours ComponentStore (not per-entity pointers).
-    // Use the vendor helper to remove pooled component storage for this entity.
-    afterhours::EntityHelper::remove_pooled_components_for(*entity);
+    (void) afterhours::components::get_type_id<AICleanVomit>();
+    (void) afterhours::components::get_type_id<AIUseBathroom>();
+    (void) afterhours::components::get_type_id<AIDrinking>();
+    (void) afterhours::components::get_type_id<AIWaitInQueue>();
+    (void) afterhours::components::get_type_id<AICloseTab>();
+    (void) afterhours::components::get_type_id<AIPlayJukebox>();
+    (void) afterhours::components::get_type_id<AIWandering>();
 
-    delete entity;
+    (void) afterhours::components::get_type_id<IsRotatable>();
+    (void) afterhours::components::get_type_id<IsItem>();
+    (void) afterhours::components::get_type_id<IsSpawner>();
+    (void) afterhours::components::get_type_id<IsTriggerArea>();
+    (void) afterhours::components::get_type_id<IsSolid>();
+    (void) afterhours::components::get_type_id<IsItemContainer>();
+    (void) afterhours::components::get_type_id<IsDrink>();
+    (void) afterhours::components::get_type_id<IsPnumaticPipe>();
+    (void) afterhours::components::get_type_id<IsProgressionManager>();
+    (void) afterhours::components::get_type_id<IsFloorMarker>();
+    (void) afterhours::components::get_type_id<IsBank>();
+    (void) afterhours::components::get_type_id<IsFreeInStore>();
+    (void) afterhours::components::get_type_id<IsToilet>();
+    (void) afterhours::components::get_type_id<IsRoundSettingsManager>();
+    (void) afterhours::components::get_type_id<IsStoreSpawned>();
+    (void) afterhours::components::get_type_id<IsNuxManager>();
+    (void) afterhours::components::get_type_id<IsNux>();
+    (void) afterhours::components::get_type_id<IsSquirter>();
+
+    (void) afterhours::components::get_type_id<AddsIngredient>();
+    (void) afterhours::components::get_type_id<CanHoldItem>();
+    (void) afterhours::components::get_type_id<CanBeHighlighted>();
+    (void) afterhours::components::get_type_id<CanHighlightOthers>();
+    (void) afterhours::components::get_type_id<CanHoldFurniture>();
+    (void) afterhours::components::get_type_id<CanBeGhostPlayer>();
+    (void) afterhours::components::get_type_id<CanPerformJob>();
+    (void) afterhours::components::get_type_id<CanBePushed>();
+    (void) afterhours::components::get_type_id<CustomHeldItemPosition>();
+    (void) afterhours::components::get_type_id<CanBeHeld>();
+    (void) afterhours::components::get_type_id<CanGrabFromOtherFurniture>();
+    (void) afterhours::components::get_type_id<ConveysHeldItem>();
+    (void) afterhours::components::get_type_id<CanBeTakenFrom>();
+    (void) afterhours::components::get_type_id<UsesCharacterModel>();
+    (void) afterhours::components::get_type_id<Indexer>();
+    (void) afterhours::components::get_type_id<CanOrderDrink>();
+    (void) afterhours::components::get_type_id<CanPathfind>();
+    (void) afterhours::components::get_type_id<CanChangeSettingsInteractively>();
+    (void) afterhours::components::get_type_id<CanHoldHandTruck>();
+    (void) afterhours::components::get_type_id<CanBeHeld_HT>();
+    (void) afterhours::components::get_type_id<CollectsCustomerFeedback>();
+
+    (void) afterhours::components::get_type_id<HasWaitingQueue>();
+    (void) afterhours::components::get_type_id<HasSubtype>();
+    (void) afterhours::components::get_type_id<HasSpeechBubble>();
+    (void) afterhours::components::get_type_id<HasWork>();
+    (void) afterhours::components::get_type_id<HasBaseSpeed>();
+    (void) afterhours::components::get_type_id<HasRopeToItem>();
+    (void) afterhours::components::get_type_id<HasProgression>();
+    (void) afterhours::components::get_type_id<HasPatience>();
+    (void) afterhours::components::get_type_id<HasFishingGame>();
+    (void) afterhours::components::get_type_id<HasLastInteractedCustomer>();
+    (void) afterhours::components::get_type_id<HasDayNightTimer>();
+    (void) afterhours::components::get_type_id<BypassAutomationState>();
+
+    (void) afterhours::components::get_type_id<ModelRenderer>();
+    (void) afterhours::components::get_type_id<HasDynamicModelName>();
+    (void) afterhours::components::get_type_id<SimpleColoredBoxRenderer>();
+    (void) afterhours::components::get_type_id<RespondsToDayNight>();
 }
 
 void add_entity_components(Entity& entity) { entity.addComponent<Transform>(); }
