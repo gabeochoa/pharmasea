@@ -35,6 +35,7 @@ inline constexpr std::uint32_t kWorldSnapshotVersionV2 = 2;
 // Safety bounds for Bitsery containers. Adjust if/when we support very large maps.
 inline constexpr std::size_t kMaxSnapshotEntities = 250'000;
 inline constexpr std::size_t kMaxSnapshotComponentsPerType = 250'000;
+inline constexpr std::size_t kMaxSnapshotEntityComponentsBlobBytes = 4 * 1024 * 1024;  // 4 MiB
 
 struct EntityRecordV2 {
     afterhours::EntityHandle handle{};
@@ -49,6 +50,11 @@ struct EntityRecordV2 {
     afterhours::ComponentBitSet component_set{};
     afterhours::TagBitset tags{};
     bool cleanup = false;
+
+    // Pointer-free packed encoding of component payloads (presence + values).
+    // This is a transitional "include everything" mechanism until we migrate
+    // to per-component DTO lists.
+    std::vector<std::uint8_t> components_blob{};
 };
 
 // Generic per-component snapshot list, keyed by EntityHandle.
@@ -109,6 +115,8 @@ void serialize(S& s, snapshot_v2::EntityRecordV2& e) {
     s.ext(e.component_set, StdBitset{});
     s.ext(e.tags, StdBitset{});
     s.value1b(e.cleanup);
+    s.container1b(e.components_blob,
+                  snapshot_v2::kMaxSnapshotEntityComponentsBlobBytes);
 }
 
 template<typename S>

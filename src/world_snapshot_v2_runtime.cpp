@@ -2,6 +2,7 @@
 
 #include "ah.h"
 #include "engine/log.h"
+#include "world_snapshot_v2_components_blob.h"
 
 #include <unordered_map>
 
@@ -55,24 +56,6 @@ void remove_all_pooled_components_for(Entity& e) {
 #endif
 }
 
-[[nodiscard]] TransformV2 project_transform(const Transform& t) {
-    TransformV2 out{};
-    out.visual_offset = t.viz_offset();
-    out.raw_position = t.raw();
-    out.position = t.pos();
-    out.facing = t.facing;
-    out.size = t.size();
-    return out;
-}
-
-void apply_transform(Entity& e, const TransformV2& v) {
-    // For initial wiring we enforce existence + write fields via public API.
-    Transform& t = e.addComponentIfMissing<Transform>();
-    t.init(v.raw_position, v.size);
-    t.update_visual_offset(v.visual_offset);
-    t.update_face_direction(v.facing);
-}
-
 }  // namespace
 
 WorldSnapshotV2 capture_from_entities(const Entities& entities) {
@@ -90,12 +73,8 @@ WorldSnapshotV2 capture_from_entities(const Entities& entities) {
         rec.component_set = e.componentSet;
         rec.tags = e.tags;
         rec.cleanup = e.cleanup;
+        rec.components_blob = snapshot_v2::encode_components_blob(e);
         snap.entities.push_back(rec);
-
-        if (e.has<Transform>()) {
-            snap.components.transform.entries.push_back(
-                {.entity = rec.handle, .value = project_transform(e.get<Transform>())});
-        }
     }
 
     return snap;
@@ -137,11 +116,12 @@ void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap,
         entities.push_back(std::move(sp));
     }
 
-    // Apply Transform list.
-    for (const auto& entry : snap.components.transform.entries) {
-        auto it = by_handle.find(entry.entity);
-        if (it == by_handle.end() || !it->second) continue;
-        apply_transform(*it->second, entry.value);
+    // Apply component blobs (full component state).
+    for (std::size_t i = 0; i < snap.entities.size(); ++i) {
+        const auto& rec = snap.entities[i];
+        if (i >= entities.size() || !entities[i]) continue;
+        if (rec.components_blob.empty()) continue;
+        snapshot_v2::decode_components_blob(*entities[i], rec.components_blob);
     }
 
     // Treat snapshot apply as an end-of-frame boundary for pooled components.
