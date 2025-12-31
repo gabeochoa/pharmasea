@@ -99,12 +99,6 @@ inline std::pair<vec2, vec2> setup(const std::string& map) {
 }
 
 inline void teardown() {
-    for (auto& entity : ents) {
-        // Components live in Afterhours ComponentStore (not per-entity pointers).
-        // Use the vendor helper to remove pooled component storage for this entity.
-        afterhours::EntityHelper::remove_pooled_components_for(entity);
-    }
-
     ents.clear();
 }
 
