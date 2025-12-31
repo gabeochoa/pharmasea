@@ -17,6 +17,7 @@ using afterhours::RefEntity;
 #include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
 
+#include <cstdint>
 #include <optional>
 #include "entity_handle_resolver.h"
 
@@ -65,16 +66,7 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 
 template<typename S>
 void serialize(S& s, EntityHandle& handle) {
-    // Fixed-width wire format (stable across platforms):
-    // - slot: uint32
-    // - gen:  uint32
-    //
-    // NOTE: afterhours::EntityHandle stores size_t fields; we explicitly cast
-    // for serialization stability.
-    // NOTE: This implementation intentionally works for both serializers and
-    // deserializers:
-    // - For writing, we initialize slot32/gen32 from the handle and write them.
-    // - For reading, bitsery overwrites slot32/gen32, then we assign back.
+    // Wire format: (u32 slot, u32 gen). Keep stable across platforms.
     uint32_t slot32 = static_cast<uint32_t>(handle.slot);
     uint32_t gen32 = static_cast<uint32_t>(handle.gen);
     s.value4b(slot32);
@@ -85,7 +77,6 @@ void serialize(S& s, EntityHandle& handle) {
 
 template<typename S>
 void serialize(S& s, const EntityHandle& handle) {
-    // Serialize const handle using the mutable overload logic.
     EntityHandle tmp = handle;
     serialize(s, tmp);
 }
