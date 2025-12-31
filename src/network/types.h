@@ -12,8 +12,7 @@
 #include "../external_include.h"  // for fmt, magic_enum
 #include "../strings.h"
 #include "internal/channel.h"
-// Map.h is needed for MapInfo, but it's lighter than polymorphic_components.h
-#include "../map.h"
+#include "../world_snapshot_v2.h"
 
 namespace network {
 
@@ -49,7 +48,8 @@ struct ClientPacket {
 
     // Map Info
     struct MapInfo {
-        struct Map map;
+        snapshot_v2::WorldSnapshotV2 snapshot{};
+        bool showMinimap = false;
     };
 
     // Map Seed Info

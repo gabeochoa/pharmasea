@@ -12,6 +12,7 @@
 #include "../engine/time.h"
 #include "../engine/toastmanager.h"
 #include "../post_deserialize_fixups.h"
+#include "../world_snapshot_v2_runtime.h"
 #include "network.h"
 #include "serialization.h"
 
@@ -278,12 +279,12 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            client_entities_DO_NOT_USE.clear();
-            client_entities_DO_NOT_USE = info.map.entities();
+            snapshot_v2::apply_to_entities(client_entities_DO_NOT_USE,
+                                           info.snapshot);
 
             post_deserialize_fixups::run(client_entities_DO_NOT_USE);
 
-            map->update_map(info.map);
+            map->showMinimap = info.showMinimap;
 
         } break;
 

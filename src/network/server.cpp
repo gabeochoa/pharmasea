@@ -16,6 +16,7 @@
 #include "../engine/time.h"
 #include "../entity_helper.h"
 #include "../globals.h"  // for HASHED_VERSION
+#include "../world_snapshot_v2_runtime.h"
 #include "../save_game/save_game.h"
 #include "../system/system_manager.h"
 #include "serialization.h"
@@ -93,13 +94,17 @@ void Server::stop() {
 void Server::send_map_state() {
     pharmacy_map->grab_things();
 
+    snapshot_v2::WorldSnapshotV2 snap =
+        snapshot_v2::capture_from_entities(EntityHelper::get_entities());
+
     ClientPacket map_packet{
         .channel = Channel::RELIABLE,
         .client_id = SERVER_CLIENT_ID,
         .msg_type = network::ClientPacket::MsgType::Map,
         .msg =
             network::ClientPacket::MapInfo{
-                .map = *pharmacy_map,
+                .snapshot = std::move(snap),
+                .showMinimap = pharmacy_map->showMinimap,
             },
     };
 

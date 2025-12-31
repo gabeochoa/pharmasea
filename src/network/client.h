@@ -3,6 +3,7 @@
 #pragma once
 
 #include "../entity.h"
+#include "../map.h"
 #include "internal/client.h"
 //
 #include "types.h"

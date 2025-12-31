@@ -57,9 +57,20 @@ struct ComponentListV2 {
     struct Entry {
         afterhours::EntityHandle entity{};
         V value{};
+
+        template<typename S>
+        void serialize(S& s) {
+            s.object(entity);
+            s.object(value);
+        }
     };
 
     std::vector<Entry> entries{};
+
+    template<typename S>
+    void serialize(S& s) {
+        s.container(entries, snapshot_v2::kMaxSnapshotComponentsPerType);
+    }
 };
 
 // Example DTO for Transform (live Transform is non-copyable via BaseComponent).
@@ -107,17 +118,6 @@ void serialize(S& s, snapshot_v2::TransformV2& t) {
     s.object(t.size);
 }
 
-template<typename S, typename V>
-void serialize(S& s, typename snapshot_v2::ComponentListV2<V>::Entry& e) {
-    s.object(e.entity);
-    s.object(e.value);
-}
-
-template<typename S, typename V>
-void serialize(S& s, snapshot_v2::ComponentListV2<V>& list) {
-    s.container4b(list.entries, snapshot_v2::kMaxSnapshotComponentsPerType);
-}
-
 template<typename S>
 void serialize(S& s, snapshot_v2::WorldSnapshotV2::Components& c) {
     s.object(c.transform);
@@ -126,7 +126,7 @@ void serialize(S& s, snapshot_v2::WorldSnapshotV2::Components& c) {
 template<typename S>
 void serialize(S& s, snapshot_v2::WorldSnapshotV2& snap) {
     s.value4b(snap.version);
-    s.container4b(snap.entities, snapshot_v2::kMaxSnapshotEntities);
+    s.container(snap.entities, snapshot_v2::kMaxSnapshotEntities);
     s.object(snap.components);
 }
 }  // namespace bitsery

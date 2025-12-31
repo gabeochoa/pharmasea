@@ -6,7 +6,7 @@
 #include "../bitsery_include.h"
 #include "../engine/keymap.h"  // for UserInput, UserInputs, InputName, InputSet, InputAmount
 #include "../entity.h"
-#include "../map.h"
+#include "../world_snapshot_v2.h"
 #include "types.h"
 
 namespace network {
@@ -65,7 +65,10 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value4b(info.host_menu_state);
                   s.value4b(info.host_game_state);
               },
-              [](S& s, ClientPacket::MapInfo& info) { s.object(info.map); },
+              [](S& s, ClientPacket::MapInfo& info) {
+                  s.object(info.snapshot);
+                  s.value1b(info.showMinimap);
+              },
               [](S& s, ClientPacket::MapSeedInfo& info) {
                   s.text1b(info.seed, MAX_SEED_LENGTH);
               },
