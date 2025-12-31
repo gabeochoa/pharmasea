@@ -4,7 +4,6 @@
 #include <ranges>
 
 #include "ah.h"
-#include "afterhours/src/core/component_store.h"
 #include "entity_id.h"
 #include "components/ai_clean_vomit.h"
 #include "components/ai_close_tab.h"
