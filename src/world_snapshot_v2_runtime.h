@@ -11,6 +11,14 @@ struct ApplyOptionsV2 {
     // This preserves legacy EntityID-based references but is unsafe when
     // running an in-process host+client (shared ComponentStore).
     bool preserve_legacy_entity_ids = true;
+
+    // If true, remove pooled components for the entities being replaced before
+    // applying the new snapshot.
+    //
+    // IMPORTANT: When hosting in-process (server + client in one process),
+    // ComponentStore is global and keyed by EntityID, and the server uses the
+    // same EntityIDs. Removing components here would clobber the server world.
+    bool clear_existing_components = true;
 };
 
 // Capture world state from a concrete entity list (typically EntityHelper::get_entities()).

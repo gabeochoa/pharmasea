@@ -279,18 +279,16 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            // If we are running as an in-process host, we cannot preserve
-            // server EntityIDs in the client mirror world: Afterhours'
-            // ComponentStore is process-global and keyed by EntityID.
-            //
-            // Preserving IDs would cause client snapshot apply to clobber the
-            // server's ComponentStore entries, leading to crashes in server
-            // systems (e.g. Entity::get<Transform>() with missing pooled data).
-            const bool preserve_ids = !(network_info && network_info->is_host());
+            const bool is_inproc_host = (network_info && network_info->is_host());
             snapshot_v2::apply_to_entities(
                 client_entities_DO_NOT_USE, info.snapshot,
-                snapshot_v2::ApplyOptionsV2{.preserve_legacy_entity_ids =
-                                                preserve_ids});
+                snapshot_v2::ApplyOptionsV2{
+                    // Preserve EntityIDs so EntityID-based relationships work.
+                    .preserve_legacy_entity_ids = true,
+                    // But don't clear pooled components when hosting in-process;
+                    // that would clobber the server world (shared ComponentStore).
+                    .clear_existing_components = !is_inproc_host,
+                });
 
             post_deserialize_fixups::run(client_entities_DO_NOT_USE);
 

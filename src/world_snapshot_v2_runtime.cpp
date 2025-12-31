@@ -82,10 +82,12 @@ WorldSnapshotV2 capture_from_entities(const Entities& entities) {
 
 void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap,
                        const ApplyOptionsV2 options) {
-    // Remove ComponentStore-backed component data for the entities we are replacing.
-    for (const auto& sp : entities) {
-        if (!sp) continue;
-        remove_all_pooled_components_for(*sp);
+    if (options.clear_existing_components) {
+        // Remove ComponentStore-backed component data for the entities we are replacing.
+        for (const auto& sp : entities) {
+            if (!sp) continue;
+            remove_all_pooled_components_for(*sp);
+        }
     }
     entities.clear();
 

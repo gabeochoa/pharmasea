@@ -80,8 +80,11 @@ namespace {
 using Buffer = std::vector<std::uint8_t>;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
-using Serializer = bitsery::Serializer<OutputAdapter>;
-using Deserializer = bitsery::Deserializer<InputAdapter>;
+using TContext =
+    std::tuple<bitsery::ext::PointerLinkingContext,
+               bitsery::ext::PolymorphicContext<bitsery::ext::StandardRTTI>>;
+using Serializer = bitsery::Serializer<OutputAdapter, TContext>;
+using Deserializer = bitsery::Deserializer<InputAdapter, TContext>;
 
 template<typename S>
 void serialize_components_only(S& s, Entity& entity) {
@@ -121,7 +124,9 @@ void deserialize_components_only_impl(
 
 std::vector<std::uint8_t> encode_components_blob(const Entity& e) {
     Buffer buf;
-    Serializer ser{buf};
+    TContext ctx{};
+    std::get<1>(ctx).registerBasesList<Serializer>(MyPolymorphicClasses{});
+    Serializer ser{ctx, buf};
     // bitsery's API takes non-const references even for writing.
     Entity& nc = const_cast<Entity&>(e);  // NOLINT
     serialize_components_only(ser, nc);
@@ -135,7 +140,9 @@ std::vector<std::uint8_t> encode_components_blob(const Entity& e) {
 }
 
 void decode_components_blob(Entity& e, const std::vector<std::uint8_t>& blob) {
-    Deserializer des{blob.begin(), blob.size()};
+    TContext ctx{};
+    std::get<1>(ctx).registerBasesList<Deserializer>(MyPolymorphicClasses{});
+    Deserializer des{ctx, blob.begin(), blob.size()};
     deserialize_components_only_impl(des, e);
     if (des.adapter().error() != bitsery::ReaderError::NoError) {
         log_error("snapshot_v2: decode_components_blob reader_error={}",
