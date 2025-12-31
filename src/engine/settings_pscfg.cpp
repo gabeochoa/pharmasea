@@ -13,29 +13,38 @@
 #include <utility>
 #include <vector>
 
+#include "util.h"
+
 namespace settings_pscfg {
 namespace {
 
-static uint32_t f32_bits(float v) {
-    return std::bit_cast<uint32_t>(v);
-}
+static uint32_t f32_bits(float v) { return std::bit_cast<uint32_t>(v); }
 
-static float f32_from_bits(uint32_t bits) {
-    return std::bit_cast<float>(bits);
-}
+static float f32_from_bits(uint32_t bits) { return std::bit_cast<float>(bits); }
 
-static bool f32_bits_equal(float a, float b) {
-    return f32_bits(a) == f32_bits(b);
-}
+static bool f32_bits_equal(float a, float b) { return f32_bits(a) == f32_bits(b); }
 
-static std::string to_lower(std::string_view s) {
-    std::string out;
-    out.reserve(s.size());
-    for (char c : s) out.push_back((char) std::tolower((unsigned char) c));
-    return out;
-}
+class pscfg_parser {
+   public:
+    explicit pscfg_parser(std::string_view input) : in(input) {}
 
-struct Parser {
+    void parse_file() {
+        while (!eof()) {
+            parse_stmt();
+        }
+    }
+
+    [[nodiscard]] const std::vector<Assignment>& get_assignments() const {
+        return assignments;
+    }
+
+    [[nodiscard]] const std::vector<Message>& get_messages() const { return messages; }
+
+    [[nodiscard]] bool has_multiple_versions() const { return multiple_versions; }
+
+    [[nodiscard]] const std::optional<int>& get_version() const { return version; }
+
+   private:
     std::string_view in;
     size_t i = 0;
     int line = 1;
@@ -49,11 +58,12 @@ struct Parser {
     std::vector<Assignment> assignments;
     std::vector<Message> messages;
 
-    bool eof() const { return i >= in.size(); }
+    [[nodiscard]] bool eof() const { return i >= in.size(); }
 
-    char peek(size_t off = 0) const {
+    [[nodiscard]] char peek(size_t off = 0) const {
         const size_t p = i + off;
-        return p < in.size() ? in[p] : '\0';
+        if (p < in.size()) return in[p];
+        return '\0';
     }
 
     char get() {
@@ -69,7 +79,9 @@ struct Parser {
     }
 
     void skip_to_eol() {
-        while (!eof() && peek() != '\n') (void) get();
+        while (!eof() && peek() != '\n') {
+            (void) get();
+        }
     }
 
     void skip_ws_and_comments() {
@@ -79,6 +91,8 @@ struct Parser {
                 continue;
             }
 
+            // Full-line and inline comments are treated the same: once we see a
+            // comment token, ignore until end-of-line.
             if (peek() == '#') {
                 skip_to_eol();
                 continue;
@@ -96,13 +110,7 @@ struct Parser {
     }
 
     void warn_here(std::string msg) {
-        messages.push_back(
-            Message{Message::Level::Warn, line, std::move(msg)});
-    }
-
-    void error_here(std::string msg) {
-        messages.push_back(
-            Message{Message::Level::Error, line, std::move(msg)});
+        messages.push_back(Message{Message::Level::Warn, line, std::move(msg)});
     }
 
     bool consume(char expected) {
@@ -115,13 +123,15 @@ struct Parser {
     // identifier := [a-zA-Z_][a-zA-Z0-9_]*
     std::optional<std::string> parse_ident() {
         skip_ws_and_comments();
-        char c = peek();
-        if (!(std::isalpha((unsigned char) c) || c == '_')) return std::nullopt;
+        const char c = peek();
+        if (!(std::isalpha((unsigned char) c) || c == '_')) {
+            return std::nullopt;
+        }
 
         std::string out;
         while (!eof()) {
-            c = peek();
-            if (std::isalnum((unsigned char) c) || c == '_') {
+            const char ch = peek();
+            if (std::isalnum((unsigned char) ch) || ch == '_') {
                 out.push_back(get());
             } else {
                 break;
@@ -133,15 +143,20 @@ struct Parser {
     std::optional<int32_t> parse_i32_raw() {
         skip_ws_and_comments();
 
+        // Allow leading '-' only.
+        if (peek() != '-' && !std::isdigit((unsigned char) peek())) {
+            return std::nullopt;
+        }
+
         const char* begin = in.data() + i;
         const char* end = in.data() + in.size();
-
-        // Allow leading '-' only.
-        if (peek() != '-' && !std::isdigit((unsigned char) peek())) return std::nullopt;
-
         int32_t value = 0;
+
         auto res = std::from_chars(begin, end, value, 10);
-        if (res.ec != std::errc()) return std::nullopt;
+        if (res.ec != std::errc()) {
+            return std::nullopt;
+        }
+
         i = (size_t) (res.ptr - in.data());
         return value;
     }
@@ -152,21 +167,29 @@ struct Parser {
         return (int) v.value();
     }
 
-    std::optional<uint32_t> parse_hex_u32() {
+    std::optional<uint32_t> parse_hex_u32_exact8() {
         skip_ws_and_comments();
-        if (!(peek() == '0' && (peek(1) == 'x' || peek(1) == 'X'))) return std::nullopt;
+        if (!(peek() == '0' && (peek(1) == 'x' || peek(1) == 'X'))) {
+            return std::nullopt;
+        }
         (void) get();
         (void) get();
 
         uint32_t value = 0;
         int digits = 0;
+
         while (!eof()) {
-            char c = peek();
+            const char c = peek();
             int v = -1;
-            if (c >= '0' && c <= '9') v = c - '0';
-            else if (c >= 'a' && c <= 'f') v = 10 + (c - 'a');
-            else if (c >= 'A' && c <= 'F') v = 10 + (c - 'A');
-            else break;
+
+            if (c >= '0' && c <= '9')
+                v = c - '0';
+            else if (c >= 'a' && c <= 'f')
+                v = 10 + (c - 'a');
+            else if (c >= 'A' && c <= 'F')
+                v = 10 + (c - 'A');
+            else
+                break;
 
             value = (value << 4) | (uint32_t) v;
             ++digits;
@@ -178,18 +201,21 @@ struct Parser {
     }
 
     std::optional<std::string> parse_quoted_string() {
+        // Note: comment parsing must not trigger inside strings, so we do NOT
+        // call skip_ws_and_comments() after consuming the opening quote.
         skip_ws_and_comments();
         if (peek() != '"') return std::nullopt;
         (void) get();
 
         std::string out;
         while (!eof()) {
-            char c = get();
+            const char c = get();
             if (c == '"') return out;
             if (c == '\n' || c == '\0') return std::nullopt;
+
             if (c == '\\') {
                 if (eof()) return std::nullopt;
-                char esc = get();
+                const char esc = get();
                 switch (esc) {
                     case '"':
                         out.push_back('"');
@@ -210,8 +236,10 @@ struct Parser {
                 }
                 continue;
             }
+
             out.push_back(c);
         }
+
         return std::nullopt;
     }
 
@@ -252,7 +280,7 @@ struct Parser {
         if (in.substr(i).starts_with("f32")) {
             i += 3;
             if (!consume('(')) return std::nullopt;
-            auto bits = parse_hex_u32();
+            auto bits = parse_hex_u32_exact8();
             if (!bits.has_value()) return std::nullopt;
             if (!consume(')')) return std::nullopt;
             return Assignment::Value{f32_from_bits(bits.value())};
@@ -291,18 +319,20 @@ struct Parser {
     }
 
     void parse_version_stmt() {
-        // We are positioned after "version".
+        // Positioned after "version"
         if (!consume(':')) {
             warn_here("Malformed version statement; expected ':'");
             recover_to_statement_end();
             return;
         }
+
         auto v = parse_int_raw();
         if (!v.has_value()) {
             warn_here("Malformed version statement; expected integer version");
             recover_to_statement_end();
             return;
         }
+
         if (!consume(';')) {
             warn_here("Malformed version statement; expected ';'");
             recover_to_statement_end();
@@ -316,8 +346,9 @@ struct Parser {
     }
 
     void parse_section_stmt() {
-        // We are positioned at '['
+        // Positioned at '['
         (void) get();
+
         std::string name;
         while (!eof()) {
             const char c = get();
@@ -330,13 +361,14 @@ struct Parser {
         }
 
         current_section = name;
-        const std::string lower = to_lower(current_section);
+
+        const std::string lower = util::toLowerCase(current_section);
         const auto it = section_lower_to_original.find(lower);
         if (it == section_lower_to_original.end()) {
             section_lower_to_original.emplace(lower, current_section);
         } else if (it->second != current_section) {
-            warn_here("Multiple section names differ only by case: '" +
-                      it->second + "' vs '" + current_section + "'");
+            warn_here("Multiple section names differ only by case: '" + it->second +
+                      "' vs '" + current_section + "'");
         }
     }
 
@@ -455,6 +487,60 @@ static std::string fmt_i32x2(int32_t a, int32_t b) {
     return "i32x2(" + std::to_string(a) + ", " + std::to_string(b) + ")";
 }
 
+struct write_line {
+    std::string section;
+    std::string key;
+    std::string literal;
+};
+
+static void push_override_bool(std::vector<write_line>& out, std::string section,
+                               std::string key, bool value, bool def_value) {
+    if (value == def_value) return;
+    out.push_back(write_line{std::move(section), std::move(key),
+                             value ? "true" : "false"});
+}
+
+static void push_override_str(std::vector<write_line>& out, std::string section,
+                              std::string key, const std::string& value,
+                              const std::string& def_value) {
+    if (value == def_value) return;
+    out.push_back(
+        write_line{std::move(section), std::move(key), fmt_str(value)});
+}
+
+static void push_override_f32(std::vector<write_line>& out, std::string section,
+                              std::string key, float value, float def_value) {
+    if (f32_bits_equal(value, def_value)) return;
+    out.push_back(
+        write_line{std::move(section), std::move(key), fmt_f32_bits(value)});
+}
+
+static void push_override_i32x2(std::vector<write_line>& out, std::string section,
+                                std::string key, int32_t a, int32_t b, int32_t da,
+                                int32_t db) {
+    if (a == da && b == db) return;
+    out.push_back(write_line{std::move(section), std::move(key), fmt_i32x2(a, b)});
+}
+
+static bool section_has_any(const std::vector<write_line>& lines,
+                            std::string_view section_name) {
+    for (const auto& l : lines) {
+        if (l.section == section_name) return true;
+    }
+    return false;
+}
+
+static void emit_section(std::ostringstream& os, const std::vector<write_line>& lines,
+                         std::string_view section_name) {
+    if (!section_has_any(lines, section_name)) return;
+
+    os << "\n[" << section_name << "]\n";
+    for (const auto& l : lines) {
+        if (l.section != section_name) continue;
+        os << l.key << "* = " << l.literal << ";\n";
+    }
+}
+
 }  // namespace
 
 LoadResult load_from_string(std::string_view input, const settings::Data& defaults,
@@ -463,17 +549,12 @@ LoadResult load_from_string(std::string_view input, const settings::Data& defaul
     out.data = defaults;
     out.used_defaults = true;
 
-    Parser p;
-    p.in = input;
+    pscfg_parser parser(input);
+    parser.parse_file();
 
-    while (!p.eof()) {
-        p.parse_stmt();
-    }
+    out.messages = parser.get_messages();
 
-    // Parser warnings first.
-    out.messages = std::move(p.messages);
-
-    if (p.multiple_versions) {
+    if (parser.has_multiple_versions()) {
         out.messages.push_back(Message{
             Message::Level::Error,
             1,
@@ -482,7 +563,7 @@ LoadResult load_from_string(std::string_view input, const settings::Data& defaul
         return out;
     }
 
-    if (!p.version.has_value()) {
+    if (!parser.get_version().has_value()) {
         out.messages.push_back(Message{
             Message::Level::Error,
             1,
@@ -491,7 +572,7 @@ LoadResult load_from_string(std::string_view input, const settings::Data& defaul
         return out;
     }
 
-    if (p.version.value() != current_version) {
+    if (parser.get_version().value() != current_version) {
         out.messages.push_back(Message{
             Message::Level::Warn,
             1,
@@ -504,20 +585,17 @@ LoadResult load_from_string(std::string_view input, const settings::Data& defaul
     std::unordered_map<std::string, int> key_seen_count;
     bool warned_nonstar = false;
 
-    auto warn = [&](int line, std::string msg) {
-        out.messages.push_back(
-            Message{Message::Level::Warn, line, std::move(msg)});
+    const auto warn = [&](int warn_line, std::string msg) {
+        out.messages.push_back(Message{Message::Level::Warn, warn_line, std::move(msg)});
     };
 
-    const auto bump_dup = [&](const std::string& key, int line) {
+    const auto bump_dup = [&](const std::string& key, int warn_line) {
         int& n = key_seen_count[key];
         ++n;
-        if (n > 1) {
-            warn(line, "Duplicate key '" + key + "'; last one wins");
-        }
+        if (n > 1) warn(warn_line, "Duplicate key '" + key + "'; last one wins");
     };
 
-    for (const auto& a : p.assignments) {
+    for (const auto& a : parser.get_assignments()) {
         if (!a.starred) {
             if (!warned_nonstar) {
                 warned_nonstar = true;
@@ -661,96 +739,51 @@ LoadResult load_from_string(std::string_view input, const settings::Data& defaul
 std::string write_overrides_only(const settings::Data& current,
                                  const settings::Data& defaults,
                                  int current_version) {
-    struct Line {
-        std::string section;
-        std::string key;
-        std::string literal;
-    };
-
-    std::vector<Line> lines;
+    std::vector<write_line> lines;
     lines.reserve(32);
 
-    auto add_bool = [&](std::string section, std::string key, bool v,
-                        bool def) {
-        if (v == def) return;
-        lines.push_back(Line{std::move(section), std::move(key),
-                             v ? "true" : "false"});
-    };
-
-    auto add_str = [&](std::string section, std::string key,
-                       const std::string& v, const std::string& def) {
-        if (v == def) return;
-        lines.push_back(
-            Line{std::move(section), std::move(key), fmt_str(v)});
-    };
-
-    auto add_f32 = [&](std::string section, std::string key, float v,
-                       float def) {
-        if (f32_bits_equal(v, def)) return;
-        lines.push_back(
-            Line{std::move(section), std::move(key), fmt_f32_bits(v)});
-    };
-
-    auto add_i32x2 = [&](std::string section, std::string key, int32_t a,
-                         int32_t b, int32_t da, int32_t db) {
-        if (a == da && b == db) return;
-        lines.push_back(Line{std::move(section), std::move(key),
-                             fmt_i32x2(a, b)});
-    };
-
     // Canonical ordering by section then key (manual; stable & deterministic).
-    add_f32("audio", "master_volume", current.master_volume,
-            defaults.master_volume);
-    add_f32("audio", "music_volume", current.music_volume, defaults.music_volume);
-    add_f32("audio", "sound_volume", current.sound_volume, defaults.sound_volume);
+    push_override_f32(lines, "audio", "master_volume", current.master_volume,
+                      defaults.master_volume);
+    push_override_f32(lines, "audio", "music_volume", current.music_volume,
+                      defaults.music_volume);
+    push_override_f32(lines, "audio", "sound_volume", current.sound_volume,
+                      defaults.sound_volume);
 
-    add_bool("video", "is_fullscreen", current.isFullscreen, defaults.isFullscreen);
-    add_i32x2("video", "resolution", (int32_t) current.resolution.width,
-              (int32_t) current.resolution.height,
-              (int32_t) defaults.resolution.width,
-              (int32_t) defaults.resolution.height);
-    add_bool("video", "vsync_enabled", current.vsync_enabled, defaults.vsync_enabled);
-    add_bool("video", "enable_postprocessing", current.enable_postprocessing,
-             defaults.enable_postprocessing);
-    add_bool("video", "enable_lighting", current.enable_lighting,
-             defaults.enable_lighting);
-    add_bool("video", "snap_camera_to_90", current.snapCameraTo90,
-             defaults.snapCameraTo90);
+    push_override_bool(lines, "video", "is_fullscreen", current.isFullscreen,
+                       defaults.isFullscreen);
+    push_override_i32x2(lines, "video", "resolution",
+                        (int32_t) current.resolution.width,
+                        (int32_t) current.resolution.height,
+                        (int32_t) defaults.resolution.width,
+                        (int32_t) defaults.resolution.height);
+    push_override_bool(lines, "video", "vsync_enabled", current.vsync_enabled,
+                       defaults.vsync_enabled);
+    push_override_bool(lines, "video", "enable_postprocessing",
+                       current.enable_postprocessing,
+                       defaults.enable_postprocessing);
+    push_override_bool(lines, "video", "enable_lighting", current.enable_lighting,
+                       defaults.enable_lighting);
+    push_override_bool(lines, "video", "snap_camera_to_90", current.snapCameraTo90,
+                       defaults.snapCameraTo90);
 
-    add_str("ui", "lang_name", current.lang_name, defaults.lang_name);
-    add_str("ui", "ui_theme", current.ui_theme, defaults.ui_theme);
-    add_bool("ui", "show_streamer_safe_box", current.show_streamer_safe_box,
-             defaults.show_streamer_safe_box);
+    push_override_str(lines, "ui", "lang_name", current.lang_name, defaults.lang_name);
+    push_override_str(lines, "ui", "ui_theme", current.ui_theme, defaults.ui_theme);
+    push_override_bool(lines, "ui", "show_streamer_safe_box",
+                       current.show_streamer_safe_box,
+                       defaults.show_streamer_safe_box);
 
-    add_str("network", "username", current.username, defaults.username);
-    add_str("network", "last_ip_joined", current.last_ip_joined,
-            defaults.last_ip_joined);
+    push_override_str(lines, "network", "username", current.username, defaults.username);
+    push_override_str(lines, "network", "last_ip_joined", current.last_ip_joined,
+                      defaults.last_ip_joined);
 
     std::ostringstream os;
     os << "version: " << current_version << ";\n";
 
-    // Emit in section groups; only emit a section if it has overrides.
-    auto emit_section = [&](std::string_view section_name) {
-        bool any = false;
-        for (const auto& l : lines) {
-            if (l.section == section_name) {
-                any = true;
-                break;
-            }
-        }
-        if (!any) return;
-
-        os << "\n[" << section_name << "]\n";
-        for (const auto& l : lines) {
-            if (l.section != section_name) continue;
-            os << l.key << "* = " << l.literal << ";\n";
-        }
-    };
-
-    emit_section("audio");
-    emit_section("video");
-    emit_section("ui");
-    emit_section("network");
+    emit_section(os, lines, "audio");
+    emit_section(os, lines, "video");
+    emit_section(os, lines, "ui");
+    emit_section(os, lines, "network");
 
     return os.str();
 }
