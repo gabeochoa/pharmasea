@@ -21,6 +21,23 @@ Source notes: `serializing_notes.md` (lines 1–22).
 
 ---
 
+## Current decisions (based on follow-up)
+
+1. **Defaults source of truth**: TBD (recommendation below).
+2. **File location/name**: keep the same path and filename for now (currently `settings.bin` under the save-games folder).
+3. **Key naming**: snake_case.
+4. **Unknown/deprecated keys**: ignore and `log_warn`.
+5. **Duplicate keys**: `log_warn`, but last-one-wins.
+6. **Comments**: support both `#` and `//`.
+7. **Migration**: ignore the old binary format for now (no backwards compatibility).
+
+Recommendation for (1):
+
+- **Short term (Phase 2–3)**: keep C++ as the authority for defaults while we stabilize the runtime format.
+- **Long term (Phase 4+)**: make the schema/DSL authoritative and generate the C++ tables, so version annotations/defaults/types are truly maintained in one place.
+
+---
+
 ## High-level approach
 
 ### Defaults live in code; file stores overrides
@@ -323,6 +340,21 @@ LOG_LEVEL*  = i32(3);
 lang_name*  = str("en_us");
 ```
 
+### Strings and escaping
+
+Based on current `resources/config/*.json`, strings are mostly:
+
+- Identifiers (e.g. `"GAMEPAD_AXIS_LEFT_Y"`, `"en_us"`, `"pharmasea"`)
+- Filenames/paths (e.g. `"constan.ttf"`, `"models/kennynl"`)
+
+So we can start with **minimal escaping**:
+
+- `\"` for quotes
+- `\\` for backslash
+- `\n`, `\t` (optional but easy)
+
+Unicode escaping can be deferred unless we actually need it.
+
 ### Small structs (example)
 
 ```text
@@ -412,4 +444,17 @@ This design matches the original notes:
 - **Float precision**: `f32(0x...)`
 - **Default skipping**: `*` marks overrides (and the canonical file contains only overrides)
 - **Versioned schema**: lifecycle tags live in code; old files can be invalidated on version bumps
+
+---
+
+## Future: reusing the format to replace JSON configs
+
+Your existing “JSON” configs already rely on non-standard JSON features (notably `//` comments). If we eventually want to replace `resources/config/*.json` with the same family of formats, we’ll likely need:
+
+- Arrays/lists (e.g. `position_offset: [0, -0.5, 0]`)
+- Objects/maps (nested structures)
+- Numbers (int + float), strings, bool
+- Comments (`#` and `//`) and possibly trailing commas
+
+We don’t need to implement all of that for the settings file itself (key/value overrides are enough), but it’s a useful constraint if we want to design the DSL so it can grow into a general config format later.
 
