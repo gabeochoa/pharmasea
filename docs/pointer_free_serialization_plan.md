@@ -67,6 +67,9 @@ We will execute **Option 3 (handle system: slot + generation + dense iteration)*
 
 ### Phase 2 — Make the runtime entity store handle-native (dense + stable slots)
 
+**Important note (Phase 1 bridge)**:
+Today PharmaSea owns entity lifetime in `src/entity_helper.*` (not `vendor/afterhours::EntityHelper`). That means any O(1) handle resolution must live alongside PharmaSea’s storage until we migrate ownership. Phase 2 explicitly removes that duplication by switching the backing store to Afterhours’ handle-native entity store.
+
 PharmaSea currently stores entities as `std::vector<std::shared_ptr<Entity>>` and deletes via `erase/remove_if`, which breaks stable indexing.
 
 - **Implement stable slots + dense list** (compatibility-first):
@@ -76,6 +79,9 @@ PharmaSea currently stores entities as `std::vector<std::shared_ptr<Entity>>` an
 - **Migration approach**:
   - First, implement the storage change behind `EntityHelper` while keeping existing iteration APIs working.
   - Then gradually switch “persistent relationships” to store handles (where any still exist).
+- **Remove Phase 1 duplication**:
+  - Delete PharmaSea-local handle bookkeeping (slot/free/id mapping) once entity lifetime is delegated to Afterhours.
+  - `handle_for/resolve` should call Afterhours’ implementation (or be trivially layered over it).
 
 **Exit criteria**: entity lifetime (create/cleanup/delete) preserves handle validity guarantees; iteration remains dense and fast.
 
