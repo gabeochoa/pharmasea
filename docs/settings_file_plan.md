@@ -64,7 +64,19 @@ This matches the original intent: quickly skip whole categories / keys that are 
 - Each key/value can also carry lifecycle metadata:
   - version added
   - version deprecated (optional)
-  - version removed (optional; not supported/accepted after this)
+  - version removed (optional; not supported/accepted at/after this)
+
+#### Removal semantics (important)
+
+To avoid off-by-one confusion, treat “removed” as **exclusive**:
+
+- A key with `removed_in_version = 5` is valid only for PSCFG versions \(< 5\).
+- In other words: it is valid up through **version 4**, and invalid starting at **version 5**.
+
+Because this field is really “the first version where it stops working”, a clearer name than `version_removed` is:
+
+- `removed_in_version` (recommended), or equivalently
+- `until_version_exclusive`
 
 ### Grammar (informal)
 
@@ -161,7 +173,9 @@ ui_theme*  = str("pharmasea");
    - Section headers only affect grouping/debug logging (optional).
    - Assignments:
      - If key is unknown → `log_warn` and ignore.
-     - If key is known but not valid for this version (deprecated) → `log_warn` and ignore.
+      - Lifecycle handling:
+        - If key is deprecated in this version → `log_warn`, but **accept** it.
+        - If key is removed in this version → `log_error` and ignore.
      - If key appears multiple times → `log_warn`, **last one wins**.
      - If a line is malformed (syntax error, bad literal, etc.) → `log_warn`, **skip the line** and continue.
      - If assignment is not starred (a “non-star assignment”):
@@ -173,7 +187,7 @@ ui_theme*  = str("pharmasea");
 
 - Goal: **preserve user formatting** as much as practical.
 - Always ensure `version: CURRENT_SETTINGS_VERSION;` exists at the top (update in place if present).
-- Update/insert only the keys that are changing; avoid rewriting unrelated lines.
+- Update/insert **only the lines that changed**; avoid rewriting unrelated lines.
 - Keep inline and full-line comments intact when possible.
 - When writing a brand-new file, emit a canonical, deterministic ordering.
 
@@ -203,12 +217,13 @@ Instead of a separate DSL file immediately, we can represent the schema in C++ w
 
 Concept sketch (shape):
 
-- `SettingsValue { name, version_added, version_deprecated, version_removed }`
+- `SettingsValue { name, version_added, version_deprecated, removed_in_version }`
 - `SettingsSection { name, values[] }`
 
 Example entry:
 
-- `{ "is_fullscreen", v1, null, null }`
+- `{ "is_fullscreen", v1, null, null }` (never removed)
+- `{ "old_value", v2, v3, v5 }` (deprecated in v3, removed starting v5)
 
 ---
 
