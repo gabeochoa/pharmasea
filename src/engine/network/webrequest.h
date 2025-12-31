@@ -1,6 +1,6 @@
 
 #pragma once
-#include "afterhours/expected.hpp"
+#include <expected.hpp>
 #include <string>
 
 namespace network {

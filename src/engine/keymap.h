@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "afterhours/expected.hpp"
+#include <expected.hpp>
 #include <tuple>
 #include <unordered_map>
 //
