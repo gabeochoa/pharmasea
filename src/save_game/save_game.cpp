@@ -8,6 +8,7 @@
 #include "../engine/files.h"
 #include "../engine/log.h"
 #include "../network/polymorphic_components.h"
+#include "../entity_component_serialization.h"
 #include "../components/has_day_night_timer.h"
 #include "../components/is_bank.h"
 
