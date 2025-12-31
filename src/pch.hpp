@@ -14,7 +14,7 @@
 #include <fmt/xchar.h>
 
 // afterhours helpers
-#include "afterhours/src/bitset_utils.h"
+#include "cursor/remove-serializing-pointers-438b/src/bitset_utils.h"
 
 // nlohmann json
 #include <nlohmann/json.hpp>

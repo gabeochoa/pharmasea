@@ -1,13 +1,13 @@
 # Afterhours: migrating to a handle-based entity store (slots + generation + dense iteration)
 
-This doc describes what it would take to implement the **stable-slot handle system** (slot index + generation, with a dense live list for iteration) **inside `vendor/afterhours`**, and which parts would be **API-breaking** vs what can be done **without breaking existing public APIs**.
+This doc describes what it would take to implement the **stable-slot handle system** (slot index + generation, with a dense live list for iteration) **inside `cursor/remove-serializing-pointers-438b`**, and which parts would be **API-breaking** vs what can be done **without breaking existing public APIs**.
 
 ---
 
 ## Current Afterhours APIs relevant to this change
 
 ### Entity identity & reference types
-In `vendor/afterhours/src/core/entity.h`:
+In `cursor/remove-serializing-pointers-438b/src/core/entity.h`:
 
 - `using EntityID = int;` and `Entity::id` is assigned from a global atomic increment.
 - `using RefEntity = std::reference_wrapper<Entity>;`
@@ -16,7 +16,7 @@ In `vendor/afterhours/src/core/entity.h`:
 These are *non-owning* references. They are convenient, but they can become invalid if an entity is deleted (because they store a direct reference).
 
 ### Entity storage & iteration
-In `vendor/afterhours/src/core/entity_helper.h`:
+In `cursor/remove-serializing-pointers-438b/src/core/entity_helper.h`:
 
 - `using Entities = std::vector<std::shared_ptr<Entity>>;`
 - `EntityHelper` stores:
@@ -27,13 +27,13 @@ In `vendor/afterhours/src/core/entity_helper.h`:
 - `EntityHelper::getEntityForID` is a linear scan over `get_entities()`.
 - `EntityHelper::forEachEntity` loops over `get_entities()`.
 
-In `vendor/afterhours/src/core/entity_query.h`:
+In `cursor/remove-serializing-pointers-438b/src/core/entity_query.h`:
 
 - `EntityQuery` takes a snapshot of the `Entities` vector (copies it) and then builds `RefEntities` by pushing references to every `Entity` in that vector.
 - It already expects the `Entities` container to be **dense** (it iterates a contiguous vector).
 
 ### Public API boundary (important for “breaking” analysis)
-`vendor/afterhours/PLUGIN_API.md` defines the plugin/public boundary:
+`cursor/remove-serializing-pointers-438b/PLUGIN_API.md` defines the plugin/public boundary:
 
 - “Allowed” access is primarily through `EntityHelper` static methods and `EntityQuery`.
 - It explicitly calls out that direct access to `entities_DO_NOT_USE`, `temp_entities`, etc. is **forbidden**, even though the struct members are currently public in the header.
@@ -341,7 +341,7 @@ This is the “do the work” plan. Each phase has:
 ### Phase 0 — Ground truth & guardrails
 
 **Tasks**
-- Read `vendor/afterhours/PLUGIN_API.md` and treat it as the compatibility contract.
+- Read `cursor/remove-serializing-pointers-438b/PLUGIN_API.md` and treat it as the compatibility contract.
 - Identify any **known consumers** (PharmaSea, Afterhours examples/plugins) that might:
   - access `EntityHelper` fields directly,
   - depend on `EntityQuery` behavior around temp entities,
@@ -359,7 +359,7 @@ This is the “do the work” plan. Each phase has:
 ### Phase 1 — Add `EntityHandle` (additive only)
 
 **Tasks**
-- Add `struct EntityHandle { uint32_t slot; uint32_t gen; };` to `vendor/afterhours/src/core/entity.h`.
+- Add `struct EntityHandle { uint32_t slot; uint32_t gen; };` to `cursor/remove-serializing-pointers-438b/src/core/entity.h`.
 - Add helpers:
   - `static constexpr EntityHandle invalid();`
   - `bool valid() const;`
@@ -375,7 +375,7 @@ This is the “do the work” plan. Each phase has:
 ### Phase 2 — Add handle APIs to `EntityHelper` (still additive)
 
 **Tasks**
-- Add these static methods in `vendor/afterhours/src/core/entity_helper.h`:
+- Add these static methods in `cursor/remove-serializing-pointers-438b/src/core/entity_helper.h`:
   - `static EntityHandle handle_of(const Entity& e);`
   - `static Entity* resolve_ptr(EntityHandle h);`
   - `static OptEntity resolve(EntityHandle h);`
@@ -391,7 +391,7 @@ This is the “do the work” plan. Each phase has:
 ### Phase 3 — Implement slot metadata on `Entity` (decision: allowed)
 
 **Tasks**
-- Add runtime-only fields to `afterhours::Entity` (in `vendor/afterhours/src/core/entity.h`) to support O(1) `handle_of`:
+- Add runtime-only fields to `afterhours::Entity` (in `cursor/remove-serializing-pointers-438b/src/core/entity.h`) to support O(1) `handle_of`:
   - `uint32_t ah_slot_index` (or similar name)
   - optionally `uint32_t ah_slot_gen_snapshot` (optional; generation is usually stored in slots)
 - Initialize them for safety:
@@ -407,7 +407,7 @@ This is the “do the work” plan. Each phase has:
 ### Phase 4 — Add slot bookkeeping to `EntityHelper` (compatibility-first design)
 
 **Tasks**
-- In `vendor/afterhours/src/core/entity_helper.h`, add internal structures:
+- In `cursor/remove-serializing-pointers-438b/src/core/entity_helper.h`, add internal structures:
   - `struct Slot { EntityType ent; uint32_t gen; uint32_t dense_index; };`
   - `std::vector<Slot> slots;`
   - `std::vector<uint32_t> free_list;`
@@ -471,7 +471,7 @@ This is the “do the work” plan. Each phase has:
 ### Phase 7 — Add opt-in query APIs for handles (non-breaking)
 
 **Tasks**
-- Add new methods to `EntityQuery` (in `vendor/afterhours/src/core/entity_query.h`):
+- Add new methods to `EntityQuery` (in `cursor/remove-serializing-pointers-438b/src/core/entity_query.h`):
   - `std::vector<EntityHandle> gen_handles() const;`
   - `std::optional<EntityHandle> gen_first_handle() const;`
 - Implement by mapping over existing `gen()` results and calling `EntityHelper::handle_of`.

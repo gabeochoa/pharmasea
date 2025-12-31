@@ -32,7 +32,7 @@ NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
 # IMPORTANT (Linux): avoid colliding with libc's <strings.h>.
 # Using -iquote keeps project headers available for `#include "..."` without
 # letting system headers accidentally resolve to `src/strings.h`.
-INCLUDES = -I$(GNS_INC) -Ivendor/ -iquote src
+INCLUDES = -I. -I$(GNS_INC) -Ivendor/ -iquote src
 LIBS = -L$(GNS_LIBDIR) -lGameNetworkingSockets -Lvendor/ $(RAYLIB_LIB)
 
 # backward-cpp (Debug only) - cache pkg-config calls

@@ -1,4 +1,4 @@
 #pragma once
 
 // Forward to afterhours implementation
-#include "../../vendor/afterhours/src/singleton.h"
+#include "../../cursor/remove-serializing-pointers-438b/src/singleton.h"

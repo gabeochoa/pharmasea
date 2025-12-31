@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../vec_util.h"
-#include "afterhours/src/plugins/color.h"
+#include "cursor/remove-serializing-pointers-438b/src/plugins/color.h"
 
 namespace ui {
 namespace color {

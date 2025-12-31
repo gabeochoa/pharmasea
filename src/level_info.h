@@ -52,7 +52,11 @@ struct LevelInfo {
         s.value8b(num_entities);
         s.container(entities, num_entities,
                     [](S& s2, std::shared_ptr<Entity>& entity) {
-                        s2.ext(entity, bitsery::ext::StdSmartPtr{});
+                        // Pointer-free encoding: serialize entity by value.
+                        if (!entity) {
+                            entity = std::make_shared<Entity>();
+                        }
+                        s2.object(*entity);
                     });
         s.value1b(was_generated);
         s.text1b(seed, MAX_SEED_LENGTH);

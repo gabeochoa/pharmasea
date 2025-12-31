@@ -83,7 +83,7 @@ using raylib::Rectangle;
 #ifndef AFTER_HOURS_USE_RAYLIB
 #define AFTER_HOURS_USE_RAYLIB
 #endif
-#include "afterhours/src/plugins/color.h"
+#include "cursor/remove-serializing-pointers-438b/src/plugins/color.h"
 using Color = afterhours::Color;
 
 // Forward declaration for synthetic key state (bypass functionality)

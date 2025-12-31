@@ -14,9 +14,9 @@ namespace std {
     using tl::expected;
     using tl::unexpected;
 }
-#include "afterhours/ah.h"
-#include "afterhours/src/bitset_utils.h"
-#include "afterhours/src/library.h"
+#include "cursor/remove-serializing-pointers-438b/ah.h"
+#include "cursor/remove-serializing-pointers-438b/src/bitset_utils.h"
+#include "cursor/remove-serializing-pointers-438b/src/library.h"
 
 namespace afterhours {
 template<typename T>

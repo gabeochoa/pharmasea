@@ -8,7 +8,7 @@ extern bool disable_models_flag;
 #include <memory>
 #include <utility>
 
-#include "afterhours/src/font_helper.h"
+#include "cursor/remove-serializing-pointers-438b/src/font_helper.h"
 #include "config_key_library.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/settings.h"

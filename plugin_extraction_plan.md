@@ -432,16 +432,16 @@ Extract reusable features from pharmasea into afterhours plugins. Focus on featu
 ## Files to Extract
 
 **Priority 1**:
-- `src/network/` → `vendor/afterhours/src/plugins/network.h`
-- `src/strings.h`, `src/translations/` → `vendor/afterhours/src/plugins/i18n.h`
-- `src/engine/sound_library.h`, `src/engine/music_library.h` → `vendor/afterhours/src/plugins/audio.h`
-- `src/engine/settings.h`, `src/engine/files.h` → `vendor/afterhours/src/plugins/settings.h`
+- `src/network/` → `cursor/remove-serializing-pointers-438b/src/plugins/network.h`
+- `src/strings.h`, `src/translations/` → `cursor/remove-serializing-pointers-438b/src/plugins/i18n.h`
+- `src/engine/sound_library.h`, `src/engine/music_library.h` → `cursor/remove-serializing-pointers-438b/src/plugins/audio.h`
+- `src/engine/settings.h`, `src/engine/files.h` → `cursor/remove-serializing-pointers-438b/src/plugins/settings.h`
 
 **Priority 2**:
-- `src/engine/statemanager.h` → `vendor/afterhours/src/plugins/state_manager.h`
-- `src/engine/files.h` → `vendor/afterhours/src/plugins/files.h`
-- `src/engine/path_request_manager.h`, `src/engine/bfs.h`, `src/engine/astar.h` → `vendor/afterhours/src/plugins/pathfinding.h`
-- `src/engine/trigger_on_dt.h` → `vendor/afterhours/src/plugins/timer.h`
+- `src/engine/statemanager.h` → `cursor/remove-serializing-pointers-438b/src/plugins/state_manager.h`
+- `src/engine/files.h` → `cursor/remove-serializing-pointers-438b/src/plugins/files.h`
+- `src/engine/path_request_manager.h`, `src/engine/bfs.h`, `src/engine/astar.h` → `cursor/remove-serializing-pointers-438b/src/plugins/pathfinding.h`
+- `src/engine/trigger_on_dt.h` → `cursor/remove-serializing-pointers-438b/src/plugins/timer.h`
 
 ## Dependencies to Consider
 

@@ -305,3 +305,44 @@ using MyPolymorphicClasses =
     bitsery::ext::PolymorphicClassesList<BaseComponent,
                                          afterhours::BaseComponent, AIComponent,
                                          Job, afterhours::Entity>;
+
+namespace {
+// Phase 3 guardrail: ensure we don't accidentally add pointer-like types as
+// "snapshot surface" template parameters for persisted component APIs.
+consteval int enforce_pointer_free_polymorphic_component_types() {
+    afterhours::snapshot<
+        // BEGIN (mirror PolymorphicBaseClass<BaseComponent>)
+        Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
+        CanBeHighlighted, CanHighlightOthers, CanHoldFurniture, CanBeGhostPlayer,
+        CanPerformJob, ModelRenderer, CanBePushed, CustomHeldItemPosition,
+        HasWork, HasBaseSpeed, IsSolid, HasPatience, HasProgression, IsRotatable,
+        CanGrabFromOtherFurniture, ConveysHeldItem, HasWaitingQueue,
+        CanBeTakenFrom, IsItemContainer, UsesCharacterModel, HasDynamicModelName,
+        IsTriggerArea, HasSpeechBubble, Indexer, IsSpawner, HasRopeToItem,
+        HasSubtype, IsItem, IsDrink, AddsIngredient, CanOrderDrink,
+        IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
+        IsFreeInStore, IsToilet, CanPathfind, IsRoundSettingsManager, AIComponent,
+        HasFishingGame, IsStoreSpawned, AICloseTab, AIPlayJukebox,
+        HasLastInteractedCustomer, CanChangeSettingsInteractively, IsNuxManager,
+        IsNux, AIWandering, CollectsUserInput, IsSnappable, HasClientID,
+        RespondsToUserInput, CanHoldHandTruck, RespondsToDayNight,
+        HasDayNightTimer, CollectsCustomerFeedback, IsSquirter, CanBeHeld,
+        BypassAutomationState
+        // END
+        >();
+
+    afterhours::snapshot<
+        // Mirror PolymorphicBaseClass<AIComponent>
+        AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AIPlayJukebox,
+        AICloseTab, AIWandering>();
+
+    afterhours::snapshot<
+        // Mirror PolymorphicBaseClass<CanBeHeld>
+        CanBeHeld_HT>();
+
+    return 0;
+}
+
+constexpr int _pointer_free_polymorphic_component_types_enforced =
+    enforce_pointer_free_polymorphic_component_types();
+}  // namespace

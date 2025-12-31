@@ -13,7 +13,6 @@ using afterhours::RefEntity;
 #include "bitsery/ext/std_smart_ptr.h"
 #include "entity_type.h"
 //
-#include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
 
 // TODO memory? we could keep track of deleted entities and reuse those ids if
@@ -29,12 +28,8 @@ using Item = Entity;
 
 namespace bitsery {
 
-using bitsery::ext::PointerObserver;
-using bitsery::ext::PointerOwner;
-using bitsery::ext::PointerType;
 using bitsery::ext::StdBitset;
 using bitsery::ext::StdMap;
-using bitsery::ext::StdOptional;
 using bitsery::ext::StdSmartPtr;
 
 template<typename S>
@@ -56,20 +51,22 @@ void serialize(S& s, Entity& entity) {
 
 template<typename S>
 void serialize(S& s, std::shared_ptr<Entity>& entity) {
-    s.ext(entity, StdSmartPtr{});
+    // Pointer-free encoding: entities are serialized by value.
+    //
+    // NOTE: This does not preserve aliasing across multiple shared_ptrs to the
+    // same Entity, but our game state should not rely on that. The goal is to
+    // avoid serializing pointer identity/address data.
+    if (!entity) {
+        entity = std::make_shared<Entity>();
+    }
+    s.object(*entity);
 }
 
 template<typename S>
-void serialize(S& s, RefEntity ref) {
-    Entity& e = ref.get();
-    Entity* eptr = &e;
-    s.ext8b(eptr, PointerObserver{});
-}
+void serialize(S&, RefEntity) = delete;
 
 template<typename S>
-void serialize(S& s, OptEntity opt) {
-    s.ext(opt, StdOptional{});
-}
+void serialize(S&, OptEntity) = delete;
 }  // namespace bitsery
 
 bool check_type(const Entity& entity, EntityType type);
