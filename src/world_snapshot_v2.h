@@ -41,7 +41,9 @@ struct EntityRecordV2 {
 
     // Transitional/debug: the runtime EntityID value at capture time.
     // Do not rely on this for stable identity.
-    afterhours::EntityID legacy_id = afterhours::INVALID_ENTITY_ID;
+    // NOTE: avoid depending on a particular afterhours invalid-ID constant name.
+    // Afterhours uses -1 as the invalid EntityID sentinel.
+    afterhours::EntityID legacy_id = afterhours::EntityID{-1};
 
     int entity_type = 0;
     afterhours::ComponentBitSet component_set{};
