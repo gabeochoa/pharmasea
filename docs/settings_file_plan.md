@@ -1,8 +1,8 @@
-# Versioned Settings File Plan (non-JSON)
+# PSCFG: Versioned Settings File Format (non-JSON)
 
 Source notes: `serializing_notes.md` (lines 1–22).
 
-This plan defines a **versioned**, **human-editable**, **diff-friendly** settings file that:
+This plan defines **PSCFG**, a **versioned**, **human-editable**, **diff-friendly** settings file format that:
 
 - Stores **floats exactly** via IEEE-754 hex bits
 - Uses `*` to mark **overrides** (non-default values)
@@ -21,6 +21,14 @@ This plan defines a **versioned**, **human-editable**, **diff-friendly** setting
 7. **Defaults source of truth**:
    - **Near-term**: C++ remains authoritative while the runtime format stabilizes.
    - **Later**: schema/DSL becomes authoritative + codegen (optional, Phase 4).
+
+---
+
+## Naming
+
+- **Format name**: **PSCFG**
+- **Recommended extension**: `.pscfg`
+- **Current on-disk filename**: still `settings.bin` (per current decision), even though the contents will be PSCFG text.
 
 ---
 
