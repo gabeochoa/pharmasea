@@ -319,6 +319,18 @@ Recommended convention:
 
 To keep parsing simple and type-safe, values use explicit typed literals.
 
+### Literal set (v1 / focus for initial implementation)
+
+Implement a small, explicit set of literals first (enough to cover current settings):
+
+- `bool`: `true` / `false`
+- `i32(n)`: signed 32-bit integer
+- `str("...")`: UTF-8 string with minimal escaping
+- `f32(0xXXXXXXXX)`: 32-bit float stored as IEEE-754 hex bits (exact)
+- `i32x2(a, b)`: 2-tuple for resolution-like values (e.g. width/height)
+
+Everything else is out of scope until we have a concrete need.
+
 ### Floats (exact)
 
 Store floats as IEEE-754 bits in hex:
@@ -447,14 +459,7 @@ This design matches the original notes:
 
 ---
 
-## Future: reusing the format to replace JSON configs
+## Out of scope (for now)
 
-Your existing “JSON” configs already rely on non-standard JSON features (notably `//` comments). If we eventually want to replace `resources/config/*.json` with the same family of formats, we’ll likely need:
-
-- Arrays/lists (e.g. `position_offset: [0, -0.5, 0]`)
-- Objects/maps (nested structures)
-- Numbers (int + float), strings, bool
-- Comments (`#` and `//`) and possibly trailing commas
-
-We don’t need to implement all of that for the settings file itself (key/value overrides are enough), but it’s a useful constraint if we want to design the DSL so it can grow into a general config format later.
+Replacing `resources/config/*.json` with this format would require richer data model support (arrays/objects, etc.). For now we’re focusing on **the literal set above** so the settings loader/writer can ship quickly.
 
