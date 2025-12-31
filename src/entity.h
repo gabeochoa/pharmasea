@@ -46,7 +46,6 @@ template<typename S>
 void serialize(S& s, Entity& entity) {
     s.value4b(entity.id);
     s.value4b(entity.entity_type);
-
     s.ext(entity.componentSet, StdBitset{});
     s.ext(entity.tags, StdBitset{});
     s.value1b(entity.cleanup);
