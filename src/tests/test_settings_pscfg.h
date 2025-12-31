@@ -5,6 +5,7 @@
 
 #include "../engine/assert.h"
 #include "../engine/settings_pscfg.h"
+#include "../engine/settings_schema.h"
 
 namespace tests {
 
@@ -35,7 +36,7 @@ last_ip_joined* = str("127.0.0.1");
 
     const auto res =
         settings_pscfg::load_from_string(txt, defaults,
-                                         settings::SETTINGS_PSCFG_VERSION);
+                                         settings_schema::PSCFG_VERSION);
 
     VALIDATE(!res.used_defaults, "expected settings file to be accepted");
 
@@ -70,7 +71,7 @@ master_volume* = f32(0x3F000000);
 
     const auto res =
         settings_pscfg::load_from_string(txt, defaults,
-                                         settings::SETTINGS_PSCFG_VERSION);
+                                         settings_schema::PSCFG_VERSION);
     VALIDATE(res.used_defaults, "expected version mismatch to use defaults");
     VALIDATE(std::bit_cast<uint32_t>(res.data.master_volume) ==
                  std::bit_cast<uint32_t>(defaults.master_volume),
@@ -86,10 +87,10 @@ inline void test_settings_pscfg_write_roundtrip() {
 
     const std::string out =
         settings_pscfg::write_overrides_only(cur, defaults,
-                                             settings::SETTINGS_PSCFG_VERSION);
+                                             settings_schema::PSCFG_VERSION);
     const auto loaded =
         settings_pscfg::load_from_string(out, defaults,
-                                         settings::SETTINGS_PSCFG_VERSION);
+                                         settings_schema::PSCFG_VERSION);
 
     VALIDATE(!loaded.used_defaults, "expected written file to load");
     VALIDATE(std::bit_cast<uint32_t>(loaded.data.music_volume) == 0x3E99999Au,

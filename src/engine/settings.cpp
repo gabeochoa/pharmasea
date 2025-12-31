@@ -3,6 +3,7 @@
 
 #include "../preload.h"
 #include "settings_pscfg.h"
+#include "settings_schema.h"
 
 Settings Settings::instance;
 bool Settings::created = false;
@@ -177,7 +178,7 @@ bool Settings::load_save_file() {
 
     const auto res =
         settings_pscfg::load_from_string(buf_str, defaults,
-                                         settings::SETTINGS_PSCFG_VERSION);
+                                         settings_schema::PSCFG_VERSION);
     for (const auto& m : res.messages) {
         const auto level = (m.level == settings_pscfg::Message::Level::Error)
                                ? LogLevel::LOG_ERROR
@@ -208,7 +209,7 @@ bool Settings::write_save_file() {
     const auto defaults = settings::Data();
     const std::string out =
         settings_pscfg::write_overrides_only(data, defaults,
-                                             settings::SETTINGS_PSCFG_VERSION);
+                                             settings_schema::PSCFG_VERSION);
     ofs << out;
     ofs.close();
 

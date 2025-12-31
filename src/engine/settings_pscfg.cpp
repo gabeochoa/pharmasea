@@ -13,6 +13,7 @@
 #include <utility>
 #include <vector>
 
+#include "settings_schema.h"
 #include "util.h"
 
 namespace settings_pscfg {
@@ -610,127 +611,57 @@ LoadResult load_from_string(std::string_view input, const settings::Data& defaul
         // We currently ignore sections for key identity.
         bump_dup(a.key, a.line);
 
-        // Manual schema mapping (Phase 1/2: C++ is authoritative).
-        if (a.key == "master_volume") {
-            if (!value_is_f32(a.value)) {
-                warn(a.line, "Type mismatch for 'master_volume'; keeping default");
-                continue;
-            }
-            out.data.master_volume = std::get<float>(a.value);
-            continue;
-        }
-        if (a.key == "music_volume") {
-            if (!value_is_f32(a.value)) {
-                warn(a.line, "Type mismatch for 'music_volume'; keeping default");
-                continue;
-            }
-            out.data.music_volume = std::get<float>(a.value);
-            continue;
-        }
-        if (a.key == "sound_volume") {
-            if (!value_is_f32(a.value)) {
-                warn(a.line, "Type mismatch for 'sound_volume'; keeping default");
-                continue;
-            }
-            out.data.sound_volume = std::get<float>(a.value);
-            continue;
-        }
-        if (a.key == "lang_name") {
-            if (!value_is_str(a.value)) {
-                warn(a.line, "Type mismatch for 'lang_name'; keeping default");
-                continue;
-            }
-            out.data.lang_name = std::get<std::string>(a.value);
-            continue;
-        }
-        if (a.key == "ui_theme") {
-            if (!value_is_str(a.value)) {
-                warn(a.line, "Type mismatch for 'ui_theme'; keeping default");
-                continue;
-            }
-            out.data.ui_theme = std::get<std::string>(a.value);
-            continue;
-        }
-        if (a.key == "username") {
-            if (!value_is_str(a.value)) {
-                warn(a.line, "Type mismatch for 'username'; keeping default");
-                continue;
-            }
-            out.data.username = std::get<std::string>(a.value);
-            continue;
-        }
-        if (a.key == "last_ip_joined") {
-            if (!value_is_str(a.value)) {
-                warn(a.line, "Type mismatch for 'last_ip_joined'; keeping default");
-                continue;
-            }
-            out.data.last_ip_joined = std::get<std::string>(a.value);
-            continue;
-        }
-        if (a.key == "show_streamer_safe_box") {
-            if (!value_is_bool(a.value)) {
-                warn(a.line,
-                     "Type mismatch for 'show_streamer_safe_box'; keeping default");
-                continue;
-            }
-            out.data.show_streamer_safe_box = std::get<bool>(a.value);
-            continue;
-        }
-        if (a.key == "enable_postprocessing") {
-            if (!value_is_bool(a.value)) {
-                warn(a.line,
-                     "Type mismatch for 'enable_postprocessing'; keeping default");
-                continue;
-            }
-            out.data.enable_postprocessing = std::get<bool>(a.value);
-            continue;
-        }
-        if (a.key == "enable_lighting") {
-            if (!value_is_bool(a.value)) {
-                warn(a.line,
-                     "Type mismatch for 'enable_lighting'; keeping default");
-                continue;
-            }
-            out.data.enable_lighting = std::get<bool>(a.value);
-            continue;
-        }
-        if (a.key == "snap_camera_to_90") {
-            if (!value_is_bool(a.value)) {
-                warn(a.line,
-                     "Type mismatch for 'snap_camera_to_90'; keeping default");
-                continue;
-            }
-            out.data.snapCameraTo90 = std::get<bool>(a.value);
-            continue;
-        }
-        if (a.key == "is_fullscreen") {
-            if (!value_is_bool(a.value)) {
-                warn(a.line, "Type mismatch for 'is_fullscreen'; keeping default");
-                continue;
-            }
-            out.data.isFullscreen = std::get<bool>(a.value);
-            continue;
-        }
-        if (a.key == "vsync_enabled") {
-            if (!value_is_bool(a.value)) {
-                warn(a.line, "Type mismatch for 'vsync_enabled'; keeping default");
-                continue;
-            }
-            out.data.vsync_enabled = std::get<bool>(a.value);
-            continue;
-        }
-        if (a.key == "resolution") {
-            if (!value_is_i32x2(a.value)) {
-                warn(a.line, "Type mismatch for 'resolution'; keeping default");
-                continue;
-            }
-            const auto [w, h] = std::get<std::pair<int32_t, int32_t>>(a.value);
-            out.data.resolution.width = (int) w;
-            out.data.resolution.height = (int) h;
+        const auto* spec = settings_schema::find_key(a.key);
+        if (spec == nullptr) {
+            warn(a.line, "Unknown key '" + a.key + "'; ignoring");
             continue;
         }
 
-        warn(a.line, "Unknown key '" + a.key + "'; ignoring");
+        // Lifecycle validation.
+        if (current_version < spec->lifecycle.since) {
+            warn(a.line, "Key '" + a.key + "' is not valid in this version; ignoring");
+            continue;
+        }
+        if (spec->lifecycle.removed_in_version.has_value() &&
+            current_version >= spec->lifecycle.removed_in_version.value()) {
+            out.messages.push_back(Message{
+                Message::Level::Error,
+                a.line,
+                "Key '" + a.key + "' is removed in this version; ignoring",
+            });
+            continue;
+        }
+        if (spec->lifecycle.deprecated_since.has_value() &&
+            current_version >= spec->lifecycle.deprecated_since.value()) {
+            warn(a.line, "Key '" + a.key + "' is deprecated");
+        }
+
+        // Type validation + apply.
+        bool ok = false;
+        if (spec->type == settings_schema::ValueType::Bool) {
+            ok = value_is_bool(a.value) && spec->bool_member != nullptr;
+            if (ok) out.data.*(spec->bool_member) = std::get<bool>(a.value);
+        } else if (spec->type == settings_schema::ValueType::F32) {
+            ok = value_is_f32(a.value) && spec->f32_member != nullptr;
+            if (ok) out.data.*(spec->f32_member) = std::get<float>(a.value);
+        } else if (spec->type == settings_schema::ValueType::Str) {
+            ok = value_is_str(a.value) && spec->str_member != nullptr;
+            if (ok) out.data.*(spec->str_member) = std::get<std::string>(a.value);
+        } else if (spec->type == settings_schema::ValueType::I32x2) {
+            ok = value_is_i32x2(a.value) && spec->set_i32x2 != nullptr;
+            if (ok) {
+                const auto [w, h] =
+                    std::get<std::pair<int32_t, int32_t>>(a.value);
+                spec->set_i32x2(out.data, w, h);
+            }
+        } else {
+            ok = false;
+        }
+
+        if (!ok) {
+            warn(a.line, "Type mismatch for '" + a.key + "'; keeping default");
+            continue;
+        }
     }
 
     out.data.engineVersion = current_version;
@@ -744,40 +675,40 @@ std::string write_overrides_only(const settings::Data& current,
     std::vector<write_line> lines;
     lines.reserve(32);
 
-    // Canonical ordering by section then key (manual; stable & deterministic).
-    push_override_f32(lines, "audio", "master_volume", current.master_volume,
-                      defaults.master_volume);
-    push_override_f32(lines, "audio", "music_volume", current.music_volume,
-                      defaults.music_volume);
-    push_override_f32(lines, "audio", "sound_volume", current.sound_volume,
-                      defaults.sound_volume);
+    // Canonical ordering: follow schema list order.
+    for (const auto& spec : settings_schema::all_keys()) {
+        // Don't write keys that aren't valid in the current version.
+        if (current_version < spec.lifecycle.since) continue;
+        if (spec.lifecycle.removed_in_version.has_value() &&
+            current_version >= spec.lifecycle.removed_in_version.value()) {
+            continue;
+        }
 
-    push_override_bool(lines, "video", "is_fullscreen", current.isFullscreen,
-                       defaults.isFullscreen);
-    push_override_i32x2(lines, "video", "resolution",
-                        (int32_t) current.resolution.width,
-                        (int32_t) current.resolution.height,
-                        (int32_t) defaults.resolution.width,
-                        (int32_t) defaults.resolution.height);
-    push_override_bool(lines, "video", "vsync_enabled", current.vsync_enabled,
-                       defaults.vsync_enabled);
-    push_override_bool(lines, "video", "enable_postprocessing",
-                       current.enable_postprocessing,
-                       defaults.enable_postprocessing);
-    push_override_bool(lines, "video", "enable_lighting", current.enable_lighting,
-                       defaults.enable_lighting);
-    push_override_bool(lines, "video", "snap_camera_to_90", current.snapCameraTo90,
-                       defaults.snapCameraTo90);
-
-    push_override_str(lines, "ui", "lang_name", current.lang_name, defaults.lang_name);
-    push_override_str(lines, "ui", "ui_theme", current.ui_theme, defaults.ui_theme);
-    push_override_bool(lines, "ui", "show_streamer_safe_box",
-                       current.show_streamer_safe_box,
-                       defaults.show_streamer_safe_box);
-
-    push_override_str(lines, "network", "username", current.username, defaults.username);
-    push_override_str(lines, "network", "last_ip_joined", current.last_ip_joined,
-                      defaults.last_ip_joined);
+        if (spec.type == settings_schema::ValueType::Bool) {
+            if (spec.bool_member == nullptr) continue;
+            push_override_bool(lines, std::string(spec.section),
+                               std::string(spec.key), current.*(spec.bool_member),
+                               defaults.*(spec.bool_member));
+        } else if (spec.type == settings_schema::ValueType::F32) {
+            if (spec.f32_member == nullptr) continue;
+            push_override_f32(lines, std::string(spec.section),
+                              std::string(spec.key), current.*(spec.f32_member),
+                              defaults.*(spec.f32_member));
+        } else if (spec.type == settings_schema::ValueType::Str) {
+            if (spec.str_member == nullptr) continue;
+            push_override_str(lines, std::string(spec.section),
+                              std::string(spec.key), current.*(spec.str_member),
+                              defaults.*(spec.str_member));
+        } else if (spec.type == settings_schema::ValueType::I32x2) {
+            if (spec.get_i32x2 == nullptr) continue;
+            int32_t a = 0, b = 0;
+            int32_t da = 0, db = 0;
+            spec.get_i32x2(current, a, b);
+            spec.get_i32x2(defaults, da, db);
+            push_override_i32x2(lines, std::string(spec.section),
+                                std::string(spec.key), a, b, da, db);
+        }
+    }
 
     std::ostringstream os;
     os << "version: " << current_version << ";\n";

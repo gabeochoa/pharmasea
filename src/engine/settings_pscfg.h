@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "settings.h"
+#include "settings_schema.h"
 
 namespace settings_pscfg {
 
@@ -41,12 +42,12 @@ struct LoadResult {
 // Parse + apply PSCFG settings overrides to defaults.
 LoadResult load_from_string(std::string_view input,
                             const settings::Data& defaults,
-                            int current_version = settings::SETTINGS_PSCFG_VERSION);
+                            int current_version = settings_schema::PSCFG_VERSION);
 
 // Write overrides-only PSCFG file contents.
 std::string write_overrides_only(const settings::Data& current,
                                  const settings::Data& defaults,
-                                 int current_version = settings::SETTINGS_PSCFG_VERSION);
+                                 int current_version = settings_schema::PSCFG_VERSION);
 
 }  // namespace settings_pscfg
 
