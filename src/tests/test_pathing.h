@@ -1,6 +1,7 @@
 
 #include "../engine/pathfinder.h"
 #include "../entity.h"
+#include "../afterhours/src/core/component_store.h"
 #include "../entity_helper.h"
 #include "../level_info.h"
 #include "../map_generation/map_generation.h"
@@ -101,8 +102,13 @@ inline std::pair<vec2, vec2> setup(const std::string& map) {
 inline void teardown() {
     for (auto& entity : ents) {
         // Components live in Afterhours ComponentStore (not per-entity pointers).
-        afterhours::EntityHelper::remove_pooled_components_for(entity);
-        entity.componentSet.reset();  // redundant, but keeps old assumptions safe
+        // Walk the component bitset and remove stored values.
+        for (afterhours::ComponentID cid = 0; cid < afterhours::max_num_components;
+             ++cid) {
+            if (!entity.componentSet.test(cid)) continue;
+            entity.componentSet.reset(cid);
+            afterhours::ComponentStore::get().remove_by_component_id(cid, entity.id);
+        }
     }
 
     ents.clear();
