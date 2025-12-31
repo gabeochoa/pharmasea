@@ -16,6 +16,10 @@ include makefile
 # due to different diagnostics in vendored headers.
 override CXX := clang++
 
+# Cursor build uses C++23 so <expected> is usable with libstdc++.
+# (The repo's default -std=c++2a is kept in the main makefile.)
+override FLAGS += -std=c++23
+
 # Cursor build: don't treat warnings as errors (container toolchains differ).
 # The upstream makefile uses -Werror inside NOFLAGS; drop it here.
 override NOFLAGS := $(filter-out -Werror,$(NOFLAGS))
