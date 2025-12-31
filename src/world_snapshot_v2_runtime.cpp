@@ -5,6 +5,16 @@
 
 #include <unordered_map>
 
+// ComponentStore is present in newer Afterhours versions (pooled components).
+// Some dev environments may have an older submodule checkout; keep this file
+// compiling by feature-detecting the header.
+#if __has_include("afterhours/src/core/component_store.h")
+#include "afterhours/src/core/component_store.h"
+#define PHARMASEA_HAS_AFTERHOURS_COMPONENT_STORE 1
+#else
+#define PHARMASEA_HAS_AFTERHOURS_COMPONENT_STORE 0
+#endif
+
 namespace snapshot_v2 {
 namespace {
 
@@ -26,6 +36,8 @@ struct EntityHandleEq {
 };
 
 void remove_all_pooled_components_for(Entity& e) {
+    // Prefer removing from Afterhours ComponentStore when available (pooled).
+#if PHARMASEA_HAS_AFTERHOURS_COMPONENT_STORE
     // Mirror afterhours::EntityHelper::remove_pooled_components_for, but without
     // depending on vendor EntityHelper storage (PharmaSea owns entity arrays).
     for (afterhours::ComponentID cid = 0; cid < afterhours::max_num_components;
@@ -34,6 +46,13 @@ void remove_all_pooled_components_for(Entity& e) {
         e.componentSet[cid] = false;
         afterhours::ComponentStore::get().remove_by_component_id(cid, e.id);
     }
+#else
+    // Fallback for older Afterhours builds (no pooled ComponentStore).
+    // Best-effort: clear the presence bitset; any legacy per-entity component
+    // storage (if still present) is owned by the entity and will be dropped when
+    // we replace the entity list.
+    e.componentSet.reset();
+#endif
 }
 
 [[nodiscard]] TransformV2 project_transform(const Transform& t) {
@@ -121,7 +140,9 @@ void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap) {
     }
 
     // Treat snapshot apply as an end-of-frame boundary for pooled components.
+#if PHARMASEA_HAS_AFTERHOURS_COMPONENT_STORE
     afterhours::ComponentStore::get().flush_end_of_frame();
+#endif
 
     // Invalidate any cached entity lookups (named entities, path cache, etc.).
     EntityHelper::invalidateCaches();
