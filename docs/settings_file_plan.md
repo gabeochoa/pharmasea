@@ -37,6 +37,76 @@ Optionally, support a debug “full dump” mode that writes every key, but stil
 
 ---
 
+## How we implement this (recommended): schema/DSL + codegen
+
+If we want `@vN` / `@vN-M` annotations to be easy to update as the format evolves, the cleanest approach is to keep a **single source of truth** schema file and generate:
+
+- C++ definitions / metadata tables (keys, types, defaults, lifecycle)
+- A parser/serializer for the on-disk text format (or at least the table the parser uses)
+- Optional documentation output (e.g. a generated “all settings + defaults” markdown)
+
+### Proposed schema file
+
+Add a small DSL file (or YAML/TOML) committed to the repo, e.g.:
+
+- `resources/config/settings.schema` (DSL)
+- or `resources/config/settings.schema.yaml` (YAML)
+
+This schema contains:
+
+- **current schema version** (`version: 5`)
+- **settings list**: section, key name, type, default value
+- **lifecycle**: `since`, optional `until` (maps directly to `@v2` and `@v3-4`)
+
+Example DSL (illustrative):
+
+```text
+version: 5;
+
+[audio]
+master_volume : f32 = f32(0x3F000000); @v1
+music_volume  : f32 = f32(0x3F000000); @v1
+sound_volume  : f32 = f32(0x3F000000); @v1
+
+[video]
+fullscreen : bool = false;            @v1
+vsync      : bool = true;             @v1-5
+resolution : i32x2 = i32x2(1280,720); @v1
+
+[ui]
+lang_name : str = str("en_us");       @v1
+ui_theme  : str = str("");            @v2
+```
+
+Notes:
+
+- `@vN` means `since=N`.
+- `@vA-B` means `since=A, until=B`.
+- The typed literals for defaults match the runtime format, which keeps parsing consistent.
+
+### Code generation flow
+
+- A small generator (likely a `scripts/*.py` tool) reads the schema and writes generated files like:
+  - `src/generated/settings_schema.h` (enum/IDs + metadata table)
+  - `src/generated/settings_schema.cpp` (defaults + lifecycle info)
+  - optionally `docs/generated_settings_schema.md`
+- The runtime settings loader:
+  - Reads the on-disk `settings` file (overrides-only)
+  - Checks `version` matches `CURRENT_SETTINGS_VERSION` (which can be generated from the schema)
+  - For each `key* = value;`:
+    - Look up key in generated metadata table
+    - Verify key is valid for this version (`since/until`)
+    - Parse typed literal into the expected C++ type
+    - Apply to in-memory settings
+
+### Why a schema/DSL helps
+
+- **Version annotations live in one place** (the schema), not scattered across parsing code.
+- Adding/removing/renaming keys becomes an **edit to one file**, then regenerate.
+- The schema can also enforce determinism (ordering, canonical names).
+
+---
+
 ## On-disk file format (line-based text)
 
 ### Header
