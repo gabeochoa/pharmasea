@@ -40,7 +40,7 @@
 #include "../entity_query.h"
 #include "../entity_type.h"
 #include "../network/server.h"
-#include "afterhours/expected.hpp"
+#include <expected.hpp>
 #include "system_manager.h"
 
 namespace system_manager {
