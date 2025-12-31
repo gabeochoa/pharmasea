@@ -2,6 +2,10 @@
 
 This document reviews what’s new in `vendor/afterhours` (the Afterhours submodule) and lays out a phased plan to migrate PharmaSea to the updated setup **with clear “what” and “why”**.
 
+**Baseline assumption for this plan**: the `vendor/afterhours` submodule is pinned to:
+- branch: `cursor/remove-serializing-pointers-438b`
+- feature set: handle refs + pointer-free policy + snapshot take/apply + pooled components
+
 ---
 
 ## What’s new in `vendor/afterhours` (relevant to PharmaSea)
@@ -22,6 +26,23 @@ This document reviews what’s new in `vendor/afterhours` (the Afterhours submod
     - pointer-free guardrails (`src/core/pointer_policy.h`)
   - The direction is: **store handles/IDs in persisted state, resolve via `EntityHelper` at runtime**.
 
+- **Snapshot “apply” helpers (Phase 6)**
+  - Afterhours now includes an “apply snapshot” workflow in `src/core/snapshot.h` plus documentation (`SNAPSHOT_APPLY.md`).
+  - This is explicitly designed for **rebuilding world state** from pointer-free snapshots and handling missing entities with a defined policy.
+
+- **Pooled component storage (Phase 4)**
+  - Afterhours has introduced pooled component storage (`src/core/component_pool.h`, `src/core/component_store.h`) and refactored `Entity` to use it.
+  - Impact: anything that tries to serialize/inspect `Entity` internals (e.g., per-entity component pointer arrays) is expected to break and should be replaced by the snapshot surface.
+
+- **EntityQuery performance improvements**
+  - `EntityQuery` has recent work for short-circuiting/caching (important once “resolve by handle” becomes common and we rely more heavily on queries).
+
+- **Policy enforcement + regression infrastructure**
+  - Afterhours now includes:
+    - compile-time pointer-free checks via `pointer_policy.h`
+    - regression examples for snapshots (`example/snapshot_pointer_free_regression/`)
+    - “compile-fail” style guard scripts (e.g. `check_compile_fail_tests.sh`) to ensure pointer-like types don’t leak into snapshot surfaces.
+
 - **More built-in plugins**
   - `vendor/afterhours/src/plugins/` includes reusable building blocks we currently maintain ourselves (or have planned to extract), e.g. `files`, `settings`, `timer`, `pathfinding`, `translation`, `sound_system`, `ui`, `animation`, etc.
 
@@ -41,6 +62,7 @@ This document reviews what’s new in `vendor/afterhours` (the Afterhours submod
     - `std::shared_ptr<Entity>` (directly)
     - and we still carry pointer-linking infrastructure in network/save contexts (see `docs/pointer_free_serialization_options.md`)
   - This conflicts with the Afterhours “pointer-free snapshot surface” direction.
+  - **Important update with the new Afterhours branch**: Afterhours now uses **pooled component storage**, so our current `serialize(Entity&)` logic that walks per-entity component pointer arrays is not a stable integration point. We should treat “serialize Entity directly” as deprecated/unsupported and migrate to snapshots.
 
 - **Afterhours systems are already being adopted**
   - We’ve started migrating “old system functions” into Afterhours systems (see `src/system/afterhours_*` and `SystemManager::systems.tick(...)`).
@@ -59,10 +81,12 @@ This document reviews what’s new in `vendor/afterhours` (the Afterhours submod
 
 ## Phased plan
 
-### Phase 0 — Baseline + inventory (no behavior changes)
+### Phase 0 — Pin, bootstrap, and verify the new Afterhours baseline (no gameplay changes)
 
 **What**
 - Ensure `vendor/afterhours` is **always initialized** in dev + CI (`git submodule update --init --recursive`).
+- Ensure the submodule is on the intended branch: `cursor/remove-serializing-pointers-438b`.
+- Add a lightweight CI verification step that runs Afterhours’ own fast checks/examples (at minimum, its non-raylib examples/tests), so we know we’re not pinning to a broken snapshot/pool build.
 - Inventory all current integration points:
   - Includes: where we include `afterhours/*` vs project wrappers.
   - Plugin usage: which Afterhours plugins we already rely on (directly or indirectly).
@@ -78,7 +102,7 @@ This document reviews what’s new in `vendor/afterhours` (the Afterhours submod
 
 ---
 
-### Phase 1 — Afterhours “new setup” integration cleanup (low risk)
+### Phase 1 — Integrate the new Afterhours setup cleanly (low risk)
 
 **What**
 - Align includes with Afterhours’ recommended entrypoints:
@@ -87,6 +111,7 @@ This document reviews what’s new in `vendor/afterhours` (the Afterhours submod
 - Decide how we want to handle **`expected`** and logging/validate overrides:
   - Afterhours ships `expected.hpp` and supports `AFTER_HOURS_REPLACE_LOGGING` / `AFTER_HOURS_REPLACE_VALIDATE`.
   - PharmaSea currently has wrapper behavior in `src/ah.h` that may be carrying legacy compatibility hacks.
+  - Note: this branch has recent refactors around `expected.hpp` namespacing/fallbacks; keep our wrapper minimal and avoid redefining expected types unless we must.
 
 **Why**
 - This reduces “mystery include” problems and makes future Afterhours updates less painful.
@@ -97,12 +122,12 @@ This document reviews what’s new in `vendor/afterhours` (the Afterhours submod
 
 ---
 
-### Phase 2 — Move long-lived references to handles (medium risk, incremental)
+### Phase 2 — Adopt Afterhours’ persisted reference model (handles + OptEntityHandle) (medium risk, incremental)
 
 **What**
 - Adopt Afterhours’ handle types for **persisted or long-lived relationships**:
   - Use `afterhours::EntityHandle` for durable references.
-  - Use `afterhours::OptEntityHandle` where we need “ID fallback” behavior (e.g., temp entities pre-merge or transitional code).
+  - Use `afterhours::OptEntityHandle` as the standard “persisted reference helper” where we need fallback behavior (e.g., temp entities pre-merge or transitional code).
 - Keep “short-lived” query ergonomics:
   - It’s fine for queries/systems to work with `Entity&`, `RefEntity`, `OptEntity` **as transient values**.
   - The rule is: **don’t store those in long-lived component state**.
@@ -124,14 +149,16 @@ This document reviews what’s new in `vendor/afterhours` (the Afterhours submod
 
 ---
 
-### Phase 3 — Migrate saves/networking to pointer-free snapshot serialization (highest payoff)
+### Phase 3 — Switch persistence + networking to Afterhours snapshots (take/apply) (highest payoff)
 
 **What**
-- Stop serializing `Entity` and `shared_ptr<Entity>` graphs directly.
-- Replace persistence/network snapshots with explicit, pointer-free DTO snapshots:
-  - Use `afterhours::snapshot::take_entities()` for entity identity/tag/type baselines.
-  - Use `afterhours::snapshot::take_components<Component, DTO>(converter)` for component state.
-  - DTOs must satisfy Afterhours pointer-free policy (`pointer_policy.h`).
+- Stop serializing `afterhours::Entity` and `shared_ptr<Entity>` graphs directly in PharmaSea.
+- Reframe save/network state as **explicit, pointer-free DTO snapshots** using Afterhours’ snapshot APIs:
+  - `afterhours::snapshot::take_entities()`
+  - `afterhours::snapshot::take_components<Component, DTO>(converter)`
+  - enforce pointer-free DTOs via `pointer_policy.h` (and mirror Afterhours’ “compile-fail regression” approach for our project-level snapshot DTOs).
+- Use Afterhours’ **apply** helpers to rebuild state:
+  - adopt a clear `MissingEntityPolicy` decision per domain (save-load vs network reconciliation), rather than relying on pointer graph “best effort”.
 - Remove Bitsery pointer-linking context **once no pointer-like data remains** in the format.
 - Add versioning/migration strategy for existing save files (format bump + one-time upgrade path or incompatibility policy).
 
@@ -142,11 +169,28 @@ This document reviews what’s new in `vendor/afterhours` (the Afterhours submod
 **Deliverables**
 - Save/load working with **zero pointer values in serialized data**.
 - Network sync updated (or clearly split) to use pointer-free packet payloads.
-- A regression test suite for snapshot round-trips (at least: entity creation/deletion churn + handle validity).
+- A regression test suite for snapshot round-trips + apply semantics (at minimum: churn + handle validity + missing-entity policy behavior).
 
 ---
 
-### Phase 4 — Plugin adoption + de-duplication (optional, but strategic)
+### Phase 4 — Leverage Afterhours performance/correctness upgrades (pooled components + query improvements)
+
+**What**
+- Treat Afterhours’ pooled component storage as a **feature we benefit from by not fighting it**:
+  - remove/avoid any code that assumes entity component internals are pointer arrays
+  - keep all component access through `Entity::addComponent/get/has/remove` and query APIs
+- Explicitly validate that our “hot query patterns” align with Afterhours’ updated `EntityQuery` behavior (short-circuiting/caching) and avoid accidental double work (e.g., `has_values()` followed by `gen_first()` patterns in tight loops).
+
+**Why**
+- This branch is not just “serialization plumbing”; it includes structural ECS changes meant to keep the pointer-free model performant.
+
+**Deliverables**
+- No remaining PharmaSea code depends on Afterhours `Entity` internal layout.
+- Confirmed query patterns in hot paths are efficient and match new semantics.
+
+---
+
+### Phase 5 — Plugin adoption + de-duplication (optional, but strategic)
 
 **What**
 - Evaluate adopting Afterhours plugins where we currently have PharmaSea-only equivalents:
@@ -170,12 +214,13 @@ This document reviews what’s new in `vendor/afterhours` (the Afterhours submod
 
 ---
 
-### Phase 5 — Validation, performance, and rollout hardening
+### Phase 6 — Validation, performance, and rollout hardening
 
 **What**
 - Add focused tests and checks:
   - handle lifecycle: create → resolve → delete → stale handle fails → slot reuse increments generation
   - snapshot correctness: pointer-free DTO assertions + round-trip tests
+  - snapshot apply correctness: missing-entity policies behave as intended (drop vs keep vs error)
   - gameplay smoke tests for the highest-churn systems (inventory/holding, AI targets, UI attachments, etc.)
 - Performance validation:
   - confirm hot paths are O(1) resolve (no linear scans for repeated lookups)
