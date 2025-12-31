@@ -4,6 +4,7 @@
 #include <ranges>
 
 #include "ah.h"
+#include "afterhours/src/core/component_store.h"
 #include "entity_id.h"
 #include "components/ai_clean_vomit.h"
 #include "components/ai_close_tab.h"
@@ -189,9 +190,13 @@ void register_all_components() {
     //
 
     // Components live in Afterhours ComponentStore (not per-entity pointers).
-    // Use the vendor helper which centralizes "walk bitset, remove from store".
-    afterhours::EntityHelper::remove_pooled_components_for(*entity);
-    entity->componentSet.reset();  // redundant, but keeps old assumptions safe
+    // Walk the component bitset and remove stored values.
+    for (afterhours::ComponentID cid = 0; cid < afterhours::max_num_components;
+         ++cid) {
+        if (!entity->componentSet.test(cid)) continue;
+        entity->componentSet.reset(cid);
+        afterhours::ComponentStore::get().remove_by_component_id(cid, entity->id);
+    }
 
     delete entity;
 }
