@@ -3,10 +3,13 @@
 #include "client.h"
 
 #include "../building_locations.h"
+#include "../components/collects_user_input.h"
+#include "../components/has_client_id.h"
+#include "../components/has_name.h"
 #include "../engine/globals_register.h"
-#include "../engine/time.h"
 #include "../engine/log.h"
 #include "../engine/sound_library.h"
+#include "../engine/time.h"
 #include "../engine/toastmanager.h"
 #include "../post_deserialize_fixups.h"
 #include "network.h"
@@ -216,7 +219,8 @@ void Client::client_process_message_string(const std::string& msg) {
                 std::get<ClientPacket::AnnouncementInfo>(packet.msg);
             announcements.push_back(info);
             // Also surface immediately as an in-game toast.
-            TOASTS.push_back({.msg = info.message, .type = info.type, .timeToShow = 5});
+            TOASTS.push_back(
+                {.msg = info.message, .type = info.type, .timeToShow = 5});
         } break;
         case ClientPacket::MsgType::PlayerLeave: {
             ClientPacket::PlayerLeaveInfo info =
