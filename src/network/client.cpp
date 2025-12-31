@@ -279,14 +279,13 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            const bool is_inproc_host = (network_info && network_info->is_host());
             snapshot_v2::apply_to_entities(
                 client_entities_DO_NOT_USE, info.snapshot,
                 snapshot_v2::ApplyOptionsV2{
-                    .preserve_legacy_entity_ids = true,
-                    // Avoid clobbering server ComponentStore when host+client
-                    // are in one process (ComponentStore is global + keyed by EntityID).
-                    .clear_existing_components = !is_inproc_host,
+                    // Use a client-local EntityID space to avoid collisions with
+                    // the authoritative server world when hosting in-process.
+                    .preserve_legacy_entity_ids = false,
+                    .clear_existing_components = true,
                 });
 
             post_deserialize_fixups::run(client_entities_DO_NOT_USE);

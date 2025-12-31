@@ -1,6 +1,7 @@
 #pragma once
 
 #include <exception>
+#include <functional>
 #include <memory>
 #include <optional>
 //
@@ -80,6 +81,14 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] EntityType hb_type() const { return held_by; }
 
     [[nodiscard]] EntityID last_id() const { return last_held_id; }
+
+    // Snapshot support: remap stored EntityID references.
+    // This is used by pointer-free snapshot apply when the client uses a
+    // different EntityID space than the server.
+    void remap_entity_ids(const std::function<EntityID(EntityID)>& remap) {
+        if (held_item_id != entity_id::INVALID) held_item_id = remap(held_item_id);
+        if (last_held_id != entity_id::INVALID) last_held_id = remap(last_held_id);
+    }
 
    private:
     EntityID last_held_id = entity_id::INVALID;

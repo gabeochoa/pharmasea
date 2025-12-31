@@ -36,6 +36,96 @@ struct EntityHandleEq {
     }
 };
 
+using EntityIdRemap =
+    std::unordered_map<afterhours::EntityID, afterhours::EntityID>;
+
+[[nodiscard]] afterhours::EntityID remap_id_or(
+    const EntityIdRemap& remap, const afterhours::EntityID old_id,
+    const afterhours::EntityID fallback) {
+    auto it = remap.find(old_id);
+    if (it == remap.end()) return fallback;
+    return it->second;
+}
+
+void remap_entity_id_fields(Entities& entities, const EntityIdRemap& remap) {
+    if (remap.empty()) return;
+
+    const auto f = [&](afterhours::EntityID id) -> afterhours::EntityID {
+        return remap_id_or(remap, id, id);
+    };
+
+    for (auto& sp : entities) {
+        if (!sp) continue;
+        Entity& e = *sp;
+
+        if (e.has<CanHoldItem>()) {
+            e.get<CanHoldItem>().remap_entity_ids(f);
+        }
+        if (e.has<CanHoldFurniture>()) {
+            auto& chf = e.get<CanHoldFurniture>();
+            if (chf.is_holding_furniture()) {
+                const auto old = chf.furniture_id();
+                const auto nw = (int)f(old);
+                if (nw != old) chf.update(nw, chf.picked_up_at());
+            }
+        }
+        if (e.has<CanHoldHandTruck>()) {
+            auto& cht = e.get<CanHoldHandTruck>();
+            if (cht.is_holding()) {
+                const auto old = cht.hand_truck_id();
+                const auto nw = (int)f(old);
+                if (nw != old) cht.update(nw, cht.picked_up_at());
+            }
+        }
+        if (e.has<HasWaitingQueue>()) {
+            e.get<HasWaitingQueue>().remap_entity_ids(f);
+        }
+        if (e.has<HasRopeToItem>()) {
+            e.get<HasRopeToItem>().remap_entity_ids(f);
+        }
+        if (e.has<HasLastInteractedCustomer>()) {
+            auto& hl = e.get<HasLastInteractedCustomer>();
+            if (hl.customer_id != -1) {
+                hl.customer_id = (int)f(hl.customer_id);
+            }
+        }
+        if (e.has<IsFloorMarker>()) {
+            const auto& ids = e.get<IsFloorMarker>().marked_ids();
+            if (!ids.empty()) {
+                std::vector<int> out;
+                out.reserve(ids.size());
+                for (int id : ids) out.push_back((int)f(id));
+                e.get<IsFloorMarker>().mark_all(std::move(out));
+            }
+        }
+        if (e.has<IsSquirter>()) {
+            auto& sq = e.get<IsSquirter>();
+            if (sq.item_id() != -1) {
+                const int old = sq.item_id();
+                const int nw = (int)f(old);
+                if (nw != old) sq.update(nw, sq.picked_up_at());
+            }
+            if (sq.drink_id() != -1) {
+                const int old = sq.drink_id();
+                const int nw = (int)f(old);
+                if (nw != old) sq.set_drink_id(nw);
+            }
+        }
+
+        // Components that use "parent_id" patterns.
+        if (e.has<CanPathfind>()) {
+            // Parent is expected to be this entity; remap defensively anyway.
+            e.get<CanPathfind>().set_parent((int)f(e.id));
+        }
+        if (e.has<RespondsToDayNight>()) {
+            e.get<RespondsToDayNight>().set_parent((int)f(e.id));
+        }
+        if (e.has<AddsIngredient>()) {
+            e.get<AddsIngredient>().set_parent((int)f(e.id));
+        }
+    }
+}
+
 void remove_all_pooled_components_for(Entity& e) {
     // Prefer removing from Afterhours ComponentStore when available (pooled).
 #if PHARMASEA_HAS_AFTERHOURS_COMPONENT_STORE
@@ -98,6 +188,9 @@ void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap,
     by_handle.reserve(snap.entities.size());
 
     entities.reserve(snap.entities.size());
+    EntityIdRemap id_remap;
+    id_remap.reserve(snap.entities.size());
+
     for (const EntityRecordV2& rec : snap.entities) {
         auto sp = std::make_shared<Entity>();
 
@@ -115,6 +208,10 @@ void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap,
         sp->componentSet.reset();
 
         by_handle.emplace(rec.handle, sp.get());
+        // Record mapping for later fixups when we *don't* preserve IDs.
+        if (!options.preserve_legacy_entity_ids) {
+            id_remap.emplace(rec.legacy_id, sp->id);
+        }
         entities.push_back(std::move(sp));
     }
 
@@ -124,6 +221,10 @@ void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap,
         if (i >= entities.size() || !entities[i]) continue;
         if (rec.components_blob.empty()) continue;
         snapshot_v2::decode_components_blob(*entities[i], rec.components_blob);
+    }
+
+    if (!options.preserve_legacy_entity_ids) {
+        remap_entity_id_fields(entities, id_remap);
     }
 
     // Treat snapshot apply as an end-of-frame boundary for pooled components.

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <functional>
 #include "base_component.h"
 
 using EntityID = int;
@@ -48,6 +49,15 @@ struct HasWaitingQueue : public BaseComponent {
     [[nodiscard]] bool has_matching_person(int id) const;
     [[nodiscard]] int get_customer_position(int id) const;
     HasWaitingQueue& add_customer(const Entity& customer);
+
+    // Snapshot support: remap stored EntityID references.
+    void remap_entity_ids(const std::function<EntityID(EntityID)>& remap) {
+        for (int i = 0; i < max_queue_size; ++i) {
+            if (ppl_in_line[i] != -1) {
+                ppl_in_line[i] = remap(ppl_in_line[i]);
+            }
+        }
+    }
 
    private:
     std::array<EntityID, max_queue_size> ppl_in_line;

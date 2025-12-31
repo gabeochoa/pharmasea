@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <functional>
 #include "../entity_helper.h"
 #include "base_component.h"
 
@@ -31,6 +32,14 @@ struct HasRopeToItem : public BaseComponent {
     }
 
     [[nodiscard]] vec2 goal() const { return path_to; }
+
+    // Snapshot support: remap stored EntityID references.
+    void remap_entity_ids(const std::function<EntityID(EntityID)>& remap) {
+        for (auto& id : rope) {
+            id = remap(id);
+        }
+        rope_length = (int)rope.size();
+    }
 
    private:
     vec2 path_to;
