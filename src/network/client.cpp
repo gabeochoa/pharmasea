@@ -279,15 +279,14 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            const bool is_inproc_host = (network_info && network_info->is_host());
             snapshot_v2::apply_to_entities(
                 client_entities_DO_NOT_USE, info.snapshot,
                 snapshot_v2::ApplyOptionsV2{
                     // Preserve EntityIDs so EntityID-based relationships work.
                     .preserve_legacy_entity_ids = true,
-                    // But don't clear pooled components when hosting in-process;
-                    // that would clobber the server world (shared ComponentStore).
-                    .clear_existing_components = !is_inproc_host,
+                    // Now safe: ComponentStore is thread-local (host server thread
+                    // and client main thread have separate stores).
+                    .clear_existing_components = true,
                 });
 
             post_deserialize_fixups::run(client_entities_DO_NOT_USE);
