@@ -1,0 +1,23 @@
+# Cursor/CI-friendly makefile wrapper.
+#
+# Goals:
+# - Don't modify the repo's primary `makefile`.
+# - Provide a Linux-friendly build that avoids macOS-only post-build steps.
+# - Let Cursor/agents build deterministically in the container.
+#
+# Usage:
+#   make -f makefile_cursor -j2
+#   make -f makefile_cursor -j2 main-build
+#
+
+include makefile
+
+# Prefer clang (matches upstream warning flags). GCC tends to fail under -Werror
+# due to different diagnostics in vendored headers.
+override CXX := clang++
+
+# The default `post-build` recipe runs `install_name_tool` (macOS-only).
+# Override it on Linux to be a no-op while keeping dependency ordering intact.
+post-build: main-build
+	@true
+
