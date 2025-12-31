@@ -188,12 +188,10 @@ void register_all_components() {
     // otherwise it will leak the memory
     //
 
-    for (afterhours::ComponentID cid = 0; cid < afterhours::max_num_components;
-         ++cid) {
-        if (!entity->componentSet.test(cid)) continue;
-        afterhours::ComponentStore::get().remove_by_component_id(cid, entity->id);
-    }
-    entity->componentSet.reset();
+    // Components live in Afterhours ComponentStore (not per-entity pointers).
+    // Use the vendor helper which centralizes "walk bitset, remove from store".
+    afterhours::EntityHelper::remove_pooled_components_for(*entity);
+    entity->componentSet.reset();  // redundant, but keeps old assumptions safe
 
     delete entity;
 }
