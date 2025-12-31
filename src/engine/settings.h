@@ -24,6 +24,9 @@
 // TODO we should not be reaches outside of engine
 #include "../strings.h"
 
+#include "settings_schema.h"
+#include "settings_pscfg_keys.h"
+
 namespace settings {
 
 using Buffer = std::string;
@@ -35,6 +38,7 @@ using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 
 constexpr int MAX_LANG_LENGTH = 25;
 
+
 // TODO How do we support multiple versions
 // we dont want to add a new field and break
 // all past save games
@@ -43,20 +47,19 @@ constexpr int MAX_LANG_LENGTH = 25;
 struct Data {
     int engineVersion = 0;
     rez::ResolutionInfo resolution = {.width = 1280, .height = 720};
-    std::string lang_name = "en_us";
-    // Volume percent [0, 1] for everything
-    float master_volume = 0.5f;
-    float music_volume = 0.5f;
-    float sound_volume = 0.5f;
-    std::string username;
-    std::string last_ip_joined;
-    std::string ui_theme;
-    bool show_streamer_safe_box = false;
-    bool enable_postprocessing = true;
-    bool enable_lighting = true;
-    bool snapCameraTo90 = false;
-    bool isFullscreen = false;
-    bool vsync_enabled = true;
+
+    // PSCFG persisted values (declared via X-macro list; see settings_pscfg_keys.h).
+    // Note: `resolution` is declared above as rez::ResolutionInfo; the i32x2
+    // entry in the list maps to width/height accessors.
+#define DECL_BOOL(_section, _key, member, def, _life, comment) bool member = def; comment
+#define DECL_F32(_section, _key, member, def, _life, comment) float member = def; comment
+#define DECL_STR(_section, _key, member, def, _life, comment) std::string member = def; comment
+#define DECL_I32X2(_section, _key, _member, _def, _life, comment) /* mapped via accessors */ comment
+    SETTINGS_PSCFG_LIST(DECL_BOOL, DECL_F32, DECL_STR, DECL_I32X2)
+#undef DECL_BOOL
+#undef DECL_F32
+#undef DECL_STR
+#undef DECL_I32X2
 
    private:
     friend bitsery::Access;

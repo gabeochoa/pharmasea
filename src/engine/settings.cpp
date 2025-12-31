@@ -2,6 +2,8 @@
 #include "settings.h"
 
 #include "../preload.h"
+#include "settings_pscfg.h"
+#include "settings_schema.h"
 
 Settings Settings::instance;
 bool Settings::created = false;
@@ -159,10 +161,13 @@ void Settings::update_vsync_enabled(bool vsync_enabled) {
 
 // TODO music volumes only seem to take effect once you open SettingsLayer
 bool Settings::load_save_file() {
-    std::ifstream ifs(Files::get().settings_filepath());
+    const auto defaults = settings::Data();
+    std::ifstream ifs(Files::get().settings_filepath(), std::ios::binary);
     if (!ifs.is_open()) {
         log_warn("Failed to find settings file (Read) {}",
                  Files::get().settings_filepath());
+        data = defaults;
+        refresh_settings();
         return false;
     }
 
@@ -171,41 +176,41 @@ bool Settings::load_save_file() {
     buffer << ifs.rdbuf();
     auto buf_str = buffer.str();
 
-    // Settings serialization is not version-tolerant yet; if the schema changes
-    // (e.g. adding a new field), older files may fail to deserialize.
-    // In that case, fall back to defaults instead of leaving partially-read data.
-    settings::Data tmp{};
-    const auto [err, ok] = bitsery::quickDeserialization<settings::InputAdapter>(
-        {buf_str.begin(), buf_str.size()}, tmp);
-    if (err != bitsery::ReaderError::NoError || !ok) {
-        log_warn("Settings deserialize failed (err={}, ok={}); resetting to defaults",
-                 (int) err, ok);
-        data = settings::Data();
-    } else {
-        data = tmp;
+    const auto res =
+        settings_pscfg::load_from_string(buf_str, defaults,
+                                         settings_schema::PSCFG_VERSION);
+    for (const auto& m : res.messages) {
+        const auto level = (m.level == settings_pscfg::Message::Level::Error)
+                               ? LogLevel::LOG_ERROR
+                               : LogLevel::LOG_WARN;
+        // Note: we intentionally avoid log_error() here (it asserts/terminates).
+        log_with_level(level, "Settings PSCFG (line {}): {}", m.line, m.text);
     }
+    data = res.data;
 
     refresh_settings();
 
     log_info("Settings Loaded: {}", data);
     log_trace("End loading settings file");
     ifs.close();
-    return true;
+    return !res.used_defaults;
 }
 
 // TODO instead of writing to a string and then file
 // theres a way to write directly to the file
 // https://github.com/fraillt/bitsery/blob/master/examples/file_stream.cpp
 bool Settings::write_save_file() {
-    std::ofstream ofs(Files::get().settings_filepath());
+    std::ofstream ofs(Files::get().settings_filepath(), std::ios::binary);
     if (!ofs.is_open()) {
         log_warn("Failed to find settings file (Write) {}",
                  Files::get().settings_filepath());
         return false;
     }
-    settings::Buffer buffer;
-    bitsery::quickSerialization(settings::OutputAdapter{buffer}, data);
-    ofs << buffer << std::endl;
+    const auto defaults = settings::Data();
+    const std::string out =
+        settings_pscfg::write_overrides_only(data, defaults,
+                                             settings_schema::PSCFG_VERSION);
+    ofs << out;
     ofs.close();
 
     log_info("Wrote Settings File to {}", Files::get().settings_filepath());

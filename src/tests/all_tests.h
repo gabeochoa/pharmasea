@@ -18,6 +18,7 @@
 #include "test_entity_serialization.h"
 #include "test_map_playability.h"
 #include "test_pathing.h"
+#include "test_settings_pscfg.h"
 #include "test_ui_widget.h"
 
 namespace tests {
@@ -66,6 +67,7 @@ inline void run_all() {
     random_tests();
 
     test_ui_widget();
+    test_settings_pscfg();
     all_tests();
 
     lerp_test();
