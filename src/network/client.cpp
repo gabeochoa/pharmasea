@@ -17,6 +17,21 @@
 
 namespace network {
 
+namespace {
+// Remote player entities live outside PharmaSea's EntityHelper lists, but they
+// still use Afterhours pooled component storage. Provide a local helper to
+// clean their pooled components on teardown.
+void remove_pooled_components_for_remote_entity(Entity& e) {
+    for (afterhours::ComponentID cid = 0; cid < afterhours::max_num_components;
+         ++cid) {
+        if (!e.componentSet[cid]) continue;
+        e.componentSet[cid] = false;
+        afterhours::ComponentStore::get().remove_by_component_id(cid, e.id);
+    }
+    afterhours::ComponentStore::get().flush_end_of_frame();
+}
+}  // namespace
+
 Client::Client() {
     client_p = std::make_unique<internal::Client>();
     client_p->set_process_message([this](const std::string& msg) {
@@ -138,6 +153,11 @@ void Client::client_process_message_string(const std::string& msg) {
         // want this in the array that is serialized, this should only live
         // in remote_players
         Entity* entity = new Entity();
+        // Ensure remote player EntityIDs never collide with map EntityIDs that
+        // arrive from the server snapshot (which are typically small).
+        // These entities are not serialized, so their numeric IDs only need to
+        // be unique within this client process/collection.
+        entity->id = 1'000'000 + client_id;
         make_remote_player(*entity, LOBBY_BUILDING.to3());
         remote_players[client_id] = std::shared_ptr<Entity>(entity);
         const auto& rp = remote_players[client_id];
@@ -174,6 +194,7 @@ void Client::client_process_message_string(const std::string& msg) {
                 "shared_ptr",
                 client_id);
         } else {
+            remove_pooled_components_for_remote_entity(*rp);
             rp->cleanup = true;
         }
 
