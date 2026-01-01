@@ -215,8 +215,6 @@ void Client::client_process_message_string(const std::string& msg) {
     // "duplicate component", and post-deserialize fixups can crash on stale state.
     {
         TContext ctx{};
-        std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
-            MyPolymorphicClasses{});
         BitseryDeserializer des{ctx, msg.begin(), msg.size()};
 
         Channel channel{};
