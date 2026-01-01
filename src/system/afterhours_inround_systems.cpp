@@ -128,8 +128,8 @@ struct ProcessGrabberItemsSystem
 
         auto behind =
             transform.offsetFaceDirection(transform.face_direction(), 180);
-        auto match = EntityHelper::getMatchingEntityInFront(
-            transform.as2(), 1.f, behind, [&entity](const Entity& furn) {
+        auto match = EQ().getMatchingEntityInFront(
+            transform.as2(), behind, 1.f, [&entity](const Entity& furn) {
                 // cant be us
                 if (entity.id == furn.id) return false;
                 // needs to be able to hold something
@@ -245,9 +245,9 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
                         .orderByDist(pos)
                         .gen_first();
         } else {
-            match = EntityHelper::getMatchingEntityInFront(
-                transform.as2(), 1.f, transform.face_direction(),
-                _conveyer_filter);
+            match = EQ().getMatchingEntityInFront(transform.as2(),
+                                                  transform.face_direction(),
+                                                  1.f, _conveyer_filter);
         }
 
         // no match means we can't continue, stay in the middle

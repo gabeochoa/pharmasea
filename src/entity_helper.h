@@ -53,10 +53,6 @@ struct EntityHelper : afterhours::EntityHelper {
     static OptEntity getPossibleNamedEntity(const NamedEntity& name);
 
     // Game-specific query methods
-    static OptEntity getClosestMatchingFurniture(
-        const Transform& transform, float range,
-        const std::function<bool(const Entity&)>& filter);
-
     static OptEntity getEntityForID(afterhours::EntityID id) {
         if (id == entity_id::INVALID) return {};
         return get_current_collection().getEntityForID(id);
@@ -70,25 +66,6 @@ struct EntityHelper : afterhours::EntityHelper {
         }
         return opt.asE();
     }
-
-    static bool doesAnyExistWithType(const EntityType& type);
-
-    static OptEntity getMatchingEntityInFront(
-        vec2 pos,                                         //
-        float range,                                      //
-        Transform::FrontFaceDirection direction,          //
-        const std::function<bool(const Entity&)>& filter  //
-    );
-
-    static RefEntities getAllInRange(vec2 range_min, vec2 range_max);
-    static RefEntities getAllInRangeFiltered(
-        vec2 range_min, vec2 range_max,
-        const std::function<bool(const Entity&)>& filter);
-
-    static OptEntity getOverlappingEntityIfExists(
-        const Entity& entity, float range,
-        const std::function<bool(const Entity&)>& filter = {},
-        bool include_store_entities = false);
 
     // Pathfinding and walkability
     static void invalidateCaches();

@@ -74,3 +74,64 @@ EQ& EQ::whereHeldItemMatches(const std::function<bool(const Entity&)>& fn) {
             return fn(item);
         }));
 }
+
+OptEntity EQ::getClosestMatchingFurniture(
+    const Transform& transform, float range,
+    const std::function<bool(const Entity&)>& filter) {
+    // TODO :BE: should this really be using this?
+    return getMatchingEntityInFront(transform.as2(), transform.face_direction(),
+                                    range, filter);
+}
+
+OptEntity EQ::getMatchingEntityInFront(
+    vec2 pos, Transform::FrontFaceDirection direction, float range,
+    const std::function<bool(const Entity&)>& filter) {
+    TRACY_ZONE_SCOPED;
+    VALIDATE(range > 0,
+             fmt::format("range has to be positive but was {}", range));
+    /**
+        auto& eq = EQ()
+                   .whereLambda(filter)
+                   .whereInFront(tile)
+                   .whereSnappedPositionMatches(vec::snap(tile));
+        if (eq.has_values()) {
+            return eq.gen_first();
+        }
+     */
+
+    int cur_step = 0;
+    int irange = static_cast<int>(range);
+    while (cur_step <= irange) {
+        auto tile = Transform::tile_infront_given_pos(pos, cur_step, direction);
+
+        for (const auto& current_entity : EntityHelper::get_entities()) {
+            if (!current_entity) continue;
+            if (!filter(*current_entity)) continue;
+
+            // all entitites should have transforms but just in case
+            if (current_entity->template is_missing<Transform>()) {
+                log_warn("component {} is missing transform",
+                         current_entity->id);
+                log_error("component {} is missing name",
+                          str(get_entity_type(*current_entity)));
+                continue;
+            }
+
+            const Transform& transform =
+                current_entity->template get<Transform>();
+
+            float cur_dist = vec::distance(transform.as2(), tile);
+            // outside reach
+            if (abs(cur_dist) > 1) continue;
+            // this is behind us
+            if (cur_dist < 0) continue;
+
+            // TODO :BE: add a snap_as2() function to transform
+            if (vec::to2(transform.snap_position()) == vec::snap(tile)) {
+                return *current_entity;
+            }
+        }
+        cur_step++;
+    }
+    return {};
+}

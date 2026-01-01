@@ -259,7 +259,7 @@ void deleting_item_needed_for_recipe(Entity& entity) {
     // TODO right now getAll will return store ents but we dont want that for
     // this, the radius is saving us at the moment
     float rad = 25;
-    const RefEntities ents = EntityHelper::getAllInRangeFiltered(
+    const RefEntities ents = EQ().getAllInRangeFiltered(
         {-1.f * rad, -1.f * rad}, {rad, rad}, [&ifm](const Entity& entity) {
             // Ignore the ones in the trash
             if (ifm.is_marked(entity.id)) return false;

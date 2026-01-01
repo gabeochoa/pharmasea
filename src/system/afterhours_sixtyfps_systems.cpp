@@ -227,7 +227,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::ModelTest_BackToLobby: {
             GameState::get().transition_to_lobby();
 
-            const auto ents = EntityHelper::getAllInRange(
+            const auto ents = EQ().getAllInRange(
                 MODEL_TEST_BUILDING.min(), MODEL_TEST_BUILDING.max());
 
             for (Entity& to_delete : ents) {
@@ -302,7 +302,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::LoadSave_BackToLobby: {
             GameState::get().transition_to_lobby();
 
-            const auto ents = EntityHelper::getAllInRange(
+            const auto ents = EQ().getAllInRange(
                 LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
             for (Entity& to_delete : ents) {
                 to_delete.cleanup = true;
@@ -328,7 +328,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
                 // Refresh room by clearing entities in the building and
                 // regenerating.
-                const auto ents = EntityHelper::getAllInRange(
+                const auto ents = EQ().getAllInRange(
                     LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
                 for (Entity& to_delete : ents) {
                     to_delete.cleanup = true;

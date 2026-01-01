@@ -163,6 +163,46 @@ struct EQ : public afterhours::EntityQuery<EQ> {
             [type](const IsTriggerArea& ta) { return ta.type == type; });
     }
 
+    // Complex query methods
+    [[nodiscard]] OptEntity getClosestMatchingFurniture(
+        const Transform& transform, float range,
+        const std::function<bool(const Entity&)>& filter);
+
+    [[nodiscard]] bool doesAnyExistWithType(const EntityType& type) {
+        return whereType(type).has_values();
+    }
+
+    [[nodiscard]] OptEntity getMatchingEntityInFront(
+        vec2 pos, Transform::FrontFaceDirection direction, float range,
+        const std::function<bool(const Entity&)>& filter);
+
+    [[nodiscard]] RefEntities getAllInRangeFiltered(
+        vec2 range_min, vec2 range_max,
+        const std::function<bool(const Entity&)>& filter) {
+        return whereInside(range_min, range_max)
+            .include_store_entities()
+            .whereLambda(filter)
+            .gen();
+    }
+
+    [[nodiscard]] RefEntities getAllInRange(vec2 range_min, vec2 range_max) {
+        return whereInside(range_min, range_max).include_store_entities().gen();
+    }
+
+    [[nodiscard]] OptEntity getOverlappingEntityIfExists(
+        const Entity& entity, float range,
+        const std::function<bool(const Entity&)>& filter = {},
+        bool include_store_entities = false) {
+        const vec2 position = entity.get<Transform>().as2();
+        return whereNotID(entity.id)
+            .whereLambdaExistsAndTrue(filter)
+            .whereHasComponent<IsSolid>()
+            .whereInRange(position, range)
+            .wherePositionMatches(entity)
+            .include_store_entities(include_store_entities)
+            .gen_first();
+    }
+
     // Pathfinding filtering
     struct WhereCanPathfindTo : EntityQuery::Modification {
         vec2 start;

@@ -255,7 +255,7 @@ void process_player_movement_input(Entity& entity, float dt,
         }
 
         OptEntity overlap =
-            EntityHelper::getOverlappingEntityIfExists(entity, 0.75f);
+            EQ().getOverlappingEntityIfExists(entity, 0.75f);
         if (!overlap.has_value()) return 1.f;
         if (check_type(overlap.asE(), EntityType::Vomit)) return 0.5f;
         return 1.f;
@@ -297,7 +297,7 @@ void process_player_movement_input(Entity& entity, float dt,
 void work_furniture(Entity& player, float frame_dt) {
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
-    OptEntity match = EntityHelper::getClosestMatchingFurniture(
+    OptEntity match = EQ().getClosestMatchingFurniture(
         player.get<Transform>(), cho.reach(), [](const Entity& furniture) {
             if (furniture.template is_missing<HasWork>()) return false;
             const HasWork& hasWork = furniture.template get<HasWork>();
@@ -491,7 +491,7 @@ void rotate_furniture(const Entity& player) {
 
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
-    OptEntity match = EntityHelper::getClosestMatchingFurniture(
+    OptEntity match = EQ().getClosestMatchingFurniture(
         player.get<Transform>(), cho.reach(), [](const Entity& furniture) {
             return furniture.template has<IsRotatable>();
         });
@@ -572,7 +572,7 @@ void handle_grab_or_drop(Entity& player) {
         // TODO support finding things in the direction the player is
         // facing, instead of in a box around him
 
-        OptEntity closest_furniture = EntityHelper::getClosestMatchingFurniture(
+        OptEntity closest_furniture = EQ().getClosestMatchingFurniture(
             player.get<Transform>(), cho.reach(), [](const Entity& f) {
                 // right now walls inherit this from furniture
                 // but eventually that should not be the case
@@ -702,7 +702,7 @@ void handle_drop(Entity& player) {
                 "empty");
         }
 
-        OptEntity closest_furniture = EntityHelper::getClosestMatchingFurniture(
+        OptEntity closest_furniture = EQ().getClosestMatchingFurniture(
             player.get<Transform>(), cho.reach(), [](const Entity& f) {
                 if (f.is_missing<CanHoldItem>()) return false;
                 return f.get<CanHoldItem>().is_holding_item();
@@ -764,7 +764,7 @@ void handle_drop(Entity& player) {
                 "holding anything");
         }
 
-        OptEntity closest_furniture = EntityHelper::getClosestMatchingFurniture(
+        OptEntity closest_furniture = EQ().getClosestMatchingFurniture(
             player.get<Transform>(), cho.reach(),
             [&playerCHI](const Entity& f) {
                 if (f.is_missing<CanHoldItem>()) return false;
@@ -814,7 +814,7 @@ void handle_drop(Entity& player) {
 
     const auto _place_item_onto_furniture =
         [&]() -> tl::expected<bool, std::string> {
-        OptEntity closest_furniture = EntityHelper::getClosestMatchingFurniture(
+        OptEntity closest_furniture = EQ().getClosestMatchingFurniture(
             player.get<Transform>(), cho.reach(),
             [&player](const Entity& f) -> bool {
                 // This cant hold anything
@@ -926,7 +926,7 @@ void handle_grab(Entity& player) {
         const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
         const Transform& playerT = player.get<Transform>();
 
-        OptEntity closest_furniture = EntityHelper::getClosestMatchingFurniture(
+        OptEntity closest_furniture = EQ().getClosestMatchingFurniture(
             playerT, cho.reach(), [&player](const Entity& furn) -> bool {
                 // You should not be able to take from
                 // other player / customer
