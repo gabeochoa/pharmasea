@@ -75,8 +75,19 @@ void serialize(S& s, ClientPacket& packet) {
                       } break;
                       case ClientPacket::MapInfo::Kind::Chunk: {
                           s.value4b(info.offset);
-                          // Binary data chunk (may contain '\0'), so use text4b.
-                          s.text4b(info.data, 1024u * 1024u);
+                          // Binary data chunk (may contain '\0').
+                          //
+                          // IMPORTANT: do NOT use bitsery text4b/container4b for
+                          // std::string in this repo's bitsery version; it
+                          // assumes element size == 4 and static_asserts on
+                          // `char` (sizeof(char)==1).
+                          std::uint32_t n =
+                              static_cast<std::uint32_t>(info.data.size());
+                          s.value4b(n);
+                          info.data.resize(n);
+                          for (std::uint32_t i = 0; i < n; ++i) {
+                              s.value1b(info.data[i]);
+                          }
                       } break;
                       case ClientPacket::MapInfo::Kind::End: {
                           // nothing else
