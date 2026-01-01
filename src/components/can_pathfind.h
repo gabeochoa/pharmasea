@@ -15,7 +15,8 @@ struct CanPathfind : public BaseComponent {
     [[nodiscard]] vec2 get_local_target() { return local_target.value(); }
 
     [[nodiscard]] bool travel_toward(vec2 end, float speed) {
-        Entity& parent = EntityHelper::getEnforcedEntityForID(parent.id);
+        Entity& parent_entity =
+            EntityHelper::getEnforcedEntityForID(this->parent.id);
 
         // Nothing to do we are already at the goal
         if (is_at_position(end)) return true;
@@ -25,7 +26,7 @@ struct CanPathfind : public BaseComponent {
             return false;
         }
 
-        Transform& transform = parent.get<Transform>();
+        Transform& transform = parent_entity.get<Transform>();
         vec2 me = transform.as2();
 
         global_target = end;
