@@ -372,27 +372,9 @@ void process_ai_drinking(Entity& entity, float dt) {
     OptEntity opt_drink_pos = EntityHelper::getEntityForID(target_id);
 
     if (!opt_drink_pos) {
-        // Debugging: verify whether IDs are "wrong" vs the entity just being
-        // in Afterhours temp storage or already cleaned up.
-        const auto& col = EntityHelper::get_current_collection();
-        const auto& ents = col.get_entities();
-        const auto& temp = col.get_temp();
-        const auto contains_id = [](const auto& container, EntityID id) {
-            for (const auto& sp : container) {
-                if (!sp) continue;
-                if (sp->id == id) return true;
-            }
-            return false;
-        };
-
-        // Note: don't use log_error here; it asserts to break into debugger.
-        log_warn(
-            "ai_drinking: missing drink_pos id={} for customer_id={} "
-            "merged_size={} temp_size={} in_merged={} in_temp={}",
-            target_id, entity.id, ents.size(), temp.size(),
-            contains_id(ents, target_id), contains_id(temp, target_id));
-
         // Avoid crashing on asE(); clear the target so we can re-pick next tick.
+        log_warn("ai_drinking: missing drink_pos id={} for customer_id={}",
+                 target_id, entity.id);
         aidrinking.target.unset();
         aidrinking.reset();
         return;

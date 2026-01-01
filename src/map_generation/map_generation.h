@@ -251,33 +251,6 @@ struct helper {
     }
 
     void validate() {
-        // Diagnostics: validate() runs immediately after generation and uses
-        // EQ() which queries the *merged* entity list by default (temp entities
-        // are not query-visible until merge). If this trips, we want to know
-        // whether entities exist in temp vs merged.
-        const auto& collection = EntityHelper::get_current_collection();
-        const auto& ents = collection.get_entities();
-        const auto& temp = collection.get_temp();
-
-        const auto has_type_in = [](const auto& container, EntityType et) {
-            for (const auto& sp : container) {
-                if (!sp) continue;
-                if (sp->hasTag(et)) return true;
-            }
-            return false;
-        };
-
-        log_trace(
-            "mapgen::validate: merged_entities={} temp_entities={} "
-            "Sophie(merged={},temp={}) Register(merged={},temp={}) "
-            "CustomerSpawner(merged={},temp={})",
-            ents.size(), temp.size(), has_type_in(ents, EntityType::Sophie),
-            has_type_in(temp, EntityType::Sophie),
-            has_type_in(ents, EntityType::Register),
-            has_type_in(temp, EntityType::Register),
-            has_type_in(ents, EntityType::CustomerSpawner),
-            has_type_in(temp, EntityType::CustomerSpawner));
-
         const auto get_first_matching = [](EntityType et) -> OptEntity {
             return EQ().whereType(et).first().gen_first();
         };
