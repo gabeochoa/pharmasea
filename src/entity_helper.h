@@ -55,7 +55,22 @@ struct EntityHelper : afterhours::EntityHelper {
     // Game-specific query methods
     static OptEntity getEntityForID(afterhours::EntityID id) {
         if (id == entity_id::INVALID) return {};
-        return get_current_collection().getEntityForID(id);
+        // Afterhours maintains an O(1) ID->slot mapping for merged entities.
+        // However, many gameplay paths (AI target markers, etc.) create helper
+        // entities into `temp_entities` and then immediately resolve by ID
+        // within the same tick, before the usual per-system merge.
+        //
+        // To preserve historical behavior (and avoid relying on forced merges
+        // mid-system), fall back to checking temp entities if the O(1) lookup
+        // misses.
+        OptEntity merged = get_current_collection().getEntityForID(id);
+        if (merged) return merged;
+
+        for (const auto& sp : get_current_collection().get_temp()) {
+            if (!sp) continue;
+            if (sp->id == id) return *sp;
+        }
+        return {};
     }
 
     // Like getEntityForID, but asserts when missing.

@@ -385,7 +385,8 @@ void process_ai_drinking(Entity& entity, float dt) {
             return false;
         };
 
-        log_error(
+        // Note: don't use log_error here; it asserts to break into debugger.
+        log_warn(
             "ai_drinking: missing drink_pos id={} for customer_id={} "
             "merged_size={} temp_size={} in_merged={} in_temp={}",
             target_id, entity.id, ents.size(), temp.size(),
