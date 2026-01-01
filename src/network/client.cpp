@@ -18,6 +18,12 @@
 namespace network {
 
 Client::Client() {
+    // Ensure Afterhours' default collection matches the client thread's
+    // collection. (Some serialization paths call afterhours::EntityHelper
+    // directly.)
+    afterhours::EntityHelper::set_default_collection(
+        &EntityHelper::get_client_collection());
+
     client_p = std::make_unique<internal::Client>();
     client_p->set_process_message([this](const std::string& msg) {
         this->client_process_message_string(msg);
@@ -279,8 +285,7 @@ void Client::client_process_message_string(const std::string& msg) {
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
             auto& collection = EntityHelper::get_client_collection();
-            collection.entities_DO_NOT_USE.clear();
-            collection.entities_DO_NOT_USE = info.map.entities();
+            collection.replace_all_entities(info.map.entities());
 
             post_deserialize_fixups::run(collection.entities_DO_NOT_USE);
 
