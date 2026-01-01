@@ -68,7 +68,13 @@ struct EntityHelper : afterhours::EntityHelper {
 
         for (const auto& sp : get_current_collection().get_temp()) {
             if (!sp) continue;
-            if (sp->id == id) return *sp;
+            if (sp->id == id) {
+                log_warn(
+                    "EntityHelper::getEntityForID: resolved id {} from temp "
+                    "entities (pre-merge)",
+                    id);
+                return *sp;
+            }
         }
         return {};
     }
