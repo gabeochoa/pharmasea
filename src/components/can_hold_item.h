@@ -31,7 +31,16 @@ struct CanHoldItem : public BaseComponent {
 
     CanHoldItem& update(Entity& item, int entity_id) {
         held_item_id = item.id;
-        item.get<IsItem>().set_held_by(held_by, entity_id);
+        // Defensive: this should always be an item, but avoid hard-crashing if
+        // an unexpected entity is passed in.
+        if (item.has<IsItem>()) {
+            item.get<IsItem>().set_held_by(held_by, entity_id);
+        } else {
+            log_error(
+                "CanHoldItem::update: entity {} was set as held item but is "
+                "missing IsItem",
+                item.id);
+        }
         last_held_id = item.id;
         if (held_by == EntityType::Unknown) {
             log_warn(

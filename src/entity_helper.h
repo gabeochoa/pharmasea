@@ -55,7 +55,24 @@ struct EntityHelper : afterhours::EntityHelper {
     // Game-specific query methods
     static OptEntity getEntityForID(afterhours::EntityID id) {
         if (id == entity_id::INVALID) return {};
-        return get_current_collection().getEntityForID(id);
+        // Afterhours maintains an O(1) ID->slot mapping for merged entities.
+        // However, many gameplay paths (AI target markers, etc.) create helper
+        // entities into `temp_entities` and then immediately resolve by ID
+        // within the same tick, before the usual per-system merge.
+        //
+        // To preserve historical behavior (and avoid relying on forced merges
+        // mid-system), fall back to checking temp entities if the O(1) lookup
+        // misses.
+        OptEntity merged = get_current_collection().getEntityForID(id);
+        if (merged) return merged;
+
+        for (const auto& sp : get_current_collection().get_temp()) {
+            if (!sp) continue;
+            if (sp->id == id) {
+                return *sp;
+            }
+        }
+        return {};
     }
 
     // Like getEntityForID, but asserts when missing.
@@ -104,18 +121,19 @@ struct EntityHelper : afterhours::EntityHelper {
     // Item creation helpers
     template<typename... TArgs>
     static RefEntity createItem(EntityType type, vec3 pos, TArgs... args) {
-        items::make_item_type(createEntity(), type, pos,
-                              std::forward<TArgs>(args)...);
-        // log_info("created a new item {} {} ", e.id, e.name());
-        return *(get_entities().back());
+        // Important: `createEntity()` creates into Afterhours temp storage.
+        // Do NOT return `get_entities().back()` here (that's the last *merged*
+        // entity, not necessarily the one we just created).
+        Entity& e = createEntity();
+        items::make_item_type(e, type, pos, std::forward<TArgs>(args)...);
+        return e;
     }
 
     template<typename... TArgs>
     static RefEntity createPermanentItem(vec3 pos, TArgs... args) {
-        items::make_item_type(createPermanentEntity(), pos,
-                              std::forward<TArgs>(args)...);
-        // log_info("created a new item {} {} ", e.id, e.name());
-        return *(get_entities().back());
+        Entity& e = createPermanentEntity();
+        items::make_item_type(e, pos, std::forward<TArgs>(args)...);
+        return e;
     }
 
     // Cleanup and entity management

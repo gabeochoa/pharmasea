@@ -64,14 +64,14 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 
 template<typename S>
 void serialize(S& s, EntityHandle& handle) {
-    s.value8b(handle.slot);
-    s.value8b(handle.gen);
+    s.value4b(handle.slot);
+    s.value4b(handle.gen);
 }
 
 template<typename S>
 void serialize(S& s, const EntityHandle& handle) {
-    s.value8b(handle.slot);
-    s.value8b(handle.gen);
+    s.value4b(handle.slot);
+    s.value4b(handle.gen);
 }
 
 template<typename S>

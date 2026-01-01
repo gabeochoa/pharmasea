@@ -13,6 +13,10 @@ namespace mapgen {
 vec2 generate_default_seed(const std::vector<std::string>& example_map) {
     generation::helper helper(example_map);
     helper.generate();
+    // Entities created during generation land in Afterhours' temp list; merge
+    // before validation (and any EQ()/EntityQuery usage) so queries can see
+    // required entities like Sophie/Register/etc.
+    EntityHelper::get_current_collection().merge_entity_arrays();
     helper.validate();
     EntityHelper::invalidateCaches();
     // Keep behavior consistent with prior code: outside triggers were placed at
@@ -26,6 +30,8 @@ vec2 generate_in_game_map(const std::string& seed) {
 
     generation::helper helper(ascii.lines);
     vec2 max_location = helper.generate();
+    // Same as default seed: merge temp entities before validation.
+    EntityHelper::get_current_collection().merge_entity_arrays();
     helper.validate();
     EntityHelper::invalidateCaches();
 

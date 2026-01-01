@@ -132,6 +132,12 @@ void Server::run() {
     thread_id = std::this_thread::get_id();
     GLOBALS.set("server_thread_id", &thread_id);
 
+    // Ensure Afterhours' default collection matches the server thread's
+    // collection. (Some serialization paths call afterhours::EntityHelper
+    // directly.)
+    afterhours::EntityHelper::set_default_collection(
+        &EntityHelper::get_server_collection());
+
     // should probably always be about / above whats in the game.h
     constexpr float desiredFrameRate = 240.0f;
     constexpr std::chrono::duration<float> fixedTimeStep(1.0f /
@@ -331,8 +337,8 @@ void Server::process_map_update(float dt) {
             if (save_game::SaveGameManager::load_file(p, loaded)) {
                 // Apply snapshot (same logic as
                 // server_only::load_game_from_slot).
-                EntityHelper::get_server_collection().entities_DO_NOT_USE =
-                    loaded.map_snapshot.game_info.entities;
+                EntityHelper::get_server_collection().replace_all_entities(
+                    loaded.map_snapshot.game_info.entities);
 
                 pharmacy_map->game_info = loaded.map_snapshot.game_info;
                 pharmacy_map->showMinimap = loaded.map_snapshot.showMinimap;

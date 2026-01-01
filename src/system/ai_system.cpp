@@ -368,8 +368,17 @@ void process_ai_drinking(Entity& entity, float dt) {
     }
 
     // We have a target
-    OptEntity opt_drink_pos =
-        EntityHelper::getEntityForID(aidrinking.target.id());
+    const EntityID target_id = aidrinking.target.id();
+    OptEntity opt_drink_pos = EntityHelper::getEntityForID(target_id);
+
+    if (!opt_drink_pos) {
+        // Avoid crashing on asE(); clear the target so we can re-pick next tick.
+        log_warn("ai_drinking: missing drink_pos id={} for customer_id={}",
+                 target_id, entity.id);
+        aidrinking.target.unset();
+        aidrinking.reset();
+        return;
+    }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
         opt_drink_pos.asE().get<Transform>().as2(),
