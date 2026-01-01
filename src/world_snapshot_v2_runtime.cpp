@@ -239,7 +239,9 @@ void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap,
                       off, sz, snap.component_bytes.size());
             continue;
         }
-        snapshot_v2::decode_components_blob(*entities[i], snap.component_bytes.data() + off, sz);
+        snapshot_v2::decode_components_blob(*entities[i],
+                                            snap.component_bytes.begin() + (std::ptrdiff_t)off,
+                                            sz);
     }
 
     if (!options.preserve_legacy_entity_ids) {

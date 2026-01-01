@@ -137,10 +137,11 @@ void encode_components_blob_into(const Entity& e, std::vector<std::uint8_t>& out
     }
 }
 
-void decode_components_blob(Entity& e, const std::uint8_t* data, const std::size_t size) {
+void decode_components_blob(Entity& e, std::vector<std::uint8_t>::const_iterator begin,
+                            const std::size_t size) {
     TContext ctx{};
     std::get<1>(ctx).registerBasesList<Deserializer>(MyPolymorphicClasses{});
-    Deserializer des{ctx, data, size};
+    Deserializer des{ctx, begin, size};
     deserialize_components_only_impl(des, e);
     if (des.adapter().error() != bitsery::ReaderError::NoError) {
         log_error("snapshot_v2: decode_components_blob reader_error={}",
