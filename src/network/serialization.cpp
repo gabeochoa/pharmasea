@@ -14,13 +14,8 @@ Buffer serialize_to_entity(Entity* entity) {
     std::get<1>(ctx).registerBasesList<BitserySerializer>(
         MyPolymorphicClasses{});
 
-    // Debug: Print type hashes
-    printf("[SERIALIZE DEBUG] afterhours::BaseComponent hash: %zu, name: %s\n",
-           typeid(afterhours::BaseComponent).hash_code(),
-           typeid(afterhours::BaseComponent).name());
-    printf("[SERIALIZE DEBUG] BaseComponent hash: %zu, name: %s\n",
-           typeid(BaseComponent).hash_code(), typeid(BaseComponent).name());
-    fflush(stdout);
+    // Note: avoid unconditional debug printing here; this function is called
+    // on hot paths and spammy logs can mask real issues and hurt perf.
 
     BitserySerializer ser{ctx, buffer};
     ser.object(*entity);
