@@ -4,6 +4,7 @@
 
 #include "../entity_helper.h"
 #include "../entity_id.h"
+#include "../entity_ref.h"
 #include "base_component.h"
 
 struct RespondsToDayNight : public BaseComponent {
@@ -35,28 +36,33 @@ struct RespondsToDayNight : public BaseComponent {
 
     void call_day_started() {
         if (!onDayStartedFn) return;
-        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
-        onDayStartedFn(parent);
+        OptEntity parent_opt = parent.resolve();
+        if (!parent_opt) return;
+        Entity& parent_e = parent_opt.asE();
+        onDayStartedFn(parent_e);
     }
     void call_night_started() {
         if (!onNightStartedFn) return;
-        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
-        onNightStartedFn(parent);
+        OptEntity parent_opt = parent.resolve();
+        if (!parent_opt) return;
+        onNightStartedFn(parent_opt.asE());
     }
 
     void call_day_ended() {
         if (!onDayEndedFn) return;
-        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
-        onDayEndedFn(parent);
+        OptEntity parent_opt = parent.resolve();
+        if (!parent_opt) return;
+        onDayEndedFn(parent_opt.asE());
     }
     void call_night_ended() {
         if (!onNightEndedFn) return;
-        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
-        onNightEndedFn(parent);
+        OptEntity parent_opt = parent.resolve();
+        if (!parent_opt) return;
+        onNightEndedFn(parent_opt.asE());
     }
 
     auto& set_parent(EntityID id) {
-        parent_id = id;
+        parent.set_id(id);
         return *this;
     }
 
@@ -67,12 +73,12 @@ struct RespondsToDayNight : public BaseComponent {
     OnNightStartedFn onNightStartedFn = nullptr;
     OnNightEndedFn onNightEndedFn = nullptr;
 
-    EntityID parent_id = entity_id::INVALID;
+    EntityRef parent{};
 
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(parent_id);
+        s.object(parent);
     }
 };

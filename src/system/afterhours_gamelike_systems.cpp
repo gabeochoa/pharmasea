@@ -127,8 +127,8 @@ struct ProcessPnumaticPipePairingSystem
 
         if (other_pipe.has_value()) {
             IsPnumaticPipe& otherpp = other_pipe->get<IsPnumaticPipe>();
-            otherpp.paired_id = entity.id;
-            ipp.paired_id = other_pipe->id;
+            otherpp.paired.set_id(entity.id);
+            ipp.paired.set_id(other_pipe->id);
         }
 
         // still dont have a pair, we probably just have an odd number

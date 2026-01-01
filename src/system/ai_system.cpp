@@ -685,7 +685,7 @@ void process_jukebox_play(Entity& entity, float dt) {
         [&](const Entity& best_jukebox) -> bool {
             // We were the last person to put on a song, so we dont need to
             // change it (yet...)
-            if (best_jukebox.get<HasLastInteractedCustomer>().customer_id ==
+            if (best_jukebox.get<HasLastInteractedCustomer>().customer.id ==
                 entity.id) {
                 return false;
             }
@@ -746,7 +746,7 @@ void process_jukebox_play(Entity& entity, float dt) {
     }
 
     // TODO it woud be nice to show the customer's face above the entity
-    reg.get<HasLastInteractedCustomer>().customer_id = entity.id;
+    reg.get<HasLastInteractedCustomer>().customer.set_id(entity.id);
 
     ai_play_jukebox.line_wait.leave_line(reg, entity);
 

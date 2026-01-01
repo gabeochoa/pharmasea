@@ -232,7 +232,7 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
             // if we are a pnumatic pipe, filter only down to our guy
             if (furn.is_missing<IsPnumaticPipe>()) return false;
             const IsPnumaticPipe& mypp = entity.get<IsPnumaticPipe>();
-            if (mypp.paired_id != furn.id) return false;
+            if (mypp.paired.id != furn.id) return false;
             if (mypp.recieving) return false;
             return _conveyer_filter(furn);
         };
@@ -473,10 +473,10 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
         if (entity.is_missing<IsPnumaticPipe>()) return;
         const IsPnumaticPipe& ipp = entity.get<IsPnumaticPipe>();
 
-        if (ipp.paired_id == -1) return;
+        if (!ipp.has_pair()) return;
 
         OptEntity paired_pipe = EntityQuery()
-                                    .whereID(ipp.paired_id)
+                                    .whereID(ipp.paired.id)
                                     .whereHasComponent<IsPnumaticPipe>()
                                     .gen_first();
 
