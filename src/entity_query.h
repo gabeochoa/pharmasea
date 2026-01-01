@@ -157,6 +157,12 @@ struct EQ : public afterhours::EntityQuery<EQ> {
             [type](const IsFloorMarker& fm) { return fm.type == type; });
     }
 
+    // Trigger area filtering
+    EQ& whereTriggerAreaOfType(IsTriggerArea::Type type) {
+        return whereHasComponentAndLambda<IsTriggerArea>(
+            [type](const IsTriggerArea& ta) { return ta.type == type; });
+    }
+
     // Pathfinding filtering
     struct WhereCanPathfindTo : EntityQuery::Modification {
         vec2 start;

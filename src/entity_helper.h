@@ -90,8 +90,6 @@ struct EntityHelper : afterhours::EntityHelper {
         const std::function<bool(const Entity&)>& filter = {},
         bool include_store_entities = false);
 
-    static OptEntity getMatchingTriggerArea(IsTriggerArea::Type type);
-
     // Pathfinding and walkability
     static void invalidateCaches();
     static void invalidatePathCache();

@@ -360,8 +360,10 @@ struct CartManagementSystem
             bank.update_cart(amount_in_cart);
         }
 
-        OptEntity purchase_area = EntityHelper::getMatchingTriggerArea(
-            IsTriggerArea::Type::Store_BackToPlanning);
+        OptEntity purchase_area =
+            EQ().whereTriggerAreaOfType(
+                    IsTriggerArea::Type::Store_BackToPlanning)
+                .gen_first();
         if (purchase_area.valid()) {
             (void) purchase_area->get<IsTriggerArea>().should_progress();
         }

@@ -138,13 +138,6 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
         transform.as2(), range, transform.face_direction(), filter);
 }
 
-OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
-    return EQ()
-        .whereHasComponentAndLambda<IsTriggerArea>(
-            [type](const IsTriggerArea& ta) { return ta.type == type; })
-        .gen_first();
-}
-
 // TODO: make this more explicit that we are ignoring store entities
 // (this was already the default but new callers should know)
 bool EntityHelper::doesAnyExistWithType(const EntityType& type) {

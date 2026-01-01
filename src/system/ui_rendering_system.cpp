@@ -400,8 +400,10 @@ void render_store(const Entity& entity, float) {
     if (!check_type(entity, EntityType::Sophie)) return;
 
     const auto render_validation = [](Rectangle content) {
-        OptEntity purchase_area = EntityHelper::getMatchingTriggerArea(
-            IsTriggerArea::Type::Store_BackToPlanning);
+        OptEntity purchase_area =
+            EQ().whereTriggerAreaOfType(
+                    IsTriggerArea::Type::Store_BackToPlanning)
+                .gen_first();
 
         if (!purchase_area.valid()) return;
 
