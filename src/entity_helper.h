@@ -112,6 +112,11 @@ struct EntityHelper {
     // Like getEntityForID, but asserts when missing.
     static Entity& getEnforcedEntityForID(EntityID id);
 
+    // Handle-based APIs (pointer-free, stable identifiers)
+    // NOTE: These are Phase 1 building blocks; storage remains in PharmaSea.
+    static EntityHandle handle_for(const Entity& e);
+    static OptEntity resolve(EntityHandle h);
+
     static OptEntity getClosestOfType(const Entity& entity,
                                       const EntityType& type,
                                       float range = 100.f);

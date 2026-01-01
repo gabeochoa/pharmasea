@@ -17,7 +17,9 @@ using afterhours::RefEntity;
 #include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
 
+#include <cstdint>
 #include <optional>
+#include "entity_handle_resolver.h"
 
 // TODO memory? we could keep track of deleted entities and reuse those ids if
 // we wanted to we'd have to be pretty disiplined about clearing people who
@@ -64,14 +66,19 @@ void serialize(S& s, std::shared_ptr<Entity>& entity) {
 
 template<typename S>
 void serialize(S& s, EntityHandle& handle) {
-    s.value8b(handle.slot);
-    s.value8b(handle.gen);
+    // Wire format: (u32 slot, u32 gen). Keep stable across platforms.
+    uint32_t slot32 = static_cast<uint32_t>(handle.slot);
+    uint32_t gen32 = static_cast<uint32_t>(handle.gen);
+    s.value4b(slot32);
+    s.value4b(gen32);
+    handle.slot = static_cast<afterhours::EntityHandle::Slot>(slot32);
+    handle.gen = static_cast<std::size_t>(gen32);
 }
 
 template<typename S>
 void serialize(S& s, const EntityHandle& handle) {
-    s.value8b(handle.slot);
-    s.value8b(handle.gen);
+    EntityHandle tmp = handle;
+    serialize(s, tmp);
 }
 
 template<typename S>
@@ -83,7 +90,7 @@ void serialize(S& s, std::optional<EntityHandle>& opt_handle) {
 template<typename S>
 void serialize(S& s, RefEntity ref) {
     Entity& e = ref.get();
-    EntityHandle handle = afterhours::EntityHelper::handle_for(e);
+    EntityHandle handle = pharmasea_handles::handle_for(e);
     serialize(s, handle);
 }
 
@@ -91,7 +98,7 @@ template<typename S>
 void serialize(S& s, OptEntity opt) {
     std::optional<EntityHandle> opt_handle;
     if (opt.has_value()) {
-        opt_handle = afterhours::EntityHelper::handle_for(opt.asE());
+        opt_handle = pharmasea_handles::handle_for(opt.asE());
     }
     serialize(s, opt_handle);
 }

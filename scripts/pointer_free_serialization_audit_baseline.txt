@@ -1,0 +1,17 @@
+# Baseline for scripts/check_pointer_free_serialization.py
+#
+# This file intentionally lists current known violations so the audit can
+# be used as a regression detector before the migration is complete.
+#
+# To update:
+#   UPDATE_BASELINE=1 python3 scripts/check_pointer_free_serialization.py
+
+[no PointerLinkingContext in network/save contexts] src/network/serialization.h contains 'bitsery::ext::PointerLinkingContext'
+[no PointerLinkingContext in network/save contexts] src/save_game/save_game.cpp contains 'bitsery::ext::PointerLinkingContext'
+[no StdSmartPtr in world snapshot paths] src/entity.h contains 'StdSmartPtr{'
+[no StdSmartPtr in world snapshot paths] src/entity.h contains 'bitsery::ext::StdSmartPtr'
+[no StdSmartPtr in world snapshot paths] src/level_info.h contains 'StdSmartPtr{'
+[no StdSmartPtr in world snapshot paths] src/level_info.h contains 'bitsery::ext::StdSmartPtr'
+[no bitsery pointer extension includes in world snapshot paths] src/entity.h contains '#include <bitsery/ext/pointer.h>'
+[no bitsery pointer extension includes in world snapshot paths] src/entity.h contains 'PointerObserver'
+[no bitsery pointer extension includes in world snapshot paths] src/entity.h contains 'PointerOwner'

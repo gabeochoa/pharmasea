@@ -85,6 +85,8 @@ all: post-build
 
 pre-build:
 	python3 scripts/check_network_polymorphs.py
+	python3 scripts/check_pointer_free_serialization.py
+	python3 scripts/check_no_persistent_refentity.py
 
 main-build: pre-build $(OUTPUT_EXE) 
 
@@ -93,6 +95,11 @@ post-build: main-build
 	# ./$(OUTPUT_EXE) 2>&1 $(GAME_LOG)
 # -g disables sounds 
 # ./$(OUTPUT_EXE) -g 2>&1 $(GAME_LOG)
+
+serialization_roundtrip: pre-build
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) tools/serialization_roundtrip.cpp -o $(OBJ_DIR)/serialization_roundtrip
+	./$(OBJ_DIR)/serialization_roundtrip
 
 
 $(OUTPUT_EXE): $(H_FILES) $(OBJ_FILES) 

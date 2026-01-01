@@ -14,6 +14,136 @@ NamedEntities named_entities_DO_NOT_USE;
 std::set<int> permanant_ids;
 std::map<vec2, bool> cache_is_walkable;
 
+namespace {
+using SlotIndex = afterhours::EntityHandle::Slot;
+
+struct Slot {
+    std::shared_ptr<Entity> ent{};
+    std::size_t gen = 1;
+    std::size_t dense_index = 0;
+};
+
+struct HandleStore {
+    std::vector<Slot> slots;
+    std::vector<SlotIndex> free_slots;
+    std::vector<SlotIndex> id_to_slot;
+};
+
+HandleStore client_handle_store_DO_NOT_USE;
+HandleStore server_handle_store_DO_NOT_USE;
+
+HandleStore& handle_store() {
+    return is_server() ? server_handle_store_DO_NOT_USE
+                       : client_handle_store_DO_NOT_USE;
+}
+
+// Bump generation so old handles become stale (0 is reserved/avoided).
+std::size_t bump_gen(std::size_t gen) {
+    const std::size_t next = gen + 1;
+    return next + static_cast<std::size_t>(next == 0);
+}
+
+SlotIndex alloc_slot_index(HandleStore& hs) {
+    if (!hs.free_slots.empty()) {
+        const SlotIndex slot = hs.free_slots.back();
+        hs.free_slots.pop_back();
+        return slot;
+    }
+    hs.slots.push_back(Slot{});
+    return static_cast<SlotIndex>(hs.slots.size() - 1);
+}
+
+void ensure_id_mapping_size(HandleStore& hs, const EntityID id) {
+    if (id < 0) return;
+    const auto need = static_cast<std::size_t>(id) + 1;
+    if (hs.id_to_slot.size() < need) {
+        hs.id_to_slot.resize(need, afterhours::EntityHandle::INVALID_SLOT);
+    }
+}
+
+void assign_slot_to_entity(HandleStore& hs, const std::shared_ptr<Entity>& sp,
+                           std::size_t dense_index) {
+    if (!sp) return;
+
+    // Already assigned: just ensure the ID mapping is up to date.
+    if (sp->ah_slot_index != afterhours::EntityHandle::INVALID_SLOT) {
+        ensure_id_mapping_size(hs, sp->id);
+        if (sp->id >= 0) {
+            hs.id_to_slot[static_cast<std::size_t>(sp->id)] =
+                sp->ah_slot_index;
+        }
+        // Ensure slot points at the entity (defensive).
+        const SlotIndex slot = sp->ah_slot_index;
+        if (slot < hs.slots.size()) {
+            hs.slots[slot].ent = sp;
+            hs.slots[slot].dense_index = dense_index;
+        }
+        return;
+    }
+
+    const SlotIndex slot = alloc_slot_index(hs);
+    if (slot >= hs.slots.size()) return;
+    hs.slots[slot].ent = sp;
+    hs.slots[slot].dense_index = dense_index;
+    sp->ah_slot_index = slot;
+
+    ensure_id_mapping_size(hs, sp->id);
+    if (sp->id >= 0) {
+        hs.id_to_slot[static_cast<std::size_t>(sp->id)] = slot;
+    }
+}
+
+void invalidate_entity_slot_if_any(HandleStore& hs,
+                                  const std::shared_ptr<Entity>& sp) {
+    if (!sp) return;
+    const EntityID id = sp->id;
+    const SlotIndex slot = sp->ah_slot_index;
+    sp->ah_slot_index = afterhours::EntityHandle::INVALID_SLOT;
+
+    if (id >= 0 && static_cast<std::size_t>(id) < hs.id_to_slot.size()) {
+        if (hs.id_to_slot[static_cast<std::size_t>(id)] == slot) {
+            hs.id_to_slot[static_cast<std::size_t>(id)] =
+                afterhours::EntityHandle::INVALID_SLOT;
+        }
+    }
+
+    if (slot == afterhours::EntityHandle::INVALID_SLOT) return;
+    if (slot >= hs.slots.size()) return;
+
+    Slot& s = hs.slots[slot];
+    s.ent.reset();
+    s.gen = bump_gen(s.gen);
+    s.dense_index = 0;
+    hs.free_slots.push_back(slot);
+}
+
+void remove_entity_at_index(Entities& entities, HandleStore& hs,
+                            std::size_t index) {
+    if (index >= entities.size()) return;
+
+    // Invalidate slot/id mapping for the entity being removed.
+    invalidate_entity_slot_if_any(hs, entities[index]);
+
+    // Swap-remove from dense list.
+    const std::size_t last = entities.size() - 1;
+    if (index != last) {
+        std::swap(entities[index], entities[last]);
+        // Update the moved entity's dense index in its slot.
+        const auto& moved = entities[index];
+        if (moved) {
+            const SlotIndex moved_slot = moved->ah_slot_index;
+            if (moved_slot != afterhours::EntityHandle::INVALID_SLOT &&
+                moved_slot < hs.slots.size()) {
+                hs.slots[moved_slot].dense_index = index;
+                // Defensive: ensure slot points at the moved entity.
+                hs.slots[moved_slot].ent = moved;
+            }
+        }
+    }
+    entities.pop_back();
+}
+}  // namespace
+
 ///////////////////////////////////
 ///
 
@@ -108,7 +238,9 @@ Entity& EntityHelper::createPermanentEntity() {
 
 Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
     auto e = std::make_shared<Entity>();
-    get_entities_for_mod().push_back(e);
+    auto& entities = get_entities_for_mod();
+    entities.push_back(e);
+    assign_slot_to_entity(handle_store(), e, entities.size() - 1);
 
     invalidatePathCache();
 
@@ -150,12 +282,32 @@ void EntityHelper::removeEntity(int e_id) {
     // }
 
     auto& entities = get_entities_for_mod();
+    auto& hs = handle_store();
 
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [e_id](const auto& entity) { return !entity || entity->id == e_id; });
+    if (e_id >= 0) {
+        const auto idx = static_cast<std::size_t>(e_id);
+        if (idx < hs.id_to_slot.size()) {
+            const SlotIndex slot = hs.id_to_slot[idx];
+            if (slot != afterhours::EntityHandle::INVALID_SLOT &&
+                slot < hs.slots.size()) {
+                Slot& s = hs.slots[slot];
+                if (s.ent && s.ent->id == e_id &&
+                    s.dense_index < entities.size() &&
+                    entities[s.dense_index] == s.ent) {
+                    remove_entity_at_index(entities, hs, s.dense_index);
+                    return;
+                }
+            }
+        }
+    }
 
-    entities.erase(newend, entities.end());
+    // Fallback: scan to find the entity and remove it.
+    for (std::size_t i = 0; i < entities.size(); ++i) {
+        if (entities[i] && entities[i]->id == e_id) {
+            remove_entity_at_index(entities, hs, i);
+            return;
+        }
+    }
 }
 
 //  Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
@@ -172,18 +324,26 @@ void EntityHelper::removeEntity(int e_id) {
 void EntityHelper::cleanup() {
     // Cleanup entities marked cleanup
     Entities& entities = get_entities_for_mod();
+    auto& hs = handle_store();
 
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [](const auto& entity) { return !entity || entity->cleanup; });
-
-    entities.erase(newend, entities.end());
+    std::size_t i = 0;
+    while (i < entities.size()) {
+        if (!entities[i] || entities[i]->cleanup) {
+            remove_entity_at_index(entities, hs, i);
+            continue;  // do not increment; we swapped a new element into i
+        }
+        ++i;
+    }
 }
 
 void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
     Entities& entities = get_entities_for_mod();
-    // just clear the whole thing
-    entities.clear();
+    auto& hs = handle_store();
+    while (!entities.empty()) {
+        remove_entity_at_index(entities, hs, entities.size() - 1);
+    }
+    // Drop all bookkeeping so any old handles fail cleanly (out-of-range).
+    hs = HandleStore{};
 }
 
 void EntityHelper::delete_all_entities(bool include_permanent) {
@@ -192,14 +352,23 @@ void EntityHelper::delete_all_entities(bool include_permanent) {
         return;
     }
 
-    // Only delete non perms
+    // Only delete non perms.
     Entities& entities = get_entities_for_mod();
+    auto& hs = handle_store();
 
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [](const auto& entity) { return !permanant_ids.contains(entity->id); });
-
-    entities.erase(newend, entities.end());
+    std::size_t i = 0;
+    while (i < entities.size()) {
+        const auto& sp = entities[i];
+        if (!sp) {
+            remove_entity_at_index(entities, hs, i);
+            continue;
+        }
+        if (!permanant_ids.contains(sp->id)) {
+            remove_entity_at_index(entities, hs, i);
+            continue;
+        }
+        ++i;
+    }
 }
 
 enum ForEachFlow {
@@ -229,11 +398,48 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
 OptEntity EntityHelper::getEntityForID(EntityID id) {
     if (id == entity_id::INVALID) return {};
 
+    auto& hs = handle_store();
+    if (id >= 0) {
+        const auto idx = static_cast<std::size_t>(id);
+        if (idx < hs.id_to_slot.size()) {
+            const SlotIndex slot = hs.id_to_slot[idx];
+            if (slot != afterhours::EntityHandle::INVALID_SLOT &&
+                slot < hs.slots.size()) {
+                auto& s = hs.slots[slot];
+                if (s.ent && s.ent->id == id) {
+                    return *s.ent;
+                }
+            }
+        }
+    }
+
     for (const auto& e : get_entities()) {
         if (!e) continue;
         if (e->id == id) return *e;
     }
     return {};
+}
+
+EntityHandle EntityHelper::handle_for(const Entity& e) {
+    const SlotIndex slot = e.ah_slot_index;
+    if (slot == afterhours::EntityHandle::INVALID_SLOT) {
+        return afterhours::EntityHandle::invalid();
+    }
+    auto& hs = handle_store();
+    if (slot >= hs.slots.size()) return afterhours::EntityHandle::invalid();
+    const Slot& s = hs.slots[slot];
+    if (!s.ent || s.ent.get() != &e) return afterhours::EntityHandle::invalid();
+    return {slot, s.gen};
+}
+
+OptEntity EntityHelper::resolve(EntityHandle h) {
+    if (!h.valid()) return {};
+    auto& hs = handle_store();
+    if (h.slot >= hs.slots.size()) return {};
+    Slot& s = hs.slots[h.slot];
+    if (s.gen != h.gen) return {};
+    if (!s.ent) return {};
+    return *s.ent;
 }
 
 Entity& EntityHelper::getEnforcedEntityForID(EntityID id) {
