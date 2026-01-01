@@ -9,8 +9,6 @@
 struct UsesCharacterModel : public BaseComponent {
     UsesCharacterModel() : index(0), changed(true) {}
 
-    virtual ~UsesCharacterModel() {}
-
     auto& switch_to_random_model() {
         index = RandomEngine::get().get_index(strings::character_models);
         changed = true;

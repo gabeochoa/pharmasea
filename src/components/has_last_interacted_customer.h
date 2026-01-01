@@ -8,8 +8,6 @@ using EntityID = int;
 struct HasLastInteractedCustomer : public BaseComponent {
     EntityID customer_id = -1;
 
-    virtual ~HasLastInteractedCustomer() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

@@ -4,8 +4,6 @@
 #include "base_component.h"
 
 struct IsFreeInStore : public BaseComponent {
-    virtual ~IsFreeInStore() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

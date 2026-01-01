@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct HasBaseSpeed : public BaseComponent {
-    virtual ~HasBaseSpeed() {}
-
     [[nodiscard]] float speed() const { return base_speed; }
 
     void update(float spd) { base_speed = spd; }

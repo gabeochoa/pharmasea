@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct CanBeHeld : public BaseComponent {
-    virtual ~CanBeHeld() {}
-
     [[nodiscard]] bool is_held() const { return held; }
     [[nodiscard]] bool is_not_held() const { return !is_held(); }
 

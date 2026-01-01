@@ -44,8 +44,6 @@ struct AIWaitInQueue : public AIComponent {
         set_cooldown(0.1f);
     }
 
-    virtual ~AIWaitInQueue() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

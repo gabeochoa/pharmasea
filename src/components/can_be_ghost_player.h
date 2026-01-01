@@ -5,8 +5,6 @@
 
 // TODO is this actually used anymore
 struct CanBeGhostPlayer : public BaseComponent {
-    virtual ~CanBeGhostPlayer() {}
-
     [[nodiscard]] bool is_ghost() const { return ghost; }
     [[nodiscard]] bool is_not_ghost() const { return !is_ghost(); }
 

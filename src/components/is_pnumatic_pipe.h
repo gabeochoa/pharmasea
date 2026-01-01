@@ -10,8 +10,6 @@ struct IsPnumaticPipe : public BaseComponent {
 
     int paired_id = -1;
 
-    virtual ~IsPnumaticPipe() {}
-
     [[nodiscard]] bool has_pair() const { return paired_id != -1; }
 
    private:

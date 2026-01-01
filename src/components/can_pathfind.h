@@ -10,8 +10,6 @@
 #include "base_component.h"
 
 struct CanPathfind : public BaseComponent {
-    virtual ~CanPathfind() {}
-
     [[nodiscard]] bool is_path_empty() const { return !!path.empty(); }
     [[nodiscard]] vec2 get_local_target() { return local_target.value(); }
 

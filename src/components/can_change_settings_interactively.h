@@ -12,8 +12,6 @@ struct CanChangeSettingsInteractively : public BaseComponent {
     CanChangeSettingsInteractively() : style(Unknown) {}
     explicit CanChangeSettingsInteractively(Style style) : style(style) {}
 
-    virtual ~CanChangeSettingsInteractively() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

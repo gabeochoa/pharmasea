@@ -6,8 +6,6 @@
 using OnChangeFn = std::function<void(Entity&, bool)>;
 
 struct CanBeHighlighted : public BaseComponent {
-    virtual ~CanBeHighlighted() {}
-
     [[nodiscard]] bool is_highlighted() const { return highlighted; }
     [[nodiscard]] bool is_not_highlighted() const { return !is_highlighted(); }
 

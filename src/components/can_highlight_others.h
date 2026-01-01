@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct CanHighlightOthers : public BaseComponent {
-    virtual ~CanHighlightOthers() {}
-
     [[nodiscard]] float reach() const { return furniture_reach; }
 
    private:
