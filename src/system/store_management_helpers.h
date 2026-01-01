@@ -77,8 +77,9 @@ inline void generate_store_options() {
     // spawn them
     // - use the place machine thing
 
-    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
-        IsFloorMarker::Type::Store_SpawnArea);
+    OptEntity spawn_area =
+        EQ().whereFloorMarkerOfType(IsFloorMarker::Type::Store_SpawnArea)
+            .gen_first();
 
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsProgressionManager& ipp = sophie.get<IsProgressionManager>();

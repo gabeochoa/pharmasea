@@ -138,13 +138,6 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
         transform.as2(), range, transform.face_direction(), filter);
 }
 
-OptEntity EntityHelper::getMatchingFloorMarker(IsFloorMarker::Type type) {
-    return EQ()
-        .whereHasComponentAndLambda<IsFloorMarker>(
-            [type](const IsFloorMarker& fm) { return fm.type == type; })
-        .gen_first();
-}
-
 OptEntity EntityHelper::getMatchingTriggerArea(IsTriggerArea::Type type) {
     return EQ()
         .whereHasComponentAndLambda<IsTriggerArea>(

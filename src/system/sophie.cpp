@@ -127,8 +127,9 @@ void overlapping_furniture(Entity& entity) {
 }
 
 void forgot_item_in_spawn_area(Entity& entity) {
-    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
-        IsFloorMarker::Type::Planning_SpawnArea);
+    OptEntity spawn_area =
+        EQ().whereFloorMarkerOfType(IsFloorMarker::Type::Planning_SpawnArea)
+            .gen_first();
 
     bool has_item_in_spawn_area = false;
     std::optional<vec2> position;
@@ -239,8 +240,9 @@ void deleting_item_needed_for_recipe(Entity& entity) {
         return;
     };
 
-    OptEntity trash_area = EntityHelper::getMatchingFloorMarker(
-        IsFloorMarker::Type::Planning_TrashArea);
+    OptEntity trash_area =
+        EQ().whereFloorMarkerOfType(IsFloorMarker::Type::Planning_TrashArea)
+            .gen_first();
 
     if (!trash_area.valid()) return result(false);
 

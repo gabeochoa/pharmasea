@@ -151,6 +151,12 @@ struct EQ : public afterhours::EntityQuery<EQ> {
         return add_mod(new WhereHasComponentAndLambda<Component>(fn));
     }
 
+    // Floor marker filtering
+    EQ& whereFloorMarkerOfType(IsFloorMarker::Type type) {
+        return whereHasComponentAndLambda<IsFloorMarker>(
+            [type](const IsFloorMarker& fm) { return fm.type == type; });
+    }
+
     // Pathfinding filtering
     struct WhereCanPathfindTo : EntityQuery::Modification {
         vec2 start;

@@ -108,8 +108,9 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
             position = LOBBY_BUILDING.to3();
         } break;
         case game::InGame: {
-            OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
-                IsFloorMarker::Planning_SpawnArea);
+            OptEntity spawn_area =
+                EQ().whereFloorMarkerOfType(IsFloorMarker::Planning_SpawnArea)
+                    .gen_first();
             if (!spawn_area) {
                 position = {0, 0, 0};
             } else {
@@ -309,10 +310,12 @@ void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
     // Because prereqs are handled, we dont need do check for them and can
     // assume that those bits will handle checking for it
 
-    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
-        // Note we spawn free items in the purchase area so its more obvious
-        // that they are free
-        IsFloorMarker::Type::Planning_SpawnArea);
+    OptEntity spawn_area =
+        EQ().whereFloorMarkerOfType(
+                // Note we spawn free items in the purchase area so its more
+                // obvious that they are free
+                IsFloorMarker::Type::Planning_SpawnArea)
+            .gen_first();
 
     if (!spawn_area) {
         // need to guarantee this exists long before we get here
@@ -415,8 +418,9 @@ void generate_machines_for_new_upgrades() {
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
-        IsFloorMarker::Type::Planning_SpawnArea);
+    OptEntity purchase_area =
+        EQ().whereFloorMarkerOfType(IsFloorMarker::Type::Planning_SpawnArea)
+            .gen_first();
 
     for (EntityType et : irsm.config.store_to_spawn) {
         auto& entity = EntityHelper::createEntity();
@@ -505,8 +509,10 @@ bool _create_nuxes(Entity&) {
         {
             // move the register out to the Planning_SpawnArea
             {
-                OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
-                    IsFloorMarker::Type::Planning_SpawnArea);
+                OptEntity purchase_area =
+                    EQ().whereFloorMarkerOfType(
+                            IsFloorMarker::Type::Planning_SpawnArea)
+                        .gen_first();
                 reg->get<Transform>().update(
                     vec::to3(purchase_area->get<Transform>().as2()));
             }
@@ -994,13 +1000,15 @@ void process_nux_updates(Entity& entity, float dt) {
 namespace store {
 void move_purchased_furniture() {
     // Grab the overlap area so we can see what it marked
-    OptEntity purchase_area = EntityHelper::getMatchingFloorMarker(
-        IsFloorMarker::Type::Store_PurchaseArea);
+    OptEntity purchase_area =
+        EQ().whereFloorMarkerOfType(IsFloorMarker::Type::Store_PurchaseArea)
+            .gen_first();
     const IsFloorMarker& ifm = purchase_area->get<IsFloorMarker>();
 
     // Grab the plannig spawn area so we can place in the right spot
-    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
-        IsFloorMarker::Type::Planning_SpawnArea);
+    OptEntity spawn_area =
+        EQ().whereFloorMarkerOfType(IsFloorMarker::Type::Planning_SpawnArea)
+            .gen_first();
     vec3 spawn_position = spawn_area->get<Transform>().pos();
 
     OptEntity sophie = EntityQuery().whereType(EntityType::Sophie).gen_first();
