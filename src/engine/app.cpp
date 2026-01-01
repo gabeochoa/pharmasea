@@ -13,10 +13,10 @@
 #include "raylib.h"
 //
 
-#include "simulated_input/simulated_input.h"
 #include "log.h"
 #include "settings.h"
 #include "shader_library.h"
+#include "simulated_input/simulated_input.h"
 
 App App::instance;
 bool App::created = false;

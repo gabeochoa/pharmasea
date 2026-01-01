@@ -75,7 +75,8 @@ void set_key_up(int keycode) {
 }
 
 bool consume_synthetic_press(int keycode) {
-    if (keycode < 0 || keycode >= static_cast<int>(synthetic_press_count.size())) {
+    if (keycode < 0 ||
+        keycode >= static_cast<int>(synthetic_press_count.size())) {
         return false;
     }
     size_t idx = static_cast<size_t>(keycode);

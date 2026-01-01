@@ -20,11 +20,9 @@ struct SizeExpectation {
     float strictness = 0.5f;
 };
 
-#define Size_Px(v, s) \
-    { .mode = Pixels, .value = v, .strictness = s }
+#define Size_Px(v, s) {.mode = Pixels, .value = v, .strictness = s}
 
-#define Size_Pct(v, s) \
-    { .mode = Percent, .value = v, .strictness = s }
+#define Size_Pct(v, s) {.mode = Percent, .value = v, .strictness = s}
 
 #define Size_FullW(s) Size_Px(WIN_WF(), s)
 

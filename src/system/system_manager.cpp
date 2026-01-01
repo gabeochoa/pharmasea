@@ -8,7 +8,6 @@
 
 ///
 #include "../building_locations.h"
-#include "../entity_id.h"
 #include "../components/adds_ingredient.h"
 #include "../components/ai_wait_in_queue.h"
 #include "../components/base_component.h"
@@ -65,6 +64,7 @@
 #include "../components/uses_character_model.h"
 #include "../dataclass/upgrades.h"
 #include "../engine/util.h"
+#include "../entity_id.h"
 #include "raylib.h"
 #include "sophie.h"
 ///

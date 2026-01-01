@@ -4,11 +4,11 @@
 #include <optional>
 #include <string>
 
+#include "../../globals.h"
 #include "../app.h"
 #include "../files.h"
 #include "../log.h"
 #include "../statemanager.h"
-#include "../../globals.h"
 #include "bypass_helper.h"
 
 namespace fs = std::filesystem;
@@ -21,9 +21,7 @@ constexpr const char* kDefaultRecordName = "recorded_input.txt";
 constexpr const char* kDefaultBypassMenuReplay = "bypass_menu.txt";
 constexpr const char* kDefaultBypassRoundReplay = "bypass_round1.txt";
 
-fs::path recorded_dir() {
-    return fs::current_path() / kRecordedInputsDirName;
-}
+fs::path recorded_dir() { return fs::current_path() / kRecordedInputsDirName; }
 
 void ensure_dir() { fs::create_directories(recorded_dir()); }
 
@@ -31,12 +29,10 @@ void register_state_recorders() {
     static bool registered = false;
     if (registered) return;
     MenuState::get().register_on_change([](menu::State ns, menu::State) {
-        input_recorder::record_state_change("menu_state",
-                                            static_cast<int>(ns));
+        input_recorder::record_state_change("menu_state", static_cast<int>(ns));
     });
     GameState::get().register_on_change([](game::State ns, game::State) {
-        input_recorder::record_state_change("game_state",
-                                            static_cast<int>(ns));
+        input_recorder::record_state_change("game_state", static_cast<int>(ns));
     });
     registered = true;
 }

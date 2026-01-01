@@ -250,8 +250,7 @@ struct PolymorphicBaseClass<BaseComponent>
           CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
           CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
           CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback, IsSquirter, CanBeHeld,
-          BypassAutomationState
+          CollectsCustomerFeedback, IsSquirter, CanBeHeld, BypassAutomationState
           // END
           > {};
 

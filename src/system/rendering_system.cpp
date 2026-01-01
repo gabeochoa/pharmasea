@@ -25,8 +25,8 @@
 #include "../components/transform.h"
 #include "../dataclass/upgrades.h"
 #include "../drawing_util.h"
-#include "../engine/texture_library.h"
 #include "../engine/settings.h"
+#include "../engine/texture_library.h"
 #include "../engine/ui/theme.h"
 #include "../engine/util.h"
 #include "../entity_helper.h"
@@ -256,8 +256,8 @@ bool draw_transform_with_model(const Transform& transform,
 
     if (ENABLE_MODELS) {
         // Apply lighting shader to model materials (Blinn-Phong/Half-Lambert).
-        // NOTE: ModelRenderer::model() returns a copy; we must set the shader on
-        // the library-owned model reference to persist.
+        // NOTE: ModelRenderer::model() returns a copy; we must set the shader
+        // on the library-owned model reference to persist.
         auto& model_ref = ModelLibrary::get().get(renderer.name());
 
         const bool lighting_enabled = Settings::get().data.enable_lighting;

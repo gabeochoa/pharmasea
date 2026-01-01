@@ -2,8 +2,8 @@
 #pragma once
 
 #include <deque>
-#include <thread>
 #include <mutex>
+#include <thread>
 
 template<typename T>
 struct AtomicQueue {

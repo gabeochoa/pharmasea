@@ -11,4 +11,3 @@ namespace mapgen {
     const std::string& seed, const GenerationContext& ctx, int attempt_index);
 
 }  // namespace mapgen
-

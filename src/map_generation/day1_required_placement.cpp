@@ -75,8 +75,7 @@ bool place_required_day1(std::vector<std::string>& lines, std::mt19937& rng) {
     // Try a few register candidates until we can place a spawner with a path to
     // the queue-front tile.
     for (size_t reg_try = 0;
-         reg_try < std::min<size_t>(reg_candidates.size(), 50);
-         reg_try++) {
+         reg_try < std::min<size_t>(reg_candidates.size(), 50); reg_try++) {
         grid::Cell reg = reg_candidates[reg_try];
         grid::Cell queue_front{reg.i, reg.j + 1};
 
@@ -127,11 +126,14 @@ bool place_required_day1(std::vector<std::string>& lines, std::mt19937& rng) {
                 return false;
             if (!place_one(lines, generation::CUPBOARD, rng, blocked))
                 return false;
-            if (!place_one(lines, generation::TRASH, rng, blocked)) return false;
+            if (!place_one(lines, generation::TRASH, rng, blocked))
+                return false;
             if (!place_one(lines, generation::FAST_FORWARD, rng, blocked))
                 return false;
-            if (!place_one(lines, generation::SOPHIE, rng, blocked)) return false;
-            if (!place_one(lines, generation::TABLE, rng, blocked)) return false;
+            if (!place_one(lines, generation::SOPHIE, rng, blocked))
+                return false;
+            if (!place_one(lines, generation::TABLE, rng, blocked))
+                return false;
 
             return true;
         }
@@ -141,4 +143,3 @@ bool place_required_day1(std::vector<std::string>& lines, std::mt19937& rng) {
 }
 
 }  // namespace mapgen
-

@@ -503,8 +503,8 @@ void process_ai_use_bathroom(Entity& entity, float dt) {
         istoilet.end_use();
 
         // TODO move away from it for a second
-        (void) entity.get<CanPathfind>().travel_toward(vec2{0, 0},
-                                                       get_speed_for_entity(entity) * dt);
+        (void) entity.get<CanPathfind>().travel_toward(
+            vec2{0, 0}, get_speed_for_entity(entity) * dt);
 
         // We specificaly dont use next_job() here because
         // we dont want to infinite loop

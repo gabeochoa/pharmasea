@@ -62,4 +62,3 @@ std::vector<std::string> generate_layout_wfc(const std::string& seed,
 }
 
 }  // namespace mapgen
-

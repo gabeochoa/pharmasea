@@ -10,4 +10,3 @@ namespace mapgen {
     const std::vector<std::string>& lines);
 
 }  // namespace mapgen
-

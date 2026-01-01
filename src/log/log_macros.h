@@ -8,9 +8,9 @@
 #define LOG_WARN(...) log_warn(__VA_ARGS__)
 #define LOG_ERROR(...) log_error(__VA_ARGS__)
 
-#define VALIDATE(condition, ...)           \
-    do {                                   \
-        if (!(condition)) {                \
-            log_error(__VA_ARGS__);        \
-        }                                  \
+#define VALIDATE(condition, ...)    \
+    do {                            \
+        if (!(condition)) {         \
+            log_error(__VA_ARGS__); \
+        }                           \
     } while (0)

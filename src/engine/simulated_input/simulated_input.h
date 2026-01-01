@@ -3,17 +3,17 @@
 #include <filesystem>
 
 #include "../../components/bypass_automation_state.h"
+#include "../../entity_helper.h"
+#include "../../external_include.h"
+#include "../../globals.h"
+#include "../../network/network.h"
 #include "../app.h"
 #include "../event.h"
 #include "../files.h"
 #include "../log.h"
 #include "../settings.h"
-#include "../svg_renderer.h"
 #include "../statemanager.h"
-#include "../../entity_helper.h"
-#include "../../external_include.h"
-#include "../../globals.h"
-#include "../../network/network.h"
+#include "../svg_renderer.h"
 
 namespace input_injector {
 void schedule_mouse_click_at(const Rectangle& rect);

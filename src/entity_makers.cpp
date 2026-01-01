@@ -4,7 +4,6 @@
 #include <ranges>
 
 #include "ah.h"
-#include "entity_id.h"
 #include "components/ai_clean_vomit.h"
 #include "components/ai_close_tab.h"
 #include "components/ai_drinking.h"
@@ -41,6 +40,7 @@
 #include "engine/util.h"
 #include "entity.h"
 #include "entity_helper.h"
+#include "entity_id.h"
 #include "entity_type.h"
 //
 #include "client_server_comm.h"

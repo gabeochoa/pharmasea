@@ -9,4 +9,3 @@ Entity& CanHoldItem::item() const {
 const Entity& CanHoldItem::const_item() const {
     return EntityHelper::getEnforcedEntityForID(held_item_id);
 }
-

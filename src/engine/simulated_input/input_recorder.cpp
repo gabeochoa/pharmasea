@@ -1,11 +1,10 @@
-#include "simulated_input.h"
-
 #include <chrono>
 #include <fstream>
 #include <string>
 
-#include "../log.h"
 #include "../graphics.h"
+#include "../log.h"
+#include "simulated_input.h"
 
 namespace input_recorder {
 
@@ -25,8 +24,8 @@ static RecorderState state;
 
 long long elapsed_ms() {
     const auto now = std::chrono::steady_clock::now();
-    const auto diff =
-        std::chrono::duration_cast<std::chrono::milliseconds>(now - state.start);
+    const auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(
+        now - state.start);
     return diff.count();
 }
 
@@ -106,8 +105,8 @@ void record(const Event& event) {
                 button_code < static_cast<int>(state.mouse_down.size())) {
                 if (!state.mouse_down[button_code]) {
                     state.mouse_down[button_code] = true;
-                    write_line(timestamp, "mouse",
-                               std::to_string(button_code), "down");
+                    write_line(timestamp, "mouse", std::to_string(button_code),
+                               "down");
                 }
             } else {
                 write_line(timestamp, "mouse", std::to_string(button_code),
@@ -125,8 +124,8 @@ void record(const Event& event) {
                 button_code < static_cast<int>(state.mouse_down.size())) {
                 if (state.mouse_down[button_code]) {
                     state.mouse_down[button_code] = false;
-                    write_line(timestamp, "mouse",
-                               std::to_string(button_code), "up");
+                    write_line(timestamp, "mouse", std::to_string(button_code),
+                               "up");
                 }
             } else {
                 write_line(timestamp, "mouse", std::to_string(button_code),
@@ -143,8 +142,7 @@ void record(const Event& event) {
                 state.last_mouse_x = x;
                 state.last_mouse_y = y;
                 write_line(timestamp, "mouse_move",
-                           std::to_string(x) + "_" + std::to_string(y),
-                           "move");
+                           std::to_string(x) + "_" + std::to_string(y), "move");
             }
             break;
         }
@@ -175,19 +173,21 @@ void update_poll() {
 
     // Mouse move
     vec2 mouse_pos = ext::get_mouse_position();
-    if (mouse_pos.x != state.last_mouse_x || mouse_pos.y != state.last_mouse_y) {
+    if (mouse_pos.x != state.last_mouse_x ||
+        mouse_pos.y != state.last_mouse_y) {
         state.last_mouse_x = mouse_pos.x;
         state.last_mouse_y = mouse_pos.y;
-        write_line(timestamp, "mouse_move",
-                   std::to_string(mouse_pos.x) + "_" +
-                       std::to_string(mouse_pos.y),
-                   "move");
+        write_line(
+            timestamp, "mouse_move",
+            std::to_string(mouse_pos.x) + "_" + std::to_string(mouse_pos.y),
+            "move");
         log_info("recorder: mouse move {} {}", mouse_pos.x, mouse_pos.y);
     }
 
     // Mouse buttons 0-7
     for (int b = 0; b < static_cast<int>(state.mouse_down.size()); ++b) {
-        bool down = raylib::IsMouseButtonDown(static_cast<raylib::MouseButton>(b));
+        bool down =
+            raylib::IsMouseButtonDown(static_cast<raylib::MouseButton>(b));
         if (down && !state.mouse_down[b]) {
             state.mouse_down[b] = true;
             write_line(timestamp, "mouse", std::to_string(b), "down");

@@ -18,7 +18,9 @@ struct CanHoldItem : public BaseComponent {
     CanHoldItem() : held_by(EntityType::Unknown), filter(EntityFilter()) {}
     explicit CanHoldItem(EntityType hb) : held_by(hb), filter(EntityFilter()) {}
 
-    [[nodiscard]] bool empty() const { return held_item_id == entity_id::INVALID; }
+    [[nodiscard]] bool empty() const {
+        return held_item_id == entity_id::INVALID;
+    }
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 

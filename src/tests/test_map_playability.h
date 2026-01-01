@@ -97,4 +97,3 @@ inline void test_map_playability() {
 }
 
 }  // namespace tests
-

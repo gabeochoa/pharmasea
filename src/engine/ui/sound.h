@@ -7,8 +7,14 @@
 namespace ui {
 
 namespace sounds {
-inline void select() { SoundLibrary::get().play(strings::sounds::to_name(strings::sounds::SoundId::SELECT)); }
-inline void click() { SoundLibrary::get().play(strings::sounds::to_name(strings::sounds::SoundId::CLICK)); }
+inline void select() {
+    SoundLibrary::get().play(
+        strings::sounds::to_name(strings::sounds::SoundId::SELECT));
+}
+inline void click() {
+    SoundLibrary::get().play(
+        strings::sounds::to_name(strings::sounds::SoundId::CLICK));
+}
 
 }  // namespace sounds
 

@@ -33,4 +33,3 @@ vec2 generate_in_game_map(const std::string& seed) {
 }
 
 }  // namespace mapgen
-

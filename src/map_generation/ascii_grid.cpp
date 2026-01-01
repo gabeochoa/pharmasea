@@ -168,4 +168,3 @@ void scrub_to_layout_only(std::vector<std::string>& lines) {
 }
 
 }  // namespace mapgen::grid
-

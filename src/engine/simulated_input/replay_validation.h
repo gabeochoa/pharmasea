@@ -30,4 +30,3 @@ void end_replay();
 [[nodiscard]] std::optional<Spec> get_spec(const std::string& replay_name);
 
 }  // namespace replay_validation
-

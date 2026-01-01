@@ -80,7 +80,8 @@ struct ModelLibrary {
             }
         }
     }
-    [[nodiscard]] raylib::Model get_and_load_if_needed(const std::string& name) {
+    [[nodiscard]] raylib::Model get_and_load_if_needed(
+        const std::string& name) {
         ensure_loaded(name);
         return get(name);
     }
@@ -135,7 +136,6 @@ struct ModelLibrary {
         }
     } impl;
 };
-
 
 SINGLETON_FWD(ModelInfoLibrary)
 struct ModelInfoLibrary {

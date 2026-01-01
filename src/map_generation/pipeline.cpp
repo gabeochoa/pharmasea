@@ -9,12 +9,12 @@
 #include <vector>
 
 #include "../engine/globals.h"
-#include "playability_spec.h"
 #include "ascii_grid.h"
 #include "day1_required_placement.h"
 #include "day1_validation.h"
 #include "layout_simple.h"
 #include "layout_wfc.h"
+#include "playability_spec.h"
 
 namespace mapgen {
 
@@ -39,7 +39,7 @@ BarArchetype pick_archetype_from_seed(const std::string& seed) {
 }  // namespace
 
 GeneratedAscii generate_ascii(const std::string& seed,
-                             const GenerationContext& context) {
+                              const GenerationContext& context) {
     // Optional seed prefixes for selecting the layout provider without adding
     // new settings plumbing:
     // - "wfc:" forces WFC layout
@@ -60,24 +60,22 @@ GeneratedAscii generate_ascii(const std::string& seed,
 
     BarArchetype archetype = pick_archetype_from_seed(normalized_seed);
 
-    const auto attempt_generate_with_layout = [&](LayoutSource src)
-        -> std::optional<std::vector<std::string>> {
+    const auto attempt_generate_with_layout =
+        [&](LayoutSource src) -> std::optional<std::vector<std::string>> {
         for (int attempt = 0; attempt < playability::DEFAULT_REROLL_ATTEMPTS;
              attempt++) {
             std::vector<std::string> lines;
             if (src == LayoutSource::Wfc) {
                 lines = generate_layout_wfc(normalized_seed, context, attempt);
             } else {
-                lines = generate_layout_simple(normalized_seed, context, archetype,
-                                               attempt);
+                lines = generate_layout_simple(normalized_seed, context,
+                                               archetype, attempt);
             }
 
             grid::normalize_dims(lines, context.rows, context.cols);
 
-            std::mt19937 rng(static_cast<unsigned int>(hashString(fmt::format(
-                "{}:place:{}",
-                normalized_seed,
-                attempt))));
+            std::mt19937 rng(static_cast<unsigned int>(hashString(
+                fmt::format("{}:place:{}", normalized_seed, attempt))));
 
             if (!place_required_day1(lines, rng)) continue;
             if (!validate_day1_ascii_plus_routing(lines)) continue;
@@ -92,12 +90,15 @@ GeneratedAscii generate_ascii(const std::string& seed,
     // Fallback: if WFC fails too often, try simple layout so gameplay always
     // gets a valid start-of-day map.
     if (!maybe_lines.has_value() && layout_source == LayoutSource::Wfc) {
-        log_warn("[mapgen] WFC failed all attempts for seed {}, falling back to simple layout",
-                 normalized_seed);
+        log_warn(
+            "[mapgen] WFC failed all attempts for seed {}, falling back to "
+            "simple layout",
+            normalized_seed);
         maybe_lines = attempt_generate_with_layout(LayoutSource::Simple);
     }
 
-    // Last-ditch: generate something and hope runtime repair/manual reroll is used.
+    // Last-ditch: generate something and hope runtime repair/manual reroll is
+    // used.
     std::vector<std::string> lines;
     if (maybe_lines.has_value()) {
         lines = std::move(*maybe_lines);
@@ -114,4 +115,3 @@ GeneratedAscii generate_ascii(const std::string& seed,
 }
 
 }  // namespace mapgen
-

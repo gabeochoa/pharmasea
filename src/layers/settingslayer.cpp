@@ -134,8 +134,8 @@ void SettingsLayer::draw_base_screen(float) {
 
     {
         auto [master_vol, music_vol, sfx_vol, ui_theme, resolution, language,
-              streamer, postprocessing, lighting, snapCamera, vsync, fullscreen] =
-            rect::hsplit<12>(rect::bpad(rows, 85), 20);
+              streamer, postprocessing, lighting, snapCamera, vsync,
+              fullscreen] = rect::hsplit<12>(rect::bpad(rows, 85), 20);
 
         {
             auto [label, control] = rect::vsplit(master_vol, 30);
@@ -270,8 +270,8 @@ void SettingsLayer::draw_base_screen(float) {
 
             if (auto result = checkbox(
                     Widget{control},
-                    CheckboxData{
-                        .selected = Settings::get().data.enable_lighting});
+                    CheckboxData{.selected =
+                                     Settings::get().data.enable_lighting});
                 result) {
                 Settings::get().update_lighting_enabled(result.as<bool>());
             }
@@ -311,7 +311,8 @@ void SettingsLayer::draw_base_screen(float) {
             auto [label, control] = rect::vsplit(vsync, 30);
             control = rect::rpad(control, 10);
 
-            text(Widget{label}, TranslatableString(strings::i18n::VSYNC_ENABLED));
+            text(Widget{label},
+                 TranslatableString(strings::i18n::VSYNC_ENABLED));
 
             if (auto result = checkbox(
                     Widget{control},

@@ -904,9 +904,8 @@ void Preload::load_music(const std::function<void()>& tick) {
 }
 
 void Preload::load_shaders(const std::function<void()>& tick) {
-    const auto screen_vs = Files::get()
-                               .fetch_resource_path(strings::settings::SHADERS,
-                                                    "screen_quad.vs");
+    const auto screen_vs = Files::get().fetch_resource_path(
+        strings::settings::SHADERS, "screen_quad.vs");
 
     const std::tuple<const char*, const char*, const char*> shaders[] = {
         // Screen-space shaders (explicit vertex + fragment)

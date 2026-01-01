@@ -2,8 +2,8 @@
 #pragma once
 
 #include "../engine/log.h"
-#include "../vendor_include.h"
 #include "../strings.h"
+#include "../vendor_include.h"
 #include "base_component.h"
 
 using afterhours::Entity;
@@ -102,7 +102,9 @@ struct IsSpawner : public BaseComponent {
         spawn_sound = str;
         return *this;
     }
-    [[nodiscard]] bool has_spawn_sound() const { return spawn_sound != strings::sounds::SoundId::None; }
+    [[nodiscard]] bool has_spawn_sound() const {
+        return spawn_sound != strings::sounds::SoundId::None;
+    }
     [[nodiscard]] strings::sounds::SoundId get_spawn_sound() const {
         return spawn_sound;
     }

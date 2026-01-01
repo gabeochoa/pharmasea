@@ -12,7 +12,8 @@ struct Cell {
 };
 
 [[nodiscard]] std::pair<int, int> dims(const std::vector<std::string>& lines);
-[[nodiscard]] bool in_bounds(const std::vector<std::string>& lines, int i, int j);
+[[nodiscard]] bool in_bounds(const std::vector<std::string>& lines, int i,
+                             int j);
 [[nodiscard]] char get(const std::vector<std::string>& lines, int i, int j);
 void set(std::vector<std::string>& lines, int i, int j, char ch);
 
@@ -32,4 +33,3 @@ void ensure_single_origin(std::vector<std::string>& lines);
 void scrub_to_layout_only(std::vector<std::string>& lines);
 
 }  // namespace mapgen::grid
-

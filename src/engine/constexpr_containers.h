@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include <array>
 #include <algorithm>
+#include <array>
 #include <functional>
 #include <stdexcept>
 #include <utility>  // for pair

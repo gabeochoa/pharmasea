@@ -1,15 +1,15 @@
 #include "lighting_runtime.h"
 
+#include <array>
+#include <cmath>
+#include <cstdint>
+
 #include "building_locations.h"
 #include "components/transform.h"
 #include "engine/util.h"
 #include "entity_query.h"
 #include "entity_type.h"
 #include "system/system_manager.h"
-
-#include <array>
-#include <cmath>
-#include <cstdint>
 
 namespace {
 
@@ -19,10 +19,10 @@ struct Phase1LightingTuning {
 
     // "Sun": user requested point-light-like sun (stylized).
     // Note: physically, the sun should be directional. We can swap later.
-    int light_type = 1;  // 0=directional, 1=point
-    vec3 sun_dir = {-1.0f, -1.0f, -0.3f};     // used if directional
-    vec3 sun_pos = {0.0f, 40.0f, 0.0f};       // used if point
-    vec3 sun_color = {1.0f, 0.98f, 0.92f};    // warm-ish
+    int light_type = 1;                     // 0=directional, 1=point
+    vec3 sun_dir = {-1.0f, -1.0f, -0.3f};   // used if directional
+    vec3 sun_pos = {0.0f, 40.0f, 0.0f};     // used if point
+    vec3 sun_color = {1.0f, 0.98f, 0.92f};  // warm-ish
 
     // Shading controls
     float shininess = 48.0f;
@@ -95,7 +95,8 @@ inline LightingUniforms get_lighting_uniforms(raylib::Shader& s) {
     u.lightsPerBuilding = raylib::GetShaderLocation(s, "lightsPerBuilding");
     u.lightRectCount = raylib::GetShaderLocation(s, "lightRectCount");
     u.lightRects = raylib::GetShaderLocation(s, "lightRects");
-    u.pointLightsPosRadius = raylib::GetShaderLocation(s, "pointLightsPosRadius");
+    u.pointLightsPosRadius =
+        raylib::GetShaderLocation(s, "pointLightsPosRadius");
     u.pointLightsColor = raylib::GetShaderLocation(s, "pointLightsColor");
     return u;
 }
@@ -121,7 +122,8 @@ inline vec4 building_rect_minmax(const Building& b) {
 
 inline vec4 compute_bar_light_rect_from_walls() {
     // Bar building can be larger than actual placed walls.
-    // Find wall tiles inside BAR_BUILDING bounds and compute a tight interior rect.
+    // Find wall tiles inside BAR_BUILDING bounds and compute a tight interior
+    // rect.
     const auto walls = EntityQuery()
                            .whereType(EntityType::Wall)
                            .whereInside(BAR_BUILDING.min(), BAR_BUILDING.max())
@@ -152,7 +154,8 @@ inline vec4 compute_bar_light_rect_from_walls() {
 }
 
 inline void rebuild_indoor_light_layout() {
-    // Build rects (roof rectangles for light placement). Only bar needs special-case today.
+    // Build rects (roof rectangles for light placement). Only bar needs
+    // special-case today.
     g_indoor_layout.light_rects[0] = building_rect_minmax(LOBBY_BUILDING);
     g_indoor_layout.light_rects[1] = building_rect_minmax(MODEL_TEST_BUILDING);
     g_indoor_layout.light_rects[2] = building_rect_minmax(PROGRESSION_BUILDING);
@@ -180,7 +183,8 @@ inline void rebuild_indoor_light_layout() {
         const float ly = 4.0f;
         const float r = radius_for_rect(rect);
 
-        // Add deterministic jitter per light to make positions less "grid obvious".
+        // Add deterministic jitter per light to make positions less "grid
+        // obvious".
         auto jitter = [](int seed) -> float {
             // Simple hash -> [-0.35, 0.35]
             uint32_t x = (uint32_t) (seed * 2654435761u);
@@ -226,7 +230,8 @@ inline void rebuild_indoor_light_layout() {
 
 }  // namespace
 
-void update_lighting_shader(raylib::Shader& shader, const raylib::Camera3D& cam) {
+void update_lighting_shader(raylib::Shader& shader,
+                            const raylib::Camera3D& cam) {
     static LightingUniforms u = get_lighting_uniforms(shader);
 
     // Camera
@@ -247,8 +252,9 @@ void update_lighting_shader(raylib::Shader& shader, const raylib::Camera3D& cam)
         constexpr float kDaySunDiffuseBoost = 1.95f;
         constexpr float kDaySunSpecBoost = 1.25f;
         constexpr float kDaySunColorBoost = 1.20f;
-        ambient = vec3{ambient.x * kDayAmbientBoost, ambient.y * kDayAmbientBoost,
-                       ambient.z * kDayAmbientBoost};
+        ambient =
+            vec3{ambient.x * kDayAmbientBoost, ambient.y * kDayAmbientBoost,
+                 ambient.z * kDayAmbientBoost};
         sun_diffuse_intensity *= kDaySunDiffuseBoost;
         sun_spec_intensity *= kDaySunSpecBoost;
         sun_color = vec3{sun_color.x * kDaySunColorBoost,
@@ -293,9 +299,9 @@ void update_lighting_shader(raylib::Shader& shader, const raylib::Camera3D& cam)
 
     set_int(shader, u.lightsPerBuilding, IndoorLightLayout::kLightsPerBuilding);
     set_int(shader, u.lightRectCount, IndoorLightLayout::kBuildings);
-    raylib::SetShaderValueV(shader, u.lightRects, g_indoor_layout.light_rects.data(),
-                            raylib::SHADER_UNIFORM_VEC4,
-                            IndoorLightLayout::kBuildings);
+    raylib::SetShaderValueV(
+        shader, u.lightRects, g_indoor_layout.light_rects.data(),
+        raylib::SHADER_UNIFORM_VEC4, IndoorLightLayout::kBuildings);
 
     set_int(shader, u.pointLightCount, IndoorLightLayout::kTotalLights);
     raylib::SetShaderValueV(shader, u.pointLightsPosRadius,
@@ -311,7 +317,8 @@ void update_lighting_shader(raylib::Shader& shader, const raylib::Camera3D& cam)
         g_indoor_layout.lights_color;
 
     // Daytime goal: make inside/outside feel similar in brightness.
-    // Boost only indoor point lights during the day (doesn't affect outdoors due to rect culling).
+    // Boost only indoor point lights during the day (doesn't affect outdoors
+    // due to rect culling).
     if (!is_night) {
         constexpr float kDayIndoorBoost = 1.60f;
         for (auto& c : colors) {
@@ -336,4 +343,3 @@ void update_lighting_shader(raylib::Shader& shader, const raylib::Camera3D& cam)
                             raylib::SHADER_UNIFORM_VEC3,
                             IndoorLightLayout::kTotalLights);
 }
-

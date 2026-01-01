@@ -73,4 +73,3 @@ void end_replay() {
 }
 
 }  // namespace replay_validation
-

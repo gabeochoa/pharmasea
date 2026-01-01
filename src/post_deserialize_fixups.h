@@ -10,4 +10,3 @@
 namespace post_deserialize_fixups {
 void run(Entities& entities);
 }
-

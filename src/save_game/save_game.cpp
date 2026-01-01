@@ -4,12 +4,12 @@
 #include <fstream>
 #include <sstream>
 
-#include "../external_include.h"
-#include "../engine/files.h"
-#include "../engine/log.h"
-#include "../network/polymorphic_components.h"
 #include "../components/has_day_night_timer.h"
 #include "../components/is_bank.h"
+#include "../engine/files.h"
+#include "../engine/log.h"
+#include "../external_include.h"
+#include "../network/polymorphic_components.h"
 
 namespace save_game {
 
@@ -228,4 +228,3 @@ std::vector<SlotInfo> SaveGameManager::enumerate_slots(int num_slots) {
 }
 
 }  // namespace save_game
-

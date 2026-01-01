@@ -93,8 +93,7 @@ inline bool is_connected_4_neighbor(const std::vector<std::string>& lines) {
     if (total_walkable == 0) return true;
     if (!start.has_value()) return true;
 
-    std::vector<std::vector<bool>> visited(
-        h, std::vector<bool>(w, false));
+    std::vector<std::vector<bool>> visited(h, std::vector<bool>(w, false));
 
     std::queue<std::pair<int, int>> q;
     q.push(*start);
@@ -197,4 +196,3 @@ inline Report validate_ascii_day1(const std::vector<std::string>& lines) {
 }
 
 }  // namespace mapgen::playability
-

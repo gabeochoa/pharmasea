@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "components/can_change_settings_interactively.h"
 #include "components/can_hold_furniture.h"
+#include "components/has_subtype.h"
 #include "components/is_bank.h"
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
@@ -13,14 +14,13 @@
 #include "components/is_round_settings_manager.h"
 #include "components/is_store_spawned.h"
 #include "components/is_trigger_area.h"
-#include "components/has_subtype.h"
 #include "components/simple_colored_box_renderer.h"
 #include "components/transform.h"
 #include "dataclass/ingredient.h"
 #include "engine/globals.h"
 #include "engine/random_engine.h"
-#include "engine/ui/color.h"
 #include "engine/texture_library.h"
+#include "engine/ui/color.h"
 #include "entity_helper.h"
 #include "entity_makers.h"
 #include "entity_query.h"
@@ -479,9 +479,8 @@ void LevelInfo::generate_load_save_room_map() {
                 const auto& h = slot.header.value();
                 // TODO(i18n): translate this (needs a formatted i18n string).
                 ita.update_title(NO_TRANSLATE(fmt::format(
-                    "Slot {:02d}\nDay {}\nseed '{}'\nv{}",
-                    slot.slot, h.day_count, h.seed,
-                    std::string_view(VERSION))));
+                    "Slot {:02d}\nDay {}\nseed '{}'\nv{}", slot.slot,
+                    h.day_count, h.seed, std::string_view(VERSION))));
             } else {
                 ita.update_title(
                     NO_TRANSLATE(fmt::format("Slot {:02d}\nEmpty", slot.slot)));
@@ -707,8 +706,9 @@ void LevelInfo::add_outside_triggers(vec2 origin) {
 
     {
         auto& entity = EntityHelper::createPermanentEntity();
-        // TODO(load-save): come back later and remove this (temp planning save station).
-        // Place in the bar building (planning is shown/treated as "in bar").
+        // TODO(load-save): come back later and remove this (temp planning save
+        // station). Place in the bar building (planning is shown/treated as "in
+        // bar").
         vec3 position = bar_origin + vec3{0, TILESIZE / -2.f, 0};
         furniture::make_trigger_area(entity, position, 6, 3,
                                      IsTriggerArea::Planning_SaveSlot);

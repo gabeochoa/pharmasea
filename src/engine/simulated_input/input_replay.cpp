@@ -1,15 +1,14 @@
-#include "simulated_input.h"
-
+#include <chrono>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <chrono>
 
 #include "../app.h"
-#include "replay_validation.h"
 #include "../event.h"
 #include "../log.h"
 #include "../statemanager.h"
+#include "replay_validation.h"
+#include "simulated_input.h"
 
 namespace input_replay {
 
@@ -74,7 +73,8 @@ void dispatch(const ReplayEvent& ev) {
                 log_info("replay: game_state match {}", current_int);
             }
         } else {
-            log_warn("replay: unknown state label '{}' val={}", ev.action, ev.code);
+            log_warn("replay: unknown state label '{}' val={}", ev.action,
+                     ev.code);
         }
         return;
     }
@@ -213,28 +213,30 @@ void update(float) {
         log_info("replay: start aligned with first_ts={}ms", first_ts);
     }
 
-    state.elapsed_ms = static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(
-                                              now - state.start_time)
-                                              .count());
+    state.elapsed_ms = static_cast<float>(
+        std::chrono::duration_cast<std::chrono::milliseconds>(now -
+                                                              state.start_time)
+            .count());
 
     last_now = now;
 
     static float last_debug_ms = -500.0f;
     if (state.elapsed_ms - last_debug_ms >= 500.0f) {
-        long long next_ts =
-            (state.idx < state.events.size()) ? state.events[state.idx].timestamp_ms
-                                              : -1;
-        log_info("replay: tick elapsed={:.1f}ms idx={} next_ts={}", state.elapsed_ms,
-                 state.idx, next_ts);
+        long long next_ts = (state.idx < state.events.size())
+                                ? state.events[state.idx].timestamp_ms
+                                : -1;
+        log_info("replay: tick elapsed={:.1f}ms idx={} next_ts={}",
+                 state.elapsed_ms, state.idx, next_ts);
         last_debug_ms = state.elapsed_ms;
     }
 
     if (state.idx < state.events.size() &&
         state.elapsed_ms + 0.01f >= state.events[state.idx].timestamp_ms) {
         const ReplayEvent& ev = state.events[state.idx];
-        log_info("replay: dispatch idx={} at {:.1f}ms type={} code={} action={}",
-                 state.idx, state.elapsed_ms, type_to_string(ev.type), ev.code,
-                 ev.action);
+        log_info(
+            "replay: dispatch idx={} at {:.1f}ms type={} code={} action={}",
+            state.idx, state.elapsed_ms, type_to_string(ev.type), ev.code,
+            ev.action);
         dispatch(state.events[state.idx]);
         state.idx++;
     }
@@ -243,7 +245,9 @@ void update(float) {
         state.active = false;
         replay_validation::end_replay();
         if (EXIT_ON_BYPASS_COMPLETE) {
-            log_info("replay: completed all events; exit-on-bypass-complete set, closing app");
+            log_info(
+                "replay: completed all events; exit-on-bypass-complete set, "
+                "closing app");
             App::get().close();
         }
     }

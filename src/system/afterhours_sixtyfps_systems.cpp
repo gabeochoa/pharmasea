@@ -1,7 +1,9 @@
-#include "../ah.h"
-#include "../building_locations.h"
 #include <filesystem>
 #include <unordered_set>
+
+#include "../ah.h"
+#include "../building_locations.h"
+#include "../client_server_comm.h"
 #include "../components/can_be_highlighted.h"
 #include "../components/can_change_settings_interactively.h"
 #include "../components/can_highlight_others.h"
@@ -12,6 +14,7 @@
 #include "../components/custom_item_position.h"
 #include "../components/has_dynamic_model_name.h"
 #include "../components/has_name.h"
+#include "../components/has_subtype.h"
 #include "../components/is_bank.h"
 #include "../components/is_drink.h"
 #include "../components/is_floor_marker.h"
@@ -22,20 +25,18 @@
 #include "../components/is_solid.h"
 #include "../components/is_squirter.h"
 #include "../components/is_trigger_area.h"
-#include "../components/has_subtype.h"
 #include "../components/model_renderer.h"
 #include "../components/simple_colored_box_renderer.h"
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/statemanager.h"
-#include "../entity_id.h"
 #include "../entity_helper.h"
+#include "../entity_id.h"
 #include "../entity_makers.h"
 #include "../entity_query.h"
 #include "../external_include.h"
 #include "../network/server.h"
-#include "../client_server_comm.h"
 #include "../save_game/save_game.h"
 #include "../vec_util.h"
 #include "progression.h"
@@ -45,7 +46,8 @@
 namespace system_manager {
 
 static bool g_load_save_delete_mode = false;
-// Some triggers should only fire once per "standing on it" (until you step off).
+// Some triggers should only fire once per "standing on it" (until you step
+// off).
 static std::unordered_set<int> g_trigger_fired_while_occupied;
 
 static bool should_gate_trigger_fires(const IsTriggerArea& ita) {
@@ -324,7 +326,8 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 bool ok = server_only::delete_game_slot(slot_num);
                 if (!ok) break;
 
-                // Refresh room by clearing entities in the building and regenerating.
+                // Refresh room by clearing entities in the building and
+                // regenerating.
                 const auto ents = EntityHelper::getAllInRange(
                     LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
                 for (Entity& to_delete : ents) {
@@ -358,12 +361,14 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 .channel = Channel::RELIABLE,
                 .client_id = network::SERVER_CLIENT_ID,
                 .msg_type = network::ClientPacket::MsgType::Announcement,
-                .msg = network::ClientPacket::AnnouncementInfo{
-                    .message = g_load_save_delete_mode ? "Delete mode ON"
-                                                      : "Delete mode OFF",
-                    .type = g_load_save_delete_mode ? AnnouncementType::Warning
-                                                    : AnnouncementType::Message,
-                },
+                .msg =
+                    network::ClientPacket::AnnouncementInfo{
+                        .message = g_load_save_delete_mode ? "Delete mode ON"
+                                                           : "Delete mode OFF",
+                        .type = g_load_save_delete_mode
+                                    ? AnnouncementType::Warning
+                                    : AnnouncementType::Message,
+                    },
             });
         } break;
 
@@ -373,10 +378,12 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     .channel = Channel::RELIABLE,
                     .client_id = network::SERVER_CLIENT_ID,
                     .msg_type = network::ClientPacket::MsgType::Announcement,
-                    .msg = network::ClientPacket::AnnouncementInfo{
-                        .message = "Can't save right now (planning/daytime only).",
-                        .type = AnnouncementType::Warning,
-                    },
+                    .msg =
+                        network::ClientPacket::AnnouncementInfo{
+                            .message =
+                                "Can't save right now (planning/daytime only).",
+                            .type = AnnouncementType::Warning,
+                        },
                 });
                 break;
             }
@@ -389,13 +396,15 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 .channel = Channel::RELIABLE,
                 .client_id = network::SERVER_CLIENT_ID,
                 .msg_type = network::ClientPacket::MsgType::Announcement,
-                .msg = network::ClientPacket::AnnouncementInfo{
-                    .message = ok ? fmt::format("Saved to slot {:02d}", slot_num)
-                                  : fmt::format("Failed to save slot {:02d}",
-                                                slot_num),
-                    .type = ok ? AnnouncementType::Message
-                               : AnnouncementType::Error,
-                },
+                .msg =
+                    network::ClientPacket::AnnouncementInfo{
+                        .message =
+                            ok ? fmt::format("Saved to slot {:02d}", slot_num)
+                               : fmt::format("Failed to save slot {:02d}",
+                                             slot_num),
+                        .type = ok ? AnnouncementType::Message
+                                   : AnnouncementType::Error,
+                    },
             });
         } break;
     }
@@ -463,9 +472,9 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
                                : 1;
             if (slot_num < 1) slot_num = 1;
 
-            const bool is_saving =
-                ita.active_entrants() > 0 && ita.progress() > 0.f &&
-                ita.should_progress();
+            const bool is_saving = ita.active_entrants() > 0 &&
+                                   ita.progress() > 0.f &&
+                                   ita.should_progress();
             if (is_saving) {
                 ita.update_title(NO_TRANSLATE("Saving..."));
                 ita.update_subtitle(
@@ -494,12 +503,12 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
         case IsTriggerArea::Progression_Option1:
         case IsTriggerArea::Progression_Option2:
             break;
-        case IsTriggerArea::LoadSave_LoadSlot:
-        {
+        case IsTriggerArea::LoadSave_LoadSlot: {
             // Keep colors up to date:
             // - empty slots are grey
             // - loadable slots are green
-            // - in delete mode, loadable slots are red (empty slots remain grey)
+            // - in delete mode, loadable slots are red (empty slots remain
+            // grey)
             bool delete_mode = g_load_save_delete_mode;
             int slot_num = entity.has<HasSubtype>()
                                ? entity.get<HasSubtype>().get_type_index()
@@ -509,10 +518,13 @@ void update_dynamic_trigger_area_settings(Entity& entity, float) {
             bool exists = std::filesystem::exists(
                 save_game::SaveGameManager::slot_path(slot_num));
 
-            Color c = exists ? (delete_mode ? ui::color::red : ui::color::green_apple)
-                             : ui::color::grey;
+            Color c =
+                exists ? (delete_mode ? ui::color::red : ui::color::green_apple)
+                       : ui::color::grey;
             if (entity.has<SimpleColoredBoxRenderer>()) {
-                entity.get<SimpleColoredBoxRenderer>().update_face(c).update_base(c);
+                entity.get<SimpleColoredBoxRenderer>()
+                    .update_face(c)
+                    .update_base(c);
             }
             return;
         }

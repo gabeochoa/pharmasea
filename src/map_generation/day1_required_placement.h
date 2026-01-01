@@ -12,4 +12,3 @@ namespace mapgen {
                                        std::mt19937& rng);
 
 }  // namespace mapgen
-

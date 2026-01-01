@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include "engine/globals.h"
 #include <string>
+
+#include "engine/globals.h"
 
 // steam networking uses an "app id" that we dont have
 // also the code isnt written yet :)

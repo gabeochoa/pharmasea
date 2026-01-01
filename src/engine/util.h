@@ -178,7 +178,8 @@ inline V map_get_or_default(Container<K, V, Ts...> map, K key, V def_value) {
 }
 
 template<typename T>
-[[nodiscard]] constexpr bool contains(const std::vector<T>& array, const T& key) {
+[[nodiscard]] constexpr bool contains(const std::vector<T>& array,
+                                      const T& key) {
     const auto itr = std::find_if(std::begin(array), std::end(array),
                                   [&key](const auto& v) { return v == key; });
     return itr != std::end(array);

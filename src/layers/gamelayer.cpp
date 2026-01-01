@@ -9,16 +9,16 @@
 #include "../globals.h"
 //
 #include "../camera.h"
+#include "../components/transform.h"
 #include "../engine.h"
 #include "../engine/layer.h"
 #include "../engine/settings.h"
-#include "../map.h"
-#include "../system/system_manager.h"
 #include "../engine/shader_library.h"
 #include "../entity_query.h"
 #include "../entity_type.h"
-#include "../components/transform.h"
 #include "../lighting_runtime.h"
+#include "../map.h"
+#include "../system/system_manager.h"
 #include "raylib.h"
 GameLayer::~GameLayer() { raylib::UnloadRenderTexture(game_render_texture); }
 

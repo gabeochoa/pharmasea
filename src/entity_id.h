@@ -7,4 +7,3 @@
 namespace entity_id {
 inline constexpr afterhours::EntityID INVALID = -1;
 }
-

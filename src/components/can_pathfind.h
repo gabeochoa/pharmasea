@@ -4,8 +4,8 @@
 #include <deque>
 
 #include "../engine/path_request_manager.h"
-#include "../entity_id.h"
 #include "../entity_helper.h"
+#include "../entity_id.h"
 #include "../vendor_include.h"
 #include "base_component.h"
 

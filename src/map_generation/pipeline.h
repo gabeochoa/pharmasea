@@ -31,7 +31,6 @@ struct GeneratedAscii {
 };
 
 GeneratedAscii generate_ascii(const std::string& seed,
-                             const GenerationContext& context);
+                              const GenerationContext& context);
 
 }  // namespace mapgen
-

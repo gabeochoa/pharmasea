@@ -1,15 +1,15 @@
 #pragma once
 
 #include "../../components/bypass_automation_state.h"
-#include "../settings.h"
-#include "../svg_renderer.h"
 #include "../../entity_helper.h"
 #include "../../external_include.h"
 #include "../../globals.h"
 #include "../../network/network.h"
-#include "simulated_input.h"
 #include "../log.h"
+#include "../settings.h"
 #include "../statemanager.h"
+#include "../svg_renderer.h"
+#include "simulated_input.h"
 
 // Helper to inject clicks for bypass functionality
 // This runs independently and doesn't modify the layers it clicks on

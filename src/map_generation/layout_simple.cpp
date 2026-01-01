@@ -13,12 +13,14 @@ namespace mapgen {
 
 namespace {
 
-int num_seeds_for_archetype(BarArchetype archetype, const GenerationContext& ctx,
+int num_seeds_for_archetype(BarArchetype archetype,
+                            const GenerationContext& ctx,
                             const std::string& seed) {
     int base = std::max(1, static_cast<int>((ctx.rows * ctx.cols) / 100));
     size_t h = hashString(seed);
     int jitter = static_cast<int>(h % 3);
-    if (archetype == BarArchetype::OpenHall) return std::max(1, base - 1 + jitter);
+    if (archetype == BarArchetype::OpenHall)
+        return std::max(1, base - 1 + jitter);
     if (archetype == BarArchetype::MultiRoom) return base + 2 + jitter;
     if (archetype == BarArchetype::BackRoom) return base + 1 + jitter;
     return base + 3 + jitter;
@@ -53,4 +55,3 @@ std::vector<std::string> generate_layout_simple(const std::string& seed,
 }
 
 }  // namespace mapgen
-

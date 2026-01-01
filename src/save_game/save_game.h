@@ -85,7 +85,8 @@ struct SaveGameManager {
     // Snapshot-based save/load.
     [[nodiscard]] static bool save_slot(int slot, const Map& authoritative_map);
     [[nodiscard]] static bool load_slot(int slot, SaveGameFile& out);
-    [[nodiscard]] static bool load_file(const fs::path& path, SaveGameFile& out);
+    [[nodiscard]] static bool load_file(const fs::path& path,
+                                        SaveGameFile& out);
 
     // Read only the header (fast).
     [[nodiscard]] static std::optional<SaveGameHeader> read_header(
@@ -96,4 +97,3 @@ struct SaveGameManager {
 };
 
 }  // namespace save_game
-
