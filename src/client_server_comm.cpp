@@ -103,7 +103,8 @@ bool load_game_from_slot(int slot) {
 
     // Install entities into the authoritative entity list and mark generated
     // so the generator does not wipe the loaded snapshot.
-    server_entities_DO_NOT_USE = loaded.map_snapshot.game_info.entities;
+    auto& collection = EntityHelper::get_server_collection();
+    collection.entities_DO_NOT_USE = loaded.map_snapshot.game_info.entities;
 
     Map& server_map = *(server->get_map_SERVER_ONLY());
     server_map.game_info = loaded.map_snapshot.game_info;
@@ -114,7 +115,7 @@ bool load_game_from_slot(int slot) {
     RandomEngine::set_seed(server_map.seed);
 
     // Fix up containers that loaded with EntityType::Unknown
-    server_only::run_all_post_load_helpers(server_entities_DO_NOT_USE);
+    server_only::run_all_post_load_helpers(collection.entities_DO_NOT_USE);
 
     EntityHelper::invalidateCaches();
 

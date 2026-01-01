@@ -278,10 +278,11 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            client_entities_DO_NOT_USE.clear();
-            client_entities_DO_NOT_USE = info.map.entities();
+            auto& collection = EntityHelper::get_client_collection();
+            collection.entities_DO_NOT_USE.clear();
+            collection.entities_DO_NOT_USE = info.map.entities();
 
-            post_deserialize_fixups::run(client_entities_DO_NOT_USE);
+            post_deserialize_fixups::run(collection.entities_DO_NOT_USE);
 
             map->update_map(info.map);
 

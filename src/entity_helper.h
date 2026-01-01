@@ -17,6 +17,7 @@
 #include "globals.h"
 
 //
+#include "afterhours/src/core/entity_helper.h"
 #include "engine/statemanager.h"
 #include "entity.h"
 #include "entity_makers.h"
@@ -31,17 +32,35 @@ using RefEntities = std::vector<afterhours::RefEntity>;
 
 using NamedEntities = std::map<NamedEntity, std::shared_ptr<Entity>>;
 
-extern Entities client_entities_DO_NOT_USE;
-extern Entities server_entities_DO_NOT_USE;
-extern NamedEntities named_entities_DO_NOT_USE;
+// Thread-specific EntityCollections
+// Each thread can have its own collection for independent entity management
+extern afterhours::EntityCollection client_collection;
+extern afterhours::EntityCollection server_collection;
 
-extern std::set<int> permanant_ids;
+extern NamedEntities named_entities_DO_NOT_USE;
 extern std::map<vec2, bool> cache_is_walkable;
 
 struct EntityHelper {
     struct CreationOptions {
         bool is_permanent;
     };
+
+    // Get the current thread's EntityCollection
+    // Uses is_server() to determine client vs server collection
+    static afterhours::EntityCollection& get_current_collection() {
+        if (is_server()) {
+            return server_collection;
+        }
+        return client_collection;
+    }
+
+    // Get a specific collection by thread type
+    static afterhours::EntityCollection& get_server_collection() {
+        return server_collection;
+    }
+    static afterhours::EntityCollection& get_client_collection() {
+        return client_collection;
+    }
 
     static const Entities& get_entities();
     static Entities& get_entities_for_mod();
@@ -107,10 +126,10 @@ struct EntityHelper {
         const Transform& transform, float range,
         const std::function<bool(const Entity&)>& filter);
 
-    static OptEntity getEntityForID(EntityID id);
+    static OptEntity getEntityForID(afterhours::EntityID id);
 
     // Like getEntityForID, but asserts when missing.
-    static Entity& getEnforcedEntityForID(EntityID id);
+    static Entity& getEnforcedEntityForID(afterhours::EntityID id);
 
     static OptEntity getClosestOfType(const Entity& entity,
                                       const EntityType& type,

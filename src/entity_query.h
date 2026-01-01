@@ -18,12 +18,15 @@
 // Custom EntityQuery extending afterhours::EntityQuery with pharmasea-specific
 // methods
 struct EQ : public afterhours::EntityQuery<EQ> {
-    // Override constructor to use pharmasea's EntityHelper instead of
-    // afterhours's Convert pharmasea's Entities to afterhours::Entities
     EQ()
-        : afterhours::EntityQuery<EQ>(
-              afterhours::Entities(EntityHelper::get_entities().begin(),
-                                   EntityHelper::get_entities().end())) {}
+        // Default constructor uses current thread's EntityCollection
+        : afterhours::EntityQuery<EQ>(EntityHelper::get_current_collection(),
+                                      {.ignore_temp_warning = true}) {}
+
+    // Constructor that accepts a specific EntityCollection
+    explicit EQ(afterhours::EntityCollection& collection)
+        : afterhours::EntityQuery<EQ>(collection,
+                                      {.ignore_temp_warning = true}) {}
 
     // Explicit constructor for Entities (pharmasea's Entities type)
     explicit EQ(const ::Entities& entsIn)
@@ -215,11 +218,11 @@ struct EQ : public afterhours::EntityQuery<EQ> {
         const auto results = gen();
         std::vector<std::pair<EntityID, vec3>> ids;
         ids.reserve(results.size());
-        std::transform(
-            results.begin(), results.end(), std::back_inserter(ids),
-            [](const RefEntity& ent) -> std::pair<EntityID, vec3> {
-                return {ent.get().id, ent.get().get<Transform>().pos()};
-            });
+        std::transform(results.begin(), results.end(), std::back_inserter(ids),
+                       [](const RefEntity& ent) -> std::pair<EntityID, vec3> {
+                           return {ent.get().id,
+                                   ent.get().get<Transform>().pos()};
+                       });
         return ids;
     }
 };

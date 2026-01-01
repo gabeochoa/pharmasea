@@ -7,11 +7,12 @@
 #include "entity_type.h"
 #include "system/input_process_manager.h"
 
-Entities client_entities_DO_NOT_USE;
-Entities server_entities_DO_NOT_USE;
-NamedEntities named_entities_DO_NOT_USE;
+// Thread-specific EntityCollections
+// Each thread manages its own collection independently
+afterhours::EntityCollection client_collection;
+afterhours::EntityCollection server_collection;
 
-std::set<int> permanant_ids;
+NamedEntities named_entities_DO_NOT_USE;
 std::map<vec2, bool> cache_is_walkable;
 
 ///////////////////////////////////
@@ -51,7 +52,8 @@ OptEntity EntityHelper::getPossibleNamedEntity(const NamedEntity& name) {
         }
         if (!owned) {
             log_error(
-                "Named entity cache could not find owning shared_ptr for {} (id {})",
+                "Named entity cache could not find owning shared_ptr for {} "
+                "(id {})",
                 magic_enum::enum_name<NamedEntity>(name), e_ptr->id);
             return {};
         }
@@ -72,18 +74,12 @@ Entity& EntityHelper::getNamedEntity(const NamedEntity& name) {
 }
 
 Entities& EntityHelper::get_entities_for_mod() {
-    if (is_server()) {
-        return server_entities_DO_NOT_USE;
-    }
-    // Right now we only have server/client thread, but in the future if we
-    // have more then we should check these
-
-    // auto client_thread_id =
-    // GLOBALS.get_or_default("client_thread_id", std::thread::id());
-    return client_entities_DO_NOT_USE;
+    return get_current_collection().get_entities_for_mod();
 }
 
-const Entities& EntityHelper::get_entities() { return get_entities_for_mod(); }
+const Entities& EntityHelper::get_entities() {
+    return get_current_collection().get_entities();
+}
 
 RefEntities EntityHelper::get_ref_entities() {
     RefEntities matching;
@@ -107,16 +103,13 @@ Entity& EntityHelper::createPermanentEntity() {
 }
 
 Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
-    auto e = std::make_shared<Entity>();
-    get_entities_for_mod().push_back(e);
+    auto& collection = get_current_collection();
+    afterhours::EntityCollection::CreationOptions ah_options;
+    ah_options.is_permanent = options.is_permanent;
 
+    Entity& e = collection.createEntityWithOptions(ah_options);
     invalidatePathCache();
-
-    if (options.is_permanent) {
-        permanant_ids.insert(e->id);
-    }
-
-    return *e;
+    return e;
 
     // if (!e->add_to_navmesh()) {
     // return;
@@ -131,15 +124,7 @@ Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
 }
 
 void EntityHelper::markIDForCleanup(int e_id) {
-    auto& entities = get_entities();
-    auto it = entities.begin();
-    while (it != get_entities().end()) {
-        if ((*it)->id == e_id) {
-            (*it)->cleanup = true;
-            break;
-        }
-        it++;
-    }
+    get_current_collection().markIDForCleanup(e_id);
 }
 
 void EntityHelper::removeEntity(int e_id) {
@@ -149,13 +134,8 @@ void EntityHelper::removeEntity(int e_id) {
     // cache_is_walkable.clear();
     // }
 
-    auto& entities = get_entities_for_mod();
-
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [e_id](const auto& entity) { return !entity || entity->id == e_id; });
-
-    entities.erase(newend, entities.end());
+    markIDForCleanup(e_id);
+    get_current_collection().cleanup();
 }
 
 //  Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
@@ -169,37 +149,14 @@ void EntityHelper::removeEntity(int e_id) {
 // return Polygon(rect);
 // }
 
-void EntityHelper::cleanup() {
-    // Cleanup entities marked cleanup
-    Entities& entities = get_entities_for_mod();
-
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [](const auto& entity) { return !entity || entity->cleanup; });
-
-    entities.erase(newend, entities.end());
-}
+void EntityHelper::cleanup() { get_current_collection().cleanup(); }
 
 void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
-    Entities& entities = get_entities_for_mod();
-    // just clear the whole thing
-    entities.clear();
+    get_current_collection().delete_all_entities_NO_REALLY_I_MEAN_ALL();
 }
 
 void EntityHelper::delete_all_entities(bool include_permanent) {
-    if (include_permanent) {
-        delete_all_entities_NO_REALLY_I_MEAN_ALL();
-        return;
-    }
-
-    // Only delete non perms
-    Entities& entities = get_entities_for_mod();
-
-    auto newend = std::remove_if(
-        entities.begin(), entities.end(),
-        [](const auto& entity) { return !permanant_ids.contains(entity->id); });
-
-    entities.erase(newend, entities.end());
+    get_current_collection().delete_all_entities(include_permanent);
 }
 
 enum ForEachFlow {
@@ -226,17 +183,12 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
         transform.as2(), range, transform.face_direction(), filter);
 }
 
-OptEntity EntityHelper::getEntityForID(EntityID id) {
+OptEntity EntityHelper::getEntityForID(afterhours::EntityID id) {
     if (id == entity_id::INVALID) return {};
-
-    for (const auto& e : get_entities()) {
-        if (!e) continue;
-        if (e->id == id) return *e;
-    }
-    return {};
+    return get_current_collection().getEntityForID(id);
 }
 
-Entity& EntityHelper::getEnforcedEntityForID(EntityID id) {
+Entity& EntityHelper::getEnforcedEntityForID(afterhours::EntityID id) {
     OptEntity opt = getEntityForID(id);
     if (!opt) {
         log_error("EntityHelper::getEnforcedEntityForID failed: {}", id);

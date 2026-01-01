@@ -331,7 +331,7 @@ void Server::process_map_update(float dt) {
             if (save_game::SaveGameManager::load_file(p, loaded)) {
                 // Apply snapshot (same logic as
                 // server_only::load_game_from_slot).
-                server_entities_DO_NOT_USE =
+                EntityHelper::get_server_collection().entities_DO_NOT_USE =
                     loaded.map_snapshot.game_info.entities;
 
                 pharmacy_map->game_info = loaded.map_snapshot.game_info;
