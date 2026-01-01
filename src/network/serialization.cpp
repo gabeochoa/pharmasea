@@ -14,9 +14,6 @@ Buffer serialize_to_entity(Entity* entity) {
     std::get<1>(ctx).registerBasesList<BitserySerializer>(
         MyPolymorphicClasses{});
 
-    // Note: avoid unconditional debug printing here; this function is called
-    // on hot paths and spammy logs can mask real issues and hurt perf.
-
     BitserySerializer ser{ctx, buffer};
     ser.object(*entity);
     ser.adapter().flush();
