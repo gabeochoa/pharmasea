@@ -269,8 +269,8 @@ struct helper {
 
         log_info(
             "mapgen::validate: merged_entities={} temp_entities={} "
-            "Sophie{merged={},temp={}} Register{merged={},temp={}} "
-            "CustomerSpawner{merged={},temp={}}",
+            "Sophie(merged={},temp={}) Register(merged={},temp={}) "
+            "CustomerSpawner(merged={},temp={})",
             ents.size(), temp.size(), has_type_in(ents, EntityType::Sophie),
             has_type_in(temp, EntityType::Sophie),
             has_type_in(ents, EntityType::Register),
