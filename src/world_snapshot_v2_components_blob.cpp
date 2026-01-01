@@ -122,27 +122,25 @@ void deserialize_components_only_impl(
 
 }  // namespace
 
-std::vector<std::uint8_t> encode_components_blob(const Entity& e) {
-    Buffer buf;
+void encode_components_blob_into(const Entity& e, std::vector<std::uint8_t>& out) {
+    out.clear();
     TContext ctx{};
     std::get<1>(ctx).registerBasesList<Serializer>(MyPolymorphicClasses{});
-    Serializer ser{ctx, buf};
+    Serializer ser{ctx, out};
     // bitsery's API takes non-const references even for writing.
     Entity& nc = const_cast<Entity&>(e);  // NOLINT
     serialize_components_only(ser, nc);
     ser.adapter().flush();
 
-    if (buf.size() > kMaxEntityComponentsBlobBytes) {
-        log_warn("snapshot_v2: components blob is very large: {} bytes", buf.size());
+    if (out.size() > kMaxEntityComponentsBlobBytes) {
+        log_warn("snapshot_v2: components blob is very large: {} bytes", out.size());
     }
-
-    return buf;
 }
 
-void decode_components_blob(Entity& e, const std::vector<std::uint8_t>& blob) {
+void decode_components_blob(Entity& e, const std::uint8_t* data, const std::size_t size) {
     TContext ctx{};
     std::get<1>(ctx).registerBasesList<Deserializer>(MyPolymorphicClasses{});
-    Deserializer des{ctx, blob.begin(), blob.size()};
+    Deserializer des{ctx, data, size};
     deserialize_components_only_impl(des, e);
     if (des.adapter().error() != bitsery::ReaderError::NoError) {
         log_error("snapshot_v2: decode_components_blob reader_error={}",

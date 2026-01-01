@@ -151,6 +151,9 @@ void remove_all_pooled_components_for(Entity& e) {
 WorldSnapshotV2 capture_from_entities(const Entities& entities) {
     WorldSnapshotV2 snap{};
     snap.entities.reserve(entities.size());
+    // Reused scratch buffer to avoid per-entity allocations.
+    std::vector<std::uint8_t> scratch;
+    scratch.reserve(64 * 1024);
 
     for (const auto& sp : entities) {
         if (!sp) continue;
@@ -163,7 +166,16 @@ WorldSnapshotV2 capture_from_entities(const Entities& entities) {
         rec.component_set = e.componentSet;
         rec.tags = e.tags;
         rec.cleanup = e.cleanup;
-        rec.components_blob = snapshot_v2::encode_components_blob(e);
+
+        snapshot_v2::encode_components_blob_into(e, scratch);
+        rec.components_offset = static_cast<std::uint32_t>(snap.component_bytes.size());
+        rec.components_size = static_cast<std::uint32_t>(scratch.size());
+        if (rec.components_size > snapshot_v2::kMaxSnapshotEntityComponentBytes) {
+            log_warn("snapshot_v2: entity {} component bytes too large: {}",
+                     rec.legacy_id, rec.components_size);
+        }
+        snap.component_bytes.insert(snap.component_bytes.end(), scratch.begin(),
+                                    scratch.end());
         snap.entities.push_back(rec);
     }
 
@@ -219,8 +231,15 @@ void apply_to_entities(Entities& entities, const WorldSnapshotV2& snap,
     for (std::size_t i = 0; i < snap.entities.size(); ++i) {
         const auto& rec = snap.entities[i];
         if (i >= entities.size() || !entities[i]) continue;
-        if (rec.components_blob.empty()) continue;
-        snapshot_v2::decode_components_blob(*entities[i], rec.components_blob);
+        if (rec.components_size == 0) continue;
+        const std::size_t off = rec.components_offset;
+        const std::size_t sz = rec.components_size;
+        if (off + sz > snap.component_bytes.size()) {
+            log_error("snapshot_v2: bad component slice off={} size={} arena={}",
+                      off, sz, snap.component_bytes.size());
+            continue;
+        }
+        snapshot_v2::decode_components_blob(*entities[i], snap.component_bytes.data() + off, sz);
     }
 
     if (!options.preserve_legacy_entity_ids) {

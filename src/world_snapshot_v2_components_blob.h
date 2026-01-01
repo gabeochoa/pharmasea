@@ -22,8 +22,15 @@ namespace snapshot_v2 {
 
 inline constexpr std::size_t kMaxEntityComponentsBlobBytes = 4 * 1024 * 1024;  // 4 MiB
 
-[[nodiscard]] std::vector<std::uint8_t> encode_components_blob(const Entity& e);
-void decode_components_blob(Entity& e, const std::vector<std::uint8_t>& blob);
+// Encode just the component payloads (presence + values) into `out`.
+// `out` is cleared but its capacity is reused.
+void encode_components_blob_into(const Entity& e, std::vector<std::uint8_t>& out);
+
+// Decode from a byte range and repopulate ComponentStore-backed state on `e`.
+void decode_components_blob(Entity& e, const std::uint8_t* data, std::size_t size);
+inline void decode_components_blob(Entity& e, const std::vector<std::uint8_t>& blob) {
+    decode_components_blob(e, blob.data(), blob.size());
+}
 
 }  // namespace snapshot_v2
 
