@@ -8,8 +8,6 @@
 #include "base_component.h"
 
 struct CollectsCustomerFeedback : public BaseComponent {
-    virtual ~CollectsCustomerFeedback() {}
-
     CollectsCustomerFeedback() {}
 
    private:

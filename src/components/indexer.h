@@ -8,8 +8,6 @@ struct Indexer : public BaseComponent {
     Indexer() : index(0), max_value(0), changed(true) {}
     explicit Indexer(int mx) : index(0), max_value(mx), changed(true) {}
 
-    virtual ~Indexer() {}
-
     void increment() {
         if (max_value == 0) return;
         if (max_value == 1) return;

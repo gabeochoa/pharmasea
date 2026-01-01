@@ -18,6 +18,8 @@
 #include "settings.h"
 #include "shader_library.h"
 
+#include "../afterhours_collections.h"
+
 App App::instance;
 bool App::created = false;
 
@@ -180,6 +182,10 @@ void App::run() {
 #else
     log_info("Tracing is not enabled");
 #endif
+
+    // Bind the Afterhours ECS world for this thread (client world).
+    // This must be active before any Entity/component access.
+    pharmasea_afterhours::bind_client_collection_for_this_thread();
 
     for (Layer* layer : layerstack) {
         if (layer) layer->onStartup();

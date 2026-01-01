@@ -8,8 +8,6 @@
 using EntityID = int;
 
 struct CanHoldFurniture : public BaseComponent {
-    virtual ~CanHoldFurniture() {}
-
     [[nodiscard]] bool empty() const { return held_furniture_id == -1; }
     [[nodiscard]] bool is_holding_furniture() const { return !empty(); }
 

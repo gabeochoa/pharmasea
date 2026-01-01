@@ -15,6 +15,7 @@
 #include "../engine/random_engine.h"
 #include "../engine/time.h"
 #include "../entity_helper.h"
+#include "../afterhours_collections.h"
 #include "../globals.h"  // for HASHED_VERSION
 #include "../save_game/save_game.h"
 #include "../system/system_manager.h"
@@ -131,6 +132,9 @@ void Server::run() {
     TRACY_ZONE_SCOPED;
     thread_id = std::this_thread::get_id();
     GLOBALS.set("server_thread_id", &thread_id);
+
+    // Bind the Afterhours ECS world for this thread (server world).
+    pharmasea_afterhours::bind_server_collection_for_this_thread();
 
     // should probably always be about / above whats in the game.h
     constexpr float desiredFrameRate = 240.0f;

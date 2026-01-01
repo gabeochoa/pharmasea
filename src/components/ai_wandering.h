@@ -40,8 +40,6 @@ struct AIWandering : public AIComponent {
 
     AIWandering() : target(std::bind(&AIComponent::reset, this)) {}
 
-    virtual ~AIWandering() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

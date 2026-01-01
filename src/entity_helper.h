@@ -77,6 +77,11 @@ struct EntityHelper {
     static void delete_all_entities_NO_REALLY_I_MEAN_ALL();
     static void delete_all_entities(bool include_permanent = false);
 
+    // Rebuild the handle/ID mapping for the current entity list.
+    // Intended for cases where entities are injected externally (e.g. network
+    // deserialization assigning `client_entities_DO_NOT_USE` directly).
+    static void rebuild_handle_store_for_current_entities();
+
     enum ForEachFlow {
         NormalFlow = 0,
         Continue = 1,

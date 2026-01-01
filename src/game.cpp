@@ -428,9 +428,14 @@ void process_dev_flags(int argc, char* argv[]) {
 }
 
 #include "engine/util.h"
+#include "afterhours_collections.h"
 
 int main(int argc, char* argv[]) {
     process_dev_flags(argc, argv);
+
+    // Bind the Afterhours ECS world for the main thread early (client world).
+    // This keeps tests/startup code that touches ECS from asserting.
+    pharmasea_afterhours::bind_client_collection_for_this_thread();
 
 #if ENABLE_TESTS
     tests::run_all();

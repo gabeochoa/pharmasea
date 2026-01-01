@@ -15,8 +15,6 @@
 #include "base_component.h"
 
 struct IsProgressionManager : public BaseComponent {
-    virtual ~IsProgressionManager() {}
-
     IsProgressionManager() {}
 
     void init() {

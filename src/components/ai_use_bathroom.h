@@ -43,8 +43,6 @@ struct AIUseBathroom : public AIComponent {
     AIUseBathroom()
         : target(std::bind(&AIComponent::reset, this)),
           line_wait(std::bind(&AIComponent::reset, this)) {}
-    virtual ~AIUseBathroom() {}
-
     JobType next_job;
 
    private:

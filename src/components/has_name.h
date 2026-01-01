@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct HasName : public BaseComponent {
-    virtual ~HasName() {}
-
     void update(const std::string& new_name) {
         _name = new_name;
         name_length = (int) _name.size();

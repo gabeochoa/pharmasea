@@ -11,8 +11,6 @@ struct ConveysHeldItem : public BaseComponent {
     float SPEED = 0.5f;
     float relative_item_pos = ConveysHeldItem::ITEM_START;
 
-    virtual ~ConveysHeldItem() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

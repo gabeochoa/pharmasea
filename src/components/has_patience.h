@@ -9,8 +9,6 @@ struct HasPatience : public BaseComponent {
         update_max(20.f);
     }
 
-    virtual ~HasPatience() {}
-
     [[nodiscard]] float pct() const { return amount_left_s / max_patience_s; }
 
     void reset() { amount_left_s = max_patience_s; }

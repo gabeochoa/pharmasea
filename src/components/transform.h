@@ -55,8 +55,6 @@ struct Transform : public BaseComponent {
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
 
-    virtual ~Transform() {}
-
     auto& init(vec3 pos, vec3 sz) {
         raw_position = pos;
         position = pos;

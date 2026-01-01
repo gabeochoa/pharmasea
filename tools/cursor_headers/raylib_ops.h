@@ -7,6 +7,11 @@
 // via the local raylib setup; in this container it does not, so we define it
 // here without touching production headers.
 
+// Prevent production headers from pulling in the full vendored overload set.
+#ifndef PHARMASEA_RAYLIB_OPS_PROVIDED
+#define PHARMASEA_RAYLIB_OPS_PROVIDED 1
+#endif
+
 #include "engine/graphics.h"
 
 namespace raylib {

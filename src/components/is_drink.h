@@ -13,7 +13,6 @@ using StdMap = bitsery::ext::StdMap;
 
 struct IsDrink : public BaseComponent {
     IsDrink() : _supports_multiple(false) {}
-    virtual ~IsDrink() {}
 
     auto& turn_on_support_multiple(int max) {
         _supports_multiple = true;
