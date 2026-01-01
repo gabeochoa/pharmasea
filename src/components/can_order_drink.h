@@ -23,8 +23,6 @@ struct CanOrderDrink : public BaseComponent {
         order_state = OrderState::NeedsReset;
     }
 
-    virtual ~CanOrderDrink() {}
-
     [[nodiscard]] IngredientBitSet recipe() const {
         return get_recipe_for_drink(current_order);
     }

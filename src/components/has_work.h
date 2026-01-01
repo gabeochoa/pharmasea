@@ -16,7 +16,6 @@ struct HasWork : public BaseComponent {
           reset_on_empty(false),
           hide_progress_bar_on_full(false),
           hide_progress_bar(false) {}
-    virtual ~HasWork() {}
 
     // Does this have work to be done?
     [[nodiscard]] bool is_work_complete() const {

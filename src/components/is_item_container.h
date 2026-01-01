@@ -9,7 +9,6 @@ struct IsItemContainer : public BaseComponent {
 
     explicit IsItemContainer(EntityType type)
         : item_type(type), uses_indexer(false) {}
-    virtual ~IsItemContainer() {}
 
     [[nodiscard]] virtual bool is_matching_item(const Item& item) const {
         return check_type(item, item_type);

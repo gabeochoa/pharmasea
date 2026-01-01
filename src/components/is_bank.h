@@ -43,7 +43,6 @@ struct IsBank : public BaseComponent {
         }
     };
 
-    virtual ~IsBank() {}
     IsBank() {}
 
     [[nodiscard]] int balance() const { return coins; }

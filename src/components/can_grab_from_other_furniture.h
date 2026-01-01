@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct CanGrabFromOtherFurniture : public BaseComponent {
-    virtual ~CanGrabFromOtherFurniture() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

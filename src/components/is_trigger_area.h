@@ -49,8 +49,6 @@ struct IsTriggerArea : public BaseComponent {
 
     IsTriggerArea() : IsTriggerArea(Unset) {}
 
-    virtual ~IsTriggerArea() {}
-
     [[nodiscard]] const TranslatableString& title() const { return _title; }
     [[nodiscard]] const TranslatableString& subtitle() const {
         return _subtitle;

@@ -17,8 +17,6 @@ using SpawnFn = std::function<void(Entity&, const SpawnInfo&)>;
 using ValidationSpawnFn = std::function<bool(Entity&, const SpawnInfo&)>;
 
 struct IsSpawner : public BaseComponent {
-    virtual ~IsSpawner() {}
-
     [[nodiscard]] bool hit_max() const { return num_spawned >= max_spawned; }
     [[nodiscard]] int get_num_spawned() const { return num_spawned; }
     [[nodiscard]] int get_max_spawned() const { return max_spawned; }

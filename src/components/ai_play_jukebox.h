@@ -39,7 +39,6 @@ struct AIPlayJukebox : public AIComponent {
     AIPlayJukebox()
         : target(std::bind(&AIComponent::reset, this)),
           line_wait(std::bind(&AIComponent::reset, this)) {}
-    virtual ~AIPlayJukebox() {}
 
    private:
     friend bitsery::Access;

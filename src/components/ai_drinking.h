@@ -41,8 +41,6 @@ struct AIDrinking : public AIComponent {
 
     AIDrinking() : target(std::bind(&AIComponent::reset, this)) {}
 
-    virtual ~AIDrinking() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

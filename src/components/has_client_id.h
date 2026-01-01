@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct HasClientID : public BaseComponent {
-    virtual ~HasClientID() {}
-
     void update(int new_client_id) { client_id = new_client_id; }
     void update_ping(long long ping) { last_ping_to_server = ping; }
 

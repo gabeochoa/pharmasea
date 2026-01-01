@@ -6,8 +6,6 @@
 #include "base_component.h"
 
 struct CollectsUserInput : public BaseComponent {
-    virtual ~CollectsUserInput() {}
-
     auto& reset() {
         array_reset(pressed);
         return *this;

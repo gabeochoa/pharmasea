@@ -47,8 +47,6 @@ struct AICleanVomit : public AIComponent {
 
     AICleanVomit() : target(std::bind(&AIComponent::reset, this)) {}
 
-    virtual ~AICleanVomit() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

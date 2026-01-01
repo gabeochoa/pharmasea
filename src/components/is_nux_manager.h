@@ -68,8 +68,6 @@ struct IsNux : public BaseComponent {
         return *this;
     }
 
-    virtual ~IsNux() {}
-
    private:
     friend bitsery::Access;
     template<typename S>
@@ -84,8 +82,6 @@ struct IsNux : public BaseComponent {
 };
 
 struct IsNuxManager : public BaseComponent {
-    virtual ~IsNuxManager() {}
-
     bool initialized = false;
 
    private:
