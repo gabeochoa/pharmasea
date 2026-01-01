@@ -141,7 +141,10 @@ template<typename S>
 void serialize(S& s, snapshot_v2::WorldSnapshotV2& snap) {
     s.value4b(snap.version);
     s.container(snap.entities, snapshot_v2::kMaxSnapshotEntities);
-    s.container4b(snap.component_bytes, snapshot_v2::kMaxSnapshotTotalComponentBytes);
+    // NOTE: don't use container4b without an element fn for uint8_t; bitsery's
+    // fast-path assumes element size == VSIZE (4) and will static_assert.
+    s.container4b(snap.component_bytes, snapshot_v2::kMaxSnapshotTotalComponentBytes,
+                  [](S& sv, std::uint8_t& b) { sv.value1b(b); });
     s.object(snap.components);
 }
 }  // namespace bitsery
