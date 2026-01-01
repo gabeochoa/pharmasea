@@ -368,8 +368,34 @@ void process_ai_drinking(Entity& entity, float dt) {
     }
 
     // We have a target
-    OptEntity opt_drink_pos =
-        EntityHelper::getEntityForID(aidrinking.target.id());
+    const EntityID target_id = aidrinking.target.id();
+    OptEntity opt_drink_pos = EntityHelper::getEntityForID(target_id);
+
+    if (!opt_drink_pos) {
+        // Debugging: verify whether IDs are "wrong" vs the entity just being
+        // in Afterhours temp storage or already cleaned up.
+        const auto& col = EntityHelper::get_current_collection();
+        const auto& ents = col.get_entities();
+        const auto& temp = col.get_temp();
+        const auto contains_id = [](const auto& container, EntityID id) {
+            for (const auto& sp : container) {
+                if (!sp) continue;
+                if (sp->id == id) return true;
+            }
+            return false;
+        };
+
+        log_error(
+            "ai_drinking: missing drink_pos id={} for customer_id={} "
+            "merged_size={} temp_size={} in_merged={} in_temp={}",
+            target_id, entity.id, ents.size(), temp.size(),
+            contains_id(ents, target_id), contains_id(temp, target_id));
+
+        // Avoid crashing on asE(); clear the target so we can re-pick next tick.
+        aidrinking.target.unset();
+        aidrinking.reset();
+        return;
+    }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
         opt_drink_pos.asE().get<Transform>().as2(),
