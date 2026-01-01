@@ -16,21 +16,37 @@ Non-goal (for this phase): replacing all ongoing “per-tick” gameplay replica
 
 ## Design decisions (to avoid past failures)
 ### Identity and ID-collision avoidance (in-process host + client)
+**Update (Afterhours Collections/Registry):** Afterhours now supports multiple independent ECS “worlds” via `afterhours::EntityCollection` + `afterhours::ScopedEntityCollection` (TLS-bound). This is the preferred way to avoid host+client collisions in one process.
+
 **Rule:** never apply a server snapshot by creating/overwriting entities using server-side `legacy_id`.
 
-- In `WorldSnapshotV2`, `EntityHandle` is the canonical identity *in the payload*, but the runtime ECS state is effectively global keyed by `EntityID`.
-- Therefore, the client must **allocate fresh local entities** (new local `EntityID`s / handles) when applying a snapshot and maintain a **remap table**:
-  - `server EntityHandle` → `client EntityHandle` (or → `client EntityID` if that’s what the ECS ultimately needs)
-- Any component payload entries keyed by server handle are applied to the mapped local entity.
+- With **Collections** correctly bound, server and client can safely reuse the same numeric `EntityID` values because each collection owns its own `ComponentStore` and `EntityHelper`.
+- You still must not treat `legacy_id` as stable identity across runs; it’s debug-only.
+- **When applying a snapshot across collections** (server → client world), you may still need a remap table **if any component payload contains intra-world references** (e.g. `EntityID` “parent/held item” fields). That remap is about *relationship pointers*, not about preventing component-store collisions.
+  - `server EntityHandle` → `client EntityHandle` (preferred) or → `client EntityID`
 
-**Outcome:** server and client can coexist in one process without clobbering shared `ComponentStore` state.
+**Outcome:** server and client can coexist in one process without clobbering component state, *as long as each thread is bound to the correct `EntityCollection`* when touching Afterhours ECS APIs.
+
+### Afterhours Collections integration (required for Phase 3)
+PharmaSea must explicitly bind the active Afterhours collection on each thread that accesses ECS:
+
+- Create two collections:
+  - `afterhours::EntityCollection server_collection;`
+  - `afterhours::EntityCollection client_collection;`
+- In the server thread, wrap ECS work:
+  - `afterhours::ScopedEntityCollection scoped(server_collection);`
+- In the client thread, wrap ECS work:
+  - `afterhours::ScopedEntityCollection scoped(client_collection);`
+
+Important notes:
+- `afterhours::ComponentStore::get()` and `afterhours::EntityHelper::get()` now assert if no collection is set (no global fallback).
+- Entity creation should go through the collection-bound path (e.g. `afterhours::EntityHelper::createEntity*` while scoped), not `std::make_shared<afterhours::Entity>()`, otherwise you’ll bypass per-collection ID generation and can reintroduce collisions/confusion.
 
 ### One true entity-id generator
 Eliminate the “one counter per translation unit” issue:
 
-- If there is currently `static std::atomic_int ENTITY_ID_GEN = 0;` (or similar) in a header, replace with either:
-  - a single definition in a `.cpp` with an accessor, or
-  - a `inline std::atomic_int ENTITY_ID_GEN{0};` (C++17+) in the header (only if truly intended as one global).
+- Afterhours has fixed its own generator to be a single definition (`inline static std::atomic_int ENTITY_ID_GEN{0};`) and also introduced per-collection ID generation (`EntityCollection::entity_id_gen`).
+- PharmaSea should still avoid defining TU-local `static std::atomic_int` generators in headers for entity IDs or other identity systems.
 
 **Acceptance:** IDs are globally unique across the binary; no duplicate component spam caused by collisions.
 
@@ -68,7 +84,10 @@ Create new module(s), e.g.:
 Functions (shape, not final names):
 - `snapshot_v2::WorldSnapshotV2 capture_world_v2(const Map& map_or_levelinfo)`
 - `void apply_world_v2(Map& map_or_levelinfo, const snapshot_v2::WorldSnapshotV2& snap, ApplyOptions opts)`
-  - `ApplyOptions` includes `bool remap_entity_ids = true` (default true for client/network)
+  - `ApplyOptions` includes:
+    - `afterhours::EntityCollection& target_collection` (client or server)
+    - `bool remap_entity_refs = true` (default true if any components still store `EntityID` references)
+    - **No longer required for collision avoidance:** `remap_entity_ids` (Collections isolate the stores), but remapping may still be needed for relationship fields.
 
 Initial component coverage:
 - `EntityRecordV2` fields (handle, entity_type, tags, cleanup, component_set)
@@ -103,7 +122,8 @@ Protocol change:
 
 Client behavior:
 - Buffer chunks until complete, then deserialize payload bytes into `WorldSnapshotV2`.
-- Apply snapshot with **entity remapping enabled** to avoid in-process collisions.
+- Apply snapshot while bound to the **client** `EntityCollection` (`ScopedEntityCollection`).
+- Enable entity-reference remapping if any payload still uses `EntityID` relationships.
 - Only swap the “current map” once fully applied to avoid half-applied state.
 
 Server behavior:
@@ -126,8 +146,8 @@ Acceptance:
   - `scripts/check_network_polymorphs.py`
 
 ## Risk checklist (explicitly addressing prior issues)
-- **In-process collisions**: always remap on apply; never reuse server `legacy_id`.
-- **ENTITY_ID_GEN per TU**: ensure a single global generator definition.
+- **In-process collisions**: bind server/client to separate `afterhours::EntityCollection` instances; never rely on shared global stores. Do not reuse `legacy_id` as identity.
+- **ENTITY_ID_GEN per TU**: Afterhours fixed its generator; avoid introducing new TU-local generators in PharmaSea.
 - **BaseComponent copy/move**: snapshot DTOs, not live component copies.
 - **Bitsery container4b asserts (macOS/libc++)**: do not serialize raw byte buffers with `container4b` / `text4b`; use `container1b`/`text1b` for bytes/strings. (For V2 transfer, treat the snapshot payload as bytes and serialize it with a 1-byte element container.)
 - **512KB message cap**: chunking protocol required; conservative max chunk size.
