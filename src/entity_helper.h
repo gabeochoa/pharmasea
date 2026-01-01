@@ -71,10 +71,6 @@ struct EntityHelper : afterhours::EntityHelper {
         return opt.asE();
     }
 
-    static OptEntity getClosestOfType(const Entity& entity,
-                                      const EntityType& type,
-                                      float range = 100.f);
-
     static bool doesAnyExistWithType(const EntityType& type);
 
     static OptEntity getMatchingEntityInFront(
@@ -99,7 +95,6 @@ struct EntityHelper : afterhours::EntityHelper {
 
     // Pathfinding and walkability
     static void invalidateCaches();
-    static void invalidatePathCacheLocation(vec2 pos);
     static void invalidatePathCache();
     static bool isWalkable(vec2 pos);
     static bool isWalkableRawEntities(const vec2& pos);
@@ -153,7 +148,6 @@ struct EntityHelper : afterhours::EntityHelper {
     static void markIDForCleanup(int e_id) {
         EntityHelper::get_current_collection().markIDForCleanup(e_id);
     }
-    static void removeEntity(int e_id);
     static void cleanup() { EntityHelper::get_current_collection().cleanup(); }
     static void delete_all_entities_NO_REALLY_I_MEAN_ALL() {
         EntityHelper::get_current_collection()

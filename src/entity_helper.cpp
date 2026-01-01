@@ -112,28 +112,6 @@ Entity& EntityHelper::createEntityWithOptions(
     // cache_is_walkable.clear();
 }
 
-void EntityHelper::removeEntity(int e_id) {
-    // if (e->add_to_navmesh()) {
-    // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-    // nav->removeEntity(e->id);
-    // cache_is_walkable.clear();
-    // }
-
-    markIDForCleanup(e_id);
-    EntityHelper::get_current_collection().cleanup();
-}
-
-//  Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
-// vec2 pos = vec::to2(e->snap_position());
-// Rectangle rect = {
-// pos.x,
-// pos.y,
-// TILESIZE,
-// TILESIZE,
-// };
-// return Polygon(rect);
-// }
-
 enum ForEachFlow {
     NormalFlow = 0,
     Continue = 1,
@@ -158,16 +136,6 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
     // TODO :BE: should this really be using this?
     return EntityHelper::getMatchingEntityInFront(
         transform.as2(), range, transform.face_direction(), filter);
-}
-
-OptEntity EntityHelper::getClosestOfType(const Entity& entity,
-                                         const EntityType& type, float range) {
-    const Transform& transform = entity.get<Transform>();
-    return EQ()
-        .whereType(type)
-        .whereInRange(transform.as2(), range)
-        .orderByDist(transform.as2())
-        .gen_first();
 }
 
 OptEntity EntityHelper::getMatchingFloorMarker(IsFloorMarker::Type type) {
@@ -302,16 +270,6 @@ OptEntity EntityHelper::getOverlappingEntityIfExists(
 void EntityHelper::invalidateCaches() {
     named_entities_DO_NOT_USE.clear();
     EntityHelper::invalidatePathCache();
-}
-
-// TODO :PBUG: need to invalidate any current valid paths
-void EntityHelper::invalidatePathCacheLocation(vec2 pos) {
-    if (!is_server()) {
-        // Turning off the warning because of input_process_manager _proc_single
-        // log_warn("client code is trying to invalide path cache");
-        return;
-    }
-    cache_is_walkable.erase(pos);
 }
 
 void EntityHelper::invalidatePathCache() {
