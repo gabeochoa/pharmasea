@@ -283,12 +283,15 @@ void Client::client_process_message_string(const std::string& msg) {
             // components from the active Afterhours collection too.
             EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL();
 
-            client_entities_DO_NOT_USE = info.map.entities();
+            // Install the received world state into the live Map so rendering
+            // and update paths use the new entity list.
+            map->game_info = std::move(info.map.game_info);
+            map->showMinimap = info.map.showMinimap;
+
+            client_entities_DO_NOT_USE = map->game_info.entities;
             EntityHelper::rebuild_handle_store_for_current_entities();
 
             post_deserialize_fixups::run(client_entities_DO_NOT_USE);
-
-            map->update_map(info.map);
 
         } break;
 
