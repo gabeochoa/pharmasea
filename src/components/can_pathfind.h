@@ -6,6 +6,7 @@
 #include "../engine/path_request_manager.h"
 #include "../entity_helper.h"
 #include "../entity_id.h"
+#include "../persistent_entity_ref.h"
 #include "../vendor_include.h"
 #include "base_component.h"
 
@@ -14,7 +15,7 @@ struct CanPathfind : public BaseComponent {
     [[nodiscard]] vec2 get_local_target() { return local_target.value(); }
 
     [[nodiscard]] bool travel_toward(vec2 end, float speed) {
-        Entity& parent = EntityHelper::getEnforcedEntityForID(parent_id);
+        Entity& parent = EntityHelper::getEnforcedEntityForID(parent.id);
 
         // Nothing to do we are already at the goal
         if (is_at_position(end)) return true;
@@ -59,23 +60,23 @@ struct CanPathfind : public BaseComponent {
 
         has_active_request = false;
         max_path_length = std::max(max_path_length, path.size());
-        log_trace("{} recieved a path of length {}", parent_id, path.size());
+        log_trace("{} recieved a path of length {}", parent.id, path.size());
     }
 
     auto& set_parent(EntityID id) {
-        parent_id = id;
+        parent.set_id(id);
         return *this;
     }
 
    private:
     [[nodiscard]] bool is_at_position(vec2 position) {
-        const Entity& owner = EntityHelper::getEnforcedEntityForID(parent_id);
+        const Entity& owner = EntityHelper::getEnforcedEntityForID(parent.id);
         return vec::distance(owner.get<Transform>().as2(), position) <
                (TILESIZE / 2.f);
     }
 
     void move_transform_toward_local_target(float speed) {
-        Entity& owner = EntityHelper::getEnforcedEntityForID(parent_id);
+        Entity& owner = EntityHelper::getEnforcedEntityForID(parent.id);
         if (!local_target.has_value()) {
             log_warn("Tried to ensure local target but still dont have one");
             return;
@@ -111,10 +112,10 @@ struct CanPathfind : public BaseComponent {
         goal = end;
 
         PathRequestManager::enqueue_request(PathRequestManager::PathRequest{
-            .entity_id = parent_id, .start = start, .end = goal});
+            .entity_id = parent.id, .start = start, .end = goal});
 
         has_active_request = true;
-        log_trace("{} requested path from {} to {} ", parent_id, start, goal);
+        log_trace("{} requested path from {} to {} ", parent.id, start, goal);
     }
 
     void ensure_active_local_target() {
@@ -138,13 +139,13 @@ struct CanPathfind : public BaseComponent {
     std::deque<vec2> path;
     size_t max_path_length = 0;
 
-    EntityID parent_id = entity_id::INVALID;
+    PersistentEntityRef parent{};
 
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(parent_id);
+        s.object(parent);
 
         s.object(start);
         s.object(goal);

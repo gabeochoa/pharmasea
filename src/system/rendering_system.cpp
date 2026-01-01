@@ -374,7 +374,7 @@ void render_debug_subtype(const Entity& entity, float) {
 
     if (entity.has<IsPnumaticPipe>()) {
         const IsPnumaticPipe& ipp = entity.get<IsPnumaticPipe>();
-        content = fmt::format("{} -> {}", entity.id, ipp.paired_id);
+        content = fmt::format("{} -> {}", entity.id, ipp.paired.id);
     }
 
     DrawFloatingText(vec::raise(transform.raw(), 1.f), Preload::get().font,

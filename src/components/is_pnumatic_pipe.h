@@ -4,13 +4,15 @@
 
 #include "base_component.h"
 
+#include "../persistent_entity_ref.h"
+
 struct IsPnumaticPipe : public BaseComponent {
     bool recieving = false;
     int item_id = -1;
 
-    int paired_id = -1;
+    PersistentEntityRef paired{};
 
-    [[nodiscard]] bool has_pair() const { return paired_id != -1; }
+    [[nodiscard]] bool has_pair() const { return paired.id != entity_id::INVALID; }
 
    private:
     friend bitsery::Access;
@@ -18,7 +20,7 @@ struct IsPnumaticPipe : public BaseComponent {
     void serialize(S& s) {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
-        s.value4b(paired_id);
+        s.object(paired);
 
         // s.value4b(item_id);
     }
