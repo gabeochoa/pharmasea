@@ -3,10 +3,10 @@
 
 #include "base_component.h"
 
-#include "../persistent_entity_ref.h"
+#include "../entity_ref.h"
 
 struct HasLastInteractedCustomer : public BaseComponent {
-    PersistentEntityRef customer{};
+    EntityRef customer{};
 
    private:
     friend bitsery::Access;

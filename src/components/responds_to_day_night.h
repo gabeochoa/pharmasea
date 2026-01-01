@@ -4,7 +4,7 @@
 
 #include "../entity_helper.h"
 #include "../entity_id.h"
-#include "../persistent_entity_ref.h"
+#include "../entity_ref.h"
 #include "base_component.h"
 
 struct RespondsToDayNight : public BaseComponent {
@@ -73,7 +73,7 @@ struct RespondsToDayNight : public BaseComponent {
     OnNightStartedFn onNightStartedFn = nullptr;
     OnNightEndedFn onNightEndedFn = nullptr;
 
-    PersistentEntityRef parent{};
+    EntityRef parent{};
 
     friend bitsery::Access;
     template<typename S>

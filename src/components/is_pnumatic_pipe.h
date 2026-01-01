@@ -4,13 +4,13 @@
 
 #include "base_component.h"
 
-#include "../persistent_entity_ref.h"
+#include "../entity_ref.h"
 
 struct IsPnumaticPipe : public BaseComponent {
     bool recieving = false;
     int item_id = -1;
 
-    PersistentEntityRef paired{};
+    EntityRef paired{};
 
     [[nodiscard]] bool has_pair() const { return paired.id != entity_id::INVALID; }
 

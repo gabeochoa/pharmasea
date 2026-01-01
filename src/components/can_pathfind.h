@@ -6,7 +6,7 @@
 #include "../engine/path_request_manager.h"
 #include "../entity_helper.h"
 #include "../entity_id.h"
-#include "../persistent_entity_ref.h"
+#include "../entity_ref.h"
 #include "../vendor_include.h"
 #include "base_component.h"
 
@@ -139,7 +139,7 @@ struct CanPathfind : public BaseComponent {
     std::deque<vec2> path;
     size_t max_path_length = 0;
 
-    PersistentEntityRef parent{};
+    EntityRef parent{};
 
     friend bitsery::Access;
     template<typename S>

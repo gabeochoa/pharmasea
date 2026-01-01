@@ -5,7 +5,7 @@
 #include "../vendor_include.h"
 #include "base_component.h"
 
-#include "../persistent_entity_ref.h"
+#include "../entity_ref.h"
 
 struct CanHoldFurniture : public BaseComponent {
     [[nodiscard]] bool empty() const {
@@ -22,7 +22,7 @@ struct CanHoldFurniture : public BaseComponent {
     [[nodiscard]] vec3 picked_up_at() const { return pos; }
 
    private:
-    PersistentEntityRef held_furniture{};
+    EntityRef held_furniture{};
     vec3 pos;
 
     friend bitsery::Access;

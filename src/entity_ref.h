@@ -12,7 +12,7 @@
 //
 // This is intentionally compatible with existing ID-based serialization: the
 // serialized representation is just a 4-byte EntityID.
-struct PersistentEntityRef {
+struct EntityRef {
     EntityID id = entity_id::INVALID;
     std::optional<afterhours::EntityHandle> handle{};
 
