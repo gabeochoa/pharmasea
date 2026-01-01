@@ -398,6 +398,18 @@ void EntityHelper::delete_all_entities(bool include_permanent) {
     afterhours::ComponentStore::get().flush_end_of_frame();
 }
 
+void EntityHelper::rebuild_handle_store_for_current_entities() {
+    Entities& entities = get_entities_for_mod();
+    auto& hs = handle_store();
+
+    // Drop any existing mapping so we can rebuild from the current dense list.
+    hs = HandleStore{};
+
+    for (std::size_t i = 0; i < entities.size(); ++i) {
+        assign_slot_to_entity(hs, entities[i], i);
+    }
+}
+
 enum ForEachFlow {
     NormalFlow = 0,
     Continue = 1,

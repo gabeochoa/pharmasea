@@ -278,8 +278,13 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            client_entities_DO_NOT_USE.clear();
+            // We're replacing the full client world. With pooled component
+            // storage, clearing the vector is not enough; we must remove pooled
+            // components from the active Afterhours collection too.
+            EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL();
+
             client_entities_DO_NOT_USE = info.map.entities();
+            EntityHelper::rebuild_handle_store_for_current_entities();
 
             post_deserialize_fixups::run(client_entities_DO_NOT_USE);
 
