@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct CanBePushed : public BaseComponent {
-    virtual ~CanBePushed() {}
-
     [[nodiscard]] vec3 pushed_force() const { return this->force; }
     void update(vec3 f) { this->force = f; }
     void update_x(float x) { this->force.x = x; }

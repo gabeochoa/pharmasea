@@ -7,7 +7,6 @@
 using EntityID = int;
 
 struct IsSquirter : public BaseComponent {
-    virtual ~IsSquirter() {}
     IsSquirter() : sq_time(1.f), sq_time_reset(1.f) {}
 
     void update(EntityID item_id, vec3 pickup_location) {

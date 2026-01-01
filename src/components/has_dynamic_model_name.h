@@ -19,7 +19,6 @@ struct HasDynamicModelName : public BaseComponent {
         Ingredients
     };
 
-    virtual ~HasDynamicModelName() {}
     using ModelNameFetcher =
         std::function<std::string(const Entity&, const std::string&)>;
 

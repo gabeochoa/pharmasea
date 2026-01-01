@@ -20,8 +20,6 @@ struct AddsIngredient : public BaseComponent {
     AddsIngredient() {}
     explicit AddsIngredient(const IngredientFetcherFn& ig) : fetcher(ig) {}
 
-    virtual ~AddsIngredient() {}
-
     [[nodiscard]] IngredientBitSet get(Entity& entity) const {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");

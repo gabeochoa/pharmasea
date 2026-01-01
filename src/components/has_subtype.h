@@ -26,8 +26,6 @@ struct HasSubtype : public BaseComponent {
         : start(st_start), end(st_end), type_index(st_type) {
         if (type_index == -1) type_index = get_random_index();
     }
-    virtual ~HasSubtype() {}
-
     [[nodiscard]] int get_num_types() const { return end - start; }
     [[nodiscard]] int get_random_index() const {
         int index = RandomEngine::get().get_int(0, get_num_types());

@@ -17,6 +17,21 @@
 
 namespace network {
 
+namespace {
+// Remote player entities live outside PharmaSea's EntityHelper lists, but they
+// still use Afterhours pooled component storage. Provide a local helper to
+// clean their pooled components on teardown.
+void remove_pooled_components_for_remote_entity(Entity& e) {
+    for (afterhours::ComponentID cid = 0; cid < afterhours::max_num_components;
+         ++cid) {
+        if (!e.componentSet[cid]) continue;
+        e.componentSet[cid] = false;
+        afterhours::ComponentStore::get().remove_by_component_id(cid, e.id);
+    }
+    afterhours::ComponentStore::get().flush_end_of_frame();
+}
+}  // namespace
+
 Client::Client() {
     client_p = std::make_unique<internal::Client>();
     client_p->set_process_message([this](const std::string& msg) {
@@ -138,6 +153,11 @@ void Client::client_process_message_string(const std::string& msg) {
         // want this in the array that is serialized, this should only live
         // in remote_players
         Entity* entity = new Entity();
+        // Ensure remote player EntityIDs never collide with map EntityIDs that
+        // arrive from the server snapshot (which are typically small).
+        // These entities are not serialized, so their numeric IDs only need to
+        // be unique within this client process/collection.
+        entity->id = 1'000'000 + client_id;
         make_remote_player(*entity, LOBBY_BUILDING.to3());
         remote_players[client_id] = std::shared_ptr<Entity>(entity);
         const auto& rp = remote_players[client_id];
@@ -174,6 +194,7 @@ void Client::client_process_message_string(const std::string& msg) {
                 "shared_ptr",
                 client_id);
         } else {
+            remove_pooled_components_for_remote_entity(*rp);
             rp->cleanup = true;
         }
 
@@ -208,6 +229,46 @@ void Client::client_process_message_string(const std::string& msg) {
         // model_index, rp->id);
         update_player_rare_remotely(*rp, model_index, last_ping);
     };
+
+    // Pre-pass: read just the packet header so we can clear the current client
+    // world BEFORE deserializing a full Map payload. If we deserialize first,
+    // component pools may see old components for the same EntityIDs and log
+    // "duplicate component", and post-deserialize fixups can crash on stale state.
+    {
+        TContext ctx{};
+        BitseryDeserializer des{ctx, msg.begin(), msg.size()};
+
+        Channel channel{};
+        int client_id_header = 0;
+        int msg_type_i = 0;
+        des.value4b(channel);
+        des.value4b(client_id_header);
+        des.value4b(msg_type_i);
+
+        if (des.adapter().error() == bitsery::ReaderError::NoError &&
+            msg_type_i == static_cast<int>(ClientPacket::MsgType::Map)) {
+            static int map_prepass_count = 0;
+            ++map_prepass_count;
+            if (map_prepass_count <= 3 || (map_prepass_count % 60) == 0) {
+                log_info(
+                    "Client Map prepass: clearing world before deserialize (count={} client_entities={} map_entities={})",
+                    map_prepass_count, client_entities_DO_NOT_USE.size(),
+                    map->game_info.entities.size());
+            }
+
+            // Remove pooled components + clear our entity list before the full
+            // map deserialization tries to add components for reused IDs.
+            EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL();
+            map->game_info.entities.clear();
+
+            if (map_prepass_count <= 3 || (map_prepass_count % 60) == 0) {
+                log_info(
+                    "Client Map prepass: cleared (client_entities={} map_entities={})",
+                    client_entities_DO_NOT_USE.size(),
+                    map->game_info.entities.size());
+            }
+        }
+    }
 
     ClientPacket packet = deserialize_to_packet(msg);
 
@@ -278,13 +339,24 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            client_entities_DO_NOT_USE.clear();
-            client_entities_DO_NOT_USE = info.map.entities();
+            // Install the received world state into the live Map so rendering
+            // and update paths use the new entity list.
+            map->game_info = std::move(info.map.game_info);
+            map->showMinimap = info.map.showMinimap;
+
+            client_entities_DO_NOT_USE = map->game_info.entities;
+            EntityHelper::rebuild_handle_store_for_current_entities();
 
             post_deserialize_fixups::run(client_entities_DO_NOT_USE);
 
-            map->update_map(info.map);
-
+            static int map_apply_count = 0;
+            ++map_apply_count;
+            if (map_apply_count <= 3 || (map_apply_count % 60) == 0) {
+                log_info(
+                    "Client Map apply: installed map (count={} entities={} showMinimap={})",
+                    map_apply_count, map->game_info.entities.size(),
+                    map->showMinimap);
+            }
         } break;
 
         case ClientPacket::MsgType::PlayerRare: {

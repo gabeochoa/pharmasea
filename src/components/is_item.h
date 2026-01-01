@@ -6,8 +6,6 @@
 #include "base_component.h"
 
 struct IsItem : public BaseComponent {
-    virtual ~IsItem() {}
-
     void set_held_by(EntityType hb, int entity_id) {
         held_by_id = entity_id;
         held_by = hb;

@@ -43,8 +43,6 @@ struct AICloseTab : public AIComponent {
         set_cooldown(0.1f);
     }
 
-    virtual ~AICloseTab() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

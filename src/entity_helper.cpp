@@ -37,6 +37,21 @@ HandleStore& handle_store() {
                        : client_handle_store_DO_NOT_USE;
 }
 
+// Remove all pooled components for an entity from the active Afterhours
+// ComponentStore (collection-bound via TLS), and clear the entity bitset.
+//
+// This is required now that components live in ComponentStore pools. If we
+// delete entities without removing pooled components, later deserialization or
+// ID reuse can hit "duplicate component" warnings from the pools.
+void remove_pooled_components_for(Entity& e) {
+    for (afterhours::ComponentID cid = 0; cid < afterhours::max_num_components;
+         ++cid) {
+        if (!e.componentSet[cid]) continue;
+        e.componentSet[cid] = false;
+        afterhours::ComponentStore::get().remove_by_component_id(cid, e.id);
+    }
+}
+
 // Bump generation so old handles become stale (0 is reserved/avoided).
 std::size_t bump_gen(std::size_t gen) {
     const std::size_t next = gen + 1;
@@ -120,6 +135,11 @@ void invalidate_entity_slot_if_any(HandleStore& hs,
 void remove_entity_at_index(Entities& entities, HandleStore& hs,
                             std::size_t index) {
     if (index >= entities.size()) return;
+
+    // Remove pooled components before dropping the entity handle mapping.
+    if (entities[index]) {
+        remove_pooled_components_for(*entities[index]);
+    }
 
     // Invalidate slot/id mapping for the entity being removed.
     invalidate_entity_slot_if_any(hs, entities[index]);
@@ -334,6 +354,9 @@ void EntityHelper::cleanup() {
         }
         ++i;
     }
+
+    // Treat cleanup as an end-of-frame boundary for component storage.
+    afterhours::ComponentStore::get().flush_end_of_frame();
 }
 
 void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
@@ -344,6 +367,8 @@ void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
     }
     // Drop all bookkeeping so any old handles fail cleanly (out-of-range).
     hs = HandleStore{};
+
+    afterhours::ComponentStore::get().flush_end_of_frame();
 }
 
 void EntityHelper::delete_all_entities(bool include_permanent) {
@@ -368,6 +393,20 @@ void EntityHelper::delete_all_entities(bool include_permanent) {
             continue;
         }
         ++i;
+    }
+
+    afterhours::ComponentStore::get().flush_end_of_frame();
+}
+
+void EntityHelper::rebuild_handle_store_for_current_entities() {
+    Entities& entities = get_entities_for_mod();
+    auto& hs = handle_store();
+
+    // Drop any existing mapping so we can rebuild from the current dense list.
+    hs = HandleStore{};
+
+    for (std::size_t i = 0; i < entities.size(); ++i) {
+        assign_slot_to_entity(hs, entities[i], i);
     }
 }
 

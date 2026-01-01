@@ -4,8 +4,6 @@
 #include "base_component.h"
 
 struct SimpleColoredBoxRenderer : public BaseComponent {
-    virtual ~SimpleColoredBoxRenderer() {}
-
     auto& update_face(Color face) {
         face_color = face;
         return *this;

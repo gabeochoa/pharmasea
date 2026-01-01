@@ -7,8 +7,6 @@
 #include "base_component.h"
 
 struct CanPerformJob : public BaseComponent {
-    virtual ~CanPerformJob() {}
-
     JobType current = JobType::NoJob;
 
    private:

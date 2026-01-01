@@ -14,8 +14,6 @@ struct ModelRenderer : public BaseComponent {
         model_name = util::convertToSnakeCase<EntityType>(type);
     }
 
-    virtual ~ModelRenderer() {}
-
     [[nodiscard]] bool missing() const { return !exists(); }
     [[nodiscard]] bool exists() const {
         return ModelInfoLibrary::get().has(model_name);

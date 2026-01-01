@@ -4,8 +4,6 @@
 #include "base_component.h"
 
 struct HasSpeechBubble : public BaseComponent {
-    virtual ~HasSpeechBubble() {}
-
     [[nodiscard]] std::string icon() const { return icon_name; }
     [[nodiscard]] bool enabled() const { return _enabled; }
     [[nodiscard]] bool disabled() const { return !_enabled; }

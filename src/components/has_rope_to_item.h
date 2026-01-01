@@ -8,8 +8,6 @@
 using EntityID = int;
 
 struct HasRopeToItem : public BaseComponent {
-    virtual ~HasRopeToItem() {}
-
     void clear() {
         for (EntityID id : rope) {
             EntityHelper::markIDForCleanup(id);

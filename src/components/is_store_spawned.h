@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct IsStoreSpawned : public BaseComponent {
-    virtual ~IsStoreSpawned() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

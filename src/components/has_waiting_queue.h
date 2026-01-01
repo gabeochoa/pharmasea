@@ -9,8 +9,6 @@ using EntityID = int;
 struct HasWaitingQueue : public BaseComponent {
     static constexpr int max_queue_size = 3;
 
-    virtual ~HasWaitingQueue() {}
-
     [[nodiscard]] int num_in_queue() const {
         return max_queue_size - (max_queue_size - next_line_position);
     }

@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct HasProgression : public BaseComponent {
-    virtual ~HasProgression() {}
-
    private:
     friend bitsery::Access;
     template<typename S>

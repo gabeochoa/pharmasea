@@ -11,6 +11,10 @@ using bitsery::ext::PointerObserver;
 
 struct BaseComponent : public afterhours::BaseComponent {
     BaseComponent() = default;
+    BaseComponent(const BaseComponent&) = delete;
+    BaseComponent& operator=(const BaseComponent&) = delete;
+    BaseComponent(BaseComponent&&) noexcept = default;
+    BaseComponent& operator=(BaseComponent&&) noexcept = delete;
     virtual ~BaseComponent() = default;
     friend bitsery::Access;
 

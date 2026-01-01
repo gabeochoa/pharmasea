@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct IsToilet : public BaseComponent {
-    virtual ~IsToilet() {}
-
     enum State { Available, InUse, NeedsCleaning } state = Available;
     int total_uses = 3;
     int uses_remaining = 3;
