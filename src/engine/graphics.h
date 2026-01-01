@@ -22,6 +22,11 @@ namespace raylib {
 
 #include <ostream>
 
+// Provide arithmetic operators for raylib structs (Vector2/Vector3/etc.).
+// The core raylib C API doesn't define these; PharmaSea code relies on them.
+// This header is vendored in `vendor/RaylibOpOverloads.h`.
+#include <RaylibOpOverloads.h>
+
 // NOTE: why doesnt RaylibOpOverloads do this?
 inline bool operator<(const Vector2& l, const Vector2& r) {
     return (l.x < r.x) || ((l.x == r.x) && (l.y < r.y));
