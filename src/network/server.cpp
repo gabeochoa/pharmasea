@@ -97,18 +97,62 @@ void Server::send_map_state() {
     snapshot_v2::WorldSnapshotV2 snap =
         snapshot_v2::capture_from_entities(EntityHelper::get_entities());
 
-    ClientPacket map_packet{
+    // Serialize snapshot to raw bytes so we can chunk it under
+    // SteamNetworkingSockets' per-message limit (~512KB).
+    Buffer payload;
+    {
+        using SnapOutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
+        bitsery::Serializer<SnapOutputAdapter> ser{payload};
+        ser.object(snap);
+        ser.adapter().flush();
+    }
+
+    static std::uint32_t next_snapshot_id = 1;
+    const std::uint32_t snapshot_id = next_snapshot_id++;
+    const std::uint32_t total_size = static_cast<std::uint32_t>(payload.size());
+
+    // Begin.
+    send_client_packet_to_all(ClientPacket{
         .channel = Channel::RELIABLE,
         .client_id = SERVER_CLIENT_ID,
         .msg_type = network::ClientPacket::MsgType::Map,
-        .msg =
-            network::ClientPacket::MapInfo{
-                .snapshot = std::move(snap),
-                .showMinimap = pharmacy_map->showMinimap,
-            },
-    };
+        .msg = network::ClientPacket::MapInfo{
+            .kind = network::ClientPacket::MapInfo::Kind::Begin,
+            .snapshot_id = snapshot_id,
+            .total_size = total_size,
+            .showMinimap = pharmacy_map->showMinimap,
+        },
+    });
 
-    send_client_packet_to_all(map_packet);
+    // Chunk.
+    constexpr std::size_t kChunkBytes = 256 * 1024;  // comfortably < 512KB limit
+    for (std::size_t off = 0; off < payload.size(); off += kChunkBytes) {
+        const std::size_t n = std::min(kChunkBytes, payload.size() - off);
+        ClientPacket::MapInfo info{};
+        info.kind = ClientPacket::MapInfo::Kind::Chunk;
+        info.snapshot_id = snapshot_id;
+        info.total_size = total_size;
+        info.offset = static_cast<std::uint32_t>(off);
+        info.data.assign(payload.data() + off, n);
+        send_client_packet_to_all(ClientPacket{
+            .channel = Channel::RELIABLE,
+            .client_id = SERVER_CLIENT_ID,
+            .msg_type = network::ClientPacket::MsgType::Map,
+            .msg = std::move(info),
+        });
+    }
+
+    // End.
+    send_client_packet_to_all(ClientPacket{
+        .channel = Channel::RELIABLE,
+        .client_id = SERVER_CLIENT_ID,
+        .msg_type = network::ClientPacket::MsgType::Map,
+        .msg = network::ClientPacket::MapInfo{
+            .kind = network::ClientPacket::MapInfo::Kind::End,
+            .snapshot_id = snapshot_id,
+            .total_size = total_size,
+        },
+    });
 }
 
 void Server::force_send_map_state() { send_map_state(); }

@@ -13,6 +13,7 @@
 #include "../strings.h"
 #include "internal/channel.h"
 #include "../world_snapshot_v2.h"
+#include "../map.h"
 
 namespace network {
 
@@ -48,8 +49,24 @@ struct ClientPacket {
 
     // Map Info
     struct MapInfo {
-        snapshot_v2::WorldSnapshotV2 snapshot{};
+        enum class Kind : std::uint8_t {
+            Begin = 0,
+            Chunk = 1,
+            End = 2,
+        };
+
+        Kind kind = Kind::Begin;
+        std::uint32_t snapshot_id = 0;
+
+        // Total size of the serialized snapshot payload (bytes).
+        std::uint32_t total_size = 0;
+
+        // For Begin: current map UI state.
         bool showMinimap = false;
+
+        // For Chunk: byte offset into payload + data bytes.
+        std::uint32_t offset = 0;
+        std::string data{};
     };
 
     // Map Seed Info

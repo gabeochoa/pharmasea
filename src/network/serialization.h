@@ -66,8 +66,22 @@ void serialize(S& s, ClientPacket& packet) {
                   s.value4b(info.host_game_state);
               },
               [](S& s, ClientPacket::MapInfo& info) {
-                  s.object(info.snapshot);
-                  s.value1b(info.showMinimap);
+                  s.value1b(info.kind);
+                  s.value4b(info.snapshot_id);
+                  s.value4b(info.total_size);
+                  switch (info.kind) {
+                      case ClientPacket::MapInfo::Kind::Begin: {
+                          s.value1b(info.showMinimap);
+                      } break;
+                      case ClientPacket::MapInfo::Kind::Chunk: {
+                          s.value4b(info.offset);
+                          // Binary data chunk (may contain '\0'), so use text4b.
+                          s.text4b(info.data, 1024u * 1024u);
+                      } break;
+                      case ClientPacket::MapInfo::Kind::End: {
+                          // nothing else
+                      } break;
+                  }
               },
               [](S& s, ClientPacket::MapSeedInfo& info) {
                   s.text1b(info.seed, MAX_SEED_LENGTH);

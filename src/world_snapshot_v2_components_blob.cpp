@@ -124,8 +124,15 @@ void deserialize_components_only_impl(
 
 void encode_components_blob_into(const Entity& e, std::vector<std::uint8_t>& out) {
     out.clear();
+    // Register polymorph list once per thread (huge perf win vs per-entity).
+    thread_local bool poly_init = false;
+    thread_local bitsery::ext::PolymorphicContext<bitsery::ext::StandardRTTI> poly{};
+    if (!poly_init) {
+        poly.registerBasesList<Serializer>(MyPolymorphicClasses{});
+        poly_init = true;
+    }
     TContext ctx{};
-    std::get<1>(ctx).registerBasesList<Serializer>(MyPolymorphicClasses{});
+    std::get<1>(ctx) = poly;
     Serializer ser{ctx, out};
     // bitsery's API takes non-const references even for writing.
     Entity& nc = const_cast<Entity&>(e);  // NOLINT
@@ -139,8 +146,14 @@ void encode_components_blob_into(const Entity& e, std::vector<std::uint8_t>& out
 
 void decode_components_blob(Entity& e, std::vector<std::uint8_t>::const_iterator begin,
                             const std::size_t size) {
+    thread_local bool poly_init = false;
+    thread_local bitsery::ext::PolymorphicContext<bitsery::ext::StandardRTTI> poly{};
+    if (!poly_init) {
+        poly.registerBasesList<Deserializer>(MyPolymorphicClasses{});
+        poly_init = true;
+    }
     TContext ctx{};
-    std::get<1>(ctx).registerBasesList<Deserializer>(MyPolymorphicClasses{});
+    std::get<1>(ctx) = poly;
     Deserializer des{ctx, begin, size};
     deserialize_components_only_impl(des, e);
     if (des.adapter().error() != bitsery::ReaderError::NoError) {

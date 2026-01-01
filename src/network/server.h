@@ -62,7 +62,9 @@ struct Server {
     bool has_looped = false;
 #endif
 
-    float next_map_tick_reset = 1.f / 30;  // 60fps
+    // Sending full-world state is extremely expensive. Keep this low to avoid
+    // tanking the server tick rate.
+    float next_map_tick_reset = 1.f / 2;  // 2fps
     float next_map_tick = 0;
 
     float next_player_rare_tick_reset = 1.f / 10;  // 10fps

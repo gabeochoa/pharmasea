@@ -279,18 +279,55 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            snapshot_v2::apply_to_entities(
-                client_entities_DO_NOT_USE, info.snapshot,
-                snapshot_v2::ApplyOptionsV2{
-                    // Use a client-local EntityID space to avoid collisions with
-                    // the authoritative server world when hosting in-process.
-                    .preserve_legacy_entity_ids = false,
-                    .clear_existing_components = true,
-                });
+            struct PendingMapSnapshot {
+                std::uint32_t id = 0;
+                std::uint32_t total = 0;
+                bool showMinimap = false;
+                std::string bytes{};
+            };
+            static PendingMapSnapshot pending{};
 
-            post_deserialize_fixups::run(client_entities_DO_NOT_USE);
+            switch (info.kind) {
+                case ClientPacket::MapInfo::Kind::Begin: {
+                    pending = PendingMapSnapshot{};
+                    pending.id = info.snapshot_id;
+                    pending.total = info.total_size;
+                    pending.showMinimap = info.showMinimap;
+                    pending.bytes.clear();
+                    pending.bytes.reserve(pending.total);
+                } break;
+                case ClientPacket::MapInfo::Kind::Chunk: {
+                    if (info.snapshot_id != pending.id) break;
+                    // RELIABLE is in-order, so expect sequential offsets.
+                    if (info.offset != pending.bytes.size()) break;
+                    pending.bytes.append(info.data);
+                } break;
+                case ClientPacket::MapInfo::Kind::End: {
+                    if (info.snapshot_id != pending.id) break;
+                    if (pending.bytes.size() != pending.total) break;
 
-            map->showMinimap = info.showMinimap;
+                    snapshot_v2::WorldSnapshotV2 snap{};
+                    {
+                        using SnapInputAdapter = bitsery::InputBufferAdapter<Buffer>;
+                        bitsery::Deserializer<SnapInputAdapter> des{
+                            pending.bytes.begin(), pending.bytes.size()};
+                        des.object(snap);
+                    }
+
+                    snapshot_v2::apply_to_entities(
+                        client_entities_DO_NOT_USE, snap,
+                        snapshot_v2::ApplyOptionsV2{
+                            // Use a client-local EntityID space to avoid collisions with
+                            // the authoritative server world when hosting in-process.
+                            .preserve_legacy_entity_ids = false,
+                            .clear_existing_components = true,
+                        });
+
+                    post_deserialize_fixups::run(client_entities_DO_NOT_USE);
+
+                    map->showMinimap = pending.showMinimap;
+                } break;
+            }
 
         } break;
 

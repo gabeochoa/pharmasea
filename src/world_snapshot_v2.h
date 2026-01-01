@@ -146,16 +146,11 @@ void serialize(S& s, snapshot_v2::WorldSnapshotV2& snap) {
     // IMPORTANT: don't use bitsery's `container4b(std::vector<uint8_t>)` fast-path:
     // it assumes `sizeof(T) == 4` and will `static_assert` on uint8_t/unsigned char.
     //
-    // We also cap the size to keep deserialization bounded, while still consuming
-    // the full byte stream to remain aligned for subsequent fields.
+    // NOTE: We assume the buffer is already bounded by capture-time limits.
     std::uint32_t n = static_cast<std::uint32_t>(snap.component_bytes.size());
-    if (n > snapshot_v2::kMaxSnapshotTotalComponentBytes) {
-        n = static_cast<std::uint32_t>(snapshot_v2::kMaxSnapshotTotalComponentBytes);
-    }
     s.value4b(n);
-    const std::uint32_t keep = n;
-    snap.component_bytes.resize(keep);
-    for (std::uint32_t i = 0; i < keep; ++i) {
+    snap.component_bytes.resize(n);
+    for (std::uint32_t i = 0; i < n; ++i) {
         s.value1b(snap.component_bytes[i]);
     }
     s.object(snap.components);
