@@ -141,10 +141,23 @@ template<typename S>
 void serialize(S& s, snapshot_v2::WorldSnapshotV2& snap) {
     s.value4b(snap.version);
     s.container(snap.entities, snapshot_v2::kMaxSnapshotEntities);
-    // NOTE: don't use container4b without an element fn for uint8_t; bitsery's
-    // fast-path assumes element size == VSIZE (4) and will static_assert.
-    s.container4b(snap.component_bytes, snapshot_v2::kMaxSnapshotTotalComponentBytes,
-                  [](S& sv, std::uint8_t& b) { sv.value1b(b); });
+    // Serialize byte arena with a 4-byte length prefix.
+    //
+    // IMPORTANT: don't use bitsery's `container4b(std::vector<uint8_t>)` fast-path:
+    // it assumes `sizeof(T) == 4` and will `static_assert` on uint8_t/unsigned char.
+    //
+    // We also cap the size to keep deserialization bounded, while still consuming
+    // the full byte stream to remain aligned for subsequent fields.
+    std::uint32_t n = static_cast<std::uint32_t>(snap.component_bytes.size());
+    if (n > snapshot_v2::kMaxSnapshotTotalComponentBytes) {
+        n = static_cast<std::uint32_t>(snapshot_v2::kMaxSnapshotTotalComponentBytes);
+    }
+    s.value4b(n);
+    const std::uint32_t keep = n;
+    snap.component_bytes.resize(keep);
+    for (std::uint32_t i = 0; i < keep; ++i) {
+        s.value1b(snap.component_bytes[i]);
+    }
     s.object(snap.components);
 }
 }  // namespace bitsery
