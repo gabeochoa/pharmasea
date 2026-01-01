@@ -73,14 +73,6 @@ Entity& EntityHelper::getNamedEntity(const NamedEntity& name) {
     return *(e_ptr);
 }
 
-Entities& EntityHelper::get_entities_for_mod() {
-    return get_current_collection().get_entities_for_mod();
-}
-
-const Entities& EntityHelper::get_entities() {
-    return get_current_collection().get_entities();
-}
-
 RefEntities EntityHelper::get_ref_entities() {
     RefEntities matching;
     for (const auto& e : EntityHelper::get_entities()) {
@@ -90,10 +82,6 @@ RefEntities EntityHelper::get_ref_entities() {
     return matching;
 }
 
-struct CreationOptions {
-    bool is_permanent;
-};
-
 Entity& EntityHelper::createEntity() {
     return createEntityWithOptions({.is_permanent = false});
 }
@@ -102,13 +90,14 @@ Entity& EntityHelper::createPermanentEntity() {
     return createEntityWithOptions({.is_permanent = true});
 }
 
-Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
-    auto& collection = get_current_collection();
+Entity& EntityHelper::createEntityWithOptions(
+    const EntityHelper::CreationOptions& options) {
+    auto& collection = EntityHelper::get_current_collection();
     afterhours::EntityCollection::CreationOptions ah_options;
     ah_options.is_permanent = options.is_permanent;
 
     Entity& e = collection.createEntityWithOptions(ah_options);
-    invalidatePathCache();
+    EntityHelper::invalidatePathCache();
     return e;
 
     // if (!e->add_to_navmesh()) {
@@ -123,10 +112,6 @@ Entity& EntityHelper::createEntityWithOptions(const CreationOptions& options) {
     // cache_is_walkable.clear();
 }
 
-void EntityHelper::markIDForCleanup(int e_id) {
-    get_current_collection().markIDForCleanup(e_id);
-}
-
 void EntityHelper::removeEntity(int e_id) {
     // if (e->add_to_navmesh()) {
     // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
@@ -135,7 +120,7 @@ void EntityHelper::removeEntity(int e_id) {
     // }
 
     markIDForCleanup(e_id);
-    get_current_collection().cleanup();
+    EntityHelper::get_current_collection().cleanup();
 }
 
 //  Polygon getPolyForEntity(std::shared_ptr<Entity> e) {
@@ -149,29 +134,21 @@ void EntityHelper::removeEntity(int e_id) {
 // return Polygon(rect);
 // }
 
-void EntityHelper::cleanup() { get_current_collection().cleanup(); }
-
-void EntityHelper::delete_all_entities_NO_REALLY_I_MEAN_ALL() {
-    get_current_collection().delete_all_entities_NO_REALLY_I_MEAN_ALL();
-}
-
-void EntityHelper::delete_all_entities(bool include_permanent) {
-    get_current_collection().delete_all_entities(include_permanent);
-}
-
 enum ForEachFlow {
     NormalFlow = 0,
     Continue = 1,
     Break = 2,
 };
 
-void EntityHelper::forEachEntity(std::function<ForEachFlow(Entity&)> cb) {
+void EntityHelper::forEachEntity(
+    const std::function<
+        afterhours::EntityHelper::ForEachFlow(afterhours::Entity&)>& cb) {
     TRACY_ZONE_SCOPED;
-    for (const auto& e : get_entities()) {
+    for (const auto& e : EntityHelper::get_entities()) {
         if (!e) continue;
-        auto fef = cb(*e);
-        if (fef == 1) continue;
-        if (fef == 2) break;
+        const auto fef = cb(*e);
+        if (fef == afterhours::EntityHelper::ForEachFlow::Continue) continue;
+        if (fef == afterhours::EntityHelper::ForEachFlow::Break) break;
     }
 }
 
@@ -181,19 +158,6 @@ OptEntity EntityHelper::getClosestMatchingFurniture(
     // TODO :BE: should this really be using this?
     return EntityHelper::getMatchingEntityInFront(
         transform.as2(), range, transform.face_direction(), filter);
-}
-
-OptEntity EntityHelper::getEntityForID(afterhours::EntityID id) {
-    if (id == entity_id::INVALID) return {};
-    return get_current_collection().getEntityForID(id);
-}
-
-Entity& EntityHelper::getEnforcedEntityForID(afterhours::EntityID id) {
-    OptEntity opt = getEntityForID(id);
-    if (!opt) {
-        log_error("EntityHelper::getEnforcedEntityForID failed: {}", id);
-    }
-    return opt.asE();
 }
 
 OptEntity EntityHelper::getClosestOfType(const Entity& entity,
@@ -250,7 +214,8 @@ OptEntity EntityHelper::getMatchingEntityInFront(
     while (cur_step <= irange) {
         auto tile = Transform::tile_infront_given_pos(pos, cur_step, direction);
 
-        for (std::shared_ptr<Entity> current_entity : get_entities()) {
+        for (std::shared_ptr<Entity> current_entity :
+             EntityHelper::get_entities()) {
             if (!current_entity) continue;
             if (!filter(*current_entity)) continue;
 
@@ -336,7 +301,7 @@ OptEntity EntityHelper::getOverlappingEntityIfExists(
 //
 void EntityHelper::invalidateCaches() {
     named_entities_DO_NOT_USE.clear();
-    invalidatePathCache();
+    EntityHelper::invalidatePathCache();
 }
 
 // TODO :PBUG: need to invalidate any current valid paths
@@ -372,18 +337,18 @@ bool EntityHelper::isWalkable(vec2 pos) {
 bool EntityHelper::isWalkableRawEntities(const vec2& pos) {
     TRACY_ZONE_SCOPED;
     bool hit_impassible_entity = false;
-    forEachEntity([&](Entity& entity) {
+    EntityHelper::forEachEntity([&](afterhours::Entity& entity) {
         // Ignore non colliable objects
         if (!system_manager::input_process_manager::is_collidable(entity))
-            return ForEachFlow::Continue;
+            return EntityHelper::ForEachFlow::Continue;
         // ignore things that are not at this location
         if (vec::distance(entity.template get<Transform>().as2(), pos) >
             TILESIZE / 2.f)
-            return ForEachFlow::Continue;
+            return EntityHelper::ForEachFlow::Continue;
 
         // is_collidable and inside this square
         hit_impassible_entity = true;
-        return ForEachFlow::Break;
+        return EntityHelper::ForEachFlow::Break;
     });
     return !hit_impassible_entity;
 }
