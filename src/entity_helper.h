@@ -104,18 +104,19 @@ struct EntityHelper : afterhours::EntityHelper {
     // Item creation helpers
     template<typename... TArgs>
     static RefEntity createItem(EntityType type, vec3 pos, TArgs... args) {
-        items::make_item_type(createEntity(), type, pos,
-                              std::forward<TArgs>(args)...);
-        // log_info("created a new item {} {} ", e.id, e.name());
-        return *(get_entities().back());
+        // Important: `createEntity()` creates into Afterhours temp storage.
+        // Do NOT return `get_entities().back()` here (that's the last *merged*
+        // entity, not necessarily the one we just created).
+        Entity& e = createEntity();
+        items::make_item_type(e, type, pos, std::forward<TArgs>(args)...);
+        return e;
     }
 
     template<typename... TArgs>
     static RefEntity createPermanentItem(vec3 pos, TArgs... args) {
-        items::make_item_type(createPermanentEntity(), pos,
-                              std::forward<TArgs>(args)...);
-        // log_info("created a new item {} {} ", e.id, e.name());
-        return *(get_entities().back());
+        Entity& e = createPermanentEntity();
+        items::make_item_type(e, pos, std::forward<TArgs>(args)...);
+        return e;
     }
 
     // Cleanup and entity management
