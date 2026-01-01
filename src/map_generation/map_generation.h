@@ -267,7 +267,7 @@ struct helper {
             return false;
         };
 
-        log_info(
+        log_trace(
             "mapgen::validate: merged_entities={} temp_entities={} "
             "Sophie(merged={},temp={}) Register(merged={},temp={}) "
             "CustomerSpawner(merged={},temp={})",
