@@ -37,7 +37,7 @@ inline bool read_kind(S& s, ComponentKind& out) {
 }
 
 struct ComponentSerde {
-    ComponentKind kind{};
+    std::uint16_t kind = 0;
     bool (*has)(afterhours::Entity&) = nullptr;
     void (*write)(Serializer&, afterhours::Entity&) = nullptr;
     void (*read)(Deserializer&, afterhours::Entity&) = nullptr;
@@ -64,14 +64,12 @@ static const auto& component_serdes() {
     constexpr size_t kNum =
         std::tuple_size_v<snapshot_blob::ComponentTypes>;
     static_assert(kNum <= 255, "component count must fit in uint8_t");
-    static_assert(magic_enum::enum_count<ComponentKind>() == (kNum + 1),
-                  "ComponentKind must match ComponentTypes");
 
     static const std::array<ComponentSerde, kNum> kSerdes = [] {
         std::array<ComponentSerde, kNum> out{};
         [&]<size_t... Is>(std::index_sequence<Is...>) {
             ((out[Is] = ComponentSerde{
-                  magic_enum::enum_value<ComponentKind>(Is + 1),
+                  snapshot_blob::component_kind_for_index(Is),
                   &serde_has<std::tuple_element_t<Is, ComponentTypes>>,
                   &serde_write<std::tuple_element_t<Is, ComponentTypes>>,
                   &serde_read<std::tuple_element_t<Is, ComponentTypes>>}),
@@ -91,23 +89,15 @@ void write_entity(Serializer& s, afterhours::Entity& e) {
 
     const auto& serdes = component_serdes();
     uint8_t count = 0;
-    for (const auto kind : magic_enum::enum_values<ComponentKind>()) {
-        if (kind == ComponentKind::Invalid) continue;
-        const auto idx_opt = magic_enum::enum_index(kind);
-        if (!idx_opt.has_value() || idx_opt.value() == 0) continue;
-        const auto& serde = serdes[idx_opt.value() - 1];
+    for (const auto& serde : serdes) {
         if (serde.has && serde.has(e)) ++count;
     }
     s.value1b(count);
 
-    for (const auto kind : magic_enum::enum_values<ComponentKind>()) {
-        if (kind == ComponentKind::Invalid) continue;
-        const auto idx_opt = magic_enum::enum_index(kind);
-        if (!idx_opt.has_value() || idx_opt.value() == 0) continue;
-        const auto& serde = serdes[idx_opt.value() - 1];
+    for (const auto& serde : serdes) {
         if (!serde.has || !serde.write) continue;
         if (!serde.has(e)) continue;
-        write_kind(s, kind);
+        write_kind(s, static_cast<ComponentKind>(serde.kind));
         serde.write(s, e);
     }
 }
@@ -127,15 +117,15 @@ void write_entity(Serializer& s, afterhours::Entity& e) {
     for (uint8_t i = 0; i < count; ++i) {
         ComponentKind kind{};
         if (!read_kind(d, kind)) return false;
-        const auto idx_opt = magic_enum::enum_index(kind);
-        if (!idx_opt.has_value() || idx_opt.value() == 0) {
-            log_warn("snapshot_blob: unknown component kind {}", (int)kind);
+        const std::uint16_t raw = static_cast<std::uint16_t>(kind);
+        if (raw == 0) {
+            log_warn("snapshot_blob: invalid component kind {}", (int)raw);
             return false;
         }
         const auto& serdes = component_serdes();
-        const size_t serde_idx = idx_opt.value() - 1;
+        const size_t serde_idx = static_cast<size_t>(raw - 1);
         if (serde_idx >= serdes.size()) {
-            log_warn("snapshot_blob: bad component kind index {}", (int)kind);
+            log_warn("snapshot_blob: unknown component kind {}", (int)raw);
             return false;
         }
         const auto& serde = serdes[serde_idx];

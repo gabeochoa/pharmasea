@@ -88,7 +88,6 @@ namespace snapshot_blob {
 // IMPORTANT:
 // - Never reorder.
 // - Only append.
-// - This list must stay in lockstep with `ComponentKind` below.
 using ComponentTypes = std::tuple<
     Transform,
     HasName,
@@ -160,81 +159,17 @@ using ComponentTypes = std::tuple<
     AICleanVomit>;
 
 // Stable component discriminator for snapshots.
-// IMPORTANT:
-// - Never renumber.
-// - Only append.
-// - Keep `Transform = 1` (0 reserved for "invalid").
-enum class ComponentKind : std::uint16_t {
-    Invalid = 0,
-    Transform = 1,
-    HasName,
-    CanHoldItem,
-    SimpleColoredBoxRenderer,
-    CanBeHighlighted,
-    CanHighlightOthers,
-    CanHoldFurniture,
-    CanBeGhostPlayer,
-    CanPerformJob,
-    ModelRenderer,
-    CanBePushed,
-    CustomHeldItemPosition,
-    HasWork,
-    HasBaseSpeed,
-    IsSolid,
-    HasPatience,
-    HasProgression,
-    IsRotatable,
-    CanGrabFromOtherFurniture,
-    ConveysHeldItem,
-    HasWaitingQueue,
-    CanBeTakenFrom,
-    IsItemContainer,
-    UsesCharacterModel,
-    HasDynamicModelName,
-    IsTriggerArea,
-    HasSpeechBubble,
-    Indexer,
-    IsSpawner,
-    HasRopeToItem,
-    HasSubtype,
-    IsItem,
-    IsDrink,
-    AddsIngredient,
-    CanOrderDrink,
-    IsPnumaticPipe,
-    IsProgressionManager,
-    IsFloorMarker,
-    IsBank,
-    IsFreeInStore,
-    IsToilet,
-    CanPathfind,
-    IsRoundSettingsManager,
-    HasFishingGame,
-    IsStoreSpawned,
-    HasLastInteractedCustomer,
-    CanChangeSettingsInteractively,
-    IsNuxManager,
-    IsNux,
-    CollectsUserInput,
-    IsSnappable,
-    HasClientID,
-    RespondsToUserInput,
-    CanHoldHandTruck,
-    RespondsToDayNight,
-    HasDayNightTimer,
-    CollectsCustomerFeedback,
-    IsSquirter,
-    CanBeHeld_HT,
-    CanBeHeld,
-    BypassAutomationState,
-    AICloseTab,
-    AIPlayJukebox,
-    AIWaitInQueue,
-    AIDrinking,
-    AIUseBathroom,
-    AIWandering,
-    AICleanVomit,
-};
+//
+// We encode the "kind" as (tuple_index + 1) from `ComponentTypes`.
+// - 0 is reserved for Invalid.
+// - Never reorder `ComponentTypes`; only append.
+//
+// This removes the need to duplicate the component list in an enum.
+enum class ComponentKind : std::uint16_t { Invalid = 0 };
+
+inline constexpr std::uint16_t component_kind_for_index(size_t index) {
+    return static_cast<std::uint16_t>(index + 1);
+}
 
 }  // namespace snapshot_blob
 

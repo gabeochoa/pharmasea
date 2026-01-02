@@ -149,11 +149,6 @@ void register_all_components() {
     // Register component IDs in Afterhours by instantiating all component types
     // once. Keep the list centralized in
     // `components/all_components.h`.
-    static_assert(magic_enum::enum_count<snapshot_blob::ComponentKind>() ==
-                      (std::tuple_size_v<snapshot_blob::ComponentTypes> +
-                       1),
-                  "snapshot component kind enum must match ComponentTypes");
-
     [&]<size_t... Is>(std::index_sequence<Is...>) {
         (entity->addComponent<
              std::tuple_element_t<Is, snapshot_blob::ComponentTypes>>(),
