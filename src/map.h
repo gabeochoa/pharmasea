@@ -49,7 +49,37 @@ struct Map {
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        s.object(game_info);
+        // Keep wire/save compatibility: this is the exact historical ordering:
+        // - entities list (full snapshot)
+        // - LevelInfo metadata (was_generated, seed, hashed_seed)
+        // - showMinimap
+
+        constexpr bool kIsReader = requires { s.adapter().error(); };
+
+        Entities::size_type num_entities = 0;
+        if constexpr (kIsReader) {
+            Entities tmp;
+            s.value8b(num_entities);
+            s.container(tmp, num_entities,
+                        [](S& s2, std::shared_ptr<Entity>& entity) {
+                            s2.ext(entity, bitsery::ext::StdSmartPtr{});
+                        });
+            EntityHelper::get_current_collection().replace_all_entities(
+                std::move(tmp));
+        } else {
+            Entities tmp = EntityHelper::get_entities();
+            num_entities = tmp.size();
+            s.value8b(num_entities);
+            s.container(tmp, num_entities,
+                        [](S& s2, std::shared_ptr<Entity>& entity) {
+                            s2.ext(entity, bitsery::ext::StdSmartPtr{});
+                        });
+        }
+
+        s.value1b(game_info.was_generated);
+        s.text1b(game_info.seed, MAX_SEED_LENGTH);
+        s.value8b(game_info.hashed_seed);
+
         s.value1b(showMinimap);
     }
 };
