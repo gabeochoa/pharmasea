@@ -247,7 +247,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 network::Server* server =
                     GLOBALS.get_ptr<network::Server>("server");
                 server->get_map_SERVER_ONLY()
-                    ->game_info.generate_model_test_map();
+                    ->generate_model_test_map();
             }
 
             for (RefEntity player : EQ(SystemManager::get().oldAll)
@@ -262,7 +262,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 network::Server* server =
                     GLOBALS.get_ptr<network::Server>("server");
                 server->get_map_SERVER_ONLY()
-                    ->game_info.generate_load_save_room_map();
+                    ->generate_load_save_room_map();
             }
             for (RefEntity player : EQ(SystemManager::get().oldAll)
                                         .whereType(EntityType::Player)
@@ -337,7 +337,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     GLOBALS.get_ptr<network::Server>("server");
                 if (server) {
                     server->get_map_SERVER_ONLY()
-                        ->game_info.generate_load_save_room_map();
+                        ->generate_load_save_room_map();
                     server->force_send_map_state();
                 }
                 break;

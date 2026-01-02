@@ -2,8 +2,17 @@
 
 #pragma once
 
+#include <string>
+#include <vector>
+
+#include "entity_helper.h"
 #include "external_include.h"
-#include "level_info.h"
+
+constexpr int MIN_MAP_SIZE = 10;
+constexpr int MAX_MAP_SIZE = 25;
+constexpr int MAX_SEED_LENGTH = 20;
+
+extern std::vector<std::string> EXAMPLE_MAP;
 
 struct Map {
     // This gets called on every network frame because
@@ -17,7 +26,9 @@ struct Map {
 
     // Serialized
     bool showMinimap = false;
-    LevelInfo game_info;
+    bool was_generated = false;
+    game::State last_generated = game::State::InMenu;
+    size_t hashed_seed = 0;
 
     // No serialized
     Entities local_players_NOT_SERIALIZED;
@@ -44,14 +55,31 @@ struct Map {
     void onDraw(float dt) const;
     void onDrawUI(float dt);
 
+    void ensure_generated_map(const std::string& new_seed);
+
+    // called by the server sometimes
+    void generate_model_test_map();
+    // called by the server sometimes
+    void generate_load_save_room_map();
+
    public:
    private:
+    void generate_lobby_map();
+    void generate_progression_map();
+    void generate_store_map();
+    void generate_default_seed();
+
+    void generate_in_game_map();
+    auto get_rand_walkable();
+    auto get_rand_walkable_register();
+    void add_outside_triggers(vec2 origin);
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
         // Keep wire/save compatibility: this is the exact historical ordering:
         // - entities list (full snapshot)
-        // - LevelInfo metadata (was_generated, seed, hashed_seed)
+        // - map metadata (was_generated, seed, hashed_seed)
         // - showMinimap
 
         constexpr bool kIsReader = requires { s.adapter().error(); };
@@ -76,9 +104,9 @@ struct Map {
                         });
         }
 
-        s.value1b(game_info.was_generated);
-        s.text1b(game_info.seed, MAX_SEED_LENGTH);
-        s.value8b(game_info.hashed_seed);
+        s.value1b(was_generated);
+        s.text1b(seed, MAX_SEED_LENGTH);
+        s.value8b(hashed_seed);
 
         s.value1b(showMinimap);
     }

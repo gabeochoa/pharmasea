@@ -337,10 +337,11 @@ void Server::process_map_update(float dt) {
             if (save_game::SaveGameManager::load_file(p, loaded)) {
                 // Apply snapshot (same logic as
                 // server_only::load_game_from_slot).
-                pharmacy_map->game_info = loaded.map_snapshot.game_info;
                 pharmacy_map->showMinimap = loaded.map_snapshot.showMinimap;
-                pharmacy_map->seed = loaded.map_snapshot.game_info.seed;
-                pharmacy_map->game_info.was_generated = true;
+                pharmacy_map->seed = loaded.map_snapshot.seed;
+                pharmacy_map->hashed_seed = loaded.map_snapshot.hashed_seed;
+                pharmacy_map->last_generated = loaded.map_snapshot.last_generated;
+                pharmacy_map->was_generated = true;
                 RandomEngine::set_seed(pharmacy_map->seed);
                 EntityHelper::invalidateCaches();
                 force_send_map_state();

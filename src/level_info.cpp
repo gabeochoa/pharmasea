@@ -1,5 +1,5 @@
 
-#include "level_info.h"
+#include "map.h"
 
 #include "ah.h"
 #include "building_locations.h"
@@ -43,14 +43,6 @@ namespace wfc {
 extern Rectangle SPAWN_AREA;
 extern Rectangle TRASH_AREA;
 }  // namespace wfc
-
-void LevelInfo::update_seed(const std::string& s) {
-    log_info("level info update seed {}", s);
-    seed = s;
-    RandomEngine::set_seed(seed);
-
-    was_generated = false;
-}
 
 void generate_walls_for_building(const Building& building) {
     std::vector<RefEntity> walls;
@@ -118,7 +110,7 @@ void generate_walls_for_building(const Building& building) {
     }
 }
 
-void LevelInfo::generate_lobby_map() {
+void Map::generate_lobby_map() {
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_character_switcher(
@@ -184,7 +176,7 @@ struct ModelTestMapInfo {
     std::optional<int> drink;
 };
 
-void LevelInfo::generate_model_test_map() {
+void Map::generate_model_test_map() {
     {
         auto& entity = EntityHelper::createPermanentEntity();
         furniture::make_trigger_area(
@@ -404,7 +396,7 @@ void LevelInfo::generate_model_test_map() {
     // {EntityType::Drink},
 }
 
-void LevelInfo::generate_load_save_room_map() {
+void Map::generate_load_save_room_map() {
     // Simple standalone showroom. We keep it lightweight: trigger-areas as the
     // pedestals, and we read only the save header to populate labels.
     generate_walls_for_building(LOAD_SAVE_BUILDING);
@@ -473,7 +465,7 @@ void LevelInfo::generate_load_save_room_map() {
     }
 }
 
-void LevelInfo::generate_progression_map() {
+void Map::generate_progression_map() {
     generate_walls_for_building(PROGRESSION_BUILDING);
 
     {
@@ -497,7 +489,7 @@ void LevelInfo::generate_progression_map() {
     }
 }
 
-void LevelInfo::generate_store_map() {
+void Map::generate_store_map() {
     generate_walls_for_building(STORE_BUILDING);
 
     const float trig_x = -4;
@@ -648,7 +640,7 @@ void LevelInfo::generate_store_map() {
     }
 }
 
-void LevelInfo::generate_default_seed() {
+void Map::generate_default_seed() {
     mapgen::generate_default_seed(EXAMPLE_MAP);
 }
 
@@ -656,7 +648,7 @@ vec2 generate_in_game_map_wfc(const std::string& seed) {
     return mapgen::generate_in_game_map(seed);
 }
 
-void LevelInfo::add_outside_triggers(vec2 origin) {
+void Map::add_outside_triggers(vec2 origin) {
     {
         auto& entity = EntityHelper::createEntity();
         vec3 position = {
@@ -693,7 +685,7 @@ void LevelInfo::add_outside_triggers(vec2 origin) {
     }
 }
 
-void LevelInfo::generate_in_game_map() {
+void Map::generate_in_game_map() {
     if (seed == "default_seed") {
         generate_default_seed();
         add_outside_triggers({0, 0});
@@ -712,7 +704,7 @@ void LevelInfo::generate_in_game_map() {
     return;
 }
 
-auto LevelInfo::get_rand_walkable() {
+auto Map::get_rand_walkable() {
     vec2 location;
     do {
         location = vec2{RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1),
@@ -721,7 +713,7 @@ auto LevelInfo::get_rand_walkable() {
     return location;
 }
 
-auto LevelInfo::get_rand_walkable_register() {
+auto Map::get_rand_walkable_register() {
     vec2 location;
     do {
         location = vec2{RandomEngine::get().get_float(1, MAX_MAP_SIZE - 1),
@@ -732,7 +724,7 @@ auto LevelInfo::get_rand_walkable_register() {
     return location;
 }
 
-void LevelInfo::ensure_generated_map(const std::string& new_seed) {
+void Map::ensure_generated_map(const std::string& new_seed) {
     if (was_generated) return;
     log_info("generating map with new seed: {}", new_seed);
     seed = new_seed;

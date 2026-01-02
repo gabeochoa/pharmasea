@@ -69,7 +69,7 @@ bool save_game_to_slot(int slot) {
     // Capture snapshot from authoritative state.
     EntityHelper::cleanup();
     Map snapshot = *(server->get_map_SERVER_ONLY());
-    snapshot.game_info.was_generated = true;
+    snapshot.was_generated = true;
 
     bool ok = save_game::SaveGameManager::save_slot(slot, snapshot);
     if (ok) {
@@ -104,11 +104,12 @@ bool load_game_from_slot(int slot) {
     // Install entities into the authoritative entity list and mark generated
     // so the generator does not wipe the loaded snapshot.
     Map& server_map = *(server->get_map_SERVER_ONLY());
-    server_map.game_info = loaded.map_snapshot.game_info;
     server_map.showMinimap = loaded.map_snapshot.showMinimap;
 
-    server_map.seed = loaded.map_snapshot.game_info.seed;
-    server_map.game_info.was_generated = true;
+    server_map.seed = loaded.map_snapshot.seed;
+    server_map.hashed_seed = loaded.map_snapshot.hashed_seed;
+    server_map.last_generated = loaded.map_snapshot.last_generated;
+    server_map.was_generated = true;
     RandomEngine::set_seed(server_map.seed);
 
     // Fix up containers that loaded with EntityType::Unknown
