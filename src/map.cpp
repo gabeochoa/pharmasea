@@ -49,7 +49,7 @@ void Map::_onUpdate(const std::vector<std::shared_ptr<Entity>>& players,
     // log_info("num items {}", items().size());
 
     game_info.ensure_generated_map(seed);
-    game_info.onUpdate(players, dt);
+    SystemManager::get().update_all_entities(players, dt);
 }
 
 void Map::onDraw(float dt) const {

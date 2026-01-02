@@ -21,7 +21,6 @@ struct LevelInfo {
     size_t hashed_seed;
 
     void update_seed(const std::string& s);
-    void onUpdate(const Entities& players, float dt);
     void ensure_generated_map(const std::string& new_seed);
 
     // called by the server sometimes
