@@ -91,7 +91,7 @@ void Server::stop() {
 }
 
 void Server::send_map_state() {
-    pharmacy_map->grab_things();
+    EntityHelper::cleanup();
 
     ClientPacket map_packet{
         .channel = Channel::RELIABLE,

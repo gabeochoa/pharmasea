@@ -100,7 +100,7 @@ void GameLayer::onUpdate(float dt) {
     if (map_ptr) {
         // NOTE: today we need to grab things so that the client renders
         // what they server has access to
-        map_ptr->grab_things();
+        EntityHelper::cleanup();
         map_ptr->onUpdateLocalPlayers(dt);
         map_ptr->onUpdateRemotePlayers(dt);
     }
