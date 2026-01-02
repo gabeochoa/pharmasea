@@ -89,24 +89,14 @@ struct Map {
         constexpr bool kIsReader = requires { s.adapter().error(); };
 
         std::string world_blob;
-        uint32_t world_size = 0;
         if constexpr (kIsReader) {
-            s.value4b(world_size);
-            VALIDATE(world_size <= snapshot_blob::kMaxWorldSnapshotBytes,
-                     "world snapshot blob too large");
-            world_blob.resize(world_size);
-            for (uint32_t i = 0; i < world_size; ++i) {
-                s.value1b(world_blob[i]);
-            }
+            // `container4b` writes/reads length-prefixed binary buffers.
+            s.container4b(world_blob, snapshot_blob::kMaxWorldSnapshotBytes);
             const bool ok = snapshot_blob::decode_into_current_world(world_blob);
             VALIDATE(ok, "failed to decode world snapshot blob");
         } else {
             world_blob = snapshot_blob::encode_current_world();
-            world_size = static_cast<uint32_t>(world_blob.size());
-            s.value4b(world_size);
-            for (uint32_t i = 0; i < world_size; ++i) {
-                s.value1b(world_blob[i]);
-            }
+            s.container4b(world_blob, snapshot_blob::kMaxWorldSnapshotBytes);
         }
 
         s.value1b(was_generated);

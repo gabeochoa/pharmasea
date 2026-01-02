@@ -3,7 +3,7 @@
 #include "../bitsery_include.h"
 #include "../engine/log.h"
 #include "../entity_helper.h"
-#include "../network/polymorphic_components.h"  // brings in all component types + bitsery config
+#include "../network/polymorphic_components.h"  // includes all component types + bitsery wiring
 
 #include <bitsery/ext/std_bitset.h>
 
@@ -18,7 +18,7 @@ using Serializer = bitsery::Serializer<OutputAdapter, TContext>;
 using Deserializer = bitsery::Deserializer<InputAdapter, TContext>;
 
 // Stable component discriminator for snapshots.
-// IMPORTANT: never renumber these once shipped; add new values at the end.
+// IMPORTANT: never renumber; only append.
 enum class ComponentKind : std::uint16_t {
     Transform = 1,
     HasName,
@@ -90,587 +90,564 @@ enum class ComponentKind : std::uint16_t {
     AICleanVomit,
 };
 
-struct ComponentBlobDTO {
-    ComponentKind kind = ComponentKind::Transform;
-    std::string bytes;
-
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        std::uint16_t k = static_cast<std::uint16_t>(kind);
-        s.value2b(k);
-        if constexpr (requires { s.adapter().error(); }) {
-            // Reader: restore kind.
-            kind = static_cast<ComponentKind>(k);
-        }
-
-        std::uint32_t sz = 0;
-        if constexpr (requires { s.adapter().error(); }) {
-            s.value4b(sz);
-            VALIDATE(sz <= snapshot_blob::kMaxEntitySnapshotBytes,
-                     "component blob too large");
-            bytes.resize(sz);
-        } else {
-            sz = static_cast<std::uint32_t>(bytes.size());
-            s.value4b(sz);
-        }
-        for (std::uint32_t i = 0; i < sz; ++i) {
-            s.value1b(bytes[i]);
-        }
-    }
-};
-
-struct EntitySnapshotDTO {
-    afterhours::EntityID id = -1;
-    int entity_type = 0;
-    afterhours::TagBitset tags{};
-    bool cleanup = false;
-
-    std::vector<ComponentBlobDTO> components;
-
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(id);
-        s.value4b(entity_type);
-        s.ext(tags, bitsery::ext::StdBitset{});
-        s.value1b(cleanup);
-
-        uint8_t num_components = 0;
-        if constexpr (requires { s.adapter().error(); }) {
-            s.value1b(num_components);
-            components.resize(num_components);
-        } else {
-            num_components = static_cast<uint8_t>(components.size());
-            s.value1b(num_components);
-        }
-
-        for (uint8_t i = 0; i < num_components; ++i) s.object(components[i]);
-    }
-};
-
-struct WorldSnapshotDTO {
-    // Explicit version to allow future migration if needed.
-    uint32_t version = 1;
-    std::vector<EntitySnapshotDTO> entities;
-
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(version);
-
-        uint32_t num_entities = 0;
-        if constexpr (requires { s.adapter().error(); }) {
-            s.value4b(num_entities);
-            entities.resize(num_entities);
-        } else {
-            num_entities = static_cast<uint32_t>(entities.size());
-            s.value4b(num_entities);
-        }
-
-        for (uint32_t i = 0; i < num_entities; ++i) {
-            s.object(entities[i]);
-        }
-    }
-};
-
-void clear_all_components(afterhours::Entity& e) {
+inline void clear_all_components(afterhours::Entity& e) {
     e.componentSet.reset();
-    for (auto& ptr : e.componentArray) {
-        ptr.reset();
-    }
+    for (auto& ptr : e.componentArray) ptr.reset();
+}
+
+template<typename E>
+inline void write_kind(E& s, ComponentKind k) {
+    std::uint16_t raw = static_cast<std::uint16_t>(k);
+    s.value2b(raw);
+}
+
+template<typename S>
+inline bool read_kind(S& s, ComponentKind& out) {
+    std::uint16_t raw = 0;
+    s.value2b(raw);
+    out = static_cast<ComponentKind>(raw);
+    return s.adapter().error() == bitsery::ReaderError::NoError;
 }
 
 template<typename T>
-[[nodiscard]] std::string encode_component(T& cmp) {
-    Buffer buffer;
-    TContext ctx{};
-    Serializer ser{ctx, buffer};
-    ser.object(cmp);
-    ser.adapter().flush();
-    return buffer;
-}
-
-template<typename T>
-[[nodiscard]] bool decode_component_into(T& cmp, const std::string& bytes) {
-    TContext ctx{};
-    Deserializer des{ctx, bytes.begin(), bytes.size()};
-    des.object(cmp);
-    return des.adapter().error() == bitsery::ReaderError::NoError;
-}
-
-template<typename T>
-void push_component_blob(EntitySnapshotDTO& out, ComponentKind kind, T& cmp) {
-    out.components.push_back(ComponentBlobDTO{
-        .kind = kind,
-        .bytes = encode_component(cmp),
-    });
-}
-
-EntitySnapshotDTO snapshot_entity(const afterhours::Entity& e) {
-    EntitySnapshotDTO out;
-    out.id = e.id;
-    out.entity_type = e.entity_type;
-    out.tags = e.tags;
-    out.cleanup = e.cleanup;
-
-    out.components.reserve(afterhours::max_num_components);
-
-    // Gather all known component types. (Phase 1: full snapshot.)
-    //
-    // NOTE: for derived-component families (e.g., AIComponent), we list the
-    // concrete derived types explicitly.
+inline void count_if_has(const afterhours::Entity& e, uint8_t& count) {
     auto& nc = const_cast<afterhours::Entity&>(e);
-
-    // Manual expansion keeps ordering stable and avoids macro tricks that
-    // complicate the variant type list.
-#define ADD_IF_HAS(T, K) \
-    do {                 \
-        if (nc.has<T>()) push_component_blob(out, (K), nc.get<T>()); \
-    } while (0)
-
-    ADD_IF_HAS(Transform, ComponentKind::Transform);
-    ADD_IF_HAS(HasName, ComponentKind::HasName);
-    ADD_IF_HAS(CanHoldItem, ComponentKind::CanHoldItem);
-    ADD_IF_HAS(SimpleColoredBoxRenderer, ComponentKind::SimpleColoredBoxRenderer);
-    ADD_IF_HAS(CanBeHighlighted, ComponentKind::CanBeHighlighted);
-    ADD_IF_HAS(CanHighlightOthers, ComponentKind::CanHighlightOthers);
-    ADD_IF_HAS(CanHoldFurniture, ComponentKind::CanHoldFurniture);
-    ADD_IF_HAS(CanBeGhostPlayer, ComponentKind::CanBeGhostPlayer);
-    ADD_IF_HAS(CanPerformJob, ComponentKind::CanPerformJob);
-    ADD_IF_HAS(ModelRenderer, ComponentKind::ModelRenderer);
-    ADD_IF_HAS(CanBePushed, ComponentKind::CanBePushed);
-    ADD_IF_HAS(CustomHeldItemPosition, ComponentKind::CustomHeldItemPosition);
-    ADD_IF_HAS(HasWork, ComponentKind::HasWork);
-    ADD_IF_HAS(HasBaseSpeed, ComponentKind::HasBaseSpeed);
-    ADD_IF_HAS(IsSolid, ComponentKind::IsSolid);
-    ADD_IF_HAS(HasPatience, ComponentKind::HasPatience);
-    ADD_IF_HAS(HasProgression, ComponentKind::HasProgression);
-    ADD_IF_HAS(IsRotatable, ComponentKind::IsRotatable);
-    ADD_IF_HAS(CanGrabFromOtherFurniture, ComponentKind::CanGrabFromOtherFurniture);
-    ADD_IF_HAS(ConveysHeldItem, ComponentKind::ConveysHeldItem);
-    ADD_IF_HAS(HasWaitingQueue, ComponentKind::HasWaitingQueue);
-    ADD_IF_HAS(CanBeTakenFrom, ComponentKind::CanBeTakenFrom);
-    ADD_IF_HAS(IsItemContainer, ComponentKind::IsItemContainer);
-    ADD_IF_HAS(UsesCharacterModel, ComponentKind::UsesCharacterModel);
-    ADD_IF_HAS(HasDynamicModelName, ComponentKind::HasDynamicModelName);
-    ADD_IF_HAS(IsTriggerArea, ComponentKind::IsTriggerArea);
-    ADD_IF_HAS(HasSpeechBubble, ComponentKind::HasSpeechBubble);
-    ADD_IF_HAS(Indexer, ComponentKind::Indexer);
-    ADD_IF_HAS(IsSpawner, ComponentKind::IsSpawner);
-    ADD_IF_HAS(HasRopeToItem, ComponentKind::HasRopeToItem);
-    ADD_IF_HAS(HasSubtype, ComponentKind::HasSubtype);
-    ADD_IF_HAS(IsItem, ComponentKind::IsItem);
-    ADD_IF_HAS(IsDrink, ComponentKind::IsDrink);
-    ADD_IF_HAS(AddsIngredient, ComponentKind::AddsIngredient);
-    ADD_IF_HAS(CanOrderDrink, ComponentKind::CanOrderDrink);
-    ADD_IF_HAS(IsPnumaticPipe, ComponentKind::IsPnumaticPipe);
-    ADD_IF_HAS(IsProgressionManager, ComponentKind::IsProgressionManager);
-    ADD_IF_HAS(IsFloorMarker, ComponentKind::IsFloorMarker);
-    ADD_IF_HAS(IsBank, ComponentKind::IsBank);
-    ADD_IF_HAS(IsFreeInStore, ComponentKind::IsFreeInStore);
-    ADD_IF_HAS(IsToilet, ComponentKind::IsToilet);
-    ADD_IF_HAS(CanPathfind, ComponentKind::CanPathfind);
-    ADD_IF_HAS(IsRoundSettingsManager, ComponentKind::IsRoundSettingsManager);
-    ADD_IF_HAS(HasFishingGame, ComponentKind::HasFishingGame);
-    ADD_IF_HAS(IsStoreSpawned, ComponentKind::IsStoreSpawned);
-    ADD_IF_HAS(HasLastInteractedCustomer, ComponentKind::HasLastInteractedCustomer);
-    ADD_IF_HAS(CanChangeSettingsInteractively, ComponentKind::CanChangeSettingsInteractively);
-    ADD_IF_HAS(IsNuxManager, ComponentKind::IsNuxManager);
-    ADD_IF_HAS(IsNux, ComponentKind::IsNux);
-    ADD_IF_HAS(CollectsUserInput, ComponentKind::CollectsUserInput);
-    ADD_IF_HAS(IsSnappable, ComponentKind::IsSnappable);
-    ADD_IF_HAS(HasClientID, ComponentKind::HasClientID);
-    ADD_IF_HAS(RespondsToUserInput, ComponentKind::RespondsToUserInput);
-    ADD_IF_HAS(CanHoldHandTruck, ComponentKind::CanHoldHandTruck);
-    ADD_IF_HAS(RespondsToDayNight, ComponentKind::RespondsToDayNight);
-    ADD_IF_HAS(HasDayNightTimer, ComponentKind::HasDayNightTimer);
-    ADD_IF_HAS(CollectsCustomerFeedback, ComponentKind::CollectsCustomerFeedback);
-    ADD_IF_HAS(IsSquirter, ComponentKind::IsSquirter);
-    ADD_IF_HAS(CanBeHeld_HT, ComponentKind::CanBeHeld_HT);
-    ADD_IF_HAS(CanBeHeld, ComponentKind::CanBeHeld);
-    ADD_IF_HAS(BypassAutomationState, ComponentKind::BypassAutomationState);
-    ADD_IF_HAS(AICloseTab, ComponentKind::AICloseTab);
-    ADD_IF_HAS(AIPlayJukebox, ComponentKind::AIPlayJukebox);
-    ADD_IF_HAS(AIWaitInQueue, ComponentKind::AIWaitInQueue);
-    ADD_IF_HAS(AIDrinking, ComponentKind::AIDrinking);
-    ADD_IF_HAS(AIUseBathroom, ComponentKind::AIUseBathroom);
-    ADD_IF_HAS(AIWandering, ComponentKind::AIWandering);
-    ADD_IF_HAS(AICleanVomit, ComponentKind::AICleanVomit);
-
-#undef ADD_IF_HAS
-    return out;
-}
-
-[[nodiscard]] bool apply_component_blob(afterhours::Entity& e,
-                                       const ComponentBlobDTO& b) {
-    switch (b.kind) {
-        case ComponentKind::Transform: {
-            auto& cmp = e.addComponent<Transform>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasName: {
-            auto& cmp = e.addComponent<HasName>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanHoldItem: {
-            auto& cmp = e.addComponent<CanHoldItem>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::SimpleColoredBoxRenderer: {
-            auto& cmp = e.addComponent<SimpleColoredBoxRenderer>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanBeHighlighted: {
-            auto& cmp = e.addComponent<CanBeHighlighted>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanHighlightOthers: {
-            auto& cmp = e.addComponent<CanHighlightOthers>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanHoldFurniture: {
-            auto& cmp = e.addComponent<CanHoldFurniture>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanBeGhostPlayer: {
-            auto& cmp = e.addComponent<CanBeGhostPlayer>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanPerformJob: {
-            auto& cmp = e.addComponent<CanPerformJob>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::ModelRenderer: {
-            auto& cmp = e.addComponent<ModelRenderer>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanBePushed: {
-            auto& cmp = e.addComponent<CanBePushed>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CustomHeldItemPosition: {
-            auto& cmp = e.addComponent<CustomHeldItemPosition>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasWork: {
-            auto& cmp = e.addComponent<HasWork>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasBaseSpeed: {
-            auto& cmp = e.addComponent<HasBaseSpeed>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsSolid: {
-            auto& cmp = e.addComponent<IsSolid>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasPatience: {
-            auto& cmp = e.addComponent<HasPatience>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasProgression: {
-            auto& cmp = e.addComponent<HasProgression>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsRotatable: {
-            auto& cmp = e.addComponent<IsRotatable>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanGrabFromOtherFurniture: {
-            auto& cmp = e.addComponent<CanGrabFromOtherFurniture>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::ConveysHeldItem: {
-            auto& cmp = e.addComponent<ConveysHeldItem>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasWaitingQueue: {
-            auto& cmp = e.addComponent<HasWaitingQueue>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanBeTakenFrom: {
-            auto& cmp = e.addComponent<CanBeTakenFrom>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsItemContainer: {
-            auto& cmp = e.addComponent<IsItemContainer>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::UsesCharacterModel: {
-            auto& cmp = e.addComponent<UsesCharacterModel>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasDynamicModelName: {
-            auto& cmp = e.addComponent<HasDynamicModelName>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsTriggerArea: {
-            auto& cmp = e.addComponent<IsTriggerArea>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasSpeechBubble: {
-            auto& cmp = e.addComponent<HasSpeechBubble>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::Indexer: {
-            auto& cmp = e.addComponent<Indexer>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsSpawner: {
-            auto& cmp = e.addComponent<IsSpawner>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasRopeToItem: {
-            auto& cmp = e.addComponent<HasRopeToItem>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasSubtype: {
-            auto& cmp = e.addComponent<HasSubtype>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsItem: {
-            auto& cmp = e.addComponent<IsItem>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsDrink: {
-            auto& cmp = e.addComponent<IsDrink>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::AddsIngredient: {
-            auto& cmp = e.addComponent<AddsIngredient>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanOrderDrink: {
-            auto& cmp = e.addComponent<CanOrderDrink>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsPnumaticPipe: {
-            auto& cmp = e.addComponent<IsPnumaticPipe>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsProgressionManager: {
-            auto& cmp = e.addComponent<IsProgressionManager>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsFloorMarker: {
-            auto& cmp = e.addComponent<IsFloorMarker>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsBank: {
-            auto& cmp = e.addComponent<IsBank>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsFreeInStore: {
-            auto& cmp = e.addComponent<IsFreeInStore>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsToilet: {
-            auto& cmp = e.addComponent<IsToilet>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanPathfind: {
-            auto& cmp = e.addComponent<CanPathfind>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsRoundSettingsManager: {
-            auto& cmp = e.addComponent<IsRoundSettingsManager>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasFishingGame: {
-            auto& cmp = e.addComponent<HasFishingGame>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsStoreSpawned: {
-            auto& cmp = e.addComponent<IsStoreSpawned>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasLastInteractedCustomer: {
-            auto& cmp = e.addComponent<HasLastInteractedCustomer>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanChangeSettingsInteractively: {
-            auto& cmp = e.addComponent<CanChangeSettingsInteractively>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsNuxManager: {
-            auto& cmp = e.addComponent<IsNuxManager>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsNux: {
-            auto& cmp = e.addComponent<IsNux>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CollectsUserInput: {
-            auto& cmp = e.addComponent<CollectsUserInput>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsSnappable: {
-            auto& cmp = e.addComponent<IsSnappable>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasClientID: {
-            auto& cmp = e.addComponent<HasClientID>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::RespondsToUserInput: {
-            auto& cmp = e.addComponent<RespondsToUserInput>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanHoldHandTruck: {
-            auto& cmp = e.addComponent<CanHoldHandTruck>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::RespondsToDayNight: {
-            auto& cmp = e.addComponent<RespondsToDayNight>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::HasDayNightTimer: {
-            auto& cmp = e.addComponent<HasDayNightTimer>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CollectsCustomerFeedback: {
-            auto& cmp = e.addComponent<CollectsCustomerFeedback>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::IsSquirter: {
-            auto& cmp = e.addComponent<IsSquirter>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanBeHeld_HT: {
-            auto& cmp = e.addComponent<CanBeHeld_HT>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::CanBeHeld: {
-            auto& cmp = e.addComponent<CanBeHeld>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::BypassAutomationState: {
-            auto& cmp = e.addComponent<BypassAutomationState>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::AICloseTab: {
-            auto& cmp = e.addComponent<AICloseTab>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::AIPlayJukebox: {
-            auto& cmp = e.addComponent<AIPlayJukebox>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::AIWaitInQueue: {
-            auto& cmp = e.addComponent<AIWaitInQueue>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::AIDrinking: {
-            auto& cmp = e.addComponent<AIDrinking>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::AIUseBathroom: {
-            auto& cmp = e.addComponent<AIUseBathroom>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::AIWandering: {
-            auto& cmp = e.addComponent<AIWandering>();
-            return decode_component_into(cmp, b.bytes);
-        }
-        case ComponentKind::AICleanVomit: {
-            auto& cmp = e.addComponent<AICleanVomit>();
-            return decode_component_into(cmp, b.bytes);
-        }
-    }
-    return false;
-}
-
-[[nodiscard]] bool apply_snapshot_to_entity(afterhours::Entity& e,
-                                           const EntitySnapshotDTO& s) {
-    clear_all_components(e);
-    e.id = s.id;
-    e.entity_type = s.entity_type;
-    e.tags = s.tags;
-    e.cleanup = s.cleanup;
-
-    for (const auto& b : s.components) {
-        if (!apply_component_blob(e, b)) {
-            log_warn("snapshot_blob: failed applying component kind {} on id={}",
-                     static_cast<int>(b.kind), e.id);
-            return false;
-        }
-    }
-    return true;
+    if (nc.has<T>()) ++count;
 }
 
 template<typename T>
-[[nodiscard]] std::optional<T> deserialize_one_object(const std::string& buf) {
-    TContext ctx{};
-    Deserializer des{ctx, buf.begin(), buf.size()};
-    T obj{};
-    des.object(obj);
-    if (des.adapter().error() != bitsery::ReaderError::NoError) {
-        return std::nullopt;
+inline void write_if_has(Serializer& s, afterhours::Entity& e, ComponentKind k) {
+    if (!e.has<T>()) return;
+    write_kind(s, k);
+    auto& cmp = e.get<T>();
+    s.object(cmp);
+}
+
+[[nodiscard]] uint8_t count_components(const afterhours::Entity& e) {
+    uint8_t c = 0;
+    count_if_has<Transform>(e, c);
+    count_if_has<HasName>(e, c);
+    count_if_has<CanHoldItem>(e, c);
+    count_if_has<SimpleColoredBoxRenderer>(e, c);
+    count_if_has<CanBeHighlighted>(e, c);
+    count_if_has<CanHighlightOthers>(e, c);
+    count_if_has<CanHoldFurniture>(e, c);
+    count_if_has<CanBeGhostPlayer>(e, c);
+    count_if_has<CanPerformJob>(e, c);
+    count_if_has<ModelRenderer>(e, c);
+    count_if_has<CanBePushed>(e, c);
+    count_if_has<CustomHeldItemPosition>(e, c);
+    count_if_has<HasWork>(e, c);
+    count_if_has<HasBaseSpeed>(e, c);
+    count_if_has<IsSolid>(e, c);
+    count_if_has<HasPatience>(e, c);
+    count_if_has<HasProgression>(e, c);
+    count_if_has<IsRotatable>(e, c);
+    count_if_has<CanGrabFromOtherFurniture>(e, c);
+    count_if_has<ConveysHeldItem>(e, c);
+    count_if_has<HasWaitingQueue>(e, c);
+    count_if_has<CanBeTakenFrom>(e, c);
+    count_if_has<IsItemContainer>(e, c);
+    count_if_has<UsesCharacterModel>(e, c);
+    count_if_has<HasDynamicModelName>(e, c);
+    count_if_has<IsTriggerArea>(e, c);
+    count_if_has<HasSpeechBubble>(e, c);
+    count_if_has<Indexer>(e, c);
+    count_if_has<IsSpawner>(e, c);
+    count_if_has<HasRopeToItem>(e, c);
+    count_if_has<HasSubtype>(e, c);
+    count_if_has<IsItem>(e, c);
+    count_if_has<IsDrink>(e, c);
+    count_if_has<AddsIngredient>(e, c);
+    count_if_has<CanOrderDrink>(e, c);
+    count_if_has<IsPnumaticPipe>(e, c);
+    count_if_has<IsProgressionManager>(e, c);
+    count_if_has<IsFloorMarker>(e, c);
+    count_if_has<IsBank>(e, c);
+    count_if_has<IsFreeInStore>(e, c);
+    count_if_has<IsToilet>(e, c);
+    count_if_has<CanPathfind>(e, c);
+    count_if_has<IsRoundSettingsManager>(e, c);
+    count_if_has<HasFishingGame>(e, c);
+    count_if_has<IsStoreSpawned>(e, c);
+    count_if_has<HasLastInteractedCustomer>(e, c);
+    count_if_has<CanChangeSettingsInteractively>(e, c);
+    count_if_has<IsNuxManager>(e, c);
+    count_if_has<IsNux>(e, c);
+    count_if_has<CollectsUserInput>(e, c);
+    count_if_has<IsSnappable>(e, c);
+    count_if_has<HasClientID>(e, c);
+    count_if_has<RespondsToUserInput>(e, c);
+    count_if_has<CanHoldHandTruck>(e, c);
+    count_if_has<RespondsToDayNight>(e, c);
+    count_if_has<HasDayNightTimer>(e, c);
+    count_if_has<CollectsCustomerFeedback>(e, c);
+    count_if_has<IsSquirter>(e, c);
+    count_if_has<CanBeHeld_HT>(e, c);
+    count_if_has<CanBeHeld>(e, c);
+    count_if_has<BypassAutomationState>(e, c);
+    count_if_has<AICloseTab>(e, c);
+    count_if_has<AIPlayJukebox>(e, c);
+    count_if_has<AIWaitInQueue>(e, c);
+    count_if_has<AIDrinking>(e, c);
+    count_if_has<AIUseBathroom>(e, c);
+    count_if_has<AIWandering>(e, c);
+    count_if_has<AICleanVomit>(e, c);
+    return c;
+}
+
+void write_entity(Serializer& s, afterhours::Entity& e) {
+    s.value4b(e.id);
+    s.value4b(e.entity_type);
+    s.ext(e.tags, bitsery::ext::StdBitset{});
+    s.value1b(e.cleanup);
+
+    const uint8_t count = count_components(e);
+    s.value1b(count);
+
+    write_if_has<Transform>(s, e, ComponentKind::Transform);
+    write_if_has<HasName>(s, e, ComponentKind::HasName);
+    write_if_has<CanHoldItem>(s, e, ComponentKind::CanHoldItem);
+    write_if_has<SimpleColoredBoxRenderer>(s, e,
+                                          ComponentKind::SimpleColoredBoxRenderer);
+    write_if_has<CanBeHighlighted>(s, e, ComponentKind::CanBeHighlighted);
+    write_if_has<CanHighlightOthers>(s, e, ComponentKind::CanHighlightOthers);
+    write_if_has<CanHoldFurniture>(s, e, ComponentKind::CanHoldFurniture);
+    write_if_has<CanBeGhostPlayer>(s, e, ComponentKind::CanBeGhostPlayer);
+    write_if_has<CanPerformJob>(s, e, ComponentKind::CanPerformJob);
+    write_if_has<ModelRenderer>(s, e, ComponentKind::ModelRenderer);
+    write_if_has<CanBePushed>(s, e, ComponentKind::CanBePushed);
+    write_if_has<CustomHeldItemPosition>(s, e,
+                                         ComponentKind::CustomHeldItemPosition);
+    write_if_has<HasWork>(s, e, ComponentKind::HasWork);
+    write_if_has<HasBaseSpeed>(s, e, ComponentKind::HasBaseSpeed);
+    write_if_has<IsSolid>(s, e, ComponentKind::IsSolid);
+    write_if_has<HasPatience>(s, e, ComponentKind::HasPatience);
+    write_if_has<HasProgression>(s, e, ComponentKind::HasProgression);
+    write_if_has<IsRotatable>(s, e, ComponentKind::IsRotatable);
+    write_if_has<CanGrabFromOtherFurniture>(s, e,
+                                           ComponentKind::CanGrabFromOtherFurniture);
+    write_if_has<ConveysHeldItem>(s, e, ComponentKind::ConveysHeldItem);
+    write_if_has<HasWaitingQueue>(s, e, ComponentKind::HasWaitingQueue);
+    write_if_has<CanBeTakenFrom>(s, e, ComponentKind::CanBeTakenFrom);
+    write_if_has<IsItemContainer>(s, e, ComponentKind::IsItemContainer);
+    write_if_has<UsesCharacterModel>(s, e, ComponentKind::UsesCharacterModel);
+    write_if_has<HasDynamicModelName>(s, e, ComponentKind::HasDynamicModelName);
+    write_if_has<IsTriggerArea>(s, e, ComponentKind::IsTriggerArea);
+    write_if_has<HasSpeechBubble>(s, e, ComponentKind::HasSpeechBubble);
+    write_if_has<Indexer>(s, e, ComponentKind::Indexer);
+    write_if_has<IsSpawner>(s, e, ComponentKind::IsSpawner);
+    write_if_has<HasRopeToItem>(s, e, ComponentKind::HasRopeToItem);
+    write_if_has<HasSubtype>(s, e, ComponentKind::HasSubtype);
+    write_if_has<IsItem>(s, e, ComponentKind::IsItem);
+    write_if_has<IsDrink>(s, e, ComponentKind::IsDrink);
+    write_if_has<AddsIngredient>(s, e, ComponentKind::AddsIngredient);
+    write_if_has<CanOrderDrink>(s, e, ComponentKind::CanOrderDrink);
+    write_if_has<IsPnumaticPipe>(s, e, ComponentKind::IsPnumaticPipe);
+    write_if_has<IsProgressionManager>(s, e, ComponentKind::IsProgressionManager);
+    write_if_has<IsFloorMarker>(s, e, ComponentKind::IsFloorMarker);
+    write_if_has<IsBank>(s, e, ComponentKind::IsBank);
+    write_if_has<IsFreeInStore>(s, e, ComponentKind::IsFreeInStore);
+    write_if_has<IsToilet>(s, e, ComponentKind::IsToilet);
+    write_if_has<CanPathfind>(s, e, ComponentKind::CanPathfind);
+    write_if_has<IsRoundSettingsManager>(s, e,
+                                        ComponentKind::IsRoundSettingsManager);
+    write_if_has<HasFishingGame>(s, e, ComponentKind::HasFishingGame);
+    write_if_has<IsStoreSpawned>(s, e, ComponentKind::IsStoreSpawned);
+    write_if_has<HasLastInteractedCustomer>(s, e,
+                                           ComponentKind::HasLastInteractedCustomer);
+    write_if_has<CanChangeSettingsInteractively>(s, e,
+                                                ComponentKind::CanChangeSettingsInteractively);
+    write_if_has<IsNuxManager>(s, e, ComponentKind::IsNuxManager);
+    write_if_has<IsNux>(s, e, ComponentKind::IsNux);
+    write_if_has<CollectsUserInput>(s, e, ComponentKind::CollectsUserInput);
+    write_if_has<IsSnappable>(s, e, ComponentKind::IsSnappable);
+    write_if_has<HasClientID>(s, e, ComponentKind::HasClientID);
+    write_if_has<RespondsToUserInput>(s, e, ComponentKind::RespondsToUserInput);
+    write_if_has<CanHoldHandTruck>(s, e, ComponentKind::CanHoldHandTruck);
+    write_if_has<RespondsToDayNight>(s, e, ComponentKind::RespondsToDayNight);
+    write_if_has<HasDayNightTimer>(s, e, ComponentKind::HasDayNightTimer);
+    write_if_has<CollectsCustomerFeedback>(s, e,
+                                          ComponentKind::CollectsCustomerFeedback);
+    write_if_has<IsSquirter>(s, e, ComponentKind::IsSquirter);
+    write_if_has<CanBeHeld_HT>(s, e, ComponentKind::CanBeHeld_HT);
+    write_if_has<CanBeHeld>(s, e, ComponentKind::CanBeHeld);
+    write_if_has<BypassAutomationState>(s, e, ComponentKind::BypassAutomationState);
+    write_if_has<AICloseTab>(s, e, ComponentKind::AICloseTab);
+    write_if_has<AIPlayJukebox>(s, e, ComponentKind::AIPlayJukebox);
+    write_if_has<AIWaitInQueue>(s, e, ComponentKind::AIWaitInQueue);
+    write_if_has<AIDrinking>(s, e, ComponentKind::AIDrinking);
+    write_if_has<AIUseBathroom>(s, e, ComponentKind::AIUseBathroom);
+    write_if_has<AIWandering>(s, e, ComponentKind::AIWandering);
+    write_if_has<AICleanVomit>(s, e, ComponentKind::AICleanVomit);
+}
+
+[[nodiscard]] bool read_entity(Deserializer& d, afterhours::Entity& e) {
+    clear_all_components(e);
+
+    d.value4b(e.id);
+    d.value4b(e.entity_type);
+    d.ext(e.tags, bitsery::ext::StdBitset{});
+    d.value1b(e.cleanup);
+
+    uint8_t count = 0;
+    d.value1b(count);
+    if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
+
+    for (uint8_t i = 0; i < count; ++i) {
+        ComponentKind kind{};
+        if (!read_kind(d, kind)) return false;
+
+        switch (kind) {
+            case ComponentKind::Transform: {
+                auto& cmp = e.addComponent<Transform>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasName: {
+                auto& cmp = e.addComponent<HasName>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanHoldItem: {
+                auto& cmp = e.addComponent<CanHoldItem>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::SimpleColoredBoxRenderer: {
+                auto& cmp = e.addComponent<SimpleColoredBoxRenderer>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanBeHighlighted: {
+                auto& cmp = e.addComponent<CanBeHighlighted>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanHighlightOthers: {
+                auto& cmp = e.addComponent<CanHighlightOthers>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanHoldFurniture: {
+                auto& cmp = e.addComponent<CanHoldFurniture>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanBeGhostPlayer: {
+                auto& cmp = e.addComponent<CanBeGhostPlayer>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanPerformJob: {
+                auto& cmp = e.addComponent<CanPerformJob>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::ModelRenderer: {
+                auto& cmp = e.addComponent<ModelRenderer>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanBePushed: {
+                auto& cmp = e.addComponent<CanBePushed>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CustomHeldItemPosition: {
+                auto& cmp = e.addComponent<CustomHeldItemPosition>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasWork: {
+                auto& cmp = e.addComponent<HasWork>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasBaseSpeed: {
+                auto& cmp = e.addComponent<HasBaseSpeed>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsSolid: {
+                auto& cmp = e.addComponent<IsSolid>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasPatience: {
+                auto& cmp = e.addComponent<HasPatience>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasProgression: {
+                auto& cmp = e.addComponent<HasProgression>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsRotatable: {
+                auto& cmp = e.addComponent<IsRotatable>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanGrabFromOtherFurniture: {
+                auto& cmp = e.addComponent<CanGrabFromOtherFurniture>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::ConveysHeldItem: {
+                auto& cmp = e.addComponent<ConveysHeldItem>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasWaitingQueue: {
+                auto& cmp = e.addComponent<HasWaitingQueue>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanBeTakenFrom: {
+                auto& cmp = e.addComponent<CanBeTakenFrom>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsItemContainer: {
+                auto& cmp = e.addComponent<IsItemContainer>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::UsesCharacterModel: {
+                auto& cmp = e.addComponent<UsesCharacterModel>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasDynamicModelName: {
+                auto& cmp = e.addComponent<HasDynamicModelName>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsTriggerArea: {
+                auto& cmp = e.addComponent<IsTriggerArea>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasSpeechBubble: {
+                auto& cmp = e.addComponent<HasSpeechBubble>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::Indexer: {
+                auto& cmp = e.addComponent<Indexer>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsSpawner: {
+                auto& cmp = e.addComponent<IsSpawner>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasRopeToItem: {
+                auto& cmp = e.addComponent<HasRopeToItem>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasSubtype: {
+                auto& cmp = e.addComponent<HasSubtype>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsItem: {
+                auto& cmp = e.addComponent<IsItem>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsDrink: {
+                auto& cmp = e.addComponent<IsDrink>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::AddsIngredient: {
+                auto& cmp = e.addComponent<AddsIngredient>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanOrderDrink: {
+                auto& cmp = e.addComponent<CanOrderDrink>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsPnumaticPipe: {
+                auto& cmp = e.addComponent<IsPnumaticPipe>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsProgressionManager: {
+                auto& cmp = e.addComponent<IsProgressionManager>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsFloorMarker: {
+                auto& cmp = e.addComponent<IsFloorMarker>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsBank: {
+                auto& cmp = e.addComponent<IsBank>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsFreeInStore: {
+                auto& cmp = e.addComponent<IsFreeInStore>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsToilet: {
+                auto& cmp = e.addComponent<IsToilet>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanPathfind: {
+                auto& cmp = e.addComponent<CanPathfind>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsRoundSettingsManager: {
+                auto& cmp = e.addComponent<IsRoundSettingsManager>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasFishingGame: {
+                auto& cmp = e.addComponent<HasFishingGame>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsStoreSpawned: {
+                auto& cmp = e.addComponent<IsStoreSpawned>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasLastInteractedCustomer: {
+                auto& cmp = e.addComponent<HasLastInteractedCustomer>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanChangeSettingsInteractively: {
+                auto& cmp = e.addComponent<CanChangeSettingsInteractively>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsNuxManager: {
+                auto& cmp = e.addComponent<IsNuxManager>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsNux: {
+                auto& cmp = e.addComponent<IsNux>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CollectsUserInput: {
+                auto& cmp = e.addComponent<CollectsUserInput>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsSnappable: {
+                auto& cmp = e.addComponent<IsSnappable>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasClientID: {
+                auto& cmp = e.addComponent<HasClientID>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::RespondsToUserInput: {
+                auto& cmp = e.addComponent<RespondsToUserInput>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanHoldHandTruck: {
+                auto& cmp = e.addComponent<CanHoldHandTruck>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::RespondsToDayNight: {
+                auto& cmp = e.addComponent<RespondsToDayNight>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::HasDayNightTimer: {
+                auto& cmp = e.addComponent<HasDayNightTimer>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CollectsCustomerFeedback: {
+                auto& cmp = e.addComponent<CollectsCustomerFeedback>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::IsSquirter: {
+                auto& cmp = e.addComponent<IsSquirter>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanBeHeld_HT: {
+                auto& cmp = e.addComponent<CanBeHeld_HT>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::CanBeHeld: {
+                auto& cmp = e.addComponent<CanBeHeld>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::BypassAutomationState: {
+                auto& cmp = e.addComponent<BypassAutomationState>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::AICloseTab: {
+                auto& cmp = e.addComponent<AICloseTab>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::AIPlayJukebox: {
+                auto& cmp = e.addComponent<AIPlayJukebox>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::AIWaitInQueue: {
+                auto& cmp = e.addComponent<AIWaitInQueue>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::AIDrinking: {
+                auto& cmp = e.addComponent<AIDrinking>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::AIUseBathroom: {
+                auto& cmp = e.addComponent<AIUseBathroom>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::AIWandering: {
+                auto& cmp = e.addComponent<AIWandering>();
+                d.object(cmp);
+            } break;
+            case ComponentKind::AICleanVomit: {
+                auto& cmp = e.addComponent<AICleanVomit>();
+                d.object(cmp);
+            } break;
+            default:
+                log_warn("snapshot_blob: unknown component kind {}", (int)kind);
+                return false;
+        }
+
+        if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
     }
-    return obj;
+
+    return true;
 }
 
 }  // namespace
 
 std::string encode_entity(const afterhours::Entity& entity) {
-    EntitySnapshotDTO dto = snapshot_entity(entity);
-
     Buffer buffer;
     TContext ctx{};
     Serializer ser{ctx, buffer};
-    ser.object(dto);
+    auto& e = const_cast<afterhours::Entity&>(entity);
+    write_entity(ser, e);
     ser.adapter().flush();
     return buffer;
 }
 
 bool decode_into_entity(afterhours::Entity& entity, const std::string& blob) {
-    auto dto_opt = deserialize_one_object<EntitySnapshotDTO>(blob);
-    if (!dto_opt.has_value()) return false;
-    return apply_snapshot_to_entity(entity, *dto_opt);
+    TContext ctx{};
+    Deserializer des{ctx, blob.begin(), blob.size()};
+    const bool ok = read_entity(des, entity);
+    return ok && des.adapter().error() == bitsery::ReaderError::NoError;
 }
 
 std::string encode_current_world() {
-    WorldSnapshotDTO world;
-    world.entities.reserve(EntityHelper::get_entities().size());
-    for (const auto& sp : EntityHelper::get_entities()) {
-        if (!sp) continue;
-        world.entities.push_back(snapshot_entity(*sp));
-    }
-
     Buffer buffer;
     TContext ctx{};
     Serializer ser{ctx, buffer};
-    ser.object(world);
+
+    uint32_t version = 1;
+    ser.value4b(version);
+
+    const auto& ents = EntityHelper::get_entities();
+    uint32_t count = 0;
+    for (const auto& sp : ents)
+        if (sp) ++count;
+    ser.value4b(count);
+
+    for (const auto& sp : ents) {
+        if (!sp) continue;
+        write_entity(ser, *sp);
+    }
+
     ser.adapter().flush();
     return buffer;
 }
 
 bool decode_into_current_world(const std::string& blob) {
-    auto world_opt = deserialize_one_object<WorldSnapshotDTO>(blob);
-    if (!world_opt.has_value()) return false;
-    const WorldSnapshotDTO& world = *world_opt;
-    if (world.version != 1) {
-        log_warn("snapshot_blob: unsupported world snapshot version {}",
-                 world.version);
-        return false;
-    }
+    TContext ctx{};
+    Deserializer des{ctx, blob.begin(), blob.size()};
+
+    uint32_t version = 0;
+    des.value4b(version);
+    if (des.adapter().error() != bitsery::ReaderError::NoError) return false;
+    if (version != 1) return false;
+
+    uint32_t num_entities = 0;
+    des.value4b(num_entities);
+    if (des.adapter().error() != bitsery::ReaderError::NoError) return false;
 
     Entities new_entities;
-    new_entities.reserve(world.entities.size());
-
-    for (const auto& ent_dto : world.entities) {
+    new_entities.reserve(num_entities);
+    for (uint32_t i = 0; i < num_entities; ++i) {
         std::shared_ptr<afterhours::Entity> sp(new afterhours::Entity());
-        if (!apply_snapshot_to_entity(*sp, ent_dto)) return false;
+        if (!read_entity(des, *sp)) return false;
         new_entities.push_back(std::move(sp));
     }
 
     EntityHelper::get_current_collection().replace_all_entities(
         std::move(new_entities));
-    return true;
+    return des.adapter().error() == bitsery::ReaderError::NoError;
 }
 
 }  // namespace snapshot_blob
