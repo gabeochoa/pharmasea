@@ -1,6 +1,8 @@
 
 #include "entity_makers.h"
 
+#include "serialization/world_snapshot_component_kind.h"
+
 #include <ranges>
 
 #include "ah.h"
@@ -143,33 +145,13 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 
 void register_all_components() {
     Entity* entity = new Entity();
-    entity->addAll<  //
-        Transform, HasName,
-        //
-        AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AICloseTab,
-        AIPlayJukebox, AIWandering,
-        // Is
-        IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
-        IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
-        IsFreeInStore, IsToilet, IsRoundSettingsManager, IsStoreSpawned,
-        IsNuxManager, IsNux, IsSquirter,
-        //
-        AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
-        CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
-        CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
-        ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
-        CanOrderDrink, CanPathfind, CanChangeSettingsInteractively,
-        CanHoldHandTruck, CanBeHeld_HT, CollectsCustomerFeedback,
-        //
-        HasWaitingQueue, HasSubtype, HasSpeechBubble, HasWork, HasBaseSpeed,
-        HasRopeToItem, HasProgression, HasPatience, HasFishingGame,
-        HasLastInteractedCustomer, HasDayNightTimer, BypassAutomationState,
-        // render
-        ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer,
-        // responds to
-        RespondsToDayNight
-        //
-        >();
+
+    // Register component IDs in Afterhours by instantiating all component types
+    // once. Keep the list centralized in
+    // `serialization/world_snapshot_component_kind.h`.
+#define PHARMASEA_REGISTER_ONE_COMPONENT(T) entity->addComponent<T>();
+    PHARMASEA_SNAPSHOT_COMPONENT_LIST(PHARMASEA_REGISTER_ONE_COMPONENT)
+#undef PHARMASEA_REGISTER_ONE_COMPONENT
     // TODO now that we have removeComponent we could remove some instead
     // for example AddsIngredient could be removed when it runs out
     // there might be some logic that relies on this not being removed though
