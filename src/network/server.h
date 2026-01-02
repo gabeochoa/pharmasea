@@ -64,7 +64,7 @@ struct Server {
 
     // Full world snapshot sync. If this is too low it looks "teleporty" on
     // clients; if it's too high it can become expensive.
-    float next_map_tick_reset = 1.f / 30;  // 30fps
+    float next_map_tick_reset = 1.f / 120;  // 120fps
     float next_map_tick = 0;
 
     float next_player_rare_tick_reset = 1.f / 10;  // 10fps
