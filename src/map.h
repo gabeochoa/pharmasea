@@ -2,8 +2,17 @@
 
 #pragma once
 
+#include <string>
+#include <vector>
+
+#include "entity_helper.h"
 #include "external_include.h"
-#include "level_info.h"
+
+constexpr int MIN_MAP_SIZE = 10;
+constexpr int MAX_MAP_SIZE = 25;
+constexpr int MAX_SEED_LENGTH = 20;
+
+extern std::vector<std::string> EXAMPLE_MAP;
 
 struct Map {
     // This gets called on every network frame because
@@ -17,7 +26,9 @@ struct Map {
 
     // Serialized
     bool showMinimap = false;
-    LevelInfo game_info;
+    bool was_generated = false;
+    game::State last_generated = game::State::InMenu;
+    size_t hashed_seed = 0;
 
     // No serialized
     Entities local_players_NOT_SERIALIZED;
@@ -30,8 +41,6 @@ struct Map {
     OptEntity get_remote_with_cui();
 
     void update_map(const Map& new_map);
-
-    Entities entities() const { return game_info.entities; }
 
     void onUpdate(float dt) {  //
         _onUpdate(remote_players_NOT_SERIALIZED, dt);
@@ -46,16 +55,59 @@ struct Map {
     void onDraw(float dt) const;
     void onDrawUI(float dt);
 
-    // These are called before every "send_map_state" when server
-    // sends everything over to clients
-    void grab_things() { game_info.grab_things(); }
+    void ensure_generated_map(const std::string& new_seed);
+
+    // called by the server sometimes
+    void generate_model_test_map();
+    // called by the server sometimes
+    void generate_load_save_room_map();
 
    public:
    private:
+    void generate_lobby_map();
+    void generate_progression_map();
+    void generate_store_map();
+    void generate_default_seed();
+
+    void generate_in_game_map();
+    auto get_rand_walkable();
+    auto get_rand_walkable_register();
+    void add_outside_triggers(vec2 origin);
+
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        s.object(game_info);
+        // Keep wire/save compatibility: this is the exact historical ordering:
+        // - entities list (full snapshot)
+        // - map metadata (was_generated, seed, hashed_seed)
+        // - showMinimap
+
+        constexpr bool kIsReader = requires { s.adapter().error(); };
+
+        Entities::size_type num_entities = 0;
+        if constexpr (kIsReader) {
+            Entities tmp;
+            s.value8b(num_entities);
+            s.container(tmp, num_entities,
+                        [](S& s2, std::shared_ptr<Entity>& entity) {
+                            s2.ext(entity, bitsery::ext::StdSmartPtr{});
+                        });
+            EntityHelper::get_current_collection().replace_all_entities(
+                std::move(tmp));
+        } else {
+            Entities tmp = EntityHelper::get_entities();
+            num_entities = tmp.size();
+            s.value8b(num_entities);
+            s.container(tmp, num_entities,
+                        [](S& s2, std::shared_ptr<Entity>& entity) {
+                            s2.ext(entity, bitsery::ext::StdSmartPtr{});
+                        });
+        }
+
+        s.value1b(was_generated);
+        s.text1b(seed, MAX_SEED_LENGTH);
+        s.value8b(hashed_seed);
+
         s.value1b(showMinimap);
     }
 };

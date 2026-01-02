@@ -6,10 +6,10 @@
 #include "engine.h"
 #include "engine/container_cast.h"
 #include "engine/log.h"
+#include "engine/random_engine.h"
 #include "external_include.h"
 //
 #include "entity_helper.h"
-#include "level_info.h"
 #include "system/system_manager.h"
 
 void Map::update_map(const Map& new_map) {
@@ -18,7 +18,8 @@ void Map::update_map(const Map& new_map) {
 
 void Map::update_seed(const std::string& s) {
     seed = s;
-    game_info.update_seed(s);
+    RandomEngine::set_seed(seed);
+    was_generated = false;
 }
 
 OptEntity Map::get_remote_with_cui() {
@@ -48,8 +49,8 @@ void Map::_onUpdate(const std::vector<std::shared_ptr<Entity>>& players,
     // TODO :BE: add to debug overlay
     // log_info("num items {}", items().size());
 
-    game_info.ensure_generated_map(seed);
-    game_info.onUpdate(players, dt);
+    ensure_generated_map(seed);
+    SystemManager::get().update_all_entities(players, dt);
 }
 
 void Map::onDraw(float dt) const {
@@ -57,7 +58,7 @@ void Map::onDraw(float dt) const {
     // TODO :INFRA: merge this into normal render pipeline
     SystemManager::get().render_entities(remote_players_NOT_SERIALIZED, dt);
 
-    game_info.onDraw(dt);
+    SystemManager::get().render_entities(EntityHelper::get_entities(), dt);
 }
 
 void Map::onDrawUI(float dt) {
@@ -65,5 +66,5 @@ void Map::onDrawUI(float dt) {
 
     // TODO :INFRA: merge this into normal render pipeline
     SystemManager::get().render_ui(remote_players_NOT_SERIALIZED, dt);
-    game_info.onDrawUI(dt);
+    SystemManager::get().render_ui(EntityHelper::get_entities(), dt);
 }
