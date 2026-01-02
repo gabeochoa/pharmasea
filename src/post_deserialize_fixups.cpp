@@ -12,7 +12,10 @@
 
 namespace post_deserialize_fixups {
 
-void run(Entities& entities) {
+void run() {
+    // Run against the current thread's active entity collection.
+    auto& entities = EntityHelper::get_current_collection().entities_DO_NOT_USE;
+
     std::unordered_set<EntityID> ids;
     ids.reserve(entities.size());
     for (const auto& sp : entities) {
@@ -64,12 +67,6 @@ void run(Entities& entities) {
             }
         }
     }
-}
-
-void run() {
-    // Run against the current thread's active entity collection.
-    auto& collection = EntityHelper::get_current_collection();
-    run(collection.entities_DO_NOT_USE);
 }
 
 }  // namespace post_deserialize_fixups

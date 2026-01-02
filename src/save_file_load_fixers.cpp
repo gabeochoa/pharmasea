@@ -105,7 +105,7 @@ void run_all_post_load_helpers() {
 
     fix_all_container_item_types(entities);
     reinit_dynamic_model_names_after_load(entities);
-    post_deserialize_fixups::run(entities);
+    post_deserialize_fixups::run();
     // Add other post-load helpers here in the future
 }
 
