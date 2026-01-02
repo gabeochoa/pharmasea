@@ -227,7 +227,13 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
         return;
     }
 
-    Item& drink = regCHI.item();
+    OptEntity drink_opt = regCHI.item();
+    if (!drink_opt) {
+        regCHI.update(nullptr, entity_id::INVALID);
+        aiwait.reset();
+        return;
+    }
+    Item& drink = drink_opt.asE();
     if (!check_if_drink(drink)) {
         log_info("this isnt a drink");
         aiwait.reset();
@@ -392,7 +398,10 @@ void process_ai_drinking(Entity& entity, float dt) {
 
     // Done with my drink, delete it
     CanHoldItem& chi = entity.get<CanHoldItem>();
-    chi.item().cleanup = true;
+    OptEntity held_opt = chi.item();
+    if (held_opt) {
+        held_opt.asE().cleanup = true;
+    }
     chi.update(nullptr, entity_id::INVALID);
 
     // Mark our current order finished

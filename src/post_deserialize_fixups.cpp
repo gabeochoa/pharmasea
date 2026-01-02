@@ -54,7 +54,12 @@ void run() {
                 } else {
                     // IsItem doesn't serialize held_by today; re-apply from the
                     // holder's CanHoldItem state.
-                    Entity& item = chi.item();
+                    OptEntity item_opt = chi.item();
+                    if (!item_opt) {
+                        chi.update(nullptr, entity_id::INVALID);
+                        continue;
+                    }
+                    Entity& item = item_opt.asE();
                     if (item.has<IsItem>()) {
                         item.get<IsItem>().set_held_by(chi.hb_type(), e.id);
                     } else {

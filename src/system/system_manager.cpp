@@ -267,7 +267,10 @@ void process_is_container_and_should_update_item(Entity& entity, float) {
 
     // Delete the currently held item
     if (canHold.is_holding_item()) {
-        canHold.item().cleanup = true;
+        OptEntity held_opt = canHold.item();
+        if (held_opt) {
+            held_opt.asE().cleanup = true;
+        }
         canHold.update(nullptr, entity_id::INVALID);
     }
 
@@ -293,10 +296,15 @@ void process_is_indexed_container_holding_incorrect_item(Entity& entity,
     if (canHold.empty()) return;
 
     int current_value = indexer.value();
-    int item_value = canHold.item().get<HasSubtype>().get_type_index();
+    OptEntity held_opt = canHold.item();
+    if (!held_opt) {
+        canHold.update(nullptr, entity_id::INVALID);
+        return;
+    }
+    int item_value = held_opt.asE().get<HasSubtype>().get_type_index();
 
     if (current_value != item_value) {
-        canHold.item().cleanup = true;
+        held_opt.asE().cleanup = true;
         canHold.update(nullptr, entity_id::INVALID);
     }
 }
@@ -1042,7 +1050,12 @@ void move_purchased_furniture() {
                     marked_entity->has<CustomHeldItemPosition>()
                         ? get_new_held_position_custom(marked_entity.asE())
                         : get_new_held_position_default(marked_entity.asE());
-                chi.item().get<Transform>().update(new_pos);
+                OptEntity held_opt = chi.item();
+                if (held_opt) {
+                    held_opt.asE().get<Transform>().update(new_pos);
+                } else {
+                    chi.update(nullptr, marked_entity->id);
+                }
             }
         }
 

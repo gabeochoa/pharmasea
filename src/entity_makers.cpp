@@ -370,9 +370,14 @@ void process_table_working(Entity& table, HasWork& hasWork, Entity& player,
     CanHoldItem& tableCHI = table.get<CanHoldItem>();
     if (tableCHI.empty()) return;
 
-    if (!tableCHI.const_item().has<HasWork>()) return;
+    OptEntity item_opt = tableCHI.const_item();
+    if (!item_opt) {
+        tableCHI.update(nullptr, table.id);
+        return;
+    }
+    if (!item_opt->has<HasWork>()) return;
 
-    Item& item = tableCHI.item();
+    Item& item = item_opt.asE();
     // We have to call the item's hasWork because the table
     // doesnt actually do anything, its the item that we are working
     //
@@ -630,8 +635,12 @@ void make_ice_machine(Entity& machine, vec2 pos) {
     machine.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity& player, float dt) {
             CanHoldItem& chi = player.get<CanHoldItem>();
-            if (chi.empty()) return;
-            Item& item = chi.item();
+            OptEntity item_opt = chi.item();
+            if (!item_opt) {
+                chi.update(nullptr, player.id);
+                return;
+            }
+            Item& item = item_opt.asE();
             if (!check_if_drink(item)) return;
 
             Ingredient ing = Ingredient::IceCubes;
@@ -860,10 +869,12 @@ void make_draft(Entity& draft, vec2 pos) {
         [](Entity& draftmachine, HasWork& hasWork, Entity&, float dt) {
             // TODO this logic is duplicated with _process_if_beer_tap
             CanHoldItem& chi = draftmachine.get<CanHoldItem>();
-            if (chi.empty()) {
+            OptEntity item_opt = chi.item();
+            if (!item_opt) {
+                chi.update(nullptr, draftmachine.id);
                 return;
             }
-            Item& item = chi.item();
+            Item& item = item_opt.asE();
             if (!check_if_drink(item)) {
                 return;
             }
@@ -938,7 +949,9 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
                 const CanHoldItem& playerCHI = entity.get<CanHoldItem>();
                 // not holding anything
                 if (playerCHI.empty()) return {true, 0.25f};
-                const Item& item = playerCHI.const_item();
+                OptEntity item_opt = playerCHI.const_item();
+                if (!item_opt) return {true, 0.25f};
+                const Item& item = item_opt.asE();
                 // Has to be holding mop
                 if (check_type(item, EntityType::Mop)) return {true, 2.f};
 
@@ -1085,7 +1098,12 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         // not holding anything
         if (playerCHI.empty()) return;
-        Item& item = playerCHI.item();
+        OptEntity item_opt = playerCHI.item();
+        if (!item_opt) {
+            playerCHI.update(nullptr, player.id);
+            return;
+        }
+        Item& item = item_opt.asE();
         // not holding item that adds ingredients
         if (item.is_missing<AddsIngredient>()) return;
         const AddsIngredient& addsIG = item.get<AddsIngredient>();

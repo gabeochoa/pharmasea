@@ -41,7 +41,10 @@ inline void delete_held_items_when_leaving_inround(Entity& entity) {
 
     // Mark it as deletable
     // let go of the item
-    canHold.item().cleanup = true;
+    OptEntity held_opt = canHold.item();
+    if (held_opt) {
+        held_opt.asE().cleanup = true;
+    }
     canHold.update(nullptr, entity_id::INVALID);
 }
 
