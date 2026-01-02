@@ -7,7 +7,6 @@
 
 using afterhours::Entity;
 using afterhours::EntityID;
-using bitsery::ext::PointerObserver;
 
 struct BaseComponent : public afterhours::BaseComponent {
     BaseComponent() = default;
