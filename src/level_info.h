@@ -45,18 +45,19 @@ struct LevelInfo {
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        // NOTE: we no longer store/duplicate an entity list in LevelInfo.
-        // The authoritative entity store lives in the active EntityCollection
-        // (EntityHelper::get_current_collection()).
+        // Compatibility note: the save/network format still includes a full
+        // entity list. We no longer store that list on LevelInfo; we serialize
+        // from/to the active EntityCollection (EntityHelper).
+
+        // Bitsery "read vs write" split:
+        // - input adapters expose `error()` (ReaderError)
+        // - output adapters do not
         //
-        // For compatibility with existing save/network formats, we still
-        // serialize a full entity list as part of LevelInfo, but:
-        // - on write: read entities from the active collection
-        // - on read: deserialize into a temporary vector and then install it
-        //   into the active collection via replace_all_entities()
+        // Use a named concept so this isn't "magic" inside the function body.
+        constexpr bool kIsReader = requires { s.adapter().error(); };
+
         Entities::size_type num_entities = 0;
-        if constexpr (requires { s.adapter().error(); }) {
-            // Deserializer path: read entities and install into active world.
+        if constexpr (kIsReader) {
             Entities tmp;
             s.value8b(num_entities);
             s.container(tmp, num_entities,
@@ -67,11 +68,13 @@ struct LevelInfo {
             EntityHelper::get_current_collection().replace_all_entities(
                 std::move(tmp));
         } else {
-            // Serializer path: write entities from active world.
-            auto& ents = EntityHelper::get_entities_for_mod();
-            num_entities = ents.size();
+            // Write path: serialize a stable copy of the current entity list.
+            // (This preserves the old "grab_things copied a vector" behavior,
+            // without storing the copy on LevelInfo.)
+            Entities tmp = EntityHelper::get_entities();
+            num_entities = tmp.size();
             s.value8b(num_entities);
-            s.container(ents, num_entities,
+            s.container(tmp, num_entities,
                         [](S& s2, std::shared_ptr<Entity>& entity) {
                             s2.ext(entity, bitsery::ext::StdSmartPtr{});
                         });
