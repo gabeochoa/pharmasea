@@ -1,13 +1,14 @@
 #pragma once
 
 #include <cstdint>
+#include <tuple>
 
 // This header is intended to be a single include point for:
 // - all component type definitions (useful for serialization/registration)
 // - stable snapshot component IDs / iteration helpers
 //
-// If you add a new component that should be part of "full snapshots", add it to
-// `PHARMASEA_SNAPSHOT_COMPONENT_LIST_REST(X)` exactly once.
+// If you add a new component that should be part of "full snapshots", append it
+// exactly once in `snapshot_blob::SnapshotComponentTypes`.
 
 // ---- Component type includes (the canonical "all components" list) ----
 
@@ -78,91 +79,85 @@
 #include "transform.h"
 #include "uses_character_model.h"
 
-// ---- Snapshot component list + stable kind IDs ----
+// ---- Snapshot kind IDs ----
 
-// Full list (order matters; keep stable).
-// NOTE: this macro expands to statements, so it can be used to generate:
-// - enum entries
-// - registration calls
-// - serializer dispatch tables
+namespace snapshot_blob {
+
+// Snapshot component types (order matters; keep stable).
 //
 // IMPORTANT:
 // - Never reorder.
 // - Only append.
-#define PHARMASEA_SNAPSHOT_COMPONENT_LIST_REST(X)                               \
-    X(HasName)                                                                 \
-    X(CanHoldItem)                                                             \
-    X(SimpleColoredBoxRenderer)                                                \
-    X(CanBeHighlighted)                                                        \
-    X(CanHighlightOthers)                                                      \
-    X(CanHoldFurniture)                                                        \
-    X(CanBeGhostPlayer)                                                        \
-    X(CanPerformJob)                                                           \
-    X(ModelRenderer)                                                           \
-    X(CanBePushed)                                                             \
-    X(CustomHeldItemPosition)                                                  \
-    X(HasWork)                                                                 \
-    X(HasBaseSpeed)                                                            \
-    X(IsSolid)                                                                 \
-    X(HasPatience)                                                             \
-    X(HasProgression)                                                          \
-    X(IsRotatable)                                                             \
-    X(CanGrabFromOtherFurniture)                                               \
-    X(ConveysHeldItem)                                                         \
-    X(HasWaitingQueue)                                                         \
-    X(CanBeTakenFrom)                                                          \
-    X(IsItemContainer)                                                         \
-    X(UsesCharacterModel)                                                      \
-    X(HasDynamicModelName)                                                     \
-    X(IsTriggerArea)                                                           \
-    X(HasSpeechBubble)                                                         \
-    X(Indexer)                                                                 \
-    X(IsSpawner)                                                               \
-    X(HasRopeToItem)                                                           \
-    X(HasSubtype)                                                              \
-    X(IsItem)                                                                  \
-    X(IsDrink)                                                                 \
-    X(AddsIngredient)                                                          \
-    X(CanOrderDrink)                                                           \
-    X(IsPnumaticPipe)                                                          \
-    X(IsProgressionManager)                                                    \
-    X(IsFloorMarker)                                                           \
-    X(IsBank)                                                                  \
-    X(IsFreeInStore)                                                           \
-    X(IsToilet)                                                                \
-    X(CanPathfind)                                                             \
-    X(IsRoundSettingsManager)                                                  \
-    X(HasFishingGame)                                                          \
-    X(IsStoreSpawned)                                                          \
-    X(HasLastInteractedCustomer)                                               \
-    X(CanChangeSettingsInteractively)                                          \
-    X(IsNuxManager)                                                            \
-    X(IsNux)                                                                   \
-    X(CollectsUserInput)                                                       \
-    X(IsSnappable)                                                             \
-    X(HasClientID)                                                             \
-    X(RespondsToUserInput)                                                     \
-    X(CanHoldHandTruck)                                                        \
-    X(RespondsToDayNight)                                                      \
-    X(HasDayNightTimer)                                                        \
-    X(CollectsCustomerFeedback)                                                \
-    X(IsSquirter)                                                              \
-    X(CanBeHeld_HT)                                                            \
-    X(CanBeHeld)                                                               \
-    X(BypassAutomationState)                                                   \
-    X(AICloseTab)                                                              \
-    X(AIPlayJukebox)                                                           \
-    X(AIWaitInQueue)                                                           \
-    X(AIDrinking)                                                              \
-    X(AIUseBathroom)                                                           \
-    X(AIWandering)                                                             \
-    X(AICleanVomit)
-
-#define PHARMASEA_SNAPSHOT_COMPONENT_LIST(X)                                    \
-    X(Transform)                                                               \
-    PHARMASEA_SNAPSHOT_COMPONENT_LIST_REST(X)
-
-namespace snapshot_blob {
+// - This list must stay in lockstep with `ComponentKind` below.
+using SnapshotComponentTypes = std::tuple<
+    Transform,
+    HasName,
+    CanHoldItem,
+    SimpleColoredBoxRenderer,
+    CanBeHighlighted,
+    CanHighlightOthers,
+    CanHoldFurniture,
+    CanBeGhostPlayer,
+    CanPerformJob,
+    ModelRenderer,
+    CanBePushed,
+    CustomHeldItemPosition,
+    HasWork,
+    HasBaseSpeed,
+    IsSolid,
+    HasPatience,
+    HasProgression,
+    IsRotatable,
+    CanGrabFromOtherFurniture,
+    ConveysHeldItem,
+    HasWaitingQueue,
+    CanBeTakenFrom,
+    IsItemContainer,
+    UsesCharacterModel,
+    HasDynamicModelName,
+    IsTriggerArea,
+    HasSpeechBubble,
+    Indexer,
+    IsSpawner,
+    HasRopeToItem,
+    HasSubtype,
+    IsItem,
+    IsDrink,
+    AddsIngredient,
+    CanOrderDrink,
+    IsPnumaticPipe,
+    IsProgressionManager,
+    IsFloorMarker,
+    IsBank,
+    IsFreeInStore,
+    IsToilet,
+    CanPathfind,
+    IsRoundSettingsManager,
+    HasFishingGame,
+    IsStoreSpawned,
+    HasLastInteractedCustomer,
+    CanChangeSettingsInteractively,
+    IsNuxManager,
+    IsNux,
+    CollectsUserInput,
+    IsSnappable,
+    HasClientID,
+    RespondsToUserInput,
+    CanHoldHandTruck,
+    RespondsToDayNight,
+    HasDayNightTimer,
+    CollectsCustomerFeedback,
+    IsSquirter,
+    CanBeHeld_HT,
+    CanBeHeld,
+    BypassAutomationState,
+    AICloseTab,
+    AIPlayJukebox,
+    AIWaitInQueue,
+    AIDrinking,
+    AIUseBathroom,
+    AIWandering,
+    AICleanVomit>;
 
 // Stable component discriminator for snapshots.
 // IMPORTANT:
@@ -172,9 +167,73 @@ namespace snapshot_blob {
 enum class ComponentKind : std::uint16_t {
     Invalid = 0,
     Transform = 1,
-#define PHARMASEA_KIND_ENUM_ENTRY(T) T,
-    PHARMASEA_SNAPSHOT_COMPONENT_LIST_REST(PHARMASEA_KIND_ENUM_ENTRY)
-#undef PHARMASEA_KIND_ENUM_ENTRY
+    HasName,
+    CanHoldItem,
+    SimpleColoredBoxRenderer,
+    CanBeHighlighted,
+    CanHighlightOthers,
+    CanHoldFurniture,
+    CanBeGhostPlayer,
+    CanPerformJob,
+    ModelRenderer,
+    CanBePushed,
+    CustomHeldItemPosition,
+    HasWork,
+    HasBaseSpeed,
+    IsSolid,
+    HasPatience,
+    HasProgression,
+    IsRotatable,
+    CanGrabFromOtherFurniture,
+    ConveysHeldItem,
+    HasWaitingQueue,
+    CanBeTakenFrom,
+    IsItemContainer,
+    UsesCharacterModel,
+    HasDynamicModelName,
+    IsTriggerArea,
+    HasSpeechBubble,
+    Indexer,
+    IsSpawner,
+    HasRopeToItem,
+    HasSubtype,
+    IsItem,
+    IsDrink,
+    AddsIngredient,
+    CanOrderDrink,
+    IsPnumaticPipe,
+    IsProgressionManager,
+    IsFloorMarker,
+    IsBank,
+    IsFreeInStore,
+    IsToilet,
+    CanPathfind,
+    IsRoundSettingsManager,
+    HasFishingGame,
+    IsStoreSpawned,
+    HasLastInteractedCustomer,
+    CanChangeSettingsInteractively,
+    IsNuxManager,
+    IsNux,
+    CollectsUserInput,
+    IsSnappable,
+    HasClientID,
+    RespondsToUserInput,
+    CanHoldHandTruck,
+    RespondsToDayNight,
+    HasDayNightTimer,
+    CollectsCustomerFeedback,
+    IsSquirter,
+    CanBeHeld_HT,
+    CanBeHeld,
+    BypassAutomationState,
+    AICloseTab,
+    AIPlayJukebox,
+    AIWaitInQueue,
+    AIDrinking,
+    AIUseBathroom,
+    AIWandering,
+    AICleanVomit,
 };
 
 }  // namespace snapshot_blob

@@ -61,20 +61,22 @@ void serde_read(Deserializer& d, afterhours::Entity& e) {
 }
 
 static const auto& component_serdes() {
-    static constexpr size_t kNum = magic_enum::enum_count<ComponentKind>() - 1;
+    constexpr size_t kNum =
+        std::tuple_size_v<snapshot_blob::SnapshotComponentTypes>;
     static_assert(kNum <= 255, "component count must fit in uint8_t");
+    static_assert(magic_enum::enum_count<ComponentKind>() == (kNum + 1),
+                  "ComponentKind must match SnapshotComponentTypes");
 
     static const std::array<ComponentSerde, kNum> kSerdes = [] {
         std::array<ComponentSerde, kNum> out{};
-        size_t i = 0;
-        out[i++] = {ComponentKind::Transform, &serde_has<Transform>,
-                    &serde_write<Transform>, &serde_read<Transform>};
-#define ADD_SERDE(T)                                                            \
-    out[i++] = {ComponentKind::T, &serde_has<T>, &serde_write<T>, &serde_read<T>};
-        PHARMASEA_SNAPSHOT_COMPONENT_LIST_REST(ADD_SERDE)
-#undef ADD_SERDE
-        VALIDATE(i == out.size(),
-                 "snapshot component list doesn't match ComponentKind enum");
+        [&]<size_t... Is>(std::index_sequence<Is...>) {
+            ((out[Is] = ComponentSerde{
+                  magic_enum::enum_value<ComponentKind>(Is + 1),
+                  &serde_has<std::tuple_element_t<Is, SnapshotComponentTypes>>,
+                  &serde_write<std::tuple_element_t<Is, SnapshotComponentTypes>>,
+                  &serde_read<std::tuple_element_t<Is, SnapshotComponentTypes>>}),
+             ...);
+        }(std::make_index_sequence<kNum>{});
         return out;
     }();
 

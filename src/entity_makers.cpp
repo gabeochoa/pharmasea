@@ -149,9 +149,17 @@ void register_all_components() {
     // Register component IDs in Afterhours by instantiating all component types
     // once. Keep the list centralized in
     // `components/all_components.h`.
-#define PHARMASEA_REGISTER_ONE_COMPONENT(T) entity->addComponent<T>();
-    PHARMASEA_SNAPSHOT_COMPONENT_LIST(PHARMASEA_REGISTER_ONE_COMPONENT)
-#undef PHARMASEA_REGISTER_ONE_COMPONENT
+    static_assert(magic_enum::enum_count<snapshot_blob::ComponentKind>() ==
+                      (std::tuple_size_v<snapshot_blob::SnapshotComponentTypes> +
+                       1),
+                  "snapshot component kind enum must match SnapshotComponentTypes");
+
+    [&]<size_t... Is>(std::index_sequence<Is...>) {
+        (entity->addComponent<
+             std::tuple_element_t<Is, snapshot_blob::SnapshotComponentTypes>>(),
+         ...);
+    }(std::make_index_sequence<
+        std::tuple_size_v<snapshot_blob::SnapshotComponentTypes>>{});
     // TODO now that we have removeComponent we could remove some instead
     // for example AddsIngredient could be removed when it runs out
     // there might be some logic that relies on this not being removed though
