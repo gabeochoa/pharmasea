@@ -62,7 +62,8 @@ struct Server {
     bool has_looped = false;
 #endif
 
-    float next_map_tick_reset = 1.f / 30;  // 60fps
+    // Full world snapshot sync is expensive; keep this relatively low.
+    float next_map_tick_reset = 1.f / 10;  // 10fps
     float next_map_tick = 0;
 
     float next_player_rare_tick_reset = 1.f / 10;  // 10fps

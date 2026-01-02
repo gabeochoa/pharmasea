@@ -7,6 +7,8 @@
 
 #include <bitsery/ext/std_bitset.h>
 
+#include <bitset>
+
 namespace snapshot_blob {
 
 namespace {
@@ -65,20 +67,12 @@ static const auto& component_serdes() {
     return kSerdes;
 }
 
-constexpr std::uint32_t kEntitySnapshotVersion = 2;
-constexpr std::uint32_t kWorldSnapshotVersion = 2;
+constexpr std::uint32_t kEntitySnapshotVersion = 3;
+constexpr std::uint32_t kWorldSnapshotVersion = 3;
 
-template<typename BitsetT>
-BitsetT supported_component_mask() {
-    BitsetT mask{};
-    [&]<size_t... Is>(std::index_sequence<Is...>) {
-        ((mask.set(afterhours::components::get_type_id<
-                       std::tuple_element_t<Is, ComponentTypes>>()),
-          void()),
-         ...);
-    }(std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
-    return mask;
-}
+constexpr size_t kSnapshotComponentCount =
+    std::tuple_size_v<snapshot_blob::ComponentTypes>;
+using SnapshotComponentMask = std::bitset<kSnapshotComponentCount>;
 
 void write_entity(Serializer& s, afterhours::Entity& e) {
     // Versioned entity record.
@@ -90,14 +84,13 @@ void write_entity(Serializer& s, afterhours::Entity& e) {
     s.value1b(e.cleanup);
 
     // We serialize a bitset of which components are present, then serialize
-    // component payloads in the stable `ComponentTypes` order. This assumes
-    // Afterhours component IDs are stable given a stable registration order.
-    afterhours::ComponentBitSet present{};
+    // component payloads in the stable `ComponentTypes` order.
+    SnapshotComponentMask present{};
     [&]<size_t... Is>(std::index_sequence<Is...>) {
         (([&] {
              using T = std::tuple_element_t<Is, ComponentTypes>;
              if (e.has<T>()) {
-                 present.set(afterhours::components::get_type_id<T>());
+                 present.set(Is);
              }
          }()),
          ...);
@@ -108,8 +101,7 @@ void write_entity(Serializer& s, afterhours::Entity& e) {
     const auto& serdes = component_serdes();
     [&]<size_t... Is>(std::index_sequence<Is...>) {
         (([&] {
-             using T = std::tuple_element_t<Is, ComponentTypes>;
-             if (!present.test(afterhours::components::get_type_id<T>())) return;
+             if (!present.test(Is)) return;
              if (!serdes[Is].write) return;
              serdes[Is].write(s, e);
          }()),
@@ -131,22 +123,14 @@ void write_entity(Serializer& s, afterhours::Entity& e) {
     d.ext(e.tags, bitsery::ext::StdBitset{});
     d.value1b(e.cleanup);
 
-    afterhours::ComponentBitSet present{};
+    SnapshotComponentMask present{};
     d.ext(present, bitsery::ext::StdBitset{});
     if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
-
-    static const afterhours::ComponentBitSet kMask =
-        supported_component_mask<afterhours::ComponentBitSet>();
-    if ((present & ~kMask).any()) {
-        log_warn("snapshot_blob: snapshot has unsupported component bits set");
-        return false;
-    }
 
     const auto& serdes = component_serdes();
     [&]<size_t... Is>(std::index_sequence<Is...>) {
         (([&] {
-             using T = std::tuple_element_t<Is, ComponentTypes>;
-             if (!present.test(afterhours::components::get_type_id<T>())) return;
+             if (!present.test(Is)) return;
              if (!serdes[Is].read) return;
              serdes[Is].read(d, e);
          }()),
@@ -161,12 +145,15 @@ void write_entity(Serializer& s, afterhours::Entity& e) {
 }  // namespace
 
 std::string encode_entity(const afterhours::Entity& entity) {
+    thread_local size_t last_reserve = 0;
     Buffer buffer;
+    if (last_reserve > 0) buffer.reserve(last_reserve);
     TContext ctx{};
     Serializer ser{ctx, buffer};
     auto& e = const_cast<afterhours::Entity&>(entity);
     write_entity(ser, e);
     ser.adapter().flush();
+    last_reserve = buffer.size();
     return buffer;
 }
 
@@ -178,7 +165,9 @@ bool decode_into_entity(afterhours::Entity& entity, const std::string& blob) {
 }
 
 std::string encode_current_world() {
+    thread_local size_t last_reserve = 0;
     Buffer buffer;
+    if (last_reserve > 0) buffer.reserve(last_reserve);
     TContext ctx{};
     Serializer ser{ctx, buffer};
 
@@ -197,6 +186,7 @@ std::string encode_current_world() {
     }
 
     ser.adapter().flush();
+    last_reserve = buffer.size();
     return buffer;
 }
 

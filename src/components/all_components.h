@@ -94,9 +94,8 @@ namespace snapshot_blob {
 // - Never reorder.
 // - Only append.
 // - Deleting or reordering entries will break save files / replays / network
-//   snapshot compatibility because the on-wire snapshot format assumes a stable
-//   component ID assignment (Afterhours static ids) and a stable serialization
-//   order based on this list.
+//   snapshot compatibility because the on-wire snapshot format serializes
+//   component payloads positionally in this exact order.
 using ComponentTypes = std::tuple<
     Transform,
     HasName,
