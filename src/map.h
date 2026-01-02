@@ -7,6 +7,7 @@
 
 #include "entity_helper.h"
 #include "external_include.h"
+#include "serialization/world_snapshot_blob.h"
 
 constexpr int MIN_MAP_SIZE = 10;
 constexpr int MAX_MAP_SIZE = 25;
@@ -77,31 +78,35 @@ struct Map {
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        // Keep wire/save compatibility: this is the exact historical ordering:
-        // - entities list (full snapshot)
-        // - map metadata (was_generated, seed, hashed_seed)
-        // - showMinimap
+        // Pointer-free snapshot surface:
+        // - We serialize the entire world into a byte blob (no pointer linking).
+        // - Then we serialize map metadata (was_generated, seed, hashed_seed).
+        // - Then showMinimap.
+        //
+        // NOTE: This is intentionally a breaking change vs. the historical
+        // StdSmartPtr-based entity graph serialization.
 
         constexpr bool kIsReader = requires { s.adapter().error(); };
 
-        Entities::size_type num_entities = 0;
+        std::string world_blob;
+        uint32_t world_size = 0;
         if constexpr (kIsReader) {
-            Entities tmp;
-            s.value8b(num_entities);
-            s.container(tmp, num_entities,
-                        [](S& s2, std::shared_ptr<Entity>& entity) {
-                            s2.ext(entity, bitsery::ext::StdSmartPtr{});
-                        });
-            EntityHelper::get_current_collection().replace_all_entities(
-                std::move(tmp));
+            s.value4b(world_size);
+            VALIDATE(world_size <= snapshot_blob::kMaxWorldSnapshotBytes,
+                     "world snapshot blob too large");
+            world_blob.resize(world_size);
+            for (uint32_t i = 0; i < world_size; ++i) {
+                s.value1b(world_blob[i]);
+            }
+            const bool ok = snapshot_blob::decode_into_current_world(world_blob);
+            VALIDATE(ok, "failed to decode world snapshot blob");
         } else {
-            Entities tmp = EntityHelper::get_entities();
-            num_entities = tmp.size();
-            s.value8b(num_entities);
-            s.container(tmp, num_entities,
-                        [](S& s2, std::shared_ptr<Entity>& entity) {
-                            s2.ext(entity, bitsery::ext::StdSmartPtr{});
-                        });
+            world_blob = snapshot_blob::encode_current_world();
+            world_size = static_cast<uint32_t>(world_blob.size());
+            s.value4b(world_size);
+            for (uint32_t i = 0; i < world_size; ++i) {
+                s.value1b(world_blob[i]);
+            }
         }
 
         s.value1b(was_generated);

@@ -11,10 +11,7 @@ using afterhours::OptEntity;
 using afterhours::RefEntity;
 
 #include "bitsery/ext/std_bitset.h"
-#include "bitsery/ext/std_smart_ptr.h"
 #include "entity_type.h"
-//
-#include <bitsery/ext/pointer.h>
 #include <bitsery/ext/std_map.h>
 
 #include <optional>
@@ -38,29 +35,6 @@ using bitsery::ext::PointerType;
 using bitsery::ext::StdBitset;
 using bitsery::ext::StdMap;
 using bitsery::ext::StdOptional;
-using bitsery::ext::StdSmartPtr;
-
-template<typename S>
-void serialize(S& s, Entity& entity) {
-    s.value4b(entity.id);
-    s.value4b(entity.entity_type);
-
-    s.ext(entity.componentSet, StdBitset{});
-    s.ext(entity.tags, StdBitset{});
-    s.value1b(entity.cleanup);
-
-    for (size_t i = 0; i < afterhours::max_num_components; ++i) {
-        if (entity.componentSet.test(i)) {
-            auto& ptr = entity.componentArray[i];
-            s.ext(ptr, StdSmartPtr{});
-        }
-    }
-}
-
-template<typename S>
-void serialize(S& s, std::shared_ptr<Entity>& entity) {
-    s.ext(entity, StdSmartPtr{});
-}
 
 template<typename S>
 void serialize(S& s, EntityHandle& handle) {

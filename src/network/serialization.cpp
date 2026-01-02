@@ -3,56 +3,26 @@
 #include "../engine/log.h"
 #include "../entity.h"
 #include "../globals.h"
-#include "polymorphic_components.h"
+#include "../serialization/world_snapshot_blob.h"
 
 namespace network {
 
 Buffer serialize_to_entity(Entity* entity) {
-    Buffer buffer;
-    TContext ctx{};
-
-    std::get<1>(ctx).registerBasesList<BitserySerializer>(
-        MyPolymorphicClasses{});
-
-    BitserySerializer ser{ctx, buffer};
-    ser.object(*entity);
-    ser.adapter().flush();
-
-    return buffer;
+    if (!entity) return {};
+    return snapshot_blob::encode_entity(*entity);
 }
 
 void deserialize_to_entity(Entity* entity, const std::string& msg) {
-    TContext ctx{};
-    std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
-        MyPolymorphicClasses{});
-
-    BitseryDeserializer des{ctx, msg.begin(), msg.size()};
-    des.object(*entity);
-
-    switch (des.adapter().error()) {
-        case bitsery::ReaderError::NoError:
-            break;
-        case bitsery::ReaderError::ReadingError:
-            log_error("reading error");
-            break;
-        case bitsery::ReaderError::DataOverflow:
-            log_error("data overflow error");
-            break;
-        case bitsery::ReaderError::InvalidData:
-            log_error("invalid data error");
-            break;
-        case bitsery::ReaderError::InvalidPointer:
-            log_error("invalid pointer error");
-            break;
+    if (!entity) return;
+    const bool ok = snapshot_blob::decode_into_entity(*entity, msg);
+    if (!ok) {
+        log_error("deserialize_to_entity failed (invalid snapshot blob)");
     }
-    assert(des.adapter().error() == bitsery::ReaderError::NoError);
+    assert(ok);
 }
 
 ClientPacket deserialize_to_packet(const std::string& msg) {
     TContext ctx{};
-    std::get<1>(ctx).registerBasesList<BitseryDeserializer>(
-        MyPolymorphicClasses{});
-
     BitseryDeserializer des{ctx, msg.begin(), msg.size()};
 
     ClientPacket packet;
@@ -66,8 +36,6 @@ Buffer serialize_to_buffer(ClientPacket packet) {
     Buffer buffer;
     TContext ctx{};
 
-    std::get<1>(ctx).registerBasesList<BitserySerializer>(
-        MyPolymorphicClasses{});
     BitserySerializer ser{ctx, buffer};
     ser.object(packet);
     ser.adapter().flush();
