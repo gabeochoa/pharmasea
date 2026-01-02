@@ -23,21 +23,7 @@ inline void clear_all_components(afterhours::Entity& e) {
 }
 
 template<typename E>
-inline void write_kind(E& s, ComponentKind k) {
-    std::uint16_t raw = static_cast<std::uint16_t>(k);
-    s.value2b(raw);
-}
-
-template<typename S>
-inline bool read_kind(S& s, ComponentKind& out) {
-    std::uint16_t raw = 0;
-    s.value2b(raw);
-    out = static_cast<ComponentKind>(raw);
-    return s.adapter().error() == bitsery::ReaderError::NoError;
-}
-
 struct ComponentSerde {
-    std::uint16_t kind = 0;
     bool (*has)(afterhours::Entity&) = nullptr;
     void (*write)(Serializer&, afterhours::Entity&) = nullptr;
     void (*read)(Deserializer&, afterhours::Entity&) = nullptr;
@@ -69,7 +55,6 @@ static const auto& component_serdes() {
         std::array<ComponentSerde, kNum> out{};
         [&]<size_t... Is>(std::index_sequence<Is...>) {
             ((out[Is] = ComponentSerde{
-                  snapshot_blob::component_kind_for_index(Is),
                   &serde_has<std::tuple_element_t<Is, ComponentTypes>>,
                   &serde_write<std::tuple_element_t<Is, ComponentTypes>>,
                   &serde_read<std::tuple_element_t<Is, ComponentTypes>>}),
@@ -81,59 +66,95 @@ static const auto& component_serdes() {
     return kSerdes;
 }
 
+constexpr std::uint32_t kEntitySnapshotVersion = 2;
+constexpr std::uint32_t kWorldSnapshotVersion = 2;
+
+template<typename BitsetT>
+BitsetT supported_component_mask() {
+    BitsetT mask{};
+    [&]<size_t... Is>(std::index_sequence<Is...>) {
+        ((mask.set(afterhours::components::get_type_id<
+                       std::tuple_element_t<Is, ComponentTypes>>()),
+          void()),
+         ...);
+    }(std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
+    return mask;
+}
+
 void write_entity(Serializer& s, afterhours::Entity& e) {
+    // Versioned entity record.
+    s.value4b(kEntitySnapshotVersion);
+
     s.value4b(e.id);
     s.value4b(e.entity_type);
     s.ext(e.tags, bitsery::ext::StdBitset{});
     s.value1b(e.cleanup);
 
-    const auto& serdes = component_serdes();
-    uint8_t count = 0;
-    for (const auto& serde : serdes) {
-        if (serde.has && serde.has(e)) ++count;
-    }
-    s.value1b(count);
+    // We serialize a bitset of which components are present, then serialize
+    // component payloads in the stable `ComponentTypes` order. This assumes
+    // Afterhours component IDs are stable given a stable registration order.
+    afterhours::ComponentBitSet present{};
+    [&]<size_t... Is>(std::index_sequence<Is...>) {
+        (([&] {
+             using T = std::tuple_element_t<Is, ComponentTypes>;
+             if (e.has<T>()) {
+                 present.set(afterhours::components::get_type_id<T>());
+             }
+         }()),
+         ...);
+    }(std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
 
-    for (const auto& serde : serdes) {
-        if (!serde.has || !serde.write) continue;
-        if (!serde.has(e)) continue;
-        write_kind(s, static_cast<ComponentKind>(serde.kind));
-        serde.write(s, e);
-    }
+    s.ext(present, bitsery::ext::StdBitset{});
+
+    const auto& serdes = component_serdes();
+    [&]<size_t... Is>(std::index_sequence<Is...>) {
+        (([&] {
+             using T = std::tuple_element_t<Is, ComponentTypes>;
+             if (!present.test(afterhours::components::get_type_id<T>())) return;
+             if (!serdes[Is].write) return;
+             serdes[Is].write(s, e);
+         }()),
+         ...);
+    }(std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
 }
 
 [[nodiscard]] bool read_entity(Deserializer& d, afterhours::Entity& e) {
     clear_all_components(e);
+
+    // Versioned entity record.
+    std::uint32_t ver = 0;
+    d.value4b(ver);
+    if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
+    if (ver != kEntitySnapshotVersion) return false;
 
     d.value4b(e.id);
     d.value4b(e.entity_type);
     d.ext(e.tags, bitsery::ext::StdBitset{});
     d.value1b(e.cleanup);
 
-    uint8_t count = 0;
-    d.value1b(count);
+    afterhours::ComponentBitSet present{};
+    d.ext(present, bitsery::ext::StdBitset{});
     if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
 
-    for (uint8_t i = 0; i < count; ++i) {
-        ComponentKind kind{};
-        if (!read_kind(d, kind)) return false;
-        const std::uint16_t raw = static_cast<std::uint16_t>(kind);
-        if (raw == 0) {
-            log_warn("snapshot_blob: invalid component kind {}", (int)raw);
-            return false;
-        }
-        const auto& serdes = component_serdes();
-        const size_t serde_idx = static_cast<size_t>(raw - 1);
-        if (serde_idx >= serdes.size()) {
-            log_warn("snapshot_blob: unknown component kind {}", (int)raw);
-            return false;
-        }
-        const auto& serde = serdes[serde_idx];
-        if (!serde.read) return false;
-        serde.read(d, e);
-
-        if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
+    static const afterhours::ComponentBitSet kMask =
+        supported_component_mask<afterhours::ComponentBitSet>();
+    if ((present & ~kMask).any()) {
+        log_warn("snapshot_blob: snapshot has unsupported component bits set");
+        return false;
     }
+
+    const auto& serdes = component_serdes();
+    [&]<size_t... Is>(std::index_sequence<Is...>) {
+        (([&] {
+             using T = std::tuple_element_t<Is, ComponentTypes>;
+             if (!present.test(afterhours::components::get_type_id<T>())) return;
+             if (!serdes[Is].read) return;
+             serdes[Is].read(d, e);
+         }()),
+         ...);
+    }(std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
+
+    if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
 
     return true;
 }
@@ -162,7 +183,7 @@ std::string encode_current_world() {
     TContext ctx{};
     Serializer ser{ctx, buffer};
 
-    uint32_t version = 1;
+    uint32_t version = kWorldSnapshotVersion;
     ser.value4b(version);
 
     const auto& ents = EntityHelper::get_entities();
@@ -187,7 +208,7 @@ bool decode_into_current_world(const std::string& blob) {
     uint32_t version = 0;
     des.value4b(version);
     if (des.adapter().error() != bitsery::ReaderError::NoError) return false;
-    if (version != 1) return false;
+    if (version != kWorldSnapshotVersion) return false;
 
     uint32_t num_entities = 0;
     des.value4b(num_entities);
