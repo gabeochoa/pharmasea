@@ -17,7 +17,7 @@ namespace fs = std::filesystem;
 // Keep this small; it should be quick to read without deserializing the world.
 struct SaveGameHeader {
     // Versioning / compatibility
-    uint32_t save_version = 2;
+    uint32_t save_version = 1;
     uint64_t hashed_build_version = HASHED_VERSION;
 
     // Metadata (best-effort; may be 0 / empty)
@@ -72,7 +72,6 @@ struct SlotInfo {
     fs::path path;
 };
 
-// NOTE: Phase 1 uses a full snapshot payload (Map + full world snapshot blob).
 struct SaveGameManager {
     static constexpr int kDefaultNumSlots = 8;
 

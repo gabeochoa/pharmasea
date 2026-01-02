@@ -93,12 +93,12 @@ struct Map {
             // Serialize as raw bytes: length + 1-byte chars.
             // (Bitsery's `container4b`/`text4b` mean 4-bytes-per-element, which
             // is NOT what we want for a byte blob.)
-            s.text1b(world_blob, snapshot_blob::kMaxWorldSnapshotBytes);
+            s.text1b(world_blob, snapshot_blob::MaxWorldSnapshotBytes);
             const bool ok = snapshot_blob::decode_into_current_world(world_blob);
             VALIDATE(ok, "failed to decode world snapshot blob");
         } else {
             world_blob = snapshot_blob::encode_current_world();
-            s.text1b(world_blob, snapshot_blob::kMaxWorldSnapshotBytes);
+            s.text1b(world_blob, snapshot_blob::MaxWorldSnapshotBytes);
         }
 
         s.value1b(was_generated);

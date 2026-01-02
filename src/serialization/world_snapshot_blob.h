@@ -14,8 +14,8 @@ struct Entity;
 namespace snapshot_blob {
 
 // Hard caps to avoid pathological allocations from corrupt data.
-constexpr std::uint32_t kMaxWorldSnapshotBytes = 64u * 1024u * 1024u;  // 64 MiB
-constexpr std::uint32_t kMaxEntitySnapshotBytes = 2u * 1024u * 1024u;  // 2 MiB
+constexpr std::uint32_t MaxWorldSnapshotBytes = 64u * 1024u * 1024u;  // 64 MiB
+constexpr std::uint32_t MaxEntitySnapshotBytes = 2u * 1024u * 1024u;  // 2 MiB
 
 // Serialize the current (thread-local) entity collection into a byte blob.
 [[nodiscard]] std::string encode_current_world();
