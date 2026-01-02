@@ -22,7 +22,6 @@ inline void clear_all_components(afterhours::Entity& e) {
     for (auto& ptr : e.componentArray) ptr.reset();
 }
 
-template<typename E>
 struct ComponentSerde {
     bool (*has)(afterhours::Entity&) = nullptr;
     void (*write)(Serializer&, afterhours::Entity&) = nullptr;
