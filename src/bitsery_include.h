@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "serialization/bitsery_no_pointers.h"
+
 #include <bitsery/adapter/buffer.h>
 #include <bitsery/bitsery.h>
 #include <bitsery/ext/inheritance.h>
