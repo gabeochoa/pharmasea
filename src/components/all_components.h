@@ -5,10 +5,10 @@
 
 // This header is intended to be a single include point for:
 // - all component type definitions (useful for serialization/registration)
-// - stable snapshot component IDs / iteration helpers
+// - stable snapshot schema helpers
 //
 // If you add a new component that should be part of "full snapshots", append it
-// exactly once in `snapshot_blob::ComponentTypes`.
+// exactly once in `snapshot_blob::ComponentTypes` (see `component_schema.h`).
 
 // ---- Component type includes (the canonical "all components" list) ----
 
@@ -79,88 +79,6 @@
 #include "transform.h"
 #include "uses_character_model.h"
 
-// ---- Snapshot kind IDs ----
-
-namespace snapshot_blob {
-
-// Snapshot component types (order matters; keep stable).
-//
-// IMPORTANT:
-// - Never reorder.
-// - Only append.
-// - Deleting or reordering entries will break save files / replays / network
-//   snapshot compatibility because the on-wire snapshot format assumes a stable
-//   component ID assignment (Afterhours static ids) and a stable serialization
-//   order based on this list.
-using ComponentTypes = std::tuple<
-    Transform,
-    HasName,
-    CanHoldItem,
-    SimpleColoredBoxRenderer,
-    CanBeHighlighted,
-    CanHighlightOthers,
-    CanHoldFurniture,
-    CanBeGhostPlayer,
-    CanPerformJob,
-    ModelRenderer,
-    CanBePushed,
-    CustomHeldItemPosition,
-    HasWork,
-    HasBaseSpeed,
-    IsSolid,
-    HasPatience,
-    HasProgression,
-    IsRotatable,
-    CanGrabFromOtherFurniture,
-    ConveysHeldItem,
-    HasWaitingQueue,
-    CanBeTakenFrom,
-    IsItemContainer,
-    UsesCharacterModel,
-    HasDynamicModelName,
-    IsTriggerArea,
-    HasSpeechBubble,
-    Indexer,
-    IsSpawner,
-    HasRopeToItem,
-    HasSubtype,
-    IsItem,
-    IsDrink,
-    AddsIngredient,
-    CanOrderDrink,
-    IsPnumaticPipe,
-    IsProgressionManager,
-    IsFloorMarker,
-    IsBank,
-    IsFreeInStore,
-    IsToilet,
-    CanPathfind,
-    IsRoundSettingsManager,
-    HasFishingGame,
-    IsStoreSpawned,
-    HasLastInteractedCustomer,
-    CanChangeSettingsInteractively,
-    IsNuxManager,
-    IsNux,
-    CollectsUserInput,
-    IsSnappable,
-    HasClientID,
-    RespondsToUserInput,
-    CanHoldHandTruck,
-    RespondsToDayNight,
-    HasDayNightTimer,
-    CollectsCustomerFeedback,
-    IsSquirter,
-    CanBeHeld_HT,
-    CanBeHeld,
-    BypassAutomationState,
-    AICloseTab,
-    AIPlayJukebox,
-    AIWaitInQueue,
-    AIDrinking,
-    AIUseBathroom,
-    AIWandering,
-    AICleanVomit>;
-
-}  // namespace snapshot_blob
+// Snapshot schema (ComponentTypes list + checksum).
+#include "component_schema.h"
 
