@@ -9,4 +9,5 @@
 // Keep this limited to "safe" fixups that only use existing component APIs.
 namespace post_deserialize_fixups {
 void run(Entities& entities);
+void run();
 }

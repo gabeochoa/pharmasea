@@ -284,8 +284,7 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            auto& collection = EntityHelper::get_client_collection();
-            post_deserialize_fixups::run(collection.entities_DO_NOT_USE);
+            post_deserialize_fixups::run();
 
             map->update_map(info.map);
 

@@ -7,6 +7,7 @@
 #include "components/can_pathfind.h"
 #include "components/responds_to_day_night.h"
 #include "engine/log.h"
+#include "entity_helper.h"
 #include "entity_id.h"
 
 namespace post_deserialize_fixups {
@@ -63,6 +64,12 @@ void run(Entities& entities) {
             }
         }
     }
+}
+
+void run() {
+    // Run against the current thread's active entity collection.
+    auto& collection = EntityHelper::get_current_collection();
+    run(collection.entities_DO_NOT_USE);
 }
 
 }  // namespace post_deserialize_fixups
