@@ -1,26 +1,30 @@
-
-#pragma once
-
-#include "../external_include.h"
+// Snapshot serialization Bitsery wiring.
 //
+// This is intentionally *not* "polymorphic" wiring:
+// - Save/network formats are pointer-free and do not use Bitsery pointer graphs.
+// - Snapshot blob serialization writes concrete component types directly.
+//
+// This header exists to:
+// - include the canonical component list (`all_components.h`)
+// - provide Bitsery SelectSerializeFnc specializations for those component types
+//
+// Keep this header lightweight and scoped to snapshot serialization needs.
+#pragma once
 
 #include "../components/all_components.h"
 #include "bitsery/details/serialization_common.h"
 
-//
-
 namespace bitsery {
+
+// Vendor base uses non-member serialize hooks.
 template<>
 struct SelectSerializeFnc<afterhours::BaseComponent> : UseNonMemberFnc {};
 
+// Our component base uses member serialize hooks.
 template<>
 struct SelectSerializeFnc<BaseComponent> : UseMemberFnc {};
 
-// Provide a no-op free serialize for the vendor base to satisfy bitsery's
-// static checks. Real serialization occurs on derived component types.
-template<typename S>
-inline void serialize(S&, afterhours::BaseComponent&) {}
-
+// Concrete components use member serialize hooks.
 template<>
 struct SelectSerializeFnc<Transform> : UseMemberFnc {};
 template<>
@@ -147,9 +151,6 @@ template<>
 struct SelectSerializeFnc<CollectsCustomerFeedback> : UseMemberFnc {};
 template<>
 struct SelectSerializeFnc<IsSquirter> : UseMemberFnc {};
-
-//
-
 template<>
 struct SelectSerializeFnc<AICleanVomit> : UseMemberFnc {};
 template<>
@@ -158,84 +159,10 @@ template<>
 struct SelectSerializeFnc<AIDrinking> : UseMemberFnc {};
 template<>
 struct SelectSerializeFnc<AIWaitInQueue> : UseMemberFnc {};
-//
 template<>
 struct SelectSerializeFnc<CanBeHeld_HT> : UseMemberFnc {};
 template<>
 struct SelectSerializeFnc<BypassAutomationState> : UseMemberFnc {};
 
-namespace ext {
-
-template<>
-struct PolymorphicBaseClass<BaseComponent>
-    : PolymorphicDerivedClasses<
-          // BEGIN
-          Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
-          CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
-          CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
-          CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid, HasPatience,
-          HasProgression, IsRotatable, CanGrabFromOtherFurniture,
-          ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
-          UsesCharacterModel, HasDynamicModelName, IsTriggerArea,
-          HasSpeechBubble, Indexer, IsSpawner, HasRopeToItem, HasSubtype,
-          IsItem, IsDrink, AddsIngredient, CanOrderDrink, IsPnumaticPipe,
-          IsProgressionManager, IsFloorMarker, IsBank, IsFreeInStore, IsToilet,
-          CanPathfind, IsRoundSettingsManager, AIComponent, HasFishingGame,
-          IsStoreSpawned, AICloseTab, AIPlayJukebox, HasLastInteractedCustomer,
-          CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
-          CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
-          CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback, IsSquirter, CanBeHeld, BypassAutomationState
-          // END
-          > {};
-
-// Register the vendor base so unique_ptr<afterhours::BaseComponent> works
-template<>
-struct PolymorphicBaseClass<afterhours::BaseComponent>
-    : PolymorphicDerivedClasses<
-          // Include BaseComponent itself as an intermediate base
-          BaseComponent,
-          // Mirror the same concrete components as our BaseComponent
-          Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer,
-          CanBeHighlighted, CanHighlightOthers, CanHoldFurniture,
-          CanBeGhostPlayer, CanPerformJob, ModelRenderer, CanBePushed,
-          CustomHeldItemPosition, HasWork, HasBaseSpeed, IsSolid, HasPatience,
-          HasProgression, IsRotatable, CanGrabFromOtherFurniture,
-          ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom, IsItemContainer,
-          UsesCharacterModel, HasDynamicModelName, IsTriggerArea,
-          HasSpeechBubble, Indexer, IsSpawner, HasRopeToItem, HasSubtype,
-          IsItem, IsDrink, AddsIngredient, CanOrderDrink, IsPnumaticPipe,
-          IsProgressionManager, IsFloorMarker, IsBank, IsFreeInStore, IsToilet,
-          CanPathfind, IsRoundSettingsManager, AIComponent, HasFishingGame,
-          IsStoreSpawned, AICloseTab, AIPlayJukebox, HasLastInteractedCustomer,
-          CanChangeSettingsInteractively, IsNuxManager, IsNux, AIWandering,
-          CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
-          CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
-          CollectsCustomerFeedback, IsSquirter, CanBeHeld,
-          BypassAutomationState> {};
-// If you add anything here ^^ then you should add that component to
-// register_all_components in entity.h
-
-template<>
-struct PolymorphicBaseClass<AIComponent>
-    : PolymorphicDerivedClasses<
-          // BEGIN
-          AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AIPlayJukebox,
-          AICloseTab, AIWandering
-          // END
-          > {};
-
-template<>
-struct PolymorphicBaseClass<CanBeHeld> : PolymorphicDerivedClasses<
-                                             // BEGIN
-                                             CanBeHeld_HT
-                                             // END
-                                             > {};
-
-}  // namespace ext
 }  // namespace bitsery
 
-using MyPolymorphicClasses =
-    bitsery::ext::PolymorphicClassesList<BaseComponent,
-                                         afterhours::BaseComponent, AIComponent,
-                                         Job, afterhours::Entity>;

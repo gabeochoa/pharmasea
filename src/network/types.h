@@ -12,7 +12,7 @@
 #include "../external_include.h"  // for fmt, magic_enum
 #include "../strings.h"
 #include "internal/channel.h"
-// Map.h is needed for MapInfo, but it's lighter than polymorphic_components.h
+// Map.h is needed for MapInfo, but avoid heavy snapshot/serialization wiring here.
 #include "../map.h"
 
 namespace network {
