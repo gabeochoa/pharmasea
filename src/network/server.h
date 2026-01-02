@@ -20,13 +20,16 @@ namespace network {
 using ClientMessage = std::pair<internal::Client_t, std::string>;
 
 struct Server {
-    static std::thread start(int port);
+    // Starts the server thread (idempotent).
+    static void start(int port);
     static void queue_packet(const ClientPacket& p);
     static void forward_packet(const ClientPacket& p);
-    static void stop();
+    // Stops the server thread and waits for it to exit (idempotent).
+    static void shutdown();
     ~Server();
 
     static void play_sound(vec2 position, strings::sounds::SoundId sound);
+    [[nodiscard]] static std::thread::id get_thread_id();
 
     //
     void send_player_location_packet(int client_id, const vec3& pos,
@@ -53,6 +56,7 @@ struct Server {
     std::unique_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
     std::thread::id thread_id;
+    std::thread server_thread;
     std::thread pathfinding_thread;
 
 #if MEASURE_SERVER_PERF
@@ -64,7 +68,9 @@ struct Server {
 
     // Full world snapshot sync. If this is too low it looks "teleporty" on
     // clients; if it's too high it can become expensive.
-    float next_map_tick_reset = 1.f / 60;  // 60fps
+    // Snapshot sync is currently a full-world blob and can be large.
+    // Keep this fairly low-frequency to avoid overwhelming the network stack.
+    float next_map_tick_reset = 1.f / 5;  // 5fps
     float next_map_tick = 0;
 
     float next_player_rare_tick_reset = 1.f / 10;  // 10fps
