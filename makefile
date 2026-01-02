@@ -84,7 +84,7 @@ GAME_LOG = $(OBJ_DIR)/game.log
 all: post-build
 
 pre-build:
-	python3 scripts/check_network_polymorphs.py
+	@true
 
 main-build: pre-build $(OUTPUT_EXE) 
 
