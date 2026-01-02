@@ -1,9 +1,9 @@
 #include "world_snapshot_blob.h"
 
 #include "../bitsery_include.h"
+#include "../components/all_components.h"
 #include "../engine/log.h"
 #include "../entity_helper.h"
-#include "snapshot_bitsery_wiring.h"
 
 #include <bitsery/ext/std_bitset.h>
 
