@@ -4,11 +4,23 @@
 #include <fstream>
 #include <sstream>
 
+#include "../components/all_components.h"
 #include "../components/has_day_night_timer.h"
 #include "../components/is_bank.h"
 #include "../engine/files.h"
 #include "../engine/log.h"
 #include "../external_include.h"
+
+// Acknowledgement gate:
+// If you change `snapshot_blob::ComponentTypes` (add/reorder/delete), you MUST
+// update this expected value to acknowledge the save/replay/network format
+// impact.
+static constexpr std::uint64_t kExpectedComponentTypesChecksum =
+    0xde64e3f368746217ull;
+static_assert(snapshot_blob::kComponentTypesChecksum ==
+                  kExpectedComponentTypesChecksum,
+              "ComponentTypes checksum changed. Update "
+              "kExpectedComponentTypesChecksum to acknowledge.");
 
 namespace save_game {
 

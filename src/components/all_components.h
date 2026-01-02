@@ -1,14 +1,19 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
+#include <string_view>
 #include <tuple>
+#include <utility>
+
+#include "../../vendor/afterhours/src/type_name.h"
 
 // This header is intended to be a single include point for:
 // - all component type definitions (useful for serialization/registration)
-// - stable snapshot schema helpers
+// - stable snapshot schema helpers (component snapshot order + checksum)
 //
 // If you add a new component that should be part of "full snapshots", append it
-// exactly once in `snapshot_blob::ComponentTypes` (see `component_schema.h`).
+// exactly once in `snapshot_blob::ComponentTypes` below.
 
 // ---- Component type includes (the canonical "all components" list) ----
 
@@ -79,6 +84,127 @@
 #include "transform.h"
 #include "uses_character_model.h"
 
-// Snapshot schema (ComponentTypes list + checksum).
-#include "component_schema.h"
+// ---- Snapshot schema (ComponentTypes list + checksum) ----
+
+namespace snapshot_blob {
+
+// Snapshot component types (order matters; keep stable).
+//
+// IMPORTANT:
+// - Never reorder.
+// - Only append.
+// - Deleting or reordering entries will break save files / replays / network
+//   snapshot compatibility because the on-wire snapshot format assumes a stable
+//   component ID assignment (Afterhours static ids) and a stable serialization
+//   order based on this list.
+using ComponentTypes = std::tuple<
+    Transform,
+    HasName,
+    CanHoldItem,
+    SimpleColoredBoxRenderer,
+    CanBeHighlighted,
+    CanHighlightOthers,
+    CanHoldFurniture,
+    CanBeGhostPlayer,
+    CanPerformJob,
+    ModelRenderer,
+    CanBePushed,
+    CustomHeldItemPosition,
+    HasWork,
+    HasBaseSpeed,
+    IsSolid,
+    HasPatience,
+    HasProgression,
+    IsRotatable,
+    CanGrabFromOtherFurniture,
+    ConveysHeldItem,
+    HasWaitingQueue,
+    CanBeTakenFrom,
+    IsItemContainer,
+    UsesCharacterModel,
+    HasDynamicModelName,
+    IsTriggerArea,
+    HasSpeechBubble,
+    Indexer,
+    IsSpawner,
+    HasRopeToItem,
+    HasSubtype,
+    IsItem,
+    IsDrink,
+    AddsIngredient,
+    CanOrderDrink,
+    IsPnumaticPipe,
+    IsProgressionManager,
+    IsFloorMarker,
+    IsBank,
+    IsFreeInStore,
+    IsToilet,
+    CanPathfind,
+    IsRoundSettingsManager,
+    HasFishingGame,
+    IsStoreSpawned,
+    HasLastInteractedCustomer,
+    CanChangeSettingsInteractively,
+    IsNuxManager,
+    IsNux,
+    CollectsUserInput,
+    IsSnappable,
+    HasClientID,
+    RespondsToUserInput,
+    CanHoldHandTruck,
+    RespondsToDayNight,
+    HasDayNightTimer,
+    CollectsCustomerFeedback,
+    IsSquirter,
+    CanBeHeld_HT,
+    CanBeHeld,
+    BypassAutomationState,
+    AICloseTab,
+    AIPlayJukebox,
+    AIWaitInQueue,
+    AIDrinking,
+    AIUseBathroom,
+    AIWandering,
+    AICleanVomit>;
+
+namespace detail {
+constexpr std::uint64_t kFnv1aOffset = 14695981039346656037ull;
+constexpr std::uint64_t kFnv1aPrime = 1099511628211ull;
+
+constexpr std::uint64_t fnv1a_step(std::uint64_t h, std::uint8_t b) {
+    return (h ^ b) * kFnv1aPrime;
+}
+
+constexpr std::uint64_t fnv1a_append(std::uint64_t h, std::string_view s) {
+    for (char c : s) {
+        h = fnv1a_step(h, static_cast<std::uint8_t>(c));
+    }
+    return h;
+}
+
+template<typename Tuple, size_t... Is>
+constexpr auto tuple_type_names(std::index_sequence<Is...>) {
+    return std::array<std::string_view, sizeof...(Is)>{
+        ::type_name<std::tuple_element_t<Is, Tuple>>()...,
+    };
+}
+}  // namespace detail
+
+inline constexpr std::uint64_t component_types_checksum() {
+    constexpr auto names = detail::tuple_type_names<ComponentTypes>(
+        std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
+    std::uint64_t h = detail::kFnv1aOffset;
+    h = detail::fnv1a_append(h, "ComponentTypesChecksum.v1");
+    h = detail::fnv1a_step(h, 0);
+    for (auto n : names) {
+        h = detail::fnv1a_append(h, n);
+        h = detail::fnv1a_step(h, 0);
+    }
+    return h;
+}
+
+inline constexpr std::uint64_t kComponentTypesChecksum =
+    component_types_checksum();
+
+}  // namespace snapshot_blob
 

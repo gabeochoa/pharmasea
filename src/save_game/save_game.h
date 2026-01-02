@@ -7,24 +7,12 @@
 #include <vector>
 
 #include "../bitsery_include.h"
-#include "../components/component_schema.h"
 #include "../globals.h"
 #include "../map.h"
 
 namespace save_game {
 
 namespace fs = std::filesystem;
-
-// Acknowledgement gate:
-// If you change `snapshot_blob::ComponentTypes` (add/reorder/delete), you MUST
-// update this expected value to acknowledge the save/replay/network format
-// impact.
-static constexpr std::uint64_t kExpectedComponentTypesChecksum =
-    0xde64e3f368746217ull;
-static_assert(snapshot_blob::kComponentTypesChecksum ==
-                  kExpectedComponentTypesChecksum,
-              "ComponentTypes checksum changed. Update "
-              "kExpectedComponentTypesChecksum to acknowledge.");
 
 // Keep this small; it should be quick to read without deserializing the world.
 struct SaveGameHeader {
