@@ -4,7 +4,6 @@
 #include "../engine/log.h"
 #include "../entity_helper.h"
 #include "../network/polymorphic_components.h"  // includes all component types + bitsery wiring
-#include "world_snapshot_component_kind.h"
 
 #include <bitsery/ext/std_bitset.h>
 

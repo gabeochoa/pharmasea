@@ -2,18 +2,93 @@
 
 #include <cstdint>
 
-// Single source of truth for:
-// - which components are included in "full snapshot" surfaces
-// - stable on-wire component kind IDs (must never be renumbered)
+// This header is intended to be a single include point for:
+// - all component type definitions (useful for serialization/registration)
+// - stable snapshot component IDs / iteration helpers
 //
-// Anything that wants to iterate over snapshot components should use
-// `PHARMASEA_SNAPSHOT_COMPONENT_LIST(X)`.
+// If you add a new component that should be part of "full snapshots", add it to
+// `PHARMASEA_SNAPSHOT_COMPONENT_LIST_REST(X)` exactly once.
+
+// ---- Component type includes (the canonical "all components" list) ----
+
+#include "adds_ingredient.h"
+#include "ai_clean_vomit.h"
+#include "ai_close_tab.h"
+#include "ai_drinking.h"
+#include "ai_play_jukebox.h"
+#include "ai_use_bathroom.h"
+#include "ai_wait_in_queue.h"
+#include "ai_wandering.h"
+#include "base_component.h"
+#include "bypass_automation_state.h"
+#include "can_be_ghost_player.h"
+#include "can_be_held.h"
+#include "can_be_highlighted.h"
+#include "can_be_pushed.h"
+#include "can_be_taken_from.h"
+#include "can_change_settings_interactively.h"
+#include "can_grab_from_other_furniture.h"
+#include "can_highlight_others.h"
+#include "can_hold_furniture.h"
+#include "can_hold_handtruck.h"
+#include "can_hold_item.h"
+#include "can_order_drink.h"
+#include "can_pathfind.h"
+#include "can_perform_job.h"
+#include "collects_customer_feedback.h"
+#include "collects_user_input.h"
+#include "conveys_held_item.h"
+#include "custom_item_position.h"
+#include "has_base_speed.h"
+#include "has_client_id.h"
+#include "has_day_night_timer.h"
+#include "has_dynamic_model_name.h"
+#include "has_fishing_game.h"
+#include "has_last_interacted_customer.h"
+#include "has_name.h"
+#include "has_patience.h"
+#include "has_progression.h"
+#include "has_rope_to_item.h"
+#include "has_speech_bubble.h"
+#include "has_subtype.h"
+#include "has_waiting_queue.h"
+#include "has_work.h"
+#include "indexer.h"
+#include "is_bank.h"
+#include "is_drink.h"
+#include "is_free_in_store.h"
+#include "is_item.h"
+#include "is_item_container.h"
+#include "is_nux_manager.h"
+#include "is_pnumatic_pipe.h"
+#include "is_progression_manager.h"
+#include "is_rotatable.h"
+#include "is_round_settings_manager.h"
+#include "is_snappable.h"
+#include "is_solid.h"
+#include "is_spawner.h"
+#include "is_squirter.h"
+#include "is_store_spawned.h"
+#include "is_toilet.h"
+#include "is_trigger_area.h"
+#include "model_renderer.h"
+#include "responds_to_day_night.h"
+#include "responds_to_user_input.h"
+#include "simple_colored_box_renderer.h"
+#include "transform.h"
+#include "uses_character_model.h"
+
+// ---- Snapshot component list + stable kind IDs ----
 
 // Full list (order matters; keep stable).
 // NOTE: this macro expands to statements, so it can be used to generate:
 // - enum entries
 // - registration calls
 // - serializer dispatch tables
+//
+// IMPORTANT:
+// - Never reorder.
+// - Only append.
 #define PHARMASEA_SNAPSHOT_COMPONENT_LIST_REST(X)                               \
     X(HasName)                                                                 \
     X(CanHoldItem)                                                             \

@@ -1,7 +1,7 @@
 
 #include "entity_makers.h"
 
-#include "serialization/world_snapshot_component_kind.h"
+#include "components/all_components.h"
 
 #include <ranges>
 
@@ -148,7 +148,7 @@ void register_all_components() {
 
     // Register component IDs in Afterhours by instantiating all component types
     // once. Keep the list centralized in
-    // `serialization/world_snapshot_component_kind.h`.
+    // `components/all_components.h`.
 #define PHARMASEA_REGISTER_ONE_COMPONENT(T) entity->addComponent<T>();
     PHARMASEA_SNAPSHOT_COMPONENT_LIST(PHARMASEA_REGISTER_ONE_COMPONENT)
 #undef PHARMASEA_REGISTER_ONE_COMPONENT
