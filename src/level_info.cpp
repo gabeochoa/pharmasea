@@ -59,11 +59,11 @@ void LevelInfo::onUpdate(const Entities& players, float dt) {
 }
 
 void LevelInfo::onDraw(float dt) const {
-    SystemManager::get().render_entities(entities, dt);
+    SystemManager::get().render_entities(EntityHelper::get_entities(), dt);
 }
 
 void LevelInfo::onDrawUI(float dt) {
-    SystemManager::get().render_ui(entities, dt);
+    SystemManager::get().render_ui(EntityHelper::get_entities(), dt);
 }
 
 void generate_walls_for_building(const Building& building) {
@@ -129,15 +129,6 @@ void generate_walls_for_building(const Building& building) {
             auto& entity = EntityHelper::createEntity();
             convert_to_type(EntityType::Door, entity, door_pos);
         }
-    }
-}
-
-void LevelInfo::grab_things() {
-    {
-        this->entities.clear();
-        EntityHelper::cleanup();
-        this->entities = EntityHelper::get_entities();
-        num_entities = this->entities.size();
     }
 }
 

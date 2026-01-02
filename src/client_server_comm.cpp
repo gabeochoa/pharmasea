@@ -104,7 +104,8 @@ bool load_game_from_slot(int slot) {
     // Install entities into the authoritative entity list and mark generated
     // so the generator does not wipe the loaded snapshot.
     auto& collection = EntityHelper::get_server_collection();
-    collection.replace_all_entities(loaded.map_snapshot.game_info.entities);
+    // Entities were installed during deserialization of `loaded.map_snapshot`
+    // (LevelInfo::serialize). We only need the collection reference for fixups.
 
     Map& server_map = *(server->get_map_SERVER_ONLY());
     server_map.game_info = loaded.map_snapshot.game_info;

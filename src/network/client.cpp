@@ -285,8 +285,8 @@ void Client::client_process_message_string(const std::string& msg) {
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
             auto& collection = EntityHelper::get_client_collection();
-            collection.replace_all_entities(info.map.entities());
-
+            // Entities were installed during deserialization of `info.map`
+            // (LevelInfo::serialize). Apply any runtime fixups now.
             post_deserialize_fixups::run(collection.entities_DO_NOT_USE);
 
             map->update_map(info.map);

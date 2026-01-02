@@ -155,7 +155,7 @@ bool SaveGameManager::save_slot(int slot, const Map& authoritative_map) {
     file.header.hashed_build_version = HASHED_VERSION;
 
     // Fill a few commonly useful preview fields from the snapshot.
-    for (const auto& ent_ptr : file.map_snapshot.game_info.entities) {
+    for (const auto& ent_ptr : EntityHelper::get_entities()) {
         if (!ent_ptr) continue;
         const Entity& e = *ent_ptr;
         if (e.has<HasDayNightTimer>()) {

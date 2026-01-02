@@ -17,9 +17,6 @@ struct LevelInfo {
 
     game::State last_generated = game::State::InMenu;
 
-    Entities entities;
-    Entities::size_type num_entities;
-
     std::string seed;
     size_t hashed_seed;
 
@@ -27,7 +24,6 @@ struct LevelInfo {
     void onUpdate(const Entities& players, float dt);
     void onDraw(float dt) const;
     void onDrawUI(float dt);
-    void grab_things();
     void ensure_generated_map(const std::string& new_seed);
 
     // called by the server sometimes
@@ -49,11 +45,37 @@ struct LevelInfo {
     friend bitsery::Access;
     template<typename S>
     void serialize(S& s) {
-        s.value8b(num_entities);
-        s.container(entities, num_entities,
-                    [](S& s2, std::shared_ptr<Entity>& entity) {
-                        s2.ext(entity, bitsery::ext::StdSmartPtr{});
-                    });
+        // NOTE: we no longer store/duplicate an entity list in LevelInfo.
+        // The authoritative entity store lives in the active EntityCollection
+        // (EntityHelper::get_current_collection()).
+        //
+        // For compatibility with existing save/network formats, we still
+        // serialize a full entity list as part of LevelInfo, but:
+        // - on write: read entities from the active collection
+        // - on read: deserialize into a temporary vector and then install it
+        //   into the active collection via replace_all_entities()
+        Entities::size_type num_entities = 0;
+        if constexpr (requires { s.adapter().error(); }) {
+            // Deserializer path: read entities and install into active world.
+            Entities tmp;
+            s.value8b(num_entities);
+            s.container(tmp, num_entities,
+                        [](S& s2, std::shared_ptr<Entity>& entity) {
+                            s2.ext(entity, bitsery::ext::StdSmartPtr{});
+                        });
+
+            EntityHelper::get_current_collection().replace_all_entities(
+                std::move(tmp));
+        } else {
+            // Serializer path: write entities from active world.
+            auto& ents = EntityHelper::get_entities_for_mod();
+            num_entities = ents.size();
+            s.value8b(num_entities);
+            s.container(ents, num_entities,
+                        [](S& s2, std::shared_ptr<Entity>& entity) {
+                            s2.ext(entity, bitsery::ext::StdSmartPtr{});
+                        });
+        }
         s.value1b(was_generated);
         s.text1b(seed, MAX_SEED_LENGTH);
 

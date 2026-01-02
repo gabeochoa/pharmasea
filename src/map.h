@@ -31,7 +31,8 @@ struct Map {
 
     void update_map(const Map& new_map);
 
-    Entities entities() const { return game_info.entities; }
+    // NOTE: entities are owned by the active EntityCollection (EntityHelper).
+    // Map/LevelInfo no longer duplicates an entity list.
 
     void onUpdate(float dt) {  //
         _onUpdate(remote_players_NOT_SERIALIZED, dt);
@@ -48,7 +49,11 @@ struct Map {
 
     // These are called before every "send_map_state" when server
     // sends everything over to clients
-    void grab_things() { game_info.grab_things(); }
+    void grab_things() {
+        // Keep historical behavior: ensure temp entities are merged and cleaned
+        // before we serialize/send/save.
+        EntityHelper::cleanup();
+    }
 
    public:
    private:
