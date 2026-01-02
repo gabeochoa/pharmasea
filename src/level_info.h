@@ -22,8 +22,6 @@ struct LevelInfo {
 
     void update_seed(const std::string& s);
     void onUpdate(const Entities& players, float dt);
-    void onDraw(float dt) const;
-    void onDrawUI(float dt);
     void ensure_generated_map(const std::string& new_seed);
 
     // called by the server sometimes

@@ -58,14 +58,6 @@ void LevelInfo::onUpdate(const Entities& players, float dt) {
     SystemManager::get().update_all_entities(players, dt);
 }
 
-void LevelInfo::onDraw(float dt) const {
-    SystemManager::get().render_entities(EntityHelper::get_entities(), dt);
-}
-
-void LevelInfo::onDrawUI(float dt) {
-    SystemManager::get().render_ui(EntityHelper::get_entities(), dt);
-}
-
 void generate_walls_for_building(const Building& building) {
     std::vector<RefEntity> walls;
     walls.reserve((int) (building.area.width + building.area.height) * 2);

@@ -57,7 +57,7 @@ void Map::onDraw(float dt) const {
     // TODO :INFRA: merge this into normal render pipeline
     SystemManager::get().render_entities(remote_players_NOT_SERIALIZED, dt);
 
-    game_info.onDraw(dt);
+    SystemManager::get().render_entities(EntityHelper::get_entities(), dt);
 }
 
 void Map::onDrawUI(float dt) {
@@ -65,5 +65,5 @@ void Map::onDrawUI(float dt) {
 
     // TODO :INFRA: merge this into normal render pipeline
     SystemManager::get().render_ui(remote_players_NOT_SERIALIZED, dt);
-    game_info.onDrawUI(dt);
+    SystemManager::get().render_ui(EntityHelper::get_entities(), dt);
 }
