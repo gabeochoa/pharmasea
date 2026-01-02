@@ -17,7 +17,7 @@ Goal: **zero pointers and zero pointer-linking contexts** in save-game + network
 - Network and save still use Bitsery pointer context:
   - `src/network/serialization.h`: `TContext = tuple<PointerLinkingContext, PolymorphicContext<...>>`
   - `src/save_game/save_game.cpp`: same
-- Save currently serializes a full snapshot as **`Map -> LevelInfo -> vector<shared_ptr<Entity>>`**, so pointer-linking stays required until we replace that surface with pointer-free snapshots.
+- Save currently serializes a full snapshot as **`Map -> vector<shared_ptr<Entity>>`**, so pointer-linking stays required until we replace that surface with pointer-free snapshots.
 
 ---
 

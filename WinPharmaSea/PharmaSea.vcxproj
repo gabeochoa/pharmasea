@@ -208,7 +208,7 @@
     <ClInclude Include="..\src\layers\toastlayer.h" />
     <ClInclude Include="..\src\layers\uitestlayer.h" />
     <ClInclude Include="..\src\layers\versionlayer.h" />
-    <ClInclude Include="..\src\level_info.h" />
+    <!-- level_info.h was removed; Map lives in map.h -->
     <ClInclude Include="..\src\local_ui.h" />
     <ClInclude Include="..\src\map.h" />
     <ClInclude Include="..\src\map_generation\map_generation.h" />
@@ -286,7 +286,7 @@
     <ClCompile Include="..\src\layers\recipe_book_layer.cpp" />
     <ClCompile Include="..\src\layers\seedmanagerlayer.cpp" />
     <ClCompile Include="..\src\layers\settingslayer.cpp" />
-    <ClCompile Include="..\src\level_info.cpp" />
+    <ClCompile Include="..\src\map_generation.cpp" />
     <ClCompile Include="..\src\map.cpp" />
     <ClCompile Include="..\src\network\client.cpp" />
     <ClCompile Include="..\src\network\server.cpp" />

@@ -4,7 +4,7 @@ Date: 2025-12-24
 ## Status (as of 2025-12-24)
 
 ### Implemented (Phase 1: snapshot pipeline)
-- **Save file format**: Bitsery-based `SaveGameHeader` + `SaveGameFile` (full snapshot payload `Map`/`LevelInfo`) per slot, with `"PHARMSAVE"` magic and build/version fields.
+- **Save file format**: Bitsery-based `SaveGameHeader` + `SaveGameFile` (full snapshot payload `Map`) per slot, with `"PHARMSAVE"` magic and build/version fields.
 - **Save location**: `Files::get().game_folder()/saves/slot_XX.bin` (atomic write via `*.tmp` + rename).
 - **Slot discovery**: enumerate `kDefaultNumSlots` (currently **8**) and read **header only** to populate UI metadata.
 - **Authoritative apply (server-only)**: load installs snapshot on the **server thread**, sets `was_generated = true`, invalidates caches, and forces a map sync to clients (`force_send_map_state()`).
@@ -62,8 +62,7 @@ Date: 2025-12-24
 
 ### Serialization foundations already exist
 - `Entity` serializes ids, tags, and polymorphic components (`src/entity.h`).
-- `LevelInfo` serializes `entities`, `seed`, `was_generated`, `hashed_seed` (`src/level_info.h`).
-- `Map` serializes `LevelInfo` (`src/map.h`).
+- `Map` serializes the world entity snapshot + map metadata (`src/map.h`).
 - Networking already serializes `Map` inside `ClientPacket::MapInfo` (`src/network/serialization.h`).
 
 ### Authoritative apply exists (Phase 1 snapshot install)
@@ -122,14 +121,14 @@ Use Bitsery, but add a small header for **versioning + UI metadata**.
   - any other state designers consider “save-worthy”
 
 **Implementation note (practical)**
-- Phase 1 can ship using a full snapshot payload (`Map` / `LevelInfo`) to prove correctness end-to-end.
+- Phase 1 can ship using a full snapshot payload (`Map`) to prove correctness end-to-end.
 - Phase 2 refactors to true hybrid delta (filter + stable identifiers), once load/apply is solid.
 
 ## Authoritative Load: Apply Save → World Reconstruction
 
 ### Non-negotiables
 - Load must run **server-side** (authoritative) so the world is consistent for multiplayer and for replay.
-- Loading must ensure `LevelInfo.was_generated = true` so the generator doesn’t wipe the loaded world.
+- Loading must ensure `Map.was_generated = true` so the generator doesn’t wipe the loaded world.
 - After installing entities, we must invalidate caches (named entity cache, walkable/path caches).
 - **Host-only**: only host server thread can apply saves; clients are synced afterward.
 
@@ -174,13 +173,13 @@ Each slot pedestal entity shows:
 - An interaction behavior that triggers `load_save(slot)`
 
 ### Entry point: lobby trigger
-In `LevelInfo::generate_lobby_map()`:
+In `Map::generate_lobby_map()`:
 - Add a new `IsTriggerArea` similar to existing lobby triggers:
   - `IsTriggerArea::Lobby_LoadSave` (new)
   - Transition to new game state: `game::State::LoadSaveRoom` (new)
 
 ### Room generation
-Add `LevelInfo::generate_load_save_room_map()` (pattern after `generate_model_test_map()`):
+Add `Map::generate_load_save_room_map()` (pattern after `generate_model_test_map()`):
 - Spawn:
   - “Back to Lobby” trigger
   - A grid of N save slot pedestals (**8–12**) like a PS2 card screen

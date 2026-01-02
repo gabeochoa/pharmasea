@@ -191,9 +191,7 @@
     <ClInclude Include="..\src\system\system_manager.h">
       <Filter>Source Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\level_info.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <!-- level_info.h was removed; Map lives in map.h -->
     <ClInclude Include="..\src\system\input_process_manager.h">
       <Filter>Source Files\System</Filter>
     </ClInclude>
@@ -769,7 +767,7 @@
     <ClCompile Include="..\src\entity_makers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\level_info.cpp">
+    <ClCompile Include="..\src\map_generation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\network\server.cpp">

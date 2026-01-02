@@ -12,7 +12,7 @@ This document is a **planning note only**. It outlines a roadmap to update map g
     - Map-gen config loading exists in **two places** today:
       - `Preload::load_map_generation_info()` (loads patterns, and also computes outside marker rectangles).
       - `wfc::ensure_map_generation_info_loaded()` (lazy-loads the same JSON directly).
-- **Trigger point**: In-game map-gen is triggered from gameplay (`LevelInfo::generate_in_game_map()`), which delegates to the in-game map generation entry points.
+- **Trigger point**: In-game map-gen is triggered from gameplay (`Map::generate_in_game_map()`), which delegates to the in-game map generation entry points.
 
 ## ASCII legend (current, code-defined)
 
@@ -352,7 +352,7 @@ The planning UI uses floor markers:
 - `IsFloorMarker::Planning_SpawnArea`
 - `IsFloorMarker::Planning_TrashArea`
 
-Today these are placed by `LevelInfo::add_outside_triggers(origin)` using
+Today these are placed by `Map::add_outside_triggers(origin)` using
 rectangles derived from WFC config (`wfc::SPAWN_AREA`, `wfc::TRASH_AREA`).
 
 Implications for map-gen:
