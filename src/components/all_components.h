@@ -8,7 +8,7 @@
 // - stable snapshot component IDs / iteration helpers
 //
 // If you add a new component that should be part of "full snapshots", append it
-// exactly once in `snapshot_blob::SnapshotComponentTypes`.
+// exactly once in `snapshot_blob::ComponentTypes`.
 
 // ---- Component type includes (the canonical "all components" list) ----
 
@@ -89,7 +89,7 @@ namespace snapshot_blob {
 // - Never reorder.
 // - Only append.
 // - This list must stay in lockstep with `ComponentKind` below.
-using SnapshotComponentTypes = std::tuple<
+using ComponentTypes = std::tuple<
     Transform,
     HasName,
     CanHoldItem,

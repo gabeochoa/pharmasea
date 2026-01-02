@@ -150,16 +150,16 @@ void register_all_components() {
     // once. Keep the list centralized in
     // `components/all_components.h`.
     static_assert(magic_enum::enum_count<snapshot_blob::ComponentKind>() ==
-                      (std::tuple_size_v<snapshot_blob::SnapshotComponentTypes> +
+                      (std::tuple_size_v<snapshot_blob::ComponentTypes> +
                        1),
-                  "snapshot component kind enum must match SnapshotComponentTypes");
+                  "snapshot component kind enum must match ComponentTypes");
 
     [&]<size_t... Is>(std::index_sequence<Is...>) {
         (entity->addComponent<
-             std::tuple_element_t<Is, snapshot_blob::SnapshotComponentTypes>>(),
+             std::tuple_element_t<Is, snapshot_blob::ComponentTypes>>(),
          ...);
     }(std::make_index_sequence<
-        std::tuple_size_v<snapshot_blob::SnapshotComponentTypes>>{});
+        std::tuple_size_v<snapshot_blob::ComponentTypes>>{});
     // TODO now that we have removeComponent we could remove some instead
     // for example AddsIngredient could be removed when it runs out
     // there might be some logic that relies on this not being removed though

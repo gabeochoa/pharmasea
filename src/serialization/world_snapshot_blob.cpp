@@ -62,19 +62,19 @@ void serde_read(Deserializer& d, afterhours::Entity& e) {
 
 static const auto& component_serdes() {
     constexpr size_t kNum =
-        std::tuple_size_v<snapshot_blob::SnapshotComponentTypes>;
+        std::tuple_size_v<snapshot_blob::ComponentTypes>;
     static_assert(kNum <= 255, "component count must fit in uint8_t");
     static_assert(magic_enum::enum_count<ComponentKind>() == (kNum + 1),
-                  "ComponentKind must match SnapshotComponentTypes");
+                  "ComponentKind must match ComponentTypes");
 
     static const std::array<ComponentSerde, kNum> kSerdes = [] {
         std::array<ComponentSerde, kNum> out{};
         [&]<size_t... Is>(std::index_sequence<Is...>) {
             ((out[Is] = ComponentSerde{
                   magic_enum::enum_value<ComponentKind>(Is + 1),
-                  &serde_has<std::tuple_element_t<Is, SnapshotComponentTypes>>,
-                  &serde_write<std::tuple_element_t<Is, SnapshotComponentTypes>>,
-                  &serde_read<std::tuple_element_t<Is, SnapshotComponentTypes>>}),
+                  &serde_has<std::tuple_element_t<Is, ComponentTypes>>,
+                  &serde_write<std::tuple_element_t<Is, ComponentTypes>>,
+                  &serde_read<std::tuple_element_t<Is, ComponentTypes>>}),
              ...);
         }(std::make_index_sequence<kNum>{});
         return out;
