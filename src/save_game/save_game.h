@@ -72,7 +72,6 @@ struct SlotInfo {
     fs::path path;
 };
 
-// NOTE: Phase 1 uses a full snapshot payload (Map + full entity list).
 struct SaveGameManager {
     static constexpr int kDefaultNumSlots = 8;
 

@@ -90,11 +90,11 @@ void Server::stop() {
     }
 }
 
-void Server::send_map_state() {
+void Server::send_map_state(Channel channel) {
     EntityHelper::cleanup();
 
     ClientPacket map_packet{
-        .channel = Channel::RELIABLE,
+        .channel = channel,
         .client_id = SERVER_CLIENT_ID,
         .msg_type = network::ClientPacket::MsgType::Map,
         .msg =
@@ -106,7 +106,7 @@ void Server::send_map_state() {
     send_client_packet_to_all(map_packet);
 }
 
-void Server::force_send_map_state() { send_map_state(); }
+void Server::force_send_map_state() { send_map_state(Channel::RELIABLE); }
 
 void Server::send_player_rare_data() {
     for (const auto& player : players) {
@@ -377,7 +377,10 @@ void Server::process_map_update(float dt) {
 void Server::process_map_sync(float dt) {
     next_map_tick -= dt;
     if (next_map_tick <= 0) {
-        send_map_state();
+        // Periodic snapshots are "state refresh" and can be lossy; using
+        // UNRELIABLE avoids building up latency/backpressure when snapshots
+        // are large.
+        send_map_state(Channel::UNRELIABLE);
         next_map_tick += next_map_tick_reset;
     }
 }

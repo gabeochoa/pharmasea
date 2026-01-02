@@ -131,9 +131,9 @@ The buildings/walls “never change after spawn”, so we can convert their cube
     - scans entities after map generation,
     - groups eligible static cubes (by building or by chunk),
     - builds one or more raylib `Mesh` objects (with per-vertex color),
-    - stores the resulting `Model`/`Mesh` handles in `LevelInfo` (not serialized; rebuild on load).
+    - stores the resulting `Model`/`Mesh` handles in `Map` (not serialized; rebuild on load).
 - **Render integration**
-  - In `LevelInfo::onDraw(dt)`:
+  - In `Map::onDraw(dt)`:
     - draw static mesh batches first,
     - render remaining dynamic entities normally.
 - **Prevent double-render**

@@ -62,7 +62,9 @@ struct Server {
     bool has_looped = false;
 #endif
 
-    float next_map_tick_reset = 1.f / 30;  // 60fps
+    // Full world snapshot sync. If this is too low it looks "teleporty" on
+    // clients; if it's too high it can become expensive.
+    float next_map_tick_reset = 1.f / 60;  // 60fps
     float next_map_tick = 0;
 
     float next_player_rare_tick_reset = 1.f / 10;  // 10fps
@@ -101,7 +103,7 @@ struct Server {
         log_info("Server constructor completed");
     }
 
-    void send_map_state();
+    void send_map_state(Channel channel);
     void send_player_rare_data();
     void send_game_state_update();
     void run();

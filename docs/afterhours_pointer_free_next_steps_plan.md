@@ -14,10 +14,10 @@ Goal: **zero pointers and zero pointer-linking contexts** in save-game + network
 
 - **Afterhours direction is clear**: slot+generation handles + dense iteration + O(1) lookup (see `docs/afterhours_handle_system_migration.md`).
 - In PharmaSea (`src/entity.h`), **`RefEntity` and `OptEntity` already serialize as `EntityHandle`** (good).
-- Network and save still use Bitsery pointer context:
-  - `src/network/serialization.h`: `TContext = tuple<PointerLinkingContext, PolymorphicContext<...>>`
-  - `src/save_game/save_game.cpp`: same
-- Save currently serializes a full snapshot as **`Map -> LevelInfo -> vector<shared_ptr<Entity>>`**, so pointer-linking stays required until we replace that surface with pointer-free snapshots.
+- Network and save no longer use Bitsery pointer-linking contexts:
+  - `src/network/serialization.h`: `TContext = tuple<>`
+  - `src/save_game/save_game.cpp`: `TContext = tuple<>`
+- Save/network snapshots are serialized through a pointer-free blob surface (`src/serialization/world_snapshot_blob.*`) rather than serializing `shared_ptr` graphs.
 
 ---
 
@@ -144,8 +144,8 @@ Create a new snapshot layer (location suggestion: `src/serialization/snapshot/`)
 Once snapshot DTOs are in place:
 
 - Update:
-  - `src/network/serialization.h` context to remove `PointerLinkingContext`.
-  - `src/save_game/save_game.cpp` context likewise.
+  - `src/network/serialization.h` context to remove `PointerLinkingContext`. (done)
+  - `src/save_game/save_game.cpp` context likewise. (done)
 - Any remaining polymorphic needs should be handled with **explicit tagged unions** (e.g., variant of DTO types) rather than pointer graphs.
 
 Deliverable: save files + network packets contain no pointers and don’t use Bitsery pointer extensions.
@@ -175,9 +175,9 @@ Deliverable: stable performance and reproducible snapshot formats.
 - [ ] **(Phase 1)** Rewrite cleanup/delete paths to keep slots/dense indices correct and bump generation.
 - [ ] **(Phase 1)** Add `EntityQuery::gen_handles()` and `gen_first_handle()`.
 - [ ] **(Phase 2)** Audit and migrate any remaining serialized entity relationships in PharmaSea to handles.
-- [ ] **(Phase 3)** Add snapshot DTO layer and switch **network first** to snapshot payloads (smaller blast radius than save compatibility).
-- [ ] **(Phase 3)** Switch save-game to snapshot payloads; add save versioning + migration hooks.
-- [ ] **(Phase 3)** Remove `PointerLinkingContext` from both network and save contexts.
+- [ ] **(Phase 3)** Add snapshot DTO layer and switch **network first** to snapshot payloads (smaller blast radius than save compatibility). (done via `world_snapshot_blob`)
+- [ ] **(Phase 3)** Switch save-game to snapshot payloads; add save versioning + migration hooks. (done; save_version bumped, no migration yet)
+- [ ] **(Phase 3)** Remove `PointerLinkingContext` from both network and save contexts. (done)
 
 ---
 

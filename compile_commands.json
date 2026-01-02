@@ -303,10 +303,10 @@
       "-c",
       "-o",
       "output/src/level_info.o",
-      "src/level_info.cpp"
+      "src/map_generation.cpp"
     ],
     "directory": "/Users/gabe/p/pharmasea",
-    "file": "/Users/gabe/p/pharmasea/src/level_info.cpp",
+    "file": "/Users/gabe/p/pharmasea/src/map_generation.cpp",
     "output": "/Users/gabe/p/pharmasea/output/src/level_info.o"
   },
   {

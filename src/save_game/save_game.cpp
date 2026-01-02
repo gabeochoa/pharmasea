@@ -4,12 +4,23 @@
 #include <fstream>
 #include <sstream>
 
+#include "../components/all_components.h"
 #include "../components/has_day_night_timer.h"
 #include "../components/is_bank.h"
 #include "../engine/files.h"
 #include "../engine/log.h"
 #include "../external_include.h"
-#include "../network/polymorphic_components.h"
+
+// Acknowledgement gate:
+// If you change `snapshot_blob::ComponentTypes` (add/reorder/delete), you MUST
+// update this expected value to acknowledge the save/replay/network format
+// impact.
+static constexpr std::uint64_t kExpectedComponentTypesChecksum =
+    0xde64e3f368746217ull;
+static_assert(snapshot_blob::kComponentTypesChecksum ==
+                  kExpectedComponentTypesChecksum,
+              "ComponentTypes checksum changed. Update "
+              "kExpectedComponentTypesChecksum to acknowledge.");
 
 namespace save_game {
 
@@ -17,9 +28,7 @@ namespace {
 using Buffer = std::string;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
-using TContext =
-    std::tuple<bitsery::ext::PointerLinkingContext,
-               bitsery::ext::PolymorphicContext<bitsery::ext::StandardRTTI>>;
+using TContext = std::tuple<>;
 using Serializer = bitsery::Serializer<OutputAdapter, TContext>;
 using Deserializer = bitsery::Deserializer<InputAdapter, TContext>;
 
@@ -75,7 +84,6 @@ template<typename T>
 [[nodiscard]] std::optional<T> deserialize_one_object_prefix(
     const std::string& buf) {
     TContext ctx{};
-    std::get<1>(ctx).registerBasesList<Deserializer>(MyPolymorphicClasses{});
     Deserializer des{ctx, buf.begin(), buf.size()};
     T obj{};
     des.object(obj);
@@ -173,7 +181,6 @@ bool SaveGameManager::save_slot(int slot, const Map& authoritative_map) {
     // Serialize.
     Buffer buffer;
     TContext ctx{};
-    std::get<1>(ctx).registerBasesList<Serializer>(MyPolymorphicClasses{});
     Serializer ser{ctx, buffer};
     ser.object(file);
     ser.adapter().flush();
@@ -192,7 +199,6 @@ bool SaveGameManager::load_file(const fs::path& path, SaveGameFile& out) {
     if (!data.has_value()) return false;
 
     TContext ctx{};
-    std::get<1>(ctx).registerBasesList<Deserializer>(MyPolymorphicClasses{});
     Deserializer des{ctx, data->begin(), data->size()};
     des.object(out);
     if (des.adapter().error() != bitsery::ReaderError::NoError) {

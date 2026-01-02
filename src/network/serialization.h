@@ -14,9 +14,7 @@ namespace network {
 // Bitsery type aliases (only needed for serialization)
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
-using TContext =
-    std::tuple<bitsery::ext::PointerLinkingContext,
-               bitsery::ext::PolymorphicContext<bitsery::ext::StandardRTTI>>;
+using TContext = std::tuple<>;
 using BitserySerializer = bitsery::Serializer<OutputAdapter, TContext>;
 using BitseryDeserializer = bitsery::Deserializer<InputAdapter, TContext>;
 
