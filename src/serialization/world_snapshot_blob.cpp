@@ -73,6 +73,35 @@ constexpr std::uint32_t kWorldSnapshotVersion = 3;
 constexpr size_t kSnapshotComponentCount =
     std::tuple_size_v<snapshot_blob::ComponentTypes>;
 using SnapshotComponentMask = std::bitset<kSnapshotComponentCount>;
+constexpr size_t kSnapshotComponentMaskWords = (kSnapshotComponentCount + 63) / 64;
+
+template<typename S>
+void serialize_snapshot_mask(S& s, SnapshotComponentMask& mask) {
+    // NOTE: We do NOT use bitsery::ext::StdBitset here because it relies on
+    // std::bitset::to_ullong(), which throws for N > 64 when higher bits are set.
+    for (size_t word_i = 0; word_i < kSnapshotComponentMaskWords; ++word_i) {
+        std::uint64_t word = 0;
+
+        if constexpr (requires { s.adapter().error(); }) {
+            // Reader
+            s.value8b(word);
+            for (size_t bit = 0; bit < 64; ++bit) {
+                const size_t idx = word_i * 64 + bit;
+                if (idx >= kSnapshotComponentCount) break;
+                const bool on = ((word >> bit) & 1ull) != 0ull;
+                mask.set(idx, on);
+            }
+        } else {
+            // Writer
+            for (size_t bit = 0; bit < 64; ++bit) {
+                const size_t idx = word_i * 64 + bit;
+                if (idx >= kSnapshotComponentCount) break;
+                if (mask.test(idx)) word |= (1ull << bit);
+            }
+            s.value8b(word);
+        }
+    }
+}
 
 void write_entity(Serializer& s, afterhours::Entity& e) {
     // Versioned entity record.
@@ -96,7 +125,7 @@ void write_entity(Serializer& s, afterhours::Entity& e) {
          ...);
     }(std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
 
-    s.ext(present, bitsery::ext::StdBitset{});
+    serialize_snapshot_mask(s, present);
 
     const auto& serdes = component_serdes();
     [&]<size_t... Is>(std::index_sequence<Is...>) {
@@ -124,7 +153,7 @@ void write_entity(Serializer& s, afterhours::Entity& e) {
     d.value1b(e.cleanup);
 
     SnapshotComponentMask present{};
-    d.ext(present, bitsery::ext::StdBitset{});
+    serialize_snapshot_mask(d, present);
     if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
 
     const auto& serdes = component_serdes();
