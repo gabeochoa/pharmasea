@@ -7,6 +7,7 @@
 #include "components/is_item_container.h"
 #include "dataclass/ingredient.h"
 #include "entity.h"
+#include "entity_helper.h"
 #include "entity_type.h"
 #include "post_deserialize_fixups.h"
 #include "system/system_manager.h"
@@ -102,6 +103,12 @@ void run_all_post_load_helpers(Entities& entities) {
     reinit_dynamic_model_names_after_load(entities);
     post_deserialize_fixups::run(entities);
     // Add other post-load helpers here in the future
+}
+
+void run_all_post_load_helpers() {
+    // Always run fixups against the authoritative server collection.
+    auto& collection = EntityHelper::get_server_collection();
+    run_all_post_load_helpers(collection.entities_DO_NOT_USE);
 }
 
 }  // namespace server_only
