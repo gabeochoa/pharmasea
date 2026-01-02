@@ -16,5 +16,6 @@ struct CanPerformJob : public BaseComponent {
         s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
 
         s.value4b(current);
+        // Only things that need to be rendered, need to be serialized :)
     }
 };
