@@ -6,18 +6,16 @@
 #include "../ah.h"
 #include "../building_locations.h"
 #include "../components/adds_ingredient.h"
-#include "../components/ai_clean_vomit.h"
-#include "../components/ai_drinking.h"
-#include "../components/ai_play_jukebox.h"
-#include "../components/ai_use_bathroom.h"
-#include "../components/ai_wait_in_queue.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_pathfind.h"
-#include "../components/can_perform_job.h"
+#include "../components/has_ai_bathroom_state.h"
+#include "../components/has_ai_target_entity.h"
+#include "../components/has_ai_target_location.h"
 #include "../components/has_fishing_game.h"
 #include "../components/has_patience.h"
 #include "../components/has_subtype.h"
 #include "../components/has_waiting_queue.h"
+#include "../components/is_ai_controlled.h"
 #include "../components/is_free_in_store.h"
 #include "../components/is_nux_manager.h"
 #include "../components/is_squirter.h"
@@ -429,45 +427,32 @@ void render_debug_num_uses_left(const Entity& entity, float) {
                      std::string(content).c_str(), 50);
 }
 
-template<typename C>
-void _render_ai_target_if_exists(const Entity& entity) {
-    if (entity.is_missing<C>()) return;
-    const C& ai_component = entity.get<C>();
-
-    // no active target
-    if (ai_component.target.missing()) return;
-
-    OptEntity opt_target =
-        EntityHelper::getEntityForID(ai_component.target.id());
-
-    // Didnt find the target for some reason...
-    if (!opt_target.valid()) return;
-
-    // TODO I would like for non debug mode if there would be a tooltip
-    // with the customer's face or something so we know who is going there
-    Entity& target = opt_target.asE();
-    vec3 position = target.get<Transform>().pos();
-    DrawCubeCustom(position, 1.f, 1.f, 1.f, 0, ui::color::hot_pink,
-                   ui::color::hot_pink);
-}
-
 void render_debug_ai_info(const Entity& entity, float) {
-    if (entity.is_missing<CanPerformJob>()) return;
+    if (entity.is_missing<IsAIControlled>()) return;
 
     const Transform& transform = entity.get<Transform>();
 
-    const CanPerformJob& cpj = entity.get<CanPerformJob>();
-
-    const auto content =
-        fmt::format("{}", magic_enum::enum_name<JobType>(cpj.current));
+    const IsAIControlled& ai = entity.get<IsAIControlled>();
+    const auto content = fmt::format("{}", magic_enum::enum_name(ai.state));
     DrawFloatingText(vec::raise(transform.raw(), 2.0f), Preload::get().font,
                      std::string(content).c_str(), 150);
 
-    _render_ai_target_if_exists<AICleanVomit>(entity);
-    _render_ai_target_if_exists<AIUseBathroom>(entity);
-    _render_ai_target_if_exists<AIDrinking>(entity);
-    _render_ai_target_if_exists<AIWaitInQueue>(entity);
-    _render_ai_target_if_exists<AIPlayJukebox>(entity);
+    if (entity.has<HasAITargetEntity>()) {
+        const EntityRef& ref = entity.get<HasAITargetEntity>().entity;
+        OptEntity opt_target = ref.resolve();
+        if (opt_target.valid()) {
+            vec3 position = opt_target.asE().get<Transform>().pos();
+            DrawCubeCustom(position, 1.f, 1.f, 1.f, 0, ui::color::hot_pink,
+                           ui::color::hot_pink);
+        }
+    }
+    if (entity.has<HasAITargetLocation>()) {
+        const auto& pos_opt = entity.get<HasAITargetLocation>().pos;
+        if (pos_opt.has_value()) {
+            DrawCubeCustom(vec::to3(pos_opt.value()), 1.f, 1.f, 1.f, 0,
+                           ui::color::hot_pink, ui::color::hot_pink);
+        }
+    }
 }
 
 void render_debug_filter_info(const Entity& entity, float) {
@@ -958,11 +943,10 @@ void render_spawner_next_customer(const Entity& entity, float) {
 }
 
 void render_toilet_floor_timer(const Entity& entity, float) {
-    if (entity.is_missing<AIUseBathroom>()) return;
+    if (entity.is_missing<HasAIBathroomState>()) return;
     const Transform& transform = entity.get<Transform>();
-    const AIUseBathroom& aiusebathroom = entity.get<AIUseBathroom>();
-
-    const AITakesTime floor_timer = aiusebathroom.floor_timer;
+    const HasAIBathroomState& bathroom = entity.get<HasAIBathroomState>();
+    const AITakesTime floor_timer = bathroom.floor_timer;
 
     // no timer set yet
     if (!floor_timer.initialized) return;
@@ -1001,16 +985,16 @@ void render_patience(const Entity& entity, float) {
 }
 
 void render_ai_info(const Entity& entity, float) {
-    if (entity.is_missing<CanPerformJob>()) return;
+    if (entity.is_missing<IsAIControlled>()) return;
     const Transform& transform = entity.get<Transform>();
-    const CanPerformJob& cpj = entity.get<CanPerformJob>();
+    const IsAIControlled& ai = entity.get<IsAIControlled>();
 
     const vec3 position = transform.pos();
     const vec3 icon_position = vec3{position.x + (TILESIZE * 0.05f),  //
                                     position.y + (TILESIZE * 2.f),    //
                                     position.z};
-    switch (cpj.current) {
-        case Bathroom: {
+    switch (ai.state) {
+        case IsAIControlled::State::Bathroom: {
             GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
             // TODO reuse the toilet upgrade one for now
             raylib::Texture texture = TextureLibrary::get().get("gotta_go");
@@ -1019,7 +1003,7 @@ void render_ai_info(const Entity& entity, float) {
                                   icon_position + vec3{0.f, 1.f, 0},
                                   0.75f * TILESIZE, raylib::WHITE);
         } break;
-        case Paying: {
+        case IsAIControlled::State::Pay: {
             GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
             // TODO reuse the store dollar sign one for now
             raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
@@ -1028,17 +1012,13 @@ void render_ai_info(const Entity& entity, float) {
                                   icon_position + vec3{0.f, 1.f, 0},
                                   0.75f * TILESIZE, raylib::WHITE);
         } break;
-        case NoJob:
-        case Wait:
-        case WaitInQueue:
-        case Drinking:
-        case Mopping:
-        case PlayJukebox:
-        case Wandering:
-        case EnterStore:
-        case WaitInQueueForPickup:
-        case Leaving:
-        case MAX_JOB_TYPE:
+        case IsAIControlled::State::Wander:
+        case IsAIControlled::State::QueueForRegister:
+        case IsAIControlled::State::AtRegisterWaitForDrink:
+        case IsAIControlled::State::Drinking:
+        case IsAIControlled::State::PlayJukebox:
+        case IsAIControlled::State::CleanVomit:
+        case IsAIControlled::State::Leave:
             break;
     }
 }

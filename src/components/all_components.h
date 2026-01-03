@@ -18,13 +18,6 @@
 // ---- Component type includes (the canonical "all components" list) ----
 
 #include "adds_ingredient.h"
-#include "ai_clean_vomit.h"
-#include "ai_close_tab.h"
-#include "ai_drinking.h"
-#include "ai_play_jukebox.h"
-#include "ai_use_bathroom.h"
-#include "ai_wait_in_queue.h"
-#include "ai_wandering.h"
 #include "has_ai_bathroom_state.h"
 #include "has_ai_clean_vomit_state.h"
 #include "has_ai_cooldown.h"
@@ -52,7 +45,6 @@
 #include "can_hold_item.h"
 #include "can_order_drink.h"
 #include "can_pathfind.h"
-#include "can_perform_job.h"
 #include "collects_customer_feedback.h"
 #include "collects_user_input.h"
 #include "conveys_held_item.h"
@@ -117,7 +109,7 @@ using ComponentTypes = std::tuple<
     CanHighlightOthers,
     CanHoldFurniture,
     CanBeGhostPlayer,
-    CanPerformJob,
+    IsAIControlled,
     ModelRenderer,
     CanBePushed,
     CustomHeldItemPosition,
@@ -170,13 +162,18 @@ using ComponentTypes = std::tuple<
     CanBeHeld_HT,
     CanBeHeld,
     BypassAutomationState,
-    AICloseTab,
-    AIPlayJukebox,
-    AIWaitInQueue,
-    AIDrinking,
-    AIUseBathroom,
-    AIWandering,
-    AICleanVomit>;
+    // ---- Consolidated AI (Part B) ----
+    HasAICooldown,
+    HasAITargetEntity,
+    HasAITargetLocation,
+    HasAIQueueState,
+    HasAIDrinkState,
+    HasAIBathroomState,
+    HasAIPayState,
+    HasAIJukeboxState,
+    HasAIWanderState,
+    HasAICleanVomitState,
+    IsCustomer>;
 
 namespace detail {
 constexpr std::uint64_t kFnv1aOffset = 14695981039346656037ull;

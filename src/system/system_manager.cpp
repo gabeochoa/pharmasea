@@ -8,7 +8,6 @@
 
 ///
 #include "../building_locations.h"
-#include "../components/ai_wait_in_queue.h"
 #include "../components/can_change_settings_interactively.h"
 #include "../components/can_hold_item.h"
 #include "../components/custom_item_position.h"
@@ -646,8 +645,10 @@ bool _create_nuxes(Entity&) {
                     auto customer = EntityHelper::getEntityForID(inux.entityID);
                     if (!customer) return false;
 
-                    AIWaitInQueue& ai_wiq = customer->get<AIWaitInQueue>();
-                    return ai_wiq.line_wait.last_line_position == 0;
+                    if (customer->is_missing<IsAIControlled>()) return false;
+                    const IsAIControlled& ai = customer->get<IsAIControlled>();
+                    return ai.state ==
+                           IsAIControlled::State::AtRegisterWaitForDrink;
                 })
                 .set_content(TODO_TRANSLATE("This is a customer, they will "
                                             "wait in line, \nand once at "
