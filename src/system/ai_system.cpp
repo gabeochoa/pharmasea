@@ -91,19 +91,23 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     // TODO :DESIGN: how many ingredients have to be correct?
-    // As people get more drunk they should care less and less.
+    // as people get more drunk they should care less and less
+    //
     bool all_ingredients_match =
         madeDrink.get<IsDrink>().matches_drink(orderedDrink);
 
-    // All good.
+    // all good
     if (all_ingredients_match) return true;
-    // Otherwise something was wrong with the drink.
+    // Otherwise Something was wrong with the drink
 
-    // For debug, if we have this set, just assume it was correct.
+    // For debug, if we have this set, just assume it was correct
     if (GLOBALS.get_or_default<bool>("skip_ingredient_match", false)) {
         return true;
     }
 
+    // If you have the mocktail upgrade an an ingredient was wrong,
+    // figure out if it was alcohol and if theres only one missing then
+    // we are good
     if (irsm.has_upgrade_unlocked(UpgradeClass::Mocktails)) {
         Recipe recipe = RecipeLibrary::get().get(
             std::string(magic_enum::enum_name(orderedDrink)));
