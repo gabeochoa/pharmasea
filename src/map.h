@@ -132,6 +132,6 @@ struct Map {
             }
         }
 
-        return {};
+        return std::errc{};
     }
 };

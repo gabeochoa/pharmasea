@@ -66,7 +66,7 @@ struct SaveGameHeader {
             if (self.seed.size() > MAX_SEED_LENGTH) return std::errc::message_size;
         }
 
-        return {};
+        return std::errc{};
     }
 };
 
