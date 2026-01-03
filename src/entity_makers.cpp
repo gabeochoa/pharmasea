@@ -7,13 +7,6 @@
 #include <ranges>
 
 #include "ah.h"
-#include "components/ai_clean_vomit.h"
-#include "components/ai_close_tab.h"
-#include "components/ai_drinking.h"
-#include "components/ai_play_jukebox.h"
-#include "components/ai_use_bathroom.h"
-#include "components/ai_wait_in_queue.h"
-#include "components/ai_wandering.h"
 #include "components/bypass_automation_state.h"
 #include "components/can_change_settings_interactively.h"
 #include "components/can_hold_handtruck.h"
@@ -28,6 +21,8 @@
 #include "components/is_bank.h"
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
+#include "components/is_ai_controlled.h"
+#include "components/is_customer.h"
 #include "components/is_nux_manager.h"
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
@@ -58,10 +53,10 @@
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
 #include "components/can_order_drink.h"
-#include "components/can_perform_job.h"
 #include "components/collects_user_input.h"
 #include "components/conveys_held_item.h"
 #include "components/custom_item_position.h"
+#include "components/has_ai_cooldown.h"
 #include "components/has_base_speed.h"
 #include "components/has_client_id.h"
 #include "components/has_dynamic_model_name.h"
@@ -262,7 +257,8 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     make_entity(person, options, p);
     add_person_components(person, options);
 
-    person.addComponent<CanPerformJob>();
+    person.addComponent<IsAIControlled>();
+    person.addComponent<HasAICooldown>();
     person.addComponent<CanPathfind>().set_parent(person.id);
 }
 
@@ -276,8 +272,9 @@ void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
         util::convertToSnakeCase(EntityType::MopBuddy));
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
-    mop_buddy.get<CanPerformJob>().current = JobType::Mopping;
-    mop_buddy.addComponent<AICleanVomit>();
+    mop_buddy.get<IsAIControlled>()
+        .set_initial_state(IsAIControlled::State::CleanVomit)
+        .enable_ability(IsAIControlled::AbilityCleanVomit);
 
     mop_buddy
         .addComponent<IsItem>()  //
@@ -1426,12 +1423,15 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    customer.get<CanPerformJob>().current = JobType::WaitInQueue;
+    customer.addComponent<IsCustomer>();
+    customer.get<IsAIControlled>()
+        .set_initial_state(IsAIControlled::State::QueueForRegister)
+        .set_ability_state(IsAIControlled::AbilityUseBathroom,
+                           irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet))
+        .set_ability_state(IsAIControlled::AbilityPlayJukebox,
+                           irsm.has_upgrade_unlocked(UpgradeClass::Jukebox));
     // TODO for now, eventually move to customer spawner
     if (has_order) {
-        customer.addComponent<AIDrinking>();
-        customer.addComponent<AIWaitInQueue>();
-        customer.addComponent<AICloseTab>();
         CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();
         // If we are the first guy spawned this round, force the drink to be the
         // most recently unlocked one
@@ -1441,19 +1441,6 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
 
             cod.set_first_order(ipp.get_last_unlocked());
         }
-    }
-
-    customer.addComponent<AIWandering>();
-
-    bool bathroom_unlocked =
-        irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet);
-    if (bathroom_unlocked) {
-        customer.addComponent<AIUseBathroom>();
-    }
-
-    bool jukebox_unlocked = irsm.has_upgrade_unlocked(UpgradeClass::Jukebox);
-    if (jukebox_unlocked) {
-        customer.addComponent<AIPlayJukebox>();
     }
 
     customer.addComponent<HasPatience>().update_max(20.f);

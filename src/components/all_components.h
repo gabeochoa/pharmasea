@@ -18,13 +18,17 @@
 // ---- Component type includes (the canonical "all components" list) ----
 
 #include "adds_ingredient.h"
-#include "ai_clean_vomit.h"
-#include "ai_close_tab.h"
-#include "ai_drinking.h"
-#include "ai_play_jukebox.h"
-#include "ai_use_bathroom.h"
-#include "ai_wait_in_queue.h"
-#include "ai_wandering.h"
+#include "has_ai_bathroom_state.h"
+#include "has_ai_cooldown.h"
+#include "has_ai_drink_state.h"
+#include "has_ai_jukebox_state.h"
+#include "has_ai_pay_state.h"
+#include "has_ai_queue_state.h"
+#include "has_ai_target_entity.h"
+#include "has_ai_target_location.h"
+#include "has_ai_wander_state.h"
+#include "is_ai_controlled.h"
+#include "is_customer.h"
 #include "base_component.h"
 #include "bypass_automation_state.h"
 #include "can_be_ghost_player.h"
@@ -40,7 +44,6 @@
 #include "can_hold_item.h"
 #include "can_order_drink.h"
 #include "can_pathfind.h"
-#include "can_perform_job.h"
 #include "collects_customer_feedback.h"
 #include "collects_user_input.h"
 #include "conveys_held_item.h"
@@ -105,7 +108,7 @@ using ComponentTypes = std::tuple<
     CanHighlightOthers,
     CanHoldFurniture,
     CanBeGhostPlayer,
-    CanPerformJob,
+    IsAIControlled,
     ModelRenderer,
     CanBePushed,
     CustomHeldItemPosition,
@@ -158,13 +161,17 @@ using ComponentTypes = std::tuple<
     CanBeHeld_HT,
     CanBeHeld,
     BypassAutomationState,
-    AICloseTab,
-    AIPlayJukebox,
-    AIWaitInQueue,
-    AIDrinking,
-    AIUseBathroom,
-    AIWandering,
-    AICleanVomit>;
+    // ---- Consolidated AI (Part B) ----
+    HasAICooldown,
+    HasAITargetEntity,
+    HasAITargetLocation,
+    HasAIQueueState,
+    HasAIDrinkState,
+    HasAIBathroomState,
+    HasAIPayState,
+    HasAIJukeboxState,
+    HasAIWanderState,
+    IsCustomer>;
 
 namespace detail {
 constexpr std::uint64_t kFnv1aOffset = 14695981039346656037ull;

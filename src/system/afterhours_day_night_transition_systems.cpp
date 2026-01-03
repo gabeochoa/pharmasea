@@ -4,11 +4,11 @@
 #include "../components/can_hold_item.h"
 #include "../components/can_order_drink.h"
 #include "../components/can_pathfind.h"
-#include "../components/can_perform_job.h"
 #include "../components/has_day_night_timer.h"
 #include "../components/has_name.h"
 #include "../components/has_progression.h"
 #include "../components/has_waiting_queue.h"
+#include "../components/is_ai_controlled.h"
 #include "../components/is_item.h"
 #include "../components/is_item_container.h"
 #include "../components/is_round_settings_manager.h"
@@ -63,7 +63,7 @@ inline void tell_customers_to_leave(Entity& entity) {
     if (!check_type(entity, EntityType::Customer)) return;
 
     // Force leaving job
-    entity.get<CanPerformJob>().current = JobType::Leaving;
+    entity.get<IsAIControlled>().set_state(IsAIControlled::State::Leave);
     entity.removeComponentIfExists<CanPathfind>();
     entity.addComponent<CanPathfind>().set_parent(entity.id);
 }
@@ -175,7 +175,7 @@ struct DeleteFloatingItemsWhenLeavingInRoundSystem
 
 struct TellCustomersToLeaveSystem
     : public afterhours::System<afterhours::tags::All<EntityType::Customer>,
-                                CanPerformJob> {
+                                IsAIControlled> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {
@@ -186,9 +186,9 @@ struct TellCustomersToLeaveSystem
             return false;
         }
     }
-    virtual void for_each_with(Entity& entity, CanPerformJob& cpj,
+    virtual void for_each_with(Entity& entity, IsAIControlled& ai,
                                float) override {
-        cpj.current = JobType::Leaving;
+        ai.set_state(IsAIControlled::State::Leave);
         entity.removeComponentIfExists<CanPathfind>();
         entity.addComponent<CanPathfind>().set_parent(entity.id);
     }

@@ -1,22 +1,19 @@
-
-
 #pragma once
 
-#include "../engine/log.h"
-#include "../job.h"
 #include "base_component.h"
+#include "cooldown_info.h"
 
-struct CanPerformJob : public BaseComponent {
-    JobType current = JobType::NoJob;
+struct HasAICooldown : public BaseComponent {
+    CooldownInfo cooldown{};
 
    private:
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        // Only things that need to be rendered, need to be serialized :)
         return archive(                      //
             static_cast<BaseComponent&>(self), //
-            self.current                     //
+            self.cooldown                    //
         );
     }
 };
+

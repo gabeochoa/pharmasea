@@ -1,26 +1,90 @@
-
 #include "ai_system.h"
 
-#include "../components/ai_clean_vomit.h"
-#include "../components/ai_close_tab.h"
-#include "../components/ai_drinking.h"
-#include "../components/ai_play_jukebox.h"
-#include "../components/ai_use_bathroom.h"
-#include "../components/ai_wait_in_queue.h"
-#include "../components/ai_wandering.h"
+#include <set>
+
+#include "../components/can_hold_item.h"
 #include "../components/can_order_drink.h"
-#include "../components/can_perform_job.h"
+#include "../components/has_ai_bathroom_state.h"
+#include "../components/has_ai_drink_state.h"
+#include "../components/has_ai_jukebox_state.h"
+#include "../components/has_ai_pay_state.h"
+#include "../components/has_ai_queue_state.h"
+#include "../components/has_ai_target_entity.h"
+#include "../components/has_ai_target_location.h"
+#include "../components/has_ai_wander_state.h"
 #include "../components/has_base_speed.h"
 #include "../components/has_last_interacted_customer.h"
 #include "../components/has_patience.h"
 #include "../components/has_speech_bubble.h"
+#include "../components/has_work.h"
 #include "../components/is_bank.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
 #include "../components/is_toilet.h"
-#include "../entity_id.h"
+#include "../components/transform.h"
+#include "../entity_helper.h"
+#include "../entity_makers.h"
+#include "../globals.h"
+#include "../recipe_library.h"
+
+#include "ai_entity_helpers.h"
+#include "ai_helper.h"
+#include "ai_queue_helpers.h"
+#include "ai_targeting.h"
 
 namespace system_manager::ai {
+
+namespace {
+void wander_pause(Entity& e, IsAIControlled::State resume) {
+    IsAIControlled& ctrl = e.get<IsAIControlled>();
+    ctrl.set_resume_state(resume);
+    ctrl.set_state(IsAIControlled::State::Wander);
+    // Reset wander scratch so it picks a new dwell/target.
+    e.removeComponentIfExists<HasAITargetLocation>();
+    reset_component<HasAIWanderState>(e);
+}
+
+void set_new_customer_order(Entity& entity) {
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsProgressionManager& progressionManager =
+        sophie.get<IsProgressionManager>();
+
+    CanOrderDrink& cod = entity.get<CanOrderDrink>();
+    cod.set_order(progressionManager.get_random_unlocked_drink());
+
+    // Clear any old drinking target/timer.
+    entity.removeComponentIfExists<HasAITargetLocation>();
+    reset_component<HasAIDrinkState>(entity);
+}
+
+[[nodiscard]] bool needs_bathroom_now(Entity& entity) {
+    if (entity.is_missing<CanOrderDrink>()) return false;
+    if (entity.is_missing<IsAIControlled>()) return false;
+    if (!entity.get<IsAIControlled>().has_ability(
+            IsAIControlled::AbilityUseBathroom))
+        return false;
+
+    // Don't send them to the bathroom while holding something.
+    if (entity.has<CanHoldItem>()) {
+        if (!entity.get<CanHoldItem>().empty()) return false;
+    }
+
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+    int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
+    const CanOrderDrink& cod = entity.get<CanOrderDrink>();
+    return cod.get_drinks_in_bladder() >= bladder_size;
+}
+
+void enter_bathroom(Entity& entity, IsAIControlled::State return_to) {
+    entity.get<IsAIControlled>().set_state(IsAIControlled::State::Bathroom);
+    entity.removeComponentIfExists<HasAITargetEntity>();
+    entity.removeComponentIfExists<HasAITargetLocation>();
+    reset_component<HasAIBathroomState>(entity);
+    HasAIBathroomState& bs = entity.get<HasAIBathroomState>();
+    bs.next_state = return_to;
+}
+}  // namespace
 
 bool validate_drink_order(const Entity& customer, Drink orderedDrink,
                           Item& madeDrink) {
@@ -141,121 +205,119 @@ float get_speed_for_entity(Entity& entity) {
     return base_speed;
 }
 
-void next_job(Entity& entity, JobType suggestion) {
-    if (entity.has<AIUseBathroom>()) {
-        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+namespace {
+void process_state_wander(Entity& entity, IsAIControlled& ctrl, float dt) {
+    (void) ai_tick_with_cooldown(entity, dt, 0.25f);
+
+    HasAITargetLocation& tgt = ensure_component<HasAITargetLocation>(entity);
+    HasAIWanderState& ws = ensure_component<HasAIWanderState>(entity);
+
+    if (!tgt.pos.has_value()) {
+        Entity& sophie =
+            EntityHelper::getNamedEntity(NamedEntity::Sophie);
         const IsRoundSettingsManager& irsm =
             sophie.get<IsRoundSettingsManager>();
-        const CanOrderDrink& cod = entity.get<CanOrderDrink>();
 
-        int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
-        bool gotta_go = (cod.get_drinks_in_bladder() >= bladder_size);
-        if (gotta_go) {
-            entity.get<CanPerformJob>().current = JobType::Bathroom;
-            entity.get<AIUseBathroom>().next_job = suggestion;
-            return;
-        }
-    }
+        float max_dwell_time = irsm.get<float>(ConfigKey::MaxDwellTime);
+        float dwell_time =
+            RandomEngine::get().get_float(1.f, max_dwell_time);
+        ws.timer.set_time(dwell_time);
 
-    if (suggestion == JobType::Wandering) {
-        entity.get<AIWandering>().next_job =
-            entity.get<CanPerformJob>().current;
-    }
-
-    entity.get<CanPerformJob>().current = suggestion;
-}
-
-void process_ai_waitinqueue(Entity& entity, float dt) {
-    if (entity.is_missing<AIWaitInQueue>()) return;
-    if (entity.is_missing<CanOrderDrink>()) return;
-
-    AIWaitInQueue& aiwait = entity.get<AIWaitInQueue>();
-
-    bool found = aiwait.target.find_if_missing(
-        entity,
-        [](const Entity& reg) {
-            return reg.get<HasWaitingQueue>().has_space();
-        },
-        [&](Entity& best_register) {
-            aiwait.line_wait.add_to_queue(best_register, entity);
-        });
-
-    if (!found) {
-        next_job(entity, JobType::Wandering);
-        return;
+        tgt.pos = pick_random_walkable_near(entity).value_or(
+            entity.get<Transform>().as2());
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        aiwait.line_wait.position, get_speed_for_entity(entity) * dt);
+        tgt.pos.value(), get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
-    aiwait.pass_time(dt);
-    if (!aiwait.ready()) return;
+    if (!ws.timer.pass_time(dt)) return;
 
-    OptEntity opt_reg = EntityHelper::getEntityForID(aiwait.target.id());
+    tgt.pos.reset();
+    ctrl.set_state(ctrl.resume_state);
+}
+
+void process_state_queue_for_register(Entity& entity, float dt) {
+    (void) ai_tick_with_cooldown(entity, dt, 0.10f);
+    if (entity.is_missing<CanOrderDrink>()) return;
+
+    HasAITargetEntity& tgt = ensure_component<HasAITargetEntity>(entity);
+    HasAIQueueState& qs = ensure_component<HasAIQueueState>(entity);
+
+    if (!entity_ref_valid(tgt.entity)) {
+        OptEntity best = find_best_register_with_space(entity);
+        if (!best) {
+            wander_pause(entity, IsAIControlled::State::QueueForRegister);
+            return;
+        }
+        Entity& best_reg = best.asE();
+        tgt.entity.set(best_reg);
+        line_add_to_queue(entity, qs.line_wait, best_reg);
+        (void) line_position_in_line(qs.line_wait, best_reg, entity);
+    }
+
+    OptEntity opt_reg = tgt.entity.resolve();
     if (!opt_reg) {
-        log_warn("got an invalid register");
+        tgt.entity.clear();
         return;
     }
     Entity& reg = opt_reg.asE();
+
     entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
 
-    bool reached_front = aiwait.line_wait.try_to_move_closer(
-        reg, entity, get_speed_for_entity(entity) * dt);
-    if (!reached_front) {
+    bool reached_front = line_try_to_move_closer(
+        qs.line_wait, reg, entity, get_speed_for_entity(entity) * dt);
+    // Keep a simple data signal for "front of line" without relying on
+    // micro-states.
+    qs.line_wait.queue_index = qs.line_wait.previous_line_index;
+    if (!reached_front) return;
+
+    entity.get<HasSpeechBubble>().on();
+    entity.get<HasPatience>().enable();
+
+    entity.get<IsAIControlled>().set_state(
+        IsAIControlled::State::AtRegisterWaitForDrink);
+}
+
+void process_state_at_register_wait_for_drink(Entity& entity, float dt) {
+    if (entity.is_missing<CanOrderDrink>()) return;
+    if (!ai_tick_with_cooldown(entity, dt, 0.50f)) return;
+
+    HasAITargetEntity& tgt = ensure_component<HasAITargetEntity>(entity);
+    OptEntity opt_reg = tgt.entity.resolve();
+    if (!opt_reg) {
+        tgt.entity.clear();
+        entity.get<IsAIControlled>().set_state(
+            IsAIControlled::State::QueueForRegister);
         return;
     }
-
-    // Now we should be at the front of the line
-
-    // we are at the front so turn it on
-    {
-        // TODO this logic likely should move to system
-        // TODO safer way to do it?
-        entity.get<HasSpeechBubble>().on();
-        entity.get<HasPatience>().enable();
-    }
+    Entity& reg = opt_reg.asE();
 
     CanOrderDrink& canOrderDrink = entity.get<CanOrderDrink>();
-    VALIDATE(canOrderDrink.has_order(), "I should have an order");
+    VALIDATE(canOrderDrink.has_order(), "customer should have an order");
 
     CanHoldItem& regCHI = reg.get<CanHoldItem>();
-
-    if (regCHI.empty()) {
-        log_info("ai: {} drink not ready yet", entity.id);
-        aiwait.reset();
-        return;
-    }
+    if (regCHI.empty()) return;
 
     OptEntity drink_opt = regCHI.item();
     if (!drink_opt) {
         regCHI.update(nullptr, entity_id::INVALID);
-        aiwait.reset();
         return;
     }
+
     Item& drink = drink_opt.asE();
-    if (!check_if_drink(drink)) {
-        log_info("this isnt a drink");
-        aiwait.reset();
-        return;
-    }
+    if (!check_if_drink(drink)) return;
 
-    std::string drink_name = drink.get<IsDrink>().underlying.has_value()
-                                 ? std::string(magic_enum::enum_name(
-                                       drink.get<IsDrink>().underlying.value()))
-                                 : "unknown";
-    log_info("ai: {} picked up drink {}", entity.id, drink_name);
+    std::string drink_name =
+        drink.get<IsDrink>().underlying.has_value()
+            ? std::string(magic_enum::enum_name(
+                  drink.get<IsDrink>().underlying.value()))
+            : "unknown";
 
-    Drink orderdDrink = canOrderDrink.order();
-    bool was_drink_correct = validate_drink_order(entity, orderdDrink, drink);
-    if (!was_drink_correct) {
-        log_info("ai: {} drink incorrect ordered={} got={}", entity.id,
-                 magic_enum::enum_name(orderdDrink), drink_name);
-        aiwait.reset();
-        return;
-    }
-
-    // I'm relatively happy with my drink
+    Drink orderedDrink = canOrderDrink.order();
+    bool was_drink_correct =
+        validate_drink_order(entity, orderedDrink, drink);
+    if (!was_drink_correct) return;
 
     auto [price, tip] = get_price_for_order(
         {.order = canOrderDrink.get_order(),
@@ -263,7 +325,6 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
              (int) entity.get<CanPathfind>().get_max_length(),
          .patience_pct = entity.get<HasPatience>().pct()});
 
-    // mark how much we will pay for the drink
     canOrderDrink.increment_tab(price);
     canOrderDrink.increment_tip(tip);
     canOrderDrink.apply_tip_multiplier(
@@ -273,191 +334,354 @@ void process_ai_waitinqueue(Entity& entity, float dt) {
     ourCHI.update(drink, entity.id);
     regCHI.update(nullptr, entity_id::INVALID);
 
-    log_info("ai: {} accepted drink={} price={} tip={}", entity.id, drink_name,
-             price, tip);
-    aiwait.line_wait.leave_line(reg, entity);
+    HasAIQueueState& qs = ensure_component<HasAIQueueState>(entity);
+    line_leave(qs.line_wait, reg, entity);
 
-    // TODO Should move to system
-    {
-        canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
-        entity.get<HasSpeechBubble>().off();
-        entity.get<HasPatience>().disable();
-        entity.get<HasPatience>().reset();
-    }
-    // Now that we are done and got our item, time to leave the store
-    log_info("leaving line");
+    canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
+    entity.get<HasSpeechBubble>().off();
+    entity.get<HasPatience>().disable();
+    entity.get<HasPatience>().reset();
 
-    // Not using next_job because you shouldnt go to the bathroom with your
-    // drink in your hand0
-    entity.get<CanPerformJob>().current = JobType::Drinking;
+    tgt.entity.clear();
+    reset_component<HasAIQueueState>(entity);
 
-    reset_job_component<AIWaitInQueue>(entity);
+    // We used HasAITargetLocation to move in the queue; clear it so the
+    // Drinking state can pick its own target and initialize its timer.
+    entity.removeComponentIfExists<HasAITargetLocation>();
+    reset_component<HasAIDrinkState>(entity);
+
+    entity.get<IsAIControlled>().set_state(IsAIControlled::State::Drinking);
 }
 
-void _set_customer_next_order(Entity& entity) {
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    // get next order
-    const IsProgressionManager& progressionManager =
-        sophie.get<IsProgressionManager>();
-
-    CanOrderDrink& cod = entity.get<CanOrderDrink>();
-    cod.set_order(progressionManager.get_random_unlocked_drink());
-
-    reset_job_component<AIDrinking>(entity);
-    next_job(entity, JobType::WaitInQueue);
-}
-
-void process_wandering(Entity& entity, float dt) {
-    if (entity.is_missing<AIWandering>()) return;
-
-    AIWandering& aiwandering = entity.get<AIWandering>();
-    aiwandering.pass_time(dt);
-    if (!aiwandering.ready()) return;
-
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-
-    bool found =
-        aiwandering.target.find_if_missing(entity, nullptr, [&](Entity&) {
-            float max_dwell_time = irsm.get<float>(ConfigKey::MaxDwellTime);
-            float dwell_time =
-                RandomEngine::get().get_float(1.f, max_dwell_time);
-            aiwandering.timer.set_time(dwell_time);
-        });
-    if (!found) {
-        return;
-    }
-
-    // We have a target
-    OptEntity opt_target_pos =
-        EntityHelper::getEntityForID(aiwandering.target.id());
-
-    bool reached = entity.get<CanPathfind>().travel_toward(
-        opt_target_pos.asE().get<Transform>().as2(),
-        get_speed_for_entity(entity) * dt);
-    if (!reached) return;
-
-    bool completed = aiwandering.timer.pass_time(dt);
-    if (!completed) {
-        return;
-    }
-
-    // Set it back to what we were doing before we started wandering
-    next_job(entity, aiwandering.next_job);
-    reset_job_component<AIWandering>(entity);
-}
-
-void process_ai_drinking(Entity& entity, float dt) {
-    if (entity.is_missing<AIDrinking>()) return;
+void process_state_drinking(Entity& entity, float dt) {
     if (entity.is_missing<CanOrderDrink>()) return;
+    (void) ai_tick_with_cooldown(entity, dt, 0.25f);
 
     Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    AIDrinking& aidrinking = entity.get<AIDrinking>();
-    aidrinking.pass_time(dt);
-    if (!aidrinking.ready()) return;
-
     CanOrderDrink& cod = entity.get<CanOrderDrink>();
-    if (cod.order_state != CanOrderDrink::OrderState::DrinkingNow) {
-        return;
-    }
+    if (cod.order_state != CanOrderDrink::OrderState::DrinkingNow) return;
 
-    bool found =
-        aidrinking.target.find_if_missing(entity, nullptr, [&](Entity&) {
-            float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
-            drink_time += RandomEngine::get().get_float(0.1f, 1.f);
-            aidrinking.timer.set_time(drink_time);
-        });
-    if (!found) {
-        return;
-    }
+    HasAITargetLocation& tgt = ensure_component<HasAITargetLocation>(entity);
+    HasAIDrinkState& ds = ensure_component<HasAIDrinkState>(entity);
 
-    // We have a target
-    const EntityID target_id = aidrinking.target.id();
-    OptEntity opt_drink_pos = EntityHelper::getEntityForID(target_id);
-
-    if (!opt_drink_pos) {
-        // Avoid crashing on asE(); clear the target so we can re-pick next tick.
-        log_warn("ai_drinking: missing drink_pos id={} for customer_id={}",
-                 target_id, entity.id);
-        aidrinking.target.unset();
-        aidrinking.reset();
-        return;
+    if (!tgt.pos.has_value()) {
+        float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
+        drink_time += RandomEngine::get().get_float(0.1f, 1.f);
+        ds.timer.set_time(drink_time);
+        tgt.pos = pick_random_walkable_near(entity).value_or(
+            entity.get<Transform>().as2());
     }
 
     bool reached = entity.get<CanPathfind>().travel_toward(
-        opt_drink_pos.asE().get<Transform>().as2(),
-        get_speed_for_entity(entity) * dt);
+        tgt.pos.value(), get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
-    bool completed = aidrinking.timer.pass_time(dt);
-    if (!completed) {
-        return;
-    }
+    if (!ds.timer.pass_time(dt)) return;
 
-    // Done with my drink, delete it
     CanHoldItem& chi = entity.get<CanHoldItem>();
     OptEntity held_opt = chi.item();
-    if (held_opt) {
-        held_opt.asE().cleanup = true;
-    }
+    if (held_opt) held_opt.asE().cleanup = true;
     chi.update(nullptr, entity_id::INVALID);
 
-    // Mark our current order finished
     cod.on_order_finished();
-
-    // TODO :MAKE_DURING_FIND: because we made an entity during find_target,
-    // we need to delete it before we unset
-    opt_drink_pos.asE().cleanup = true;
-
-    aidrinking.target.unset();
-
-    //
-    // Do we want another drink?
-    //
+    tgt.pos.reset();
 
     bool want_another = cod.wants_more_drinks();
-
-    // done drinking
     if (!want_another) {
-        // Now we are fully done so lets pay.
-        next_job(entity, JobType::Paying);
         cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
+        entity.get<IsAIControlled>().set_state(IsAIControlled::State::Pay);
         return;
     }
 
-    // TODO decide how often customers want to do this...
-    // for now lets just say every time
-    // TODO only have them go up when someone else changes the song (like as if
-    // they are annoyed) for now just random
-    bool jukebox_unlocked = irsm.has_upgrade_unlocked(UpgradeClass::Jukebox);
-    if (jukebox_unlocked) {
-        if (RandomEngine::get().get_bool()) {
-            next_job(entity, JobType::PlayJukebox);
-            return;
-        }
+    bool jukebox_allowed =
+        entity.get<IsAIControlled>().has_ability(
+            IsAIControlled::AbilityPlayJukebox);
+    if (jukebox_allowed && RandomEngine::get().get_bool()) {
+        entity.get<IsAIControlled>().set_state(
+            IsAIControlled::State::PlayJukebox);
+        return;
     }
-    _set_customer_next_order(entity);
+
+    set_new_customer_order(entity);
+    entity.get<IsAIControlled>().set_state(
+        IsAIControlled::State::QueueForRegister);
 }
 
-void process_ai_clean_vomit(Entity& entity, float dt) {
-    if (entity.is_missing<AICleanVomit>()) return;
-    AICleanVomit& aiclean = entity.get<AICleanVomit>();
+void process_state_pay(Entity& entity, float dt) {
+    if (entity.is_missing<CanOrderDrink>()) return;
+    if (!ai_tick_with_cooldown(entity, dt, 0.10f)) return;
 
-    aiclean.pass_time(dt);
-    if (!aiclean.ready()) return;
+    HasAITargetEntity& tgt = ensure_component<HasAITargetEntity>(entity);
+    HasAIPayState& ps = ensure_component<HasAIPayState>(entity);
 
-    bool found_target = aiclean.target.find_if_missing(entity);
-    if (!found_target) {
+    if (!entity_ref_valid(tgt.entity)) {
+        OptEntity best = find_best_register_with_space(entity);
+        if (!best) {
+            wander_pause(entity, IsAIControlled::State::Pay);
+            return;
+        }
+        tgt.entity.set(best.asE());
+        line_add_to_queue(entity, ps.line_wait, best.asE());
+    }
+
+    OptEntity opt_reg = tgt.entity.resolve();
+    if (!opt_reg) {
+        tgt.entity.clear();
+        return;
+    }
+    Entity& reg = opt_reg.asE();
+    entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
+
+    bool reached_front = line_try_to_move_closer(
+        ps.line_wait, reg, entity, get_speed_for_entity(entity) * dt, [&]() {
+            if (!ps.timer.initialized) {
+                Entity& sophie =
+                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
+                const IsRoundSettingsManager& irsm =
+                    sophie.get<IsRoundSettingsManager>();
+                float pay_process_time =
+                    irsm.get<float>(ConfigKey::PayProcessTime);
+                ps.timer.set_time(pay_process_time);
+            }
+        });
+    if (!reached_front) return;
+
+    // TODO show an icon cause right now it just looks like they are standing
+    // there
+    if (!ps.timer.pass_time(dt)) return;
+
+    // Now we should be at the front of the line.
+    // TODO i would like for the player to have to go over and "work" to
+    // process their payment.
+    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    CanOrderDrink& cod = entity.get<CanOrderDrink>();
+    {
+        IsBank& bank = sophie.get<IsBank>();
+        bank.deposit_with_tip(cod.get_current_tab(), cod.get_current_tip());
+        // i dont think we need to do this, but just in case
+        cod.clear_tab_and_tip();
+    }
+
+    line_leave(ps.line_wait, reg, entity);
+    tgt.entity.clear();
+    reset_component<HasAIPayState>(entity);
+
+    entity.get<IsAIControlled>().set_state(IsAIControlled::State::Leave);
+}
+
+void process_state_play_jukebox(Entity& entity, float dt) {
+    if (entity.is_missing<CanOrderDrink>()) return;
+    if (!ai_tick_with_cooldown(entity, dt, 0.10f)) return;
+
+    HasAITargetEntity& tgt = ensure_component<HasAITargetEntity>(entity);
+    HasAIJukeboxState& js = ensure_component<HasAIJukeboxState>(entity);
+
+    if (!entity_ref_valid(tgt.entity)) {
+        OptEntity best = find_best_jukebox_with_space(entity);
+        if (!best) {
+            set_new_customer_order(entity);
+            reset_component<HasAIJukeboxState>(entity);
+            entity.get<IsAIControlled>().set_state(
+                IsAIControlled::State::QueueForRegister);
+            return;
+        }
+
+        // We were the last person to put on a song, so we dont need to
+        // change it (yet...)
+        if (best->has<HasLastInteractedCustomer>() &&
+            best->get<HasLastInteractedCustomer>().customer.id ==
+                entity.id) {
+            set_new_customer_order(entity);
+            reset_component<HasAIJukeboxState>(entity);
+            entity.get<IsAIControlled>().set_state(
+                IsAIControlled::State::QueueForRegister);
+            return;
+        }
+
+        tgt.entity.set(best.asE());
+        line_add_to_queue(entity, js.line_wait, best.asE());
+    }
+
+    OptEntity opt_j = tgt.entity.resolve();
+    if (!opt_j) {
+        tgt.entity.clear();
+        return;
+    }
+    Entity& jukebox = opt_j.asE();
+    entity.get<Transform>().turn_to_face_pos(jukebox.get<Transform>().as2());
+
+    bool reached_front = line_try_to_move_closer(
+        js.line_wait, jukebox, entity, get_speed_for_entity(entity) * dt, [&]() {
+            if (!js.timer.initialized) {
+                // TODO make into a config?
+                js.timer.set_time(5.f);
+            }
+        });
+    if (!reached_front) return;
+
+    if (!js.timer.pass_time(dt)) return;
+
+    // TODO implement jukebox song change
+    {
+        Entity& sophie =
+            EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        IsBank& bank = sophie.get<IsBank>();
+        // TODO jukebox cost
+        bank.deposit(10);
+    }
+    if (jukebox.has<HasLastInteractedCustomer>()) {
+        // TODO it woud be nice to show the customer's face above the entity
+        jukebox.get<HasLastInteractedCustomer>().customer.set_id(entity.id);
+    }
+
+    line_leave(js.line_wait, jukebox, entity);
+    tgt.entity.clear();
+    reset_component<HasAIJukeboxState>(entity);
+
+    set_new_customer_order(entity);
+    entity.get<IsAIControlled>().set_state(
+        IsAIControlled::State::QueueForRegister);
+}
+
+void process_state_bathroom(Entity& entity, float dt) {
+    if (entity.is_missing<CanOrderDrink>()) {
+        entity.get<IsAIControlled>().set_state(IsAIControlled::State::Wander);
         return;
     }
 
-    // We have a target
-    OptEntity vomit = EntityHelper::getEntityForID(aiclean.target.id());
+    if (!needs_bathroom_now(entity)) {
+        HasAIBathroomState& bs = ensure_component<HasAIBathroomState>(entity);
+        entity.get<IsAIControlled>().set_state(bs.next_state);
+        reset_component<HasAIBathroomState>(entity);
+        return;
+    }
 
+    if (!ai_tick_with_cooldown(entity, dt, 0.10f)) return;
+
+    HasAIBathroomState& bs = ensure_component<HasAIBathroomState>(entity);
+    HasAITargetEntity& tgt = ensure_component<HasAITargetEntity>(entity);
+
+    if (!entity_ref_valid(tgt.entity)) {
+        OptEntity best = find_best_toilet_with_space(entity);
+        if (!best) return;
+        tgt.entity.set(best.asE());
+        line_add_to_queue(entity, bs.line_wait, best.asE());
+        bs.floor_timer.set_time(5.f);
+    }
+
+    OptEntity opt_toilet = tgt.entity.resolve();
+    if (!opt_toilet) {
+        tgt.entity.clear();
+        return;
+    }
+    Entity& toilet = opt_toilet.asE();
+    entity.get<Transform>().turn_to_face_pos(toilet.get<Transform>().as2());
+    IsToilet& istoilet = toilet.get<IsToilet>();
+
+    const auto on_finished = [&]() {
+        line_leave(bs.line_wait, toilet, entity);
+        tgt.entity.clear();
+        entity.get<CanOrderDrink>().empty_bladder();
+        istoilet.end_use();
+        (void) entity.get<CanPathfind>().travel_toward(
+            vec2{0, 0}, get_speed_for_entity(entity) * dt);
+
+        IsAIControlled& c = entity.get<IsAIControlled>();
+        c.set_state(bs.next_state);
+        reset_component<HasAIBathroomState>(entity);
+    };
+
+    if (bs.floor_timer.pass_time(dt)) {
+        auto& vom = EntityHelper::createEntity();
+        furniture::make_vomit(vom,
+                              SpawnInfo{.location =
+                                            entity.get<Transform>().as2(),
+                                        .is_first_this_round = false});
+        on_finished();
+        return;
+    }
+
+    int previous_position = bs.line_wait.previous_line_index;
+    bool reached_front = line_try_to_move_closer(
+        bs.line_wait, toilet, entity, get_speed_for_entity(entity) * dt);
+    int new_position = bs.line_wait.previous_line_index;
+
+    if (previous_position != new_position && bs.floor_timer.initialized) {
+        float totalTime = bs.floor_timer.reset_to;
+        (void) bs.floor_timer.pass_time(-1.f * totalTime * 0.1f);
+    }
+
+    if (!reached_front) return;
+
+    bool not_me = !istoilet.available() && !istoilet.is_user(entity.id);
+    if (not_me) return;
+
+    bool we_are_using_it = istoilet.is_user(entity.id);
+    if (!we_are_using_it) {
+        Entity& sophie =
+            EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        const IsRoundSettingsManager& irsm =
+            sophie.get<IsRoundSettingsManager>();
+        float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
+        bs.use_toilet_timer.set_time(piss_timer);
+        istoilet.start_use(entity.id);
+    }
+
+    (void) bs.floor_timer.pass_time(-1.f * dt);
+
+    if (bs.use_toilet_timer.pass_time(dt)) {
+        on_finished();
+    }
+}
+
+void process_state_clean_vomit(Entity& entity, float dt) {
+    if (!ai_tick_with_cooldown(entity, dt, 0.10f)) return;
+
+    // Only entities with the ability should run this state.
+    if (!entity.get<IsAIControlled>().has_ability(
+            IsAIControlled::AbilityCleanVomit))
+        return;
+    HasAITargetEntity& tgt = ensure_component<HasAITargetEntity>(entity);
+
+    if (!entity_ref_valid(tgt.entity)) {
+        auto other_ais = EntityQuery()
+                             .whereNotID(entity.id)
+                             .whereHasComponent<IsAIControlled>()
+                             .whereLambda([](const Entity& e) {
+                                 if (e.is_missing<IsAIControlled>())
+                                     return false;
+                                 return e.get<IsAIControlled>().has_ability(
+                                     IsAIControlled::AbilityCleanVomit);
+                             })
+                             .gen();
+        std::set<int> existing_targets;
+        for (const Entity& mop : other_ais) {
+            if (mop.is_missing<HasAITargetEntity>()) continue;
+            const EntityRef& r = mop.get<HasAITargetEntity>().entity;
+            if (r.empty()) continue;
+            existing_targets.insert(static_cast<int>(r.id));
+        }
+
+        bool more_boys_than_vomit =
+            existing_targets.size() < other_ais.size();
+
+        OptEntity vomit = EntityQuery()
+                              .whereType(EntityType::Vomit)
+                              .whereLambda([&](const Entity& v) {
+                                  if (more_boys_than_vomit) return true;
+                                  return !existing_targets.contains(v.id);
+                              })
+                              .orderByDist(entity.get<Transform>().as2())
+                              .gen_first();
+        if (!vomit) return;
+        tgt.entity.set(vomit.asE());
+    }
+
+    OptEntity vomit = tgt.entity.resolve();
     if (!vomit) {
-        aiclean.target.unset();
+        tgt.entity.clear();
         return;
     }
 
@@ -465,132 +689,15 @@ void process_ai_clean_vomit(Entity& entity, float dt) {
         vomit->get<Transform>().as2(), get_speed_for_entity(entity) * dt);
     if (!reached) return;
 
+    if (!vomit->has<HasWork>()) return;
     HasWork& vomWork = vomit->get<HasWork>();
     vomWork.call(vomit.asE(), entity, dt);
-    // check if we did it
     if (vomit->cleanup) {
-        aiclean.target.unset();
-        return;
+        tgt.entity.clear();
     }
 }
 
-void process_ai_use_bathroom(Entity& entity, float dt) {
-    if (entity.is_missing<AIUseBathroom>()) return;
-    AIUseBathroom& aibathroom = entity.get<AIUseBathroom>();
-
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-    const CanOrderDrink& cod = entity.get<CanOrderDrink>();
-
-    int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
-    bool gotta_go = (cod.get_drinks_in_bladder() >= bladder_size);
-    if (!gotta_go) return;
-
-    aibathroom.pass_time(dt);
-    if (!aibathroom.ready()) return;
-
-    bool found = aibathroom.target.find_if_missing(
-        entity,
-        [](const Entity& toilet) {
-            return toilet.get<HasWaitingQueue>().has_space();
-        },
-        [&](Entity& best_toilet) {
-            aibathroom.line_wait.add_to_queue(best_toilet, entity);
-
-            // TODO setting?
-            // right now just set it to 5 seconds in line until you go on the
-            // floor
-            aibathroom.floor_timer.set_time(5.f);
-        });
-    if (!found) return;
-
-    OptEntity opt_toilet = EntityHelper::getEntityForID(aibathroom.target.id());
-    if (!opt_toilet) {
-        log_warn("got an invalid toilet");
-        return;
-    }
-    Entity& toilet = opt_toilet.asE();
-    entity.get<Transform>().turn_to_face_pos(toilet.get<Transform>().as2());
-    IsToilet& istoilet = toilet.get<IsToilet>();
-
-    const auto _onFinishedGoing = [&]() {
-        aibathroom.line_wait.leave_line(toilet, entity);
-
-        aibathroom.target.unset();
-        entity.get<CanOrderDrink>().empty_bladder();
-        istoilet.end_use();
-
-        // TODO move away from it for a second
-        (void) entity.get<CanPathfind>().travel_toward(
-            vec2{0, 0}, get_speed_for_entity(entity) * dt);
-
-        // We specificaly dont use next_job() here because
-        // we dont want to infinite loop
-        entity.get<CanPerformJob>().current = aibathroom.next_job;
-
-        reset_job_component<AIUseBathroom>(entity);
-        return;
-    };
-
-    // We are now in line, so start the floor timer
-    bool floor_complete = aibathroom.floor_timer.pass_time(dt);
-    if (floor_complete) {
-        // ive been in line so long, im just gonna pee on the ground
-        auto& vom = EntityHelper::createEntity();
-        furniture::make_vomit(vom,
-                              SpawnInfo{
-                                  .location = entity.get<Transform>().as2(),
-                                  .is_first_this_round = false,
-                              });
-        // then empty bladder and end job
-        _onFinishedGoing();
-        return;
-    }
-
-    bool reached = entity.get<CanPathfind>().travel_toward(
-        aibathroom.line_wait.position, get_speed_for_entity(entity) * dt);
-    if (!reached) return;
-
-    int previous_position = aibathroom.line_wait.last_line_position;
-    bool reached_front = aibathroom.line_wait.try_to_move_closer(
-        toilet, entity, get_speed_for_entity(entity) * dt);
-    int new_position = aibathroom.line_wait.last_line_position;
-
-    if (previous_position != new_position) {
-        float totalTime = aibathroom.floor_timer.totalTime;
-        // when you move up a spot give a 10% timer boost
-        (void) aibathroom.floor_timer.pass_time(-1.f * totalTime * 0.1f);
-    }
-
-    if (!reached_front) {
-        return;
-    }
-
-    // Now we are at the front of the line
-
-    // Either needs cleaning or someone else is using it
-    bool not_me = !istoilet.available() && !istoilet.is_user(entity.id);
-    if (not_me) {
-        return;
-    }
-
-    bool we_are_using_it = istoilet.is_user(entity.id);
-    if (!we_are_using_it) {
-        float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
-        aibathroom.timer.set_time(piss_timer);
-        istoilet.start_use(entity.id);
-    }
-
-    // TODO can we just stop the timer if you are pissing
-    (void) aibathroom.floor_timer.pass_time(-1.f * dt);
-
-    bool completed = aibathroom.timer.pass_time(dt);
-    if (completed) {
-        _onFinishedGoing();
-    }
-}
-
-void process_ai_leaving(Entity& entity, float dt) {
+void process_state_leave(Entity& entity, float dt) {
     // TODO check the return value here and if true, stop running the
     // pathfinding
     // ^ does this mean just dynamically remove CanPathfind from the customer
@@ -601,167 +708,58 @@ void process_ai_leaving(Entity& entity, float dt) {
     (void) entity.get<CanPathfind>().travel_toward(
         vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
 }
+}  // namespace
 
-void process_ai_paying(Entity& entity, float dt) {
-    if (entity.is_missing<AICloseTab>()) return;
-    if (entity.is_missing<CanOrderDrink>()) return;
+void process_ai_entity(Entity& entity, float dt) {
+    if (entity.is_missing<CanPathfind>()) return;
+    if (entity.is_missing<IsAIControlled>()) return;
 
-    AICloseTab& aiclosetab = entity.get<AICloseTab>();
+    IsAIControlled& ctrl = entity.get<IsAIControlled>();
 
-    bool found_target = aiclosetab.target.find_if_missing(
-        entity,
-        [](const Entity& reg) {
-            return reg.get<HasWaitingQueue>().has_space();
-        },
-        [&](Entity& best_register) {
-            aiclosetab.line_wait.add_to_queue(best_register, entity);
-        });
-    if (!found_target) {
-        next_job(entity, JobType::Wandering);
-        return;
+    // Global interrupt: bathroom override (except while actively drinking/leaving).
+    if (ctrl.state != IsAIControlled::State::Bathroom &&
+        ctrl.state != IsAIControlled::State::Drinking &&
+        ctrl.state != IsAIControlled::State::Leave) {
+        if (needs_bathroom_now(entity)) {
+            enter_bathroom(entity, ctrl.state);
+        }
     }
 
-    bool reached = entity.get<CanPathfind>().travel_toward(
-        aiclosetab.line_wait.position, get_speed_for_entity(entity) * dt);
-    if (!reached) return;
+    switch (ctrl.state) {
+        case IsAIControlled::State::Wander:
+            process_state_wander(entity, ctrl, dt);
+            break;
+        case IsAIControlled::State::QueueForRegister:
+            process_state_queue_for_register(entity, dt);
+            break;
+        case IsAIControlled::State::AtRegisterWaitForDrink:
+            process_state_at_register_wait_for_drink(entity, dt);
+            break;
+        case IsAIControlled::State::Drinking:
+            process_state_drinking(entity, dt);
+            break;
 
-    aiclosetab.pass_time(dt);
-    if (!aiclosetab.ready()) return;
+        case IsAIControlled::State::Pay:
+            process_state_pay(entity, dt);
+            break;
 
-    OptEntity opt_reg = EntityHelper::getEntityForID(aiclosetab.target.id());
-    if (!opt_reg) {
-        log_warn("got an invalid register");
-        aiclosetab.target.unset();
-        return;
+        case IsAIControlled::State::PlayJukebox:
+            process_state_play_jukebox(entity, dt);
+            break;
+
+        case IsAIControlled::State::Bathroom:
+            process_state_bathroom(entity, dt);
+            break;
+
+        case IsAIControlled::State::CleanVomit:
+            process_state_clean_vomit(entity, dt);
+            break;
+
+        case IsAIControlled::State::Leave:
+            process_state_leave(entity, dt);
+            break;
     }
-    Entity& reg = opt_reg.asE();
-    entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
-
-    bool reached_front = aiclosetab.line_wait.try_to_move_closer(
-        reg, entity, get_speed_for_entity(entity) * dt, [&]() {
-            if (!aiclosetab.timer.initialized) {
-                Entity& sophie =
-                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
-                const IsRoundSettingsManager& irsm =
-                    sophie.get<IsRoundSettingsManager>();
-                float pay_process_time =
-                    irsm.get<float>(ConfigKey::PayProcessTime);
-                aiclosetab.timer.set_time(pay_process_time);
-            }
-        });
-    if (!reached_front) {
-        return;
-    }
-
-    // TODO show an icon cause right now it just looks like they are standing
-    // there
-    bool completed = aiclosetab.timer.pass_time(dt);
-    if (!completed) {
-        return;
-    }
-
-    // TODO just copy the time stuff from the other ai so its not instant
-
-    // Now we should be at the front of the line
-    // TODO i would like for the player to have to go over and "work" to process
-    // their payment
-
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    CanOrderDrink& cod = entity.get<CanOrderDrink>();
-    {
-        IsBank& bank = sophie.get<IsBank>();
-        bank.deposit_with_tip(cod.get_current_tab(), cod.get_current_tip());
-
-        // i dont think we need to do this, but just in case
-        cod.clear_tab_and_tip();
-    }
-
-    aiclosetab.line_wait.leave_line(reg, entity);
-
-    next_job(entity, JobType::Leaving);
-
-    reset_job_component<AICloseTab>(entity);
-}
-
-void process_jukebox_play(Entity& entity, float dt) {
-    if (entity.is_missing<AIPlayJukebox>()) return;
-    if (entity.is_missing<CanOrderDrink>()) return;
-
-    AIPlayJukebox& ai_play_jukebox = entity.get<AIPlayJukebox>();
-
-    bool found = ai_play_jukebox.target.find_if_missing(
-        entity,
-        [&](const Entity& best_jukebox) -> bool {
-            // We were the last person to put on a song, so we dont need to
-            // change it (yet...)
-            if (best_jukebox.get<HasLastInteractedCustomer>().customer.id ==
-                entity.id) {
-                return false;
-            }
-            return true;
-        },
-        [&](Entity& best_jukebox) -> void {
-            ai_play_jukebox.line_wait.add_to_queue(best_jukebox, entity);
-        });
-
-    if (!found) {
-        _set_customer_next_order(entity);
-        reset_job_component<AIPlayJukebox>(entity);
-        return;
-    }
-
-    bool reached = entity.get<CanPathfind>().travel_toward(
-        ai_play_jukebox.line_wait.position, get_speed_for_entity(entity) * dt);
-    if (!reached) return;
-
-    ai_play_jukebox.pass_time(dt);
-    if (!ai_play_jukebox.ready()) return;
-
-    OptEntity opt_reg =
-        EntityHelper::getEntityForID(ai_play_jukebox.target.id());
-    if (!opt_reg) {
-        log_warn("got an invalid jukebox");
-        ai_play_jukebox.target.unset();
-        return;
-    }
-    Entity& reg = opt_reg.asE();
-    entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
-
-    bool reached_front = ai_play_jukebox.line_wait.try_to_move_closer(
-        reg, entity, get_speed_for_entity(entity) * dt, [&]() {
-            if (!ai_play_jukebox.timer.initialized) {
-                // TODO make into a config?
-                float song_time = 5.f;
-                ai_play_jukebox.timer.set_time(song_time);
-            }
-        });
-    if (!reached_front) {
-        return;
-    }
-
-    // Now we should be at the front of the line
-
-    bool completed = ai_play_jukebox.timer.pass_time(dt);
-    if (!completed) {
-        return;
-    }
-
-    // TODO implement jukebox song change
-    {
-        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-        IsBank& bank = sophie.get<IsBank>();
-        // TODO jukebox cost
-        bank.deposit(10);
-    }
-
-    // TODO it woud be nice to show the customer's face above the entity
-    reg.get<HasLastInteractedCustomer>().customer.set_id(entity.id);
-
-    ai_play_jukebox.line_wait.leave_line(reg, entity);
-
-    _set_customer_next_order(entity);
-
-    reset_job_component<AIPlayJukebox>(entity);
 }
 
 }  // namespace system_manager::ai
+
