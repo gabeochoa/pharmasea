@@ -49,7 +49,7 @@ struct EntityRef {
         return EntityHelper::getEntityForID(id);
     }
 
-   private:
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         // Keep persistence ID-based for now (4 bytes), even if we cache handles

@@ -97,6 +97,7 @@ struct CanHoldItem : public BaseComponent {
     EntityType held_by;
     EntityFilter filter;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

@@ -47,6 +47,7 @@ struct IsFloorMarker : public BaseComponent {
    private:
     std::vector<int> marked_entities;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

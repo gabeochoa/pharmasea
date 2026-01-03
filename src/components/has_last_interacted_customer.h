@@ -9,6 +9,7 @@ struct HasLastInteractedCustomer : public BaseComponent {
     EntityRef customer{};
 
    private:
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

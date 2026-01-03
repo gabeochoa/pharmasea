@@ -54,6 +54,7 @@ struct IsItem : public BaseComponent {
     // Default to all
     EntityTypeSet hb_filter = EntityTypeSet().set();
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

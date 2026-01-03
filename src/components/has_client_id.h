@@ -15,6 +15,7 @@ struct HasClientID : public BaseComponent {
     int client_id = -1;
     long long last_ping_to_server = -1;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

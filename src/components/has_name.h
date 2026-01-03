@@ -16,6 +16,7 @@ struct HasName : public BaseComponent {
     int name_length = 1;
     std::string _name;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

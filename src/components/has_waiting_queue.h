@@ -54,6 +54,7 @@ struct HasWaitingQueue : public BaseComponent {
     // These impl are in job.cpp
     void dump_contents() const;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

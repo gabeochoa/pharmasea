@@ -284,6 +284,7 @@ struct Transform : public BaseComponent {
     vec3 raw_position = {0, 0, 0};
     vec3 visual_offset = {0, 0, 0};
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

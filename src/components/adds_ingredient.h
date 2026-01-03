@@ -66,6 +66,7 @@ struct AddsIngredient : public BaseComponent {
     OnDecrementFn on_decrement = nullptr;
     int num_uses = -1;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

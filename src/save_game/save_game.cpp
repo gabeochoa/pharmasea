@@ -181,7 +181,8 @@ bool SaveGameManager::save_slot(int slot, const Map& authoritative_map) {
             file  //
             );
         zpp::bits::failure(result)) {
-        log_warn("save_game: serialize failed slot={} err={}", slot, (int) result);
+        log_warn("save_game: serialize failed slot={} err={}", slot,
+                 static_cast<int>(static_cast<std::errc>(result)));
         return false;
     }
 
@@ -204,7 +205,7 @@ bool SaveGameManager::load_file(const fs::path& path, SaveGameFile& out) {
             );
         zpp::bits::failure(result)) {
         log_warn("save_game: load_file {} decode_err={}", path.string(),
-                 (int) result);
+                 static_cast<int>(static_cast<std::errc>(result)));
         return false;
     }
 

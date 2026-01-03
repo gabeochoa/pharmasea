@@ -75,6 +75,7 @@ struct Map {
     auto get_rand_walkable_register();
     void add_outside_triggers(vec2 origin);
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         // Pointer-free snapshot surface:

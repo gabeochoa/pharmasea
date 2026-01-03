@@ -20,6 +20,7 @@ struct SimpleColoredBoxRenderer : public BaseComponent {
     Color face_color = PINK;
     Color base_color = PINK;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

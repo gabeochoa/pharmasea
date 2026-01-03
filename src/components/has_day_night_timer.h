@@ -79,6 +79,7 @@ struct HasDayNightTimer : public BaseComponent {
     float current_length;
     bool is_day = true;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

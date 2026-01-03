@@ -34,6 +34,7 @@ struct SaveGameHeader {
     std::string magic = "PHARMSAVE";
 
    private:
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         // NOTE: we serialize magic first so quick header reads can fail fast.
@@ -60,6 +61,7 @@ struct SaveGameFile {
     Map map_snapshot;
 
    private:
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(  //

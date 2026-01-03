@@ -32,6 +32,7 @@ struct ModelRenderer : public BaseComponent {
    private:
     std::string model_name;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

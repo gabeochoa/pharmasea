@@ -12,6 +12,7 @@ struct HasBaseSpeed : public BaseComponent {
    private:
     float base_speed = 1.f;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         // We dont serialize because its fully serverside

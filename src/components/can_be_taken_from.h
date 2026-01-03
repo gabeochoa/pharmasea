@@ -12,6 +12,7 @@ struct CanBeTakenFrom : public BaseComponent {
    private:
     bool allowed = false;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

@@ -15,6 +15,7 @@ struct IsPnumaticPipe : public BaseComponent {
     [[nodiscard]] bool has_pair() const { return paired.id != entity_id::INVALID; }
 
    private:
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         // s.value4b(item_id);

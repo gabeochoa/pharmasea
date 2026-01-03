@@ -38,6 +38,7 @@ struct HasDynamicModelName : public BaseComponent {
     bool initialized = false;
     ModelNameFetcher fetcher;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         (void) self;

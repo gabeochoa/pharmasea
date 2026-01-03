@@ -33,16 +33,10 @@ struct IsBank : public BaseComponent {
               remainingTimeTotal(0.f) {}
         friend zpp::bits::access;
         constexpr static auto serialize(auto& archive, auto& self) {
-            if (auto result = archive(  //
-                    self.amount,        //
-                    self.extra          //
-                    );
-                zpp::bits::failure(result)) {
-                return result;
-            }
-
             // animation stuff
-            return archive(            //
+            return archive(             //
+                self.amount,           //
+                self.extra,            //
                 self.remainingTime,     //
                 self.remainingTimeTotal //
             );
@@ -99,24 +93,15 @@ struct IsBank : public BaseComponent {
     std::vector<Transaction> transactions;
     int coins = 0;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        using archive_type = std::remove_cvref_t<decltype(archive)>;
-        if (auto result = archive(                      //
-                static_cast<BaseComponent&>(self),       //
-                self.num_in_cart,                        //
-                self.num_transactions,                   //
-                self.transactions,                       //
-                self.coins                               //
-                );
-            zpp::bits::failure(result)) {
-            return result;
-        }
-        if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-            if (static_cast<int>(self.transactions.size()) > self.num_transactions) {
-                return std::errc::message_size;
-            }
-        }
-        return std::errc{};
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.num_in_cart,                //
+            self.num_transactions,           //
+            self.transactions,               //
+            self.coins                       //
+        );
     }
 };

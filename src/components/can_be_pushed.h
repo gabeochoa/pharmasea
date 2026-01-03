@@ -14,6 +14,7 @@ struct CanBePushed : public BaseComponent {
    private:
     vec3 force{0.0, 0.0, 0.0};
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         (void) self;

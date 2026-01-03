@@ -12,7 +12,7 @@ struct BaseComponent : public afterhours::BaseComponent {
     BaseComponent() = default;
     virtual ~BaseComponent() = default;
 
-   private:
+   public:
     friend zpp::bits::access;
-    constexpr static auto serialize(auto&, auto&) { return std::errc{}; }
+    constexpr static auto serialize(auto& archive, auto&) { return archive(); }
 };

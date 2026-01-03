@@ -56,6 +56,7 @@ struct HasSubtype : public BaseComponent {
     int end;
     int type_index;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //

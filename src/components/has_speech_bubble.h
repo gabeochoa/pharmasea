@@ -16,6 +16,7 @@ struct HasSpeechBubble : public BaseComponent {
     int max_icon_name_length = 20;
     std::string icon_name;
 
+   public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //
