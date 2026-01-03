@@ -132,18 +132,56 @@ If/when the “CanHoldX” approach starts to fragment again (new carryables, ne
 #### With these components
 
 - **`AIController`**
-  - **Fields**:
-    - `state` (enum: Wander, Queue, Order, Drink, Bathroom, Pay, Leave, …)
-    - `cooldown_remaining`
-    - `target_entity_id` (optional)
-    - `target_pos` (optional)
-    - `timer_remaining` (optional)
-    - (no generic “memory struct”)
-    - If something needs to persist across states, prefer either:
-      - an explicit named field (e.g. `last_register_id`), or
-      - a small per-behavior/task component you can reset independently.
+  - **Fields (explicit; no “memory” blob)**:
+
+```cpp
+// Proposed shape (illustrative; breaking-change OK)
+struct AIController {
+  enum class State {
+    Wander,
+    QueueForRegister,
+    AtRegisterWaitForDrink,
+    Drinking,
+    Bathroom,
+    Pay,
+    PlayJukebox,
+    CleanVomit,
+    Leave,
+  } state;
+
+  // Generic control / pacing
+  float cooldown_remaining = 0.f;     // "don't re-decide until"
+  float state_time_remaining = 0.f;   // generic timer for current state (if used)
+
+  // Generic targeting (used by many states)
+  int target_entity_id = -1;          // register/toilet/jukebox/mess/etc
+  vec2 target_pos = {0, 0};           // where we want to walk to (optional)
+  bool has_target_pos = false;
+
+  // Last chosen/known anchors (explicit, resettable)
+  int last_register_id = -1;          // helps avoid thrash; reset when desired
+  int last_toilet_id = -1;
+  int last_jukebox_id = -1;
+
+  // Queue-specific scratch (reset by resetting only Queue state)
+  int queue_index = -1;               // last known position in line (optional)
+  vec2 queue_stand_pos = {0, 0};
+  bool has_queue_pos = false;
+
+  // Wander-specific scratch
+  vec2 wander_goal = {0, 0};
+  bool has_wander_goal = false;
+
+  // "What next?" hint (lets you preserve current behavior where wander is a pause)
+  State resume_state = State::Wander;
+};
+```
+
+Notes:
+- If any field proves too state-specific, split it into a tiny per-state component (e.g. `AIQueueState`, `AIWanderState`) so you can still “reset just Drinking” cleanly.
+- The important part is **explicit named fields** (easy to debug) and **resettable per-state scratch**, not a generic “memory” bag.
 - **`IsCustomer`**
-  - Customer-specific durable data: patience/order/traits/bladder progress (things that must survive task resets).
+  - IsCustomer-specific durable data: patience/order/traits/bladder progress (things that must survive task resets).
   - The goal is to move “customer-ness” out of scattered components and into one place.
 - **`AgentTraits`** (optional)
   - Generic attribute flags/modifiers (speed multiplier, patience decay multiplier, thief flag, VIP flag).
@@ -395,7 +433,7 @@ This directly addresses the “growing factory complexity” problem.
 
 ### Phase 4: AI consolidation
 
-- Introduce `AIController` + `Customer`
+- Introduce `AIController` + `IsCustomer`
 - Move logic from `CanPerformJob` branching into controller behaviors
 - Remove per-behavior AI components
 - Add hooks for future features (thief, VIP, fire code, etc.)
@@ -420,7 +458,7 @@ This directly addresses the “growing factory complexity” problem.
 
 - Use:
   - `Area(policy=VIPZone)`
-  - `Customer.traits.vip = true` OR assign `AgentTraits{VIP}`
+  - `IsCustomer.traits.vip = true` OR assign `AgentTraits{VIP}`
   - AI decision rules read “which areas am I allowed to path to / order from”
   - Pricing system reads “served in VIP zone” multiplier
 
@@ -433,15 +471,15 @@ This directly addresses the “growing factory complexity” problem.
 
 ### Bladder / bathroom upgrades (“Break the Seal”, “Luxury Lavatories”)
 
-- `Customer` owns bladder counters.
+- `IsCustomer` owns bladder counters.
 - Bathroom usage becomes:
   - `AIController.state = Bathroom`
   - `Interactable(type=UseBathroom)` for toilet entity (or “BathroomZone” area policy)
-- Upgrade modifiers become data applied to `Customer` needs, not ad-hoc checks in AI components.
+- Upgrade modifiers become data applied to `IsCustomer` needs, not ad-hoc checks in AI components.
 
 ### Dynamic prices / queue-length pricing
 
-- With a unified `Customer` and unified queue representation, pricing system can be:
+- With a unified `IsCustomer` and unified queue representation, pricing system can be:
   - `PriceSystem`: reads `QueueState` length at register and applies config multipliers.
 
 ### Multi-floor / capacity / “fire code”
