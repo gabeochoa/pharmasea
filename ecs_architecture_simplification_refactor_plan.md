@@ -83,37 +83,41 @@ This refactor centers the game around a few reusable primitives:
 
 ### A) Holding / attachments consolidation
 
-#### Replace these components
+#### Update (design preference): keep explicit “CanHoldX” components
 
-- `CanHoldItem`
-- `CanHoldFurniture`
-- `CanHoldHandTruck`
-- `CanBeHeld` / `CanBeHeld_HT`
-- `HasRopeToItem`
-- (most of) `CustomHeldItemPosition`
-- (most of) `IsItem`’s “held_by/holder” bookkeeping
+The generic `Slot`/`AttachmentSockets` model is optional. If the goal is **simplicity and readability in gameplay code**, keep the current components because they communicate intent extremely well:
 
-#### With these components
+- **`CanHoldItem`**: “this entity can hold an item”
+- **`CanHoldFurniture`**: “this entity can hold furniture”
+- **`CanHoldHandTruck`**: “this entity can hold a handtruck”
+- **`CanBeHeld`** (and optionally `CanBeHeld_HT`): “this entity can be carried / is currently carried”
 
-- **`AttachmentParent`**
-  - **Fields**: `parent_id`, `socket_id` (or name), `local_offset`, `local_rotation`, `flags` (collidable? inherit facing?).
-  - Lives on the **child**.
-- **`AttachmentSockets`**
-  - Lives on the **parent**.
-  - Provides named anchors like `hand`, `surface`, `conveyor`, `rope_start`, etc.
-- **`Slot`** (single-slot containment)
-  - Lives on the **parent**.
-  - **Fields**: `held_entity_id`, `slot_kind` (Hand/Surface/Machine/Container), `filter`, `on_insert`/`on_remove` hooks as enum IDs (not lambdas).
-- **`CarryState`** (optional, if you still want “picked_up_at” semantics)
-  - Stores “picked up at” location/time for furniture/handtruck carry.
+Also: some entities need *multiple* of these simultaneously (e.g. player can hold an item + hold/drag a handtruck; a handtruck can hold furniture; furniture can hold an item), and keeping separate components makes that obvious and easy to reason about.
 
-#### Why this reduces complexity
+#### What we actually consolidate: the duplicated systems + special-cases
 
-- All “follow transform” logic is handled by **one AttachmentSystem**.
-- Collisions can be data-driven with a `Collider` component (see below), not special-cased by “if held then non-collidable”.
-- Rope becomes either:
-  - a chain of attachments, or
-  - a dedicated `Rope` component whose segments are attached children.
+Instead of replacing the components, consolidate the **implementation**:
+
+- **Unify held-position updates into one system**
+  - Replace `UpdateHeldItemPositionSystem`, `UpdateHeldFurniturePositionSystem`, and `UpdateHeldHandTruckPositionSystem` with a single **`HeldAttachmentUpdateSystem`** that:
+    - updates any held child transform (item/furniture/handtruck) using shared helpers
+    - uses consistent “socket” rules for placement (front/hand/top/behind), but those rules can remain *internal* (no new public component vocabulary required)
+    - continues to support `CustomHeldItemPosition` where you want explicit tuning (conveyor vs blender vs table), without forcing everything into a generic slot model
+
+- **Simplify collision behavior with one rule**
+  - Keep `CanBeHeld` as the mechanism:
+    - if `CanBeHeld::is_held()` → **non-collidable**
+  - Move the remaining exceptions out of hardcoded entity-type branches (e.g. rope/mopbuddy-holder edge cases) into either:
+    - a small `CollisionOverrides`/`CollisionCategory` component, or
+    - a small table keyed by `EntityType` (data-driven), so the collision function stays simple.
+
+- **Rope: keep as a domain feature**
+  - `HasRopeToItem` can stay if it remains a special-case mechanic (not “just another hold”).
+  - The win is to ensure rope positioning also uses the same shared “follow/offset” helpers as held items, so it stops being its own bespoke transform math path.
+
+#### Optional later step (only if needed)
+
+If/when the “CanHoldX” approach starts to fragment again (new carryables, new attachment-like mechanics), you can still introduce a generic attachment core *underneath* while keeping the `CanHoldItem`-style API surface. But it’s not required to get the simplicity wins right now.
 
 ---
 
