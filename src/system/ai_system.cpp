@@ -266,11 +266,16 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
                           Item& madeDrink) {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+    // TODO :DESIGN: how many ingredients have to be correct?
+    // As people get more drunk they should care less and less.
     bool all_ingredients_match =
         madeDrink.get<IsDrink>().matches_drink(orderedDrink);
 
+    // All good.
     if (all_ingredients_match) return true;
+    // Otherwise something was wrong with the drink.
 
+    // For debug, if we have this set, just assume it was correct.
     if (GLOBALS.get_or_default<bool>("skip_ingredient_match", false)) {
         return true;
     }
@@ -282,12 +287,35 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
         IngredientBitSet orderedDrinkSet = recipe.ingredients;
         IngredientBitSet madeDrinkSet = madeDrink.get<IsDrink>().ing();
 
+        // Imagine we have a Mojito order (Soda, Rum, LimeJ, SimpleSyrup for
+        // ex) We also support Whiskey. So mojito would look like 11011
+        // (whiskey being zero)
+        //
+        // Two examples, one where we forget the rum (good) and one where we
+        // swap rum with whiskey (bad)
+        //
+        // one, madeDrink 10011 => this is good
+        // 11011 xor 10011 => 01000
+        // count_bits(01000) => 1 (good)
+        // is_bit_alc(01000) => true (good)
+        // return true;
+        //
+        // two madeDrink 10111 => this is bad
+        // 11011 xor 10111 => 01100
+        // count_bits(01100) => 2 (bad)
+        // is_bit_alc(01100) => true for both (?mixed)
         auto xorbits = orderedDrinkSet ^ madeDrinkSet;
+        // How many ingredients did we mess up?
         if (xorbits.count() != 1) {
+            // TODO this return is what keeps us from being able to support
+            // both upgrades at the same time (if we wanted that).
             return false;
         }
+        // TODO idk if index is right 100% of the time but lets try it
         Ingredient ig = get_ingredient_from_index(
             bitset_utils::get_first_enabled_bit(xorbits));
+        // Is the (one) ingredient we messed up an alcoholic one?
+        // If so then we are good.
         if (ingredient::is_alcohol(ig)) {
             return true;
         }
@@ -304,6 +332,8 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
 
         auto xorbits = orderedDrinkSet ^ madeDrinkSet;
         size_t num_messed_up = xorbits.count();
+        // You messed up less ingredients than the number of drinks they had,
+        // so they can't tell :)
         if (num_messed_up < num_alc_drank) {
             return true;
         }
@@ -315,12 +345,26 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
 float get_speed_for_entity(Entity& entity) {
     float base_speed = entity.get<HasBaseSpeed>().speed();
 
+    // TODO Does OrderDrink hold stagger information?
+    // or should it live in another component?
     if (entity.has<CanOrderDrink>()) {
         const CanOrderDrink& cha = entity.get<CanOrderDrink>();
+        // float speed_multiplier = cha.ailment().speed_multiplier();
+        // if (speed_multiplier != 0) base_speed *= speed_multiplier;
+
+        // TODO Turning off stagger; couple problems
+        // - configuration is hard to reason about and mess with
+        // - i really want it to cause them to move more, maybe we place
+        //   this in the path generation or something instead?
+        //
+        // float stagger_multiplier = cha.ailment().stagger();
+        // if (stagger_multiplier != 0) base_speed *= stagger_multiplier;
         int denom = RandomEngine::get().get_int(
             1, std::max(1, cha.num_alcoholic_drinks_drank()));
         base_speed *= 1.f / denom;
         base_speed = fmaxf(1.f, base_speed);
+        // log_info("multiplier {} {} {}", speed_multiplier,
+        // stagger_multiplier, base_speed);
     }
     return base_speed;
 }
@@ -574,13 +618,19 @@ void process_ai_entity(Entity& entity, float dt) {
                 });
             if (!reached_front) return;
 
+            // TODO show an icon cause right now it just looks like they are standing
+            // there
             if (!ps.timer.pass_time(dt)) return;
 
+            // Now we should be at the front of the line.
+            // TODO i would like for the player to have to go over and "work" to
+            // process their payment.
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             CanOrderDrink& cod = entity.get<CanOrderDrink>();
             {
                 IsBank& bank = sophie.get<IsBank>();
                 bank.deposit_with_tip(cod.get_current_tab(), cod.get_current_tip());
+                // i dont think we need to do this, but just in case
                 cod.clear_tab_and_tip();
             }
 
@@ -607,6 +657,8 @@ void process_ai_entity(Entity& entity, float dt) {
                     return;
                 }
 
+                // We were the last person to put on a song, so we dont need to
+                // change it (yet...)
                 if (best->has<HasLastInteractedCustomer>() &&
                     best->get<HasLastInteractedCustomer>().customer.id ==
                         entity.id) {
@@ -631,6 +683,7 @@ void process_ai_entity(Entity& entity, float dt) {
             bool reached_front = line_try_to_move_closer(
                 js.line_wait, jukebox, entity, get_speed_for_entity(entity) * dt, [&]() {
                     if (!js.timer.initialized) {
+                        // TODO make into a config?
                         js.timer.set_time(5.f);
                     }
                 });
@@ -638,13 +691,16 @@ void process_ai_entity(Entity& entity, float dt) {
 
             if (!js.timer.pass_time(dt)) return;
 
+            // TODO implement jukebox song change
             {
                 Entity& sophie =
                     EntityHelper::getNamedEntity(NamedEntity::Sophie);
                 IsBank& bank = sophie.get<IsBank>();
+                // TODO jukebox cost
                 bank.deposit(10);
             }
             if (jukebox.has<HasLastInteractedCustomer>()) {
+                // TODO it woud be nice to show the customer's face above the entity
                 jukebox.get<HasLastInteractedCustomer>().customer.set_id(entity.id);
             }
 
@@ -809,6 +865,13 @@ void process_ai_entity(Entity& entity, float dt) {
         } break;
 
         case IsAIControlled::State::Leave: {
+            // TODO check the return value here and if true, stop running the
+            // pathfinding
+            // ^ does this mean just dynamically remove CanPathfind from the customer
+            // entity?
+            //
+            // I noticed this during profiling :)
+            //
             (void) entity.get<CanPathfind>().travel_toward(
                 vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
         } break;
