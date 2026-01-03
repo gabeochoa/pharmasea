@@ -1,17 +1,8 @@
 
-// Include the full expected.hpp first to provide expected/unexpected
-#include <expected.hpp>
-
 #define AFTER_HOURS_REPLACE_LOGGING
+#define AFTER_HOURS_REPLACE_VALIDATE
 #include "log/log.h"
 #define AFTER_HOURS_SYSTEM
-// Prevent afterhours from including its expected.hpp by pretending
-// std::expected exists
-#define __cpp_lib_expected 1
-namespace std {
-using tl::expected;
-using tl::unexpected;
-}  // namespace std
 #include "afterhours/ah.h"
 #include "afterhours/src/bitset_utils.h"
 #include "afterhours/src/library.h"

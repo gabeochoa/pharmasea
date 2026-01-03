@@ -14,7 +14,8 @@
 namespace wfc {
 template<typename... Args>
 static void wfc_log(const char* format, Args&&... args) {
-    std::string message = fmt::format(format, std::forward<Args>(args)...);
+    std::string message =
+        fmt::format(fmt::runtime(format), std::forward<Args>(args)...);
     std::cout << message << '\n';
     std::cout.flush();
 }

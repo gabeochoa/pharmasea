@@ -11,7 +11,7 @@
 #include "entity_type.h"
 #include "post_deserialize_fixups.h"
 #include "system/system_manager.h"
-#include "util.h"
+#include "engine/util.h"
 
 namespace server_only {
 
