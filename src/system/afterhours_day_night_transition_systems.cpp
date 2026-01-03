@@ -62,7 +62,7 @@ inline void reset_max_gen_when_after_deletion(Entity& entity) {
 inline void tell_customers_to_leave(Entity& entity) {
     if (!check_type(entity, EntityType::Customer)) return;
 
-    // Force leaving AI state
+    // Force leaving job
     entity.get<IsAIControlled>().set_state(IsAIControlled::State::Leave);
     entity.removeComponentIfExists<CanPathfind>();
     entity.addComponent<CanPathfind>().set_parent(entity.id);
