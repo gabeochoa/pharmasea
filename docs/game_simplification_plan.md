@@ -1,6 +1,6 @@
-# Pub Panic — Master Plan (Architecture + Upcoming Features + Source Docs)
+# Pub Panic — Architecture Plan (Architecture + Upcoming Features + Source Docs)
 
-This is the **single master document** consolidating:
+This is the **single consolidated document** covering:
 
 - The **blue‑sky “perfect” architecture** (breaking changes allowed)
 - How that architecture supports **upcoming features** referenced in planning docs
@@ -190,7 +190,7 @@ kanban-plugin: basic
 ## backlog
 
 - [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
-- [ ] Add "powered by raylib" intro card (and other intro cards) like cat v roomba: https://github.com/raysan5/raylib-games/tree/master/cat_vs_roomba/src
+- [ ] Add "powered by raylib" intro card (and other intro cards) like cat v roomba: https://github.com/raysan5/raylib-games/tree/main/cat_vs_roomba/src
 - [ ] Create Doors
 - [ ] Add a pause menu with textual options
 - [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
