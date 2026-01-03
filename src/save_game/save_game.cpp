@@ -16,7 +16,7 @@
 // update this expected value to acknowledge the save/replay/network format
 // impact.
 static constexpr std::uint64_t kExpectedComponentTypesChecksum =
-    0xde64e3f368746217ull;
+    17227857999763622384ull;
 static_assert(snapshot_blob::kComponentTypesChecksum ==
                   kExpectedComponentTypesChecksum,
               "ComponentTypes checksum changed. Update "

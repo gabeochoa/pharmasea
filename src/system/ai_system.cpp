@@ -80,8 +80,8 @@ void enter_bathroom(Entity& entity, IsAIControlled::State return_to) {
     entity.get<IsAIControlled>().set_state(IsAIControlled::State::Bathroom);
     entity.removeComponentIfExists<HasAITargetEntity>();
     entity.removeComponentIfExists<HasAITargetLocation>();
-    HasAIBathroomState& bs = ensure_component<HasAIBathroomState>(entity);
-    bs = HasAIBathroomState{};
+    reset_component<HasAIBathroomState>(entity);
+    HasAIBathroomState& bs = entity.get<HasAIBathroomState>();
     bs.next_state = return_to;
 }
 }  // namespace
@@ -604,7 +604,7 @@ void process_state_bathroom(Entity& entity, float dt) {
     int new_position = bs.line_wait.previous_line_index;
 
     if (previous_position != new_position && bs.floor_timer.initialized) {
-        float totalTime = bs.floor_timer.totalTime;
+        float totalTime = bs.floor_timer.reset_to;
         (void) bs.floor_timer.pass_time(-1.f * totalTime * 0.1f);
     }
 
