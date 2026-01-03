@@ -83,8 +83,12 @@ void GameDebugLayer::draw_debug_ui(float dt) {
                      NO_TRANSLATE(fmt::format(
                          "holding item?: {}",
                          player->get<CanHoldItem>().is_holding_item()
-                             ? str(get_entity_type(
-                                   player->get<CanHoldItem>().const_item()))
+                             ? ([&]() -> std::string {
+                                   OptEntity held_opt =
+                                       player->get<CanHoldItem>().const_item();
+                                   if (!held_opt) return std::string("Missing");
+                                   return str(get_entity_type(held_opt.asE()));
+                               }())
                              : "Empty")));
             } else {
                 text(Widget{player_info},

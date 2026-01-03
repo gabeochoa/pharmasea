@@ -1,9 +1,9 @@
 #include "world_snapshot_blob.h"
 
 #include "../bitsery_include.h"
+#include "../components/all_components.h"
 #include "../engine/log.h"
 #include "../entity_helper.h"
-#include "../network/polymorphic_components.h"  // includes all component types + bitsery wiring
 
 #include <bitsery/ext/std_bitset.h>
 

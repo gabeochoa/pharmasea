@@ -139,8 +139,10 @@ struct ProcessGrabberItemsSystem
                 if (furnCHI.empty()) return false;
 
                 // Can we hold the item it has?
+                OptEntity held_opt = furnCHI.const_item();
+                if (!held_opt) return false;
                 bool can_hold = entity.get<CanHoldItem>().can_hold(
-                    furnCHI.const_item(), RespectFilter::All);
+                    held_opt.asE(), RespectFilter::All);
 
                 // we cant
                 if (!can_hold) return false;
@@ -158,7 +160,12 @@ struct ProcessGrabberItemsSystem
         CanHoldItem& matchCHI = match->get<CanHoldItem>();
         CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
-        ourCHI.update(matchCHI.item(), entity.id);
+        OptEntity grabbed_opt = matchCHI.item();
+        if (!grabbed_opt) {
+            matchCHI.update(nullptr, entity_id::INVALID);
+            return;
+        }
+        ourCHI.update(grabbed_opt.asE(), entity.id);
         matchCHI.update(nullptr, entity_id::INVALID);
 
         conveysHeldItem.relative_item_pos = ConveysHeldItem::ITEM_START;
@@ -198,6 +205,14 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
         // we are not holding anything
         if (canHold.empty()) return;
 
+        OptEntity carried_opt = canHold.const_item();
+        if (!carried_opt) {
+            canHold.update(nullptr, entity.id);
+            canBeTakenFrom.update(true);
+            return;
+        }
+        Entity& carried = carried_opt.asE();
+
         // make sure no one can insta-grab from us
         canBeTakenFrom.update(false);
 
@@ -210,8 +225,8 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
 
         bool is_ipp = entity.has<IsPnumaticPipe>();
 
-        const auto _conveyer_filter = [&entity,
-                                       &canHold](const Entity& furn) -> bool {
+        const auto _conveyer_filter = [&entity, &carried](const Entity& furn)
+            -> bool {
             // cant be us
             if (entity.id == furn.id) return false;
             // needs to be able to hold something
@@ -221,8 +236,7 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
             if (furnCHI.is_holding_item()) return false;
             // can this furniture hold the item we are passing?
             // some have filters
-            bool can_hold =
-                furnCHI.can_hold(canHold.const_item(), RespectFilter::ReqOnly);
+            bool can_hold = furnCHI.can_hold(carried, RespectFilter::ReqOnly);
 
             return can_hold;
         };
@@ -275,7 +289,7 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
         CanHoldItem& ourCHI = entity.get<CanHoldItem>();
 
         CanHoldItem& matchCHI = match->get<CanHoldItem>();
-        matchCHI.update(ourCHI.item(), entity.id);
+        matchCHI.update(carried, entity.id);
 
         ourCHI.update(nullptr, entity_id::INVALID);
 
@@ -359,8 +373,13 @@ struct ProcessGrabberFilterSystem : public afterhours::System<> {
         // deal)
         // - or we should set the filter
 
+        OptEntity held_opt = canHold.item();
+        if (!held_opt) {
+            canHold.update(nullptr, entity.id);
+            return;
+        }
         EntityFilter& ef = canHold.get_filter();
-        ef.set_filter_with_entity(canHold.item());
+        ef.set_filter_with_entity(held_opt.asE());
     }
 };
 
@@ -500,13 +519,19 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
 
             if (our_chi.is_holding_item()) return;
 
+            OptEntity other_item_opt = other_chi.const_item();
+            if (!other_item_opt) {
+                other_chi.update(nullptr, entity_id::INVALID);
+                return;
+            }
+            Entity& other_item = other_item_opt.asE();
+
             // can we hold it?
-            if (!our_chi.can_hold(other_chi.const_item(),
-                                  RespectFilter::ReqOnly))
+            if (!our_chi.can_hold(other_item, RespectFilter::ReqOnly))
                 return;
 
             // take it
-            our_chi.update(other_chi.item(), entity.id);
+            our_chi.update(other_item, entity.id);
             other_chi.update(nullptr, entity_id::INVALID);
 
             // we are done recieving
@@ -555,7 +580,9 @@ struct ProcessHasRopeSystem : public afterhours::System<> {
             if (!check_type(*e, EntityType::Player)) continue;
             const CanHoldItem& e_chi = e->get<CanHoldItem>();
             if (!e_chi.is_holding_item()) continue;
-            const Item& i = e_chi.const_item();
+            OptEntity held_opt = e_chi.const_item();
+            if (!held_opt) continue;
+            const Item& i = held_opt.asE();
             // that are holding spouts
             if (!check_type(i, EntityType::SodaSpout)) continue;
             // that match the one we were holding

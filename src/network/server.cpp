@@ -28,6 +28,13 @@ Server::~Server() {
     log_info("Server destructor called");
     running = false;
     PathRequestManager::stop();
+
+    if (server_thread.joinable() &&
+        server_thread.get_id() != std::this_thread::get_id()) {
+        log_info("Joining server thread");
+        server_thread.join();
+        log_info("Server thread joined");
+    }
     if (pathfinding_thread.joinable()) {
         log_info("Joining pathfinding thread");
         pathfinding_thread.join();
@@ -39,17 +46,20 @@ Server::~Server() {
 
 // TODO once clang supports jthread replace with jthread and remove "running
 // = true" to use stop_token
-std::thread Server::start(int port) {
+void Server::start(int port) {
     log_info("Server::start called with port: {}", port);
+    if (g_server && g_server->running) {
+        log_warn("Server::start called but server already running");
+        return;
+    }
     // TODO makeshared doesnt work here
     log_info("Creating new Server instance");
     g_server.reset(new Server(port));
     log_info("Server instance created, setting running = true");
     g_server->running = true;
     log_info("Starting server thread");
-    auto thread = std::thread(std::bind(&Server::run, g_server.get()));
-    log_info("Server thread started, returning thread handle");
-    return thread;
+    g_server->server_thread = std::thread(std::bind(&Server::run, g_server.get()));
+    log_info("Server thread started");
 }
 
 void Server::queue_packet(const ClientPacket& p) {
@@ -79,15 +89,32 @@ void Server::play_sound(vec2 position, strings::sounds::SoundId sound) {
     );
 }
 
-void Server::stop() {
-    log_info("Server::stop() called");
-    if (g_server) {
-        log_info("Setting g_server->running = false");
-        g_server->running = false;
-        PathRequestManager::stop();
-    } else {
-        log_warn("Server::stop() called but g_server is null");
+std::thread::id Server::get_thread_id() {
+    if (!g_server) return {};
+    if (g_server->server_thread.joinable()) return g_server->server_thread.get_id();
+    return g_server->thread_id;
+}
+
+void Server::shutdown() {
+    log_info("Server::shutdown() called");
+    if (!g_server) {
+        log_info("Server::shutdown(): server already null");
+        return;
     }
+
+    log_info("Setting g_server->running = false");
+    g_server->running = false;
+    PathRequestManager::stop();
+
+    if (g_server->server_thread.joinable() &&
+        g_server->server_thread.get_id() != std::this_thread::get_id()) {
+        log_info("Waiting for server thread to join");
+        g_server->server_thread.join();
+        log_info("Server thread joined successfully");
+    }
+
+    // Destroy the instance after threads are stopped.
+    g_server.reset();
 }
 
 void Server::send_map_state(Channel channel) {

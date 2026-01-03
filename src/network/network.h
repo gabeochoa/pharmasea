@@ -48,7 +48,6 @@ struct RoleInfoMixin {
     std::unique_ptr<Client> client;
     std::thread::id client_thread_id;
     std::thread::id server_thread_id;
-    std::thread server_thread;
 
     [[nodiscard]] bool is_host() { return desired_role & s_Host; }
     [[nodiscard]] bool is_client() { return desired_role & s_Client; }
@@ -69,8 +68,8 @@ struct RoleInfoMixin {
                 log_info("set user's role to host");
                 desired_role = Role::s_Host;
                 log_info("Calling Server::start with port: {}", DEFAULT_PORT);
-                server_thread = Server::start(DEFAULT_PORT);
-                log_info("Server::start returned, thread created");
+                Server::start(DEFAULT_PORT);
+                log_info("Server::start returned");
                 //
                 _setup_client();
                 client->lock_in_ip();
@@ -87,7 +86,7 @@ struct RoleInfoMixin {
                 break;
         }
 
-        server_thread_id = server_thread.get_id();
+        server_thread_id = Server::get_thread_id();
         GLOBALS.set("server_thread_id", &server_thread_id);
         log_info("Server thread ID set: {}", (void*) &server_thread_id);
 
@@ -125,14 +124,7 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
                 return;
             }
             log_info("Stopping server and joining thread");
-            Server::stop();
-            if (server_thread.joinable()) {
-                log_info("Waiting for server thread to join");
-                server_thread.join();
-                log_info("Server thread joined successfully");
-            } else {
-                log_warn("Server thread not joinable at shutdown");
-            }
+            Server::shutdown();
         }
         log_info("network::Info destructor completed");
     }

@@ -29,9 +29,6 @@ using Item = Entity;
 
 namespace bitsery {
 
-using bitsery::ext::PointerObserver;
-using bitsery::ext::PointerOwner;
-using bitsery::ext::PointerType;
 using bitsery::ext::StdBitset;
 using bitsery::ext::StdMap;
 using bitsery::ext::StdOptional;
