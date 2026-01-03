@@ -345,6 +345,11 @@ void process_state_at_register_wait_for_drink(Entity& entity, float dt) {
     tgt.entity.clear();
     reset_component<HasAIQueueState>(entity);
 
+    // We used HasAITargetLocation to move in the queue; clear it so the
+    // Drinking state can pick its own target and initialize its timer.
+    entity.removeComponentIfExists<HasAITargetLocation>();
+    reset_component<HasAIDrinkState>(entity);
+
     entity.get<IsAIControlled>().set_state(IsAIControlled::State::Drinking);
 }
 
