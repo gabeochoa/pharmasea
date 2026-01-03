@@ -6,9 +6,6 @@ namespace zpp::bits {
 struct access;
 }
 
-// NOTE: This is intentionally NOT a top-level ECS component.
-// It is embedded inside `HasAIQueueState` (the actual ECS component) to keep
-// queue runtime state grouped, without doing "component inside component".
 struct AIWaitInQueueState {
     // TODO: This is currently just a guard/diagnostic bit that prevents queue
     // helpers from running before we've actually joined a queue. Now that
