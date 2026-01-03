@@ -2,13 +2,13 @@
 
 #include "../entity_ref.h"
 #include "ai_line_wait.h"
-#include "ai_takes_time.h"
 #include "base_component.h"
+#include "cooldown_info.h"
 
 struct HasAIJukeboxState : public BaseComponent {
     EntityRef last_jukebox{};
     AIWaitInQueueState line_wait{};
-    AITakesTime timer{};
+    CooldownInfo timer{};
 
    private:
    public:

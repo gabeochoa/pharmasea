@@ -946,14 +946,13 @@ void render_toilet_floor_timer(const Entity& entity, float) {
     if (entity.is_missing<HasAIBathroomState>()) return;
     const Transform& transform = entity.get<Transform>();
     const HasAIBathroomState& bathroom = entity.get<HasAIBathroomState>();
-    const AITakesTime floor_timer = bathroom.floor_timer;
+    const CooldownInfo floor_timer = bathroom.floor_timer;
 
     // no timer set yet
     if (!floor_timer.initialized) return;
-    if (floor_timer.totalTime == -1) return;
-    if (floor_timer.timeRemaining == -1) return;
+    if (floor_timer.reset_to <= 0.f) return;
 
-    float pct = floor_timer.timeRemaining / floor_timer.totalTime;
+    float pct = floor_timer.pct_remaining();
     if (pct == 1.f) return;
 
     DrawProgressBar(ProgressBarConfig{

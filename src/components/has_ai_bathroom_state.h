@@ -1,14 +1,14 @@
 #pragma once
 
 #include "ai_line_wait.h"
-#include "ai_takes_time.h"
 #include "base_component.h"
+#include "cooldown_info.h"
 #include "is_ai_controlled.h"
 
 struct HasAIBathroomState : public BaseComponent {
     AIWaitInQueueState line_wait{};
-    AITakesTime timer{};
-    AITakesTime floor_timer{};
+    CooldownInfo timer{};
+    CooldownInfo floor_timer{};
 
     // Where to go when finished using the bathroom.
     IsAIControlled::State next_state = IsAIControlled::State::Wander;

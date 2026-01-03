@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ai_takes_time.h"
 #include "base_component.h"
+#include "cooldown_info.h"
 
 struct HasAIDrinkState : public BaseComponent {
-    AITakesTime timer{};
+    CooldownInfo timer{};
 
    private:
    public:

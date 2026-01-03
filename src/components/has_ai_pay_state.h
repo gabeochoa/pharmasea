@@ -1,12 +1,12 @@
 #pragma once
 
 #include "ai_line_wait.h"
-#include "ai_takes_time.h"
 #include "base_component.h"
+#include "cooldown_info.h"
 
 struct HasAIPayState : public BaseComponent {
     AIWaitInQueueState line_wait{};
-    AITakesTime timer{};
+    CooldownInfo timer{};
 
    private:
    public:
