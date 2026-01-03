@@ -48,17 +48,17 @@ struct IsSquirter : public BaseComponent {
     float sq_time;
     float sq_time_reset;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(pos);
-        s.value4b(held_item_id);
-        s.value4b(held_drink_id);
-
-        s.value1b(working);
-        s.value4b(sq_time);
-        s.value4b(sq_time_reset);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.pos,                        //
+            self.held_item_id,               //
+            self.held_drink_id,              //
+            self.working,                    //
+            self.sq_time,                    //
+            self.sq_time_reset               //
+        );
     }
 };

@@ -13,7 +13,7 @@ namespace snapshot_blob {
 namespace {
 using Buffer = std::string;
 using OutArchive = zpp::bits::out<Buffer>;
-using InArchive = zpp::bits::in<Buffer>;
+using InArchive = zpp::bits::in<const Buffer>;
 
 inline void clear_all_components(afterhours::Entity& e) {
     e.componentSet.reset();

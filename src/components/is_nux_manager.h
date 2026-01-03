@@ -69,15 +69,16 @@ struct IsNux : public BaseComponent {
     }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(is_active);
-        s.value4b(entityID);
-        s.object(content);
-        s.value4b(ghost);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.is_active,                 //
+            self.entityID,                  //
+            self.content,                   //
+            self.ghost                      //
+        );
     }
 };
 
@@ -85,11 +86,12 @@ struct IsNuxManager : public BaseComponent {
     bool initialized = false;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(initialized);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.initialized                //
+        );
     }
 };
