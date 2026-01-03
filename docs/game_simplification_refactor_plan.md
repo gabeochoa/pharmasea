@@ -1,5 +1,9 @@
 # Game Simplification Plan (Blue-sky Target; Breaking Changes OK)
 
+**NOTE:** This file is superseded by the single consolidated doc:
+
+- `docs/game_simplification_master.md`
+
 This is the **single canonical plan**: it combines the “what’s wrong today” review with a **blue-sky ideal end state**, assuming we are free to make **breaking changes** (component removals/renames, system rewrites, factory redesign).
 
 ## Goals
