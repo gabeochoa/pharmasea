@@ -2,6 +2,7 @@
 #include "rendering_system.h"
 
 #include <regex>
+#include <unordered_map>
 
 #include "../ah.h"
 #include "../building_locations.h"
@@ -292,6 +293,145 @@ bool draw_transform_with_model(const Transform& transform,
     return true;
 }
 
+namespace {
+// Instanced draw batching for repeated models. This specifically targets
+// the per-entity DrawModelEx() path, which otherwise explodes draw calls
+// (instances * meshes/materials).
+//
+// NOTE: We currently only need two tint buckets (normal/white vs highlighted/gray).
+enum class ModelTintBucket : uint8_t { Normal = 0, Highlighted = 1 };
+
+struct ModelInstanceBatches {
+    std::unordered_map<std::string, std::vector<raylib::Matrix>> normal;
+    std::unordered_map<std::string, std::vector<raylib::Matrix>> highlighted;
+
+    void clear() {
+        normal.clear();
+        highlighted.clear();
+    }
+};
+
+static ModelInstanceBatches g_model_instance_batches;
+
+static ModelTintBucket tint_bucket_for(Color c) {
+    // The renderer currently uses WHITE and GRAY (see render_model_*).
+    // Everything else falls back to the non-instanced path.
+    if (c.r == WHITE.r && c.g == WHITE.g && c.b == WHITE.b && c.a == WHITE.a)
+        return ModelTintBucket::Normal;
+    return ModelTintBucket::Highlighted;
+}
+
+static raylib::Matrix build_model_instance_transform(const vec3& position,
+                                                     float rotation_degrees_y,
+                                                     const vec3& scale) {
+    const float rot_radians = rotation_degrees_y * raylib::DEG2RAD;
+    const raylib::Matrix mat_scale =
+        raylib::MatrixScale(scale.x, scale.y, scale.z);
+    const raylib::Matrix mat_rot = raylib::MatrixRotateY(rot_radians);
+    const raylib::Matrix mat_trans =
+        raylib::MatrixTranslate(position.x, position.y, position.z);
+
+    // Match raylib DrawModelEx ordering (scale -> rotate -> translate).
+    return raylib::MatrixMultiply(raylib::MatrixMultiply(mat_scale, mat_rot),
+                                  mat_trans);
+}
+
+static bool queue_transform_model_instance(const Transform& transform,
+                                          const ModelRenderer& renderer,
+                                          Color tint) {
+    if (renderer.missing()) return false;
+
+    // If no models were loaded, force ENABLE_MODELS to false
+    if (ModelLibrary::get().size() == 0) {
+        ENABLE_MODELS = false;
+        return false;
+    }
+
+    if (!ENABLE_MODELS) return false;
+
+    ModelInfo& model_info = renderer.model_info();
+
+    float rotation_angle = 180.f + transform.facing;
+    vec3 position = {
+        transform.pos().x + transform.viz_x() + model_info.position_offset.x,
+        transform.pos().y + transform.viz_y() + model_info.position_offset.y,
+        transform.pos().z + transform.viz_z() + model_info.position_offset.z,
+    };
+
+    // Ensure lazy models are loaded before we try to draw them at flush time.
+    ModelLibrary::get().ensure_loaded(renderer.name());
+
+    const vec3 scale = transform.size() * model_info.size_scale;
+    const float final_rot =
+        model_info.rotation_angle + rotation_angle;  // degrees
+    const raylib::Matrix instance_xform =
+        build_model_instance_transform(position, final_rot, scale);
+
+    auto& table = (tint_bucket_for(tint) == ModelTintBucket::Normal)
+                      ? g_model_instance_batches.normal
+                      : g_model_instance_batches.highlighted;
+    table[renderer.name()].push_back(instance_xform);
+    return true;
+}
+
+static void apply_model_material_shader(raylib::Model& model_ref) {
+    const bool lighting_enabled = Settings::get().data.enable_lighting;
+    if (lighting_enabled) {
+        auto& lighting_shader = ShaderLibrary::get().get("lighting");
+        for (int i = 0; i < model_ref.materialCount; i++) {
+            if (model_ref.materials[i].shader.id != lighting_shader.id) {
+                model_ref.materials[i].shader = lighting_shader;
+            }
+        }
+    } else {
+        raylib::Shader default_shader{};
+        default_shader.id = raylib::rlGetShaderIdDefault();
+        default_shader.locs = raylib::rlGetShaderLocsDefault();
+        for (int i = 0; i < model_ref.materialCount; i++) {
+            if (model_ref.materials[i].shader.id != default_shader.id) {
+                model_ref.materials[i].shader = default_shader;
+            }
+        }
+    }
+}
+
+static void draw_model_instanced_batches(
+    const std::unordered_map<std::string, std::vector<raylib::Matrix>>& batches,
+    Color tint) {
+    if (!ENABLE_MODELS) return;
+    if (ModelLibrary::get().size() == 0) return;
+
+    for (const auto& kv : batches) {
+        const std::string& model_name = kv.first;
+        const std::vector<raylib::Matrix>& transforms = kv.second;
+        if (transforms.empty()) continue;
+
+        // library-owned model ref (shader assignment should persist)
+        auto& model_ref = ModelLibrary::get().get(model_name);
+        apply_model_material_shader(model_ref);
+
+        // Draw each mesh as an instanced batch.
+        // Draw call count becomes (unique model buckets * meshCount),
+        // instead of (instances * meshCount).
+        for (int mesh_i = 0; mesh_i < model_ref.meshCount; mesh_i++) {
+            const int material_i = model_ref.meshMaterial[mesh_i];
+            raylib::Material material = model_ref.materials[material_i];
+
+            // Approximate DrawModelEx tint behavior by tinting the material
+            // albedo/diffuse color for this draw.
+            material.maps[raylib::MATERIAL_MAP_ALBEDO].color =
+                raylib::ColorTint(material.maps[raylib::MATERIAL_MAP_ALBEDO]
+                                      .color,
+                                  tint);
+
+            raylib::DrawMeshInstanced(model_ref.meshes[mesh_i], material,
+                                      transforms.data(),
+                                      static_cast<int>(transforms.size()));
+        }
+    }
+}
+}  // namespace
+
 bool draw_internal_model(const Entity& entity, Color color) {
     if (entity.is_missing<ModelRenderer>()) return false;
     if (entity.is_missing<Transform>()) return false;
@@ -512,10 +652,22 @@ bool render_debug(const Entity& entity, float dt) {
 
 bool render_model_highlighted(const Entity& entity, float) {
     if (entity.is_missing<CanBeHighlighted>()) return false;
+    // Prefer instanced batching for repeated models (reduces draw calls).
+    if (!entity.is_missing<ModelRenderer>() && !entity.is_missing<Transform>()) {
+        const Transform& transform = entity.get<Transform>();
+        const ModelRenderer& renderer = entity.get<ModelRenderer>();
+        if (queue_transform_model_instance(transform, renderer, GRAY)) return true;
+    }
     return draw_internal_model(entity, GRAY);
 }
 
 bool render_model_normal(const Entity& entity, float) {
+    // Prefer instanced batching for repeated models (reduces draw calls).
+    if (!entity.is_missing<ModelRenderer>() && !entity.is_missing<Transform>()) {
+        const Transform& transform = entity.get<Transform>();
+        const ModelRenderer& renderer = entity.get<ModelRenderer>();
+        if (queue_transform_model_instance(transform, renderer, WHITE)) return true;
+    }
     return draw_internal_model(entity, WHITE);
 }
 
@@ -1466,6 +1618,7 @@ void on_frame_start() {
     num_ents_drawn = 0;
 #endif
     frustum.fetch_data();
+    g_model_instance_batches.clear();
 }
 
 bool should_cull(const Entity& entity) {
@@ -1489,6 +1642,13 @@ void render(const Entity& entity, float dt, bool is_debug) {
     render_progress_bar(entity, dt);
     render_fishing_game(entity, dt);
     render_squirt_progress_bar(entity, dt);
+}
+
+void flush_instanced_model_batches() {
+    // Keep tint buckets separate so we can preserve the current highlighted
+    // behavior without needing per-instance color attributes.
+    draw_model_instanced_batches(g_model_instance_batches.normal, WHITE);
+    draw_model_instanced_batches(g_model_instance_batches.highlighted, GRAY);
 }
 
 }  // namespace render_manager
@@ -1530,11 +1690,21 @@ struct RenderEntitySystem : public afterhours::System<Transform> {
     }
 };
 
+// Runs after entities have been visited and emits instanced draws.
+struct FlushInstancedModelBatchesSystem : public afterhours::System<> {
+    virtual bool should_run(const float) override { return true; }
+    virtual void once(const float) override {
+        render_manager::flush_instanced_model_batches();
+    }
+};
+
 void register_render_systems(afterhours::SystemManager& systems) {
     systems.register_render_system(std::make_unique<OnFrameStartSystem>());
     systems.register_render_system(
         std::make_unique<RenderWalkableSpotsSystem>());
     systems.register_render_system(std::make_unique<RenderEntitySystem>());
+    systems.register_render_system(
+        std::make_unique<FlushInstancedModelBatchesSystem>());
 }
 
 }  // namespace system_manager
