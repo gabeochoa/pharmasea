@@ -1424,8 +1424,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
     customer.addComponent<IsCustomer>();
-    customer.get<IsAIControlled>().state = IsAIControlled::State::QueueForRegister;
     customer.get<IsAIControlled>()
+        .set_initial_state(IsAIControlled::State::QueueForRegister)
         .set_ability_state(IsAIControlled::AbilityUseBathroom,
                            irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet))
         .set_ability_state(IsAIControlled::AbilityPlayJukebox,
