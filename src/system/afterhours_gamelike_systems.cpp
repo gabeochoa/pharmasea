@@ -160,19 +160,6 @@ struct PassTimeForTransactionAnimationSystem
     }
 };
 
-// TODO should we have a separate system for each job type?
-struct ProcessAiSystem : public afterhours::System<IsAIControlled, CanPathfind> {
-    virtual bool should_run(const float) override {
-        return GameState::get().is_game_like();
-    }
-
-    virtual void for_each_with(Entity& entity,
-                               [[maybe_unused]] IsAIControlled&,
-                               [[maybe_unused]] CanPathfind&, float dt) override {
-        ai::process_ai_entity(entity, dt);
-    }
-};
-
 namespace sophie {
 // Forward declarations for sophie namespace functions
 void customers_in_store(Entity& entity);
@@ -242,8 +229,7 @@ void SystemManager::register_gamelike_systems() {
     systems.register_update_system(
         std::make_unique<
             system_manager::PassTimeForTransactionAnimationSystem>());
-    systems.register_update_system(
-        std::make_unique<system_manager::ProcessAiSystem>());
+    system_manager::ai::register_ai_systems(systems);
     systems.register_update_system(
         std::make_unique<
             system_manager::EndOfRoundCompletionValidationSystem>());

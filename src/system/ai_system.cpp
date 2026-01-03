@@ -1,5 +1,6 @@
 #include "ai_system.h"
 
+#include <memory>
 #include <set>
 
 #include "../components/can_hold_item.h"
@@ -25,6 +26,7 @@
 #include "../entity_helper.h"
 #include "../entity_makers.h"
 #include "../globals.h"
+#include "../engine/statemanager.h"
 #include "../recipe_library.h"
 
 #include "ai_entity_helpers.h"
@@ -710,55 +712,55 @@ void process_state_leave(Entity& entity, float dt) {
 }
 }  // namespace
 
-void process_ai_entity(Entity& entity, float dt) {
-    if (entity.is_missing<CanPathfind>()) return;
-    if (entity.is_missing<IsAIControlled>()) return;
+struct ProcessAiSystem : public afterhours::System<IsAIControlled, CanPathfind> {
+    bool should_run(const float) override { return GameState::get().is_game_like(); }
 
-    IsAIControlled& ctrl = entity.get<IsAIControlled>();
+    void for_each_with(Entity& entity, IsAIControlled& ctrl,
+                       [[maybe_unused]] CanPathfind&, float dt) override {
+        // Global interrupt: bathroom override (except while actively
+        // drinking/leaving).
+        if (ctrl.state != IsAIControlled::State::Bathroom &&
+            ctrl.state != IsAIControlled::State::Drinking &&
+            ctrl.state != IsAIControlled::State::Leave) {
+            if (needs_bathroom_now(entity)) {
+                enter_bathroom(entity, ctrl.state);
+            }
+        }
 
-    // Global interrupt: bathroom override (except while actively drinking/leaving).
-    if (ctrl.state != IsAIControlled::State::Bathroom &&
-        ctrl.state != IsAIControlled::State::Drinking &&
-        ctrl.state != IsAIControlled::State::Leave) {
-        if (needs_bathroom_now(entity)) {
-            enter_bathroom(entity, ctrl.state);
+        switch (ctrl.state) {
+            case IsAIControlled::State::Wander:
+                process_state_wander(entity, ctrl, dt);
+                break;
+            case IsAIControlled::State::QueueForRegister:
+                process_state_queue_for_register(entity, dt);
+                break;
+            case IsAIControlled::State::AtRegisterWaitForDrink:
+                process_state_at_register_wait_for_drink(entity, dt);
+                break;
+            case IsAIControlled::State::Drinking:
+                process_state_drinking(entity, dt);
+                break;
+            case IsAIControlled::State::Pay:
+                process_state_pay(entity, dt);
+                break;
+            case IsAIControlled::State::PlayJukebox:
+                process_state_play_jukebox(entity, dt);
+                break;
+            case IsAIControlled::State::Bathroom:
+                process_state_bathroom(entity, dt);
+                break;
+            case IsAIControlled::State::CleanVomit:
+                process_state_clean_vomit(entity, dt);
+                break;
+            case IsAIControlled::State::Leave:
+                process_state_leave(entity, dt);
+                break;
         }
     }
+};
 
-    switch (ctrl.state) {
-        case IsAIControlled::State::Wander:
-            process_state_wander(entity, ctrl, dt);
-            break;
-        case IsAIControlled::State::QueueForRegister:
-            process_state_queue_for_register(entity, dt);
-            break;
-        case IsAIControlled::State::AtRegisterWaitForDrink:
-            process_state_at_register_wait_for_drink(entity, dt);
-            break;
-        case IsAIControlled::State::Drinking:
-            process_state_drinking(entity, dt);
-            break;
-
-        case IsAIControlled::State::Pay:
-            process_state_pay(entity, dt);
-            break;
-
-        case IsAIControlled::State::PlayJukebox:
-            process_state_play_jukebox(entity, dt);
-            break;
-
-        case IsAIControlled::State::Bathroom:
-            process_state_bathroom(entity, dt);
-            break;
-
-        case IsAIControlled::State::CleanVomit:
-            process_state_clean_vomit(entity, dt);
-            break;
-
-        case IsAIControlled::State::Leave:
-            process_state_leave(entity, dt);
-            break;
-    }
+void register_ai_systems(afterhours::SystemManager& systems) {
+    systems.register_update_system(std::make_unique<ProcessAiSystem>());
 }
 
 }  // namespace system_manager::ai
