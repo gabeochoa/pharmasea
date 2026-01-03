@@ -19,7 +19,7 @@ _This file contains critical rules and patterns that AI agents must follow when 
 - **Networking**: Steam GameNetworkingSockets
 - **Serialization**: `bitsery`
 - **Utilities**: `fmt`, `magic_enum`, `tl::expected`, `nlohmann/json`
-- **Build System**: Makefile / Clang++
+- **Build System**: `makefile` (repo root, lowercase) / Clang++
 
 ## Critical Implementation Rules
 
@@ -49,10 +49,10 @@ _This file contains critical rules and patterns that AI agents must follow when 
 
 ## Build & Test Rules
 
-- **Build**: Use `make` to build `pharmasea.exe`.
+- **Build**: Use `make` to build `pharmasea.exe` (see `OUTPUT_EXE` in repo `makefile`).
 - **Testing**:
-  - All tests must pass in **HEADLESS** and **VISIBLE** modes before committing.
-  - Run all tests: `./scripts/run_all_tests.sh` (headless) or `./scripts/run_all_tests.sh -v` (visible).
+  - Tests run at startup when built with tests enabled.
+  - Run tests and exit: `./pharmasea.exe --tests-only` (or `-t`).
   - **No Branching in Tests**: Tests must not use `if`, `else`, or `switch`. Use assertions (`app.expect_*`) and waits (`app.wait_for_*`).
   - **No Manual System Calls**: Let the game loop process systems naturally via `app.wait_for_frames(N)`.
 

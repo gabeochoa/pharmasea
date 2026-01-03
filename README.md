@@ -1,4 +1,21 @@
-# pharmasea
+# pharmasea (Pub Panic!)
+
+Code name: **PharmaSea**. In-game title string: **Pub Panic!** (`src/strings.h`).
+
+## Build
+
+- **macOS / Linux**: `make` (repo root `makefile`, lowercase)
+  - Output binary: `./pharmasea.exe`
+- **Windows**: open `WinPharmaSea/PharmaSea.sln` in Visual Studio
+
+## Save files
+
+The game uses `sago/platform_folders` and stores data under the OS “Save Games” folder:
+
+- **Settings**: `<SaveGamesFolder1>/pharmasea/settings.bin`
+- **Save slots**: `<SaveGamesFolder1>/pharmasea/saves/slot_XX.bin`
+
+If you’re unsure what your platform resolves to, run the game once and check the startup logs (it prints `intro: path=...` and `intro: game_folder=...`).
 
 libraries used:
 - raylib
@@ -39,7 +56,7 @@ Info about the todo chart
 - full raw data is in todo.md and managed by obsidian
 - hide the "backlog" here but trust me theres lots more todo 
 - only show the most recent 10 done items
-- to regerate the table below run python kanban.py
+- to regenerate the table below run `python3 scripts/kanban.py` from the repo root (it rewrites this README between `## TODOs` and `## End TODO`)
 
 ## TODOs  
 
