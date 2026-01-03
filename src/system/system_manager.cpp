@@ -1046,20 +1046,6 @@ void move_purchased_furniture() {
 
 }  // namespace system_manager
 
-void SystemManager::for_each_old(const std::function<void(Entity&)>& cb) {
-    for (const std::shared_ptr<Entity>& entity : oldAll) {
-        if (!entity) continue;
-        cb(*entity);
-    }
-}
-
-void SystemManager::for_each_old(const std::function<void(Entity&)>& cb) const {
-    for (const std::shared_ptr<Entity>& entity : oldAll) {
-        if (!entity) continue;
-        cb(*entity);
-    }
-}
-
 void SystemManager::on_game_state_change(game::State new_state,
                                          game::State old_state) {
     log_warn("system manager on gamestate change from {} to {}", old_state,

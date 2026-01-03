@@ -52,9 +52,6 @@ struct SystemManager {
 
     void process_inputs(const Entities& entities, const UserInputs& inputs);
 
-    void for_each_old(const std::function<void(Entity&)>& cb);
-    void for_each_old(const std::function<void(Entity&)>& cb) const;
-
     bool is_bar_open() const;
     bool is_bar_closed() const;
 
