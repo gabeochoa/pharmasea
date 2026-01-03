@@ -76,7 +76,7 @@ void reset_component(Entity& e) {
 // ---- Queue/line helpers (system logic; components remain data-only) ----
 void line_reset(Entity& entity, AIWaitInQueueState& s) {
     s.has_set_position_before = false;
-    s.last_line_index = -1;
+    s.previous_line_index = -1;
     if (entity.has<HasAITargetLocation>()) {
         entity.get<HasAITargetLocation>().pos.reset();
     }
@@ -99,8 +99,8 @@ void line_add_to_queue(Entity& entity, AIWaitInQueueState& s, Entity& reg) {
              "Trying to position_in_line for entity which doesn't have a "
              "waiting queue");
     const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
-    s.last_line_index = hwq.get_customer_position(entity.id);
-    return s.last_line_index;
+    s.previous_line_index = hwq.get_customer_position(entity.id);
+    return s.previous_line_index;
 }
 
 [[nodiscard]] bool line_can_move_up(const Entity& reg, const Entity& customer) {
@@ -403,7 +403,7 @@ void process_ai_entity(Entity& entity, float dt) {
                 qs.line_wait, reg, entity, get_speed_for_entity(entity) * dt);
             // Keep a simple data signal for "front of line" without relying on
             // micro-states.
-            qs.queue_index = qs.line_wait.last_line_index;
+            qs.queue_index = qs.line_wait.previous_line_index;
             if (!reached_front) return;
 
             entity.get<HasSpeechBubble>().on();
@@ -713,10 +713,10 @@ void process_ai_entity(Entity& entity, float dt) {
                 return;
             }
 
-            int previous_position = bs.line_wait.last_line_index;
+            int previous_position = bs.line_wait.previous_line_index;
             bool reached_front = line_try_to_move_closer(
                 bs.line_wait, toilet, entity, get_speed_for_entity(entity) * dt);
-            int new_position = bs.line_wait.last_line_index;
+            int new_position = bs.line_wait.previous_line_index;
 
             if (previous_position != new_position && bs.floor_timer.initialized) {
                 float totalTime = bs.floor_timer.totalTime;
