@@ -60,12 +60,14 @@ struct Building {
         return true;
     }
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.object(area);
-        s.object(bounds);
-        s.value4b(door_location);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(      //
+            self.area,       //
+            self.bounds,     //
+            self.door_location  //
+        );
     }
 };
 

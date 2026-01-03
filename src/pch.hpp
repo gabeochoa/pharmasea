@@ -20,7 +20,7 @@
 #include <nlohmann/json.hpp>
 
 // bitsery adapters/traits
-#include "bitsery_include.h"
+#include "zpp_bits_include.h"
 
 // magic_enum with widened range for raylib keycodes
 #ifndef MAGIC_ENUM_RANGE_MAX

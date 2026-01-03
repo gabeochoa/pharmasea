@@ -110,19 +110,18 @@ struct HasFishingGame : public BaseComponent {
 
     int m_num_stars = 0;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(started);
-
-        s.value4b(direction);
-        s.value4b(m_num_stars);
-
-        s.value4b(best_location);
-        s.value4b(score);
-        s.value4b(progress);
-        s.value4b(countdown);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.started,                    //
+            self.direction,                  //
+            self.m_num_stars,                //
+            self.best_location,              //
+            self.score,                      //
+            self.progress,                   //
+            self.countdown                   //
+        );
     }
 };

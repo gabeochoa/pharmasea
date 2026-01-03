@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "bitsery/ext/std_bitset.h"
-//
 #include "../ah.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/random_engine.h"
@@ -124,12 +122,13 @@ struct CanOrderDrink : public BaseComponent {
     int tip = 0;
     int drinks_in_bladder = 0;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(current_order);
-        s.value4b(order_state);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.current_order,              //
+            self.order_state                 //
+        );
     }
 };

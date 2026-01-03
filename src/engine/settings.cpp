@@ -2,6 +2,7 @@
 #include "settings.h"
 
 #include <fstream>
+#include <system_error>
 
 #include "../preload.h"
 
@@ -183,17 +184,12 @@ bool Settings::load_save_file() {
     // In that case, fall back to defaults instead of leaving partially-read
     // data.
     settings::Data tmp{};
-    const auto [err, ok] =
-        bitsery::quickDeserialization<settings::InputAdapter>(
-            {buf_str.begin(), buf_str.size()}, tmp);
-    // If err is NoError, use the data even if ok is false
-    // (ok=false might be due to trailing data, but the deserialization
-    // succeeded)
-    if (err != bitsery::ReaderError::NoError) {
+    settings::InArchive in{buf_str};
+    const auto result = in(tmp);
+    if (zpp::bits::failure(result)) {
         log_warn(
-            "Settings deserialize failed (err={}, ok={}); resetting to "
-            "defaults",
-            (int) err, ok);
+            "Settings deserialize failed (err={}); resetting to defaults",
+            static_cast<int>(static_cast<std::errc>(result)));
         data = settings::Data();
     } else {
         data = tmp;
@@ -218,7 +214,8 @@ bool Settings::write_save_file() {
         return false;
     }
     settings::Buffer buffer;
-    bitsery::quickSerialization(settings::OutputAdapter{buffer}, data);
+    settings::OutArchive out{buffer};
+    (void) out(data);
     ofs.write(buffer.data(), buffer.size());
     ofs.close();
 

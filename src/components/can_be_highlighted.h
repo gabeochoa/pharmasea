@@ -21,10 +21,12 @@ struct CanBeHighlighted : public BaseComponent {
     bool highlighted;
     OnChangeFn onchange;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(highlighted);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.highlighted                 //
+        );
     }
 };

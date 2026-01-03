@@ -10,12 +10,13 @@ struct CanPerformJob : public BaseComponent {
     JobType current = JobType::NoJob;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(current);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // Only things that need to be rendered, need to be serialized :)
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.current                     //
+        );
     }
 };

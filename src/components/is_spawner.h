@@ -128,22 +128,21 @@ struct IsSpawner : public BaseComponent {
 
     strings::sounds::SoundId spawn_sound = strings::sounds::SoundId::None;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // We likely dont need to serialize anything because it should be
         // all server side info
-
+        //
         // TODO add macro to only show these for debug builds
         // Debug only
-
-        s.value1b(showsProgressBar);
-        s.value4b(countdown);
-        s.value4b(spread);
-
-        s.value4b(num_spawned);
-        s.value4b(max_spawned);
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.showsProgressBar,           //
+            self.countdown,                  //
+            self.spread,                     //
+            self.num_spawned,                //
+            self.max_spawned                 //
+        );
     }
 };
