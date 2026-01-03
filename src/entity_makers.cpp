@@ -56,7 +56,7 @@
 #include "components/collects_user_input.h"
 #include "components/conveys_held_item.h"
 #include "components/custom_item_position.h"
-#include "components/has_ai_clean_vomit_state.h"
+#include "components/can_clean_vomit.h"
 #include "components/has_ai_cooldown.h"
 #include "components/has_base_speed.h"
 #include "components/has_client_id.h"
@@ -274,7 +274,7 @@ void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
     mop_buddy.get<IsAIControlled>().state = IsAIControlled::State::CleanVomit;
-    mop_buddy.addComponent<HasAICleanVomitState>();
+    mop_buddy.addComponent<CanCleanVomit>();
 
     mop_buddy
         .addComponent<IsItem>()  //

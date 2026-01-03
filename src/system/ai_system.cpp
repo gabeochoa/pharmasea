@@ -6,7 +6,6 @@
 #include "../components/can_hold_item.h"
 #include "../components/can_order_drink.h"
 #include "../components/has_ai_bathroom_state.h"
-#include "../components/has_ai_clean_vomit_state.h"
 #include "../components/has_ai_cooldown.h"
 #include "../components/has_ai_drink_state.h"
 #include "../components/has_ai_jukebox_state.h"
@@ -20,6 +19,7 @@
 #include "../components/has_patience.h"
 #include "../components/has_speech_bubble.h"
 #include "../components/has_work.h"
+#include "../components/can_clean_vomit.h"
 #include "../components/is_bank.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
@@ -744,13 +744,14 @@ void process_ai_entity(Entity& entity, float dt) {
         case IsAIControlled::State::CleanVomit: {
             if (!ai_tick_with_cooldown(entity, dt, 0.10f)) return;
 
-            (void) ensure_component<HasAICleanVomitState>(entity);
+            // Only entities with the capability should run this state.
+            if (entity.is_missing<CanCleanVomit>()) return;
             HasAITargetEntity& tgt = ensure_component<HasAITargetEntity>(entity);
 
             if (!entity_ref_valid(tgt.entity)) {
                 auto other_ais = EntityQuery()
                                      .whereNotID(entity.id)
-                                     .whereHasComponent<HasAICleanVomitState>()
+                                     .whereHasComponent<CanCleanVomit>()
                                      .gen();
                 std::set<int> existing_targets;
                 for (const Entity& mop : other_ais) {

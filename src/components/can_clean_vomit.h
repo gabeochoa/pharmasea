@@ -2,9 +2,9 @@
 
 #include "base_component.h"
 
-// Currently just a marker scratch component for the CleanVomit behavior.
-// Targeting is stored in HasAITargetEntity.
-struct HasAICleanVomitState : public BaseComponent {
+// Capability marker: entities with this component are allowed to run the
+// CleanVomit AI behavior/state.
+struct CanCleanVomit : public BaseComponent {
    private:
    public:
     friend zpp::bits::access;

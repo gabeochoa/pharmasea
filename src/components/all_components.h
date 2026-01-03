@@ -18,8 +18,8 @@
 // ---- Component type includes (the canonical "all components" list) ----
 
 #include "adds_ingredient.h"
+#include "can_clean_vomit.h"
 #include "has_ai_bathroom_state.h"
-#include "has_ai_clean_vomit_state.h"
 #include "has_ai_cooldown.h"
 #include "has_ai_drink_state.h"
 #include "has_ai_jukebox_state.h"
@@ -172,7 +172,7 @@ using ComponentTypes = std::tuple<
     HasAIPayState,
     HasAIJukeboxState,
     HasAIWanderState,
-    HasAICleanVomitState,
+    CanCleanVomit,
     IsCustomer>;
 
 namespace detail {
