@@ -293,7 +293,6 @@ bool draw_transform_with_model(const Transform& transform,
     return true;
 }
 
-namespace {
 // Instanced draw batching for repeated models. This specifically targets
 // the per-entity DrawModelEx() path, which otherwise explodes draw calls
 // (instances * meshes/materials).
@@ -430,7 +429,6 @@ static void draw_model_instanced_batches(
         }
     }
 }
-}  // namespace
 
 bool draw_internal_model(const Entity& entity, Color color) {
     if (entity.is_missing<ModelRenderer>()) return false;
@@ -1618,7 +1616,6 @@ void on_frame_start() {
     num_ents_drawn = 0;
 #endif
     frustum.fetch_data();
-    g_model_instance_batches.clear();
 }
 
 bool should_cull(const Entity& entity) {
@@ -1642,13 +1639,6 @@ void render(const Entity& entity, float dt, bool is_debug) {
     render_progress_bar(entity, dt);
     render_fishing_game(entity, dt);
     render_squirt_progress_bar(entity, dt);
-}
-
-void flush_instanced_model_batches() {
-    // Keep tint buckets separate so we can preserve the current highlighted
-    // behavior without needing per-instance color attributes.
-    draw_model_instanced_batches(g_model_instance_batches.normal, WHITE);
-    draw_model_instanced_batches(g_model_instance_batches.highlighted, GRAY);
 }
 
 }  // namespace render_manager
@@ -1682,19 +1672,25 @@ struct RenderEntitySystem : public afterhours::System<Transform> {
 
     virtual void once(const float) const override {
         debug_mode_on = GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        // Map::onDraw() calls render_entities() multiple times (remote players,
+        // then all entities). We want instancing to be correct per call, so
+        // reset the batch at the start of each render_entities() invocation.
+        render_manager::g_model_instance_batches.clear();
     }
 
     virtual void for_each_with(const Entity& entity, const Transform&,
                                float dt) const override {
         render_manager::render(entity, dt, debug_mode_on);
     }
-};
 
-// Runs after entities have been visited and emits instanced draws.
-struct FlushInstancedModelBatchesSystem : public afterhours::System<> {
-    virtual bool should_run(const float) override { return true; }
-    virtual void once(const float) override {
-        render_manager::flush_instanced_model_batches();
+    virtual void after(const float) const override {
+        // Flush queued instanced model draws AFTER iterating entities.
+        // (afterhours::SystemManager::render() calls `after()` once per system
+        // after the entity loop; using `once()` would be too early.)
+        render_manager::draw_model_instanced_batches(
+            render_manager::g_model_instance_batches.normal, WHITE);
+        render_manager::draw_model_instanced_batches(
+            render_manager::g_model_instance_batches.highlighted, GRAY);
     }
 };
 
@@ -1703,8 +1699,6 @@ void register_render_systems(afterhours::SystemManager& systems) {
     systems.register_render_system(
         std::make_unique<RenderWalkableSpotsSystem>());
     systems.register_render_system(std::make_unique<RenderEntitySystem>());
-    systems.register_render_system(
-        std::make_unique<FlushInstancedModelBatchesSystem>());
 }
 
 }  // namespace system_manager
