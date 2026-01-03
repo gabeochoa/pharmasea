@@ -25,12 +25,13 @@ struct CanHoldHandTruck : public BaseComponent {
     EntityRef held_hand_truck{};
     vec3 pos;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(held_hand_truck);
-        s.object(pos);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.held_hand_truck,            //
+            self.pos                         //
+        );
     }
 };

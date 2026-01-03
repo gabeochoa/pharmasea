@@ -13,12 +13,13 @@ struct CanBeHeld : public BaseComponent {
    private:
     bool held = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(held);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.held                        //
+        );
     }
 };
 

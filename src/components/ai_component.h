@@ -62,11 +62,12 @@ struct AITarget {
     }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(target_id, bitsery::ext::StdOptional{},
-              [](S& sv, int& val) { sv.value4b(val); });
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(  //
+            self.target_id  //
+        );
     }
 };
 
@@ -181,12 +182,14 @@ struct AITakesTime {
     }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value1b(initialized);
-        s.value4b(totalTime);
-        s.value4b(timeRemaining);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(       //
+            self.initialized, //
+            self.totalTime,   //
+            self.timeRemaining //
+        );
     }
 };
 
@@ -213,9 +216,11 @@ struct AIComponent : BaseComponent {
     void set_cooldown(float d) { cooldownReset = d; }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self)  //
+        );
     }
 };

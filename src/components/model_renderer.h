@@ -32,11 +32,12 @@ struct ModelRenderer : public BaseComponent {
    private:
     std::string model_name;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.model_name                  //
+        );
     }
 };

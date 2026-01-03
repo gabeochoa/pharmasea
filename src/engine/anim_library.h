@@ -19,14 +19,15 @@ struct AnimationInfo {
     int totalFrames;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.text1b(anim_name, MAX_ANIM_NAME_LENGTH);
-        s.value4b(index);
-
-        s.value4b(frame);
-        s.value4b(totalFrames);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(    //
+            self.anim_name, //
+            self.index,    //
+            self.frame,    //
+            self.totalFrames  //
+        );
     }
 };
 

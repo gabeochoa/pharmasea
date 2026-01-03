@@ -45,14 +45,15 @@ struct Job {
     vec2 end;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(type);
-        s.value4b(state);
-
-        s.object(start);
-        s.object(end);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(  //
+            self.type,   //
+            self.state,  //
+            self.start,  //
+            self.end     //
+        );
     }
 
    public:

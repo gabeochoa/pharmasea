@@ -15,13 +15,13 @@ struct IsPnumaticPipe : public BaseComponent {
     [[nodiscard]] bool has_pair() const { return paired.id != entity_id::INVALID; }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(paired);
-
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // s.value4b(item_id);
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.paired                      //
+        );
     }
 };

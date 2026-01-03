@@ -142,16 +142,16 @@ struct CanPathfind : public BaseComponent {
 
     EntityRef parent{};
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(parent);
-
-        s.object(start);
-        s.object(goal);
-
-        s.value4b(path_size);
-        s.container(path, path_size, [](S& sv, vec2 pos) { sv.object(pos); });
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.parent,                     //
+            self.start,                      //
+            self.goal,                       //
+            self.path_size,                  //
+            self.path                        //
+        );
     }
 };

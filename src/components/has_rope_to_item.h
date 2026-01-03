@@ -36,15 +36,15 @@ struct HasRopeToItem : public BaseComponent {
     int rope_length = 0;
     std::vector<EntityID> rope;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(path_to);
-        s.value1b(generated);
-        s.value4b(rope_length);
-
-        s.container4b(rope, rope_length);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.path_to,                    //
+            self.generated,                  //
+            self.rope_length,                //
+            self.rope                        //
+        );
     }
 };

@@ -220,30 +220,26 @@ struct IsTriggerArea : public BaseComponent {
     float cooldown_time_max = 0.f;
     float cooldown_time_passed = 0.f;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(last_validation_result.first);
-        s.value4b(last_validation_result.second);
-
-        s.value4b(wanted_entrants);
-        s.value4b(current_entrants);
-        s.value4b(current_in_building);
-
-        s.value4b(entrantsRequired);
-        s.ext(building, bitsery::ext::StdOptional{});
-
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // These two are needed for drawing the percentage
         // TODO store the pct instead of sending two ints?
-        s.value4b(completion_time_max);
-        s.value4b(completion_time_passed);
-
-        s.value4b(type);
-
-        s.value4b(max_title_length);
-        s.object(_title);
-        s.object(_subtitle);
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.last_validation_result.first,  //
+            self.last_validation_result.second, //
+            self.wanted_entrants,               //
+            self.current_entrants,              //
+            self.current_in_building,           //
+            self.entrantsRequired,              //
+            self.building,                      //
+            self.completion_time_max,           //
+            self.completion_time_passed,        //
+            self.type,                          //
+            self.max_title_length,              //
+            self._title,                        //
+            self._subtitle                      //
+        );
     }
 };

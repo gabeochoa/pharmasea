@@ -15,13 +15,15 @@ struct CollectsCustomerFeedback : public BaseComponent {
     float waiting_time = 1.f;
     float waiting_time_reset = 1.f;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.ext(block_state_change_reasons, bitsery::ext::StdBitset{});
-        s.container(block_state_change_locations);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        // NOTE: waiting_time fields are intentionally NOT serialized.
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.block_state_change_reasons, //
+            self.block_state_change_locations //
+        );
     }
 
    public:

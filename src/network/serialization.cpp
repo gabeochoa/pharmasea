@@ -22,11 +22,9 @@ void deserialize_to_entity(Entity* entity, const std::string& msg) {
 }
 
 ClientPacket deserialize_to_packet(const std::string& msg) {
-    TContext ctx{};
-    BitseryDeserializer des{ctx, msg.begin(), msg.size()};
-
     ClientPacket packet;
-    des.object(packet);
+    zpp::bits::in in{msg};
+    (void) in(packet);
     // TODO obviously theres a ton of validation we can do here but idk
     // https://github.com/fraillt/bitsery/blob/master/examples/smart_pointers_with_polymorphism.cpp
     return packet;
@@ -34,11 +32,8 @@ ClientPacket deserialize_to_packet(const std::string& msg) {
 
 Buffer serialize_to_buffer(ClientPacket packet) {
     Buffer buffer;
-    TContext ctx{};
-
-    BitserySerializer ser{ctx, buffer};
-    ser.object(packet);
-    ser.adapter().flush();
+    zpp::bits::out out{buffer};
+    (void) out(packet);
 
     return buffer;
 }

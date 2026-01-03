@@ -39,44 +39,47 @@ namespace reasings {
 #include <magic_enum/magic_enum_fuse.hpp>
 #include <nlohmann/json.hpp>
 
-#include "bitsery_include.h"
+#include "zpp_bits_include.h"
 
-namespace bitsery {
-template<typename S>
-void serialize(S& s, vec2& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
+constexpr auto serialize(auto& archive, vec2& data) {
+    return archive(  //
+        data.x,      //
+        data.y       //
+    );
 }
 
-template<typename S>
-void serialize(S& s, vec3& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
-    s.value4b(data.z);
+constexpr auto serialize(auto& archive, vec3& data) {
+    return archive(  //
+        data.x,      //
+        data.y,      //
+        data.z       //
+    );
 }
 
-template<typename S>
-void serialize(S& s, Color& data) {
-    s.value1b(data.r);
-    s.value1b(data.g);
-    s.value1b(data.b);
-    s.value1b(data.a);
+constexpr auto serialize(auto& archive, Color& data) {
+    return archive(  //
+        data.r,      //
+        data.g,      //
+        data.b,      //
+        data.a       //
+    );
 }
 
-template<typename S>
-void serialize(S& s, Rectangle& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
-    s.value4b(data.width);
-    s.value4b(data.height);
+constexpr auto serialize(auto& archive, Rectangle& data) {
+    return archive(  //
+        data.x,      //
+        data.y,      //
+        data.width,  //
+        data.height  //
+    );
 }
 
-template<typename S>
-void serialize(S& s, BoundingBox& data) {
-    s.object(data.min);
-    s.object(data.max);
+constexpr auto serialize(auto& archive, BoundingBox& data) {
+    return archive(  //
+        data.min,    //
+        data.max     //
+    );
 }
-}  // namespace bitsery
 
 #include "engine/tracy.h"
 

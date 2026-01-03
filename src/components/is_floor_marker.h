@@ -47,12 +47,13 @@ struct IsFloorMarker : public BaseComponent {
    private:
     std::vector<int> marked_entities;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(type);
-
-        s.container4b(marked_entities, MAX_FLOOR_MARKERS);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.type,                       //
+            self.marked_entities             //
+        );
     }
 };

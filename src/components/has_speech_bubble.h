@@ -16,14 +16,14 @@ struct HasSpeechBubble : public BaseComponent {
     int max_icon_name_length = 20;
     std::string icon_name;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(_enabled);
-
-        s.value4b(max_icon_name_length);
-        s.text1b(icon_name, max_icon_name_length);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self._enabled,                   //
+            self.max_icon_name_length,       //
+            self.icon_name                   //
+        );
     }
 };

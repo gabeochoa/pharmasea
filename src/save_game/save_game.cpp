@@ -26,11 +26,6 @@ namespace save_game {
 
 namespace {
 using Buffer = std::string;
-using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
-using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
-using TContext = std::tuple<>;
-using Serializer = bitsery::Serializer<OutputAdapter, TContext>;
-using Deserializer = bitsery::Deserializer<InputAdapter, TContext>;
 
 [[nodiscard]] std::optional<std::string> read_file_to_string(
     const fs::path& path) {
@@ -83,11 +78,12 @@ using Deserializer = bitsery::Deserializer<InputAdapter, TContext>;
 template<typename T>
 [[nodiscard]] std::optional<T> deserialize_one_object_prefix(
     const std::string& buf) {
-    TContext ctx{};
-    Deserializer des{ctx, buf.begin(), buf.size()};
     T obj{};
-    des.object(obj);
-    if (des.adapter().error() != bitsery::ReaderError::NoError) {
+    zpp::bits::in in{buf};
+    if (auto result = in(  //
+            obj  //
+            );
+        zpp::bits::failure(result)) {
         return std::nullopt;
     }
     return obj;
@@ -180,10 +176,15 @@ bool SaveGameManager::save_slot(int slot, const Map& authoritative_map) {
 
     // Serialize.
     Buffer buffer;
-    TContext ctx{};
-    Serializer ser{ctx, buffer};
-    ser.object(file);
-    ser.adapter().flush();
+    zpp::bits::out out{buffer};
+    if (auto result = out(  //
+            file  //
+            );
+        zpp::bits::failure(result)) {
+        log_warn("save_game: serialize failed slot={} err={}", slot,
+                 static_cast<int>(static_cast<std::errc>(result)));
+        return false;
+    }
 
     fs::path path = slot_path(slot);
     return write_string_to_file_atomic(path, buffer);
@@ -198,12 +199,13 @@ bool SaveGameManager::load_file(const fs::path& path, SaveGameFile& out) {
     auto data = read_file_to_string(path);
     if (!data.has_value()) return false;
 
-    TContext ctx{};
-    Deserializer des{ctx, data->begin(), data->size()};
-    des.object(out);
-    if (des.adapter().error() != bitsery::ReaderError::NoError) {
-        log_warn("save_game: load_file {} reader_error={}", path.string(),
-                 (int) des.adapter().error());
+    zpp::bits::in in{*data};
+    if (auto result = in(  //
+            out  //
+            );
+        zpp::bits::failure(result)) {
+        log_warn("save_game: load_file {} decode_err={}", path.string(),
+                 static_cast<int>(static_cast<std::errc>(result)));
         return false;
     }
 

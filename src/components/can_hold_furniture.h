@@ -25,12 +25,13 @@ struct CanHoldFurniture : public BaseComponent {
     EntityRef held_furniture{};
     vec3 pos;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(held_furniture);
-        s.object(pos);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.held_furniture,            //
+            self.pos                        //
+        );
     }
 };

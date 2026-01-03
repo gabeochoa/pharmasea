@@ -97,13 +97,15 @@ struct CanHoldItem : public BaseComponent {
     EntityType held_by;
     EntityFilter filter;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(held_by);
-        s.value4b(held_item_id);
-        s.value4b(last_held_id);
-        s.object(filter);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.held_by,                    //
+            self.held_item_id,               //
+            self.last_held_id,               //
+            self.filter                      //
+        );
     }
 };

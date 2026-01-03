@@ -26,11 +26,13 @@ struct ResolutionInfo {
     }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(this->width);
-        s.value4b(this->height);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(  //
+            self.width,  //
+            self.height  //
+        );
     }
 };
 

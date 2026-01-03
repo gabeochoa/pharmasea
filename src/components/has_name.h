@@ -16,11 +16,13 @@ struct HasName : public BaseComponent {
     int name_length = 1;
     std::string _name;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(name_length);
-        s.text1b(_name, name_length);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.name_length,                //
+            self._name                       //
+        );
     }
 };

@@ -14,9 +14,12 @@ struct CanBePushed : public BaseComponent {
    private:
     vec3 force{0.0, 0.0, 0.0};
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        (void) self;
+        return archive(                      //
+            static_cast<BaseComponent&>(self)  //
+        );
     }
 };

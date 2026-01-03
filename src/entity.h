@@ -5,14 +5,13 @@
 //
 
 #include "ah.h"
+#include "zpp_bits_include.h"
 using afterhours::Entity;
 using afterhours::EntityHandle;
 using afterhours::OptEntity;
 using afterhours::RefEntity;
 
-#include "bitsery/ext/std_bitset.h"
 #include "entity_type.h"
-#include <bitsery/ext/std_map.h>
 
 #include <optional>
 
@@ -27,46 +26,45 @@ struct DebugOptions {
 
 using Item = Entity;
 
-namespace bitsery {
-
-using bitsery::ext::StdBitset;
-using bitsery::ext::StdMap;
-using bitsery::ext::StdOptional;
-
-template<typename S>
-void serialize(S& s, EntityHandle& handle) {
-    s.value4b(handle.slot);
-    s.value4b(handle.gen);
+namespace afterhours {
+inline auto serialize(auto& archive, EntityHandle& handle) {
+    return archive(  //
+        handle.slot, //
+        handle.gen   //
+    );
 }
 
-template<typename S>
-void serialize(S& s, const EntityHandle& handle) {
-    s.value4b(handle.slot);
-    s.value4b(handle.gen);
+inline auto serialize(auto& archive, const EntityHandle& handle) {
+    return archive(  //
+        handle.slot, //
+        handle.gen   //
+    );
 }
 
-template<typename S>
-void serialize(S& s, std::optional<EntityHandle>& opt_handle) {
-    s.ext(opt_handle, StdOptional{},
-          [](S& sv, EntityHandle& h) { serialize(sv, h); });
+inline auto serialize(auto& archive, std::optional<EntityHandle>& opt_handle) {
+    return archive(  //
+        opt_handle   //
+    );
 }
 
-template<typename S>
-void serialize(S& s, RefEntity ref) {
+inline auto serialize(auto& archive, RefEntity ref) {
     Entity& e = ref.get();
     EntityHandle handle = afterhours::EntityHelper::handle_for(e);
-    serialize(s, handle);
+    return archive(  //
+        handle       //
+    );
 }
 
-template<typename S>
-void serialize(S& s, OptEntity opt) {
+inline auto serialize(auto& archive, OptEntity opt) {
     std::optional<EntityHandle> opt_handle;
     if (opt.has_value()) {
         opt_handle = afterhours::EntityHelper::handle_for(opt.asE());
     }
-    serialize(s, opt_handle);
+    return archive(  //
+        opt_handle   //
+    );
 }
-}  // namespace bitsery
+}  // namespace afterhours
 
 bool check_type(const Entity& entity, EntityType type);
 bool check_if_drink(const Entity& entity);

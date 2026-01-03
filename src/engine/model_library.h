@@ -28,13 +28,15 @@ struct ModelInfo {
     float rotation_angle = 0;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
-        s.value4b(size_scale);
-        s.object(position_offset);
-        s.value4b(rotation_angle);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(        //
+            self.model_name,   //
+            self.size_scale,   //
+            self.position_offset, //
+            self.rotation_angle  //
+        );
     }
 };
 

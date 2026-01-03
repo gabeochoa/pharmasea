@@ -284,15 +284,17 @@ struct Transform : public BaseComponent {
     vec3 raw_position = {0, 0, 0};
     vec3 visual_offset = {0, 0, 0};
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(visual_offset);
-        s.object(raw_position);
-        s.object(position);
-        s.value4b(facing);
-        s.object(_size);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.visual_offset,              //
+            self.raw_position,               //
+            self.position,                   //
+            self.facing,                     //
+            self._size                       //
+        );
     }
 };
 

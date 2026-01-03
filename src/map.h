@@ -75,9 +75,9 @@ struct Map {
     auto get_rand_walkable_register();
     void add_outside_triggers(vec2 origin);
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // Pointer-free snapshot surface:
         // - We serialize the entire world into a byte blob (no pointer linking).
         // - Then we serialize map metadata (was_generated, seed, hashed_seed).
@@ -86,25 +86,34 @@ struct Map {
         // NOTE: This is intentionally a breaking change vs. the historical
         // StdSmartPtr-based entity graph serialization.
 
-        constexpr bool kIsReader = requires { s.adapter().error(); };
-
         std::string world_blob;
-        if constexpr (kIsReader) {
-            // Serialize as raw bytes: length + 1-byte chars.
-            // (Bitsery's `container4b`/`text4b` mean 4-bytes-per-element, which
-            // is NOT what we want for a byte blob.)
-            s.text1b(world_blob, snapshot_blob::MaxWorldSnapshotBytes);
-            const bool ok = snapshot_blob::decode_into_current_world(world_blob);
-            VALIDATE(ok, "failed to decode world snapshot blob");
-        } else {
+        if constexpr (requires {
+                          std::remove_cvref_t<decltype(archive)>::kind();
+                      } && std::remove_cvref_t<decltype(archive)>::kind() ==
+                               zpp::bits::kind::out) {
             world_blob = snapshot_blob::encode_current_world();
-            s.text1b(world_blob, snapshot_blob::MaxWorldSnapshotBytes);
         }
 
-        s.value1b(was_generated);
-        s.text1b(seed, MAX_SEED_LENGTH);
-        s.value8b(hashed_seed);
+        // Serialize as raw bytes: length + 1-byte chars.
+        // (Bitsery's `container4b`/`text4b` mean 4-bytes-per-element, which
+        // is NOT what we want for a byte blob.)
+        auto result = archive(  //
+            world_blob,         //
+            self.was_generated, //
+            self.seed,          //
+            self.hashed_seed,   //
+            self.showMinimap    //
+        );
 
-        s.value1b(showMinimap);
+        if constexpr (requires {
+                          std::remove_cvref_t<decltype(archive)>::kind();
+                      } && std::remove_cvref_t<decltype(archive)>::kind() ==
+                               zpp::bits::kind::in) {
+            const bool ok =
+                snapshot_blob::decode_into_current_world(world_blob);
+            VALIDATE(ok, "failed to decode world snapshot blob");
+        }
+
+        return result;
     }
 };

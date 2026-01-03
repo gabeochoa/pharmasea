@@ -28,14 +28,15 @@ struct HasPatience : public BaseComponent {
     float amount_left_s;
     float max_patience_s;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // TODO since we only need the pct to render,
         // we should save the pct and just serialize that
-        s.value4b(amount_left_s);
-        s.value4b(max_patience_s);
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.amount_left_s,              //
+            self.max_patience_s              //
+        );
     }
 };

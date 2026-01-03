@@ -85,7 +85,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
 #include <iostream>
 #include <string>
 
-#include "bitsery_include.h"
+#include "zpp_bits_include.h"
 #include "engine/log.h"
 #include "vendor_include.h"
 
@@ -484,20 +484,15 @@ struct TranslatableString {
     bool formatted = false;
     bool no_translate = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.text1b(content, MAX_LENGTH);
-        s.value1b(formatted);
-        s.value1b(no_translate);
-
-        s.ext(
-            params,
-            bitsery::ext::StdMap{magic_enum::enum_count<strings::i18nParam>()},
-            [](S& sv, strings::i18nParam& key, std::string& value) {
-                sv.value4b(key);
-                sv.text1b(value, MAX_LENGTH);
-            });
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(    //
+            self.content,  //
+            self.formatted, //
+            self.no_translate, //
+            self.params    //
+        );
     }
 };
 

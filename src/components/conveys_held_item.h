@@ -12,10 +12,13 @@ struct ConveysHeldItem : public BaseComponent {
     float relative_item_pos = ConveysHeldItem::ITEM_START;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        (void) self;
+        return archive(                      //
+            static_cast<BaseComponent&>(self)  //
+        );
 
         // The reason we dont need to serialize this is that
         // we dont render the underlying value,
