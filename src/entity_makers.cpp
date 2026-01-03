@@ -272,9 +272,9 @@ void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
         util::convertToSnakeCase(EntityType::MopBuddy));
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
-    mop_buddy.get<IsAIControlled>().state = IsAIControlled::State::CleanVomit;
-    mop_buddy.get<IsAIControlled>().enable_ability(
-        IsAIControlled::AbilityCleanVomit);
+    mop_buddy.get<IsAIControlled>()
+        .set_initial_state(IsAIControlled::State::CleanVomit)
+        .enable_ability(IsAIControlled::AbilityCleanVomit);
 
     mop_buddy
         .addComponent<IsItem>()  //

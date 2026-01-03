@@ -30,15 +30,26 @@ struct IsAIControlled : public BaseComponent {
     [[nodiscard]] bool has_ability(AbilityFlags flag) const {
         return (abilities & static_cast<uint32_t>(flag)) != 0u;
     }
-    void enable_ability(AbilityFlags flag) {
+    IsAIControlled& enable_ability(AbilityFlags flag) {
         abilities |= static_cast<uint32_t>(flag);
+        return *this;
     }
-    void disable_ability(AbilityFlags flag) {
+    IsAIControlled& disable_ability(AbilityFlags flag) {
         abilities &= ~static_cast<uint32_t>(flag);
+        return *this;
     }
 
     // Optional: preserve current “wandering is a pause” behavior.
+    // TODO: Revisit this. We currently use resume_state as a "return to previous
+    // task" slot when Wander is used as a temporary pause; ensure this is still
+    // the right abstraction once AI decisions/interrupts are formalized.
     State resume_state = State::Wander;
+
+    // Setup helper (for makers) so call sites can chain configuration.
+    IsAIControlled& set_initial_state(State s) {
+        state = s;
+        return *this;
+    }
 
    private:
    public:
