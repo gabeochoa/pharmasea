@@ -323,7 +323,7 @@ static ModelTintBucket tint_bucket_for(Color c) {
 static raylib::Matrix build_model_instance_transform(const vec3& position,
                                                      float rotation_degrees_y,
                                                      const vec3& scale) {
-    const float rot_radians = rotation_degrees_y * raylib::DEG2RAD;
+    const float rot_radians = rotation_degrees_y * DEG2RAD;
     const raylib::Matrix mat_scale =
         raylib::MatrixScale(scale.x, scale.y, scale.z);
     const raylib::Matrix mat_rot = raylib::MatrixRotateY(rot_radians);
@@ -338,6 +338,16 @@ static raylib::Matrix build_model_instance_transform(const vec3& position,
 static bool queue_transform_model_instance(const Transform& transform,
                                           const ModelRenderer& renderer,
                                           Color tint) {
+    // TEMPORARILY DISABLED:
+    // Instanced model rendering has been causing "all models invisible" at
+    // runtime. Until we wire up a known-good instanced shader path (especially
+    // for the lighting shader), we always fall back to the original per-entity
+    // DrawModelEx() code path for correctness.
+    (void)transform;
+    (void)renderer;
+    (void)tint;
+    return false;
+
     if (renderer.missing()) return false;
 
     // IMPORTANT:
