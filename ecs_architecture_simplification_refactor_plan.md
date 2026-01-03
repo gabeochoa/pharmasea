@@ -99,21 +99,51 @@ Also: some entities need *multiple* of these simultaneously (e.g. player can hol
 Instead of replacing the components, consolidate the **implementation**:
 
 - **Unify held-position updates into one system**
-  - Replace `UpdateHeldItemPositionSystem`, `UpdateHeldFurniturePositionSystem`, and `UpdateHeldHandTruckPositionSystem` with a single **`HeldAttachmentUpdateSystem`** that:
-    - updates any held child transform (item/furniture/handtruck) using shared helpers
-    - uses consistent “socket” rules for placement (front/hand/top/behind), but those rules can remain *internal* (no new public component vocabulary required)
-    - continues to support `CustomHeldItemPosition` where you want explicit tuning (conveyor vs blender vs table), without forcing everything into a generic slot model
+  - Replace these *existing systems*:
+    - `UpdateHeldItemPositionSystem` (currently in `src/system/afterhours_sixtyfps_systems.cpp`)
+    - `UpdateHeldHandTruckPositionSystem` (currently in `src/system/afterhours_sixtyfps_systems.cpp`)
+    - `UpdateHeldFurniturePositionSystem` (currently in `src/system/input_process_manager.cpp`)
+  - With one unified **`HeldAttachmentUpdateSystem`** (new; register it in the same update phase as the old held-item/handtruck systems).
+
+  - **What `HeldAttachmentUpdateSystem` does each frame (conceptually)**:
+    - **Step 1: Collect parent→child relationships**
+      - If entity has `CanHoldItem` and it contains a valid item id → `(parent=entity, child=item, kind=Item)`
+      - If entity has `CanHoldFurniture` and it contains a valid id → `(parent=entity, child=furniture, kind=Furniture)`
+      - If entity has `CanHoldHandTruck` and it contains a valid id → `(parent=entity, child=handtruck, kind=HandTruck)`
+      - This naturally supports *multiple holds per parent* (player can hold item + handtruck; handtruck can hold furniture).
+
+    - **Step 2: Compute desired child transform using shared helpers**
+      - A single helper like `held::compute_child_pose(parent_transform, kind, maybe_custom_position)` decides:
+        - base offset (front/hand/top/behind)
+        - facing/orientation inheritance rules
+      - `CustomHeldItemPosition` continues to override placement *for item-holding cases* (conveyor, blender, table, etc.)
+
+    - **Step 3: Apply transform + “held” flags consistently**
+      - Set child `Transform` position/rotation based on computed pose
+      - Set `CanBeHeld::held = true` on carried children (or keep current semantics: held items/furniture/handtruck mark as held)
+      - Clear `CanBeHeld::held` when the relationship no longer exists (or when ids become stale)
+
+  - **What code changes are needed (concrete)**
+    - Remove or disable registration of the three old systems, and register `HeldAttachmentUpdateSystem` instead.
+    - Delete/inline duplicated “held offset math” by moving it into the shared helper(s) used by the new system.
+    - Make sure the system runs **before** collision checks/render if you rely on updated transforms that frame.
 
 - **Simplify collision behavior with one rule**
   - Keep `CanBeHeld` as the mechanism:
     - if `CanBeHeld::is_held()` → **non-collidable**
+  - Update the collision gate at the source:
+    - `system_manager::input_process_manager::is_collidable()` (currently in `src/system/input_process_manager.cpp`) should become “boring”:
+      - check `IsSolid` (or equivalent)
+      - then early-out if `CanBeHeld && held`
+      - then apply overrides (below) if needed
   - Move the remaining exceptions out of hardcoded entity-type branches (e.g. rope/mopbuddy-holder edge cases) into either:
     - a small `HasCollisionOverrides`/`HasCollisionCategory` component, or
     - a small table keyed by `EntityType` (data-driven), so the collision function stays simple.
 
 - **Rope: keep as a domain feature**
   - `HasRopeToItem` can stay if it remains a special-case mechanic (not “just another hold”).
-  - The win is to ensure rope positioning also uses the same shared “follow/offset” helpers as held items, so it stops being its own bespoke transform math path.
+  - The win is to ensure rope positioning also uses the same shared “follow/offset” helper(s) as held items, so it stops being its own bespoke transform math path.
+  - Concretely: `ProcessHasRopeSystem` (currently referenced by in-round systems) should use the same helper to place rope segments, and should rely on `CanBeHeld` / collision overrides the same way held items do.
 
 #### Optional later step (only if needed)
 
@@ -131,11 +161,11 @@ If/when the “CanHoldX” approach starts to fragment again (new carryables, ne
 
 #### With these components
 
-- **`HasAIController`**
+- **`IsAIControlled`**
   - Keep this as the *authoritative high-level mode* only (small + obvious):
 
 ```cpp
-struct HasAIController : public BaseComponent {
+struct IsAIControlled : public BaseComponent {
   enum class State {
     Wander,
     QueueForRegister,
@@ -211,7 +241,7 @@ Notes:
 
 #### Payoff for upcoming features
 
-- **Thief AI** becomes a new `HasAIController::state` + a new behavior handler, not “add another AI component + touch many places”.
+- **Thief AI** becomes a new `IsAIControlled::state` + a new behavior handler, not “add another AI component + touch many places”.
 - **VIP area** becomes an `IsArea` policy + a trait + routing rule.
 - **Karaoke / order mimicry** becomes a modifier at “choose next order” time, not special cases across systems.
 
@@ -389,7 +419,7 @@ If you want the simplest conceptual model, merge them into a single “ItemTrans
 
 **Responsibilities**:
 
-- One authoritative state machine (in `HasAIController`)
+- One authoritative state machine (in `IsAIControlled`)
 - Behavior handlers as functions/modules (QueueBehavior, DrinkBehavior, BathroomBehavior, ThiefBehavior, etc.)
 - Separation between “decision” (choose next) and “actuation” (move, interact, pay)
 
@@ -456,7 +486,7 @@ This directly addresses the “growing factory complexity” problem.
 
 ### Phase 4: AI consolidation
 
-- Introduce `HasAIController` + `IsCustomer`
+- Introduce `IsAIControlled` + `IsCustomer`
 - Move logic from `CanPerformJob` branching into controller behaviors
 - Remove per-behavior AI components
 - Add hooks for future features (thief, VIP, fire code, etc.)
@@ -488,7 +518,7 @@ This directly addresses the “growing factory complexity” problem.
 ### Thieves + metal detectors
 
 - Add:
-  - `HasAIController.state = ThiefSteal / ThiefEscape`
+  - `IsAIControlled.state = ThiefSteal / ThiefEscape`
   - `IsArea(policy=DetectorZone)` that fires an action like `FlagCustomerCaught`
   - The existing “hold” primitives already support “pick up bottle” as a transfer
 
@@ -496,7 +526,7 @@ This directly addresses the “growing factory complexity” problem.
 
 - `IsCustomer` owns bladder counters.
 - Bathroom usage becomes:
-  - `HasAIController.state = Bathroom`
+  - `IsAIControlled.state = Bathroom`
   - `IsInteractable(type=UseBathroom)` for toilet entity (or “BathroomZone” area policy)
 - Upgrade modifiers become data applied to `IsCustomer` needs, not ad-hoc checks in AI components.
 
@@ -522,7 +552,7 @@ This directly addresses the “growing factory complexity” problem.
 - **Prefer enums + small payloads over lambdas**
   - Keep the behavior logic in systems; keep entity config as data.
 - **Keep one authoritative owner for state**
-  - AI state should live in `HasAIController`, not split between `CanPerformJob` + many AI components.
+  - AI state should live in `IsAIControlled`, not split between `CanPerformJob` + many AI components.
   - Trigger gating should live in `HasAreaRuntime`, not file-static globals.
 
 ---
