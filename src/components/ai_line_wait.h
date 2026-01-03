@@ -9,9 +9,7 @@
 #include "can_pathfind.h"
 #include "has_waiting_queue.h"
 
-// Minimal "wait in line" helper state for AI.
-// Unlike the legacy version, this has no callback/function members.
-struct AILineWaitState {
+struct AIWaitInQueueState : public BaseComponent {
     bool has_set_position_before = false;
     vec2 position{};
     int last_line_position = -1;
@@ -86,8 +84,12 @@ struct AILineWaitState {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(self.has_set_position_before, self.position,
-                       self.last_line_position);
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.has_set_position_before,     //
+            self.position,                    //
+            self.last_line_position           //
+        );
     }
 };
 

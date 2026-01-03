@@ -6,7 +6,7 @@
 #include "is_ai_controlled.h"
 
 struct HasAIBathroomState : public BaseComponent {
-    AILineWaitState line_wait{};
+    AIWaitInQueueState line_wait{};
     AITakesTime timer{};
     AITakesTime floor_timer{};
 

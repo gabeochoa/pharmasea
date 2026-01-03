@@ -9,7 +9,7 @@ struct HasAIQueueState : public BaseComponent {
     EntityRef last_register{};
     int queue_index = -1;
 
-    AILineWaitState line_wait{};
+    AIWaitInQueueState line_wait{};
 
    private:
    public:

@@ -5,7 +5,7 @@
 #include "base_component.h"
 
 struct HasAIPayState : public BaseComponent {
-    AILineWaitState line_wait{};
+    AIWaitInQueueState line_wait{};
     AITakesTime timer{};
 
    private:

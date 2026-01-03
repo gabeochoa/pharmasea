@@ -7,7 +7,7 @@
 
 struct HasAIJukeboxState : public BaseComponent {
     EntityRef last_jukebox{};
-    AILineWaitState line_wait{};
+    AIWaitInQueueState line_wait{};
     AITakesTime timer{};
 
    private:
