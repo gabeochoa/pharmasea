@@ -1,5 +1,6 @@
 #include "ai_system.h"
 
+#include <functional>
 #include <set>
 
 #include "../components/can_hold_item.h"
@@ -71,6 +72,74 @@ void reset_component(Entity& e) {
         if (EntityHelper::isWalkable(p)) return p;
     }
     return std::nullopt;
+}
+
+// ---- Queue/line helpers (system logic; components remain data-only) ----
+void line_reset(AIWaitInQueueState& s) {
+    s.has_set_position_before = false;
+    s.last_line_position = -1;
+    s.position = vec2{0, 0};
+}
+
+void line_add_to_queue(AIWaitInQueueState& s, Entity& reg, const Entity& entity) {
+    VALIDATE(reg.has<HasWaitingQueue>(),
+             "Trying to add_to_queue for entity which doesn't have a waiting "
+             "queue");
+    HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
+    int next_position = hwq.add_customer(entity).get_next_pos();
+    s.position = reg.get<Transform>().tile_infront((next_position + 1));
+    s.has_set_position_before = true;
+}
+
+[[nodiscard]] int line_position_in_line(AIWaitInQueueState& s, Entity& reg,
+                                       const Entity& entity) {
+    VALIDATE(reg.has<HasWaitingQueue>(),
+             "Trying to position_in_line for entity which doesn't have a "
+             "waiting queue");
+    const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
+    s.last_line_position = hwq.get_customer_position(entity.id);
+    return s.last_line_position;
+}
+
+[[nodiscard]] bool line_can_move_up(const Entity& reg, const Entity& customer) {
+    VALIDATE(reg.has<HasWaitingQueue>(),
+             "Trying to can_move_up for entity which doesn't have a waiting "
+             "queue");
+    return reg.get<HasWaitingQueue>().matching_id(customer.id, 0);
+}
+
+// Returns true when the entity reaches the front of the line.
+[[nodiscard]] bool line_try_to_move_closer(
+    AIWaitInQueueState& s, Entity& reg, Entity& entity, float distance,
+    const std::function<void()>& onReachedFront = nullptr) {
+    if (!s.has_set_position_before) {
+        log_error("AI line state: add_to_queue must be called first");
+    }
+
+    (void) entity.get<CanPathfind>().travel_toward(s.position, distance);
+
+    int spot_in_line = line_position_in_line(s, reg, entity);
+    if (spot_in_line != 0) {
+        if (!line_can_move_up(reg, entity)) {
+            return false;
+        }
+        // Walk up one spot.
+        s.position = reg.get<Transform>().tile_infront(spot_in_line);
+        return false;
+    }
+
+    s.position = reg.get<Transform>().tile_directly_infront();
+    if (onReachedFront) onReachedFront();
+    return true;
+}
+
+void line_leave(AIWaitInQueueState& s, Entity& reg, const Entity& entity) {
+    VALIDATE(reg.has<HasWaitingQueue>(),
+             "Trying to leave_line for entity which doesn't have a waiting "
+             "queue");
+    int pos = line_position_in_line(s, reg, entity);
+    if (pos == -1) return;
+    reg.get<HasWaitingQueue>().erase(pos);
 }
 
 [[nodiscard]] OptEntity find_best_register_with_space(const Entity& ai_entity) {
@@ -305,7 +374,7 @@ void process_ai_entity(Entity& entity, float dt) {
                     return;
                 }
                 tgt.entity.set(best.asE());
-                qs.line_wait.add_to_queue(best.asE(), entity);
+                line_add_to_queue(qs.line_wait, best.asE(), entity);
             }
 
             OptEntity opt_reg = tgt.entity.resolve();
@@ -321,8 +390,8 @@ void process_ai_entity(Entity& entity, float dt) {
 
             entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
 
-            bool reached_front = qs.line_wait.try_to_move_closer(
-                reg, entity, get_speed_for_entity(entity) * dt);
+            bool reached_front = line_try_to_move_closer(
+                qs.line_wait, reg, entity, get_speed_for_entity(entity) * dt);
             if (!reached_front) return;
 
             entity.get<HasSpeechBubble>().on();
@@ -386,7 +455,7 @@ void process_ai_entity(Entity& entity, float dt) {
             regCHI.update(nullptr, entity_id::INVALID);
 
             HasAIQueueState& qs = ensure_component<HasAIQueueState>(entity);
-            qs.line_wait.leave_line(reg, entity);
+            line_leave(qs.line_wait, reg, entity);
 
             canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
             entity.get<HasSpeechBubble>().off();
@@ -465,7 +534,7 @@ void process_ai_entity(Entity& entity, float dt) {
                     return;
                 }
                 tgt.entity.set(best.asE());
-                ps.line_wait.add_to_queue(best.asE(), entity);
+                line_add_to_queue(ps.line_wait, best.asE(), entity);
             }
 
             OptEntity opt_reg = tgt.entity.resolve();
@@ -480,8 +549,8 @@ void process_ai_entity(Entity& entity, float dt) {
                 ps.line_wait.position, get_speed_for_entity(entity) * dt);
             if (!reached) return;
 
-            bool reached_front = ps.line_wait.try_to_move_closer(
-                reg, entity, get_speed_for_entity(entity) * dt, [&]() {
+            bool reached_front = line_try_to_move_closer(
+                ps.line_wait, reg, entity, get_speed_for_entity(entity) * dt, [&]() {
                     if (!ps.timer.initialized) {
                         Entity& sophie =
                             EntityHelper::getNamedEntity(NamedEntity::Sophie);
@@ -504,7 +573,7 @@ void process_ai_entity(Entity& entity, float dt) {
                 cod.clear_tab_and_tip();
             }
 
-            ps.line_wait.leave_line(reg, entity);
+            line_leave(ps.line_wait, reg, entity);
             tgt.entity.clear();
             reset_component<HasAIPayState>(entity);
 
@@ -537,7 +606,7 @@ void process_ai_entity(Entity& entity, float dt) {
                 }
 
                 tgt.entity.set(best.asE());
-                js.line_wait.add_to_queue(best.asE(), entity);
+                line_add_to_queue(js.line_wait, best.asE(), entity);
             }
 
             OptEntity opt_j = tgt.entity.resolve();
@@ -552,8 +621,8 @@ void process_ai_entity(Entity& entity, float dt) {
                 js.line_wait.position, get_speed_for_entity(entity) * dt);
             if (!reached) return;
 
-            bool reached_front = js.line_wait.try_to_move_closer(
-                jukebox, entity, get_speed_for_entity(entity) * dt, [&]() {
+            bool reached_front = line_try_to_move_closer(
+                js.line_wait, jukebox, entity, get_speed_for_entity(entity) * dt, [&]() {
                     if (!js.timer.initialized) {
                         js.timer.set_time(5.f);
                     }
@@ -572,7 +641,7 @@ void process_ai_entity(Entity& entity, float dt) {
                 jukebox.get<HasLastInteractedCustomer>().customer.set_id(entity.id);
             }
 
-            js.line_wait.leave_line(jukebox, entity);
+            line_leave(js.line_wait, jukebox, entity);
             tgt.entity.clear();
             reset_component<HasAIJukeboxState>(entity);
 
@@ -602,7 +671,7 @@ void process_ai_entity(Entity& entity, float dt) {
                 OptEntity best = find_best_toilet_with_space(entity);
                 if (!best) return;
                 tgt.entity.set(best.asE());
-                bs.line_wait.add_to_queue(best.asE(), entity);
+                line_add_to_queue(bs.line_wait, best.asE(), entity);
                 bs.floor_timer.set_time(5.f);
             }
 
@@ -616,7 +685,7 @@ void process_ai_entity(Entity& entity, float dt) {
             IsToilet& istoilet = toilet.get<IsToilet>();
 
             const auto on_finished = [&]() {
-                bs.line_wait.leave_line(toilet, entity);
+                line_leave(bs.line_wait, toilet, entity);
                 tgt.entity.clear();
                 entity.get<CanOrderDrink>().empty_bladder();
                 istoilet.end_use();
@@ -643,8 +712,8 @@ void process_ai_entity(Entity& entity, float dt) {
             if (!reached) return;
 
             int previous_position = bs.line_wait.last_line_position;
-            bool reached_front = bs.line_wait.try_to_move_closer(
-                toilet, entity, get_speed_for_entity(entity) * dt);
+            bool reached_front = line_try_to_move_closer(
+                bs.line_wait, toilet, entity, get_speed_for_entity(entity) * dt);
             int new_position = bs.line_wait.last_line_position;
 
             if (previous_position != new_position && bs.floor_timer.initialized) {
