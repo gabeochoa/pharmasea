@@ -1425,14 +1425,11 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
 
     customer.addComponent<IsCustomer>();
     customer.get<IsAIControlled>().state = IsAIControlled::State::QueueForRegister;
-    if (irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet)) {
-        customer.get<IsAIControlled>().enable_ability(
-            IsAIControlled::AbilityUseBathroom);
-    }
-    if (irsm.has_upgrade_unlocked(UpgradeClass::Jukebox)) {
-        customer.get<IsAIControlled>().enable_ability(
-            IsAIControlled::AbilityPlayJukebox);
-    }
+    customer.get<IsAIControlled>()
+        .set_ability_state(IsAIControlled::AbilityUseBathroom,
+                           irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet))
+        .set_ability_state(IsAIControlled::AbilityPlayJukebox,
+                           irsm.has_upgrade_unlocked(UpgradeClass::Jukebox));
     // TODO for now, eventually move to customer spawner
     if (has_order) {
         CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();

@@ -38,6 +38,9 @@ struct IsAIControlled : public BaseComponent {
         abilities &= ~static_cast<uint32_t>(flag);
         return *this;
     }
+    IsAIControlled& set_ability_state(AbilityFlags flag, bool enabled) {
+        return enabled ? enable_ability(flag) : disable_ability(flag);
+    }
 
     // Optional: preserve current “wandering is a pause” behavior.
     // TODO: Revisit this. We currently use resume_state as a "return to previous
