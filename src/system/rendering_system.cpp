@@ -340,6 +340,16 @@ static bool queue_transform_model_instance(const Transform& transform,
                                           Color tint) {
     if (renderer.missing()) return false;
 
+    // IMPORTANT:
+    // Our current lighting shader (`resources/shaders/lighting.vs`) is written
+    // for non-instanced meshes (single `matModel` uniform). Raylib instancing
+    // requires shader support for per-instance transforms; otherwise instances
+    // can render at the wrong place or not at all.
+    //
+    // Until we add an instanced variant of the lighting shader, keep instancing
+    // disabled whenever lighting is enabled to avoid "invisible models".
+    if (Settings::get().data.enable_lighting) return false;
+
     // If no models were loaded, force ENABLE_MODELS to false
     if (ModelLibrary::get().size() == 0) {
         ENABLE_MODELS = false;
