@@ -1,11 +1,10 @@
 #include "world_snapshot_blob.h"
 
-#include "../bitsery_include.h"
 #include "../components/all_components.h"
 #include "../engine/log.h"
 #include "../entity_helper.h"
 
-#include <bitsery/ext/std_bitset.h>
+#include "../zpp_bits_include.h"
 
 #include <bitset>
 
@@ -13,11 +12,6 @@ namespace snapshot_blob {
 
 namespace {
 using Buffer = std::string;
-using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
-using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
-using TContext = std::tuple<>;
-using Serializer = bitsery::Serializer<OutputAdapter, TContext>;
-using Deserializer = bitsery::Deserializer<InputAdapter, TContext>;
 
 inline void clear_all_components(afterhours::Entity& e) {
     e.componentSet.reset();
@@ -26,8 +20,8 @@ inline void clear_all_components(afterhours::Entity& e) {
 
 struct ComponentSerde {
     bool (*has)(afterhours::Entity&) = nullptr;
-    void (*write)(Serializer&, afterhours::Entity&) = nullptr;
-    void (*read)(Deserializer&, afterhours::Entity&) = nullptr;
+    std::errc (*write)(zpp::bits::out<>&, afterhours::Entity&) = nullptr;
+    std::errc (*read)(zpp::bits::in<>&, afterhours::Entity&) = nullptr;
 };
 
 template<typename T>
@@ -36,15 +30,15 @@ bool serde_has(afterhours::Entity& e) {
 }
 
 template<typename T>
-void serde_write(Serializer& s, afterhours::Entity& e) {
+std::errc serde_write(zpp::bits::out<>& out, afterhours::Entity& e) {
     auto& cmp = e.get<T>();
-    s.object(cmp);
+    return out(cmp);
 }
 
 template<typename T>
-void serde_read(Deserializer& d, afterhours::Entity& e) {
+std::errc serde_read(zpp::bits::in<>& in, afterhours::Entity& e) {
     auto& cmp = e.addComponent<T>();
-    d.object(cmp);
+    return in(cmp);
 }
 
 static const auto& component_serdes() {
@@ -75,16 +69,18 @@ constexpr size_t kSnapshotComponentCount =
 using SnapshotComponentMask = std::bitset<kSnapshotComponentCount>;
 constexpr size_t kSnapshotComponentMaskWords = (kSnapshotComponentCount + 63) / 64;
 
-template<typename S>
-void serialize_snapshot_mask(S& s, SnapshotComponentMask& mask) {
+template<typename Archive>
+std::errc serialize_snapshot_mask(Archive& archive, SnapshotComponentMask& mask) {
     // NOTE: We do NOT use bitsery::ext::StdBitset here because it relies on
     // std::bitset::to_ullong(), which throws for N > 64 when higher bits are set.
     for (size_t word_i = 0; word_i < kSnapshotComponentMaskWords; ++word_i) {
         std::uint64_t word = 0;
 
-        if constexpr (requires { s.adapter().error(); }) {
+        if constexpr (std::remove_cvref_t<Archive>::kind() == zpp::bits::kind::in) {
             // Reader
-            s.value8b(word);
+            if (auto result = archive(word); zpp::bits::failure(result)) {
+                return result;
+            }
             for (size_t bit = 0; bit < 64; ++bit) {
                 const size_t idx = word_i * 64 + bit;
                 if (idx >= kSnapshotComponentCount) break;
@@ -98,19 +94,32 @@ void serialize_snapshot_mask(S& s, SnapshotComponentMask& mask) {
                 if (idx >= kSnapshotComponentCount) break;
                 if (mask.test(idx)) word |= (1ull << bit);
             }
-            s.value8b(word);
+            if (auto result = archive(word); zpp::bits::failure(result)) {
+                return result;
+            }
         }
     }
+    return {};
 }
 
-void write_entity(Serializer& s, afterhours::Entity& e) {
+std::errc write_entity(zpp::bits::out<>& out, afterhours::Entity& e) {
     // Versioned entity record.
-    s.value4b(kEntitySnapshotVersion);
+    if (auto result = out(  //
+            kEntitySnapshotVersion  //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
 
-    s.value4b(e.id);
-    s.value4b(e.entity_type);
-    s.ext(e.tags, bitsery::ext::StdBitset{});
-    s.value1b(e.cleanup);
+    if (auto result = out(  //
+            e.id,          //
+            e.entity_type, //
+            e.tags,        //
+            e.cleanup      //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
 
     // We serialize a bitset of which components are present, then serialize
     // component payloads in the stable `ComponentTypes` order.
@@ -125,50 +134,68 @@ void write_entity(Serializer& s, afterhours::Entity& e) {
          ...);
     }(std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
 
-    serialize_snapshot_mask(s, present);
+    if (auto result = serialize_snapshot_mask(out, present);
+        zpp::bits::failure(result)) {
+        return result;
+    }
 
     const auto& serdes = component_serdes();
+    std::errc err{};
     [&]<size_t... Is>(std::index_sequence<Is...>) {
         (([&] {
+             if (err != std::errc{}) return;
              if (!present.test(Is)) return;
              if (!serdes[Is].write) return;
-             serdes[Is].write(s, e);
+             err = serdes[Is].write(out, e);
          }()),
          ...);
     }(std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
+
+    return err;
 }
 
-[[nodiscard]] bool read_entity(Deserializer& d, afterhours::Entity& e) {
+[[nodiscard]] std::errc read_entity(zpp::bits::in<>& in, afterhours::Entity& e) {
     clear_all_components(e);
 
     // Versioned entity record.
     std::uint32_t ver = 0;
-    d.value4b(ver);
-    if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
-    if (ver != kEntitySnapshotVersion) return false;
+    if (auto result = in(  //
+            ver  //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
+    if (ver != kEntitySnapshotVersion) return std::errc::protocol_error;
 
-    d.value4b(e.id);
-    d.value4b(e.entity_type);
-    d.ext(e.tags, bitsery::ext::StdBitset{});
-    d.value1b(e.cleanup);
+    if (auto result = in(  //
+            e.id,          //
+            e.entity_type, //
+            e.tags,        //
+            e.cleanup      //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
 
     SnapshotComponentMask present{};
-    serialize_snapshot_mask(d, present);
-    if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
+    if (auto result = serialize_snapshot_mask(in, present);
+        zpp::bits::failure(result)) {
+        return result;
+    }
 
     const auto& serdes = component_serdes();
+    std::errc err{};
     [&]<size_t... Is>(std::index_sequence<Is...>) {
         (([&] {
+             if (err != std::errc{}) return;
              if (!present.test(Is)) return;
              if (!serdes[Is].read) return;
-             serdes[Is].read(d, e);
+             err = serdes[Is].read(in, e);
          }()),
          ...);
     }(std::make_index_sequence<std::tuple_size_v<ComponentTypes>>{});
 
-    if (d.adapter().error() != bitsery::ReaderError::NoError) return false;
-
-    return true;
+    return err;
 }
 
 }  // namespace
@@ -177,72 +204,87 @@ std::string encode_entity(const afterhours::Entity& entity) {
     thread_local size_t last_reserve = 0;
     Buffer buffer;
     if (last_reserve > 0) buffer.reserve(last_reserve);
-    TContext ctx{};
-    Serializer ser{ctx, buffer};
+    zpp::bits::out out{buffer};
     auto& e = const_cast<afterhours::Entity&>(entity);
-    write_entity(ser, e);
-    ser.adapter().flush();
+    if (auto result = write_entity(out, e); zpp::bits::failure(result)) {
+        return {};
+    }
     last_reserve = buffer.size();
     return buffer;
 }
 
 bool decode_into_entity(afterhours::Entity& entity, const std::string& blob) {
-    TContext ctx{};
-    Deserializer des{ctx, blob.begin(), blob.size()};
-    const bool ok = read_entity(des, entity);
-    return ok && des.adapter().error() == bitsery::ReaderError::NoError;
+    zpp::bits::in in{blob};
+    return zpp::bits::success(read_entity(in, entity));
 }
 
 std::string encode_current_world() {
     thread_local size_t last_reserve = 0;
     Buffer buffer;
     if (last_reserve > 0) buffer.reserve(last_reserve);
-    TContext ctx{};
-    Serializer ser{ctx, buffer};
+    zpp::bits::out out{buffer};
 
     uint32_t version = kWorldSnapshotVersion;
-    ser.value4b(version);
+    if (auto result = out(  //
+            version  //
+            );
+        zpp::bits::failure(result)) {
+        return {};
+    }
 
     const auto& ents = EntityHelper::get_entities();
     uint32_t count = 0;
     for (const auto& sp : ents)
         if (sp) ++count;
-    ser.value4b(count);
+    if (auto result = out(  //
+            count  //
+            );
+        zpp::bits::failure(result)) {
+        return {};
+    }
 
     for (const auto& sp : ents) {
         if (!sp) continue;
-        write_entity(ser, *sp);
+        if (auto result = write_entity(out, *sp); zpp::bits::failure(result)) {
+            return {};
+        }
     }
 
-    ser.adapter().flush();
     last_reserve = buffer.size();
     return buffer;
 }
 
 bool decode_into_current_world(const std::string& blob) {
-    TContext ctx{};
-    Deserializer des{ctx, blob.begin(), blob.size()};
+    zpp::bits::in in{blob};
 
     uint32_t version = 0;
-    des.value4b(version);
-    if (des.adapter().error() != bitsery::ReaderError::NoError) return false;
+    if (auto result = in(  //
+            version  //
+            );
+        zpp::bits::failure(result)) {
+        return false;
+    }
     if (version != kWorldSnapshotVersion) return false;
 
     uint32_t num_entities = 0;
-    des.value4b(num_entities);
-    if (des.adapter().error() != bitsery::ReaderError::NoError) return false;
+    if (auto result = in(  //
+            num_entities  //
+            );
+        zpp::bits::failure(result)) {
+        return false;
+    }
 
     Entities new_entities;
     new_entities.reserve(num_entities);
     for (uint32_t i = 0; i < num_entities; ++i) {
         std::shared_ptr<afterhours::Entity> sp(new afterhours::Entity());
-        if (!read_entity(des, *sp)) return false;
+        if (zpp::bits::failure(read_entity(in, *sp))) return false;
         new_entities.push_back(std::move(sp));
     }
 
     EntityHelper::get_current_collection().replace_all_entities(
         std::move(new_entities));
-    return des.adapter().error() == bitsery::ReaderError::NoError;
+    return true;
 }
 
 }  // namespace snapshot_blob

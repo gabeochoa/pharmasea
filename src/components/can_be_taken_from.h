@@ -12,10 +12,11 @@ struct CanBeTakenFrom : public BaseComponent {
    private:
     bool allowed = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(allowed);
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.allowed                     //
+        );
     }
 };

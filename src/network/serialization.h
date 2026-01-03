@@ -3,92 +3,158 @@
 // This header contains serialization code that requires heavy includes
 // Only include this in .cpp files that actually need to serialize/deserialize
 
-#include "../bitsery_include.h"
 #include "../engine/keymap.h"  // for UserInput, UserInputs, InputName, InputSet, InputAmount
 #include "../entity.h"
 #include "../map.h"
+#include "../zpp_bits_include.h"
 #include "types.h"
 
 namespace network {
 
-// Bitsery type aliases (only needed for serialization)
-using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
-using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
-using TContext = std::tuple<>;
-using BitserySerializer = bitsery::Serializer<OutputAdapter, TContext>;
-using BitseryDeserializer = bitsery::Deserializer<InputAdapter, TContext>;
+constexpr auto serialize(auto& archive, ClientPacket::PingInfo& info) {
+    return archive(  //
+        info.ping,   //
+        info.pong    //
+    );
+}
 
-// Serialize template for ClientPacket
-template<typename S>
-void serialize(S& s, ClientPacket& packet) {
-    s.value4b(packet.channel);
-    s.value4b(packet.client_id);
-    s.value4b(packet.msg_type);
-    s.ext(packet.msg,
-          bitsery::ext::StdVariant{
-              [](S& s, ClientPacket::AnnouncementInfo& info) {
-                  s.text1b(info.message, MAX_ANNOUNCEMENT_LENGTH);
-                  s.value4b(info.type);
-              },
-              [](S& s, ClientPacket::PlayerJoinInfo& info) {
-                  s.container4b(info.all_clients, MAX_CLIENTS);
-                  s.value1b(info.is_you);
-                  s.value8b(info.hashed_version);
-                  s.value4b(info.client_id);
-                  s.text1b(info.username, MAX_NAME_LENGTH);
-              },
-              [](S& s, ClientPacket::PlayerLeaveInfo& info) {
-                  s.container4b(info.all_clients, MAX_CLIENTS);
-                  s.value4b(info.client_id);
-              },
-              [](S& s, ClientPacket::PlayerControlInfo& info) {
-                  s.container(
-                      info.inputs, MAX_INPUTS, [](S& sv, UserInput& input) {
-                          sv.ext(
-                              input,
-                              bitsery::ext::StdTuple{
-                                  [](auto& s, menu::State& o) { s.value4b(o); },
-                                  [](auto& s, game::State& o) { s.value4b(o); },
-                                  [](auto& s, InputName& o) { s.value4b(o); },
-                                  [](auto& s, InputSet& o) {
-                                      s.container(
-                                          o, [](S& sv2, InputAmount& amount) {
-                                              sv2.value4b(amount);
-                                          });
-                                  },
-                                  [](auto& s, float& o) { s.value4b(o); }});
-                      });
-              },
-              [](S& s, ClientPacket::GameStateInfo& info) {
-                  s.value4b(info.host_menu_state);
-                  s.value4b(info.host_game_state);
-              },
-              [](S& s, ClientPacket::MapInfo& info) { s.object(info.map); },
-              [](S& s, ClientPacket::MapSeedInfo& info) {
-                  s.text1b(info.seed, MAX_SEED_LENGTH);
-              },
-              [](S& s, ClientPacket::PlayerInfo& info) {
-                  s.text1b(info.username, MAX_NAME_LENGTH);
-                  s.value4b(info.location[0]);
-                  s.value4b(info.location[1]);
-                  s.value4b(info.location[2]);
-                  s.value4b(info.facing);
-              },
-              [](S& s, ClientPacket::PlayerRareInfo& info) {
-                  s.value4b(info.client_id);
-                  s.value4b(info.model_index);
-                  s.value8b(info.last_ping);
-              },
-              [](S& s, ClientPacket::PingInfo& info) {
-                  s.value8b(info.ping);
-                  s.value8b(info.pong);
-              },
-              [](S& s, ClientPacket::PlaySoundInfo& info) {
-                  s.value4b(info.location[0]);
-                  s.value4b(info.location[1]);
-                  s.value1b(info.sound);
-              },
-          });
+constexpr auto serialize(auto& archive, ClientPacket::AnnouncementInfo& info) {
+    using archive_type = std::remove_cvref_t<decltype(archive)>;
+    if (auto result = archive(  //
+            info.message,       //
+            info.type           //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
+    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
+        if (info.message.size() > MAX_ANNOUNCEMENT_LENGTH) {
+            return std::errc::message_size;
+        }
+    }
+    return std::errc{};
+}
+
+constexpr auto serialize(auto& archive, ClientPacket::MapInfo& info) {
+    return archive(  //
+        info.map      //
+    );
+}
+
+constexpr auto serialize(auto& archive, ClientPacket::MapSeedInfo& info) {
+    using archive_type = std::remove_cvref_t<decltype(archive)>;
+    if (auto result = archive(  //
+            info.seed           //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
+    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
+        if (info.seed.size() > MAX_SEED_LENGTH) {
+            return std::errc::message_size;
+        }
+    }
+    return std::errc{};
+}
+
+constexpr auto serialize(auto& archive, ClientPacket::GameStateInfo& info) {
+    return archive(  //
+        info.host_menu_state,  //
+        info.host_game_state   //
+    );
+}
+
+constexpr auto serialize(auto& archive, ClientPacket::PlayerControlInfo& info) {
+    using archive_type = std::remove_cvref_t<decltype(archive)>;
+    if (auto result = archive(  //
+            info.inputs         //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
+    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
+        if (info.inputs.size() > MAX_INPUTS) {
+            return std::errc::message_size;
+        }
+    }
+    return std::errc{};
+}
+
+constexpr auto serialize(auto& archive, ClientPacket::PlayerJoinInfo& info) {
+    using archive_type = std::remove_cvref_t<decltype(archive)>;
+    if (auto result = archive(  //
+            info.all_clients,   //
+            info.client_id,     //
+            info.hashed_version, //
+            info.is_you,        //
+            info.username       //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
+    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
+        if (info.all_clients.size() > MAX_CLIENTS) return std::errc::message_size;
+        if (info.username.size() > MAX_NAME_LENGTH) return std::errc::message_size;
+    }
+    return std::errc{};
+}
+
+constexpr auto serialize(auto& archive, ClientPacket::PlayerLeaveInfo& info) {
+    using archive_type = std::remove_cvref_t<decltype(archive)>;
+    if (auto result = archive(  //
+            info.all_clients,   //
+            info.client_id      //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
+    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
+        if (info.all_clients.size() > MAX_CLIENTS) return std::errc::message_size;
+    }
+    return std::errc{};
+}
+
+constexpr auto serialize(auto& archive, ClientPacket::PlayerInfo& info) {
+    using archive_type = std::remove_cvref_t<decltype(archive)>;
+    if (auto result = archive(  //
+            info.username,      //
+            info.location[0],   //
+            info.location[1],   //
+            info.location[2],   //
+            info.facing         //
+            );
+        zpp::bits::failure(result)) {
+        return result;
+    }
+    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
+        if (info.username.size() > MAX_NAME_LENGTH) return std::errc::message_size;
+    }
+    return std::errc{};
+}
+
+constexpr auto serialize(auto& archive, ClientPacket::PlayerRareInfo& info) {
+    return archive(  //
+        info.client_id,  //
+        info.model_index, //
+        info.last_ping    //
+    );
+}
+
+constexpr auto serialize(auto& archive, ClientPacket::PlaySoundInfo& info) {
+    return archive(  //
+        info.location[0], //
+        info.location[1], //
+        info.sound        //
+    );
+}
+
+constexpr auto serialize(auto& archive, ClientPacket& packet) {
+    return archive(  //
+        packet.channel,   //
+        packet.client_id, //
+        packet.msg_type,  //
+        packet.msg        //
+    );
 }
 
 // Serialization function declarations

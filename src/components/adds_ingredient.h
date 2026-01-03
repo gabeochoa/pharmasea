@@ -66,11 +66,12 @@ struct AddsIngredient : public BaseComponent {
     OnDecrementFn on_decrement = nullptr;
     int num_uses = -1;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(num_uses);
-        s.value4b(parent);
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.num_uses,                  //
+            self.parent                     //
+        );
     }
 };

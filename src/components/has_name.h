@@ -16,11 +16,22 @@ struct HasName : public BaseComponent {
     int name_length = 1;
     std::string _name;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(name_length);
-        s.text1b(_name, name_length);
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        using archive_type = std::remove_cvref_t<decltype(archive)>;
+        if (auto result = archive(                      //
+                static_cast<BaseComponent&>(self),       //
+                self.name_length,                        //
+                self._name                               //
+                );
+            zpp::bits::failure(result)) {
+            return result;
+        }
+        if constexpr (archive_type::kind() == zpp::bits::kind::in) {
+            if (static_cast<int>(self._name.size()) > self.name_length) {
+                return std::errc::message_size;
+            }
+        }
+        return std::errc{};
     }
 };

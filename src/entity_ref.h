@@ -50,12 +50,13 @@ struct EntityRef {
     }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // Keep persistence ID-based for now (4 bytes), even if we cache handles
         // at runtime.
-        s.value4b(id);
+        return archive(  //
+            self.id      //
+        );
     }
 };
 

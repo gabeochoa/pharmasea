@@ -79,18 +79,17 @@ struct HasDayNightTimer : public BaseComponent {
     float current_length;
     bool is_day = true;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(day_count);
-        s.value4b(days_until_rent_due);
-        s.value4b(amount_due);
-
-        s.value4b(day_length);
-        s.value4b(night_length);
-        s.value4b(current_length);
-        s.value1b(is_day);
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.day_count,                  //
+            self.days_until_rent_due,        //
+            self.amount_due,                 //
+            self.day_length,                 //
+            self.night_length,               //
+            self.current_length,             //
+            self.is_day                      //
+        );
     }
 };

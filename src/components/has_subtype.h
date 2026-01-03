@@ -56,13 +56,13 @@ struct HasSubtype : public BaseComponent {
     int end;
     int type_index;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(start);
-        s.value4b(end);
-        s.value4b(type_index);
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.start,                     //
+            self.end,                       //
+            self.type_index                 //
+        );
     }
 };

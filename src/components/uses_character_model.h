@@ -44,12 +44,12 @@ struct UsesCharacterModel : public BaseComponent {
     int index;
     bool changed;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(index);
-        s.value1b(changed);
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.index,                     //
+            self.changed                    //
+        );
     }
 };

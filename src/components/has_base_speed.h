@@ -12,10 +12,12 @@ struct HasBaseSpeed : public BaseComponent {
    private:
     float base_speed = 1.f;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // We dont serialize because its fully serverside
+        (void) self;
+        return archive(                      //
+            static_cast<BaseComponent&>(self)  //
+        );
     }
 };

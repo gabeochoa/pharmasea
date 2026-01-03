@@ -6,9 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "../bitsery_include.h"
 #include "../globals.h"
 #include "../map.h"
+#include "../zpp_bits_include.h"
 
 namespace save_game {
 
@@ -34,21 +34,39 @@ struct SaveGameHeader {
     std::string magic = "PHARMSAVE";
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        using archive_type = std::remove_cvref_t<decltype(archive)>;
         // NOTE: we serialize magic first so quick header reads can fail fast.
-        s.text1b(magic, 16);
-        s.value4b(save_version);
-        s.value8b(hashed_build_version);
-        s.value8b(timestamp_epoch_seconds);
+        if (auto result = archive(  //
+                self.magic,         //
+                self.save_version,  //
+                self.hashed_build_version,      //
+                self.timestamp_epoch_seconds    //
+                );
+            zpp::bits::failure(result)) {
+            return result;
+        }
 
-        s.text1b(display_name, 64);
-        s.text1b(seed, MAX_SEED_LENGTH);
-        s.value4b(day_count);
-        s.value4b(coins);
-        s.value4b(cart);
-        s.value4b(playtime_seconds);
+        if (auto result = archive(  //
+                self.display_name,  //
+                self.seed,          //
+                self.day_count,     //
+                self.coins,         //
+                self.cart,          //
+                self.playtime_seconds  //
+                );
+            zpp::bits::failure(result)) {
+            return result;
+        }
+
+        if constexpr (archive_type::kind() == zpp::bits::kind::in) {
+            if (self.magic.size() > 16) return std::errc::message_size;
+            if (self.display_name.size() > 64) return std::errc::message_size;
+            if (self.seed.size() > MAX_SEED_LENGTH) return std::errc::message_size;
+        }
+
+        return {};
     }
 };
 
@@ -57,11 +75,12 @@ struct SaveGameFile {
     Map map_snapshot;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.object(header);
-        s.object(map_snapshot);
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(  //
+            self.header,      //
+            self.map_snapshot  //
+        );
     }
 };
 
