@@ -87,28 +87,33 @@ struct Map {
         // StdSmartPtr-based entity graph serialization.
 
         std::string world_blob;
-        if constexpr (requires { std::remove_cvref_t<decltype(archive)>::kind(); } &&
-                      std::remove_cvref_t<decltype(archive)>::kind() == zpp::bits::kind::in) {
-            // Serialize as raw bytes: length + 1-byte chars.
-            // (Bitsery's `container4b`/`text4b` mean 4-bytes-per-element, which
-            // is NOT what we want for a byte blob.)
-            (void) archive(  //
-                world_blob   //
-            );
-            const bool ok = snapshot_blob::decode_into_current_world(world_blob);
-            VALIDATE(ok, "failed to decode world snapshot blob");
-        } else {
+        if constexpr (requires {
+                          std::remove_cvref_t<decltype(archive)>::kind();
+                      } && std::remove_cvref_t<decltype(archive)>::kind() ==
+                               zpp::bits::kind::out) {
             world_blob = snapshot_blob::encode_current_world();
-            (void) archive(  //
-                world_blob   //
-            );
         }
 
-        return archive(        //
+        // Serialize as raw bytes: length + 1-byte chars.
+        // (Bitsery's `container4b`/`text4b` mean 4-bytes-per-element, which
+        // is NOT what we want for a byte blob.)
+        auto result = archive(  //
+            world_blob,         //
             self.was_generated, //
             self.seed,          //
             self.hashed_seed,   //
             self.showMinimap    //
         );
+
+        if constexpr (requires {
+                          std::remove_cvref_t<decltype(archive)>::kind();
+                      } && std::remove_cvref_t<decltype(archive)>::kind() ==
+                               zpp::bits::kind::in) {
+            const bool ok =
+                snapshot_blob::decode_into_current_world(world_blob);
+            VALIDATE(ok, "failed to decode world snapshot blob");
+        }
+
+        return result;
     }
 };
