@@ -70,13 +70,8 @@ To allow all behavior systems to run every frame while keeping state transitions
 
 - Add `set_next_state(...)` to `IsAIControlled` (or introduce a small companion component for pending transitions).
 - Behavior systems call `set_next_state(...)` (or set a transition request) instead of calling `set_state(...)`.
-- As soon as a behavior system sets a next state, it should also set a lightweight transient tag so other AI behavior systems can skip for that entity until the next state is committed.
-  - Suggested tag names (pick one):
-    - `afterhours::tags::AITransitionPending`
-    - `afterhours::tags::AIPendingTransition`
-    - `afterhours::tags::AINextStatePending`
-    - `afterhours::tags::AIHasNextState`
-    - `afterhours::tags::AIStateCommitPending`
+- As soon as a behavior system sets a next state, it should also set a lightweight transient tag so other AI behavior systems can skip for that entity until the next state is committed:
+  - `afterhours::tags::AITransitionPending`
 - A final **`AICommitNextStateSystem`** runs at the end of AI processing and:
   - applies the pending transition to `IsAIControlled::state`
   - clears the pending transition
@@ -131,7 +126,7 @@ To preserve this with multiple systems:
 
 - **Recommended model**: staged transitions + reset gating
   - Behavior systems compute/act and may set “next state”.
-  - If an entity has a pending transition tag (e.g. `AITransitionPending`), all other AI behavior systems should be registered with a `whereNotTag(AITransitionPending)`-style filter so they skip for that entity.
+  - If an entity has `afterhours::tags::AITransitionPending`, all other AI behavior systems should be registered with a `whereNotTag(AITransitionPending)`-style filter so they skip for that entity.
   - `AICommitNextStateSystem` applies the state change once.
   - `afterhours::tags::AINeedsResetting` prevents other systems from running until entry resets are applied.
 
