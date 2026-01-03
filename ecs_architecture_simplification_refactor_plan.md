@@ -83,71 +83,7 @@ This refactor centers the game around a few reusable primitives:
 
 ### A) Holding / attachments consolidation
 
-#### Update (design preference): keep explicit “CanHoldX” components
-
-The generic `Slot`/`AttachmentSockets` model is optional. If the goal is **simplicity and readability in gameplay code**, keep the current components because they communicate intent extremely well:
-
-- **`CanHoldItem`**: “this entity can hold an item”
-- **`CanHoldFurniture`**: “this entity can hold furniture”
-- **`CanHoldHandTruck`**: “this entity can hold a handtruck”
-- **`CanBeHeld`** (and optionally `CanBeHeld_HT`): “this entity can be carried / is currently carried”
-
-Also: some entities need *multiple* of these simultaneously (e.g. player can hold an item + hold/drag a handtruck; a handtruck can hold furniture; furniture can hold an item), and keeping separate components makes that obvious and easy to reason about.
-
-#### What we actually consolidate: the duplicated systems + special-cases
-
-Instead of replacing the components, consolidate the **implementation**:
-
-- **Unify held-position updates into one system**
-  - Replace these *existing systems*:
-    - `UpdateHeldItemPositionSystem` (currently in `src/system/afterhours_sixtyfps_systems.cpp`)
-    - `UpdateHeldHandTruckPositionSystem` (currently in `src/system/afterhours_sixtyfps_systems.cpp`)
-    - `UpdateHeldFurniturePositionSystem` (currently in `src/system/input_process_manager.cpp`)
-  - With one unified **`HeldAttachmentUpdateSystem`** (new; register it in the same update phase as the old held-item/handtruck systems).
-
-  - **What `HeldAttachmentUpdateSystem` does each frame (conceptually)**:
-    - **Step 1: Collect parent→child relationships**
-      - If entity has `CanHoldItem` and it contains a valid item id → `(parent=entity, child=item, kind=Item)`
-      - If entity has `CanHoldFurniture` and it contains a valid id → `(parent=entity, child=furniture, kind=Furniture)`
-      - If entity has `CanHoldHandTruck` and it contains a valid id → `(parent=entity, child=handtruck, kind=HandTruck)`
-      - This naturally supports *multiple holds per parent* (player can hold item + handtruck; handtruck can hold furniture).
-
-    - **Step 2: Compute desired child transform using shared helpers**
-      - A single helper like `held::compute_child_pose(parent_transform, kind, maybe_custom_position)` decides:
-        - base offset (front/hand/top/behind)
-        - facing/orientation inheritance rules
-      - `CustomHeldItemPosition` continues to override placement *for item-holding cases* (conveyor, blender, table, etc.)
-
-    - **Step 3: Apply transform + “held” flags consistently**
-      - Set child `Transform` position/rotation based on computed pose
-      - Set `CanBeHeld::held = true` on carried children (or keep current semantics: held items/furniture/handtruck mark as held)
-      - Clear `CanBeHeld::held` when the relationship no longer exists (or when ids become stale)
-
-  - **What code changes are needed (concrete)**
-    - Remove or disable registration of the three old systems, and register `HeldAttachmentUpdateSystem` instead.
-    - Delete/inline duplicated “held offset math” by moving it into the shared helper(s) used by the new system.
-    - Make sure the system runs **before** collision checks/render if you rely on updated transforms that frame.
-
-- **Simplify collision behavior with one rule**
-  - Keep `CanBeHeld` as the mechanism:
-    - if `CanBeHeld::is_held()` → **non-collidable**
-  - Update the collision gate at the source:
-    - `system_manager::input_process_manager::is_collidable()` (currently in `src/system/input_process_manager.cpp`) should become “boring”:
-      - check `IsSolid` (or equivalent)
-      - then early-out if `CanBeHeld && held`
-      - then apply overrides (below) if needed
-  - Move the remaining exceptions out of hardcoded entity-type branches (e.g. rope/mopbuddy-holder edge cases) into either:
-    - a small `HasCollisionOverrides`/`HasCollisionCategory` component, or
-    - a small table keyed by `EntityType` (data-driven), so the collision function stays simple.
-
-- **Rope: keep as a domain feature**
-  - `HasRopeToItem` can stay if it remains a special-case mechanic (not “just another hold”).
-  - The win is to ensure rope positioning also uses the same shared “follow/offset” helper(s) as held items, so it stops being its own bespoke transform math path.
-  - Concretely: `ProcessHasRopeSystem` (currently referenced by in-round systems) should use the same helper to place rope segments, and should rely on `CanBeHeld` / collision overrides the same way held items do.
-
-#### Optional later step (only if needed)
-
-If/when the “CanHoldX” approach starts to fragment again (new carryables, new attachment-like mechanics), you can still introduce a generic attachment core *underneath* while keeping the `CanHoldItem`-style API surface. But it’s not required to get the simplicity wins right now.
+TODO: review `CanHold*` components to see if theres a better way
 
 ---
 
@@ -218,7 +154,7 @@ struct HasAITargetEntity : public BaseComponent {
 };
 
 struct HasAITargetLocation : public BaseComponent {
-  // Optional so we don’t need sentinel positions or extra `has_*` bools.
+  // TODO replace optional<vec2> with Location typdef
   std::optional<vec2> pos;
 };
 ```
@@ -231,7 +167,6 @@ struct HasAITargetLocation : public BaseComponent {
 struct HasAIQueueState : public BaseComponent {
   EntityRef last_register{};   // helps avoid thrash
   int queue_index = -1;        // last known position in line (optional)
-  // Queue stand location should use `HasAITargetLocation::pos`.
 };
 
 struct HasAIJukeboxState : public BaseComponent {
@@ -240,19 +175,14 @@ struct HasAIJukeboxState : public BaseComponent {
 ```
 
 Notes:
-- This component split is intentionally “boring”: explicit named fields, no generic “memory blob”.
-- It matches your current reset ergonomics: you can clear/reset `HasAITargetLocation` (and/or remove a state-specific component like `HasAIQueueState`) without disturbing other state.
-- **`IsCustomer`**
-  - IsCustomer-specific durable data: patience/order/traits/bladder progress (things that must survive task resets).
-  - The goal is to move “customer-ness” out of scattered components and into one place.
-- **`HasAgentTraits`** (optional)
-  - Generic attribute flags/modifiers (speed multiplier, patience decay multiplier, thief flag, VIP flag).
+TODO: finalize which AI data belongs in `IsCustomer` vs which should live on per-state components, and define a consistent reset pattern (e.g., clearing `HasAITargetEntity`/`HasAITargetLocation` vs removing state components).
 
 #### Payoff for upcoming features
 
-- **Thief AI** becomes a new `IsAIControlled::state` + a new behavior handler, not “add another AI component + touch many places”.
-- **VIP area** becomes an `IsArea` policy + a trait + routing rule.
-- **Karaoke / order mimicry** becomes a modifier at “choose next order” time, not special cases across systems.
+TODO: validate this AI split against planned features (thief/VIP/karaoke) and ensure each feature only needs:
+- adding a new state + behavior handler, and/or
+- adding a small `HasX` config component,
+without expanding shared “god components”.
 
 ---
 
