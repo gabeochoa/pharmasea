@@ -46,11 +46,13 @@ struct AIUseBathroom : public AIComponent {
     JobType next_job;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<AIComponent>{});
-        s.object(target);
-        s.object(floor_timer);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                    //
+            static_cast<AIComponent&>(self), //
+            self.target,                    //
+            self.floor_timer                //
+        );
     }
 };

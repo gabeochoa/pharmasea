@@ -41,10 +41,12 @@ struct AIPlayJukebox : public AIComponent {
           line_wait(std::bind(&AIComponent::reset, this)) {}
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<AIComponent>{});
-        s.object(target);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                    //
+            static_cast<AIComponent&>(self), //
+            self.target                     //
+        );
     }
 };

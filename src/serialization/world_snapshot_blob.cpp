@@ -12,6 +12,8 @@ namespace snapshot_blob {
 
 namespace {
 using Buffer = std::string;
+using OutArchive = zpp::bits::out<Buffer>;
+using InArchive = zpp::bits::in<Buffer>;
 
 inline void clear_all_components(afterhours::Entity& e) {
     e.componentSet.reset();
@@ -20,8 +22,8 @@ inline void clear_all_components(afterhours::Entity& e) {
 
 struct ComponentSerde {
     bool (*has)(afterhours::Entity&) = nullptr;
-    std::errc (*write)(zpp::bits::out<>&, afterhours::Entity&) = nullptr;
-    std::errc (*read)(zpp::bits::in<>&, afterhours::Entity&) = nullptr;
+    std::errc (*write)(OutArchive&, afterhours::Entity&) = nullptr;
+    std::errc (*read)(InArchive&, afterhours::Entity&) = nullptr;
 };
 
 template<typename T>
@@ -30,13 +32,13 @@ bool serde_has(afterhours::Entity& e) {
 }
 
 template<typename T>
-std::errc serde_write(zpp::bits::out<>& out, afterhours::Entity& e) {
+std::errc serde_write(OutArchive& out, afterhours::Entity& e) {
     auto& cmp = e.get<T>();
     return out(cmp);
 }
 
 template<typename T>
-std::errc serde_read(zpp::bits::in<>& in, afterhours::Entity& e) {
+std::errc serde_read(InArchive& in, afterhours::Entity& e) {
     auto& cmp = e.addComponent<T>();
     return in(cmp);
 }
@@ -102,7 +104,7 @@ std::errc serialize_snapshot_mask(Archive& archive, SnapshotComponentMask& mask)
     return {};
 }
 
-std::errc write_entity(zpp::bits::out<>& out, afterhours::Entity& e) {
+std::errc write_entity(OutArchive& out, afterhours::Entity& e) {
     // Versioned entity record.
     if (auto result = out(  //
             kEntitySnapshotVersion  //
@@ -154,7 +156,7 @@ std::errc write_entity(zpp::bits::out<>& out, afterhours::Entity& e) {
     return err;
 }
 
-[[nodiscard]] std::errc read_entity(zpp::bits::in<>& in, afterhours::Entity& e) {
+[[nodiscard]] std::errc read_entity(InArchive& in, afterhours::Entity& e) {
     clear_all_components(e);
 
     // Versioned entity record.
@@ -204,7 +206,7 @@ std::string encode_entity(const afterhours::Entity& entity) {
     thread_local size_t last_reserve = 0;
     Buffer buffer;
     if (last_reserve > 0) buffer.reserve(last_reserve);
-    zpp::bits::out out{buffer};
+    OutArchive out{buffer};
     auto& e = const_cast<afterhours::Entity&>(entity);
     if (auto result = write_entity(out, e); zpp::bits::failure(result)) {
         return {};
@@ -214,7 +216,7 @@ std::string encode_entity(const afterhours::Entity& entity) {
 }
 
 bool decode_into_entity(afterhours::Entity& entity, const std::string& blob) {
-    zpp::bits::in in{blob};
+    InArchive in{blob};
     return zpp::bits::success(read_entity(in, entity));
 }
 
@@ -222,7 +224,7 @@ std::string encode_current_world() {
     thread_local size_t last_reserve = 0;
     Buffer buffer;
     if (last_reserve > 0) buffer.reserve(last_reserve);
-    zpp::bits::out out{buffer};
+    OutArchive out{buffer};
 
     uint32_t version = kWorldSnapshotVersion;
     if (auto result = out(  //
@@ -255,7 +257,7 @@ std::string encode_current_world() {
 }
 
 bool decode_into_current_world(const std::string& blob) {
-    zpp::bits::in in{blob};
+    InArchive in{blob};
 
     uint32_t version = 0;
     if (auto result = in(  //
