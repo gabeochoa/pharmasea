@@ -108,7 +108,7 @@ Instead of replacing the components, consolidate the **implementation**:
   - Keep `CanBeHeld` as the mechanism:
     - if `CanBeHeld::is_held()` → **non-collidable**
   - Move the remaining exceptions out of hardcoded entity-type branches (e.g. rope/mopbuddy-holder edge cases) into either:
-    - a small `CollisionOverrides`/`CollisionCategory` component, or
+    - a small `HasCollisionOverrides`/`HasCollisionCategory` component, or
     - a small table keyed by `EntityType` (data-driven), so the collision function stays simple.
 
 - **Rope: keep as a domain feature**
@@ -131,11 +131,11 @@ If/when the “CanHoldX” approach starts to fragment again (new carryables, ne
 
 #### With these components
 
-- **`AIController`**
+- **`HasAIController`**
   - Keep this as the *authoritative high-level mode* only (small + obvious):
 
 ```cpp
-struct AIController : public BaseComponent {
+struct HasAIController : public BaseComponent {
   enum class State {
     Wander,
     QueueForRegister,
@@ -179,40 +179,40 @@ struct HasAITarget : public BaseComponent {
   - Add only the ones you actually need:
 
 ```cpp
-struct AIQueueState : public BaseComponent {
+struct HasAIQueueState : public BaseComponent {
   int last_register_id = -1;   // helps avoid thrash
   int queue_index = -1;        // last known position in line (optional)
   vec2 stand_pos = {0, 0};
   bool has_stand_pos = false;
 };
 
-struct AIWanderState : public BaseComponent {
+struct HasAIWanderState : public BaseComponent {
   vec2 goal = {0, 0};
   bool has_goal = false;
 };
 
-struct AIBathroomState : public BaseComponent {
+struct HasAIBathroomState : public BaseComponent {
   int last_toilet_id = -1;
 };
 
-struct AIJukeboxState : public BaseComponent {
+struct HasAIJukeboxState : public BaseComponent {
   int last_jukebox_id = -1;
 };
 ```
 
 Notes:
 - This component split is intentionally “boring”: explicit named fields, no generic “memory blob”.
-- It matches your current reset ergonomics: remove/re-add `AIWanderState` or `AIQueueState` without disturbing other state.
+- It matches your current reset ergonomics: remove/re-add `HasAIWanderState` or `HasAIQueueState` without disturbing other state.
 - **`IsCustomer`**
   - IsCustomer-specific durable data: patience/order/traits/bladder progress (things that must survive task resets).
   - The goal is to move “customer-ness” out of scattered components and into one place.
-- **`AgentTraits`** (optional)
+- **`HasAgentTraits`** (optional)
   - Generic attribute flags/modifiers (speed multiplier, patience decay multiplier, thief flag, VIP flag).
 
 #### Payoff for upcoming features
 
-- **Thief AI** becomes a new `AIController.state` + a new behavior handler, not “add another AI component + touch many places”.
-- **VIP area** becomes an Area policy + a trait + routing rule.
+- **Thief AI** becomes a new `HasAIController::state` + a new behavior handler, not “add another AI component + touch many places”.
+- **VIP area** becomes an `IsArea` policy + a trait + routing rule.
 - **Karaoke / order mimicry** becomes a modifier at “choose next order” time, not special cases across systems.
 
 ---
@@ -225,11 +225,11 @@ Notes:
 
 #### With
 
-- **`Interactable`**
+- **`IsInteractable`**
   - **Fields**: `interaction_type` (enum), `progress` (0..1), `rate`, `requirements` (held tool? time of day?), `ui_policy`.
-- **`Cooldown`** (generic)
+- **`HasCooldown`** (generic)
   - Used by interactables, trigger areas, fishing game, etc.
-- **`Progress`** (generic)
+- **`HasProgress`** (generic)
   - One consistent model for progress bars across the world.
 
 #### Example interaction types (data-driven)
@@ -255,12 +255,12 @@ The key is: **systems implement interaction types**; entity makers only configur
 
 #### With
 
-- **`Area`**
+- **`IsArea`**
   - **Fields**: `shape` (AABB/circle), `policy` (enum), `progress`, `cooldown`, `required_entrants`, `entrants_scope` (All/One/AllInBuilding), `building` optional.
-- **`AreaAction`**
+- **`HasAreaAction`**
   - **Fields**: `action_type` (enum), `action_payload` (small POD: ints/enums)
   - Example actions: `ChangeGameState`, `LoadSaveSlot`, `StoreReroll`, `PickProgressionOption`, `StartMinigame`, `TeleportPlayers`.
-- **`AreaRuntime`**
+- **`HasAreaRuntime`**
   - Tracks occupant count, “fired_while_occupied” flag, last_fire_time, etc.
 
 This converts triggers from “distributed logic + globals + large switch statements” into a single **AreaSystem** that:
@@ -299,8 +299,8 @@ This isn’t required for gameplay simplification, but it reduces the “where i
 
 **Responsibilities**:
 
-- Resolve slot-held entities to `AttachmentParent` links
-- Apply socket transforms to children every frame
+- Read held relationships from `CanHoldItem` / `CanHoldFurniture` / `CanHoldHandTruck`
+- Apply consistent held placement rules to the held entity every frame (front/hand/top/behind + `CustomHeldItemPosition` overrides)
 - Apply “non-collidable while attached” via collider flags/categories
 
 ---
@@ -389,7 +389,7 @@ If you want the simplest conceptual model, merge them into a single “ItemTrans
 
 **Responsibilities**:
 
-- One authoritative state machine (in `AIController`)
+- One authoritative state machine (in `HasAIController`)
 - Behavior handlers as functions/modules (QueueBehavior, DrinkBehavior, BathroomBehavior, ThiefBehavior, etc.)
 - Separation between “decision” (choose next) and “actuation” (move, interact, pay)
 
@@ -415,8 +415,8 @@ Create a single table `PrefabLibrary` keyed by `EntityType` (or string prefab id
 - declares base components
 - declares default render/collider config
 - declares slots/sockets
-- declares `Interactable` configs
-- declares `Area` configs (for triggers/markers)
+- declares `IsInteractable` configs
+- declares `IsArea` configs (for triggers/markers)
 
 Then keep *only* special construction code when a prefab truly needs runtime binding (rare).
 
@@ -426,10 +426,10 @@ This directly addresses the “growing factory complexity” problem.
 
 ## How to phase this refactor (recommended order)
 
-### Phase 1: Attachments + Slots (highest leverage)
+### Phase 1: Attachments + holds (highest leverage)
 
-- Introduce `Slot`, `AttachmentParent`, `AttachmentSockets`
-- Implement `AttachmentSystem`
+- Consolidate the “hold” implementation (keep `CanHoldX`, unify the systems)
+- Implement `HeldAttachmentUpdateSystem`
 - Migrate:
   - held items
   - held furniture
@@ -439,14 +439,14 @@ This directly addresses the “growing factory complexity” problem.
 
 ### Phase 2: Areas/Triggers
 
-- Introduce `Area`, `AreaAction`, `AreaRuntime`
+- Introduce `IsArea`, `HasAreaAction`, `HasAreaRuntime`
 - Implement `AreaSystem` + action dispatcher
 - Migrate `IsTriggerArea` and `IsFloorMarker` behaviors into area policies/actions
 - Delete trigger globals and the trigger micro-systems
 
 ### Phase 3: Interactions / Work
 
-- Introduce `Interactable` + `Progress` + `Cooldown`
+- Introduce `IsInteractable` + `HasProgress` + `HasCooldown`
 - Implement `InteractionSystem` (player-driven)
 - Convert the worst offenders first:
   - draft tap / drink filling duplication
@@ -456,7 +456,7 @@ This directly addresses the “growing factory complexity” problem.
 
 ### Phase 4: AI consolidation
 
-- Introduce `AIController` + `IsCustomer`
+- Introduce `HasAIController` + `IsCustomer`
 - Move logic from `CanPerformJob` branching into controller behaviors
 - Remove per-behavior AI components
 - Add hooks for future features (thief, VIP, fire code, etc.)
@@ -473,31 +473,31 @@ This directly addresses the “growing factory complexity” problem.
 ### Rhythm mixing / DDR discount (store trigger once per round)
 
 - Implement as:
-  - `Area(policy=MinigameZone)` + `AreaAction(StartMinigame, id=DDRDiscount)`
-  - `MinigameSession` component on the player (or global singleton entity) with `Progress/Cooldown`
-  - `InteractionSystem`/`AreaSystem` enforces “once per store round” by `Cooldown` or a round-scoped flag
+  - `IsArea(policy=MinigameZone)` + `HasAreaAction(StartMinigame, id=DDRDiscount)`
+  - `MinigameSession` component on the player (or global singleton entity) with `HasProgress`/`HasCooldown`
+  - `InteractionSystem`/`AreaSystem` enforces “once per store round” by `HasCooldown` or a round-scoped flag
 
 ### VIP red carpet area + special ordering rules
 
 - Use:
-  - `Area(policy=VIPZone)`
-  - `IsCustomer.traits.vip = true` OR assign `AgentTraits{VIP}`
+  - `IsArea(policy=VIPZone)`
+  - `IsCustomer.traits.vip = true` OR assign `HasAgentTraits{VIP}`
   - AI decision rules read “which areas am I allowed to path to / order from”
   - Pricing system reads “served in VIP zone” multiplier
 
 ### Thieves + metal detectors
 
 - Add:
-  - `AIController.state = ThiefSteal / ThiefEscape`
-  - `Area(policy=DetectorZone)` that fires an action like `FlagCustomerCaught`
-  - `Inventory/Slot` primitives already support “pick up bottle” as an attachment/slot transfer
+  - `HasAIController.state = ThiefSteal / ThiefEscape`
+  - `IsArea(policy=DetectorZone)` that fires an action like `FlagCustomerCaught`
+  - The existing “hold” primitives already support “pick up bottle” as a transfer
 
 ### Bladder / bathroom upgrades (“Break the Seal”, “Luxury Lavatories”)
 
 - `IsCustomer` owns bladder counters.
 - Bathroom usage becomes:
-  - `AIController.state = Bathroom`
-  - `Interactable(type=UseBathroom)` for toilet entity (or “BathroomZone” area policy)
+  - `HasAIController.state = Bathroom`
+  - `IsInteractable(type=UseBathroom)` for toilet entity (or “BathroomZone” area policy)
 - Upgrade modifiers become data applied to `IsCustomer` needs, not ad-hoc checks in AI components.
 
 ### Dynamic prices / queue-length pricing
@@ -507,7 +507,7 @@ This directly addresses the “growing factory complexity” problem.
 
 ### Multi-floor / capacity / “fire code”
 
-- `Area(policy=CapacityZone)` can count occupants and enforce “wait outside” by AI state transitions.
+- `IsArea(policy=CapacityZone)` can count occupants and enforce “wait outside” by AI state transitions.
 - Pathfinding constraints can be expressed as “allowed zones” or “goals” rather than hardcoding building rectangles.
 
 ---
@@ -522,8 +522,8 @@ This directly addresses the “growing factory complexity” problem.
 - **Prefer enums + small payloads over lambdas**
   - Keep the behavior logic in systems; keep entity config as data.
 - **Keep one authoritative owner for state**
-  - AI state should live in `AIController`, not split between `CanPerformJob` + many AI components.
-  - Trigger gating should live in `AreaRuntime`, not file-static globals.
+  - AI state should live in `HasAIController`, not split between `CanPerformJob` + many AI components.
+  - Trigger gating should live in `HasAreaRuntime`, not file-static globals.
 
 ---
 
