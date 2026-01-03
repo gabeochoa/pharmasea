@@ -89,13 +89,99 @@ TODO: review `CanHold*` components to see if theres a better way
 
 ### B) AI consolidation
 
-The AI refactor details are split into `ecs_ai_refactor_plan.md` so we can iterate on it independently without bloating this doc.
+#### Replace these components
 
-Summary of direction:
-- Use `IsAIControlled` as the high-level state driver (replacing `CanPerformJob` as the “real” state).
-- Store durable customer data in `IsCustomer`.
-- Use explicit target/timer primitives (`HasAITargetEntity`, `HasAITargetLocation`, `CooldownInfo` + `HasAICooldown`, etc).
-- Preserve the “reset just one task” workflow via small per-state `HasAI*State` components.
+- `CanPerformJob` (job enum as the “real AI state”)
+- `AIWandering`, `AIWaitInQueue`, `AIDrinking`, `AIUseBathroom`, `AIPlayJukebox`, `AICloseTab`, `AICleanVomit`
+- (optionally) `AIComponent` if it becomes redundant
+
+#### With these components
+
+- **`IsAIControlled`**
+  - Keep this as the *authoritative high-level mode* only (small + obvious):
+
+```cpp
+struct IsAIControlled : public BaseComponent {
+  enum class State {
+    Wander,
+    QueueForRegister,
+    AtRegisterWaitForDrink,
+    Drinking,
+    Bathroom,
+    Pay,
+    PlayJukebox,
+    CleanVomit,
+    Leave,
+  } state = State::Wander;
+
+  // Optional: preserve the current “wandering is a pause” behavior.
+  State resume_state = State::Wander;
+};
+```
+
+- **Cooldown/timers (shared semantics, no inheritance)**
+
+```cpp
+// Not a component: shared timer semantics used by multiple components.
+struct CooldownInfo {
+  float remaining = 0.f;   // seconds until ready
+  float reset_to = 0.f;    // seconds to reset to when triggered
+  bool enabled = true;
+
+  void tick(float dt) {
+    if (!enabled) return;
+    if (remaining > 0.f) remaining -= dt;
+  }
+  [[nodiscard]] bool ready() const { return !enabled || remaining <= 0.f; }
+  void reset() { remaining = reset_to; }
+  void clear() { remaining = 0.f; }
+};
+
+struct HasAICooldown : public BaseComponent {
+  CooldownInfo cooldown{};
+};
+```
+
+- **`HasAITargetEntity`** + **`HasAITargetLocation`**
+  - Split targeting into two clear primitives so systems depend only on what they need:
+    - target-by-entity (register/toilet/jukebox/etc)
+    - target-by-world-location (a point to path toward / stand on)
+
+```cpp
+struct HasAITargetEntity : public BaseComponent {
+  EntityRef entity{};
+};
+
+struct HasAITargetLocation : public BaseComponent {
+  // TODO replace optional<vec2> with Location typdef
+  std::optional<vec2> pos;
+};
+```
+
+- **Per-state scratch components (recommended)**
+  - This preserves what you like today: “reset just the Drinking task” without affecting wandering/queue/etc.
+  - Add only the ones you actually need:
+
+```cpp
+struct HasAIQueueState : public BaseComponent {
+  EntityRef last_register{};   // helps avoid thrash
+  int queue_index = -1;        // last known position in line (optional)
+};
+
+struct HasAIJukeboxState : public BaseComponent {
+  EntityRef last_jukebox{};
+};
+```
+
+Notes:
+TODO: finalize which AI data belongs in `IsCustomer` vs which should live on per-state components, and define a consistent reset pattern (e.g., clearing `HasAITargetEntity`/`HasAITargetLocation` vs removing state components).
+
+#### Payoff for upcoming features
+
+TODO: validate this AI split against planned features (thief/VIP/karaoke) and ensure each feature only needs:
+- adding a new state + behavior handler, and/or
+- adding a small `HasX` config component,
+without expanding shared “god components”.
 
 ---
 
