@@ -21,7 +21,7 @@ using Buffer = std::string;
 
 struct ClientPacket {
     Channel channel = Channel::RELIABLE;
-    int client_id;
+    int client_id = -1;
 
     enum MsgType {
         Announcement,
@@ -35,7 +35,7 @@ struct ClientPacket {
         PlayerRare,
         Ping,
         PlaySound,
-    } msg_type;
+    } msg_type = MsgType::Ping;
 
     struct PingInfo {
         long long ping = 0;
@@ -111,7 +111,7 @@ struct ClientPacket {
                      ClientPacket::PlayerRareInfo, ClientPacket::PingInfo,
                      ClientPacket::PlaySoundInfo>;
 
-    Msg msg;
+    Msg msg = PingInfo{};
 };
 
 // Stream operators (lightweight, only need fmt and magic_enum)

@@ -9,7 +9,8 @@ SHELL := /bin/bash
 
 BUILD_DIR := output
 OBJ_DIR := $(BUILD_DIR)/obj
-BIN := $(BUILD_DIR)/pharmasea
+# Build the executable at repo root to match existing docs/scripts.
+BIN := pharmasea.exe
 
 THIRD_PARTY := third_party
 
@@ -32,7 +33,7 @@ STD := -std=c++20
 # IMPORTANT (Linux): avoid colliding with libc's <strings.h>.
 # Using -iquote keeps project headers available for `#include "..."` without
 # letting system headers accidentally resolve to `src/strings.h`.
-INCLUDES := -Ivendor -iquote src -I$(RAYLIB_INC) -I$(GNS_INC)
+INCLUDES := -Ivendor -Ivendor/cereal/include -iquote src -I$(RAYLIB_INC) -I$(GNS_INC)
 
 # Keep warnings reasonable for local iteration; treat warnings as errors later in CI.
 WARNINGS := -Wall -Wextra -Wshadow -Wuninitialized
@@ -40,19 +41,19 @@ WARNINGS := -Wall -Wextra -Wshadow -Wuninitialized
 DEFINES := -DTRACY_ENABLE
 
 CXXFLAGS := $(STD) $(WARNINGS) -g -O0 $(DEFINES) $(INCLUDES) \
-	-Wno-deprecated-volatile -Wno-missing-field-initializers -Wno-unused-function \
-	-Wno-sign-conversion -Wno-implicit-int-float-conversion -Wno-c99-extensions
+	-Wno-missing-field-initializers -Wno-unused-function -Wno-sign-conversion \
+	-Wfatal-errors -include src/pch.hpp
 
 CPPFLAGS :=
 
 # Linker libs for raylib desktop (X11/OpenGL) + GameNetworkingSockets deps.
-LDLIBS := -lprotobuf -lssl -lcrypto -lz -lpthread -ldl -lm \
+# Include libdw/libunwind + -rdynamic so backward-cpp can symbolize stacks.
+LDFLAGS := -rdynamic
+LDLIBS := -ldw -lunwind -lprotobuf -lssl -lcrypto -lz -lpthread -ldl -lm \
 	-lX11 -lXrandr -lXi -lXinerama -lXcursor -lGL
 
 # Main game sources + required vendor .cpp units
-SRC := $(shell find src -type f -name '*.cpp' | sort) \
-	vendor/tracy/TracyClient.cpp \
-	vendor/backward/backward.cpp
+SRC := $(shell find src -type f -name '*.cpp' | sort) vendor/tracy/TracyClient.cpp
 
 OBJ := $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
 DEPS := $(OBJ:.o=.d)
@@ -70,7 +71,7 @@ third-party: $(RAYLIB_LIB) $(GNS_LIB)
 
 $(BIN): third-party $(OBJ)
 	@mkdir -p "$(dir $@)"
-	$(CXX) $(OBJ) $(GNS_LIB) $(RAYLIB_LIB) $(LDLIBS) -o "$(BIN)"
+	$(CXX) $(LDFLAGS) $(OBJ) $(GNS_LIB) $(RAYLIB_LIB) $(LDLIBS) -o "$(BIN)"
 
 $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p "$(dir $@)"
