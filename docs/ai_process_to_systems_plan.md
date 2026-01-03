@@ -44,11 +44,11 @@ In practice this means:
 
 These run regardless of state (or across multiple states).
 
-- **`AiBathroomInterruptSystem`**
+- **`AIBathroomInterruptSystem`**
   - Responsibility: the “global interrupt” that forces Bathroom when needed (with the current exclusions).
   - Runs *before* any state system.
 
-- **`AiStateResetOnEnterSystem`** (optional, later)
+- **`AIStateResetOnEnterSystem`** (optional, later)
   - Responsibility: perform “state entry” cleanup/initialization that is currently scattered (e.g. clear targets, reset scratch components).
   - Implementation requires tracking state transitions (see “State transition tracking”).
 
