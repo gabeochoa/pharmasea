@@ -54,6 +54,12 @@ struct IsAIControlled : public BaseComponent {
         return *this;
     }
 
+    // General setter (usable outside makers too).
+    IsAIControlled& set_state(State s) {
+        state = s;
+        return *this;
+    }
+
    private:
    public:
     friend zpp::bits::access;
