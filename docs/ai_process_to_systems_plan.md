@@ -18,25 +18,20 @@ Convert the existing AI “process_*” style functions (especially `process_sta
 - Scales to “a bunch more systems” without boilerplate explosion
 - Keeps registration/ordering explicit and predictable
 
-## Design choice: generic vs specific systems
+## Design choice: ability/component-driven vs state-specific systems
 
 We can do either:
 
-- **Specific systems** per behavior/state (e.g. `ShouldCleanVomitSystem`) — explicit and simple to reason about, but can become repetitive.
-- **Generic systems** with a small amount of template/utility glue — still explicit (one system per state), but avoids repeating the same “state filter + cooldown gate + should_run” logic everywhere.
+- **State-specific systems** per behavior/state (e.g. `AICleanVomitSystem`) — explicit and simple to reason about, but can become repetitive.
+- **Ability/component-driven systems** that act on components and are free to run every frame — scales better as behaviors grow, but requires a safe way to stage/commit state transitions.
 
 ### Recommendation (best of both)
 
-Use **generic wrappers** to reduce boilerplate, while still registering **one system per AI state** (plus a small number of “global” AI systems). This keeps debugging straightforward (“which state system ran?”) while making it cheap to add states.
+Use **ability/component-driven systems** for behavior, paired with a **two-phase state transition model**:
 
-In practice this means:
-
-- Systems are still state-named (`AiWanderSystem`, `AiPaySystem`, …) for clarity.
-- They are implemented via a shared base/template that handles:
-  - “is gamelike?” checks
-  - “is this entity currently in the state?” filtering
-  - optional ability checks
-  - optional cooldown gating
+- Behavior systems can all run every frame and can “request” transitions without immediately mutating the authoritative `IsAIControlled::state`.
+- A final “commit” system applies requested transitions once per frame, making ordering deterministic.
+- A simple reset gate tag can prevent half-initialized state behavior from running.
 
 ## Proposed system breakdown
 
@@ -44,40 +39,52 @@ In practice this means:
 
 These run regardless of state (or across multiple states).
 
-- **`AIBathroomInterruptSystem`**
-  - Responsibility: the “global interrupt” that forces Bathroom when needed (with the current exclusions).
-  - Runs *before* any state system.
+- **`AIBathroomInterruptSystem`** (ability/component-driven)
+  - Responsibility: detect bathroom need and request a transition.
+  - Note: in the new model this should set a “next state” request, not immediately mutate `IsAIControlled::state`.
 
 - **`AIStateResetOnEnterSystem`** (optional, later)
   - Responsibility: perform “state entry” cleanup/initialization that is currently scattered (e.g. clear targets, reset scratch components).
   - Implementation requires tracking state transitions (see “State transition tracking”).
 
-### 2) One system per `IsAIControlled::State`
+### 2) Behavior systems (ability/component-driven)
 
-Replace each `process_state_*` with a system that only runs when `ctrl.state == <that state>`.
+Replace each `process_state_*` with one or more systems that operate on the relevant components/abilities.
+These systems can run every frame, but they should not directly commit state changes.
 
 Initial set (mirrors current handlers):
 
-- `AIWanderSystem` (rate-limited, uses `HasAITargetLocation`, `HasAIWanderState`)
-- `AIQueueForRegisterSystem` (rate-limited, uses `HasAITargetEntity`, `HasAIQueueState`)
-- `AIAtRegisterWaitForDrinkSystem` (rate-limited, uses `HasAITargetEntity`)
-- `AIDrinkingSystem` (rate-limited, uses `HasAITargetLocation`, `HasAIDrinkState`)
-- `AIPaySystem` (rate-limited, uses `HasAITargetEntity`, `HasAIPayState`)
-- `AIPlayJukeboxSystem` (rate-limited, uses `HasAITargetEntity`, `HasAIJukeboxState`)
-- `AIBathroomSystem` (rate-limited, uses `HasAITargetEntity`, `HasAIBathroomState`)
-- `AICleanVomitSystem` (rate-limited + ability-gated, uses `HasAITargetEntity`)
-- `AILeaveSystem` (likely *not* rate-limited; just path toward the exit each tick)
+- `AIWanderSystem` (rate-limited; uses `HasAITargetLocation`, `HasAIWanderState`)
+- `AIQueueForRegisterSystem` (rate-limited; uses `HasAITargetEntity`, `HasAIQueueState`)
+- `AIAtRegisterWaitForDrinkSystem` (rate-limited; uses `HasAITargetEntity`)
+- `AIDrinkingSystem` (rate-limited; uses `HasAITargetLocation`, `HasAIDrinkState`)
+- `AIPaySystem` (rate-limited; uses `HasAITargetEntity`, `HasAIPayState`)
+- `AIPlayJukeboxSystem` (rate-limited; uses `HasAITargetEntity`, `HasAIJukeboxState`)
+- `AIBathroomSystem` (rate-limited; uses `HasAITargetEntity`, `HasAIBathroomState`)
+- `AICleanVomitSystem` (rate-limited + ability-gated; uses `HasAITargetEntity`)
+- `AILeaveSystem` (per-tick movement; likely not rate-limited)
 
-### 3) Keep “pure helpers” as helpers
+### 3) State transition staging + commit
+
+To allow all behavior systems to run every frame while keeping state transitions deterministic:
+
+- Add `set_next_state(...)` to `IsAIControlled` (or introduce a small companion component for pending transitions).
+- Behavior systems call `set_next_state(...)` (or set a transition request) instead of calling `set_state(...)`.
+- A final **`AICommitNextStateSystem`** runs at the end of AI processing and:
+  - applies the pending transition to `IsAIControlled::state`
+  - clears the pending transition
+  - sets `afterhours::tags::AINeedsResetting` so “on enter” reset logic can run
+
+### 4) Keep “pure helpers” as helpers
 
 Not everything should become a system. Keep these as normal functions:
 
 - **Pure calculations / validation**: `validate_drink_order`, `get_speed_for_entity`
 - **Targeting/search helpers**: `find_best_*`, `pick_random_walkable_near`, queue helpers
 
-## Generic implementation strategy (to stay DRY)
+## Implementation strategy (to stay DRY)
 
-### A) A shared base for state systems
+### A) A shared base for behavior systems
 
 Create a reusable wrapper so each new state system only defines its “step” logic:
 
@@ -107,27 +114,18 @@ struct AiStateSystem : afterhours::System<IsAIControlled, CanPathfind, Required.
 
 Then each concrete system is tiny and readable.
 
-### B) Ordering and “only one state system per entity per frame”
+### B) Ordering and safe multi-system execution
 
-Once AI is split across many systems, we must avoid accidental multi-processing when a system changes `ctrl.state`.
+Once AI is split across many systems that can all run every frame, we must avoid accidental “half-applied transitions” or “post-transition behavior running with stale scratch state”.
 
 In the current monolithic switch, an entity runs **exactly one state handler** per tick (after applying the global interrupt).
 
 To preserve this with multiple systems:
 
-- **Simple option (recommended first)**: enforce ordering + early returns
-  - Register `AiBathroomInterruptSystem` first
-  - Register state systems next in a stable order
-  - Each state system checks `ctrl.state` at the *top* and returns if it doesn’t match
-  - If a state system changes state, it should not “fall through” (it naturally won’t, but later systems could run)
-  - This is “mostly safe” but can still allow a second system to run if the state changes mid-tick.
-
-- **Robust option (recommended once we add more behaviors)**: add a per-frame guard
-  - Introduce a lightweight transient tag, e.g. `afterhours::tags::AIProcessedThisFrame`
-  - Add a `AIClearProcessedTagSystem` that runs once per frame to clear it
-  - Each AI state system sets it; all other AI state systems skip if it’s already set
-
-This guarantees **one AI state system** runs per entity per tick even when transitions happen.
+- **Recommended model**: staged transitions + reset gating
+  - Behavior systems compute/act and may set “next state”.
+  - `AICommitNextStateSystem` applies the state change once.
+  - `afterhours::tags::AINeedsResetting` prevents other systems from running until entry resets are applied.
 
 ### C) State transition tracking (for “on enter” logic)
 
