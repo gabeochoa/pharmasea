@@ -373,8 +373,10 @@ void process_ai_entity(Entity& entity, float dt) {
                     wander_pause(entity, IsAIControlled::State::QueueForRegister);
                     return;
                 }
-                tgt.entity.set(best.asE());
-                line_add_to_queue(qs.line_wait, best.asE(), entity);
+                Entity& best_reg = best.asE();
+                tgt.entity.set(best_reg);
+                line_add_to_queue(qs.line_wait, best_reg, entity);
+                qs.queue_index = line_position_in_line(qs.line_wait, best_reg, entity);
             }
 
             OptEntity opt_reg = tgt.entity.resolve();
@@ -392,6 +394,9 @@ void process_ai_entity(Entity& entity, float dt) {
 
             bool reached_front = line_try_to_move_closer(
                 qs.line_wait, reg, entity, get_speed_for_entity(entity) * dt);
+            // Keep a simple data signal for "front of line" without relying on
+            // micro-states.
+            qs.queue_index = qs.line_wait.last_line_position;
             if (!reached_front) return;
 
             entity.get<HasSpeechBubble>().on();
