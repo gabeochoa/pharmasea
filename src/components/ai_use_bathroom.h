@@ -52,7 +52,10 @@ struct AIUseBathroom : public AIComponent {
         return archive(                    //
             static_cast<AIComponent&>(self), //
             self.target,                    //
-            self.floor_timer                //
+            self.line_wait,                 //
+            self.timer,                     //
+            self.floor_timer,               //
+            self.next_job                   //
         );
     }
 };

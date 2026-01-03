@@ -162,6 +162,17 @@ struct AILineWait {
 
         reg.get<HasWaitingQueue>().erase(pos);
     }
+
+   private:
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                 //
+            self.has_set_position_before, //
+            self.position,              //
+            self.last_line_position     //
+        );
+    }
 };
 
 struct AITakesTime {
@@ -220,7 +231,9 @@ struct AIComponent : BaseComponent {
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                      //
-            static_cast<BaseComponent&>(self)  //
+            static_cast<BaseComponent&>(self), //
+            self.cooldown,                    //
+            self.cooldownReset                //
         );
     }
 };

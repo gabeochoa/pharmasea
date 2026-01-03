@@ -50,7 +50,8 @@ struct AIWaitInQueue : public AIComponent {
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                    //
             static_cast<AIComponent&>(self), //
-            self.target                     //
+            self.target,                    //
+            self.line_wait                  //
         );
     }
 };
