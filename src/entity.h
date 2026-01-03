@@ -27,27 +27,27 @@ struct DebugOptions {
 using Item = Entity;
 
 namespace afterhours {
-constexpr auto serialize(auto& archive, EntityHandle& handle) {
+inline auto serialize(auto& archive, EntityHandle& handle) {
     return archive(  //
         handle.slot, //
         handle.gen   //
     );
 }
 
-constexpr auto serialize(auto& archive, const EntityHandle& handle) {
+inline auto serialize(auto& archive, const EntityHandle& handle) {
     return archive(  //
         handle.slot, //
         handle.gen   //
     );
 }
 
-constexpr auto serialize(auto& archive, std::optional<EntityHandle>& opt_handle) {
+inline auto serialize(auto& archive, std::optional<EntityHandle>& opt_handle) {
     return archive(  //
         opt_handle   //
     );
 }
 
-constexpr auto serialize(auto& archive, RefEntity ref) {
+inline auto serialize(auto& archive, RefEntity ref) {
     Entity& e = ref.get();
     EntityHandle handle = afterhours::EntityHelper::handle_for(e);
     return archive(  //
@@ -55,7 +55,7 @@ constexpr auto serialize(auto& archive, RefEntity ref) {
     );
 }
 
-constexpr auto serialize(auto& archive, OptEntity opt) {
+inline auto serialize(auto& archive, OptEntity opt) {
     std::optional<EntityHandle> opt_handle;
     if (opt.has_value()) {
         opt_handle = afterhours::EntityHelper::handle_for(opt.asE());
