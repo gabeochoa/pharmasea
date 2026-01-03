@@ -135,7 +135,7 @@ If/when the “CanHoldX” approach starts to fragment again (new carryables, ne
   - Keep this as the *authoritative high-level mode* only (small + obvious):
 
 ```cpp
-struct AIController {
+struct AIController : public BaseComponent {
   enum class State {
     Wander,
     QueueForRegister,
@@ -157,7 +157,7 @@ struct AIController {
   - Small reusable pacing primitive; easy to reset without touching targets/state:
 
 ```cpp
-struct HasAICooldown {
+struct HasAICooldown : public BaseComponent {
   float remaining = 0.f;
   float reset_to = 1.f;
 };
@@ -167,7 +167,7 @@ struct HasAICooldown {
   - Generic targeting used by many states; also easy to clear/reset independently:
 
 ```cpp
-struct HasAITarget {
+struct HasAITarget : public BaseComponent {
   int target_entity_id = -1;   // register/toilet/jukebox/mess/etc
   vec2 target_pos = {0, 0};    // optional goal position
   bool has_target_pos = false;
@@ -179,23 +179,23 @@ struct HasAITarget {
   - Add only the ones you actually need:
 
 ```cpp
-struct AIQueueState {
+struct AIQueueState : public BaseComponent {
   int last_register_id = -1;   // helps avoid thrash
   int queue_index = -1;        // last known position in line (optional)
   vec2 stand_pos = {0, 0};
   bool has_stand_pos = false;
 };
 
-struct AIWanderState {
+struct AIWanderState : public BaseComponent {
   vec2 goal = {0, 0};
   bool has_goal = false;
 };
 
-struct AIBathroomState {
+struct AIBathroomState : public BaseComponent {
   int last_toilet_id = -1;
 };
 
-struct AIJukeboxState {
+struct AIJukeboxState : public BaseComponent {
   int last_jukebox_id = -1;
 };
 ```
