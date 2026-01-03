@@ -19,13 +19,12 @@ libraries used:
 - nlomann json for JSON reading / writing https://github.com/nlohmann/json
 - reasings (some easing functions) https://github.com/raylib-extras/reasings
 - PCG Random (faster more repreducible random) https://www.pcg-random.org/ 
+- save file and network serialization https://github.com/eyalz800/zpp_bits 
 
 Models from 
 - https://www.kenney.nl/assets?q=3d 
 - https://kaylousberg.itch.io/kay-kit-mini-game-variety-pack 
 
-Consider Looking Into: 
-- https://github.com/eyalz800/zpp_bits 
 
 Font
 - https://m.blog.naver.com/bibimseol/222303267518 
