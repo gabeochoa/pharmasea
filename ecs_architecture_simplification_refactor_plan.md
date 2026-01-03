@@ -218,7 +218,8 @@ struct HasAITargetEntity : public BaseComponent {
 };
 
 struct HasAITargetLocation : public BaseComponent {
-  vec2 pos = {0, 0};
+  // Optional so we don’t need sentinel positions or extra `has_*` bools.
+  std::optional<vec2> pos;
 };
 ```
 
@@ -230,13 +231,7 @@ struct HasAITargetLocation : public BaseComponent {
 struct HasAIQueueState : public BaseComponent {
   int last_register_id = -1;   // helps avoid thrash
   int queue_index = -1;        // last known position in line (optional)
-  vec2 stand_pos = {0, 0};
-  bool has_stand_pos = false;
-};
-
-struct HasAIWanderState : public BaseComponent {
-  vec2 goal = {0, 0};
-  bool has_goal = false;
+  // Queue stand location should use `HasAITargetLocation::pos`.
 };
 
 struct HasAIJukeboxState : public BaseComponent {
@@ -246,7 +241,7 @@ struct HasAIJukeboxState : public BaseComponent {
 
 Notes:
 - This component split is intentionally “boring”: explicit named fields, no generic “memory blob”.
-- It matches your current reset ergonomics: remove/re-add `HasAIWanderState` or `HasAIQueueState` without disturbing other state.
+- It matches your current reset ergonomics: you can clear/reset `HasAITargetLocation` (and/or remove a state-specific component like `HasAIQueueState`) without disturbing other state.
 - **`IsCustomer`**
   - IsCustomer-specific durable data: patience/order/traits/bladder progress (things that must survive task resets).
   - The goal is to move “customer-ness” out of scattered components and into one place.
