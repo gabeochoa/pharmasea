@@ -1,11 +1,14 @@
 
 #pragma once
 
-#include "../ah.h"
 #include "../components/can_pathfind.h"
 #include "../components/is_ai_controlled.h"
 #include "../entity.h"
 #include "../entity_query.h"
+
+namespace afterhours {
+struct SystemManager;
+}
 
 namespace system_manager::ai {
 

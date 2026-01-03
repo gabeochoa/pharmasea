@@ -3,6 +3,7 @@
 #include <memory>
 #include <set>
 
+#include "../ah.h"
 #include "../components/can_hold_item.h"
 #include "../components/can_order_drink.h"
 #include "../components/has_ai_bathroom_state.h"
