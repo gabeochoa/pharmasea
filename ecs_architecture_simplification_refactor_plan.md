@@ -193,14 +193,18 @@ struct HasAICooldown : public BaseComponent {
 };
 ```
 
-- **`HasAITarget`**
-  - Generic targeting used by many states; also easy to clear/reset independently:
+- **`HasAITargetEntity`** + **`HasAITargetLocation`**
+  - Split targeting into two clear primitives so systems depend only on what they need:
+    - target-by-entity-id (register/toilet/jukebox/etc)
+    - target-by-world-location (a point to path toward / stand on)
 
 ```cpp
-struct HasAITarget : public BaseComponent {
-  int target_entity_id = -1;   // register/toilet/jukebox/mess/etc
-  vec2 target_pos = {0, 0};    // optional goal position
-  bool has_target_pos = false;
+struct HasAITargetEntity : public BaseComponent {
+  int entity_id = -1;
+};
+
+struct HasAITargetLocation : public BaseComponent {
+  vec2 pos = {0, 0};
 };
 ```
 
