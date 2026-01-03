@@ -256,11 +256,79 @@ Notes:
 #### With
 
 - **`IsInteractable`**
-  - **Fields**: `interaction_type` (enum), `progress` (0..1), `rate`, `requirements` (held tool? time of day?), `ui_policy`.
-- **`HasCooldown`** (generic)
-  - Used by interactables, trigger areas, fishing game, etc.
-- **`HasProgress`** (generic)
-  - One consistent model for progress bars across the world.
+  - Proposed explicit shape (illustrative; the point is to be *data-first* and remove lambdas from `HasWork`):
+
+```cpp
+// Minimal reusable progress bar backing for anything interactive.
+struct HasProgress : public BaseComponent {
+  float pct = 0.f;                 // 0..1
+  bool hide_when_full = false;
+  bool hide_always = false;
+};
+
+// Generic cooldown primitive (also used by triggers/minigames/etc).
+struct HasCooldown : public BaseComponent {
+  float remaining = 0.f;           // seconds
+  float reset_to = 0.f;            // seconds
+  bool enabled = true;
+};
+
+// A data-driven “do work” target. Systems implement the enum behaviors.
+struct IsInteractable : public BaseComponent {
+  enum class Type {
+    None,
+
+    // Replaces container “cycle indexer” work
+    CycleVariant,
+
+    // Station-style interactions (draft tap / soda fountain / squirter)
+    DispenseIngredient,
+
+    // Applies AddsIngredient from the item you’re holding
+    AddIngredientFromHeldTool,
+
+    // Cleanup interactions
+    CleanMess,
+
+    // Minigames / one-shot interactions
+    PlayMinigame,
+
+    // Toggling/setting changes
+    ToggleSetting,
+  } type = Type::None;
+
+  // How fast the interaction progresses when held (pct/sec).
+  float rate = 1.f;
+
+  // Requirements are intentionally explicit + boring.
+  enum RequirementFlags : uint32_t {
+    ReqNone            = 0,
+    ReqServerOnly      = 1 << 0,  // authority check
+    ReqBarClosedOnly   = 1 << 1,  // planning/store only
+    ReqBarOpenOnly     = 1 << 2,  // in-round only
+    ReqHoldingItem     = 1 << 3,  // player must have CanHoldItem non-empty
+    ReqHoldingMop      = 1 << 4,  // example: cleanup faster/allowed
+  };
+  uint32_t requirements = ReqNone;
+
+  // Optional: what input drives it (defaults to “do work”).
+  enum class InputGate { DoWorkHeld, DoWorkPressed } input_gate =
+      InputGate::DoWorkHeld;
+
+  // UI policy: keeps this component self-contained.
+  enum class UiPolicy { DefaultProgressBar, Hidden, Custom } ui_policy =
+      UiPolicy::DefaultProgressBar;
+
+  // Tiny payload for parameterizing the behavior without lambdas.
+  // (Keep it small; if it grows, split into per-type HasX components.)
+  int param_i32 = 0;
+};
+```
+
+Notes:
+- `HasProgress`/`HasCooldown` are separate so they can be shared by triggers, fishing, etc.
+- If some interactions need richer config, prefer adding a small `HasX` component (e.g. `HasDispenseIngredientConfig`) rather than inflating `IsInteractable`.
+  - Uses `HasProgress` and `HasCooldown` (both reusable by triggers/minigames/etc).
 
 #### Example interaction types (data-driven)
 
