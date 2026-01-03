@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../entity_ref.h"
-#include "ai_line_wait.h"
+#include "ai_wait_in_queue_state.h"
 #include "base_component.h"
 
 struct HasAIQueueState : public BaseComponent {
