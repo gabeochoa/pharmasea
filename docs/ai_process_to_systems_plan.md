@@ -136,7 +136,9 @@ Some logic is really “on state enter” (clear targets, reset timers).
 If we want to formalize that, add:
 
 - `HasAILastState` (stores previous frame’s state)
-- `AiDetectStateChangeSystem` updates it and can call “on enter” handlers
+- A lightweight transient tag, e.g. `afterhours::tags::AINeedsResetting` (set when state changes)
+- `AIDetectStateChangeSystem` updates `HasAILastState` and sets `AINeedsResetting`
+- `AIOnEnterResetSystem` runs “on enter” handlers for entities tagged `AINeedsResetting`, then clears the tag
 
 This lets us:
 
