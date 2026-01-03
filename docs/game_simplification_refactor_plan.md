@@ -1,395 +1,222 @@
-# Game Architecture Simplification Plan (Components + Systems)
+# Game Simplification Plan (Blue-sky Target; Breaking Changes OK)
 
-This document proposes refactors to **simplify the ECS surface area** (fewer concepts, fewer duplicated rules, fewer one-off systems), while staying compatible with the project’s **snapshot/network schema**.
+This is the **single canonical plan**: it combines the “what’s wrong today” review with a **blue-sky ideal end state**, assuming we are free to make **breaking changes** (component removals/renames, system rewrites, factory redesign).
 
 ## Goals
 
-- Reduce the number of “concepts” a contributor must understand to add new gameplay.
-- Remove duplication across systems (especially state gating and “machine” logic).
-- Consolidate components that are essentially the same idea expressed multiple ways.
-- Make entity creation (factories) more data-driven and less “giant switch” driven.
-
-## Hard constraints (must respect)
-
-### Snapshot schema is stable and positional
-
-`src/components/all_components.h` defines `snapshot_blob::ComponentTypes` with explicit rules:
-
-- **Never reorder**
-- **Only append**
-- Deleting/reordering breaks save/replay/network snapshot compatibility
-
-This implies:
-
-- **Renames**: treat as *add new component type + migrate*, don’t “just rename”.
-- **Removals**: treat as *stop using + migrate + keep legacy type in schema*.
-- **Merges**: create a new unified component, migrate from old at runtime/load, and leave old types present (but unused).
-
-## Current state (as of `src/entity_makers.cpp`)
-
-### Entity composition patterns
-
-`entity_makers.cpp` is effectively the “truth” for what components actually matter:
-
-- **Everyone**: `Transform`
-- **People-ish**: `HasBaseSpeed`, renderer (`ModelRenderer` or `SimpleColoredBoxRenderer`), holding/pushing
-- **Players**: `CollectsUserInput`, `RespondsToUserInput`, `CanHighlightOthers`, `CanHoldFurniture`, `CanHoldHandTruck`, `HasClientID`, `HasName`
-- **AI people**: `CanPerformJob` + `CanPathfind` + a set of per-behavior AI components (e.g. `AIWaitInQueue`, `AIDrinking`, etc.)
-- **Furniture base**: `IsSolid`, `CanHoldItem` (optional), `CanBeHeld` / `CanBeHighlighted` (optional), `IsRotatable` (optional), renderer(s)
-- **Work machines**: `HasWork` callbacks embedded in `entity_makers.cpp` (ice machine, toilet cleaning, draft tap, etc.)
-- **Singleton “game brain” entity (`Sophie`)**: `IsRoundSettingsManager`, `HasDayNightTimer`, `IsProgressionManager`, `IsBank`, `IsNuxManager`, `CollectsCustomerFeedback`
-
-### “Smells” observed directly in `entity_makers.cpp`
-
-- **Work logic duplication**: draft tap logic is duplicated between `make_draft()` and drink `process_drink_working()` (`TODO` notes acknowledge this).
-- **Factory growth risk**: `convert_to_type()` is a large switch that will keep growing; it is easy to forget to update.
-- **A lot of behavior lives in factories** via lambdas bound into `HasWork`. This makes it hard to “see the systems” as systems.
-
-## Current systems layout (high-level)
-
-From `src/system/system_manager.*` + `src/system/afterhours_*systems.cpp`:
-
-- `register_sixtyfps_systems()` runs a *lot* every frame (trigger areas, highlights, held-item positioning, etc.).
-- `register_gamelike_systems()` runs in “game-like states”, with repeated state gating patterns.
-- `register_inround_systems()` runs primarily when the bar is open (night/in-round), again with repeated gating patterns.
-- Day/night transitions are handled by many small systems gated on `HasDayNightTimer::needs_to_process_change`.
-- ModelTest has its own “container maintenance” systems that largely duplicate in-round/planning container behavior.
-
-## Proposed simplifications (highest leverage)
-
-### 1) Consolidate “container maintenance” into one coherent system group
-
-**Problem**
-
-Container logic currently exists in multiple places with slightly different gating:
-
-- `process_is_container_and_should_backfill_item`
-- `process_is_container_and_should_update_item`
-- `process_is_indexed_container_holding_incorrect_item`
-- Plus duplicated versions in `afterhours_modeltest_systems.cpp`
-
-This increases “where should this change go?” confusion and risks subtle state differences.
-
-**Proposal**
-
-Create a single **`ContainerMaintenanceSystem`** (or a small cluster) that owns:
-
-- backfill empty containers
-- handle index changes
-- resolve “wrong item for current index” cases
-- optional: apply the `fix_container_item_type()` mapping once on load / on first tick
-
-And give it a **single source of truth** for when it runs:
-
-- ModelTest: always
-- Game-like, bar closed (planning): update index + backfill
-- Game-like, bar open (in-round): backfill + enforce invariants
-- Transition frames (`needs_to_process_change`): do nothing
-
-**Compatibility note**
-
-This is a pure behavior refactor; no schema changes required.
+- Reduce the number of gameplay concepts to a small set of reusable primitives.
+- Make behavior live in **systems** (not in `entity_makers.cpp` lambdas).
+- Make interaction/holding/work **one consistent pipeline**.
+- Make new content creation **data-driven** (archetypes), not “edit 6 switches”.
 
 ---
 
-### 2) Collapse trigger-area processing into a single `TriggerAreaSystem`
+## Current state (grounded in `src/entity_makers.cpp` + `src/system/*`)
 
-**Problem**
+### What entities are made of today
 
-Trigger areas are implemented as multiple micro-systems (count entrants, update percent, fire callback, update dynamic label/title, etc.). This causes:
+From `src/entity_makers.cpp`:
 
-- repeated queries over similar data
-- ordering coupling spread across files
-- harder debugging (which of the 5 systems did the thing?)
+- **Baseline**: nearly everything has `Transform`.
+- **Players**: input (`CollectsUserInput`, `RespondsToUserInput`), interaction (`CanHighlightOthers`), carrying (`CanHoldItem` + `CanHoldFurniture` + `CanHoldHandTruck`), identity (`HasName`, `HasClientID`), plus movement/render.
+- **Customers**: movement + job (`CanPerformJob`, `CanPathfind`) plus many per-behavior AI components.
+- **Furniture**: “base furniture” plus optional pieces (`CanHoldItem`, `HasWork`, `IsRotatable`, `CanBeHeld`, `CanBeHighlighted`, etc.).
+- **Machines**: implemented mostly as `HasWork` lambdas inside factories, with some machine logic duplicated elsewhere.
 
-**Proposal**
+### Biggest complexity hotspots
 
-Replace the sequence:
-
-- UpdateDynamicTriggerAreaSettings
-- CountAllPossibleTriggerAreaEntrants
-- CountInBuildingTriggerAreaEntrants
-- CountTriggerAreaEntrants
-- UpdateTriggerAreaPercent
-- TriggerCbOnFullProgress
-
-with a **single system** that, per `IsTriggerArea` entity, does:
-
-- update settings/title/subtitle
-- compute entrants (and “all possible entrants”) once
-- update progress/cooldown
-- fire callback if complete (with gating)
-
-**Expected benefits**
-
-- fewer update systems to reason about
-- fewer entity queries / less duplicated work
-- clearer invariants (“trigger areas update happens here”)
+- **Interaction/holding is fragmented**:
+  - 3 different “carry slots” (`CanHoldItem`, `CanHoldFurniture`, `CanHoldHandTruck`)
+  - 2 “held flags” (`CanBeHeld`, `CanBeHeld_HT`)
+  - held-by semantics also exist in `IsItem`
+  - multiple systems update held transforms, and input contains rules about what collides when held
+- **Machine logic is duplicated**:
+  - draft tap “beer add” exists both in draft tap `HasWork` and drink `HasWork` (two sources of truth)
+  - “auto add ingredient” exists as systems (soda fountain) and as work lambdas elsewhere
+- **Trigger areas and containers are split into many micro-systems** with similar gating and repeated queries.
+- **Factories are doing too much**:
+  - they pick renderers, wire behavior via lambdas, and own a huge `convert_to_type()` switch.
 
 ---
 
-### 3) Unify “held state” and “holdable” concepts (reduce component count + special casing)
+## The blue-sky perfect end state (minimal concepts)
 
-**Problem**
+### 1) Minimal component model
 
-There are multiple overlapping representations:
+#### Core
+- `Transform`
+- `Tags` (category flags)
 
-- `IsItem` tracks held-by (holder type + id), but does not serialize held-by fields.
-- `CanBeHeld` is used to mark “furniture being held”.
-- `CanBeHeld_HT` exists solely for hand-truck-style holding (and is checked separately in collision code).
-- Three separate “carry slots” exist (`CanHoldItem`, `CanHoldFurniture`, `CanHoldHandTruck`), each with its own transform-follow system.
+#### Physics
+- `Collider` (shape + layer/mask)
+- `KinematicBody` (velocity / desired motion)
 
-This spreads “what’s held / what collides / what follows me” across:
+#### Interaction + carrying (the big simplifier)
+- `Interactor` (reach + current focus + intent)
+- `Interactable` (what interactions are allowed + requirements)
+- `Inventory` (slots, e.g. hand/tool/carry)
+- `Attachment` (child → parent + socket/offset rule)
 
-- input code (`input_process_manager.cpp`)
-- multiple update systems (held item, held furniture, held handtruck)
-- collisions (“disable collision when held”) checks
+This replaces the entire “holding ecosystem”:
+- `CanHoldItem`, `CanHoldFurniture`, `CanHoldHandTruck`
+- `CanBeHeld`, `CanBeHeld_HT`
+- “held-by” state in `IsItem`
+- multiple held-position systems
 
-**Proposal**
+#### Work
+- `Workable` (progress + action id + UI flags)
 
-Introduce a unified model:
+No callbacks stored in components.
 
-- **`Holdable`** (new) for anything that can be carried/attached; contains:
-  - `bool held`
-  - optional `EntityRef holder`
-  - optional `HoldSlot slot_kind` (Item/Furniture/HandTruck/etc.)
-- **`AttachmentSlots`** (new) on holders; contains N slots (`EntityRef child`, placement rule).
-- One **`UpdateAttachmentsSystem`** that updates child transforms for all slots.
+#### Machines / crafting
+- `Machine` (type id + input/output rules + timing)
+- `DrinkState` (ingredients + metadata)
+- `IngredientSource` (for bottles/tools that add ingredients; uses remaining; validation id)
 
-**Migration approach (schema-safe)**
+#### AI
+- `Agent` (single customer AI state machine data: state, targets, timers, memory)
 
-- Append `Holdable` + `AttachmentSlots` to `snapshot_blob::ComponentTypes`.
-- Add a migration system:
-  - if entity has `CanBeHeld_HT` but not `Holdable`, create `Holdable` and copy `held`
-  - similarly for `CanBeHeld`
-  - for holders, translate from `CanHoldItem`/`CanHoldFurniture`/`CanHoldHandTruck` into `AttachmentSlots`
-- Keep old components in the schema, but stop adding them in `entity_makers.cpp` once stable.
-
-**Immediate “small win” option (lower risk)**
-
-Even before adding new components:
-
-- Stop using `CanBeHeld_HT` for new handtrucks; use `CanBeHeld`.
-- Add a one-time migration: `CanBeHeld_HT` -> `CanBeHeld`.
-- Update collision code to only check one “held flag”.
-
----
-
-### 4) Replace machine-specific `HasWork` lambdas with a “machine” component + system
-
-**Problem**
-
-Many machines are implemented as:
-
-- a furniture entity with `HasWork` bound to a lambda in `entity_makers.cpp`
-- plus separate ad-hoc systems that do similar things (e.g., soda fountain auto-adds soda)
-
-This creates duplication and makes behavior harder to audit.
-
-**Proposal**
-
-Create a small set of reusable machine components + systems, e.g.:
-
-- **`DispensesIngredient`**:
-  - ingredient kind (static ingredient, from an adjacent item, from a held item with `AddsIngredient`, etc.)
-  - rules (`require_empty`, `allow_multiple`, `must_be_held_by X`, etc.)
-  - rate/progress configuration and sound id
-- **`MachineWork`** (optional): standardized progress + completion handling (could reuse `HasWork` internally, or replace it over time)
-
-Then implement:
-
-- `IngredientDispenserSystem` for draft tap, ice machine, soda fountain (and later squirter).
-
-**Near-term target**
-
-- Fix the **draft tap duplication** by making beer-tap ingredient addition come from one shared implementation.
+#### Economy / store / progression
+- `Wallet`
+- `Priced`
+- `StoreItem`
+- `WorldTime` (singleton-like)
+- `RoundRules` (singleton-like)
 
 ---
 
-### 5) Consolidate customer AI state into a single `CustomerAI` component
+### 2) System architecture (one pipeline per domain)
 
-**Problem**
+#### World / state
+- `WorldTimeSystem` (advance time, emit transition events)
+- `RoundSystem` (upgrades/unlocks/spawning rules)
 
-AI state is split across:
+#### Input + interaction (one consistent pipeline)
+- `InputSystem` → writes intent into `Interactor`
+- `FocusSystem` → picks best `Interactable` per interactor
+- `InteractSystem` → applies grab/place/use/work with consistent validation
+- `AttachmentSystem` → updates transforms for attachments
 
-- `CanPerformJob` (job enum)
-- a component per job/behavior (`AIWaitInQueue`, `AIDrinking`, `AIUseBathroom`, `AIPlayJukebox`, `AICloseTab`, `AIWandering`, `AICleanVomit`)
+#### Movement / physics
+- `MovementSystem` (intent → velocity)
+- `CollisionSystem` (resolve using collider masks)
+- `NavSystem` (pathfinding requests + follow-path for AI)
 
-These components mostly exist to hold:
+#### Machines / crafting
+- `MachineSystem` (machine execution, insertion/extraction rules)
+- `CraftingSystem` (apply ingredient additions, consume uses, update `DrinkState`, emit sound/FX events)
 
-- cooldown timers
-- a target id + “find target” logic
-- line-wait state
+#### AI
+- `CustomerAISystem` (single state machine: queue → drink → pay → leave + side-quests)
+- `QueueSystem` (shared line mechanics)
 
-This creates:
-
-- many components to add/remove/reset
-- repeated “find target” patterns across different AI behaviors
-- the need for `reset_job_component<T>()` component churn
-
-**Proposal**
-
-Add **one** component for customers:
-
-- **`CustomerAI`**:
-  - current target ids (register/toilet/jukebox/target-location)
-  - per-behavior timers/cooldowns
-  - queue state (line position, last position, etc.)
-  - “next job after X” state (wandering/bathroom)
-
-Then:
-
-- Keep `CanPerformJob` as the job selector.
-- Replace the per-job components with `CustomerAI` sub-state (structs inside the component).
-- Replace `reset_job_component<T>()` with `customer_ai.reset(JobType)`.
-
-**Migration approach (schema-safe)**
-
-- Append `CustomerAI` to snapshot schema.
-- Add a migration system that:
-  - if a customer has any legacy AI components, populate `CustomerAI` (best-effort) and then the AI system reads only `CustomerAI` going forward.
-- Stop attaching the per-job AI components for newly created customers once stable.
+#### UI
+- `UIHintSystem` (derives progress bars/speech bubbles/icons from state)
+- `RenderPrepSystem` (resolve model variants)
+- `RenderSystem` / `UISystem`
 
 ---
 
-### 6) Make “should_run gating” a shared utility (remove boilerplate + try/catch)
+### 3) Entity creation: archetypes, not switches
 
-**Problem**
+Replace `convert_to_type()` and most of `entity_makers.cpp` with **archetype definitions**:
 
-Many systems duplicate this pattern:
+- `Archetype { components + defaults + tags }`
+- Optional “constructor hook id” for the rare cases that truly require code.
 
-- check `GameState::get().is_game_like()`
-- try/catch around `Sophie` lookup
-- check `HasDayNightTimer.needs_to_process_change`
-- check `bar_open` or `bar_closed`
+This makes adding content look like:
 
-This is noisy and makes it easy to introduce subtle differences.
+- Add archetype data
+- Add or reuse a machine/work/interaction rule id
+- Done
 
-**Proposal**
+---
 
-Create a small shared helper (e.g. `SystemRunContext`) that is computed once per tick:
-
-- `bool game_like`
-- `bool model_test`
-- `bool in_transition`
-- `bool bar_open`
-- pointers/refs to `Sophie` and her key components when available
-
-Then systems do:
-
-- `if (!ctx.inround()) return false;`
-- `if (ctx.transition()) return false;`
-
-This shrinks code and makes state logic consistent.
-
-## Component merge/rename opportunities (shortlist)
-
-This section lists “candidate simplifications” with suggested end-states.
+## Concrete breaking changes (mapping old → new)
 
 ### Holding / interaction
 
-- **Merge**: `CanBeHeld` + `CanBeHeld_HT` -> one `Holdable` (new) or one canonical “held” concept.
-- **Consolidate**: `CanHoldItem`, `CanHoldFurniture`, `CanHoldHandTruck` -> `AttachmentSlots`.
-- **Consider merge**: `CanBeHighlighted` + `CanHighlightOthers` into an “Interaction” model:
-  - `Interactor` (reach, current target id)
-  - `Interactable` (highlight rules, work rules)
-  - This enables avoiding “clear highlight on everything every frame”.
+- **Delete**: `CanHoldItem`, `CanHoldFurniture`, `CanHoldHandTruck`
+- **Delete**: `CanBeHeld`, `CanBeHeld_HT`
+- **Delete or repurpose**: `IsItem` “held by” semantics (replace with `Attachment`)
+- **Replace** with: `Inventory` + `Attachment` + unified `InteractSystem`
 
-### Variants/index selection
+### Work / machines
 
-- **Unify semantics**: `Indexer` and `HasSubtype` are both “index selection”.
-  - Long-term: one `VariantIndex` component with:
-    - range
-    - value
-    - last_rendered_value (for change detection)
+- **Delete**: `HasWork` callbacks/lambdas as the primary behavior mechanism
+- **Replace** with: `Workable(action_id)` and a small action table in systems
+- **Unify**: soda fountain, draft tap, ice machine, squirter, blender as `Machine(type_id)`
 
-### Store flags
+### AI
 
-- Consider combining `IsFreeInStore` + `IsStoreSpawned` into one `StoreItem` component:
-  - `bool spawned_from_store`
-  - `bool free`
-  - optional `price_override`
+- **Delete**: per-behavior AI components (`AIWaitInQueue`, `AIDrinking`, etc.)
+- **Replace** with: `Agent` (single component) + `CustomerAISystem`
 
-### Names / localization
+### State
 
-`HasName` is used for both debug and user-facing (with TODOs suggesting i18n). Consider:
+- **Replace** the “Sophie mega-entity owns everything” pattern with:
+  - `WorldTime` + `RoundRules` on a dedicated world entity (or globals managed by systems)
 
-- `HasDisplayName` (TranslatableString / i18n id + params)
-- `HasDebugName` (plain string)
+### Systems cleanup
 
-## Entity factory simplification (`entity_makers.cpp`)
+- **Merge** trigger area micro-systems into one `TriggerAreaSystem`.
+- **Merge** container micro-systems into one `ContainerMaintenanceSystem` (or subsystems inside one file).
+- **Centralize** gating (day/night/transition) into one shared run-context.
 
-**Problem**
+---
 
-Factory logic is long and mixes:
+## Recommended “perfect” build order (still phased, but breaking is fine)
 
-- base entity setup
-- renderer decisions
-- behavior wiring via lambdas
-- conversion logic (`convert_to_type`)
+This is the fastest route to “everything feels simpler” (not the safest, but the cleanest).
 
-**Proposal**
+### Step 1 — Unify interaction + carrying
 
-1) Replace `convert_to_type` switch with a registry:
+Implement:
+- `Interactor`, `Interactable`, `Inventory`, `Attachment`
+- `FocusSystem`, `InteractSystem`, `AttachmentSystem`
 
-- `std::array<FactoryFn, EntityType::COUNT>` where missing entries are obvious
-- this makes “unhandled types” more explicit and helps avoid accidental fallthrough
+Then delete the legacy holding ecosystem and remove special casing from input/collision.
 
-2) Extract repeated “base furniture” / “base item” patterns into small reusable helpers.
+### Step 2 — Move work out of factories
 
-3) Move “machine behavior” out of factories into systems via machine components (see above).
+Implement:
+- `Workable(action_id)` + `WorkSystem`
 
-## Phased execution plan (safe, incremental)
+Convert:
+- vomit cleaning
+- toilet cleaning
+- interactive settings changer
+- draft tap fill
 
-### Phase 0 — Inventory + guardrails (1–2 PRs)
+### Step 3 — Unify machines into one crafting/machine model
 
-- Add a doc/table enumerating:
-  - components in `snapshot_blob::ComponentTypes`
-  - which entity types use which components (starting from `entity_makers.cpp`)
-  - which systems read/write each component
-- Add lightweight assertions/logging for:
-  - “Sophie exists” assumptions
-  - “container config” assumptions
+Implement:
+- `Machine(type_id)` + `MachineSystem` + `CraftingSystem`
 
-### Phase 1 — Low-risk system consolidation (no schema changes)
+Convert:
+- soda fountain
+- ice machine
+- draft tap
+- blender + fruit → juice
 
-- Implement `TriggerAreaSystem` consolidation.
-- Implement `ContainerMaintenanceSystem` consolidation (including ModelTest path).
-- Introduce `SystemRunContext` and refactor repeated should_run patterns.
+This fixes duplicated logic (like beer tap) by construction.
 
-### Phase 2 — Holding model unification (schema changes, migration-based)
+### Step 4 — AI consolidation
 
-- Add new components (`Holdable`, `AttachmentSlots`) by **appending** to schema.
-- Add migration system(s) to translate legacy held/holding data.
-- Replace 3 separate “held position” systems with one `UpdateAttachmentsSystem`.
-- Update input/collision code to use the unified concept.
+Implement:
+- `Agent` + `CustomerAISystem`
 
-### Phase 3 — “Machine” refactor (progressive, keeps gameplay identical)
+Convert customer behavior to a single state machine.
 
-- Add `DispensesIngredient` and `IngredientDispenserSystem`.
-- Migrate:
-  - soda fountain
-  - ice machine
-  - draft tap
-- Remove duplicated beer-tap logic inside drink `HasWork`.
+### Step 5 — Archetypes
 
-### Phase 4 — AI consolidation (largest simplification, migration-based)
+Replace `convert_to_type()` with a registry/archetype table.
 
-- Append `CustomerAI` to schema.
-- Add migration that seeds `CustomerAI` from legacy per-job components.
-- Update AI processing to use `CustomerAI` exclusively.
-- Stop attaching legacy AI components for newly created customers.
+---
 
-### Phase 5 — Factory registry + cleanup
+## “If we only do one thing” recommendation
 
-- Replace `convert_to_type` giant switch with a registry map/array.
-- Move remaining “lambda behaviors” into explicit systems where appropriate.
+Build the **unified Interaction + Inventory + Attachment pipeline** first.
 
-## “If we only do three things” recommendation
-
-1) **TriggerAreaSystem consolidation** (big clarity gain, no schema risk)
-2) **ContainerMaintenanceSystem consolidation** (removes duplicated logic + state differences)
-3) **DraftTap / drink ingredient logic de-dup** via a shared helper or `DispensesIngredient`
-
-These three alone should noticeably simplify the architecture without a large migration burden.
+It collapses the biggest current complexity cluster (holding/highlighting/pickup/drop/handtruck special cases) and makes machines + AI refactors dramatically simpler.
 

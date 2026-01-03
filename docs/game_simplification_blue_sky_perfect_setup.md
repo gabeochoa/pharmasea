@@ -78,4 +78,8 @@ Replace `HasWork` callbacks with pure data:
 Then behavior is in systems keyed by `work_action_id`.
 
 ### F) Machines / crafting / recipes
+This document has been merged into the single canonical plan:
 
+- `docs/game_simplification_refactor_plan.md`
+
+Use that file going forward (it includes the blue-sky target plus the current-state grounding from `entity_makers.cpp` and the system layout review).
