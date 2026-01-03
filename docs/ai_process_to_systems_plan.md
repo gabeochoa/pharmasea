@@ -58,15 +58,15 @@ Replace each `process_state_*` with a system that only runs when `ctrl.state == 
 
 Initial set (mirrors current handlers):
 
-- `AiWanderSystem` (rate-limited, uses `HasAITargetLocation`, `HasAIWanderState`)
-- `AiQueueForRegisterSystem` (rate-limited, uses `HasAITargetEntity`, `HasAIQueueState`)
-- `AiAtRegisterWaitForDrinkSystem` (rate-limited, uses `HasAITargetEntity`)
-- `AiDrinkingSystem` (rate-limited, uses `HasAITargetLocation`, `HasAIDrinkState`)
-- `AiPaySystem` (rate-limited, uses `HasAITargetEntity`, `HasAIPayState`)
-- `AiPlayJukeboxSystem` (rate-limited, uses `HasAITargetEntity`, `HasAIJukeboxState`)
-- `AiBathroomSystem` (rate-limited, uses `HasAITargetEntity`, `HasAIBathroomState`)
-- `AiCleanVomitSystem` (rate-limited + ability-gated, uses `HasAITargetEntity`)
-- `AiLeaveSystem` (likely *not* rate-limited; just path toward the exit each tick)
+- `AIWanderSystem` (rate-limited, uses `HasAITargetLocation`, `HasAIWanderState`)
+- `AIQueueForRegisterSystem` (rate-limited, uses `HasAITargetEntity`, `HasAIQueueState`)
+- `AIAtRegisterWaitForDrinkSystem` (rate-limited, uses `HasAITargetEntity`)
+- `AIDrinkingSystem` (rate-limited, uses `HasAITargetLocation`, `HasAIDrinkState`)
+- `AIPaySystem` (rate-limited, uses `HasAITargetEntity`, `HasAIPayState`)
+- `AIPlayJukeboxSystem` (rate-limited, uses `HasAITargetEntity`, `HasAIJukeboxState`)
+- `AIBathroomSystem` (rate-limited, uses `HasAITargetEntity`, `HasAIBathroomState`)
+- `AICleanVomitSystem` (rate-limited + ability-gated, uses `HasAITargetEntity`)
+- `AILeaveSystem` (likely *not* rate-limited; just path toward the exit each tick)
 
 ### 3) Keep “pure helpers” as helpers
 
@@ -123,8 +123,8 @@ To preserve this with multiple systems:
   - This is “mostly safe” but can still allow a second system to run if the state changes mid-tick.
 
 - **Robust option (recommended once we add more behaviors)**: add a per-frame guard
-  - Introduce a lightweight transient marker component, e.g. `HasAIProcessedThisFrame`
-  - Add a `AiClearProcessedMarkerSystem` that runs once per frame to clear it
+  - Introduce a lightweight transient tag, e.g. `afterhours::tags::AIProcessedThisFrame`
+  - Add a `AIClearProcessedTagSystem` that runs once per frame to clear it
   - Each AI state system sets it; all other AI state systems skip if it’s already set
 
 This guarantees **one AI state system** runs per entity per tick even when transitions happen.
