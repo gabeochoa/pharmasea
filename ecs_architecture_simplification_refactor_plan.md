@@ -187,9 +187,23 @@ struct IsAIControlled : public BaseComponent {
   - Small reusable pacing primitive; easy to reset without touching targets/state:
 
 ```cpp
+// Not a component: shared timer semantics used by multiple components.
+struct CooldownInfo {
+  float remaining = 0.f;   // seconds until ready
+  float reset_to = 0.f;    // seconds to reset to when triggered
+  bool enabled = true;
+
+  void tick(float dt) {
+    if (!enabled) return;
+    if (remaining > 0.f) remaining -= dt;
+  }
+  [[nodiscard]] bool ready() const { return !enabled || remaining <= 0.f; }
+  void reset() { remaining = reset_to; }
+  void clear() { remaining = 0.f; }
+};
+
 struct HasAICooldown : public BaseComponent {
-  float remaining = 0.f;
-  float reset_to = 1.f;
+  CooldownInfo cooldown{};
 };
 ```
 
@@ -268,9 +282,13 @@ struct HasProgress : public BaseComponent {
 
 // Generic cooldown primitive (also used by triggers/minigames/etc).
 struct HasCooldown : public BaseComponent {
-  float remaining = 0.f;           // seconds
-  float reset_to = 0.f;            // seconds
-  bool enabled = true;
+  CooldownInfo cooldown{};
+};
+
+// Optional: if you want a distinct “this state/action lasts N seconds” timer
+// without conflating it with “cooldown gating”, keep it as its own component.
+struct HasActionTimer : public BaseComponent {
+  CooldownInfo timer{};
 };
 
 // A data-driven “do work” target. Systems implement the enum behaviors.
