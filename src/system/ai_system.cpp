@@ -91,23 +91,19 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     // TODO :DESIGN: how many ingredients have to be correct?
-    // as people get more drunk they should care less and less
-    //
+    // As people get more drunk they should care less and less.
     bool all_ingredients_match =
         madeDrink.get<IsDrink>().matches_drink(orderedDrink);
 
-    // all good
+    // All good.
     if (all_ingredients_match) return true;
-    // Otherwise Something was wrong with the drink
+    // Otherwise something was wrong with the drink.
 
-    // For debug, if we have this set, just assume it was correct
+    // For debug, if we have this set, just assume it was correct.
     if (GLOBALS.get_or_default<bool>("skip_ingredient_match", false)) {
         return true;
     }
 
-    // If you have the mocktail upgrade an an ingredient was wrong,
-    // figure out if it was alcohol and if theres only one missing then
-    // we are good
     if (irsm.has_upgrade_unlocked(UpgradeClass::Mocktails)) {
         Recipe recipe = RecipeLibrary::get().get(
             std::string(magic_enum::enum_name(orderedDrink)));
@@ -136,14 +132,14 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
         // How many ingredients did we mess up?
         if (xorbits.count() != 1) {
             // TODO this return is what keeps us from being able to support
-            // both upgrades at the same time (if we wanted that)
+            // both upgrades at the same time (if we wanted that).
             return false;
         }
         // TODO idk if index is right 100% of the time but lets try it
         Ingredient ig = get_ingredient_from_index(
             bitset_utils::get_first_enabled_bit(xorbits));
-        // is the (one) ingredient we messed up an alcoholic one?
-        // if so then we are good
+        // Is the (one) ingredient we messed up an alcoholic one?
+        // If so then we are good.
         if (ingredient::is_alcohol(ig)) {
             return true;
         }
@@ -160,11 +156,8 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
 
         auto xorbits = orderedDrinkSet ^ madeDrinkSet;
         size_t num_messed_up = xorbits.count();
-        // You messed up less ingredients than
-        // the number of drinks they had
-        //
-        // So they cant tell :)
-        //
+        // You messed up less ingredients than the number of drinks they had,
+        // so they can't tell :)
         if (num_messed_up < num_alc_drank) {
             return true;
         }
@@ -186,10 +179,10 @@ float get_speed_for_entity(Entity& entity) {
         // TODO Turning off stagger; couple problems
         // - configuration is hard to reason about and mess with
         // - i really want it to cause them to move more, maybe we place
-        // this in the path generation or something isntead?
+        //   this in the path generation or something instead?
         //
-        // float stagger_multiplier = cha.ailment().stagger(); if
-        // (stagger_multiplier != 0) base_speed *= stagger_multiplier;
+        // float stagger_multiplier = cha.ailment().stagger();
+        // if (stagger_multiplier != 0) base_speed *= stagger_multiplier;
         int denom = RandomEngine::get().get_int(
             1, std::max(1, cha.num_alcoholic_drinks_drank()));
         base_speed *= 1.f / denom;
