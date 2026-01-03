@@ -7,6 +7,10 @@ struct access;
 }
 
 // Shared timer semantics used by multiple components (AI, interactions, etc).
+// TODO: Review this public API. CooldownInfo currently mixes "cooldown gating"
+// semantics with "duration/progress timer" semantics; we may want clearer naming
+// (e.g., TimerInfo with start/tick/reset) or to split responsibilities again if
+// it grows.
 struct CooldownInfo {
     bool initialized = false;
     float remaining = 0.f;  // seconds until ready
