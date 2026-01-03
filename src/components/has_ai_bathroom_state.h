@@ -7,7 +7,8 @@
 
 struct HasAIBathroomState : public BaseComponent {
     AIWaitInQueueState line_wait{};
-    CooldownInfo timer{};
+    // Time spent actively using the toilet once at the front.
+    CooldownInfo use_toilet_timer{};
     CooldownInfo floor_timer{};
 
     // Where to go when finished using the bathroom.
@@ -20,7 +21,7 @@ struct HasAIBathroomState : public BaseComponent {
         return archive(                      //
             static_cast<BaseComponent&>(self), //
             self.line_wait,                   //
-            self.timer,                       //
+            self.use_toilet_timer,            //
             self.floor_timer,                 //
             self.next_state                   //
         );

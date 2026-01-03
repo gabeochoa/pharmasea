@@ -736,13 +736,13 @@ void process_ai_entity(Entity& entity, float dt) {
                 const IsRoundSettingsManager& irsm =
                     sophie.get<IsRoundSettingsManager>();
                 float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
-                bs.timer.set_time(piss_timer);
+                bs.use_toilet_timer.set_time(piss_timer);
                 istoilet.start_use(entity.id);
             }
 
             (void) bs.floor_timer.pass_time(-1.f * dt);
 
-            if (bs.timer.pass_time(dt)) {
+            if (bs.use_toilet_timer.pass_time(dt)) {
                 on_finished();
             }
         } break;
