@@ -649,7 +649,7 @@ bool _create_nuxes(Entity&) {
                     if (customer->is_missing<HasAIQueueState>()) return false;
                     const HasAIQueueState& aiQState =
                         customer->get<HasAIQueueState>();
-                    return aiQState.queue_index == 0;
+                    return aiQState.line_wait.queue_index == 0;
                 })
                 .set_content(TODO_TRANSLATE("This is a customer, they will "
                                             "wait in line, \nand once at "

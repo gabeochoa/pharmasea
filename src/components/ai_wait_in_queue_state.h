@@ -10,6 +10,9 @@ struct AIWaitInQueueState : public BaseComponent {
     // removing this and relying on those signals instead.
     bool has_set_position_before = false;
     int previous_line_index = -1;
+    // Convenience mirror of the current known index in the queue (0 = front).
+    // TODO: This overlaps with previous_line_index; consider collapsing to one.
+    int queue_index = -1;
 
    private:
    public:
@@ -18,7 +21,8 @@ struct AIWaitInQueueState : public BaseComponent {
         return archive(                      //
             static_cast<BaseComponent&>(self), //
             self.has_set_position_before,     //
-            self.previous_line_index          //
+            self.previous_line_index,         //
+            self.queue_index                  //
         );
     }
 };

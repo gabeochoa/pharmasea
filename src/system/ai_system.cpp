@@ -77,6 +77,7 @@ void reset_component(Entity& e) {
 void line_reset(Entity& entity, AIWaitInQueueState& s) {
     s.has_set_position_before = false;
     s.previous_line_index = -1;
+    s.queue_index = -1;
     if (entity.has<HasAITargetLocation>()) {
         entity.get<HasAITargetLocation>().pos.reset();
     }
@@ -100,6 +101,7 @@ void line_add_to_queue(Entity& entity, AIWaitInQueueState& s, Entity& reg) {
              "waiting queue");
     const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
     s.previous_line_index = hwq.get_customer_position(entity.id);
+    s.queue_index = s.previous_line_index;
     return s.previous_line_index;
 }
 
@@ -386,8 +388,7 @@ void process_ai_entity(Entity& entity, float dt) {
                 Entity& best_reg = best.asE();
                 tgt.entity.set(best_reg);
                 line_add_to_queue(entity, qs.line_wait, best_reg);
-                qs.queue_index =
-                    line_position_in_line(qs.line_wait, best_reg, entity);
+                (void) line_position_in_line(qs.line_wait, best_reg, entity);
             }
 
             OptEntity opt_reg = tgt.entity.resolve();
@@ -403,7 +404,7 @@ void process_ai_entity(Entity& entity, float dt) {
                 qs.line_wait, reg, entity, get_speed_for_entity(entity) * dt);
             // Keep a simple data signal for "front of line" without relying on
             // micro-states.
-            qs.queue_index = qs.line_wait.previous_line_index;
+            qs.line_wait.queue_index = qs.line_wait.previous_line_index;
             if (!reached_front) return;
 
             entity.get<HasSpeechBubble>().on();

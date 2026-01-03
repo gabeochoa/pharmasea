@@ -7,7 +7,6 @@
 struct HasAIQueueState : public BaseComponent {
     // Helps avoid register thrash (optional).
     EntityRef last_register{};
-    int queue_index = -1;
 
     AIWaitInQueueState line_wait{};
 
@@ -18,7 +17,6 @@ struct HasAIQueueState : public BaseComponent {
         return archive(                      //
             static_cast<BaseComponent&>(self), //
             self.last_register,               //
-            self.queue_index,                 //
             self.line_wait                    //
         );
     }
