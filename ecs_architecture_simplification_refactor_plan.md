@@ -214,7 +214,7 @@ struct HasAICooldown : public BaseComponent {
 
 ```cpp
 struct HasAITargetEntity : public BaseComponent {
-  int entity_id = -1;
+  EntityRef entity{};
 };
 
 struct HasAITargetLocation : public BaseComponent {
@@ -229,13 +229,13 @@ struct HasAITargetLocation : public BaseComponent {
 
 ```cpp
 struct HasAIQueueState : public BaseComponent {
-  int last_register_id = -1;   // helps avoid thrash
+  EntityRef last_register{};   // helps avoid thrash
   int queue_index = -1;        // last known position in line (optional)
   // Queue stand location should use `HasAITargetLocation::pos`.
 };
 
 struct HasAIJukeboxState : public BaseComponent {
-  int last_jukebox_id = -1;
+  EntityRef last_jukebox{};
 };
 ```
 
