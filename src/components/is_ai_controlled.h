@@ -60,6 +60,11 @@ struct IsAIControlled : public BaseComponent {
         return *this;
     }
 
+    IsAIControlled& set_resume_state(State s) {
+        resume_state = s;
+        return *this;
+    }
+
    private:
    public:
     friend zpp::bits::access;
