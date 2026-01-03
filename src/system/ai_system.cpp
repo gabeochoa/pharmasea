@@ -75,19 +75,22 @@ void reset_component(Entity& e) {
 }
 
 // ---- Queue/line helpers (system logic; components remain data-only) ----
-void line_reset(AIWaitInQueueState& s) {
+void line_reset(Entity& entity, AIWaitInQueueState& s) {
     s.has_set_position_before = false;
-    s.last_line_position = -1;
-    s.position = vec2{0, 0};
+    s.last_line_index = -1;
+    if (entity.has<HasAITargetLocation>()) {
+        entity.get<HasAITargetLocation>().pos.reset();
+    }
 }
 
-void line_add_to_queue(AIWaitInQueueState& s, Entity& reg, const Entity& entity) {
+void line_add_to_queue(Entity& entity, AIWaitInQueueState& s, Entity& reg) {
     VALIDATE(reg.has<HasWaitingQueue>(),
              "Trying to add_to_queue for entity which doesn't have a waiting "
              "queue");
     HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
     int next_position = hwq.add_customer(entity).get_next_pos();
-    s.position = reg.get<Transform>().tile_infront((next_position + 1));
+    HasAITargetLocation& tl = ensure_component<HasAITargetLocation>(entity);
+    tl.pos = reg.get<Transform>().tile_infront((next_position + 1));
     s.has_set_position_before = true;
 }
 
@@ -97,8 +100,8 @@ void line_add_to_queue(AIWaitInQueueState& s, Entity& reg, const Entity& entity)
              "Trying to position_in_line for entity which doesn't have a "
              "waiting queue");
     const HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
-    s.last_line_position = hwq.get_customer_position(entity.id);
-    return s.last_line_position;
+    s.last_line_index = hwq.get_customer_position(entity.id);
+    return s.last_line_index;
 }
 
 [[nodiscard]] bool line_can_move_up(const Entity& reg, const Entity& customer) {
@@ -116,7 +119,11 @@ void line_add_to_queue(AIWaitInQueueState& s, Entity& reg, const Entity& entity)
         log_error("AI line state: add_to_queue must be called first");
     }
 
-    (void) entity.get<CanPathfind>().travel_toward(s.position, distance);
+    HasAITargetLocation& tl = ensure_component<HasAITargetLocation>(entity);
+    if (!tl.pos.has_value()) {
+        tl.pos = reg.get<Transform>().tile_directly_infront();
+    }
+    (void) entity.get<CanPathfind>().travel_toward(tl.pos.value(), distance);
 
     int spot_in_line = line_position_in_line(s, reg, entity);
     if (spot_in_line != 0) {
@@ -124,11 +131,11 @@ void line_add_to_queue(AIWaitInQueueState& s, Entity& reg, const Entity& entity)
             return false;
         }
         // Walk up one spot.
-        s.position = reg.get<Transform>().tile_infront(spot_in_line);
+        tl.pos = reg.get<Transform>().tile_infront(spot_in_line);
         return false;
     }
 
-    s.position = reg.get<Transform>().tile_directly_infront();
+    tl.pos = reg.get<Transform>().tile_directly_infront();
     if (onReachedFront) onReachedFront();
     return true;
 }
@@ -375,8 +382,9 @@ void process_ai_entity(Entity& entity, float dt) {
                 }
                 Entity& best_reg = best.asE();
                 tgt.entity.set(best_reg);
-                line_add_to_queue(qs.line_wait, best_reg, entity);
-                qs.queue_index = line_position_in_line(qs.line_wait, best_reg, entity);
+                line_add_to_queue(entity, qs.line_wait, best_reg);
+                qs.queue_index =
+                    line_position_in_line(qs.line_wait, best_reg, entity);
             }
 
             OptEntity opt_reg = tgt.entity.resolve();
@@ -386,17 +394,13 @@ void process_ai_entity(Entity& entity, float dt) {
             }
             Entity& reg = opt_reg.asE();
 
-            bool reached = entity.get<CanPathfind>().travel_toward(
-                qs.line_wait.position, get_speed_for_entity(entity) * dt);
-            if (!reached) return;
-
             entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
 
             bool reached_front = line_try_to_move_closer(
                 qs.line_wait, reg, entity, get_speed_for_entity(entity) * dt);
             // Keep a simple data signal for "front of line" without relying on
             // micro-states.
-            qs.queue_index = qs.line_wait.last_line_position;
+            qs.queue_index = qs.line_wait.last_line_index;
             if (!reached_front) return;
 
             entity.get<HasSpeechBubble>().on();
@@ -539,7 +543,7 @@ void process_ai_entity(Entity& entity, float dt) {
                     return;
                 }
                 tgt.entity.set(best.asE());
-                line_add_to_queue(ps.line_wait, best.asE(), entity);
+                line_add_to_queue(entity, ps.line_wait, best.asE());
             }
 
             OptEntity opt_reg = tgt.entity.resolve();
@@ -549,10 +553,6 @@ void process_ai_entity(Entity& entity, float dt) {
             }
             Entity& reg = opt_reg.asE();
             entity.get<Transform>().turn_to_face_pos(reg.get<Transform>().as2());
-
-            bool reached = entity.get<CanPathfind>().travel_toward(
-                ps.line_wait.position, get_speed_for_entity(entity) * dt);
-            if (!reached) return;
 
             bool reached_front = line_try_to_move_closer(
                 ps.line_wait, reg, entity, get_speed_for_entity(entity) * dt, [&]() {
@@ -611,7 +611,7 @@ void process_ai_entity(Entity& entity, float dt) {
                 }
 
                 tgt.entity.set(best.asE());
-                line_add_to_queue(js.line_wait, best.asE(), entity);
+                line_add_to_queue(entity, js.line_wait, best.asE());
             }
 
             OptEntity opt_j = tgt.entity.resolve();
@@ -621,10 +621,6 @@ void process_ai_entity(Entity& entity, float dt) {
             }
             Entity& jukebox = opt_j.asE();
             entity.get<Transform>().turn_to_face_pos(jukebox.get<Transform>().as2());
-
-            bool reached = entity.get<CanPathfind>().travel_toward(
-                js.line_wait.position, get_speed_for_entity(entity) * dt);
-            if (!reached) return;
 
             bool reached_front = line_try_to_move_closer(
                 js.line_wait, jukebox, entity, get_speed_for_entity(entity) * dt, [&]() {
@@ -676,7 +672,7 @@ void process_ai_entity(Entity& entity, float dt) {
                 OptEntity best = find_best_toilet_with_space(entity);
                 if (!best) return;
                 tgt.entity.set(best.asE());
-                line_add_to_queue(bs.line_wait, best.asE(), entity);
+                line_add_to_queue(entity, bs.line_wait, best.asE());
                 bs.floor_timer.set_time(5.f);
             }
 
@@ -712,14 +708,10 @@ void process_ai_entity(Entity& entity, float dt) {
                 return;
             }
 
-            bool reached = entity.get<CanPathfind>().travel_toward(
-                bs.line_wait.position, get_speed_for_entity(entity) * dt);
-            if (!reached) return;
-
-            int previous_position = bs.line_wait.last_line_position;
+            int previous_position = bs.line_wait.last_line_index;
             bool reached_front = line_try_to_move_closer(
                 bs.line_wait, toilet, entity, get_speed_for_entity(entity) * dt);
-            int new_position = bs.line_wait.last_line_position;
+            int new_position = bs.line_wait.last_line_index;
 
             if (previous_position != new_position && bs.floor_timer.initialized) {
                 float totalTime = bs.floor_timer.totalTime;

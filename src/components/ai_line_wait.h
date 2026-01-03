@@ -5,8 +5,7 @@
 
 struct AIWaitInQueueState : public BaseComponent {
     bool has_set_position_before = false;
-    vec2 position{};
-    int last_line_position = -1;
+    int last_line_index = -1;
 
    private:
    public:
@@ -15,8 +14,7 @@ struct AIWaitInQueueState : public BaseComponent {
         return archive(                      //
             static_cast<BaseComponent&>(self), //
             self.has_set_position_before,     //
-            self.position,                    //
-            self.last_line_position           //
+            self.last_line_index              //
         );
     }
 };
