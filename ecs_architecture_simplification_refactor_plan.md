@@ -225,10 +225,6 @@ struct HasAIWanderState : public BaseComponent {
   bool has_goal = false;
 };
 
-struct HasAIBathroomState : public BaseComponent {
-  int last_toilet_id = -1;
-};
-
 struct HasAIJukeboxState : public BaseComponent {
   int last_jukebox_id = -1;
 };
