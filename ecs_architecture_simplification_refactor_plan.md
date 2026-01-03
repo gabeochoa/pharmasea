@@ -132,10 +132,9 @@ If/when the “CanHoldX” approach starts to fragment again (new carryables, ne
 #### With these components
 
 - **`AIController`**
-  - **Fields (explicit; no “memory” blob)**:
+  - Keep this as the *authoritative high-level mode* only (small + obvious):
 
 ```cpp
-// Proposed shape (illustrative; breaking-change OK)
 struct AIController {
   enum class State {
     Wander,
@@ -147,39 +146,63 @@ struct AIController {
     PlayJukebox,
     CleanVomit,
     Leave,
-  } state;
+  } state = State::Wander;
 
-  // Generic control / pacing
-  float cooldown_remaining = 0.f;     // "don't re-decide until"
-  float state_time_remaining = 0.f;   // generic timer for current state (if used)
-
-  // Generic targeting (used by many states)
-  int target_entity_id = -1;          // register/toilet/jukebox/mess/etc
-  vec2 target_pos = {0, 0};           // where we want to walk to (optional)
-  bool has_target_pos = false;
-
-  // Last chosen/known anchors (explicit, resettable)
-  int last_register_id = -1;          // helps avoid thrash; reset when desired
-  int last_toilet_id = -1;
-  int last_jukebox_id = -1;
-
-  // Queue-specific scratch (reset by resetting only Queue state)
-  int queue_index = -1;               // last known position in line (optional)
-  vec2 queue_stand_pos = {0, 0};
-  bool has_queue_pos = false;
-
-  // Wander-specific scratch
-  vec2 wander_goal = {0, 0};
-  bool has_wander_goal = false;
-
-  // "What next?" hint (lets you preserve current behavior where wander is a pause)
+  // Optional: preserve the current “wandering is a pause” behavior.
   State resume_state = State::Wander;
 };
 ```
 
+- **`HasAICooldown`** (or keep/reuse the existing `AIComponent`)
+  - Small reusable pacing primitive; easy to reset without touching targets/state:
+
+```cpp
+struct HasAICooldown {
+  float remaining = 0.f;
+  float reset_to = 1.f;
+};
+```
+
+- **`HasAITarget`**
+  - Generic targeting used by many states; also easy to clear/reset independently:
+
+```cpp
+struct HasAITarget {
+  int target_entity_id = -1;   // register/toilet/jukebox/mess/etc
+  vec2 target_pos = {0, 0};    // optional goal position
+  bool has_target_pos = false;
+};
+```
+
+- **Per-state scratch components (recommended)**
+  - This preserves what you like today: “reset just the Drinking task” without affecting wandering/queue/etc.
+  - Add only the ones you actually need:
+
+```cpp
+struct AIQueueState {
+  int last_register_id = -1;   // helps avoid thrash
+  int queue_index = -1;        // last known position in line (optional)
+  vec2 stand_pos = {0, 0};
+  bool has_stand_pos = false;
+};
+
+struct AIWanderState {
+  vec2 goal = {0, 0};
+  bool has_goal = false;
+};
+
+struct AIBathroomState {
+  int last_toilet_id = -1;
+};
+
+struct AIJukeboxState {
+  int last_jukebox_id = -1;
+};
+```
+
 Notes:
-- If any field proves too state-specific, split it into a tiny per-state component (e.g. `AIQueueState`, `AIWanderState`) so you can still “reset just Drinking” cleanly.
-- The important part is **explicit named fields** (easy to debug) and **resettable per-state scratch**, not a generic “memory” bag.
+- This component split is intentionally “boring”: explicit named fields, no generic “memory blob”.
+- It matches your current reset ergonomics: remove/re-add `AIWanderState` or `AIQueueState` without disturbing other state.
 - **`IsCustomer`**
   - IsCustomer-specific durable data: patience/order/traits/bladder progress (things that must survive task resets).
   - The goal is to move “customer-ness” out of scattered components and into one place.
