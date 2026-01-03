@@ -75,7 +75,7 @@ This refactor centers the game around a few reusable primitives:
 3. **Slots/Containers**: “this entity can contain/hold another entity” (hand slot, surface slot, machine slot, shelf slot) using one component shape
 4. **Interactables**: interaction logic expressed as data + systems, not embedded lambdas
 5. **Areas/Zones**: trigger areas, floor markers, VIP zones, etc. represented as area volumes with policies
-6. **AI Controller**: one component representing AI state + short-term memory, with systems that implement behaviors
+6. **AI Controller**: one component representing AI state, with systems that implement behaviors
 
 ---
 
@@ -138,9 +138,12 @@ If/when the “CanHoldX” approach starts to fragment again (new carryables, ne
     - `target_entity_id` (optional)
     - `target_pos` (optional)
     - `timer_remaining` (optional)
-    - `memory` struct (small: last_register_id, drinks_in_bladder, etc.)
-- **`Customer`**
-  - Customer-specific data: patience, order, traits (loud/rude/speedwalker), bladder progress.
+    - (no generic “memory struct”)
+    - If something needs to persist across states, prefer either:
+      - an explicit named field (e.g. `last_register_id`), or
+      - a small per-behavior/task component you can reset independently.
+- **`IsCustomer`**
+  - Customer-specific durable data: patience/order/traits/bladder progress (things that must survive task resets).
   - The goal is to move “customer-ness” out of scattered components and into one place.
 - **`AgentTraits`** (optional)
   - Generic attribute flags/modifiers (speed multiplier, patience decay multiplier, thief flag, VIP flag).
