@@ -1,9 +1,10 @@
 #pragma once
 
-#include "base_component.h"
+namespace zpp::bits {
+struct access;
+}
 
 // Shared timer semantics used by multiple components (AI, interactions, etc).
-// Not itself a component; embed it in components that need it.
 struct CooldownInfo {
     float remaining = 0.f;  // seconds until ready
     float reset_to = 0.f;   // seconds to reset to when triggered
