@@ -56,7 +56,6 @@
 #include "components/collects_user_input.h"
 #include "components/conveys_held_item.h"
 #include "components/custom_item_position.h"
-#include "components/can_clean_vomit.h"
 #include "components/has_ai_cooldown.h"
 #include "components/has_base_speed.h"
 #include "components/has_client_id.h"
@@ -274,7 +273,8 @@ void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
     mop_buddy.get<IsAIControlled>().state = IsAIControlled::State::CleanVomit;
-    mop_buddy.addComponent<CanCleanVomit>();
+    mop_buddy.get<IsAIControlled>().enable_ability(
+        IsAIControlled::AbilityCleanVomit);
 
     mop_buddy
         .addComponent<IsItem>()  //
@@ -1425,6 +1425,14 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
 
     customer.addComponent<IsCustomer>();
     customer.get<IsAIControlled>().state = IsAIControlled::State::QueueForRegister;
+    if (irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet)) {
+        customer.get<IsAIControlled>().enable_ability(
+            IsAIControlled::AbilityUseBathroom);
+    }
+    if (irsm.has_upgrade_unlocked(UpgradeClass::Jukebox)) {
+        customer.get<IsAIControlled>().enable_ability(
+            IsAIControlled::AbilityPlayJukebox);
+    }
     // TODO for now, eventually move to customer spawner
     if (has_order) {
         CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();

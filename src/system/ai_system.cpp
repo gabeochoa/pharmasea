@@ -19,7 +19,6 @@
 #include "../components/has_patience.h"
 #include "../components/has_speech_bubble.h"
 #include "../components/has_work.h"
-#include "../components/can_clean_vomit.h"
 #include "../components/is_bank.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
@@ -234,6 +233,10 @@ void set_new_customer_order(Entity& entity) {
 
 [[nodiscard]] bool needs_bathroom_now(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return false;
+    if (entity.is_missing<IsAIControlled>()) return false;
+    if (!entity.get<IsAIControlled>().has_ability(
+            IsAIControlled::AbilityUseBathroom))
+        return false;
 
     // Don't send them to the bathroom while holding something.
     if (entity.has<CanHoldItem>()) {
@@ -519,8 +522,10 @@ void process_ai_entity(Entity& entity, float dt) {
                 return;
             }
 
-            bool jukebox_unlocked = irsm.has_upgrade_unlocked(UpgradeClass::Jukebox);
-            if (jukebox_unlocked && RandomEngine::get().get_bool()) {
+            bool jukebox_allowed =
+                entity.get<IsAIControlled>().has_ability(
+                    IsAIControlled::AbilityPlayJukebox);
+            if (jukebox_allowed && RandomEngine::get().get_bool()) {
                 set_state(entity, IsAIControlled::State::PlayJukebox);
                 return;
             }
@@ -744,14 +749,22 @@ void process_ai_entity(Entity& entity, float dt) {
         case IsAIControlled::State::CleanVomit: {
             if (!ai_tick_with_cooldown(entity, dt, 0.10f)) return;
 
-            // Only entities with the capability should run this state.
-            if (entity.is_missing<CanCleanVomit>()) return;
+            // Only entities with the ability should run this state.
+            if (!entity.get<IsAIControlled>().has_ability(
+                    IsAIControlled::AbilityCleanVomit))
+                return;
             HasAITargetEntity& tgt = ensure_component<HasAITargetEntity>(entity);
 
             if (!entity_ref_valid(tgt.entity)) {
                 auto other_ais = EntityQuery()
                                      .whereNotID(entity.id)
-                                     .whereHasComponent<CanCleanVomit>()
+                                     .whereHasComponent<IsAIControlled>()
+                                     .whereLambda([](const Entity& e) {
+                                         if (e.is_missing<IsAIControlled>())
+                                             return false;
+                                         return e.get<IsAIControlled>().has_ability(
+                                             IsAIControlled::AbilityCleanVomit);
+                                     })
                                      .gen();
                 std::set<int> existing_targets;
                 for (const Entity& mop : other_ais) {
