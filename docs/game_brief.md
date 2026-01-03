@@ -124,8 +124,8 @@ All upgrades permanently modify the global `ConfigData` state.
 
 ---
 
-## � Recipe Bible
-Drinks are loaded from `drinks.json` and require specific ingredients and equipment prereqs.
+## Recipe Bible
+Drinks are loaded from `resources/config/drinks.json` and require specific ingredients and equipment prereqs.
 
 - **Standard Pours**:
     - **Cola**: Soda (1 ing) -> $5
