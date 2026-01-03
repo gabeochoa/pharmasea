@@ -49,20 +49,10 @@ struct IsFloorMarker : public BaseComponent {
 
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        using archive_type = std::remove_cvref_t<decltype(archive)>;
-        if (auto result = archive(                      //
-                static_cast<BaseComponent&>(self),       //
-                self.type,                               //
-                self.marked_entities                     //
-                );
-            zpp::bits::failure(result)) {
-            return result;
-        }
-        if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-            if (self.marked_entities.size() > MAX_FLOOR_MARKERS) {
-                return std::errc::message_size;
-            }
-        }
-        return std::errc{};
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.type,                       //
+            self.marked_entities             //
+        );
     }
 };

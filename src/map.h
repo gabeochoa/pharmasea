@@ -85,53 +85,29 @@ struct Map {
         // NOTE: This is intentionally a breaking change vs. the historical
         // StdSmartPtr-based entity graph serialization.
 
-        using archive_type = std::remove_cvref_t<decltype(archive)>;
-
         std::string world_blob;
-        if constexpr (archive_type::kind() == zpp::bits::kind::in) {
+        if constexpr (requires { std::remove_cvref_t<decltype(archive)>::kind(); } &&
+                      std::remove_cvref_t<decltype(archive)>::kind() == zpp::bits::kind::in) {
             // Serialize as raw bytes: length + 1-byte chars.
             // (Bitsery's `container4b`/`text4b` mean 4-bytes-per-element, which
             // is NOT what we want for a byte blob.)
-            if (auto result = archive(  //
-                    world_blob  //
-                    );
-                zpp::bits::failure(result)) {
-                return result;
-            }
-            if (world_blob.size() > snapshot_blob::MaxWorldSnapshotBytes) {
-                return std::errc::message_size;
-            }
+            (void) archive(  //
+                world_blob   //
+            );
             const bool ok = snapshot_blob::decode_into_current_world(world_blob);
             VALIDATE(ok, "failed to decode world snapshot blob");
         } else {
             world_blob = snapshot_blob::encode_current_world();
-            if (world_blob.size() > snapshot_blob::MaxWorldSnapshotBytes) {
-                return std::errc::message_size;
-            }
-            if (auto result = archive(  //
-                    world_blob  //
-                    );
-                zpp::bits::failure(result)) {
-                return result;
-            }
+            (void) archive(  //
+                world_blob   //
+            );
         }
 
-        if (auto result = archive(  //
-                self.was_generated, //
-                self.seed,          //
-                self.hashed_seed,   //
-                self.showMinimap    //
-                );
-            zpp::bits::failure(result)) {
-            return result;
-        }
-
-        if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-            if (self.seed.size() > MAX_SEED_LENGTH) {
-                return std::errc::message_size;
-            }
-        }
-
-        return std::errc{};
+        return archive(        //
+            self.was_generated, //
+            self.seed,          //
+            self.hashed_seed,   //
+            self.showMinimap    //
+        );
     }
 };

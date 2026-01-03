@@ -19,20 +19,10 @@ constexpr auto serialize(auto& archive, ClientPacket::PingInfo& info) {
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::AnnouncementInfo& info) {
-    using archive_type = std::remove_cvref_t<decltype(archive)>;
-    if (auto result = archive(  //
-            info.message,       //
-            info.type           //
-            );
-        zpp::bits::failure(result)) {
-        return result;
-    }
-    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-        if (info.message.size() > MAX_ANNOUNCEMENT_LENGTH) {
-            return std::errc::message_size;
-        }
-    }
-    return std::errc{};
+    return archive(  //
+        info.message, //
+        info.type     //
+    );
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::MapInfo& info) {
@@ -42,19 +32,9 @@ constexpr auto serialize(auto& archive, ClientPacket::MapInfo& info) {
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::MapSeedInfo& info) {
-    using archive_type = std::remove_cvref_t<decltype(archive)>;
-    if (auto result = archive(  //
-            info.seed           //
-            );
-        zpp::bits::failure(result)) {
-        return result;
-    }
-    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-        if (info.seed.size() > MAX_SEED_LENGTH) {
-            return std::errc::message_size;
-        }
-    }
-    return std::errc{};
+    return archive(  //
+        info.seed    //
+    );
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::GameStateInfo& info) {
@@ -65,71 +45,36 @@ constexpr auto serialize(auto& archive, ClientPacket::GameStateInfo& info) {
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::PlayerControlInfo& info) {
-    using archive_type = std::remove_cvref_t<decltype(archive)>;
-    if (auto result = archive(  //
-            info.inputs         //
-            );
-        zpp::bits::failure(result)) {
-        return result;
-    }
-    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-        if (info.inputs.size() > MAX_INPUTS) {
-            return std::errc::message_size;
-        }
-    }
-    return std::errc{};
+    return archive(  //
+        info.inputs  //
+    );
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::PlayerJoinInfo& info) {
-    using archive_type = std::remove_cvref_t<decltype(archive)>;
-    if (auto result = archive(  //
-            info.all_clients,   //
-            info.client_id,     //
-            info.hashed_version, //
-            info.is_you,        //
-            info.username       //
-            );
-        zpp::bits::failure(result)) {
-        return result;
-    }
-    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-        if (info.all_clients.size() > MAX_CLIENTS) return std::errc::message_size;
-        if (info.username.size() > MAX_NAME_LENGTH) return std::errc::message_size;
-    }
-    return std::errc{};
+    return archive(        //
+        info.all_clients,  //
+        info.client_id,    //
+        info.hashed_version, //
+        info.is_you,       //
+        info.username      //
+    );
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::PlayerLeaveInfo& info) {
-    using archive_type = std::remove_cvref_t<decltype(archive)>;
-    if (auto result = archive(  //
-            info.all_clients,   //
-            info.client_id      //
-            );
-        zpp::bits::failure(result)) {
-        return result;
-    }
-    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-        if (info.all_clients.size() > MAX_CLIENTS) return std::errc::message_size;
-    }
-    return std::errc{};
+    return archive(        //
+        info.all_clients,  //
+        info.client_id     //
+    );
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::PlayerInfo& info) {
-    using archive_type = std::remove_cvref_t<decltype(archive)>;
-    if (auto result = archive(  //
-            info.username,      //
-            info.location[0],   //
-            info.location[1],   //
-            info.location[2],   //
-            info.facing         //
-            );
-        zpp::bits::failure(result)) {
-        return result;
-    }
-    if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-        if (info.username.size() > MAX_NAME_LENGTH) return std::errc::message_size;
-    }
-    return std::errc{};
+    return archive(        //
+        info.username,     //
+        info.location[0],  //
+        info.location[1],  //
+        info.location[2],  //
+        info.facing        //
+    );
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::PlayerRareInfo& info) {

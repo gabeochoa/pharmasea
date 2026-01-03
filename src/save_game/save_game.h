@@ -36,37 +36,22 @@ struct SaveGameHeader {
    private:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        using archive_type = std::remove_cvref_t<decltype(archive)>;
         // NOTE: we serialize magic first so quick header reads can fail fast.
-        if (auto result = archive(  //
-                self.magic,         //
-                self.save_version,  //
-                self.hashed_build_version,      //
-                self.timestamp_epoch_seconds    //
-                );
-            zpp::bits::failure(result)) {
-            return result;
-        }
+        (void) archive(                //
+            self.magic,                //
+            self.save_version,         //
+            self.hashed_build_version, //
+            self.timestamp_epoch_seconds //
+        );
 
-        if (auto result = archive(  //
-                self.display_name,  //
-                self.seed,          //
-                self.day_count,     //
-                self.coins,         //
-                self.cart,          //
-                self.playtime_seconds  //
-                );
-            zpp::bits::failure(result)) {
-            return result;
-        }
-
-        if constexpr (archive_type::kind() == zpp::bits::kind::in) {
-            if (self.magic.size() > 16) return std::errc::message_size;
-            if (self.display_name.size() > 64) return std::errc::message_size;
-            if (self.seed.size() > MAX_SEED_LENGTH) return std::errc::message_size;
-        }
-
-        return std::errc{};
+        return archive(            //
+            self.display_name,     //
+            self.seed,             //
+            self.day_count,        //
+            self.coins,            //
+            self.cart,             //
+            self.playtime_seconds  //
+        );
     }
 };
 

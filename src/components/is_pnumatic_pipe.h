@@ -17,15 +17,10 @@ struct IsPnumaticPipe : public BaseComponent {
    private:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        if (auto result = archive(                      //
-                static_cast<BaseComponent&>(self),       //
-                self.paired                              //
-                );
-            zpp::bits::failure(result)) {
-            return result;
-        }
-
         // s.value4b(item_id);
-        return std::errc{};
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.paired                      //
+        );
     }
 };
