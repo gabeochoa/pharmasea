@@ -4,6 +4,7 @@
 #include "../ah.h"
 #include "../building_locations.h"
 #include "../client_server_comm.h"
+#include "../components/adds_ingredient.h"
 #include "../components/can_be_highlighted.h"
 #include "../components/can_change_settings_interactively.h"
 #include "../components/can_highlight_others.h"
@@ -227,8 +228,8 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::ModelTest_BackToLobby: {
             GameState::get().transition_to_lobby();
 
-            const auto ents = EQ().getAllInRange(
-                MODEL_TEST_BUILDING.min(), MODEL_TEST_BUILDING.max());
+            const auto ents = EQ().getAllInRange(MODEL_TEST_BUILDING.min(),
+                                                 MODEL_TEST_BUILDING.max());
 
             for (Entity& to_delete : ents) {
                 if (to_delete.has<IsTriggerArea>()) continue;
@@ -246,8 +247,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             if (is_server()) {
                 network::Server* server =
                     GLOBALS.get_ptr<network::Server>("server");
-                server->get_map_SERVER_ONLY()
-                    ->generate_model_test_map();
+                server->get_map_SERVER_ONLY()->generate_model_test_map();
             }
 
             for (RefEntity player : EQ(SystemManager::get().oldAll)
@@ -261,8 +261,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
             if (is_server()) {
                 network::Server* server =
                     GLOBALS.get_ptr<network::Server>("server");
-                server->get_map_SERVER_ONLY()
-                    ->generate_load_save_room_map();
+                server->get_map_SERVER_ONLY()->generate_load_save_room_map();
             }
             for (RefEntity player : EQ(SystemManager::get().oldAll)
                                         .whereType(EntityType::Player)
@@ -302,8 +301,8 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::LoadSave_BackToLobby: {
             GameState::get().transition_to_lobby();
 
-            const auto ents = EQ().getAllInRange(
-                LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
+            const auto ents = EQ().getAllInRange(LOAD_SAVE_BUILDING.min(),
+                                                 LOAD_SAVE_BUILDING.max());
             for (Entity& to_delete : ents) {
                 to_delete.cleanup = true;
             }
@@ -328,8 +327,8 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
 
                 // Refresh room by clearing entities in the building and
                 // regenerating.
-                const auto ents = EQ().getAllInRange(
-                    LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
+                const auto ents = EQ().getAllInRange(LOAD_SAVE_BUILDING.min(),
+                                                     LOAD_SAVE_BUILDING.max());
                 for (Entity& to_delete : ents) {
                     to_delete.cleanup = true;
                 }

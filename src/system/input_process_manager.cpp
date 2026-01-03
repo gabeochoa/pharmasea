@@ -7,29 +7,25 @@
 #include "../building_locations.h"
 #include "../camera.h"
 #include "../components/can_be_ghost_player.h"
-#include "../components/can_be_pushed.h"
-#include "../components/can_grab_from_other_furniture.h"
+#include "../components/can_be_held.h"
 #include "../components/can_highlight_others.h"
 #include "../components/can_hold_furniture.h"
 #include "../components/can_hold_handtruck.h"
-#include "../components/can_perform_job.h"
+#include "../components/can_hold_item.h"
 #include "../components/collects_user_input.h"
-#include "../components/conveys_held_item.h"
-#include "../components/custom_item_position.h"
 #include "../components/has_base_speed.h"
 #include "../components/has_day_night_timer.h"
 #include "../components/has_fishing_game.h"
 #include "../components/has_work.h"
 #include "../components/is_bank.h"
-#include "../components/is_floor_marker.h"
+#include "../components/is_drink.h"
 #include "../components/is_free_in_store.h"
+#include "../components/is_item.h"
 #include "../components/is_item_container.h"
 #include "../components/is_rotatable.h"
-#include "../components/is_snappable.h"
 #include "../components/is_solid.h"
 #include "../components/is_store_spawned.h"
 #include "../components/is_trigger_area.h"
-#include "../components/responds_to_user_input.h"
 #include "../components/transform.h"
 #include "../engine/assert.h"
 #include "../engine/log.h"
@@ -256,8 +252,7 @@ void process_player_movement_input(Entity& entity, float dt,
             }
         }
 
-        OptEntity overlap =
-            EQ().getOverlappingEntityIfExists(entity, 0.75f);
+        OptEntity overlap = EQ().getOverlappingEntityIfExists(entity, 0.75f);
         if (!overlap.has_value()) return 1.f;
         if (check_type(overlap.asE(), EntityType::Vomit)) return 0.5f;
         return 1.f;

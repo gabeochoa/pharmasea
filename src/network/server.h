@@ -70,10 +70,10 @@ struct Server {
     // clients; if it's too high it can become expensive.
     // Snapshot sync is currently a full-world blob and can be large.
     // Keep this fairly low-frequency to avoid overwhelming the network stack.
-    float next_map_tick_reset = 1.f / 5;  // 5fps
+    float next_map_tick_reset = 1.f / 20;  // 20fps
     float next_map_tick = 0;
 
-    float next_player_rare_tick_reset = 1.f / 10;  // 10fps
+    float next_player_rare_tick_reset = 1.f / 100;  // 100fps
     float next_player_rare_tick = 0;
 
     explicit Server(int port) {
