@@ -2,6 +2,7 @@
 #include "entity_makers.h"
 
 #include "components/all_components.h"
+#include "afterhours/src/core/base_component.h"
 
 #include <ranges>
 
@@ -144,41 +145,15 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 }  // namespace items
 
 void register_all_components() {
-    Entity* entity = new Entity();
-
-    // Register component IDs in Afterhours by instantiating all component types
-    // once. Keep the list centralized in
-    // `components/all_components.h`.
+    // Register component IDs in Afterhours by calling get_type_id for each
+    // component type. This registers the types without instantiating them.
+    // Keep the list centralized in `components/all_components.h`.
     [&]<size_t... Is>(std::index_sequence<Is...>) {
-        (entity->addComponent<
+        (afterhours::components::get_type_id<
              std::tuple_element_t<Is, snapshot_blob::ComponentTypes>>(),
          ...);
     }(std::make_index_sequence<
         std::tuple_size_v<snapshot_blob::ComponentTypes>>{});
-    // TODO now that we have removeComponent we could remove some instead
-    // for example AddsIngredient could be removed when it runs out
-    // there might be some logic that relies on this not being removed though
-    // so be aware
-
-    // TODO test remove_all_components at some point
-    // VALIDATE(entity->has<ModelRenderer>(), "entity should have all
-    // components"); entity->removeComponent<ModelRenderer>();
-    // VALIDATE(entity->is_missing<ModelRenderer>(),
-    // "entity should not have all components");
-
-    // Now that they are all registered we can delete them
-    //
-    // since we dont have a destructor today TODO because we are copying
-    // components we have to delete these manually before the ent delete because
-    // otherwise it will leak the memory
-    //
-
-    for (size_t i = 0; i < afterhours::max_num_components; ++i) {
-        entity->componentArray[i].reset();
-    }
-    entity->componentSet.reset();
-
-    delete entity;
 }
 
 void add_entity_components(Entity& entity) { entity.addComponent<Transform>(); }

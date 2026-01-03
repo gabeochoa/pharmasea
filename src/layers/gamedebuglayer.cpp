@@ -87,7 +87,7 @@ void GameDebugLayer::draw_debug_ui(float dt) {
                                    OptEntity held_opt =
                                        player->get<CanHoldItem>().const_item();
                                    if (!held_opt) return std::string("Missing");
-                                   return str(get_entity_type(held_opt.asE()));
+                                   return std::string(str(get_entity_type(held_opt.asE())));
                                }())
                              : "Empty")));
             } else {
