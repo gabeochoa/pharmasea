@@ -61,9 +61,19 @@ struct IsAIControlled : public BaseComponent {
         return *this;
     }
 
-    // General setter (usable outside makers too).
-    IsAIControlled& set_state(State s) {
+    // Immediate setter (authoritative). Prefer `set_state(...)` for staged
+    // transitions once the commit system is in place.
+    IsAIControlled& set_state_immediately(State s) {
         state = s;
+        return *this;
+    }
+
+    // Staged setter (requested transition). This writes `next_state` and is
+    // intended to be committed by `AICommitNextStateSystem`.
+    //
+    // Note: does not override an existing pending next_state.
+    IsAIControlled& set_state(State s) {
+        (void) set_next_state(s);
         return *this;
     }
 
