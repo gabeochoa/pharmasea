@@ -3,6 +3,7 @@
 
 #include "ah.h"
 #include "entity_type.h"
+#include "magic_enum/magic_enum.hpp"
 
 bool check_type(const Entity& entity, EntityType type) {
     return entity.hasTag(type);
@@ -74,24 +75,30 @@ bool check_if_drink(const Entity& entity) {
 }
 
 EntityType get_entity_type(const Entity& entity) {
-    // Use bitset operations to find the first set bit (much faster than
-    // iterating enum values)
-    int first_bit = bitset_utils::get_first_enabled_bit(entity.tags);
+    // Entity tags can include non-EntityType markers (e.g. AI state transition
+    // flags). Only consider bits in the EntityType enum range when determining
+    // an entity's type.
+    constexpr int kTypeCount =
+        static_cast<int>(magic_enum::enum_count<EntityType>());
 
-    if (first_bit == -1) {
-        // No tags set
-        log_error("Entity has no tags set: {}", entity.tags.to_string());
+    int type_bit = -1;
+    int type_bits_set = 0;
+    for (int i = 0; i < kTypeCount; ++i) {
+        if (!entity.tags.test(static_cast<size_t>(i))) continue;
+        type_bit = i;
+        ++type_bits_set;
+        if (type_bits_set > 1) break;
+    }
+
+    if (type_bits_set == 0) {
+        log_error("Entity has no EntityType tag set: {}", entity.tags.to_string());
+        return EntityType::Unknown;
+    }
+    if (type_bits_set > 1) {
+        log_error("Entity has multiple EntityType tags set: {}",
+                  entity.tags.to_string());
         return EntityType::Unknown;
     }
 
-    // Check if multiple tags are set by counting bits
-    // If count > 1, return Unknown (entities should only have one EntityType
-    // tag)
-    if (entity.tags.count() > 1) {
-        log_error("Entity has multiple tags set: {}", entity.tags.to_string());
-        return EntityType::Unknown;
-    }
-
-    // Cast the bit index to EntityType
-    return static_cast<EntityType>(first_bit);
+    return static_cast<EntityType>(type_bit);
 }

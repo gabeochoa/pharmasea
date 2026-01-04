@@ -16,6 +16,10 @@ struct IsAIControlled : public BaseComponent {
         Leave,
     } state = State::Wander;
 
+    // Staged state transition. AI and other systems can request a transition by
+    // setting next_state, which will be committed by a dedicated system.
+    State next_state = State::Wander;
+
     // AI-only capability flags (what states/behaviors this controller is allowed
     // to enter). This intentionally lives on the AI controller so players don't
     // accidentally "inherit" AI-only components.
@@ -51,12 +55,20 @@ struct IsAIControlled : public BaseComponent {
     // Setup helper (for makers) so call sites can chain configuration.
     IsAIControlled& set_initial_state(State s) {
         state = s;
+        next_state = s;
         return *this;
     }
 
-    // General setter (usable outside makers too).
+    // Stage a state transition (does NOT immediately change `state`).
     IsAIControlled& set_state(State s) {
+        next_state = s;
+        return *this;
+    }
+
+    // Immediately change the active state (bypasses staged transitions).
+    IsAIControlled& set_state_immediately(State s) {
         state = s;
+        next_state = s;
         return *this;
     }
 
@@ -72,6 +84,7 @@ struct IsAIControlled : public BaseComponent {
         return archive(                      //
             static_cast<BaseComponent&>(self), //
             self.state,                       //
+            self.next_state,                  //
             self.abilities,                   //
             self.resume_state                 //
         );
