@@ -172,8 +172,10 @@ struct PassTimeForTransactionAnimationSystem
     }
 };
 
+// Local run-gating helpers for AI systems.
+namespace ai {
 namespace {
-[[nodiscard]] const HasDayNightTimer* get_day_night_timer() {
+[[nodiscard]] const HasDayNightTimer* day_night_timer() {
     // Centralized Sophie + HasDayNightTimer lookup (used by many systems).
     OptEntity sophie_opt =
         EntityHelper::getPossibleNamedEntity(NamedEntity::Sophie);
@@ -182,30 +184,29 @@ namespace {
     if (sophie.is_missing<HasDayNightTimer>()) return nullptr;
     return &sophie.get<HasDayNightTimer>();
 }
+}  // namespace
 
-[[nodiscard]] bool should_run_ai_normal_round() {
+[[nodiscard]] bool normal_round() {
     if (!GameState::get().is_game_like()) return false;
-    const HasDayNightTimer* timer = get_day_night_timer();
+    const HasDayNightTimer* timer = day_night_timer();
     if (!timer) return true;  // Conservative default.
     // Only run during the active round, and skip while transitions are in-flight.
     return timer->is_bar_open() && !timer->needs_to_process_change;
 }
 
-[[nodiscard]] bool should_run_ai_close_bar_transition() {
+[[nodiscard]] bool close_bar_transition() {
     if (!GameState::get().is_game_like()) return false;
-    const HasDayNightTimer* timer = get_day_night_timer();
+    const HasDayNightTimer* timer = day_night_timer();
     if (!timer) return false;
     return timer->needs_to_process_change && timer->is_bar_closed();
 }
 
-[[nodiscard]] bool should_run_ai_any() {
-    return should_run_ai_normal_round() || should_run_ai_close_bar_transition();
-}
-}  // namespace
+[[nodiscard]] bool any() { return normal_round() || close_bar_transition(); }
+}  // namespace ai
 
 // Override: request Bathroom regardless of pending transition.
 struct NeedsBathroomNowSystem : public afterhours::System<IsAIControlled> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
         // Don't interrupt these states (matches previous logic).
@@ -229,7 +230,7 @@ struct AICommitNextStateSystem
     : public afterhours::System<IsAIControlled,
                                 afterhours::tags::Any<
                                     afterhours::tags::AITag::AITransitionPending>> {
-    bool should_run(const float) override { return should_run_ai_any(); }
+    bool should_run(const float) override { return ai::any(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
 #if !__APPLE__
@@ -281,7 +282,7 @@ struct AIForceLeaveCommitSystem : public afterhours::System<IsAIControlled> {
     bool should_run(const float) override {
         // Mirror day/night transition systems: "leaving in-round" happens while
         // processing the close-bar transition.
-        return should_run_ai_close_bar_transition();
+        return ai::close_bar_transition();
     }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
@@ -301,7 +302,7 @@ struct AIOnEnterResetSystem
     : public afterhours::System<
           IsAIControlled,
           afterhours::tags::Any<afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_any(); }
+    bool should_run(const float) override { return ai::any(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
 #if !__APPLE__
@@ -364,7 +365,7 @@ struct AIFallbackToWanderSystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float) override {
@@ -410,7 +411,7 @@ struct AIWanderSystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
@@ -427,7 +428,7 @@ struct AIQueueForRegisterSystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
@@ -444,7 +445,7 @@ struct AIAtRegisterWaitForDrinkSystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
@@ -461,7 +462,7 @@ struct AIDrinkingSystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
@@ -478,7 +479,7 @@ struct AIPaySystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
@@ -495,7 +496,7 @@ struct AIPlayJukeboxSystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
@@ -512,7 +513,7 @@ struct AIBathroomSystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
@@ -529,7 +530,7 @@ struct AICleanVomitSystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_normal_round(); }
+    bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
@@ -546,7 +547,7 @@ struct AILeaveSystem
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return should_run_ai_any(); }
+    bool should_run(const float) override { return ai::any(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
