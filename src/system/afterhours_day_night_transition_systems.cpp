@@ -59,15 +59,6 @@ inline void reset_max_gen_when_after_deletion(Entity& entity) {
     entity.get<IsItemContainer>().reset_generations();
 }
 
-inline void tell_customers_to_leave(Entity& entity) {
-    if (!check_type(entity, EntityType::Customer)) return;
-
-    // Force leaving job
-    entity.get<IsAIControlled>().set_state(IsAIControlled::State::Leave);
-    entity.removeComponentIfExists<CanPathfind>();
-    entity.addComponent<CanPathfind>().set_parent(entity.id);
-}
-
 inline void update_new_max_customers(Entity& entity, float) {
     if (entity.is_missing<HasProgression>()) return;
 
@@ -188,7 +179,7 @@ struct TellCustomersToLeaveSystem
     }
     virtual void for_each_with(Entity& entity, IsAIControlled& ai,
                                float) override {
-        ai.set_state(IsAIControlled::State::Leave);
+        ai.set_state_immediately(IsAIControlled::State::Leave);
         entity.removeComponentIfExists<CanPathfind>();
         entity.addComponent<CanPathfind>().set_parent(entity.id);
     }

@@ -767,11 +767,22 @@ void render_trigger_area(const Entity& entity, float dt) {
     };
 
     const auto _render_progression_option = [&](IsTriggerArea::Type type) {
-        if (!PROGRESSION_BUILDING.is_inside(
-                SystemManager::get().local_players[0]->get<Transform>().as2()))
+        auto& sm = SystemManager::get();
+        if (sm.local_players.empty()) {
             return;
+        }
+        if (!sm.local_players[0]) {
+            return;
+        }
+        if (!PROGRESSION_BUILDING.is_inside(
+                sm.local_players[0]->get<Transform>().as2())) {
+            return;
+        }
         OptEntity sophie =
             EntityQuery().whereType(EntityType::Sophie).gen_first();
+        if (!sophie.has_value()) {
+            return;
+        }
         const IsProgressionManager& ipm = sophie->get<IsProgressionManager>();
 
         bool isOption1 = type == IsTriggerArea::Progression_Option1;

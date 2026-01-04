@@ -79,6 +79,13 @@ enum struct EntityType {
     // first so its easier to track in non-destructive
 };
 
+// Tag ID allocation (afterhours):
+// - EntityType values are used as tag IDs via `entity.enableTag(EntityType::X)`.
+// - AFTER_HOURS_MAX_ENTITY_TAGS defaults to 64, so keep enum_count(EntityType)
+//   <= 60 to leave room for non-EntityType runtime tags.
+// - Reserved runtime tag ranges (see `src/system/ai_tags.h`):
+//   - 60–63: AI control-flow tags (AITransitionPending, AINeedsResetting, ...)
+
 using EntityTypeSet = std::bitset<magic_enum::enum_count<EntityType>()>;
 
 constexpr EntityTypeSet create_non_destructive() {
