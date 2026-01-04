@@ -30,6 +30,8 @@
 #include "magic_enum/magic_enum.hpp"
 #include "store_management_helpers.h"
 #include "system_manager.h"
+#include "ai_state_transition_systems.h"
+#include "ai_transition_tags.h"
 
 namespace system_manager {
 
@@ -62,10 +64,10 @@ inline void reset_max_gen_when_after_deletion(Entity& entity) {
 inline void tell_customers_to_leave(Entity& entity) {
     if (!check_type(entity, EntityType::Customer)) return;
 
-    // Force leaving job
-    entity.get<IsAIControlled>().set_state(IsAIControlled::State::Leave);
-    entity.removeComponentIfExists<CanPathfind>();
-    entity.addComponent<CanPathfind>().set_parent(entity.id);
+    // Stage leaving job (committed by AICommitNextStateSystem).
+    IsAIControlled& ai = entity.get<IsAIControlled>();
+    ai.set_next_state(IsAIControlled::State::Leave);
+    entity.enableTag(afterhours::tags::AITag::AITransitionPending);
 }
 
 inline void update_new_max_customers(Entity& entity, float) {
@@ -188,9 +190,8 @@ struct TellCustomersToLeaveSystem
     }
     virtual void for_each_with(Entity& entity, IsAIControlled& ai,
                                float) override {
-        ai.set_state(IsAIControlled::State::Leave);
-        entity.removeComponentIfExists<CanPathfind>();
-        entity.addComponent<CanPathfind>().set_parent(entity.id);
+        ai.set_next_state(IsAIControlled::State::Leave);
+        entity.enableTag(afterhours::tags::AITag::AITransitionPending);
     }
 };
 
@@ -649,7 +650,11 @@ void SystemManager::register_day_night_transition_systems() {
             std::make_unique<
                 system_manager::DeleteTrashWhenLeavingPlanningSystem>());
     }
-    // This one needs to run after the transition systems to clear the flag
+    // Commit staged AI transitions after all transition systems have run,
+    // but before we clear needs_to_process_change.
+    system_manager::ai::register_ai_commit_system(systems);
+
+    // This one needs to run after the transition systems to clear the flag.
     systems.register_update_system(
         std::make_unique<system_manager::ResetHasDayNightChanged>());
 }

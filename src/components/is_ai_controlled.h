@@ -2,6 +2,8 @@
 
 #include "base_component.h"
 
+#include <optional>
+
 // Authoritative high-level AI controller state.
 struct IsAIControlled : public BaseComponent {
     enum class State : int {
@@ -60,6 +62,13 @@ struct IsAIControlled : public BaseComponent {
         return *this;
     }
 
+    // Staged transitions (committed by AICommitNextStateSystem).
+    std::optional<State> next_state;
+    IsAIControlled& set_next_state(State s) {
+        next_state = s;
+        return *this;
+    }
+
     IsAIControlled& set_resume_state(State s) {
         resume_state = s;
         return *this;
@@ -73,7 +82,8 @@ struct IsAIControlled : public BaseComponent {
             static_cast<BaseComponent&>(self), //
             self.state,                       //
             self.abilities,                   //
-            self.resume_state                 //
+            self.resume_state,                //
+            self.next_state                   //
         );
     }
 };

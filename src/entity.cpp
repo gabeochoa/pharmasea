@@ -4,6 +4,9 @@
 #include "ah.h"
 #include "entity_type.h"
 
+#include <algorithm>
+#include "magic_enum/magic_enum.hpp"
+
 bool check_type(const Entity& entity, EntityType type) {
     return entity.hasTag(type);
 }
@@ -74,24 +77,30 @@ bool check_if_drink(const Entity& entity) {
 }
 
 EntityType get_entity_type(const Entity& entity) {
-    // Use bitset operations to find the first set bit (much faster than
-    // iterating enum values)
-    int first_bit = bitset_utils::get_first_enabled_bit(entity.tags);
+    // We reserve the low tag IDs for EntityType and allow higher tag IDs for
+    // additional runtime flags (AI transition tags, etc.).
+    constexpr size_t kMaxTags = 64;
+    const size_t kNumEntityTypeTags =
+        std::min(static_cast<size_t>(magic_enum::enum_count<EntityType>()),
+                 kMaxTags);
 
-    if (first_bit == -1) {
-        // No tags set
-        log_error("Entity has no tags set: {}", entity.tags.to_string());
+    int first_type_bit = -1;
+    int type_bits_set = 0;
+    for (size_t i = 0; i < kNumEntityTypeTags; ++i) {
+        if (!entity.tags.test(i)) continue;
+        type_bits_set++;
+        if (first_type_bit == -1) first_type_bit = static_cast<int>(i);
+        if (type_bits_set > 1) break;
+    }
+
+    if (type_bits_set == 0) {
+        log_error("Entity has no EntityType tag set: {}", entity.tags.to_string());
+        return EntityType::Unknown;
+    }
+    if (type_bits_set > 1) {
+        log_error("Entity has multiple EntityType tags set: {}", entity.tags.to_string());
         return EntityType::Unknown;
     }
 
-    // Check if multiple tags are set by counting bits
-    // If count > 1, return Unknown (entities should only have one EntityType
-    // tag)
-    if (entity.tags.count() > 1) {
-        log_error("Entity has multiple tags set: {}", entity.tags.to_string());
-        return EntityType::Unknown;
-    }
-
-    // Cast the bit index to EntityType
-    return static_cast<EntityType>(first_bit);
+    return static_cast<EntityType>(first_type_bit);
 }

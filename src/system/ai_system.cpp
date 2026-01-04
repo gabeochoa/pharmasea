@@ -34,6 +34,7 @@
 #include "ai_helper.h"
 #include "ai_queue_helpers.h"
 #include "ai_targeting.h"
+#include "ai_state_transition_systems.h"
 
 namespace system_manager::ai {
 
@@ -761,6 +762,8 @@ struct ProcessAiSystem : public afterhours::System<IsAIControlled, CanPathfind> 
 };
 
 void register_ai_systems(afterhours::SystemManager& systems) {
+    // Reset runs early each frame (for commits done last frame).
+    register_ai_reset_system(systems);
     systems.register_update_system(std::make_unique<ProcessAiSystem>());
 }
 
