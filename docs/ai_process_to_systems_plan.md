@@ -42,6 +42,7 @@ These run regardless of state (or across multiple states).
 - **`AIBathroomInterruptSystem`** (ability/component-driven)
   - Responsibility: detect bathroom need and request a transition.
   - Note: in the new model this should set a “next state” request, not immediately mutate `IsAIControlled::state`.
+  - Override rule (chosen): this system does **not** respect `afterhours::tags::AITransitionPending` and may overwrite `next_state` to `Bathroom` (and ensure `AITransitionPending` is set).
 
 - **Force leave override**
   - We treat “bar is closing / end-of-round” as highest priority.
@@ -98,6 +99,13 @@ In the current AI implementation, the states that explicitly fall back to Wander
 - `Bathroom` → Wander (if `CanOrderDrink` is missing; safety fallback)
 
 This list can expand as new behaviors are added.
+
+#### CleanVomit roaming behavior (no state flipping)
+
+We do **not** need a CleanVomit ↔ Wander loop. Instead:
+
+- When in `State::CleanVomit`, if there is **no available vomit** on the map, the system should roam by picking/keeping a random walkable target (e.g. via `HasAITargetLocation`) and walking toward it.
+- Each tick (or cooldown tick), it should still check for a viable vomit target; once one exists, it should switch its target to that entity (e.g. via `HasAITargetEntity`) and clear the roam target.
 
 ### 4) Keep “pure helpers” as helpers
 
@@ -233,7 +241,7 @@ This makes cooldown behavior observable and avoids rewriting `reset_to` every ca
    - Convert `process_state_*` blocks into behavior systems that call `set_next_state(...)` and set `AITransitionPending`.
    - Add `whereNotTag(AITransitionPending)`-style skipping to non-override systems.
    - Implement `NeedsBathroomNowSystem` as an override that can set `next_state` even if `AITransitionPending` is already set.
-   - (Current clean-vomit behavior) ensure the entity alternates: CleanVomit → (fallback) Wander → resume_state (CleanVomit).
+   - Implement `AICleanVomitSystem` roaming: if no vomit exists, wander to random walkable targets while continuing to scan for vomit.
 
 7. **Register systems**
    - Keep registration in one place (e.g. `system_manager::ai::register_ai_systems`).
