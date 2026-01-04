@@ -191,39 +191,16 @@ struct NeedsBathroomNowSystem : public afterhours::System<IsAIControlled> {
 };
 
 // Applies staged AI transitions (next_state -> state) and sets reset tag.
-// Also enforces a "force leave" override during end-of-round transitions.
-struct AICommitNextStateSystem : public afterhours::System<IsAIControlled> {
-    bool force_leave_active = false;
-
+// Uses tag filtering to only run for entities with pending transitions.
+struct AICommitNextStateSystem
+    : public afterhours::System<IsAIControlled,
+                                afterhours::tags::Any<
+                                    afterhours::tags::AITag::AITransitionPending>> {
     bool should_run(const float) override { return GameState::get().is_game_like(); }
 
-    void once(float) override {
-        force_leave_active = false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            // Mirror existing day/night transition systems: "leaving in-round"
-            // happens while processing the close-bar transition.
-            // TODO: Refactor this duplicated day/night transition check into a
-            // shared helper (many systems repeat this Sophie + HasDayNightTimer
-            // lookup and condition).
-            force_leave_active =
-                timer.needs_to_process_change && timer.is_bar_closed();
-        } catch (...) {
-            force_leave_active = false;
-        }
-    }
-
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
-        // Normal flow: only entities that requested a transition should be
-        // processed. Force-leave can override regardless of pending request.
-        if (!force_leave_active &&
-            !entity.hasTag(afterhours::tags::AITag::AITransitionPending)) {
-            return;
-        }
-
         const bool has_next = ai.has_next_state();
-        if (!force_leave_active && !has_next) {
+        if (!has_next) {
             // Keep tags consistent: if something set the pending tag but didn't
             // actually set next_state, clear it so other systems can run again.
             entity.disableTag(afterhours::tags::AITag::AITransitionPending);
@@ -231,9 +208,7 @@ struct AICommitNextStateSystem : public afterhours::System<IsAIControlled> {
         }
 
         const IsAIControlled::State old_state = ai.state;
-        const IsAIControlled::State desired =
-            force_leave_active ? IsAIControlled::State::Leave
-                               : ai.next_state.value();
+        const IsAIControlled::State desired = ai.next_state.value();
 
         // Special handling: entering Bathroom must preserve the "return-to"
         // state slot. We encode it into the bathroom state component at commit
@@ -246,6 +221,39 @@ struct AICommitNextStateSystem : public afterhours::System<IsAIControlled> {
         ai.set_state_immediately(desired);
         ai.clear_next_state();
 
+        entity.disableTag(afterhours::tags::AITag::AITransitionPending);
+        entity.enableTag(afterhours::tags::AITag::AINeedsResetting);
+    }
+};
+
+// Force-leave override (end-of-round / close-bar transition).
+// This uses should_run() so it only runs while force-leave is active.
+struct AIForceLeaveCommitSystem : public afterhours::System<IsAIControlled> {
+    bool force_leave_active = false;
+
+    bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            // Mirror existing day/night transition systems: "leaving in-round"
+            // happens while processing the close-bar transition.
+            // TODO: Refactor this duplicated day/night transition check into a
+            // shared helper (many systems repeat this Sophie + HasDayNightTimer
+            // lookup and condition).
+            force_leave_active =
+                timer.needs_to_process_change && timer.is_bar_closed();
+            return force_leave_active;
+        } catch (...) {
+            force_leave_active = false;
+            return false;
+        }
+    }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
+        (void) force_leave_active;
+        ai.set_state_immediately(IsAIControlled::State::Leave);
+        ai.clear_next_state();
         entity.disableTag(afterhours::tags::AITag::AITransitionPending);
         entity.enableTag(afterhours::tags::AITag::AINeedsResetting);
     }
@@ -404,6 +412,9 @@ void SystemManager::register_gamelike_systems() {
     // Commit staged transitions after AI has had a chance to request them.
     systems.register_update_system(
         std::make_unique<system_manager::AICommitNextStateSystem>());
+    // Force-leave override runs after normal commits.
+    systems.register_update_system(
+        std::make_unique<system_manager::AIForceLeaveCommitSystem>());
     systems.register_update_system(
         std::make_unique<
             system_manager::EndOfRoundCompletionValidationSystem>());
