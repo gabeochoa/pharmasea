@@ -233,11 +233,6 @@ struct AICommitNextStateSystem
     bool should_run(const float) override { return ai::any(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
-#if !__APPLE__
-        // Tag filtering is Apple-only in afterhours today; guard manually on
-        // other platforms to avoid iterating/processing every AI entity.
-        if (!entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-#endif
         const bool has_next = ai.has_next_state();
         if (!has_next) {
             // Keep tags consistent: if something set the pending tag but didn't
@@ -305,10 +300,6 @@ struct AIOnEnterResetSystem
     bool should_run(const float) override { return ai::any(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
-#if !__APPLE__
-        if (!entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
-
         // Keep this cheap and conservative; do not erase state that must carry
         // information across transitions (e.g. Bathroom's return-to slot).
         switch (ai.state) {
@@ -369,10 +360,6 @@ struct AIFallbackToWanderSystem
 
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         switch (ai.state) {
             case IsAIControlled::State::QueueForRegister: {
                 if (system_manager::ai::find_best_register_with_space(entity))
@@ -414,10 +401,6 @@ struct AIWanderSystem
     bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         if (ai.state != IsAIControlled::State::Wander) return;
         system_manager::ai::process_state_wander(entity, ai, dt);
     }
@@ -431,10 +414,6 @@ struct AIQueueForRegisterSystem
     bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         if (ai.state != IsAIControlled::State::QueueForRegister) return;
         system_manager::ai::process_state_queue_for_register(entity, dt);
     }
@@ -448,10 +427,6 @@ struct AIAtRegisterWaitForDrinkSystem
     bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         if (ai.state != IsAIControlled::State::AtRegisterWaitForDrink) return;
         system_manager::ai::process_state_at_register_wait_for_drink(entity, dt);
     }
@@ -465,10 +440,6 @@ struct AIDrinkingSystem
     bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         if (ai.state != IsAIControlled::State::Drinking) return;
         system_manager::ai::process_state_drinking(entity, dt);
     }
@@ -482,10 +453,6 @@ struct AIPaySystem
     bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         if (ai.state != IsAIControlled::State::Pay) return;
         system_manager::ai::process_state_pay(entity, dt);
     }
@@ -499,10 +466,6 @@ struct AIPlayJukeboxSystem
     bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         if (ai.state != IsAIControlled::State::PlayJukebox) return;
         system_manager::ai::process_state_play_jukebox(entity, dt);
     }
@@ -516,10 +479,6 @@ struct AIBathroomSystem
     bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         if (ai.state != IsAIControlled::State::Bathroom) return;
         system_manager::ai::process_state_bathroom(entity, dt);
     }
@@ -533,10 +492,6 @@ struct AICleanVomitSystem
     bool should_run(const float) override { return ai::normal_round(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         if (ai.state != IsAIControlled::State::CleanVomit) return;
         system_manager::ai::process_state_clean_vomit(entity, dt);
     }
@@ -550,10 +505,6 @@ struct AILeaveSystem
     bool should_run(const float) override { return ai::any(); }
     void for_each_with(Entity& entity, IsAIControlled& ai,
                        [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
         if (ai.state != IsAIControlled::State::Leave) return;
         system_manager::ai::process_state_leave(entity, dt);
     }
