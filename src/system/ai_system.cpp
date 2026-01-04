@@ -26,22 +26,33 @@
 #include "../entity_makers.h"
 #include "../globals.h"
 #include "../recipe_library.h"
-
 #include "ai_entity_helpers.h"
 #include "ai_helper.h"
 #include "ai_queue_helpers.h"
+#include "ai_tags.h"
 #include "ai_targeting.h"
 
 namespace system_manager::ai {
 
 namespace {
+// Request a staged transition (next_state) and mark the entity as having a
+// pending transition for this frame.
+void request_next_state(Entity& entity, IsAIControlled& ctrl,
+                        IsAIControlled::State s,
+                        bool override_existing = false) {
+    if (override_existing) {
+        ctrl.clear_next_state();
+    }
+    const bool set = ctrl.set_next_state(s);
+    if (set) {
+        entity.enableTag(afterhours::tags::AITag::AITransitionPending);
+    }
+}
+
 void wander_pause(Entity& e, IsAIControlled::State resume) {
     IsAIControlled& ctrl = e.get<IsAIControlled>();
     ctrl.set_resume_state(resume);
-    ctrl.set_state(IsAIControlled::State::Wander);
-    // Reset wander scratch so it picks a new dwell/target.
-    e.removeComponentIfExists<HasAITargetLocation>();
-    reset_component<HasAIWanderState>(e);
+    request_next_state(e, ctrl, IsAIControlled::State::Wander);
 }
 
 void set_new_customer_order(Entity& entity) {
@@ -57,7 +68,7 @@ void set_new_customer_order(Entity& entity) {
     reset_component<HasAIDrinkState>(entity);
 }
 
-[[nodiscard]] bool needs_bathroom_now(Entity& entity) {
+[[nodiscard]] bool needs_bathroom_now_internal(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return false;
     if (entity.is_missing<IsAIControlled>()) return false;
     if (!entity.get<IsAIControlled>().has_ability(
@@ -69,7 +80,11 @@ void set_new_customer_order(Entity& entity) {
         if (!entity.get<CanHoldItem>().empty()) return false;
     }
 
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    OptEntity sophie_opt =
+        EntityHelper::getPossibleNamedEntity(NamedEntity::Sophie);
+    if (!sophie_opt) return false;
+    Entity& sophie = sophie_opt.asE();
+    if (sophie.is_missing<IsRoundSettingsManager>()) return false;
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
     const CanOrderDrink& cod = entity.get<CanOrderDrink>();
@@ -77,14 +92,19 @@ void set_new_customer_order(Entity& entity) {
 }
 
 void enter_bathroom(Entity& entity, IsAIControlled::State return_to) {
-    entity.get<IsAIControlled>().set_state(IsAIControlled::State::Bathroom);
-    entity.removeComponentIfExists<HasAITargetEntity>();
-    entity.removeComponentIfExists<HasAITargetLocation>();
-    reset_component<HasAIBathroomState>(entity);
-    HasAIBathroomState& bs = entity.get<HasAIBathroomState>();
-    bs.next_state = return_to;
+    IsAIControlled& ctrl = entity.get<IsAIControlled>();
+    // Override any existing pending transition.
+    request_next_state(entity, ctrl, IsAIControlled::State::Bathroom,
+                       /*override_existing=*/true);
+    // Preserve return-to intent for the commit step (which will reset the
+    // bathroom state component and copy this value into it).
+    ensure_component<HasAIBathroomState>(entity).next_state = return_to;
 }
 }  // namespace
+
+[[nodiscard]] bool needs_bathroom_now(Entity& entity) {
+    return needs_bathroom_now_internal(entity);
+}
 
 bool validate_drink_order(const Entity& customer, Drink orderedDrink,
                           Item& madeDrink) {
@@ -213,14 +233,12 @@ void process_state_wander(Entity& entity, IsAIControlled& ctrl, float dt) {
     HasAIWanderState& ws = ensure_component<HasAIWanderState>(entity);
 
     if (!tgt.pos.has_value()) {
-        Entity& sophie =
-            EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         const IsRoundSettingsManager& irsm =
             sophie.get<IsRoundSettingsManager>();
 
         float max_dwell_time = irsm.get<float>(ConfigKey::MaxDwellTime);
-        float dwell_time =
-            RandomEngine::get().get_float(1.f, max_dwell_time);
+        float dwell_time = RandomEngine::get().get_float(1.f, max_dwell_time);
         ws.timer.set_time(dwell_time);
 
         tgt.pos = pick_random_walkable_near(entity).value_or(
@@ -234,7 +252,7 @@ void process_state_wander(Entity& entity, IsAIControlled& ctrl, float dt) {
     if (!ws.timer.pass_time(dt)) return;
 
     tgt.pos.reset();
-    ctrl.set_state(ctrl.resume_state);
+    request_next_state(entity, ctrl, ctrl.resume_state);
 }
 
 void process_state_queue_for_register(Entity& entity, float dt) {
@@ -275,8 +293,8 @@ void process_state_queue_for_register(Entity& entity, float dt) {
     entity.get<HasSpeechBubble>().on();
     entity.get<HasPatience>().enable();
 
-    entity.get<IsAIControlled>().set_state(
-        IsAIControlled::State::AtRegisterWaitForDrink);
+    request_next_state(entity, entity.get<IsAIControlled>(),
+                       IsAIControlled::State::AtRegisterWaitForDrink);
 }
 
 void process_state_at_register_wait_for_drink(Entity& entity, float dt) {
@@ -287,8 +305,8 @@ void process_state_at_register_wait_for_drink(Entity& entity, float dt) {
     OptEntity opt_reg = tgt.entity.resolve();
     if (!opt_reg) {
         tgt.entity.clear();
-        entity.get<IsAIControlled>().set_state(
-            IsAIControlled::State::QueueForRegister);
+        request_next_state(entity, entity.get<IsAIControlled>(),
+                           IsAIControlled::State::QueueForRegister);
         return;
     }
     Entity& reg = opt_reg.asE();
@@ -308,15 +326,13 @@ void process_state_at_register_wait_for_drink(Entity& entity, float dt) {
     Item& drink = drink_opt.asE();
     if (!check_if_drink(drink)) return;
 
-    std::string drink_name =
-        drink.get<IsDrink>().underlying.has_value()
-            ? std::string(magic_enum::enum_name(
-                  drink.get<IsDrink>().underlying.value()))
-            : "unknown";
+    std::string drink_name = drink.get<IsDrink>().underlying.has_value()
+                                 ? std::string(magic_enum::enum_name(
+                                       drink.get<IsDrink>().underlying.value()))
+                                 : "unknown";
 
     Drink orderedDrink = canOrderDrink.order();
-    bool was_drink_correct =
-        validate_drink_order(entity, orderedDrink, drink);
+    bool was_drink_correct = validate_drink_order(entity, orderedDrink, drink);
     if (!was_drink_correct) return;
 
     auto [price, tip] = get_price_for_order(
@@ -350,7 +366,8 @@ void process_state_at_register_wait_for_drink(Entity& entity, float dt) {
     entity.removeComponentIfExists<HasAITargetLocation>();
     reset_component<HasAIDrinkState>(entity);
 
-    entity.get<IsAIControlled>().set_state(IsAIControlled::State::Drinking);
+    request_next_state(entity, entity.get<IsAIControlled>(),
+                       IsAIControlled::State::Drinking);
 }
 
 void process_state_drinking(Entity& entity, float dt) {
@@ -391,22 +408,22 @@ void process_state_drinking(Entity& entity, float dt) {
     bool want_another = cod.wants_more_drinks();
     if (!want_another) {
         cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
-        entity.get<IsAIControlled>().set_state(IsAIControlled::State::Pay);
+        request_next_state(entity, entity.get<IsAIControlled>(),
+                           IsAIControlled::State::Pay);
         return;
     }
 
-    bool jukebox_allowed =
-        entity.get<IsAIControlled>().has_ability(
-            IsAIControlled::AbilityPlayJukebox);
+    bool jukebox_allowed = entity.get<IsAIControlled>().has_ability(
+        IsAIControlled::AbilityPlayJukebox);
     if (jukebox_allowed && RandomEngine::get().get_bool()) {
-        entity.get<IsAIControlled>().set_state(
-            IsAIControlled::State::PlayJukebox);
+        request_next_state(entity, entity.get<IsAIControlled>(),
+                           IsAIControlled::State::PlayJukebox);
         return;
     }
 
     set_new_customer_order(entity);
-    entity.get<IsAIControlled>().set_state(
-        IsAIControlled::State::QueueForRegister);
+    request_next_state(entity, entity.get<IsAIControlled>(),
+                       IsAIControlled::State::QueueForRegister);
 }
 
 void process_state_pay(Entity& entity, float dt) {
@@ -468,7 +485,8 @@ void process_state_pay(Entity& entity, float dt) {
     tgt.entity.clear();
     reset_component<HasAIPayState>(entity);
 
-    entity.get<IsAIControlled>().set_state(IsAIControlled::State::Leave);
+    request_next_state(entity, entity.get<IsAIControlled>(),
+                       IsAIControlled::State::Leave);
 }
 
 void process_state_play_jukebox(Entity& entity, float dt) {
@@ -483,20 +501,19 @@ void process_state_play_jukebox(Entity& entity, float dt) {
         if (!best) {
             set_new_customer_order(entity);
             reset_component<HasAIJukeboxState>(entity);
-            entity.get<IsAIControlled>().set_state(
-                IsAIControlled::State::QueueForRegister);
+            request_next_state(entity, entity.get<IsAIControlled>(),
+                               IsAIControlled::State::QueueForRegister);
             return;
         }
 
         // We were the last person to put on a song, so we dont need to
         // change it (yet...)
         if (best->has<HasLastInteractedCustomer>() &&
-            best->get<HasLastInteractedCustomer>().customer.id ==
-                entity.id) {
+            best->get<HasLastInteractedCustomer>().customer.id == entity.id) {
             set_new_customer_order(entity);
             reset_component<HasAIJukeboxState>(entity);
-            entity.get<IsAIControlled>().set_state(
-                IsAIControlled::State::QueueForRegister);
+            request_next_state(entity, entity.get<IsAIControlled>(),
+                               IsAIControlled::State::QueueForRegister);
             return;
         }
 
@@ -512,21 +529,21 @@ void process_state_play_jukebox(Entity& entity, float dt) {
     Entity& jukebox = opt_j.asE();
     entity.get<Transform>().turn_to_face_pos(jukebox.get<Transform>().as2());
 
-    bool reached_front = line_try_to_move_closer(
-        js.line_wait, jukebox, entity, get_speed_for_entity(entity) * dt, [&]() {
-            if (!js.timer.initialized) {
-                // TODO make into a config?
-                js.timer.set_time(5.f);
-            }
-        });
+    bool reached_front =
+        line_try_to_move_closer(js.line_wait, jukebox, entity,
+                                get_speed_for_entity(entity) * dt, [&]() {
+                                    if (!js.timer.initialized) {
+                                        // TODO make into a config?
+                                        js.timer.set_time(5.f);
+                                    }
+                                });
     if (!reached_front) return;
 
     if (!js.timer.pass_time(dt)) return;
 
     // TODO implement jukebox song change
     {
-        Entity& sophie =
-            EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         IsBank& bank = sophie.get<IsBank>();
         // TODO jukebox cost
         bank.deposit(10);
@@ -541,20 +558,20 @@ void process_state_play_jukebox(Entity& entity, float dt) {
     reset_component<HasAIJukeboxState>(entity);
 
     set_new_customer_order(entity);
-    entity.get<IsAIControlled>().set_state(
-        IsAIControlled::State::QueueForRegister);
+    request_next_state(entity, entity.get<IsAIControlled>(),
+                       IsAIControlled::State::QueueForRegister);
 }
 
 void process_state_bathroom(Entity& entity, float dt) {
     if (entity.is_missing<CanOrderDrink>()) {
-        entity.get<IsAIControlled>().set_state(IsAIControlled::State::Wander);
+        request_next_state(entity, entity.get<IsAIControlled>(),
+                           IsAIControlled::State::Wander);
         return;
     }
 
     if (!needs_bathroom_now(entity)) {
         HasAIBathroomState& bs = ensure_component<HasAIBathroomState>(entity);
-        entity.get<IsAIControlled>().set_state(bs.next_state);
-        reset_component<HasAIBathroomState>(entity);
+        request_next_state(entity, entity.get<IsAIControlled>(), bs.next_state);
         return;
     }
 
@@ -589,16 +606,14 @@ void process_state_bathroom(Entity& entity, float dt) {
             vec2{0, 0}, get_speed_for_entity(entity) * dt);
 
         IsAIControlled& c = entity.get<IsAIControlled>();
-        c.set_state(bs.next_state);
-        reset_component<HasAIBathroomState>(entity);
+        request_next_state(entity, c, bs.next_state);
     };
 
     if (bs.floor_timer.pass_time(dt)) {
         auto& vom = EntityHelper::createEntity();
-        furniture::make_vomit(vom,
-                              SpawnInfo{.location =
-                                            entity.get<Transform>().as2(),
-                                        .is_first_this_round = false});
+        furniture::make_vomit(
+            vom, SpawnInfo{.location = entity.get<Transform>().as2(),
+                           .is_first_this_round = false});
         on_finished();
         return;
     }
@@ -620,8 +635,7 @@ void process_state_bathroom(Entity& entity, float dt) {
 
     bool we_are_using_it = istoilet.is_user(entity.id);
     if (!we_are_using_it) {
-        Entity& sophie =
-            EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         const IsRoundSettingsManager& irsm =
             sophie.get<IsRoundSettingsManager>();
         float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
@@ -637,8 +651,6 @@ void process_state_bathroom(Entity& entity, float dt) {
 }
 
 void process_state_clean_vomit(Entity& entity, float dt) {
-    if (!ai_tick_with_cooldown(entity, dt, 0.10f)) return;
-
     // Only entities with the ability should run this state.
     if (!entity.get<IsAIControlled>().has_ability(
             IsAIControlled::AbilityCleanVomit))
@@ -664,8 +676,7 @@ void process_state_clean_vomit(Entity& entity, float dt) {
             existing_targets.insert(static_cast<int>(r.id));
         }
 
-        bool more_boys_than_vomit =
-            existing_targets.size() < other_ais.size();
+        bool more_boys_than_vomit = existing_targets.size() < other_ais.size();
 
         OptEntity vomit = EntityQuery()
                               .whereType(EntityType::Vomit)
@@ -675,13 +686,37 @@ void process_state_clean_vomit(Entity& entity, float dt) {
                               })
                               .orderByDist(entity.get<Transform>().as2())
                               .gen_first();
-        if (!vomit) return;
+        if (!vomit) {
+            // No work: roam until something appears.
+            HasAITargetLocation& roam =
+                ensure_component<HasAITargetLocation>(entity);
+            if (!roam.pos.has_value()) {
+                roam.pos = pick_random_walkable_near(entity).value_or(
+                    entity.get<Transform>().as2());
+            }
+            bool reached = entity.get<CanPathfind>().travel_toward(
+                roam.pos.value(), get_speed_for_entity(entity) * dt);
+            if (reached) roam.pos.reset();
+            return;
+        }
         tgt.entity.set(vomit.asE());
+        // Switch from roaming to work targeting.
+        entity.removeComponentIfExists<HasAITargetLocation>();
     }
 
     OptEntity vomit = tgt.entity.resolve();
     if (!vomit) {
         tgt.entity.clear();
+        // Fall back to roaming.
+        HasAITargetLocation& roam =
+            ensure_component<HasAITargetLocation>(entity);
+        if (!roam.pos.has_value()) {
+            roam.pos = pick_random_walkable_near(entity).value_or(
+                entity.get<Transform>().as2());
+        }
+        bool reached = entity.get<CanPathfind>().travel_toward(
+            roam.pos.value(), get_speed_for_entity(entity) * dt);
+        if (reached) roam.pos.reset();
         return;
     }
 
@@ -714,16 +749,10 @@ void process_ai_entity(Entity& entity, float dt) {
     if (entity.is_missing<CanPathfind>()) return;
     if (entity.is_missing<IsAIControlled>()) return;
 
-    IsAIControlled& ctrl = entity.get<IsAIControlled>();
+    // If we've already requested a transition this frame, stop processing.
+    if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
 
-    // Global interrupt: bathroom override (except while actively drinking/leaving).
-    if (ctrl.state != IsAIControlled::State::Bathroom &&
-        ctrl.state != IsAIControlled::State::Drinking &&
-        ctrl.state != IsAIControlled::State::Leave) {
-        if (needs_bathroom_now(entity)) {
-            enter_bathroom(entity, ctrl.state);
-        }
-    }
+    IsAIControlled& ctrl = entity.get<IsAIControlled>();
 
     switch (ctrl.state) {
         case IsAIControlled::State::Wander:
@@ -762,4 +791,3 @@ void process_ai_entity(Entity& entity, float dt) {
 }
 
 }  // namespace system_manager::ai
-

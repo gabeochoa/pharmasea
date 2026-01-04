@@ -69,7 +69,7 @@ inline void line_add_to_queue(Entity& entity, AIWaitInQueueState& s,
     if (!tl.pos.has_value()) {
         tl.pos = reg.get<Transform>().tile_directly_infront();
     }
-    (void) entity.get<CanPathfind>().travel_toward(tl.pos.value(), distance);
+    bool travel_result = entity.get<CanPathfind>().travel_toward(tl.pos.value(), distance);
 
     int spot_in_line = line_position_in_line(s, reg, entity);
     if (spot_in_line != 0) {
@@ -78,6 +78,14 @@ inline void line_add_to_queue(Entity& entity, AIWaitInQueueState& s,
         }
         // Walk up one spot.
         tl.pos = reg.get<Transform>().tile_infront(spot_in_line);
+        return false;
+    }
+
+    // At position 0 (front of line), but must verify we've actually reached the target
+    // Only return true if we're actually at the target location
+    if (!travel_result) {
+        // Still moving toward target, update target to directly in front and continue
+        tl.pos = reg.get<Transform>().tile_directly_infront();
         return false;
     }
 
