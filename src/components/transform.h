@@ -55,30 +55,39 @@ struct Transform : public BaseComponent {
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
 
-    virtual ~Transform() {}
-
-    void init(vec3 pos, vec3 sz) {
+    auto& init(vec3 pos, vec3 sz) {
         raw_position = pos;
         position = pos;
 
         _size = sz;
+        return *this;
     }
 
-    void update(vec3 npos) {
+    auto& update(vec3 npos) {
         this->raw_position = npos;
         sync();
+        return *this;
     }
-    void update_x(float x) {
+    auto& update_x(float x) {
         this->raw_position.x = x;
         sync();
+        return *this;
     }
-    void update_y(float y) {
+    auto& update_y(float y) {
         this->raw_position.y = y;
         sync();
+        return *this;
     }
-    void update_z(float z) {
+    auto& update_z(float z) {
         this->raw_position.z = z;
         sync();
+        return *this;
+    }
+
+    auto& update_visual_offset(vec3 pos) {
+        this->visual_offset = pos;
+        sync();
+        return *this;
     }
 
     void update_face_direction(float ang) { facing = ang; }
@@ -93,13 +102,20 @@ struct Transform : public BaseComponent {
     [[nodiscard]] float sizey() const { return this->size().y; }
     [[nodiscard]] float sizez() const { return this->size().z; }
 
-    void update_size(vec3 sze) { this->_size = sze; }
+    [[nodiscard]] vec3 viz_offset() const { return this->visual_offset; }
+    [[nodiscard]] float viz_x() const { return this->visual_offset.x; }
+    [[nodiscard]] float viz_y() const { return this->visual_offset.y; }
+    [[nodiscard]] float viz_z() const { return this->visual_offset.z; }
+
+    auto& update_size(vec3 sze) {
+        this->_size = sze;
+        return *this;
+    }
 
     [[nodiscard]] BoundingBox raw_bounds() const {
         return get_bounds(this->raw_position, this->size());
     }
 
-    // TODO we should draw this during debug
     [[nodiscard]] BoundingBox expanded_bounds(vec3 inc) const {
         return get_bounds(this->raw_position, this->size() + inc);
     }
@@ -146,6 +162,8 @@ struct Transform : public BaseComponent {
      * */
     void rotate_facing_clockwise(int angle = 90) { facing += angle; }
 
+    vec2 tile_directly_infront() const { return tile_infront(1); }
+
     /*
      * Returns the location of the tile `distance` distance in front of the
      * entity
@@ -160,6 +178,17 @@ struct Transform : public BaseComponent {
         return tile_infront_given_pos(tile, distance, face_direction());
     }
 
+    vec2 tile_behind(int distance) const {
+        vec2 tile = vec::to2(snap_position());
+        return tile_infront_given_pos(
+            tile, distance, offsetFaceDirection(face_direction(), 180));
+    }
+    vec2 tile_behind(float distance) const {
+        vec2 tile = vec::to2(snap_position());
+        return tile_infront_given_pos(
+            tile, distance, offsetFaceDirection(face_direction(), 180));
+    }
+
     /*
      * Given a tile, distance, and direction, returns the location of the
      * tile `distance` distance in front of the tile
@@ -170,28 +199,36 @@ struct Transform : public BaseComponent {
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    static vec2 tile_infront_given_pos(vec2 tile, int dist,
+    static vec2 tile_infront_given_pos(vec2 tile, float distance,
                                        FrontFaceDirection direction) {
-        float distance = static_cast<float>(dist);
+        // {0.3, 4.08}, 1, Transform::Forward
+        // {0.3, ceil(4.08 + 1)} => ceil(5.08) => {0.3, 6}
 
         if (direction & Transform::FORWARD) {
-            tile.y += distance * TILESIZE;
             tile.y = ceil(tile.y);
+            tile.y += distance * TILESIZE;
         }
+
         if (direction & Transform::BACK) {
-            tile.y -= distance * TILESIZE;
             tile.y = floor(tile.y);
+            tile.y -= distance * TILESIZE;
         }
 
         if (direction & Transform::RIGHT) {
-            tile.x += distance * TILESIZE;
             tile.x = ceil(tile.x);
+            tile.x += distance * TILESIZE;
         }
+
         if (direction & Transform::LEFT) {
-            tile.x -= distance * TILESIZE;
             tile.x = floor(tile.x);
+            tile.x -= distance * TILESIZE;
         }
         return tile;
+    }
+    static vec2 tile_infront_given_pos(vec2 tile, int dist,
+                                       FrontFaceDirection direction) {
+        float distance = static_cast<float>(dist);
+        return tile_infront_given_pos(tile, distance, direction);
     }
 
     void turn_to_face_pos(const vec2 goal) {
@@ -219,7 +256,7 @@ struct Transform : public BaseComponent {
     // This exists so that its easy to make sure the real location
     // matches the preview location
     [[nodiscard]] vec3 drop_location() const {
-        return vec::snap(vec::to3(tile_infront(1)));
+        return vec::snap(vec::to3(tile_directly_infront()));
     }
 
     // TODO private
@@ -235,23 +272,29 @@ struct Transform : public BaseComponent {
     }
 
     void sync() {
-        // TODO is there a way for us to figure out if this
-        // is a snappable entity?
+        // TODO neeed to add a component for snappable then we can just do
+        // if(parent->has<IsSnappedToGrid>()){
+        //  snap();
+        // }
         this->position = this->raw_position;
     }
 
     vec3 _size = {TILESIZE, TILESIZE, TILESIZE};
-    vec3 position;
-    vec3 raw_position;
+    vec3 position = {0, 0, 0};
+    vec3 raw_position = {0, 0, 0};
+    vec3 visual_offset = {0, 0, 0};
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(raw_position);
-        s.object(position);
-        s.value4b(facing);
-        s.object(_size);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.visual_offset,              //
+            self.raw_position,               //
+            self.position,                   //
+            self.facing,                     //
+            self._size                       //
+        );
     }
 };
 

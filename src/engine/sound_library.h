@@ -2,8 +2,8 @@
 
 #pragma once
 
+#include "../ah.h"
 #include "is_server.h"
-#include "library.h"
 #include "singleton.h"
 
 SINGLETON_FWD(SoundLibrary)
@@ -45,7 +45,7 @@ struct SoundLibrary {
     // Note: Read note in MusicLibrary
     float current_volume = 1.f;
 
-    struct SoundLibraryImpl : Library<raylib::Sound> {
+    struct SoundLibraryImpl : afterhours::Library<raylib::Sound> {
         virtual raylib::Sound convert_filename_to_object(
             const char*, const char* filename) override {
             return raylib::LoadSound(filename);

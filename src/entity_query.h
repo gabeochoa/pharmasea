@@ -1,307 +1,284 @@
 
 #pragma once
 
+#include "ah.h"
+#include "components/can_be_held.h"
+#include "components/can_hold_furniture.h"
+#include "components/can_hold_item.h"
+#include "components/is_drink.h"
+#include "components/is_store_spawned.h"
+#include "components/transform.h"
+#include "dataclass/ingredient.h"
 #include "entity.h"
 #include "entity_helper.h"
 #include "entity_type.h"
+#include "external_include.h"
+#include "vec_util.h"
 
-struct EntityQuery {
-    struct Modification {
-        virtual ~Modification() {}
-        virtual bool operator()(const Entity&) const = 0;
-    };
+// Custom EntityQuery extending afterhours::EntityQuery with pharmasea-specific
+// methods
+struct EQ : public afterhours::EntityQuery<EQ> {
+    EQ()
+        // Default constructor uses current thread's EntityCollection
+        : afterhours::EntityQuery<EQ>(EntityHelper::get_current_collection(),
+                                      {.ignore_temp_warning = true}) {}
 
-    // TODO add predicates
-    struct Not : Modification {
-        std::unique_ptr<Modification> mod;
+    // Constructor that accepts a specific EntityCollection
+    explicit EQ(afterhours::EntityCollection& collection)
+        : afterhours::EntityQuery<EQ>(collection,
+                                      {.ignore_temp_warning = true}) {}
 
-        explicit Not(Modification* m) : mod(m) {}
+    // Explicit constructor for Entities (pharmasea's Entities type)
+    explicit EQ(const ::Entities& entsIn)
+        : afterhours::EntityQuery<EQ>(
+              afterhours::Entities(entsIn.begin(), entsIn.end())) {}
 
-        virtual bool operator()(const Entity& entity) const override {
-            return !((*mod)(entity));
-        }
-    };
-
-    struct Limit : Modification {
-        int amount;
-        mutable int amount_taken;
-        explicit Limit(int amt) : amount(amt), amount_taken(0) {}
-
-        virtual bool operator()(const Entity&) const override {
-            if (amount_taken > amount) return false;
-            amount_taken++;
-            return true;
-        }
-    };
-    auto& take(int amount) { return add_mod(new Limit(amount)); }
-    auto& first() { return take(1); }
-
-    struct WhereID : Modification {
-        int id;
-        explicit WhereID(int id) : id(id) {}
-        virtual bool operator()(const Entity& entity) const override {
-            return entity.id == id;
-        }
-    };
-    auto& whereID(int id) { return add_mod(new WhereID(id)); }
-    auto& whereNotID(int id) { return add_mod(new Not(new WhereID(id))); }
-
-    struct WhereType : Modification {
+    // Game-specific type filtering
+    struct WhereType : EntityQuery::Modification {
         EntityType type;
         explicit WhereType(const EntityType& t) : type(t) {}
-        virtual bool operator()(const Entity& entity) const override {
-            return check_type(entity, type);
+        bool operator()(const Entity& entity) const override {
+            return entity.hasTag(type);
         }
     };
-    auto& whereType(const EntityType& t) { return add_mod(new WhereType(t)); }
-    auto& whereNotType(const EntityType& t) {
+    EQ& whereType(const EntityType& t) { return add_mod(new WhereType(t)); }
+    EQ& whereNotType(const EntityType& t) {
         return add_mod(new Not(new WhereType(t)));
     }
 
-    template<typename T>
-    struct WhereHasComponent : Modification {
-        virtual bool operator()(const Entity& entity) const override {
-            return entity.has<T>();
-        }
-    };
-    template<typename T>
-    auto& whereHasComponent() {
-        return add_mod(new WhereHasComponent<T>());
-    }
-    template<typename T>
-    auto& whereMissingComponent() {
-        return add_mod(new Not(new WhereHasComponent<T>()));
-    }
-
-    struct WhereLambda : Modification {
-        std::function<bool(const Entity&)> filter;
-        explicit WhereLambda(const std::function<bool(const Entity&)>& cb)
-            : filter(cb) {}
-        virtual bool operator()(const Entity& entity) const override {
-            return filter(entity);
-        }
-    };
-    auto& whereLambda(const std::function<bool(const Entity&)>& fn) {
-        return add_mod(new WhereLambda(fn));
-    }
-    auto& whereLambdaExistsAndTrue(
-        const std::function<bool(const Entity&)>& fn) {
-        if (fn) return add_mod(new WhereLambda(fn));
-        return *this;
-    }
-
-    struct WhereInRange : Modification {
+    // Range-based filtering
+    struct WhereInRange : EntityQuery::Modification {
         vec2 position;
         float range;
         bool should_snap;
 
-        // TODO mess around with the right epsilon here
         explicit WhereInRange(vec2 pos, float r = 0.01f, bool snap = false)
             : position(pos), range(r), should_snap(snap) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             vec2 pos = entity.get<Transform>().as2();
             if (should_snap) pos = vec::snap(pos);
-            return vec::distance(position, pos) < range;
+            return vec::distance_sq(position, pos) < (range * range);
         }
     };
-    auto& whereInRange(vec2 position, float range) {
+    EQ& whereInRange(vec2 position, float range) {
         return add_mod(new WhereInRange(position, range));
     }
-    auto& whereNotInRange(vec2 position, float range) {
+    EQ& whereNotInRange(vec2 position, float range) {
         return add_mod(new Not(new WhereInRange(position, range)));
     }
-    auto& wherePositionMatches(const Entity& entity) {
+    EQ& wherePositionMatches(const Entity& entity) {
         return whereInRange(entity.get<Transform>().as2(), 0.01f);
     }
-    auto& whereSnappedPositionMatches(vec2 position) {
-        // TODO mess around with the right epsilon here
+    EQ& whereSnappedPositionMatches(vec2 position) {
         return add_mod(new WhereInRange(position, 0.01f, true));
     }
-    auto& whereSnappedPositionMatches(const Entity& entity) {
+    EQ& whereSnappedPositionMatches(const Entity& entity) {
         return whereSnappedPositionMatches(entity.get<Transform>().as2());
     }
 
-    struct WhereInFront : Modification {
+    // Direction-based filtering
+    struct WhereInFront : EntityQuery::Modification {
         vec2 position;
         float range;
 
         explicit WhereInFront(vec2 pos, float r) : position(pos), range(r) {}
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             float dist = vec::distance(entity.get<Transform>().as2(), position);
             if (abs(dist) > range) return false;
             if (dist < 0) return false;
             return true;
         }
     };
-
-    auto& whereInFront(vec2 pos, float range = 1.f) {
+    EQ& whereInFront(vec2 pos, float range = 1.f) {
         return add_mod(new WhereInFront(pos, range));
     }
-
-    auto& whereInFront(const Entity& entity, float range = 1.f) {
+    EQ& whereInFront(const Entity& entity, float range = 1.f) {
         return whereInFront(entity.get<Transform>().as2(), range);
     }
 
-    struct WhereInside : Modification {
+    // Bounding box filtering
+    struct WhereInside : EntityQuery::Modification {
         vec2 min;
         vec2 max;
 
         explicit WhereInside(vec2 mn, vec2 mx) : min(mn), max(mx) {}
 
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             const auto pos = entity.get<Transform>().as2();
             if (pos.x > max.x || pos.x < min.x) return false;
             if (pos.y > max.y || pos.y < min.y) return false;
             return true;
         }
     };
-    auto& whereInside(vec2 range_min, vec2 range_max) {
+    EQ& whereInside(vec2 range_min, vec2 range_max) {
         return add_mod(new WhereInside(range_min, range_max));
     }
+    EQ& whereNotInside(vec2 range_min, vec2 range_max) {
+        return add_mod(new Not(new WhereInside(range_min, range_max)));
+    }
 
-    struct WhereCollides : Modification {
+    // Collision filtering
+    struct WhereCollides : EntityQuery::Modification {
         BoundingBox bounds;
 
         explicit WhereCollides(BoundingBox box) : bounds(box) {}
 
-        virtual bool operator()(const Entity& entity) const override {
+        bool operator()(const Entity& entity) const override {
             return CheckCollisionBoxes(entity.get<Transform>().bounds(),
                                        bounds);
         }
     };
-    auto& whereCollides(BoundingBox box) {
+    EQ& whereCollides(BoundingBox box) {
         return add_mod(new WhereCollides(box));
     }
-    /////////
 
-    using OrderByFn = std::function<bool(const Entity&, const Entity&)>;
-    struct OrderBy {
-        virtual ~OrderBy() {}
-        virtual bool operator()(const Entity& a, const Entity& b) = 0;
-    };
+    // Component + lambda filtering
+    template<typename Component>
+    struct WhereHasComponentAndLambda : EntityQuery::Modification {
+        std::function<bool(const Component&)> fn;
+        explicit WhereHasComponentAndLambda(
+            const std::function<bool(const Component&)>& fn)
+            : fn(fn) {}
 
-    struct OrderByLambda : OrderBy {
-        OrderByFn sortFn;
-        explicit OrderByLambda(const OrderByFn& sortFn) : sortFn(sortFn) {}
-
-        virtual bool operator()(const Entity& a, const Entity& b) override {
-            return sortFn(a, b);
+        bool operator()(const Entity& entity) const override {
+            return entity.has<Component>() && fn(entity.get<Component>());
         }
     };
 
-    auto& orderByLambda(const OrderByFn& sortfn) {
-        return set_order_by(new OrderByLambda(sortfn));
+    template<typename Component>
+    EQ& whereHasComponentAndLambda(
+        const std::function<bool(const Component&)>& fn) {
+        return add_mod(new WhereHasComponentAndLambda<Component>(fn));
     }
 
-    auto& orderByDist(vec2 position) {
+    // Floor marker filtering
+    EQ& whereFloorMarkerOfType(IsFloorMarker::Type type) {
+        return whereHasComponentAndLambda<IsFloorMarker>(
+            [type](const IsFloorMarker& fm) { return fm.type == type; });
+    }
+
+    // Trigger area filtering
+    EQ& whereTriggerAreaOfType(IsTriggerArea::Type type) {
+        return whereHasComponentAndLambda<IsTriggerArea>(
+            [type](const IsTriggerArea& ta) { return ta.type == type; });
+    }
+
+    // Complex query methods
+    [[nodiscard]] OptEntity getClosestMatchingFurniture(
+        const Transform& transform, float range,
+        const std::function<bool(const Entity&)>& filter);
+
+    [[nodiscard]] bool doesAnyExistWithType(const EntityType& type) {
+        return whereType(type).has_values();
+    }
+
+    [[nodiscard]] OptEntity getMatchingEntityInFront(
+        vec2 pos, Transform::FrontFaceDirection direction, float range,
+        const std::function<bool(const Entity&)>& filter);
+
+    [[nodiscard]] RefEntities getAllInRangeFiltered(
+        vec2 range_min, vec2 range_max,
+        const std::function<bool(const Entity&)>& filter) {
+        return whereInside(range_min, range_max)
+            .include_store_entities()
+            .whereLambda(filter)
+            .gen();
+    }
+
+    [[nodiscard]] RefEntities getAllInRange(vec2 range_min, vec2 range_max) {
+        return whereInside(range_min, range_max).include_store_entities().gen();
+    }
+
+    [[nodiscard]] OptEntity getOverlappingEntityIfExists(
+        const Entity& entity, float range,
+        const std::function<bool(const Entity&)>& filter = {},
+        bool include_store_entities = false) {
+        const vec2 position = entity.get<Transform>().as2();
+        return whereNotID(entity.id)
+            .whereLambdaExistsAndTrue(filter)
+            .whereHasComponent<IsSolid>()
+            .whereInRange(position, range)
+            .wherePositionMatches(entity)
+            .include_store_entities(include_store_entities)
+            .gen_first();
+    }
+
+    // Pathfinding filtering
+    struct WhereCanPathfindTo : EntityQuery::Modification {
+        vec2 start;
+
+        explicit WhereCanPathfindTo(vec2 starting_point)
+            : start(starting_point) {}
+
+        bool operator()(const Entity& entity) const override;
+    };
+
+    EQ& whereCanPathfindTo(const vec2& start) {
+        return add_mod(new WhereCanPathfindTo(start));
+    }
+
+    // Held item filtering
+    EQ& whereIsNotBeingHeld() {
+        return add_mod(new WhereHasComponent<CanBeHeld>())
+            .add_mod(new WhereLambda([](const Entity& entity) {
+                return entity.get<CanBeHeld>().is_not_held();
+            }));
+    }
+
+    EQ& whereIsHoldingAnyFurniture();
+    EQ& whereIsHoldingAnyFurnitureThatMatches(
+        const std::function<bool(const Entity&)>&);
+    EQ& whereIsHoldingFurnitureID(EntityID entityID);
+    EQ& whereIsHoldingItemOfType(EntityType type);
+    EQ& whereIsDrinkAndMatches(Drink recipe);
+    EQ& whereHeldItemMatches(const std::function<bool(const Entity&)>& fn);
+
+    // Store entity filtering
+    // By default, store entities (with IsStoreSpawned) are excluded
+    // Call include_store_entities() to include them, or
+    // include_store_entities(false) to explicitly exclude
+    EQ& include_store_entities(bool include = true) {
+        if (include) {
+            // Include store entities - no filter needed, just return
+            return *this;
+        } else {
+            // Exclude store entities - filter out those with IsStoreSpawned
+            return whereMissingComponent<IsStoreSpawned>();
+        }
+    }
+
+    // Distance-based ordering
+    EQ& orderByDist(vec2 position) {
         return orderByLambda([=](const Entity& a, const Entity& b) {
-            float a_dist = vec::distance(a.get<Transform>().as2(), position);
-            float b_dist = vec::distance(b.get<Transform>().as2(), position);
+            float a_dist = vec::distance_sq(a.get<Transform>().as2(), position);
+            float b_dist = vec::distance_sq(b.get<Transform>().as2(), position);
             return a_dist < b_dist;
         });
     }
 
-    /////////
-    struct UnderlyingOptions {
-        bool stop_on_first = false;
-    };
-
-    [[nodiscard]] bool has_values() const {
-        return !run_query({.stop_on_first = true}).empty();
+    // Helper methods for extracting position data
+    [[nodiscard]] std::optional<std::pair<int, vec3>> gen_first_position()
+        const {
+        if (!has_values()) return {};
+        auto values = gen_with_options({.stop_on_first = true});
+        if (values.empty()) return {};
+        auto& ent = values[0].get();
+        return std::pair{ent.id, ent.get<Transform>().pos()};
     }
 
-    [[nodiscard]] RefEntities values_ignore_cache(
-        UnderlyingOptions options) const {
-        ents = run_query(options);
-        return ents;
-    }
-
-    [[nodiscard]] RefEntities gen() const {
-        if (!ran_query) return values_ignore_cache({});
-        return ents;
-    }
-
-    [[nodiscard]] RefEntities gen_with_options(
-        UnderlyingOptions options) const {
-        if (!ran_query) return values_ignore_cache(options);
-        return ents;
-    }
-
-    [[nodiscard]] OptEntity gen_first() const {
-        if (has_values()) return (gen_with_options({.stop_on_first = true})[0]);
-        return {};
-    }
-
-    [[nodiscard]] size_t gen_count() const {
-        if (!ran_query) return values_ignore_cache({}).size();
-        return ents.size();
-    }
-
-    [[nodiscard]] std::vector<int> gen_ids() const {
-        const auto results = ran_query ? ents : values_ignore_cache({});
-        std::vector<int> ids;
-        for (const Entity& ent : results) {
-            ids.push_back(ent.id);
-        }
+    [[nodiscard]] std::vector<std::pair<EntityID, vec3>> gen_positions() const {
+        const auto results = gen();
+        std::vector<std::pair<EntityID, vec3>> ids;
+        ids.reserve(results.size());
+        std::transform(results.begin(), results.end(), std::back_inserter(ids),
+                       [](const RefEntity& ent) -> std::pair<EntityID, vec3> {
+                           return {ent.get().id,
+                                   ent.get().get<Transform>().pos()};
+                       });
         return ids;
     }
-
-    EntityQuery() : entities(EntityHelper::get_entities()) {}
-    explicit EntityQuery(const Entities& ents) : entities(ents) {
-        entities = ents;
-    }
-
-   private:
-    Entities entities;
-
-    std::unique_ptr<OrderBy> orderby;
-    std::vector<std::unique_ptr<Modification>> mods;
-    mutable RefEntities ents;
-    mutable bool ran_query = false;
-
-    EntityQuery& add_mod(Modification* mod) {
-        mods.push_back(std::unique_ptr<Modification>(mod));
-        return *this;
-    }
-
-    EntityQuery& set_order_by(OrderBy* ob) {
-        if (orderby) {
-            log_error(
-                "We only apply the first order by in a query at the moment");
-            return *this;
-        }
-        orderby = std::unique_ptr<OrderBy>(ob);
-        return *this;
-    }
-
-    [[nodiscard]] RefEntities run_query(UnderlyingOptions options) const {
-        RefEntities out;
-        for (const auto& e_ptr : entities) {
-            if (!e_ptr) continue;
-            Entity& e = *e_ptr;
-
-            bool passed_all_mods = std::all_of(
-                mods.begin(), mods.end(),
-                [&](const std::unique_ptr<Modification>& mod) -> bool {
-                    return (*mod)(e);
-                });
-
-            if (passed_all_mods) out.push_back(e);
-            if (options.stop_on_first && !out.empty()) return out;
-        }
-
-        // TODO :SPEED: if there is only one item no need to sort
-        // TODO :SPEED: if we are doing gen_first() then partial sort?
-        // Now run any order bys
-        if (orderby) {
-            std::sort(out.begin(), out.end(),
-                      [&](const Entity& a, const Entity& b) {
-                          return (*orderby)(a, b);
-                      });
-        }
-
-        // TODO turn off cache for now
-        // ran_query = true;
-        return out;
-    }
 };
+
+// Type alias - EQ is the new afterhours-based query, EntityQuery is kept for
+// compatibility
+using EntityQuery = EQ;

@@ -3,9 +3,8 @@
 
 #include "base_component.h"
 
+// TODO is this actually used anymore
 struct CanBeGhostPlayer : public BaseComponent {
-    virtual ~CanBeGhostPlayer() {}
-
     [[nodiscard]] bool is_ghost() const { return ghost; }
     [[nodiscard]] bool is_not_ghost() const { return !is_ghost(); }
 
@@ -14,10 +13,12 @@ struct CanBeGhostPlayer : public BaseComponent {
    private:
     bool ghost = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(ghost);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.ghost                       //
+        );
     }
 };

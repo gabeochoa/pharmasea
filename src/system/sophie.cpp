@@ -5,15 +5,19 @@
 #include <iterator>
 #include <tuple>
 
+#include "../ah.h"
+#include "../building_locations.h"
 #include "../components/can_hold_furniture.h"
-#include "../components/has_timer.h"
+#include "../components/collects_customer_feedback.h"
+#include "../components/has_day_night_timer.h"
 #include "../components/has_waiting_queue.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
+#include "../components/is_store_spawned.h"
+#include "../components/is_toilet.h"
 #include "../components/transform.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/assert.h"
-#include "../engine/bitset_utils.h"
 #include "../engine/pathfinder.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
@@ -24,12 +28,14 @@
 namespace system_manager {
 
 namespace sophie {
+
 void customers_in_store(Entity& entity) {
     // Handle customers finally leaving the store
     // TODO with the others siwtch to something else... customer
     // spawner?
     const auto endpos = vec2{GATHER_SPOT, GATHER_SPOT};
 
+    // TODO :DUPE: used as well for nux checks
     OptEntity any = EntityQuery()
                         .whereType(EntityType::Customer)
                         .whereNotInRange(endpos, TILESIZE * 2.f)
@@ -37,39 +43,42 @@ void customers_in_store(Entity& entity) {
 
     vec2 pos = any.has_value() ? any->get<Transform>().as2() : vec2{0, 0};
 
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::CustomersInStore, any.has_value(), pos);
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::CustomersInStore,
+        any.has_value(), pos);
 }
 
 // Handle some player is holding furniture
 void player_holding_furniture(Entity& entity) {
-    bool all_empty = true;
-    // TODO i want to to do it this way: but players are not in
-    // entities, so its not possible
-    //
-    // auto players =
-    // EntityHelper::getAllWithComponent<CanHoldFurniture>();
+    bool all_empty =
+        EQ(SystemManager::get().oldAll).whereIsHoldingAnyFurniture().is_empty();
 
-    // TODO need support for 'break' to use for_each_old
-    for (std::shared_ptr<Entity>& e : SystemManager::get().oldAll) {
-        if (!e) continue;
-        if (e->is_missing<CanHoldFurniture>()) continue;
-        if (e->get<CanHoldFurniture>().is_holding_furniture()) {
-            all_empty = false;
-            break;
-        }
-    }
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::HoldingFurniture, !all_empty,
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::HoldingFurniture, !all_empty,
         // players can figure it out on their own
         {});
 }
 
 void bar_not_clean(Entity& entity) {
-    OptEntity any = EntityQuery().whereType(EntityType::Vomit).gen_first();
-    vec2 pos = any.has_value() ? any->get<Transform>().as2() : vec2{0, 0};
-    entity.get<HasTimer>().write_reason(HasTimer::WaitingReason::BarNotClean,
-                                        any.has_value(), pos);
+    // are there any vomit anywhere?
+    auto any = EntityQuery().whereType(EntityType::Vomit).gen_first_position();
+
+    // is the toilet clean?
+    if (!any.has_value()) {
+        any =
+            EntityQuery()
+                .whereHasComponentAndLambda<IsToilet>(
+                    [](const IsToilet& istoilet) {
+                        return istoilet.state == IsToilet::State::NeedsCleaning;
+                    })
+                .gen_first_position();
+    }
+
+    vec2 pos = any.has_value() ? vec::to2(any->second) : vec2{0, 0};
+
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::BarNotClean, any.has_value(),
+        pos);
 }
 
 void overlapping_furniture(Entity& entity) {
@@ -81,7 +90,7 @@ void overlapping_furniture(Entity& entity) {
     vec2 range_min = {-50, -50};
     vec2 range_max = {50, 50};
 
-    auto solid_ents =
+    auto solid_ids =
         EntityQuery()                      //
             .whereHasComponent<IsSolid>()  //
                                            // Skip the soda rope because the
@@ -89,15 +98,8 @@ void overlapping_furniture(Entity& entity) {
                                            // are okay with that
             .whereNotType(EntityType::SodaSpout)  //
             .whereInside(range_min, range_max)    //
-            .gen();
-
-    // Convert them all to just ids and position
-    std::vector<std::pair<EntityID, vec3>> solid_ids;
-    std::transform(
-        solid_ents.begin(), solid_ents.end(), std::back_inserter(solid_ids),
-        [](Entity& ent) -> std::pair<EntityID, vec3> {
-            return std::make_pair(ent.id, ent.get<Transform>().pos());
-        });
+            // Convert them all to just ids and position
+            .gen_positions();
 
     const auto _hasDuplicates =
         [](const std::vector<std::pair<EntityID, vec3>>& arr) -> EntityID {
@@ -119,13 +121,15 @@ void overlapping_furniture(Entity& entity) {
                                   ? overlapping_entity->get<Transform>().as2()
                                   : std::optional<vec2>{};
 
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::FurnitureOverlapping, has_overlapping, pos);
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::FurnitureOverlapping,
+        has_overlapping, pos);
 }
 
 void forgot_item_in_spawn_area(Entity& entity) {
-    OptEntity spawn_area = EntityHelper::getMatchingFloorMarker(
-        IsFloorMarker::Type::Planning_SpawnArea);
+    OptEntity spawn_area =
+        EQ().whereFloorMarkerOfType(IsFloorMarker::Type::Planning_SpawnArea)
+            .gen_first();
 
     bool has_item_in_spawn_area = false;
     std::optional<vec2> position;
@@ -143,9 +147,9 @@ void forgot_item_in_spawn_area(Entity& entity) {
         }
     }
 
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::ItemInSpawnArea, has_item_in_spawn_area,
-        position);
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::ItemInSpawnArea,
+        has_item_in_spawn_area, position);
 }
 
 void lightweight_map_validation(Entity& entity) {
@@ -163,7 +167,19 @@ void lightweight_map_validation(Entity& entity) {
     int reg_with_no_pathing = 0;
     int reg_with_bad_spots = 0;
     std::vector<RefEntity> all_registers =
-        EntityQuery().whereHasComponent<HasWaitingQueue>().gen();
+        EntityQuery()
+            .whereHasComponent<HasWaitingQueue>()
+            .whereInside(BAR_BUILDING.min(), BAR_BUILDING.max())
+            .gen();
+
+    if (all_registers.empty()) {
+        // because we require the map to spawn one, we know this is due to the
+        // bar building area check above
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::RegisterNotInside, true,
+            {});
+        return;
+    }
 
     const auto _has_blocked_spot = [](const Entity& r) {
         for (int i = 0; i < (int) HasWaitingQueue::max_queue_size; i++) {
@@ -185,10 +201,7 @@ void lightweight_map_validation(Entity& entity) {
 
         auto new_path = pathfinder::find_path(
             customer.get<Transform>().as2(),
-            // TODO need a better way to do this
-            // 0 makes sense but is the position of the entity, when its
-            // infront?
-            r.get<Transform>().tile_infront(1),
+            r.get<Transform>().tile_directly_infront(),
             std::bind(EntityHelper::isWalkable, std::placeholders::_1));
 
         if (new_path.empty()) {
@@ -201,33 +214,35 @@ void lightweight_map_validation(Entity& entity) {
     // probably not pathable anyway so return false
     if (reg_with_bad_spots == (int) all_registers.size()) {
         // TODO maybe we could add a separate error message for this
-        entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::NoPathToRegister, true,
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::NoPathToRegister, true,
             bad_spot_reg_location);
         return;
     }
 
     if (reg_with_no_pathing == (int) all_registers.size()) {
         // TODO maybe we could add a separate error message for this
-        entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::NoPathToRegister, true,
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::NoPathToRegister, true,
             non_pathable_reg_location);
         return;
     }
 
-    entity.get<HasTimer>().write_reason(
-        HasTimer::WaitingReason::NoPathToRegister, false, {});
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::NoPathToRegister, false, {});
 }
 
 void deleting_item_needed_for_recipe(Entity& entity) {
     const auto result = [&entity](bool on, std::optional<vec2> position = {}) {
-        entity.get<HasTimer>().write_reason(
-            HasTimer::WaitingReason::DeletingNeededItem, on, position);
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::DeletingNeededItem, on,
+            position);
         return;
     };
 
-    OptEntity trash_area = EntityHelper::getMatchingFloorMarker(
-        IsFloorMarker::Type::Planning_TrashArea);
+    OptEntity trash_area =
+        EQ().whereFloorMarkerOfType(IsFloorMarker::Type::Planning_TrashArea)
+            .gen_first();
 
     if (!trash_area.valid()) return result(false);
 
@@ -241,8 +256,10 @@ void deleting_item_needed_for_recipe(Entity& entity) {
     if (ifm.num_marked() == 0) return result(false);
 
     // TODO this is not robust but itll work for a while
+    // TODO right now getAll will return store ents but we dont want that for
+    // this, the radius is saving us at the moment
     float rad = 25;
-    const RefEntities ents = EntityHelper::getAllInRangeFiltered(
+    const RefEntities ents = EQ().getAllInRangeFiltered(
         {-1.f * rad, -1.f * rad}, {rad, rad}, [&ifm](const Entity& entity) {
             // Ignore the ones in the trash
             if (ifm.is_marked(entity.id)) return false;
@@ -301,6 +318,7 @@ void deleting_item_needed_for_recipe(Entity& entity) {
         has_req_machines =
             has_req_machines &&
             IngredientHelper::has_machines_required_for_ingredient(ents, ig);
+        return bitset_utils::ForEachFlow::NormalFlow;
         // log_info(
         // "hasMachines {} {}",
         // magic_enum::enum_name<Ingredient>(ig),
@@ -323,29 +341,84 @@ void deleting_item_needed_for_recipe(Entity& entity) {
     return result(!has_req_machines, get_position_for_reason());
 }
 
+void holding_stolen_item(Entity& entity) {
+    // Find all players holding Store items and not in the store
+    OptEntity player =
+        EQ(SystemManager::get().oldAll)
+            .whereNotInside(STORE_BUILDING.min(), STORE_BUILDING.max())
+            .whereIsHoldingAnyFurnitureThatMatches([](const Entity& furniture) {
+                return furniture.has<IsStoreSpawned>();
+            })
+            .gen_first();
+
+    if (!player) {
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::StoreStealingMachine,
+            false, {});
+        return;
+    }
+
+    auto position = player->get<Transform>().as2();
+
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::StoreStealingMachine, true,
+        position);
+}
+
+void garbage_in_store(Entity& entity) {
+    // Find if players put non sellables in the store
+
+    auto garbage = EntityQuery()
+                       .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
+                       .whereMissingComponent<IsStoreSpawned>()
+                       .whereHasComponent<CanBeHeld>()
+                       .gen();
+
+    if (garbage.empty()) {
+        entity.get<CollectsCustomerFeedback>().write_reason(
+            CollectsCustomerFeedback::WaitingReason::StoreHasGarbage, false,
+            {});
+        return;
+    }
+
+    Entity& garbo = garbage[0];
+    auto position = garbo.get<Transform>().as2();
+
+    entity.get<CollectsCustomerFeedback>().write_reason(
+        CollectsCustomerFeedback::WaitingReason::StoreHasGarbage, true,
+        position);
+}
+
 }  // namespace sophie
 
 // TODO this function is 75% of our game update time spent
-void update_sophie(Entity& entity, float) {
+void update_sophie(Entity& entity, float dt) {
     if (!check_type(entity, EntityType::Sophie)) return;
-    if (entity.is_missing<HasTimer>()) return;
+    if (entity.is_missing<HasDayNightTimer>()) return;
 
     const auto debug_mode_on =
         GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
-    const HasTimer& ht = entity.get<HasTimer>();
+    HasDayNightTimer& ht = entity.get<HasDayNightTimer>();
+    CollectsCustomerFeedback& feedback = entity.get<CollectsCustomerFeedback>();
 
     // TODO i dont like that this is copy paste from layers/round_end
-    if (GameState::get().is_not(game::State::Planning) &&
-        ht.get_current_round_time() > 0 && !debug_mode_on)
+    if (SystemManager::get().is_bar_closed() && ht.get_current_length() > 0 &&
+        !debug_mode_on)
         return;
+
+    if (!feedback.waiting_time_pass(dt)) {
+        return;
+    }
 
     // doing it this way so that if we wanna make them return bool itll be
     // easy
     typedef std::function<void(Entity&)> WaitingFn;
 
     std::vector<WaitingFn> fns{
-        sophie::customers_in_store,               //
-        sophie::player_holding_furniture,         //
+        sophie::customers_in_store,   //
+        sophie::holding_stolen_item,  //
+        sophie::garbage_in_store,     //
+        // sophie::player_holding_furniture,         //
         sophie::bar_not_clean,                    //
         sophie::overlapping_furniture,            //
         sophie::forgot_item_in_spawn_area,        //

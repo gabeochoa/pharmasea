@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <functional>
 #include <stdexcept>
@@ -93,4 +94,18 @@ template<typename T, std::size_t Size>
         // Item not found
         return -1;
     }
+}
+
+template<typename T, std::size_t Size>
+[[nodiscard]] constexpr bool array_contains_any_value(
+    const std::array<T, Size> &array) {
+    const auto itr = std::find_if(std::begin(array), std::end(array),
+                                  [](const auto &v) { return v > T(); });
+    return itr != std::end(array);
+}
+
+template<typename T, std::size_t Size>
+constexpr void array_reset(std::array<T, Size> &array) {
+    std::transform(array.begin(), array.end(), array.begin(),
+                   [](const auto &) { return T(); });
 }

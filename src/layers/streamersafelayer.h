@@ -31,8 +31,7 @@ struct StreamerSafeLayer : public Layer {
             DrawRectangleRoundedLines(
                 Rectangle{(float) x_pos, (float) y_pos,
                           (float) streamer_box_size, (float) streamer_box_size},
-                0.25f /* roundness */, (int) (FS / 4.f) /* segments */,
-                (FS / 4.f) /* lineThick */, BLACK);
+                0.25f /* roundness */, (int) (FS / 4.f) /* segments */, BLACK);
 
             DrawTextEx(
                 Preload::get().font,

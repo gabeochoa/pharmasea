@@ -13,36 +13,52 @@ struct Layer {
     int id;
     std::string name;
 
-    Layer(const std::string& n = "layer") : id(s_layer_id++), name(n) {}
+    explicit Layer(const std::string& n = "layer")
+        : id(s_layer_id++), name(n) {}
     virtual ~Layer() {}
-    virtual void onAttach() {}
-    virtual void onDetach() {}
+    virtual void onStartup() {}
     virtual void onUpdate(float elapsed) = 0;
     virtual void onDraw(float elapsed) = 0;
 
     void onEvent(Event& event) {
         EventDispatcher dispatcher(event);
         dispatcher.dispatch<KeyPressedEvent>(
-            std::bind(&Layer::onKeyPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<GamepadButtonPressedEvent>(std::bind(
-            &Layer::onGamepadButtonPressed, this, std::placeholders::_1));
+            [&](KeyPressedEvent& event) { return this->onKeyPressed(event); });
+        dispatcher.dispatch<GamepadButtonPressedEvent>(
+            [&](GamepadButtonPressedEvent& event) {
+                return this->onGamepadButtonPressed(event);
+            });
         dispatcher.dispatch<GamepadAxisMovedEvent>(
-            std::bind(&Layer::onGamepadAxisMoved, this, std::placeholders::_1));
-        dispatcher.dispatch<CharPressedEvent>(
-            std::bind(&Layer::onCharPressedEvent, this, std::placeholders::_1));
-
+            [&](GamepadAxisMovedEvent& event) {
+                return this->onGamepadAxisMoved(event);
+            });
+        dispatcher.dispatch<CharPressedEvent>([&](CharPressedEvent& event) {
+            return this->onCharPressedEvent(event);
+        });
         dispatcher.dispatch<Mouse::MouseMovedEvent>(
-            std::bind(&Layer::onMouseMoved, this, std::placeholders::_1));
+            [&](Mouse::MouseMovedEvent& event) {
+                return this->onMouseMoved(event);
+            });
         dispatcher.dispatch<Mouse::MouseScrolledEvent>(
-            std::bind(&Layer::onMouseScrolled, this, std::placeholders::_1));
-        dispatcher.dispatch<Mouse::MouseButtonPressedEvent>(std::bind(
-            &Layer::onMouseButtonPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<Mouse::MouseButtonReleasedEvent>(std::bind(
-            &Layer::onMouseButtonReleased, this, std::placeholders::_1));
+            [&](Mouse::MouseScrolledEvent& event) {
+                return this->onMouseScrolled(event);
+            });
+        dispatcher.dispatch<Mouse::MouseButtonPressedEvent>(
+            [&](Mouse::MouseButtonPressedEvent& event) {
+                return this->onMouseButtonPressed(event);
+            });
+        dispatcher.dispatch<Mouse::MouseButtonReleasedEvent>(
+            [&](Mouse::MouseButtonReleasedEvent& event) {
+                return this->onMouseButtonReleased(event);
+            });
         dispatcher.dispatch<Mouse::MouseButtonUpEvent>(
-            std::bind(&Layer::onMouseButtonUp, this, std::placeholders::_1));
+            [&](Mouse::MouseButtonUpEvent& event) {
+                return this->onMouseButtonUp(event);
+            });
         dispatcher.dispatch<Mouse::MouseButtonDownEvent>(
-            std::bind(&Layer::onMouseButtonDown, this, std::placeholders::_1));
+            [&](Mouse::MouseButtonDownEvent& event) {
+                return this->onMouseButtonDown(event);
+            });
     }
 
     virtual bool onKeyPressed(KeyPressedEvent&) { return false; }
@@ -66,45 +82,4 @@ struct Layer {
     }
 
     [[nodiscard]] const std::string& getname() const { return name; }
-};
-
-struct LayerStack {
-    std::vector<Layer*> layers;
-    std::vector<Layer*>::iterator insert;
-
-    std::vector<Layer*>::iterator begin() { return layers.begin(); }
-    std::vector<Layer*>::iterator end() { return layers.end(); }
-    std::vector<Layer*>::reverse_iterator rbegin() { return layers.rbegin(); }
-    std::vector<Layer*>::reverse_iterator rend() { return layers.rend(); }
-
-    LayerStack() { insert = layers.begin(); }
-    ~LayerStack() {
-        for (Layer* layer : layers) {
-            delete layer;
-        }
-    }
-
-    void push(Layer* layer) {
-        if (layers.empty()) {
-            layers.push_back(layer);
-            insert = layers.begin();
-        } else {
-            insert = layers.emplace(insert, layer);
-        }
-    }
-    void pop(Layer* layer) {
-        auto it = std::find(layers.begin(), layers.end(), layer);
-        if (it != layers.end()) {
-            layers.erase(it);
-            --insert;
-        }
-    }
-
-    void popOverlay(Layer* layer) { layers.emplace_back(layer); }
-    void pushOverlay(Layer* layer) {
-        auto it = std::find(layers.begin(), layers.end(), layer);
-        if (it != layers.end()) {
-            layers.erase(it);
-        }
-    }
 };

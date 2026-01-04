@@ -20,7 +20,8 @@ SINGLETON_FWD(MouseMap)
 struct MouseMap {
     SINGLETON(MouseMap)
 
-    static void forEachMouseButtonPressed(std::function<void(Event&)> cb) {
+    static void forEachMouseButtonPressed(
+        const std::function<void(Event&)>& cb) {
         size_t num_inputs = magic_enum::enum_count<Mouse::MouseCode>();
         for (int i = 0; i < (int) num_inputs; i++) {
             bool pressed = raylib::IsMouseButtonPressed(i);
@@ -32,7 +33,8 @@ struct MouseMap {
             }
         }
     }
-    static void forEachMouseButtonReleased(std::function<void(Event&)> cb) {
+    static void forEachMouseButtonReleased(
+        const std::function<void(Event&)>& cb) {
         size_t num_inputs = magic_enum::enum_count<Mouse::MouseCode>();
         for (int i = 0; i < (int) num_inputs; i++) {
             bool released = raylib::IsMouseButtonReleased(i);
@@ -44,7 +46,7 @@ struct MouseMap {
             }
         }
     }
-    static void forEachMouseButtonDown(std::function<void(Event&)> cb) {
+    static void forEachMouseButtonDown(const std::function<void(Event&)>& cb) {
         size_t num_inputs = magic_enum::enum_count<Mouse::MouseCode>();
         for (int i = 0; i < (int) num_inputs; i++) {
             bool down = raylib::IsMouseButtonDown(i);
@@ -56,7 +58,7 @@ struct MouseMap {
             }
         }
     }
-    static void forEachMouseButtonUp(std::function<void(Event&)> cb) {
+    static void forEachMouseButtonUp(const std::function<void(Event&)>& cb) {
         size_t num_inputs = magic_enum::enum_count<Mouse::MouseCode>();
         for (int i = 0; i < (int) num_inputs; i++) {
             bool up = raylib::IsMouseButtonUp(i);
@@ -69,7 +71,7 @@ struct MouseMap {
         }
     }
 
-    static void forEachMouseInput(std::function<void(Event&)> cb) {
+    static void forEachMouseInput(const std::function<void(Event&)>& cb) {
         size_t num_inputs = magic_enum::enum_count<MouseInputType>();
         for (size_t i = 0; i < num_inputs; i++) {
             auto mit = magic_enum::enum_value<MouseInputType>(i);

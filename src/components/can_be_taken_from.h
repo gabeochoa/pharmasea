@@ -4,8 +4,6 @@
 #include "base_component.h"
 
 struct CanBeTakenFrom : public BaseComponent {
-    virtual ~CanBeTakenFrom() {}
-
     [[nodiscard]] bool can_take_from() const { return allowed; }
     [[nodiscard]] bool cannot_take_from() const { return !can_take_from(); }
 
@@ -14,10 +12,12 @@ struct CanBeTakenFrom : public BaseComponent {
    private:
     bool allowed = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(allowed);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.allowed                     //
+        );
     }
 };

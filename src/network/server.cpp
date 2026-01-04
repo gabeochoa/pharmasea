@@ -1,20 +1,66 @@
 #include "server.h"
 
+#include <algorithm>
+#include <cctype>
+#include <chrono>
 #include <thread>
 
-#include "shared.h"
+#include "../building_locations.h"
+#include "../client_server_comm.h"
+#include "../components/has_client_id.h"
+#include "../components/has_name.h"
+#include "../components/uses_character_model.h"
+#include "../engine/files.h"
+#include "../engine/path_request_manager.h"
+#include "../engine/random_engine.h"
+#include "../engine/time.h"
+#include "../entity_helper.h"
+#include "../globals.h"  // for HASHED_VERSION
+#include "../save_game/save_game.h"
+#include "../system/system_manager.h"
+#include "serialization.h"
 
 namespace network {
 
-static std::shared_ptr<Server> g_server;
+static std::unique_ptr<Server> g_server;
+
+Server::~Server() {
+    log_info("Server destructor called");
+    running = false;
+    PathRequestManager::stop();
+
+    if (server_thread.joinable() &&
+        server_thread.get_id() != std::this_thread::get_id()) {
+        log_info("Joining server thread");
+        server_thread.join();
+        log_info("Server thread joined");
+    }
+    if (pathfinding_thread.joinable()) {
+        log_info("Joining pathfinding thread");
+        pathfinding_thread.join();
+        log_info("Pathfinding thread joined");
+    } else {
+        log_warn("Pathfinding thread not joinable at shutdown");
+    }
+}
 
 // TODO once clang supports jthread replace with jthread and remove "running
 // = true" to use stop_token
-std::thread Server::start(int port) {
+void Server::start(int port) {
+    log_info("Server::start called with port: {}", port);
+    if (g_server && g_server->running) {
+        log_warn("Server::start called but server already running");
+        return;
+    }
     // TODO makeshared doesnt work here
+    log_info("Creating new Server instance");
     g_server.reset(new Server(port));
+    log_info("Server instance created, setting running = true");
     g_server->running = true;
-    return std::thread(std::bind(&Server::run, g_server.get()));
+    log_info("Starting server thread");
+    g_server->server_thread =
+        std::thread(std::bind(&Server::run, g_server.get()));
+    log_info("Server thread started");
 }
 
 void Server::queue_packet(const ClientPacket& p) {
@@ -26,7 +72,7 @@ void Server::forward_packet(const ClientPacket& p) {
     g_server->packet_queue.push_back(p);
 }
 
-void Server::play_sound(vec2 position, const std::string& sound) {
+void Server::play_sound(vec2 position, strings::sounds::SoundId sound) {
     Server::forward_packet(  //
         ClientPacket{
             //
@@ -44,13 +90,40 @@ void Server::play_sound(vec2 position, const std::string& sound) {
     );
 }
 
-void Server::stop() { g_server->running = false; }
+std::thread::id Server::get_thread_id() {
+    if (!g_server) return {};
+    if (g_server->server_thread.joinable())
+        return g_server->server_thread.get_id();
+    return g_server->thread_id;
+}
 
-void Server::send_map_state() {
-    pharmacy_map->grab_things();
+void Server::shutdown() {
+    log_info("Server::shutdown() called");
+    if (!g_server) {
+        log_info("Server::shutdown(): server already null");
+        return;
+    }
+
+    log_info("Setting g_server->running = false");
+    g_server->running = false;
+    PathRequestManager::stop();
+
+    if (g_server->server_thread.joinable() &&
+        g_server->server_thread.get_id() != std::this_thread::get_id()) {
+        log_info("Waiting for server thread to join");
+        g_server->server_thread.join();
+        log_info("Server thread joined successfully");
+    }
+
+    // Destroy the instance after threads are stopped.
+    g_server.reset();
+}
+
+void Server::send_map_state(Channel channel) {
+    EntityHelper::cleanup();
 
     ClientPacket map_packet{
-        .channel = Channel::RELIABLE,
+        .channel = channel,
         .client_id = SERVER_CLIENT_ID,
         .msg_type = network::ClientPacket::MsgType::Map,
         .msg =
@@ -61,6 +134,8 @@ void Server::send_map_state() {
 
     send_client_packet_to_all(map_packet);
 }
+
+void Server::force_send_map_state() { send_map_state(Channel::RELIABLE); }
 
 void Server::send_player_rare_data() {
     for (const auto& player : players) {
@@ -86,7 +161,15 @@ void Server::run() {
     thread_id = std::this_thread::get_id();
     GLOBALS.set("server_thread_id", &thread_id);
 
-    constexpr float desiredFrameRate = 240.0f;
+    // Ensure Afterhours' default collection matches the server thread's
+    // collection. (Some serialization paths call afterhours::EntityHelper
+    // directly.)
+    afterhours::EntityHelper::set_default_collection(
+        &EntityHelper::get_server_collection());
+
+    // should probably always be about / above whats in the game.h
+    // TODO - should be a setting since on this computer i need it slow
+    constexpr float desiredFrameRate = 120.0f;
     constexpr std::chrono::duration<float> fixedTimeStep(1.0f /
                                                          desiredFrameRate);
 
@@ -94,17 +177,19 @@ void Server::run() {
     auto previousTime = std::chrono::high_resolution_clock::now();
     auto currentTime = previousTime;
 
+    // Turn on pathfinding
+    pathfinding_thread = PathRequestManager::start();
+
     while (running) {
         currentTime = std::chrono::high_resolution_clock::now();
         float duration =
             std::chrono::duration_cast<std::chrono::duration<float>>(
                 currentTime - previousTime)
                 .count();
-        // 240fps would be 4ms (well like 4.16ms)
-        // log_info("last server frame took {}ms ",
-        // std::chrono::duration_cast<std::chrono::milliseconds>(
-        // currentTime - previousTime)
-        // .count());
+
+        size_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        currentTime - previousTime)
+                        .count();
 
         if (duration >= fixedTimeStep.count()) {
             tick(fixedTimeStep.count());
@@ -113,27 +198,50 @@ void Server::run() {
             previousTime = currentTime;
         }
 
+#if MEASURE_SERVER_PERF
+        last_frames[last_frames_index] = ms;
+        last_frames_index = (last_frames_index + 1);
+        if (!has_looped && last_frames_index >= last_frames.size())
+            has_looped = true;
+        last_frames_index = last_frames_index % last_frames.size();
+
+        float avglf = 0.f;
+        for (size_t i = 0;
+             i < (has_looped ? last_frames.size() : last_frames_index); i++) {
+            avglf += (last_frames[i]);
+        }
+        avglf /= (has_looped ? last_frames.size() : last_frames_index);
+        log_info("avg frame {:2}ms", avglf);
+#endif
+        // 240fps would be 4ms (well like 4.16ms)
+
         // Sleep to control the frame rate
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        if (ms < 3) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
     }
 }
 
-// float fps_timer = 1.f;
-// int frames = 0;
-//
-// void fps(float dt) {
-// fps_timer -= dt;
-// frames++;
-// if (fps_timer <= 0) {
-// fps_timer = 1.f;
-// log_info("{} {} imq{} fwq{}", dt, frames,
-// incoming_message_queue.size(), packet_queue.size());
-// frames = 0;
-// }
-// }
+#if MEASURE_SERVER_PERF
+float fps_timer = 1.f;
+int frames = 0;
+
+void Server::fps(float dt) {
+    fps_timer -= dt;
+    frames++;
+    if (fps_timer <= 0) {
+        fps_timer = 1.f;
+        log_info("{} {} imq{} fwq{}", dt, frames, incoming_message_queue.size(),
+                 packet_queue.size());
+        frames = 0;
+    }
+}
+#endif
 
 void Server::tick(float dt) {
-    // fps(dt);
+#if MEASURE_SERVER_PERF
+    fps(dt);
+#endif
 
     TRACY_ZONE_SCOPED;
     server_p->run();
@@ -156,6 +264,21 @@ void Server::tick(float dt) {
     process_map_sync(dt);
 
     TRACY_FRAME_MARK("server::tick");
+}
+
+void Server::send_game_state_update() {
+    ClientPacket game_state_update{
+        .channel = Channel::UNRELIABLE,
+        .client_id = SERVER_CLIENT_ID,
+        .msg_type = network::ClientPacket::MsgType::GameState,
+        .msg =
+            network::ClientPacket::GameStateInfo{
+                .host_menu_state = MenuState::get().read(),
+                .host_game_state = GameState::get().read()},
+    };
+    // log_info("game state packet sent {} {}", MenuState::get().read(),
+    // GameState::get().read());
+    send_client_packet_to_all(game_state_update);
 }
 
 void Server::process_incoming_messages() {
@@ -192,11 +315,11 @@ void Server::process_packet_forwarding() {
 
         switch (p.msg_type) {
             case ClientPacket::MsgType::GameState: {
-                ClientPacket::GameStateInfo info =
-                    std::get<ClientPacket::GameStateInfo>(p.msg);
+                // ClientPacket::GameStateInfo info =
+                // std::get<ClientPacket::GameStateInfo>(p.msg);
                 // TODO probably dont need this
-                current_menu_state = info.host_menu_state;
-                current_game_state = info.host_game_state;
+                // current_menu_state = info.host_menu_state;
+                // current_game_state = info.host_game_state;
             } break;
             default:
                 break;
@@ -210,7 +333,59 @@ void Server::process_packet_forwarding() {
 
 void Server::process_map_update(float dt) {
     // No need to do anything if we are still in the menu
-    if (!MenuState::s_is_game(current_menu_state)) return;
+    if (!MenuState::get().in_game()) return;
+
+    // Phase 1 CLI hook: allow loading a save once the authoritative server
+    // thread is running. This is intentionally server-only.
+    static bool cli_load_applied = false;
+    if (!cli_load_applied && LOAD_SAVE_ENABLED && !LOAD_SAVE_TARGET.empty()) {
+        bool ok = false;
+        // slot number?
+        bool all_digits =
+            std::all_of(LOAD_SAVE_TARGET.begin(), LOAD_SAVE_TARGET.end(),
+                        [](char c) { return std::isdigit((unsigned char) c); });
+        if (all_digits) {
+            int slot = 1;
+            try {
+                slot = std::stoi(LOAD_SAVE_TARGET);
+            } catch (...) {
+                slot = 1;
+            }
+            ok = server_only::load_game_from_slot(slot);
+        } else {
+            save_game::SaveGameFile loaded;
+            fs::path p = fs::path(LOAD_SAVE_TARGET);
+            if (p.is_relative()) {
+                // Prefer saves folder, then fall back to CWD.
+                fs::path in_saves =
+                    save_game::SaveGameManager::saves_folder() / p;
+                if (fs::exists(in_saves)) {
+                    p = in_saves;
+                }
+            }
+
+            if (save_game::SaveGameManager::load_file(p, loaded)) {
+                // Apply snapshot (same logic as
+                // server_only::load_game_from_slot).
+                pharmacy_map->showMinimap = loaded.map_snapshot.showMinimap;
+                pharmacy_map->seed = loaded.map_snapshot.seed;
+                pharmacy_map->hashed_seed = loaded.map_snapshot.hashed_seed;
+                pharmacy_map->last_generated =
+                    loaded.map_snapshot.last_generated;
+                pharmacy_map->was_generated = true;
+                RandomEngine::set_seed(pharmacy_map->seed);
+                EntityHelper::invalidateCaches();
+                force_send_map_state();
+                ok = true;
+            }
+        }
+
+        if (ok) {
+            // Per design: always land in planning.
+            GameState::get().transition_to_game();
+        }
+        cli_load_applied = true;
+    }
 
     // TODO right now we have the run update on all the server players
     // this kinda makes sense but most of the game doesnt need this.
@@ -233,7 +408,10 @@ void Server::process_map_update(float dt) {
 void Server::process_map_sync(float dt) {
     next_map_tick -= dt;
     if (next_map_tick <= 0) {
-        send_map_state();
+        // Periodic snapshots are "state refresh" and can be lossy; using
+        // UNRELIABLE avoids building up latency/backpressure when snapshots
+        // are large.
+        send_map_state(Channel::UNRELIABLE);
         next_map_tick += next_map_tick_reset;
     }
 }
@@ -244,6 +422,9 @@ void Server::process_player_rare_tick(float dt) {
         // TODO decide if this needs to be more / less often
         send_player_rare_data();
         next_player_rare_tick = next_player_rare_tick_reset;
+
+        // TODO this should probably have its own timer but w/e
+        send_game_state_update();
     }
 }
 
@@ -384,25 +565,25 @@ void Server::process_player_join_packet(
     int client_id = incoming_client.client_id;
 
     const auto get_position_for_current_state = [=]() -> vec3 {
-        vec3 default_pos = {LOBBY_ORIGIN, 0.f, 0.f};
+        vec3 default_pos = LOBBY_BUILDING.to3();
 
+        auto current_game_state = GameState::get().read();
         // Not in game just spawn them in the lobby
-        if (current_menu_state != menu::State::Game) return default_pos;
+        if (MenuState::get().read() != menu::State::Game) return default_pos;
 
         switch (current_game_state) {
             case game::InMenu:
             case game::Lobby:
             case game::Paused:
                 return default_pos;
-            case game::InRound:
-            case game::Planning:
+            case game::InGame:
                 return {0.f, 0.f, 0.f};
-            case game::Progression:
-                return {PROGRESSION_ORIGIN, 0.f, 0.f};
-            case game::Store:
-                return {STORE_ORIGIN, 0.f, 0.f};
-            case game::ModelTest:
-                return {MODEL_TEST_ORIGIN, 0.f, 0.f};
+            case game::ModelTest: {
+                return MODEL_TEST_BUILDING.to3();
+            }
+            case game::LoadSaveRoom: {
+                return LOAD_SAVE_BUILDING.to3();
+            }
         }
 
         return default_pos;
@@ -572,7 +753,7 @@ void Server::send_client_packet_to_client(HSteamNetConnection conn,
 
 void Server::send_client_packet_to_all(
     const ClientPacket& packet,
-    std::function<bool(internal::Client_t&)> exclude) {
+    const std::function<bool(internal::Client_t&)>& exclude) {
     Buffer buffer = serialize_to_buffer(packet);
     server_p->send_message_to_all(buffer.c_str(), (uint32) buffer.size(),
                                   exclude);

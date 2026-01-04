@@ -17,165 +17,146 @@
 #include "globals.h"
 
 //
+#include "afterhours/src/core/entity_helper.h"
 #include "engine/statemanager.h"
 #include "entity.h"
 #include "entity_makers.h"
 #include "job.h"
-#include "strings.h"
 
 enum struct NamedEntity {
     Sophie,
 };
 
-using Entities = std::vector<std::shared_ptr<Entity>>;
-using RefEntities = std::vector<RefEntity>;
+using Entities = std::vector<std::shared_ptr<afterhours::Entity>>;
+using RefEntities = std::vector<afterhours::RefEntity>;
+
 using NamedEntities = std::map<NamedEntity, std::shared_ptr<Entity>>;
 
-extern Entities client_entities_DO_NOT_USE;
-extern NamedEntities named_entities_DO_NOT_USE;
+// Thread-specific EntityCollections
+// Each thread can have its own collection for independent entity management
+extern afterhours::EntityCollection client_collection;
+extern afterhours::EntityCollection server_collection;
 
-extern std::set<int> permanant_ids;
+extern NamedEntities named_entities_DO_NOT_USE;
 extern std::map<vec2, bool> cache_is_walkable;
 
-struct EntityHelper {
-    struct CreationOptions {
-        bool is_permanent;
-    };
+struct EntityHelper : afterhours::EntityHelper {
+    static afterhours::EntityCollection& get_current_collection() {
+        if (is_server()) {
+            return server_collection;
+        }
+        return client_collection;
+    }
 
-    static Entities& get_entities();
-    static RefEntities get_ref_entities();
-
-    static Entity& createEntity();
-    static Entity& createPermanentEntity();
-    static Entity& createEntityWithOptions(const CreationOptions& options);
-
+    // Named entity functionality
     static Entity& getNamedEntity(const NamedEntity& name);
     static OptEntity getPossibleNamedEntity(const NamedEntity& name);
 
-    // TODO :BE: maybe return the entity id or something
-    template<typename... TArgs>
-    static RefEntity createItem(TArgs... args) {
-        items::make_item_type(createEntity(), std::forward<TArgs>(args)...);
-        // log_info("created a new item {} {} ", e.id, e.name());
-        return *(get_entities().back());
-    }
+    // Game-specific query methods
+    static OptEntity getEntityForID(afterhours::EntityID id) {
+        if (id == entity_id::INVALID) return {};
+        // Afterhours maintains an O(1) ID->slot mapping for merged entities.
+        // However, many gameplay paths (AI target markers, etc.) create helper
+        // entities into `temp_entities` and then immediately resolve by ID
+        // within the same tick, before the usual per-system merge.
+        //
+        // To preserve historical behavior (and avoid relying on forced merges
+        // mid-system), fall back to checking temp entities if the O(1) lookup
+        // misses.
+        OptEntity merged = get_current_collection().getEntityForID(id);
+        if (merged) return merged;
 
-    template<typename... TArgs>
-    static RefEntity createPermanentItem(TArgs... args) {
-        items::make_item_type(createPermanentEntity(),
-                              std::forward<TArgs>(args)...);
-        // log_info("created a new item {} {} ", e.id, e.name());
-        return *(get_entities().back());
-    }
-
-    static void markIDForCleanup(int e_id);
-    static void removeEntity(int e_id);
-    static void cleanup();
-    static void delete_all_entities_NO_REALLY_I_MEAN_ALL();
-    static void delete_all_entities(bool include_permanent = false);
-
-    enum ForEachFlow {
-        NormalFlow = 0,
-        Continue = 1,
-        Break = 2,
-    };
-
-    static void forEachEntity(std::function<ForEachFlow(Entity&)> cb);
-
-    static std::vector<RefEntity> getFilteredEntitiesInRange(
-        vec2 pos, float range,
-        const std::function<bool(const Entity&)>& filter);
-
-    static std::vector<RefEntity> getEntitiesInRange(vec2 pos, float range);
-
-    static std::vector<RefEntity> getEntitiesInPosition(vec2 pos) {
-        return getEntitiesInRange(pos, TILESIZE);
-    }
-
-    // TODO exists as a conversion for things that need shared_ptr right now
-    static std::shared_ptr<Entity> getEntityAsSharedPtr(OptEntity entity) {
-        if (!entity) return {};
-        for (std::shared_ptr<Entity> current_entity : get_entities()) {
-            if (entity->id == current_entity->id) return current_entity;
+        for (const auto& sp : get_current_collection().get_temp()) {
+            if (!sp) continue;
+            if (sp->id == id) {
+                return *sp;
+            }
         }
         return {};
     }
 
-    static OptEntity getClosestMatchingFurniture(
-        const Transform& transform, float range,
-        const std::function<bool(const Entity&)>& filter);
-
-    static OptEntity getEntityForID(EntityID id);
-
-    static OptEntity getClosestOfType(const Entity& entity,
-                                      const EntityType& type,
-                                      float range = 100.f);
-
-    // TODO :BE: change other debugname filter guys to this
-
-    static bool doesAnyExistWithType(const EntityType& type);
-
-    static OptEntity getMatchingEntityInFront(
-        vec2 pos,                                         //
-        float range,                                      //
-        Transform::FrontFaceDirection direction,          //
-        const std::function<bool(const Entity&)>& filter  //
-    );
-
-    static OptEntity getClosestMatchingEntity(
-        vec2 pos, float range,
-        const std::function<bool(const Entity&)>& filter);
-
-    template<typename T>
-    static OptEntity getClosestWithComponent(const Entity& entity,
-                                             float range) {
-        const Transform& transform = entity.get<Transform>();
-        return EntityHelper::getClosestMatchingEntity(
-            transform.as2(), range,
-            [](const Entity& entity) { return entity.has<T>(); });
+    // Like getEntityForID, but asserts when missing.
+    static Entity& getEnforcedEntityForID(afterhours::EntityID id) {
+        OptEntity opt = getEntityForID(id);
+        if (!opt) {
+            log_error("EntityHelper::getEnforcedEntityForID failed: {}", id);
+        }
+        return opt.asE();
     }
 
-    static RefEntities getAllInRange(vec2 range_min, vec2 range_max);
-    static RefEntities getAllInRangeFiltered(
-        vec2 range_min, vec2 range_max,
-        const std::function<bool(const Entity&)>& filter);
-
-    static OptEntity getOverlappingSolidEntityInRange(
-        vec2 range_min, vec2 range_max,
-        const std::function<bool(const Entity&)>& = {});
-
-    static bool hasOverlappingSolidEntitiesInRange(vec2 range_min,
-                                                   vec2 range_max);
-
-    static OptEntity getOverlappingEntityIfExists(
-        const Entity& entity, float range,
-        const std::function<bool(const Entity&)>& filter = {});
-
-    static OptEntity getMatchingFloorMarker(IsFloorMarker::Type type);
-    static OptEntity getMatchingTriggerArea(IsTriggerArea::Type type);
-
-    // TODO :INFRA: i think this is slower because we are doing "outside
-    // mesh" as outside we should probably have just make some tiles for
-    // inside the map
-    // ('.' on map for example) and use those to mark where people can walk
-    // and where they cant static bool isWalkable_impl(const vec2& pos) {
-    // auto nav = GLOBALS.get_ptr<NavMesh>("navmesh");
-    // if (!nav) {
-    // return true;
-    // }
-    //
-    // for (auto kv : nav->entityShapes) {
-    // auto s = kv.second;
-    // if (s.inside(pos)) return false;
-    // }
-    // return true;
-    // }
-
-    static void invalidatePathCacheLocation(vec2 pos);
+    // Pathfinding and walkability
+    static void invalidateCaches();
     static void invalidatePathCache();
     static bool isWalkable(vec2 pos);
-
-    // each target get and path find runs through all entities
-    // so this will just get slower and slower over time
     static bool isWalkableRawEntities(const vec2& pos);
+
+    // Creation stuff
+
+    struct CreationOptions {
+        bool is_permanent;
+    };
+
+    // Get a specific collection by thread type
+    static afterhours::EntityCollection& get_server_collection() {
+        return server_collection;
+    }
+    static afterhours::EntityCollection& get_client_collection() {
+        return client_collection;
+    }
+
+    // Game-specific entity access methods
+    static const Entities& get_entities() {
+        return EntityHelper::get_current_collection().get_entities();
+    }
+    static Entities& get_entities_for_mod() {
+        return EntityHelper::get_current_collection().get_entities_for_mod();
+    }
+    static RefEntities get_ref_entities();
+
+    // Entity creation with game-specific options
+    static Entity& createEntity();
+    static Entity& createPermanentEntity();
+    static Entity& createEntityWithOptions(const CreationOptions& options);
+
+    // Item creation helpers
+    template<typename... TArgs>
+    static RefEntity createItem(EntityType type, vec3 pos, TArgs... args) {
+        // Important: `createEntity()` creates into Afterhours temp storage.
+        // Do NOT return `get_entities().back()` here (that's the last *merged*
+        // entity, not necessarily the one we just created).
+        Entity& e = createEntity();
+        items::make_item_type(e, type, pos, std::forward<TArgs>(args)...);
+        return e;
+    }
+
+    template<typename... TArgs>
+    static RefEntity createPermanentItem(vec3 pos, TArgs... args) {
+        Entity& e = createPermanentEntity();
+        items::make_item_type(e, pos, std::forward<TArgs>(args)...);
+        return e;
+    }
+
+    // Cleanup and entity management
+    static void markIDForCleanup(int e_id) {
+        EntityHelper::get_current_collection().markIDForCleanup(e_id);
+    }
+    static void cleanup() { EntityHelper::get_current_collection().cleanup(); }
+    static void delete_all_entities_NO_REALLY_I_MEAN_ALL() {
+        EntityHelper::get_current_collection()
+            .delete_all_entities_NO_REALLY_I_MEAN_ALL();
+    }
+    static void delete_all_entities(bool include_permanent = false) {
+        EntityHelper::get_current_collection().delete_all_entities(
+            include_permanent);
+    }
+
+    // Entity iteration
+    static void forEachEntity(
+        const std::function<
+            afterhours::EntityHelper::ForEachFlow(afterhours::Entity&)>& cb);
+
+    // Entity query methods
+    static std::vector<RefEntity> getFilteredEntitiesInRange(
+        vec2 pos, float range,
+        const std::function<bool(const Entity&)>& filter);
 };

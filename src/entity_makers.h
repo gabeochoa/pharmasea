@@ -4,15 +4,15 @@
 
 #include <string>  // for basic_string
 
+#include "components/can_change_settings_interactively.h"
 #include "components/has_work.h"
 #include "components/is_floor_marker.h"
 #include "components/is_spawner.h"
 #include "components/is_trigger_area.h"
 #include "dataclass/ingredient.h"
 #include "engine/ui/color.h"
-#include "entity.h"   // for Item, DebugOptions, Entity
-#include "raylib.h"   // for Color, PINK
-#include "strings.h"  // for GRABBER, CONVEYER, FILTERED_GRABBER
+#include "entity.h"  // for Item, DebugOptions, Entity
+#include "raylib.h"  // for Color, PINK
 
 typedef Entity Furniture;
 
@@ -27,6 +27,11 @@ void update_player_rare_remotely(Entity& entity, int model_index,
                                  long long last_ping);
 void make_player(Entity& player, vec3 p);
 void make_customer(Entity& customer, const SpawnInfo& info, bool has_order);
+
+void make_entity(Entity& entity, const DebugOptions& options,
+                 vec3 p = {-2, 0, -2});
+
+void make_entity(Entity& entity, const DebugOptions& options, vec2 p);
 
 namespace furniture {
 
@@ -46,15 +51,19 @@ void make_fruit_basket(Entity&, vec2, int starting_index);
 void make_table(Entity&, vec2);
 void make_cupboard(Entity&, vec2, int index = 0);
 
+void make_interactive_settings_changet(
+    Entity& isc, vec2 pos, CanChangeSettingsInteractively::Style style);
+
 }  // namespace furniture
 
 namespace items {
-void make_juice(Item& juice, vec2 pos, Ingredient fruit);
-void make_drink(Item& drink, vec2 pos);
+void make_juice(Item& juice, vec3 pos, Ingredient fruit);
+void make_drink(Item& drink, vec3 pos);
 
-void make_item_type(Item& item, EntityType type_name, vec2 pos, int index = -1);
+void make_item_type(Item& item, EntityType type_name, vec3 pos, int index = -1);
 
 // Returns true if item was cleaned up
 bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd);
+bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient toadd);
 
 }  // namespace items

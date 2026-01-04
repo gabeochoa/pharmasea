@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct CanBeHeld : public BaseComponent {
-    virtual ~CanBeHeld() {}
-
     [[nodiscard]] bool is_held() const { return held; }
     [[nodiscard]] bool is_not_held() const { return !is_held(); }
 
@@ -15,11 +13,14 @@ struct CanBeHeld : public BaseComponent {
    private:
     bool held = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(held);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.held                        //
+        );
     }
 };
+
+struct CanBeHeld_HT : public CanBeHeld {};

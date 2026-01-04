@@ -68,5 +68,6 @@ struct SettingsLayer : public Layer {
 
     virtual void onDraw(float dt) override;
 
+    void draw_column(Rectangle column, int index, Rectangle screen);
     void draw_keybinding_screen(float);
 };

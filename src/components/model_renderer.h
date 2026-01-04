@@ -14,8 +14,6 @@ struct ModelRenderer : public BaseComponent {
         model_name = util::convertToSnakeCase<EntityType>(type);
     }
 
-    virtual ~ModelRenderer() {}
-
     [[nodiscard]] bool missing() const { return !exists(); }
     [[nodiscard]] bool exists() const {
         return ModelInfoLibrary::get().has(model_name);
@@ -25,22 +23,21 @@ struct ModelRenderer : public BaseComponent {
         return ModelInfoLibrary::get().get(model_name);
     }
     [[nodiscard]] raylib::Model model() const {
-        return ModelLibrary::get().get(model_name);
+        return ModelLibrary::get().get_and_load_if_needed(model_name);
     }
     [[nodiscard]] const std::string& name() const { return model_name; }
 
-    void update_model_name(const std::string& new_name) {
-        model_name = new_name;
-    }
+    void update_model_name(std::string_view new_name) { model_name = new_name; }
 
    private:
     std::string model_name;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.model_name                  //
+        );
     }
 };

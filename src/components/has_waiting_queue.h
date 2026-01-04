@@ -7,9 +7,7 @@
 using EntityID = int;
 
 struct HasWaitingQueue : public BaseComponent {
-    static const int max_queue_size = 3;
-
-    virtual ~HasWaitingQueue() {}
+    static constexpr int max_queue_size = 3;
 
     [[nodiscard]] int num_in_queue() const {
         return max_queue_size - (max_queue_size - next_line_position);
@@ -45,7 +43,8 @@ struct HasWaitingQueue : public BaseComponent {
 
     // These impl are in job.cpp
     [[nodiscard]] bool matching_id(int id, int i) const;
-    [[nodiscard]] int has_matching_person(int id) const;
+    [[nodiscard]] bool has_matching_person(int id) const;
+    [[nodiscard]] int get_customer_position(int id) const;
     HasWaitingQueue& add_customer(const Entity& customer);
 
    private:
@@ -55,12 +54,13 @@ struct HasWaitingQueue : public BaseComponent {
     // These impl are in job.cpp
     void dump_contents() const;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(next_line_position);
-        s.container4b(ppl_in_line);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                      //
+            static_cast<BaseComponent&>(self), //
+            self.next_line_position,         //
+            self.ppl_in_line                 //
+        );
     }
 };

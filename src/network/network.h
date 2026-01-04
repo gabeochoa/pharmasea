@@ -9,15 +9,15 @@
 #include "../engine/network/webrequest.h"
 #include "../engine/statemanager.h"
 #include "../engine/trigger_on_dt.h"
-#include "shared.h"
+#include "types.h"
 //
 #include "client.h"
 #include "server.h"
 
 namespace network {
 struct Info;
-}
-extern std::shared_ptr<network::Info> network_info;
+}  // namespace network
+extern std::unique_ptr<network::Info> network_info;
 
 namespace network {
 
@@ -45,10 +45,9 @@ struct RoleInfoMixin {
     };
 
     Role desired_role = Role::s_None;
-    std::shared_ptr<Client> client;
+    std::unique_ptr<Client> client;
     std::thread::id client_thread_id;
     std::thread::id server_thread_id;
-    std::thread server_thread;
 
     [[nodiscard]] bool is_host() { return desired_role & s_Host; }
     [[nodiscard]] bool is_client() { return desired_role & s_Client; }
@@ -56,19 +55,25 @@ struct RoleInfoMixin {
     [[nodiscard]] bool missing_role() { return !has_role(); }
 
     void set_role(Role role) {
+        log_info("set_role called with role: {}", (int) role);
         const auto _setup_client = [&]() {
-            client = std::make_shared<Client>();
+            log_info("_setup_client lambda called - creating Client instance");
+            client = std::make_unique<Client>();
             client->update_username(Settings::get().data.username);
+            log_info("_setup_client lambda completed");
         };
 
         switch (role) {
             case Role::s_Host: {
                 log_info("set user's role to host");
                 desired_role = Role::s_Host;
-                server_thread = Server::start(DEFAULT_PORT);
+                log_info("Calling Server::start with port: {}", DEFAULT_PORT);
+                Server::start(DEFAULT_PORT);
+                log_info("Server::start returned");
                 //
                 _setup_client();
                 client->lock_in_ip();
+                log_info("Host role setup completed");
 
             } break;
             case Role::s_Client: {
@@ -77,14 +82,17 @@ struct RoleInfoMixin {
                 _setup_client();
             } break;
             default:
+                log_warn("set_role called with unknown role: {}", (int) role);
                 break;
         }
 
-        server_thread_id = server_thread.get_id();
+        server_thread_id = Server::get_thread_id();
         GLOBALS.set("server_thread_id", &server_thread_id);
+        log_info("Server thread ID set: {}", (void*) &server_thread_id);
 
         client_thread_id = std::this_thread::get_id();
         GLOBALS.set("client_thread_id", &client_thread_id);
+        log_info("set_role completed successfully");
     }
 };
 
@@ -107,33 +115,54 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
     Info() {}
 
     ~Info() {
+        log_info("network::Info destructor called");
         desired_role = Role::s_None;
         // cleanup server
         {
-            if (server_thread_id == std::thread::id()) return;
-            Server::stop();
-            server_thread.join();
+            if (server_thread_id == std::thread::id()) {
+                log_info("No server thread to clean up (thread_id is default)");
+                return;
+            }
+            log_info("Stopping server and joining thread");
+            Server::shutdown();
         }
+        log_info("network::Info destructor completed");
     }
 
     static void init_connections() {
+        log_info("init_connections() called");
 #ifdef BUILD_WITHOUT_STEAM
+        log_info(
+            "BUILD_WITHOUT_STEAM is defined, calling "
+            "GameNetworkingSockets_Init()");
         SteamDatagramErrMsg errMsg;
-        if (!GameNetworkingSockets_Init(nullptr, errMsg)) {
-            log_warn("GameNetworkingSockets init failed {}", errMsg);
+        bool init_result = GameNetworkingSockets_Init(nullptr, errMsg);
+        log_info("GameNetworkingSockets_Init() returned: {}",
+                 init_result ? "true" : "false");
+        if (!init_result) {
+            log_warn("GameNetworkingSockets init failed: {}", errMsg);
             // TODO return true / false so we can hide host / join button?
             // TODO display message to the user?
+        } else {
+            log_info("GameNetworkingSockets_Init() succeeded");
         }
+#else
+        log_info(
+            "BUILD_WITHOUT_STEAM is NOT defined, skipping "
+            "GameNetworkingSockets_Init()");
 #endif
+        log_info("Calling SteamNetworkingUtils()->GetLocalTimestamp()");
         START_TIME = SteamNetworkingUtils()->GetLocalTimestamp();
+        log_info("Setting debug output function");
         SteamNetworkingUtils()->SetDebugOutputFunction(
             k_ESteamNetworkingSocketsDebugOutputType_Msg, log_debug);
 
         reset_connections();
+        log_info("Initializing GNS Network Connections");
     }
 
     static void reset_connections() {
-        network_info = std::make_shared<network::Info>();
+        network_info = std::make_unique<network::Info>();
         if (network::ENABLE_REMOTE_IP) {
             my_remote_ip_address = get_remote_ip_address().value_or("");
         } else {
@@ -155,14 +184,15 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
         client->send_updated_seed(seed);
     }
 
+    void send_current_menu_state() {
+        if (is_host()) {
+            client->send_current_menu_state();
+        }
+    }
+
     void tick(float dt) {
         if (missing_role()) return;
         if (has_not_set_ip()) return;
-
-        if (is_host()) {
-            bool run = menu_state_tick_trigger.test(dt);
-            if (run) client->send_current_menu_state();
-        }
 
         client->tick(dt);
     }
