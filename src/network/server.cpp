@@ -58,7 +58,8 @@ void Server::start(int port) {
     log_info("Server instance created, setting running = true");
     g_server->running = true;
     log_info("Starting server thread");
-    g_server->server_thread = std::thread(std::bind(&Server::run, g_server.get()));
+    g_server->server_thread =
+        std::thread(std::bind(&Server::run, g_server.get()));
     log_info("Server thread started");
 }
 
@@ -91,7 +92,8 @@ void Server::play_sound(vec2 position, strings::sounds::SoundId sound) {
 
 std::thread::id Server::get_thread_id() {
     if (!g_server) return {};
-    if (g_server->server_thread.joinable()) return g_server->server_thread.get_id();
+    if (g_server->server_thread.joinable())
+        return g_server->server_thread.get_id();
     return g_server->thread_id;
 }
 
@@ -166,7 +168,8 @@ void Server::run() {
         &EntityHelper::get_server_collection());
 
     // should probably always be about / above whats in the game.h
-    constexpr float desiredFrameRate = 240.0f;
+    // TODO - should be a setting since on this computer i need it slow
+    constexpr float desiredFrameRate = 120.0f;
     constexpr std::chrono::duration<float> fixedTimeStep(1.0f /
                                                          desiredFrameRate);
 
@@ -367,7 +370,8 @@ void Server::process_map_update(float dt) {
                 pharmacy_map->showMinimap = loaded.map_snapshot.showMinimap;
                 pharmacy_map->seed = loaded.map_snapshot.seed;
                 pharmacy_map->hashed_seed = loaded.map_snapshot.hashed_seed;
-                pharmacy_map->last_generated = loaded.map_snapshot.last_generated;
+                pharmacy_map->last_generated =
+                    loaded.map_snapshot.last_generated;
                 pharmacy_map->was_generated = true;
                 RandomEngine::set_seed(pharmacy_map->seed);
                 EntityHelper::invalidateCaches();
