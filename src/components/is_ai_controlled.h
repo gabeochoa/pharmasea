@@ -87,9 +87,6 @@ struct IsAIControlled : public BaseComponent {
         return true;
     }
 
-    // Always set the next state (used for "override" transitions like bathroom).
-    void force_next_state(State s) { next_state = s; }
-
     void clear_next_state() { next_state.reset(); }
 
     IsAIControlled& set_resume_state(State s) {
