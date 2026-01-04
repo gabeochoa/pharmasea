@@ -81,7 +81,10 @@ void set_new_customer_order(Entity& entity) {
         if (!entity.get<CanHoldItem>().empty()) return false;
     }
 
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+    OptEntity sophie_opt = EntityHelper::getPossibleNamedEntity(NamedEntity::Sophie);
+    if (!sophie_opt) return false;
+    Entity& sophie = sophie_opt.asE();
+    if (sophie.is_missing<IsRoundSettingsManager>()) return false;
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
     int bladder_size = irsm.get<int>(ConfigKey::BladderSize);
     const CanOrderDrink& cod = entity.get<CanOrderDrink>();
