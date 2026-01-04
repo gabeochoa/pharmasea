@@ -176,6 +176,8 @@ If that ever becomes a problem, two alternatives:
 - **Selective reset tagging**: only set `AINeedsResetting` for transitions that need cleanup (e.g. ones that change target/scratch components).
 - **Split reset systems**: keep `AINeedsResetting` always-on, but make `AIOnEnterResetSystem` very cheap and only do targeted resets based on (old_state, new_state).
 
+TODO: Revisit whether always-on `AINeedsResetting` introduces noticeable “1 frame of no-op” after frequent transitions (esp. queue/register loops). If it does, switch to selective tagging or targeted resets.
+
 ## Cooldown handling: keep vs generalize
 
 ### Phase 1 (fast + safe)
