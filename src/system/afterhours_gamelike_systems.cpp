@@ -320,7 +320,15 @@ struct AIOnEnterResetSystem
 };
 
 // TODO should we have a separate system for each job type?
-struct ProcessAiSystem : public afterhours::System<IsAIControlled, CanPathfind> {
+//
+// Note: afterhours tag filtering currently only applies on Apple platforms
+// (see vendor/afterhours/src/core/system.h). We still guard at runtime on other
+// platforms.
+struct ProcessAiSystem
+    : public afterhours::System<
+          IsAIControlled, CanPathfind,
+          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
+                                 afterhours::tags::AITag::AINeedsResetting>> {
     virtual bool should_run(const float) override {
         return GameState::get().is_game_like();
     }
@@ -328,9 +336,11 @@ struct ProcessAiSystem : public afterhours::System<IsAIControlled, CanPathfind> 
     virtual void for_each_with(Entity& entity,
                                [[maybe_unused]] IsAIControlled&,
                                [[maybe_unused]] CanPathfind&, float dt) override {
-        // If a transition is pending, don't run normal AI logic this frame.
+#if !__APPLE__
+        // If tag filtering is not active, guard manually.
         if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
         if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
         ai::process_ai_entity(entity, dt);
     }
 };
