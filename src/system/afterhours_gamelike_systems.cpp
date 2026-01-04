@@ -254,11 +254,20 @@ struct AIForceLeaveCommitSystem : public afterhours::System<IsAIControlled> {
 };
 
 // Performs "on-enter" resets once a new state has been committed.
-struct AIOnEnterResetSystem : public afterhours::System<IsAIControlled> {
+//
+// Note: afterhours tag filtering currently only applies on Apple platforms
+// (see vendor/afterhours/src/core/system.h). We still guard at runtime on other
+// platforms to avoid running resets every frame.
+struct AIOnEnterResetSystem
+    : public afterhours::System<
+          IsAIControlled,
+          afterhours::tags::Any<afterhours::tags::AITag::AINeedsResetting>> {
     bool should_run(const float) override { return GameState::get().is_game_like(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
+#if !__APPLE__
         if (!entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
 
         // Keep this cheap and conservative; do not erase state that must carry
         // information across transitions (e.g. Bathroom's return-to slot).
