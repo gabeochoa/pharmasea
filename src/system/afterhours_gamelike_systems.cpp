@@ -204,6 +204,9 @@ struct AICommitNextStateSystem : public afterhours::System<IsAIControlled> {
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
             // Mirror existing day/night transition systems: "leaving in-round"
             // happens while processing the close-bar transition.
+            // TODO: Refactor this duplicated day/night transition check into a
+            // shared helper (many systems repeat this Sophie + HasDayNightTimer
+            // lookup and condition).
             force_leave_active =
                 timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
