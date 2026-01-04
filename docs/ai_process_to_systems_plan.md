@@ -18,6 +18,27 @@ Convert the existing AI “process_*” style functions (especially `process_sta
 - Scales to “a bunch more systems” without boilerplate explosion
 - Keeps registration/ordering explicit and predictable
 
+## Current implementation status (this branch)
+
+The staged-transition “pipeline” is now partially implemented, but the AI state
+handlers are still largely monolithic.
+
+- **Implemented**
+  - **Staged transitions on `IsAIControlled`**: `next_state` plus `set_state(...)` staging semantics and `set_state_immediately(...)` for authoritative transitions.
+  - **AI runtime tags**: reserved non-`EntityType` tag IDs (AI tags live in 60–63; see `src/system/ai_tags.h` and `src/entity_type.h` comments).
+  - **Commit/reset pipeline systems**:
+    - `AIOnEnterResetSystem` (applies minimal resets when `AINeedsResetting` is set)
+    - `AICommitNextStateSystem` (commits `next_state → state` when `AITransitionPending` is set)
+    - `AIForceLeaveCommitSystem` (force-leave override via `should_run` using Sophie + `HasDayNightTimer`)
+  - **Bathroom override system**: `NeedsBathroomNowSystem` ignores `AITransitionPending` and overwrites staged transitions to Bathroom.
+  - **CleanVomit roaming**: in `process_state_clean_vomit`, when no vomit exists the AI roams using `HasAITargetLocation` while continuing to scan for vomit.
+
+- **Not implemented yet**
+  - **Ability/component-based split of the AI state handlers**: `ProcessAiSystem` still calls `system_manager::ai::process_ai_entity(...)`, which still does the big `switch` and calls `process_state_*`.
+  - **`AIFallbackToWanderSystem`** (centralized “progress or wander” fallback) — we still have per-state fallback logic (queue/pay/bathroom safety) rather than a dedicated fallback system.
+  - **Performance gating**: AI pipeline systems are registered under “gamelike” currently; we likely need to gate them to the in-round/bar-open contexts if they impact trigger-area progression/replay timing.
+  - **afterhours tag filtering portability**: vendor afterhours tag filtering is Apple-only today; Linux builds require explicit `hasTag()` guards (we currently have guards in several systems).
+
 ## Design choice: ability/component-driven vs state-specific systems
 
 We can do either:
@@ -254,4 +275,22 @@ This makes cooldown behavior observable and avoids rewriting `reset_to` every ca
 - Adding a new AI state is “add a component + add a small system class + register it”.
 - Cooldown behavior remains unchanged in Phase 1.
 - System ordering is explicit and stable; multi-processing is prevented once we scale.
+
+## What’s left to do (actionable next steps)
+
+1. **Gate AI pipeline systems to avoid replay/trigger timing regressions**
+   - Move AI pipeline registration to `register_inround_systems()` or update each AI pipeline system’s `should_run()` to require “bar open” (or equivalent).
+   - Add a shared helper for the duplicated Sophie + `HasDayNightTimer` checks (TODO already exists).
+
+2. **Decide on centralized fallback**
+   - Either implement `AIFallbackToWanderSystem` (and remove per-state wander fallbacks), or keep the per-state fallbacks and delete this step from the plan.
+
+3. **Split the monolithic AI dispatcher**
+   - Replace `process_ai_entity` + `process_state_*` with separate afterhours systems (queue/register/drink/pay/bathroom/clean/etc.).
+   - Each system should:
+     - respect `AITransitionPending` (skip) unless it’s an override system
+     - request transitions by staging `set_state(...)` + setting `AITransitionPending`
+
+4. **Revisit reset tagging policy**
+   - If always-on `AINeedsResetting` causes noticeable one-frame stalls, switch to selective tagging or targeted reset logic.
 
