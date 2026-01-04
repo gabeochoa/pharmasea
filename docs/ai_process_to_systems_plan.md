@@ -43,6 +43,10 @@ These run regardless of state (or across multiple states).
   - Responsibility: detect bathroom need and request a transition.
   - Note: in the new model this should set a “next state” request, not immediately mutate `IsAIControlled::state`.
 
+- **Force leave override**
+  - We treat “bar is closing / end-of-round” as highest priority.
+  - In `AICommitNextStateSystem`, if a “force leave” condition is active, we override any pending transition and commit `State::Leave`.
+
 - **`AIStateResetOnEnterSystem`** (optional, later)
   - Responsibility: perform “state entry” cleanup/initialization that is currently scattered (e.g. clear targets, reset scratch components).
   - Implementation requires tracking state transitions (see “State transition tracking”).
@@ -75,7 +79,25 @@ To allow all behavior systems to run every frame while keeping state transitions
 - A final **`AICommitNextStateSystem`** runs at the end of AI processing and:
   - applies the pending transition to `IsAIControlled::state`
   - clears the pending transition
-  - sets `afterhours::tags::AINeedsResetting` so “on enter” reset logic can run
+  - sets `afterhours::tags::AINeedsResetting` (always) so “on enter” reset logic can run
+
+#### Fallback-to-wander (explicit “progress or wander” policy)
+
+We want Wander to be the universal fallback when progress is blocked.
+Instead of having each behavior system directly switch to Wander, use a dedicated fallback system:
+
+- **`AIFallbackToWanderSystem`**
+  - Runs even if other AI behavior systems are skipped (but should still respect “force leave”).
+  - If the entity has no pending transition (`!AITransitionPending`) and needs a fallback, it calls `set_next_state(Wander)` and sets `AITransitionPending`.
+  - Should be registered early so that when it sets a transition, other systems skip for that entity.
+
+In the current AI implementation, the states that explicitly fall back to Wander are:
+
+- `QueueForRegister` → Wander (when no register is available)
+- `Pay` → Wander (when no register is available)
+- `Bathroom` → Wander (if `CanOrderDrink` is missing; safety fallback)
+
+This list can expand as new behaviors are added.
 
 ### 4) Keep “pure helpers” as helpers
 
@@ -146,6 +168,14 @@ This lets us:
 - Move `reset_component<...>` calls out of random places
 - Set cooldown intervals once on entry rather than each tick
 
+#### Note on “always set `AINeedsResetting`”
+
+Always setting `AINeedsResetting` after a commit is the safest default, but it can introduce an extra “entry reset” step even for trivial transitions.
+If that ever becomes a problem, two alternatives:
+
+- **Selective reset tagging**: only set `AINeedsResetting` for transitions that need cleanup (e.g. ones that change target/scratch components).
+- **Split reset systems**: keep `AINeedsResetting` always-on, but make `AIOnEnterResetSystem` very cheap and only do targeted resets based on (old_state, new_state).
+
 ## Cooldown handling: keep vs generalize
 
 ### Phase 1 (fast + safe)
@@ -168,22 +198,26 @@ This makes cooldown behavior observable and avoids rewriting `reset_to` every ca
 1. **Inventory & tagging**
    - Enumerate all AI “state handlers” and identify required components + tick rate.
 
-2. **Introduce the generic base/template**
-   - Add `AiStateSystem` wrapper (and optionally `AiAbilityStateSystem`).
+2. **Add staged transitions**
+   - Add `next_state` storage (either on `IsAIControlled` or a companion component).
+   - Add `afterhours::tags::AITransitionPending`.
 
-3. **Split the monolithic `ProcessAiSystem`**
-   - Replace the switch-based dispatcher with per-state systems.
-   - Add `AiBathroomInterruptSystem` as its own system (runs first).
+3. **Add commit + reset**
+   - Implement `AICommitNextStateSystem` (clears `AITransitionPending`, sets `AINeedsResetting`).
+   - Add force-leave override inside the commit step.
 
-4. **Add the “one per frame” guard** (once there are 3+ state systems)
-   - Prevent multi-processing when transitions occur.
+4. **Add reset-on-enter**
+   - Implement `AIOnEnterResetSystem` (clears `AINeedsResetting`).
 
-5. **Optional: add state-entry system**
-   - Centralize resets and initializations.
+5. **Add fallback**
+   - Implement `AIFallbackToWanderSystem` to request Wander when progress is blocked (and no pending transition exists).
 
-6. **Register systems**
+6. **Port behaviors**
+   - Convert `process_state_*` blocks into behavior systems that call `set_next_state(...)` and set `AITransitionPending`.
+
+7. **Register systems**
    - Keep registration in one place (e.g. `system_manager::ai::register_ai_systems`).
-   - Register in deterministic order.
+   - Register in deterministic order (fallback early, commit last).
 
 ## Success criteria (definition of done)
 
