@@ -652,8 +652,6 @@ void process_state_bathroom(Entity& entity, float dt) {
 }
 
 void process_state_clean_vomit(Entity& entity, float dt) {
-    if (!ai_tick_with_cooldown(entity, dt, 0.10f)) return;
-
     // Only entities with the ability should run this state.
     if (!entity.get<IsAIControlled>().has_ability(
             IsAIControlled::AbilityCleanVomit))
@@ -690,13 +688,37 @@ void process_state_clean_vomit(Entity& entity, float dt) {
                               })
                               .orderByDist(entity.get<Transform>().as2())
                               .gen_first();
-        if (!vomit) return;
+        if (!vomit) {
+            // No work: roam until something appears.
+            HasAITargetLocation& roam =
+                ensure_component<HasAITargetLocation>(entity);
+            if (!roam.pos.has_value()) {
+                roam.pos = pick_random_walkable_near(entity).value_or(
+                    entity.get<Transform>().as2());
+            }
+            bool reached = entity.get<CanPathfind>().travel_toward(
+                roam.pos.value(), get_speed_for_entity(entity) * dt);
+            if (reached) roam.pos.reset();
+            return;
+        }
         tgt.entity.set(vomit.asE());
+        // Switch from roaming to work targeting.
+        entity.removeComponentIfExists<HasAITargetLocation>();
     }
 
     OptEntity vomit = tgt.entity.resolve();
     if (!vomit) {
         tgt.entity.clear();
+        // Fall back to roaming.
+        HasAITargetLocation& roam =
+            ensure_component<HasAITargetLocation>(entity);
+        if (!roam.pos.has_value()) {
+            roam.pos = pick_random_walkable_near(entity).value_or(
+                entity.get<Transform>().as2());
+        }
+        bool reached = entity.get<CanPathfind>().travel_toward(
+            roam.pos.value(), get_speed_for_entity(entity) * dt);
+        if (reached) roam.pos.reset();
         return;
     }
 
