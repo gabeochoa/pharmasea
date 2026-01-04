@@ -170,6 +170,26 @@ struct PassTimeForTransactionAnimationSystem
     }
 };
 
+// Override: request Bathroom regardless of pending transition.
+struct NeedsBathroomNowSystem : public afterhours::System<IsAIControlled> {
+    bool should_run(const float) override { return GameState::get().is_game_like(); }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
+        // Don't interrupt these states (matches previous logic).
+        if (ai.state == IsAIControlled::State::Bathroom ||
+            ai.state == IsAIControlled::State::Drinking ||
+            ai.state == IsAIControlled::State::Leave)
+            return;
+
+        if (!system_manager::ai::needs_bathroom_now(entity)) return;
+
+        // Override: clear any pending request and force Bathroom.
+        ai.clear_next_state();
+        (void) ai.set_next_state(IsAIControlled::State::Bathroom);
+        entity.enableTag(afterhours::tags::AITag::AITransitionPending);
+    }
+};
+
 // Applies staged AI transitions (next_state -> state) and sets reset tag.
 // Also enforces a "force leave" override during end-of-round transitions.
 struct AICommitNextStateSystem : public afterhours::System<IsAIControlled> {
@@ -282,6 +302,9 @@ struct ProcessAiSystem : public afterhours::System<IsAIControlled, CanPathfind> 
     virtual void for_each_with(Entity& entity,
                                [[maybe_unused]] IsAIControlled&,
                                [[maybe_unused]] CanPathfind&, float dt) override {
+        // If a transition is pending, don't run normal AI logic this frame.
+        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
         ai::process_ai_entity(entity, dt);
     }
 };
@@ -358,6 +381,9 @@ void SystemManager::register_gamelike_systems() {
     // Apply resets from previously committed transitions before running AI.
     systems.register_update_system(
         std::make_unique<system_manager::AIOnEnterResetSystem>());
+    // Bathroom override can preempt other transitions.
+    systems.register_update_system(
+        std::make_unique<system_manager::NeedsBathroomNowSystem>());
     systems.register_update_system(
         std::make_unique<system_manager::ProcessAiSystem>());
     // Commit staged transitions after AI has had a chance to request them.
