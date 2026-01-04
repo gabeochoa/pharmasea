@@ -51,7 +51,7 @@ struct Server {
     AtomicQueue<ClientMessage> incoming_message_queue;
     AtomicQueue<ClientPacket> incoming_packet_queue;
     AtomicQueue<ClientPacket> packet_queue;
-    std::unique_ptr<internal::Server> server_p;
+    std::unique_ptr<internal::IServer> server_p;
     std::map<int, std::shared_ptr<Entity>> players;
     std::unique_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
@@ -78,22 +78,27 @@ struct Server {
 
     explicit Server(int port) {
         log_info("Server constructor called with port: {}", port);
-        log_info("Creating internal::Server instance");
-        server_p.reset(new internal::Server(port));
+        if (network::LOCAL_ONLY) {
+            log_info("Creating internal::LocalServer instance (local-only)");
+            server_p = std::make_unique<internal::LocalServer>();
+        } else {
+            log_info("Creating internal::GnsServer instance");
+            server_p = std::make_unique<internal::GnsServer>(port);
+        }
         log_info("Setting up server callbacks");
         server_p->set_process_message(
             [this](const internal::Client_t& incoming_client,
                    const std::string& msg) {
                 this->server_enqueue_message_string(incoming_client, msg);
             });
-        server_p->onClientDisconnect =
-            ([this](int client_id) { this->process_player_leave(client_id); });
+        server_p->set_on_client_disconnect(
+            [this](int client_id) { this->process_player_leave(client_id); });
 
-        server_p->onSendClientAnnouncement =
+        server_p->set_on_send_client_announcement(
             [this](HSteamNetConnection conn, const std::string& msg,
                    internal::InternalServerAnnouncement type) {
                 this->send_announcement(conn, msg, type);
-            };
+            });
         log_info("Calling server_p->startup()");
         server_p->startup();
         log_info("server_p->startup() completed, running state: {}",

@@ -517,9 +517,7 @@ void Server::process_player_leave(int client_id) {
     players.erase(player_match);
 
     std::vector<int> ids;
-    for (auto& c : server_p->clients) {
-        ids.push_back(c.second.client_id);
-    }
+    ids = server_p->connected_client_ids();
     // Since we are the host, we can use the internal::Client_t to figure
     // out the id / name
     send_client_packet_to_all(
@@ -607,9 +605,7 @@ void Server::process_player_join_packet(
     // TODO i looked into std::transform but kept getting std::out of range
     // errors
     std::vector<int> ids;
-    for (auto& c : server_p->clients) {
-        ids.push_back(c.second.client_id);
-    }
+    ids = server_p->connected_client_ids();
     // Since we are the host, we can use the internal::Client_t to figure
     // out the id / name
     send_client_packet_to_all(

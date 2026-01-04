@@ -80,40 +80,7 @@ Optionally, `--local` can also:
 
 - Force host mode (or add a UI toggle) if desired for “single-player but server-authoritative” behavior.
 
-## Implementation options
-
-### Option A (recommended): Loopback-only + no external IP fetch
-
-This is the smallest change with the highest chance of fixing “corporate machine” issues.
-
-Changes:
-
-1. **Add `--local` CLI flag** (always recognized, because unknown flags currently cause exit)
-   - `src/game.cpp`: extend `process_dev_flags()`’s `is_known_flag` set to include `--local`
-   - Store a global `network::LOCAL_ONLY` or similar (new flag in `globals.h` under `namespace network`)
-
-2. **Skip remote IP lookup in local mode**
-   - In `network::Info::reset_connections()` (`src/network/network.h`), gate:
-     - if `LOCAL_ONLY`: do not call `get_remote_ip_address()`
-     - and set `my_remote_ip_address` to something like `"Local only"`
-
-3. **Bind the server listen socket to 127.0.0.1**
-   - In `network::internal::Server` constructor or `startup()` (`src/network/internal/server.h`):
-     - set `address.ParseString("127.0.0.1")` (or the SteamNetworkingIPAddr equivalent) when local-only is enabled
-     - keep `address.m_port = port`
-   - Result: the server is not reachable from other machines; endpoint security is less likely to object.
-
-4. **UI messaging**
-   - In `NetworkLayer` (`src/layers/networklayer.cpp`), adjust the “IP address” area to show “Local only” and disable copy/show toggles when local-only is enabled.
-
-Pros:
-- Smallest scope; preserves existing host/client architecture and serialization paths.
-- Likely fixes both “proxy” complaints (by skipping ipify) and “corporate firewall” complaints (by not binding to all interfaces).
-
-Cons:
-- Still uses GameNetworkingSockets and underlying sockets; if UDP/socket creation is blocked, this won’t help.
-
-### Option B: True in-memory transport (no sockets at all)
+## Implementation plan (we should do this): True in-memory transport (no sockets at all)
 
 This replaces the “wire” between host client and server with a local queue/pipe abstraction.
 
@@ -141,50 +108,22 @@ Cons:
 - Bigger refactor: touches `src/network/internal/client.*`, `src/network/internal/server.*`, and likely call sites.
 - Needs careful threading/ownership and backpressure handling.
 
-### Option C: “Local-only executable” (compile-time switch)
-
-Build variant that:
-
-- disables all remote networking features
-- removes ipify and remote IP display
-- forces loopback listen or in-memory transport
-
-Pros:
-- Very clear product story (two builds).
-
-Cons:
-- More build/release complexity.
-- Less flexible than a runtime flag.
-
-## Recommended path
-
-Start with **Option A** because it’s low-risk and likely addresses the stated proxy/corporate issues:
-
-- `--local` disables ipify remote IP fetch
-- server listens on 127.0.0.1 only
-- UI reflects “Local only” and doesn’t encourage sharing/copying an IP
-
-If you still get reports that local-only fails (e.g., due to blocked UDP), then plan **Option B** (in-memory transport) as the “works everywhere” fallback.
-
 ## Concrete checklist (files to touch)
 
-- **CLI flag**
+- **CLI flag / mode switch**
   - `src/game.cpp`: accept `--local` as a known flag; set `network::LOCAL_ONLY = true`
-  - `src/engine/globals.h`: add `namespace network { inline bool LOCAL_ONLY = false; }` (or similar)
+  - `src/engine/globals.h`: add `namespace network { inline bool LOCAL_ONLY = false; }`
 
-- **Disable remote IP fetch**
-  - `src/network/network.h`: in `Info::reset_connections()`, skip `get_remote_ip_address()` when `LOCAL_ONLY`
-  - Optionally, `src/engine/network/webrequest.cpp`: add a short timeout (defensive even outside `--local`)
+- **Transport abstraction + implementations**
+  - `src/network/internal/*`: introduce a small “client/server transport” interface
+  - Keep existing GNS transport as one implementation
+  - Add `InProcessTransport` implementation using in-memory queues (no sockets)
+  - Select transport based on `network::LOCAL_ONLY`
 
-- **Bind listen socket to loopback**
-  - `src/network/internal/server.h`: set `address` IP to `127.0.0.1` in local-only mode before `CreateListenSocketIP`
-
-- **UI**
-  - `src/layers/networklayer.cpp`: show “Local only” instead of IP; disable copy/show IP actions when `LOCAL_ONLY`
+- **Local-only UX**
+  - In local-only mode, “Join by IP” should be disabled or treated as “Host local” (no remote networking)
 
 ## Notes / gotchas
 
 - `ENABLE_DEV_FLAGS` is currently always on (`src/game.h`), and `process_dev_flags()` exits on unknown flags. So `--local` must be added to the allowlist or it will terminate the game.
-- The ipify request is plain HTTP (`http://api.ipify.org/`), which is likely to be blocked or intercepted in enterprise networks. If you keep this feature, consider using HTTPS and adding explicit timeouts.
-- Binding to loopback-only will make “Host” no longer reachable from other machines (by design for local-only). If you want both behaviors, keep “Host” as-is and make “Local” a distinct mode/toggle.
 

@@ -24,7 +24,11 @@ Client::Client() {
     afterhours::EntityHelper::set_default_collection(
         &EntityHelper::get_client_collection());
 
-    client_p = std::make_unique<internal::Client>();
+    if (network::LOCAL_ONLY) {
+        client_p = std::make_unique<internal::LocalClient>();
+    } else {
+        client_p = std::make_unique<internal::GnsClient>();
+    }
     client_p->set_process_message([this](const std::string& msg) {
         this->client_process_message_string(msg);
     });

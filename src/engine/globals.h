@@ -52,4 +52,8 @@ constexpr int MAX_NAME_LENGTH = 25;
 constexpr int MAX_SOUND_LENGTH = 25;
 constexpr int MAX_SEED_LENGTH = 25;
 static bool ENABLE_REMOTE_IP = false;
+// When true, the game runs in "local-only" mode:
+// - no sockets/UDP required between host client and server
+// - transport is in-process queues instead of GameNetworkingSockets
+static bool LOCAL_ONLY = false;
 }  // namespace network

@@ -10,11 +10,41 @@
 #include "../../globals.h"
 //
 #include "../serialization.h"
+#include "local_hub.h"
 
 namespace network {
 namespace internal {
 
-Client::~Client() {
+static void send_packet_to_server(IClient& client, const ClientPacket& packet) {
+    Buffer buffer = serialize_to_buffer(packet);
+    client.send_string_to_server(buffer, packet.channel);
+}
+
+void IClient::send_join_info_request() {
+    log_info("client sending join info request");
+    ClientPacket packet({.client_id = -1,  // we dont know yet what it is
+                         .msg_type = ClientPacket::MsgType::PlayerJoin,
+                         .msg = ClientPacket::PlayerJoinInfo({
+                             .client_id = -1,  // again
+                             .hashed_version = HASHED_VERSION,
+                             .is_you = false,
+                             .username = username,
+                         })});
+    send_packet_to_server(*this, packet);
+}
+
+void IClient::send_leave_info_request() {
+    log_info("internal client sending leave info request");
+    ClientPacket packet(
+        {.client_id = -1,  // TODO we know this, idk where it is tho
+         .msg_type = ClientPacket::MsgType::PlayerLeave,
+         .msg = ClientPacket::PlayerLeaveInfo({
+             .client_id = -1,  // Server will fill this out for us
+         })});
+    send_packet_to_server(*this, packet);
+}
+
+GnsClient::~GnsClient() {
     try {
         send_leave_info_request();
     } catch (std::exception &) {
@@ -27,12 +57,12 @@ Client::~Client() {
     }
 }
 
-void Client::set_address(const std::string &ip) {
+void GnsClient::set_address(const std::string &ip) {
     address.ParseString(ip.c_str());
     address.m_port = DEFAULT_PORT;
 }
 
-void Client::startup() {
+void GnsClient::startup() {
     interface = SteamNetworkingSockets();
     if (interface == nullptr) {
         log_warn(
@@ -66,7 +96,7 @@ void Client::startup() {
     log_info("success connecting");
     running = true;
 }
-bool Client::poll_incoming_messages() {
+bool GnsClient::poll_incoming_messages() {
     ISteamNetworkingMessage *incoming_msg = nullptr;
     int num_msgs =
         interface->ReceiveMessagesOnConnection(connection, &incoming_msg, 1);
@@ -83,7 +113,7 @@ bool Client::poll_incoming_messages() {
     return true;
 }
 
-bool Client::run() {
+bool GnsClient::run() {
     if (!running) return false;
 
     auto poll_connection_state_changes = [&]() {
@@ -102,40 +132,7 @@ bool Client::run() {
     return true;
 }
 
-// TODO :DUPE: this is duplicated
-// we used to expose this in the header, but that means
-// the header has to include shared.h
-// .. this way we only include it in the cpp
-void send_packet_to_server(Client &client, const ClientPacket &packet) {
-    Buffer buffer = serialize_to_buffer(packet);
-    client.send_string_to_server(buffer, packet.channel);
-}
-
-void Client::send_join_info_request() {
-    log_info("client sending join info request");
-    ClientPacket packet({.client_id = -1,  // we dont know yet what it is
-                         .msg_type = ClientPacket::MsgType::PlayerJoin,
-                         .msg = ClientPacket::PlayerJoinInfo({
-                             .client_id = -1,  // again
-                             .hashed_version = HASHED_VERSION,
-                             .is_you = false,
-                             .username = username,
-                         })});
-    send_packet_to_server(*this, packet);
-}
-
-void Client::send_leave_info_request() {
-    log_info("internal client sending leave info request");
-    ClientPacket packet(
-        {.client_id = -1,  // TODO we know this, idk where it is tho
-         .msg_type = ClientPacket::MsgType::PlayerLeave,
-         .msg = ClientPacket::PlayerLeaveInfo({
-             .client_id = -1,  // Server will fill this out for us
-         })});
-    send_packet_to_server(*this, packet);
-}
-
-void Client::on_steam_network_connection_status_changed(
+void GnsClient::on_steam_network_connection_status_changed(
     SteamNetConnectionStatusChangedCallback_t *info) {
     log_info("client on stream network connection status changed");
     VALIDATE(info->m_hConn == connection ||
@@ -200,6 +197,55 @@ void Client::on_steam_network_connection_status_changed(
             // Silences -Wswitch
             break;
     }
+}
+
+LocalClient::~LocalClient() {
+    if (connection != k_HSteamNetConnection_Invalid) {
+        try {
+            send_leave_info_request();
+        } catch (...) {
+        }
+        local::disconnect_client(connection);
+    }
+}
+
+void LocalClient::startup() {
+    auto maybe = local::connect_client();
+    if (!maybe.has_value()) {
+        log_warn("Local client failed to connect (no local server running)");
+        running = false;
+        connection = k_HSteamNetConnection_Invalid;
+        return;
+    }
+    connection = maybe->first;
+    running = true;
+
+    // Local connections are immediate; mimic "Connected" callback.
+    send_join_info_request();
+}
+
+bool LocalClient::run() {
+    if (!running) return false;
+    if (connection == k_HSteamNetConnection_Invalid) return false;
+    if (!local::is_connection_alive(connection)) {
+        running = false;
+        connection = k_HSteamNetConnection_Invalid;
+        return false;
+    }
+
+    // Drain a few messages per frame to avoid starvation.
+    for (int i = 0; i < 32; ++i) {
+        auto msg = local::pop_to_client(connection);
+        if (!msg.has_value()) break;
+        if (process_message_cb) process_message_cb(*msg);
+    }
+    return true;
+}
+
+void LocalClient::send_string_to_server(const std::string &msg, Channel) {
+    if (connection == k_HSteamNetConnection_Invalid) return;
+    if (!local::is_connection_alive(connection)) return;
+    local::push_to_server(connection, msg);
 }
 
 }  // namespace internal
