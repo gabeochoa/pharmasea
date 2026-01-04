@@ -26,7 +26,6 @@
 #include "../entity_makers.h"
 #include "../globals.h"
 #include "../recipe_library.h"
-
 #include "ai_entity_helpers.h"
 #include "ai_helper.h"
 #include "ai_queue_helpers.h"
@@ -81,7 +80,8 @@ void set_new_customer_order(Entity& entity) {
         if (!entity.get<CanHoldItem>().empty()) return false;
     }
 
-    OptEntity sophie_opt = EntityHelper::getPossibleNamedEntity(NamedEntity::Sophie);
+    OptEntity sophie_opt =
+        EntityHelper::getPossibleNamedEntity(NamedEntity::Sophie);
     if (!sophie_opt) return false;
     Entity& sophie = sophie_opt.asE();
     if (sophie.is_missing<IsRoundSettingsManager>()) return false;
@@ -233,14 +233,12 @@ void process_state_wander(Entity& entity, IsAIControlled& ctrl, float dt) {
     HasAIWanderState& ws = ensure_component<HasAIWanderState>(entity);
 
     if (!tgt.pos.has_value()) {
-        Entity& sophie =
-            EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         const IsRoundSettingsManager& irsm =
             sophie.get<IsRoundSettingsManager>();
 
         float max_dwell_time = irsm.get<float>(ConfigKey::MaxDwellTime);
-        float dwell_time =
-            RandomEngine::get().get_float(1.f, max_dwell_time);
+        float dwell_time = RandomEngine::get().get_float(1.f, max_dwell_time);
         ws.timer.set_time(dwell_time);
 
         tgt.pos = pick_random_walkable_near(entity).value_or(
@@ -328,15 +326,13 @@ void process_state_at_register_wait_for_drink(Entity& entity, float dt) {
     Item& drink = drink_opt.asE();
     if (!check_if_drink(drink)) return;
 
-    std::string drink_name =
-        drink.get<IsDrink>().underlying.has_value()
-            ? std::string(magic_enum::enum_name(
-                  drink.get<IsDrink>().underlying.value()))
-            : "unknown";
+    std::string drink_name = drink.get<IsDrink>().underlying.has_value()
+                                 ? std::string(magic_enum::enum_name(
+                                       drink.get<IsDrink>().underlying.value()))
+                                 : "unknown";
 
     Drink orderedDrink = canOrderDrink.order();
-    bool was_drink_correct =
-        validate_drink_order(entity, orderedDrink, drink);
+    bool was_drink_correct = validate_drink_order(entity, orderedDrink, drink);
     if (!was_drink_correct) return;
 
     auto [price, tip] = get_price_for_order(
@@ -417,9 +413,8 @@ void process_state_drinking(Entity& entity, float dt) {
         return;
     }
 
-    bool jukebox_allowed =
-        entity.get<IsAIControlled>().has_ability(
-            IsAIControlled::AbilityPlayJukebox);
+    bool jukebox_allowed = entity.get<IsAIControlled>().has_ability(
+        IsAIControlled::AbilityPlayJukebox);
     if (jukebox_allowed && RandomEngine::get().get_bool()) {
         request_next_state(entity, entity.get<IsAIControlled>(),
                            IsAIControlled::State::PlayJukebox);
@@ -514,8 +509,7 @@ void process_state_play_jukebox(Entity& entity, float dt) {
         // We were the last person to put on a song, so we dont need to
         // change it (yet...)
         if (best->has<HasLastInteractedCustomer>() &&
-            best->get<HasLastInteractedCustomer>().customer.id ==
-                entity.id) {
+            best->get<HasLastInteractedCustomer>().customer.id == entity.id) {
             set_new_customer_order(entity);
             reset_component<HasAIJukeboxState>(entity);
             request_next_state(entity, entity.get<IsAIControlled>(),
@@ -535,21 +529,21 @@ void process_state_play_jukebox(Entity& entity, float dt) {
     Entity& jukebox = opt_j.asE();
     entity.get<Transform>().turn_to_face_pos(jukebox.get<Transform>().as2());
 
-    bool reached_front = line_try_to_move_closer(
-        js.line_wait, jukebox, entity, get_speed_for_entity(entity) * dt, [&]() {
-            if (!js.timer.initialized) {
-                // TODO make into a config?
-                js.timer.set_time(5.f);
-            }
-        });
+    bool reached_front =
+        line_try_to_move_closer(js.line_wait, jukebox, entity,
+                                get_speed_for_entity(entity) * dt, [&]() {
+                                    if (!js.timer.initialized) {
+                                        // TODO make into a config?
+                                        js.timer.set_time(5.f);
+                                    }
+                                });
     if (!reached_front) return;
 
     if (!js.timer.pass_time(dt)) return;
 
     // TODO implement jukebox song change
     {
-        Entity& sophie =
-            EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         IsBank& bank = sophie.get<IsBank>();
         // TODO jukebox cost
         bank.deposit(10);
@@ -617,10 +611,9 @@ void process_state_bathroom(Entity& entity, float dt) {
 
     if (bs.floor_timer.pass_time(dt)) {
         auto& vom = EntityHelper::createEntity();
-        furniture::make_vomit(vom,
-                              SpawnInfo{.location =
-                                            entity.get<Transform>().as2(),
-                                        .is_first_this_round = false});
+        furniture::make_vomit(
+            vom, SpawnInfo{.location = entity.get<Transform>().as2(),
+                           .is_first_this_round = false});
         on_finished();
         return;
     }
@@ -642,8 +635,7 @@ void process_state_bathroom(Entity& entity, float dt) {
 
     bool we_are_using_it = istoilet.is_user(entity.id);
     if (!we_are_using_it) {
-        Entity& sophie =
-            EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         const IsRoundSettingsManager& irsm =
             sophie.get<IsRoundSettingsManager>();
         float piss_timer = irsm.get<float>(ConfigKey::PissTimer);
@@ -684,8 +676,7 @@ void process_state_clean_vomit(Entity& entity, float dt) {
             existing_targets.insert(static_cast<int>(r.id));
         }
 
-        bool more_boys_than_vomit =
-            existing_targets.size() < other_ais.size();
+        bool more_boys_than_vomit = existing_targets.size() < other_ais.size();
 
         OptEntity vomit = EntityQuery()
                               .whereType(EntityType::Vomit)
@@ -800,4 +791,3 @@ void process_ai_entity(Entity& entity, float dt) {
 }
 
 }  // namespace system_manager::ai
-
