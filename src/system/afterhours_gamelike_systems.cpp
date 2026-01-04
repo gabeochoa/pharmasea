@@ -229,8 +229,6 @@ struct AICommitNextStateSystem
 // Force-leave override (end-of-round / close-bar transition).
 // This uses should_run() so it only runs while force-leave is active.
 struct AIForceLeaveCommitSystem : public afterhours::System<IsAIControlled> {
-    bool force_leave_active = false;
-
     bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {
@@ -241,17 +239,13 @@ struct AIForceLeaveCommitSystem : public afterhours::System<IsAIControlled> {
             // TODO: Refactor this duplicated day/night transition check into a
             // shared helper (many systems repeat this Sophie + HasDayNightTimer
             // lookup and condition).
-            force_leave_active =
-                timer.needs_to_process_change && timer.is_bar_closed();
-            return force_leave_active;
+            return timer.needs_to_process_change && timer.is_bar_closed();
         } catch (...) {
-            force_leave_active = false;
             return false;
         }
     }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
-        (void) force_leave_active;
         ai.set_state_immediately(IsAIControlled::State::Leave);
         ai.clear_next_state();
         entity.disableTag(afterhours::tags::AITag::AITransitionPending);
