@@ -345,8 +345,7 @@ struct AIOnEnterResetSystem
 // Note: afterhours tag filtering currently only applies on Apple platforms
 // (see vendor/afterhours/src/core/system.h). We still guard at runtime on other
 // platforms.
-template<IsAIControlled::State TargetState>
-struct AIStateSystemBase
+struct AIWanderSystem
     : public afterhours::System<
           IsAIControlled, CanPathfind,
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
@@ -359,70 +358,152 @@ struct AIStateSystemBase
         if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
         if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
 #endif
-        if (ai.state != TargetState) return;
-        step(entity, ai, dt);
-    }
-
-    virtual void step(Entity& entity, IsAIControlled& ai, float dt) = 0;
-};
-
-struct AIWanderSystem : public AIStateSystemBase<IsAIControlled::State::Wander> {
-    void step(Entity& entity, IsAIControlled& ai, float dt) override {
+        if (ai.state != IsAIControlled::State::Wander) return;
         system_manager::ai::process_state_wander(entity, ai, dt);
     }
 };
 
 struct AIQueueForRegisterSystem
-    : public AIStateSystemBase<IsAIControlled::State::QueueForRegister> {
-    void step(Entity& entity, IsAIControlled& ai, float dt) override {
+    : public afterhours::System<
+          IsAIControlled, CanPathfind,
+          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
+                                 afterhours::tags::AITag::AINeedsResetting>> {
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, CanPathfind&,
+                       float dt) override {
+#if !__APPLE__
+        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
+        if (ai.state != IsAIControlled::State::QueueForRegister) return;
         system_manager::ai::process_state_queue_for_register(entity, ai, dt);
     }
 };
 
 struct AIAtRegisterWaitForDrinkSystem
-    : public AIStateSystemBase<IsAIControlled::State::AtRegisterWaitForDrink> {
-    void step(Entity& entity, IsAIControlled& ai, float dt) override {
+    : public afterhours::System<
+          IsAIControlled, CanPathfind,
+          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
+                                 afterhours::tags::AITag::AINeedsResetting>> {
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, CanPathfind&,
+                       float dt) override {
+#if !__APPLE__
+        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
+        if (ai.state != IsAIControlled::State::AtRegisterWaitForDrink) return;
         system_manager::ai::process_state_at_register_wait_for_drink(entity, ai,
                                                                      dt);
     }
 };
 
 struct AIDrinkingSystem
-    : public AIStateSystemBase<IsAIControlled::State::Drinking> {
-    void step(Entity& entity, IsAIControlled& ai, float dt) override {
+    : public afterhours::System<
+          IsAIControlled, CanPathfind,
+          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
+                                 afterhours::tags::AITag::AINeedsResetting>> {
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, CanPathfind&,
+                       float dt) override {
+#if !__APPLE__
+        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
+        if (ai.state != IsAIControlled::State::Drinking) return;
         system_manager::ai::process_state_drinking(entity, ai, dt);
     }
 };
 
-struct AIPaySystem : public AIStateSystemBase<IsAIControlled::State::Pay> {
-    void step(Entity& entity, IsAIControlled& ai, float dt) override {
+struct AIPaySystem
+    : public afterhours::System<
+          IsAIControlled, CanPathfind,
+          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
+                                 afterhours::tags::AITag::AINeedsResetting>> {
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, CanPathfind&,
+                       float dt) override {
+#if !__APPLE__
+        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
+        if (ai.state != IsAIControlled::State::Pay) return;
         system_manager::ai::process_state_pay(entity, ai, dt);
     }
 };
 
 struct AIPlayJukeboxSystem
-    : public AIStateSystemBase<IsAIControlled::State::PlayJukebox> {
-    void step(Entity& entity, IsAIControlled& ai, float dt) override {
+    : public afterhours::System<
+          IsAIControlled, CanPathfind,
+          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
+                                 afterhours::tags::AITag::AINeedsResetting>> {
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, CanPathfind&,
+                       float dt) override {
+#if !__APPLE__
+        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
+        if (ai.state != IsAIControlled::State::PlayJukebox) return;
         system_manager::ai::process_state_play_jukebox(entity, ai, dt);
     }
 };
 
 struct AIBathroomSystem
-    : public AIStateSystemBase<IsAIControlled::State::Bathroom> {
-    void step(Entity& entity, IsAIControlled& ai, float dt) override {
+    : public afterhours::System<
+          IsAIControlled, CanPathfind,
+          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
+                                 afterhours::tags::AITag::AINeedsResetting>> {
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, CanPathfind&,
+                       float dt) override {
+#if !__APPLE__
+        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
+        if (ai.state != IsAIControlled::State::Bathroom) return;
         system_manager::ai::process_state_bathroom(entity, ai, dt);
     }
 };
 
 struct AICleanVomitSystem
-    : public AIStateSystemBase<IsAIControlled::State::CleanVomit> {
-    void step(Entity& entity, IsAIControlled& ai, float dt) override {
+    : public afterhours::System<
+          IsAIControlled, CanPathfind,
+          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
+                                 afterhours::tags::AITag::AINeedsResetting>> {
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, CanPathfind&,
+                       float dt) override {
+#if !__APPLE__
+        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
+        if (ai.state != IsAIControlled::State::CleanVomit) return;
         system_manager::ai::process_state_clean_vomit(entity, ai, dt);
     }
 };
 
-struct AILeaveSystem : public AIStateSystemBase<IsAIControlled::State::Leave> {
-    void step(Entity& entity, IsAIControlled& ai, float dt) override {
+struct AILeaveSystem
+    : public afterhours::System<
+          IsAIControlled, CanPathfind,
+          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
+                                 afterhours::tags::AITag::AINeedsResetting>> {
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
+
+    void for_each_with(Entity& entity, IsAIControlled& ai, CanPathfind&,
+                       float dt) override {
+#if !__APPLE__
+        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
+#endif
+        if (ai.state != IsAIControlled::State::Leave) return;
         system_manager::ai::process_state_leave(entity, ai, dt);
     }
 };
