@@ -35,6 +35,34 @@
 
 namespace system_manager {
 
+namespace {
+[[nodiscard]] bool is_bar_open_and_stable() {
+    if (!GameState::get().is_game_like()) return false;
+    try {
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+        // Skip during transitions to avoid replay/trigger timing regressions and
+        // half-applied state changes.
+        if (timer.needs_to_process_change) return false;
+        return timer.is_bar_open();
+    } catch (...) {
+        return false;
+    }
+}
+
+[[nodiscard]] bool is_close_bar_transition_active() {
+    if (!GameState::get().is_game_like()) return false;
+    try {
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+        // "Leaving in-round" happens while processing the close-bar transition.
+        return timer.needs_to_process_change && timer.is_bar_closed();
+    } catch (...) {
+        return false;
+    }
+}
+}  // namespace
+
 // System for processing containers that should backfill items during gamelike
 // updates
 struct ProcessIsContainerAndShouldBackfillItemSystem
@@ -172,7 +200,7 @@ struct PassTimeForTransactionAnimationSystem
 
 // Override: request Bathroom regardless of pending transition.
 struct NeedsBathroomNowSystem : public afterhours::System<IsAIControlled> {
-    bool should_run(const float) override { return GameState::get().is_game_like(); }
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
         // Don't interrupt these states (matches previous logic).
@@ -196,7 +224,7 @@ struct AICommitNextStateSystem
     : public afterhours::System<IsAIControlled,
                                 afterhours::tags::Any<
                                     afterhours::tags::AITag::AITransitionPending>> {
-    bool should_run(const float) override { return GameState::get().is_game_like(); }
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
 #if !__APPLE__
@@ -235,19 +263,7 @@ struct AICommitNextStateSystem
 // This uses should_run() so it only runs while force-leave is active.
 struct AIForceLeaveCommitSystem : public afterhours::System<IsAIControlled> {
     bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            // Mirror existing day/night transition systems: "leaving in-round"
-            // happens while processing the close-bar transition.
-            // TODO: Refactor this duplicated day/night transition check into a
-            // shared helper (many systems repeat this Sophie + HasDayNightTimer
-            // lookup and condition).
-            return timer.needs_to_process_change && timer.is_bar_closed();
-        } catch (...) {
-            return false;
-        }
+        return is_close_bar_transition_active();
     }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
@@ -267,7 +283,7 @@ struct AIOnEnterResetSystem
     : public afterhours::System<
           IsAIControlled,
           afterhours::tags::Any<afterhours::tags::AITag::AINeedsResetting>> {
-    bool should_run(const float) override { return GameState::get().is_game_like(); }
+    bool should_run(const float) override { return is_bar_open_and_stable(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
 #if !__APPLE__
@@ -335,7 +351,7 @@ struct ProcessAiSystem
           afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
                                  afterhours::tags::AITag::AINeedsResetting>> {
     virtual bool should_run(const float) override {
-        return GameState::get().is_game_like();
+        return is_bar_open_and_stable();
     }
 
     virtual void for_each_with(Entity& entity,
