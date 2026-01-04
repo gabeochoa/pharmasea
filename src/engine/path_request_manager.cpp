@@ -29,16 +29,15 @@ void PathRequestManager::process_responses(
         }
     }
 
-    while (!g_path_request_manager->response_queue.empty()) {
-        const auto& response = g_path_request_manager->response_queue.front();
-
+    PathResponse response;
+    while (g_path_request_manager->response_queue.try_pop_front(response)) {
         OptEntity requester = EntityHelper::getEntityForID(response.entity_id);
         if (requester.has_value()) {
             requester->get<CanPathfind>().update_path(response.path);
+            if (response.onComplete) response.onComplete(response.path);
         } else {
             log_warn("Path requester {} no longer exists", response.entity_id);
         }
-        g_path_request_manager->response_queue.pop_front();
     }
 }
 
@@ -54,14 +53,14 @@ void PathRequestManager::enqueue_request(const PathRequest& request) {
 
 std::thread PathRequestManager::start() {
     g_path_request_manager.reset(new PathRequestManager());
-    g_path_request_manager->running = true;
+    g_path_request_manager->running.store(true, std::memory_order_release);
     return std::thread(
         std::bind(&PathRequestManager::run, g_path_request_manager.get()));
 }
 
 void PathRequestManager::stop() {
     if (!g_path_request_manager) return;
-    g_path_request_manager->running = false;
+    g_path_request_manager->running.store(false, std::memory_order_release);
 }
 
 bool PathRequestManager::is_walkable(const vec2& pos) {

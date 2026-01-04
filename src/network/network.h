@@ -8,6 +8,7 @@
 //
 #include "../engine/network/webrequest.h"
 #include "../engine/statemanager.h"
+#include "../engine/thread_role.h"
 #include "../engine/trigger_on_dt.h"
 #include "types.h"
 //
@@ -55,6 +56,8 @@ struct RoleInfoMixin {
     [[nodiscard]] bool missing_role() { return !has_role(); }
 
     void set_role(Role role) {
+        // This function runs on the main/client thread.
+        thread_role::set(thread_role::Role::ClientMain);
         log_info("set_role called with role: {}", (int) role);
         const auto _setup_client = [&]() {
             log_info("_setup_client lambda called - creating Client instance");
@@ -87,11 +90,9 @@ struct RoleInfoMixin {
         }
 
         server_thread_id = Server::get_thread_id();
-        GLOBALS.set("server_thread_id", &server_thread_id);
-        log_info("Server thread ID set: {}", (void*) &server_thread_id);
+        log_info("Server thread ID set");
 
         client_thread_id = std::this_thread::get_id();
-        GLOBALS.set("client_thread_id", &client_thread_id);
         log_info("set_role completed successfully");
     }
 };

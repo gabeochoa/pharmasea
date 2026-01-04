@@ -4,6 +4,7 @@
 #include <chrono>
 #include <functional>
 #include <vector>
+#include <atomic>
 
 #include "../entity.h"
 #include "atomic_queue.h"
@@ -40,7 +41,7 @@ struct PathRequestManager {
     //////////////
 
     AtomicQueue<PathResponse> response_queue;
-    bool running = false;
+    std::atomic<bool> running{false};
 
     bool is_walkable(const vec2& pos);
     std::deque<vec2> find_path(const PathRequest& request);
@@ -55,7 +56,7 @@ struct PathRequestManager {
 
         auto previousTime = std::chrono::high_resolution_clock::now();
         auto currentTime = previousTime;
-        while (running) {
+        while (running.load(std::memory_order_acquire)) {
             currentTime = std::chrono::high_resolution_clock::now();
             float duration =
                 std::chrono::duration_cast<std::chrono::duration<float>>(
@@ -74,12 +75,14 @@ struct PathRequestManager {
             }
             previousTime = currentTime;
 
-            while (!request_queue.empty()) {
-                const auto& request = request_queue.front();
+            PathRequest request;
+            while (request_queue.try_pop_front(request)) {
                 auto path = find_path(request);
-                request_queue.pop_front();
-                response_queue.push_back(
-                    PathResponse{.entity_id = request.entity_id, .path = path});
+                response_queue.push_back(PathResponse{
+                    .entity_id = request.entity_id,
+                    .path = std::move(path),
+                    .onComplete = std::move(request.onComplete),
+                });
             }
         }
     }

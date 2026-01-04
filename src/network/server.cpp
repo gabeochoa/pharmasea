@@ -13,6 +13,7 @@
 #include "../engine/files.h"
 #include "../engine/path_request_manager.h"
 #include "../engine/random_engine.h"
+#include "../engine/thread_role.h"
 #include "../engine/time.h"
 #include "../entity_helper.h"
 #include "../globals.h"  // for HASHED_VERSION
@@ -64,6 +65,7 @@ void Server::start(int port) {
 }
 
 void Server::queue_packet(const ClientPacket& p) {
+    if (!g_server) return;
     g_server->incoming_packet_queue.push_back(p);
 }
 void Server::forward_packet(const ClientPacket& p) {
@@ -158,8 +160,8 @@ void Server::send_player_rare_data() {
 
 void Server::run() {
     TRACY_ZONE_SCOPED;
+    thread_role::set(thread_role::Role::Server);
     thread_id = std::this_thread::get_id();
-    GLOBALS.set("server_thread_id", &thread_id);
 
     // Ensure Afterhours' default collection matches the server thread's
     // collection. (Some serialization paths call afterhours::EntityHelper
@@ -283,21 +285,20 @@ void Server::send_game_state_update() {
 
 void Server::process_incoming_messages() {
     // Check to see if we have any new packets to process
-    while (!incoming_message_queue.empty()) {
+    ClientMessage msg;
+    while (incoming_message_queue.try_pop_front(msg)) {
         TRACY_ZONE_NAMED(tracy_server_process, "packets to process", true);
         log_trace("Incoming Messages {}", incoming_message_queue.size());
-        server_process_message_string(incoming_message_queue.front());
-        incoming_message_queue.pop_front();
+        server_process_message_string(msg);
     }
 }
 
 void Server::process_incoming_packets() {
     // Check to see if we have any new packets to process
-    while (!incoming_packet_queue.empty()) {
+    ClientPacket pkt;
+    while (incoming_packet_queue.try_pop_front(pkt)) {
         log_trace("Incoming Packets {}", incoming_message_queue.size());
-        server_process_packet({.client_id = SERVER_CLIENT_ID},
-                              incoming_packet_queue.front());
-        incoming_packet_queue.pop_front();
+        server_process_packet({.client_id = SERVER_CLIENT_ID}, pkt);
     }
 }
 
@@ -308,10 +309,10 @@ void Server::process_packet_forwarding() {
     // control over which messages to drop
 
     // Check to see if we have any packets to send off
-    while (!packet_queue.empty()) {
+    ClientPacket p;
+    while (packet_queue.try_pop_front(p)) {
         TRACY_ZONE_NAMED(tracy_server_fwd, "packets to fwd", true);
         log_trace("Packets to FWD {}", packet_queue.size());
-        ClientPacket& p = packet_queue.front();
 
         switch (p.msg_type) {
             case ClientPacket::MsgType::GameState: {
@@ -327,7 +328,6 @@ void Server::process_packet_forwarding() {
 
         //
         send_client_packet_to_all(p);
-        packet_queue.pop_front();
     }
 }
 

@@ -2,52 +2,91 @@
 #pragma once
 
 #include <iostream>
+#include <functional>
+#include <mutex>
 #include <stack>
+#include <vector>
 
 #include "log.h"
 #include "singleton.h"
 
 template<typename T>
 struct StateManager2 {
-    [[nodiscard]] T read() const { return state; }
-    [[nodiscard]] T previous() const { return prev.top(); }
+    [[nodiscard]] T read() const {
+        std::lock_guard<std::mutex> lock(mtx);
+        return state;
+    }
+    [[nodiscard]] T previous() const {
+        std::lock_guard<std::mutex> lock(mtx);
+        return prev.top();
+    }
 
     T go_back() {
-        log_info("going from {} to {}", state, prev.top());
-        state = prev.top();
-        prev.pop();
-        return state;
+        std::vector<std::function<void(T, T)>> callbacks;
+        T old_state{};
+        T new_state{};
+        {
+            std::lock_guard<std::mutex> lock(mtx);
+            old_state = state;
+            new_state = prev.top();
+            log_info("going from {} to {}", state, prev.top());
+            state = prev.top();
+            prev.pop();
+            callbacks = on_change_action_list;
+        }
+        for (const auto& func : callbacks) {
+            if (func) func(new_state, old_state);
+        }
+        return new_state;
     }
 
     void clear_history() {
+        std::lock_guard<std::mutex> lock(mtx);
         while (!prev.empty()) prev.pop();
     }
 
-    [[nodiscard]] bool is(T s) const { return state == s; }
-    [[nodiscard]] bool is_not(T s) const { return state != s; }
+    [[nodiscard]] bool is(T s) const {
+        std::lock_guard<std::mutex> lock(mtx);
+        return state == s;
+    }
+    [[nodiscard]] bool is_not(T s) const {
+        std::lock_guard<std::mutex> lock(mtx);
+        return state != s;
+    }
     [[nodiscard]] inline std::string_view tostring() const {
+        std::lock_guard<std::mutex> lock(mtx);
         return magic_enum::enum_name(state);
     }
 
     void register_on_change(const std::function<void(T, T)>& nfunc) {
+        std::lock_guard<std::mutex> lock(mtx);
         on_change_action_list.push_back(nfunc);
     }
 
     void set(T ns) {
-        if (state == ns) return;
-        log_info("trying to set state to {} (was {})", ns, state);
-        prev.push(state);
-        state = ns;
+        std::vector<std::function<void(T, T)>> callbacks;
+        T old_state{};
+        {
+            std::lock_guard<std::mutex> lock(mtx);
+            if (state == ns) return;
+            old_state = state;
+            log_info("trying to set state to {} (was {})", ns, state);
+            prev.push(state);
+            state = ns;
 
-        // Note: this is just for dev to figure out if
-        //       we have any issues in our logic that allows circular visits
-        if (prev.size() >= 10) {
-            log_warn("prev state getting large: {}", prev.size());
-            // TODO at some point we could condense the results if there is a
-            // loop
+            // Note: this is just for dev to figure out if
+            //       we have any issues in our logic that allows circular visits
+            if (prev.size() >= 10) {
+                log_warn("prev state getting large: {}", prev.size());
+                // TODO at some point we could condense the results if there is a
+                // loop
+            }
+
+            callbacks = on_change_action_list;
         }
-
-        call_on_change(ns, prev.top());
+        for (const auto& func : callbacks) {
+            if (func) func(ns, old_state);
+        }
     }
 
     virtual T default_value() const = 0;
@@ -60,15 +99,10 @@ struct StateManager2 {
     virtual ~StateManager2() {}
 
    private:
-    void call_on_change(T ns, T os) {
-        for (const auto& func : on_change_action_list) {
-            if (func) func(ns, os);
-        }
-    }
-
     std::stack<T> prev;
     std::vector<std::function<void(T, T)>> on_change_action_list;
     T state;
+    mutable std::mutex mtx;
 };
 
 namespace menu {
