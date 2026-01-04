@@ -199,6 +199,11 @@ struct AICommitNextStateSystem
     bool should_run(const float) override { return GameState::get().is_game_like(); }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
+#if !__APPLE__
+        // Tag filtering is Apple-only in afterhours today; guard manually on
+        // other platforms to avoid iterating/processing every AI entity.
+        if (!entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+#endif
         const bool has_next = ai.has_next_state();
         if (!has_next) {
             // Keep tags consistent: if something set the pending tag but didn't
