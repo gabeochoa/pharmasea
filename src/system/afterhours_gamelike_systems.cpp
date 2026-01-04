@@ -212,8 +212,20 @@ struct AICommitNextStateSystem : public afterhours::System<IsAIControlled> {
     }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
+        // Normal flow: only entities that requested a transition should be
+        // processed. Force-leave can override regardless of pending request.
+        if (!force_leave_active &&
+            !entity.hasTag(afterhours::tags::AITag::AITransitionPending)) {
+            return;
+        }
+
         const bool has_next = ai.has_next_state();
-        if (!force_leave_active && !has_next) return;
+        if (!force_leave_active && !has_next) {
+            // Keep tags consistent: if something set the pending tag but didn't
+            // actually set next_state, clear it so other systems can run again.
+            entity.disableTag(afterhours::tags::AITag::AITransitionPending);
+            return;
+        }
 
         const IsAIControlled::State old_state = ai.state;
         const IsAIControlled::State desired =
