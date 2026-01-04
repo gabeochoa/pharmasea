@@ -197,27 +197,46 @@ This makes cooldown behavior observable and avoids rewriting `reset_to` every ca
 
 1. **Inventory & tagging**
    - Enumerate all AI “state handlers” and identify required components + tick rate.
+   - Catalog all current `set_state(...)` transitions (from → to).
+   - Catalog all current “entry/exit” cleanup:
+     - `reset_component<...>`
+     - `removeComponentIfExists<...>`
+     - target clears (`tgt.entity.clear()`, `tgt.pos.reset()`)
+   - Define initial “fallback-needed” predicates (start with today’s: QueueForRegister/Pay no register; Bathroom missing `CanOrderDrink`).
 
 2. **Add staged transitions**
    - Add `next_state` storage (either on `IsAIControlled` or a companion component).
+   - Add helpers: `set_next_state(...)`, `has_next_state()`, `clear_next_state()`.
    - Add `afterhours::tags::AITransitionPending`.
+   - Update AI call sites (temporary): replace direct `set_state(...)` with `set_next_state(...)` + set `AITransitionPending`.
 
 3. **Add commit + reset**
    - Implement `AICommitNextStateSystem` (clears `AITransitionPending`, sets `AINeedsResetting`).
    - Add force-leave override inside the commit step.
+   - Commit behavior:
+     - If force-leave is active (Option A: query Sophie + `HasDayNightTimer`), override to `State::Leave`.
+     - If `next_state` exists, set `state = next_state`.
+     - Clear `next_state` and clear `AITransitionPending`.
+     - Set `afterhours::tags::AINeedsResetting` (always).
 
 4. **Add reset-on-enter**
    - Implement `AIOnEnterResetSystem` (clears `AINeedsResetting`).
+   - Apply the minimal target/scratch resets needed for the new `state`.
 
 5. **Add fallback**
    - Implement `AIFallbackToWanderSystem` to request Wander when progress is blocked (and no pending transition exists).
+   - Register fallback early so it can set `AITransitionPending` and cause other systems to skip.
 
 6. **Port behaviors**
    - Convert `process_state_*` blocks into behavior systems that call `set_next_state(...)` and set `AITransitionPending`.
+   - Add `whereNotTag(AITransitionPending)`-style skipping to non-override systems.
+   - Implement `NeedsBathroomNowSystem` as an override that can set `next_state` even if `AITransitionPending` is already set.
+   - (Current clean-vomit behavior) ensure the entity alternates: CleanVomit → (fallback) Wander → resume_state (CleanVomit).
 
 7. **Register systems**
    - Keep registration in one place (e.g. `system_manager::ai::register_ai_systems`).
    - Register in deterministic order (fallback early, commit last).
+   - Ensure force-leave override is enforced at commit time (so registration order doesn’t matter for it).
 
 ## Success criteria (definition of done)
 
