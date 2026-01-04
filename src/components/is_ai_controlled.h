@@ -2,6 +2,8 @@
 
 #include "base_component.h"
 
+#include <optional>
+
 // Authoritative high-level AI controller state.
 struct IsAIControlled : public BaseComponent {
     enum class State : int {
@@ -15,6 +17,11 @@ struct IsAIControlled : public BaseComponent {
         CleanVomit,
         Leave,
     } state = State::Wander;
+
+    // Staged transition target (for two-phase "decide then commit" updates).
+    // When set, systems should avoid mutating the authoritative `state` directly
+    // and instead allow a commit step to apply this value.
+    std::optional<State> next_state;
 
     // AI-only capability flags (what states/behaviors this controller is allowed
     // to enter). This intentionally lives on the AI controller so players don't
@@ -60,6 +67,21 @@ struct IsAIControlled : public BaseComponent {
         return *this;
     }
 
+    [[nodiscard]] bool has_next_state() const { return next_state.has_value(); }
+
+    // Returns true if the next state was set. Returns false if a next state was
+    // already pending.
+    bool set_next_state(State s) {
+        if (next_state.has_value()) return false;
+        next_state = s;
+        return true;
+    }
+
+    // Always set the next state (used for "override" transitions like bathroom).
+    void force_next_state(State s) { next_state = s; }
+
+    void clear_next_state() { next_state.reset(); }
+
     IsAIControlled& set_resume_state(State s) {
         resume_state = s;
         return *this;
@@ -72,6 +94,7 @@ struct IsAIControlled : public BaseComponent {
         return archive(                      //
             static_cast<BaseComponent&>(self), //
             self.state,                       //
+            self.next_state,                  //
             self.abilities,                   //
             self.resume_state                 //
         );
