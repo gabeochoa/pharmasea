@@ -69,7 +69,7 @@ void set_new_customer_order(Entity& entity) {
     reset_component<HasAIDrinkState>(entity);
 }
 
-[[nodiscard]] bool needs_bathroom_now(Entity& entity) {
+[[nodiscard]] bool needs_bathroom_now_internal(Entity& entity) {
     if (entity.is_missing<CanOrderDrink>()) return false;
     if (entity.is_missing<IsAIControlled>()) return false;
     if (!entity.get<IsAIControlled>().has_ability(
@@ -98,6 +98,10 @@ void enter_bathroom(Entity& entity, IsAIControlled::State return_to) {
     ensure_component<HasAIBathroomState>(entity).next_state = return_to;
 }
 }  // namespace
+
+[[nodiscard]] bool needs_bathroom_now(Entity& entity) {
+    return needs_bathroom_now_internal(entity);
+}
 
 bool validate_drink_order(const Entity& customer, Drink orderedDrink,
                           Item& madeDrink) {
