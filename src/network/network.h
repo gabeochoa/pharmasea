@@ -177,6 +177,19 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
             my_remote_ip_address = "(DEV) network disabled";
         }
 
+        // In local-only mode, boot straight into the Network lobby flow.
+        // If username is missing, NetworkLayer will prompt for it.
+        if (network::LOCAL_ONLY) {
+            MenuState::get().set(menu::State::Network);
+            GameState::get().set(game::State::InMenu);
+
+            if (!Settings::get().data.username.empty()) {
+                network_info->lock_in_username();
+                network_info->set_role(Role::s_Host);
+            }
+            return;
+        }
+
         MenuState::get().set(menu::State::Root);
         GameState::get().set(game::State::InMenu);
     }
