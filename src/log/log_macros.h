@@ -8,7 +8,7 @@
 #define LOG_WARN(...) log_warn(__VA_ARGS__)
 #define LOG_ERROR(...) log_error(__VA_ARGS__)
 
-// Prefer using `INVARIANT`/`VALIDATE` from `engine/assert.h` for contracts.
+// Prefer using `invariant`/`VALIDATE` from `engine/assert.h` for contracts.
 // This header is used by `engine/log_fakelog.h` and may be included in contexts
 // where assert helpers are intentionally absent.
 #define LOG_VALIDATE(condition, ...) \

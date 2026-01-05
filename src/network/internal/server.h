@@ -115,7 +115,7 @@ struct Server {
 
     void send_message_to_connection(HSteamNetConnection conn,
                                     const char *buffer, uint32 size) {
-        INVARIANT(interface != nullptr);
+        invariant(interface != nullptr);
         interface->SendMessageToConnection(conn, buffer, size,
                                            Channel::RELIABLE, nullptr);
         // TODO why does unreliable make it so unreliable...
@@ -244,8 +244,7 @@ struct Server {
             // (except on shutdown), and connection change callbacks are
             // dispatched in queue order.
             auto itClient = clients.find(info->m_hConn);
-            INVARIANT_MSG(itClient != clients.end(),
-                          "Expected disconnecting client to exist");
+            invariant(itClient != clients.end());
 
             std::string temp;
             // Select appropriate log messages
@@ -412,8 +411,7 @@ struct Server {
 
     static void SteamNetConnectionStatusChangedCallback(
         SteamNetConnectionStatusChangedCallback_t *pInfo) {
-        INVARIANT_MSG(callback_instance != nullptr,
-                      "Server callback_instance must be set before callbacks");
+        invariant(callback_instance != nullptr);
         callback_instance->connection_changed_callback(pInfo);
     }
 };

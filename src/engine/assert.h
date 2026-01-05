@@ -15,7 +15,7 @@
 #endif
 
 #if PHARMASEA_INVARIANTS_ENABLED
-#define INVARIANT(condition)                                                     \
+#define invariant(condition)                                                     \
     do {                                                                         \
         const bool _pharmasea_ok = static_cast<bool>(condition);                 \
         if (!_pharmasea_ok) {                                                    \
@@ -24,26 +24,11 @@
             assert(false);                                                       \
         }                                                                        \
     } while (0)
-
-#define INVARIANT_MSG(condition, msg_expr)                                       \
-    do {                                                                         \
-        const bool _pharmasea_ok = static_cast<bool>(condition);                 \
-        if (!_pharmasea_ok) {                                                    \
-            std::cerr << "Invariant failed: " << #condition << " (" << __FILE__  \
-                      << ":" << __LINE__ << "): " << (msg_expr) << "\n";         \
-            assert(false);                                                       \
-        }                                                                        \
-    } while (0)
 #else
 // NOTE: don't evaluate `condition` in production builds.
-#define INVARIANT(condition)                                                     \
+#define invariant(condition)                                                     \
     do {                                                                         \
         (void) sizeof(condition);                                                \
-    } while (0)
-#define INVARIANT_MSG(condition, msg_expr)                                       \
-    do {                                                                         \
-        (void) sizeof(condition);                                                \
-        (void) sizeof(msg_expr);                                                 \
     } while (0)
 #endif
 
@@ -63,7 +48,12 @@
         }                                                                        \
     } while (0)
 
-#define M_ASSERT(condition, msg_expr) INVARIANT_MSG((condition), (msg_expr))
+#define M_ASSERT(condition, msg_expr)                                            \
+    do {                                                                         \
+        /* Keep M_ASSERT as debug-only, message is ignored intentionally. */      \
+        invariant(condition);                                                    \
+        (void) sizeof(msg_expr);                                                  \
+    } while (0)
 
 #define M_TEST_IMPL(x, y, op, op_string, ...)                          \
     {                                                                  \
