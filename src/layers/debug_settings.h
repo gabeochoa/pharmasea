@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/constexpr_containers.h"
+#include "../engine/runtime_globals.h"
 #include "base_game_renderer.h"
 
 constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //
@@ -24,9 +25,9 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     }
 
     void sync_globals() {
-        GLOBALS.set_value("debug_ui_enabled", debug_ui_enabled);
-        GLOBALS.set_value("no_clip_enabled", no_clip_enabled);
-        GLOBALS.set_value("skip_ingredient_match", skip_ingredient_match);
+        globals::set_debug_ui_enabled(debug_ui_enabled);
+        globals::set_no_clip_enabled(no_clip_enabled);
+        globals::set_skip_ingredient_match(skip_ingredient_match);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {

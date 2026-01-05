@@ -31,6 +31,7 @@
 #include "../components/transform.h"
 #include "../components/uses_character_model.h"
 #include "../dataclass/ingredient.h"
+#include "../engine/runtime_globals.h"
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
 #include "../entity_id.h"
@@ -245,9 +246,10 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::Lobby_ModelTest: {
             GameState::get().transition_to_model_test();
             if (is_server()) {
-                network::Server* server =
-                    GLOBALS.get_ptr<network::Server>("server");
-                server->get_map_SERVER_ONLY()->generate_model_test_map();
+                network::Server* server = globals::server();
+                if (server) {
+                    server->get_map_SERVER_ONLY()->generate_model_test_map();
+                }
             }
 
             for (RefEntity player : EQ(SystemManager::get().oldAll)
@@ -259,9 +261,11 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
         case IsTriggerArea::Lobby_LoadSave: {
             GameState::get().set(game::State::LoadSaveRoom);
             if (is_server()) {
-                network::Server* server =
-                    GLOBALS.get_ptr<network::Server>("server");
-                server->get_map_SERVER_ONLY()->generate_load_save_room_map();
+                network::Server* server = globals::server();
+                if (server) {
+                    server->get_map_SERVER_ONLY()
+                        ->generate_load_save_room_map();
+                }
             }
             for (RefEntity player : EQ(SystemManager::get().oldAll)
                                         .whereType(EntityType::Player)
@@ -333,7 +337,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                     to_delete.cleanup = true;
                 }
                 network::Server* server =
-                    GLOBALS.get_ptr<network::Server>("server");
+                    globals::server();
                 if (server) {
                     server->get_map_SERVER_ONLY()
                         ->generate_load_save_room_map();

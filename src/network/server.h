@@ -7,6 +7,7 @@
 #include "../engine/atomic_queue.h"
 #include "../engine/tracy.h"
 #include "../engine/trigger_on_dt.h"
+#include "../engine/runtime_globals.h"
 #include "../entity.h"
 #include "types.h"
 //
@@ -101,9 +102,7 @@ struct Server {
         // selection screen
         log_info("Creating pharmacy_map with default_seed");
         pharmacy_map = std::make_unique<Map>("default_seed");
-        GLOBALS.set_ptr("server_map", pharmacy_map.get());
-        GLOBALS.set_ptr("server_players", &players);
-        GLOBALS.set_ptr("server", this);
+        globals::set_server(this);
         log_info("Server constructor completed");
     }
 

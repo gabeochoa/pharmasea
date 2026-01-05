@@ -30,6 +30,7 @@
 #include "../engine/assert.h"
 #include "../engine/log.h"
 #include "../engine/pathfinder.h"
+#include "../engine/runtime_globals.h"
 #include "../entity.h"
 #include "../entity_helper.h"
 #include "../entity_id.h"
@@ -84,7 +85,7 @@ void person_update_given_new_pos(
         });
 
         const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("no_clip_enabled", false);
+            globals::no_clip_enabled();
         if (debug_mode_on) {
             collided_entity_x = {};
             collided_entity_z = {};
@@ -170,7 +171,8 @@ void collect_user_input(Entity& entity, float dt) {
     float key_down = KeyMap::is_event(state, InputName::PlayerBack);
 
     // we need to rotate these controls based on the camera
-    auto cam = GLOBALS.get_ptr<GameCam>("game_cam");
+    auto* cam = globals::game_cam();
+    if (!cam) return;
     auto camAngle = util::rad2deg(cam->angle.x);
     camAngle = std::fmod(camAngle, 360.0f);
     if (camAngle < 0.0f) {
@@ -389,7 +391,7 @@ struct PopOutWhenCollidingSystem
                                CanHoldHandTruck& chht, CanHoldFurniture& chf,
                                float) override {
         const auto no_clip_on =
-            GLOBALS.get_or_default<bool>("no_clip_enabled", false);
+            globals::no_clip_enabled();
         if (no_clip_on) return;
 
         if (!check_type(entity, EntityType::Player)) return;

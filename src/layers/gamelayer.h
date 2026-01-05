@@ -2,7 +2,7 @@
 
 #include "../camera.h"
 #include "../engine/layer.h"
-#include "../engine/globals_register.h"
+#include "../engine/runtime_globals.h"
 #include "ah.h"
 
 struct GameLayer : public Layer {
@@ -12,7 +12,7 @@ struct GameLayer : public Layer {
     raylib::RenderTexture2D game_render_texture;
 
     GameLayer() : Layer(strings::menu::GAME), cam(std::make_unique<GameCam>()) {
-        GLOBALS.set_ptr(strings::globals::GAME_CAM, cam.get());
+        globals::set_game_cam(cam.get());
         game_render_texture = raylib::LoadRenderTexture(WIN_W(), WIN_H());
     }
 

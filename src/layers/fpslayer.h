@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../engine/globals_register.h"
+#include "../engine/runtime_globals.h"
 #include "../engine/layer.h"
 #include "../engine/profile.h"
 #include "../external_include.h"
@@ -16,7 +16,7 @@ struct FPSLayer : public Layer {
     virtual void onDraw(float) override {
         ext::draw_fps(0, 0);
 
-        if (GLOBALS.get<bool>("debug_ui_enabled")) {
+        if (globals::debug_ui_enabled()) {
             std::vector<Sample> pairs;
             pairs.insert(pairs.end(), Profiler::get()._acc.begin(),
                          Profiler::get()._acc.end());

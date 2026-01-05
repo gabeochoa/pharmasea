@@ -87,7 +87,7 @@ void GameLayer::onUpdate(float dt) {
     // Dont quit window on escape
     raylib::SetExitKey(raylib::KEY_NULL);
 
-    auto act = GLOBALS.get_ptr<Entity>(strings::globals::CAM_TARGET);
+    auto* act = globals::active_camera_target();
     if (!act) {
         return;
     }
@@ -96,7 +96,7 @@ void GameLayer::onUpdate(float dt) {
     cam->updateCamera();
 
     //         jun 24-23 we need this so furniture shows up
-    auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+    auto* map_ptr = globals::map();
     if (map_ptr) {
         // NOTE: today we need to grab things so that the client renders
         // what they server has access to
@@ -115,9 +115,9 @@ void draw_building(const Building& building) {
 }
 
 void GameLayer::draw_world(float dt) {
-    auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+    auto* map_ptr = globals::map();
     const auto network_debug_mode_on =
-        GLOBALS.get_or_default<bool>("network_ui_enabled", false);
+        globals::network_ui_enabled();
     if (network_debug_mode_on) {
         // NOTE(threading): The authoritative server map is mutated on the
         // dedicated server thread. Rendering it directly on the main thread is
@@ -148,7 +148,7 @@ void GameLayer::draw_world(float dt) {
             raylib::EndShaderMode();
         }
 
-        if (GLOBALS.get_or_default<bool>("debug_ui_enabled", false)) {
+        if (globals::debug_ui_enabled()) {
             draw_building(LOBBY_BUILDING);
             draw_building(MODEL_TEST_BUILDING);
             draw_building(PROGRESSION_BUILDING);
@@ -175,7 +175,7 @@ void GameLayer::onDraw(float dt) {
     TRACY_ZONE_SCOPED;
     if (!MenuState::s_in_game()) return;
 
-    auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+    auto* map_ptr = globals::map();
 
     ext::clear_background(Color{200, 200, 200, 255});
     draw_world(dt);

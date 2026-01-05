@@ -12,7 +12,6 @@
 #include "components/can_be_ghost_player.h"
 #include "components/can_be_held.h"
 #include "components/is_solid.h"
-#include "engine/globals_register.h"
 #include "engine/is_server.h"
 #include "globals.h"
 

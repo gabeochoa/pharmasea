@@ -44,6 +44,9 @@ Server::~Server() {
     } else {
         log_warn("Pathfinding thread not joinable at shutdown");
     }
+
+    // Clear global server pointer to avoid dangling reads after shutdown.
+    globals::set_server(nullptr);
 }
 
 // TODO once clang supports jthread replace with jthread and remove "running
@@ -121,6 +124,7 @@ void Server::shutdown() {
 
     // Destroy the instance after threads are stopped.
     g_server.reset();
+    globals::set_server(nullptr);
 }
 
 void Server::send_map_state(Channel channel) {

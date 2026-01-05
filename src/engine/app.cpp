@@ -7,7 +7,6 @@
 #include "tracy.h"
 //
 #include "event.h"
-#include "globals_register.h"
 #include "keymap.h"
 #include "mouse_map.h"
 #include "raylib.h"
@@ -61,7 +60,6 @@ App::App(const AppSettings& settings) {
     KeyMap::create();
 
     mainRT = raylib::LoadRenderTexture(width, height);
-    GLOBALS.set_ptr("mainRT", &mainRT);
 }
 
 void App::loadLayers(const std::vector<Layer*>& layers) {
@@ -95,7 +93,6 @@ bool App::onWindowResize(WindowResizeEvent event) {
 
     UnloadRenderTexture(mainRT);
     mainRT = raylib::LoadRenderTexture(width, height);
-    GLOBALS.set_ptr("mainRT", &mainRT);
     return true;
 }
 

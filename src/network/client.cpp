@@ -6,8 +6,8 @@
 #include "../components/collects_user_input.h"
 #include "../components/has_client_id.h"
 #include "../components/has_name.h"
-#include "../engine/globals_register.h"
 #include "../engine/log.h"
+#include "../engine/runtime_globals.h"
 #include "../engine/sound_library.h"
 #include "../engine/time.h"
 #include "../engine/toastmanager.h"
@@ -30,7 +30,7 @@ Client::Client() {
     });
 
     map = std::make_unique<Map>("default_seed");
-    GLOBALS.set_ptr("map", map.get());
+    globals::set_map(map.get());
 }
 
 void Client::update_username(const std::string& new_name) {
@@ -242,8 +242,7 @@ void Client::client_process_message_string(const std::string& msg) {
                 id = info.client_id;
                 log_info("my id is {}", id);
                 add_new_player(id, client_p->username);
-                GLOBALS.set_ptr("active_camera_target",
-                                remote_players[id].get());
+                globals::set_active_camera_target(remote_players[id].get());
                 map->local_players_NOT_SERIALIZED.push_back(remote_players[id]);
                 (*(map->local_players_NOT_SERIALIZED.rbegin()))
                     ->addComponent<CollectsUserInput>();

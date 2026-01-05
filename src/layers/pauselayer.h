@@ -88,7 +88,7 @@ struct BasePauseLayer : public Layer {
         }
 
         const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+            globals::debug_ui_enabled();
         if (debug_mode_on &&
             button(Widget{quit}, NO_TRANSLATE("RELOAD CONFIGS"))) {
             Preload::get().reload_config();

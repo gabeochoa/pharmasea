@@ -3,8 +3,8 @@
 #include "external_include.h"
 //
 #include "camera.h"
-#include "engine/globals_register.h"
 #include "engine/log.h"
+#include "engine/runtime_globals.h"
 #include "engine/texture_library.h"
 #include "engine/ui/color.h"
 #include "globals.h"
@@ -200,8 +200,9 @@ static void DrawFloatingText(const vec3& position, const Font& font,
             1.f, 1.f);
         vec3 icon_pos = vec3{t_size.x * 0.9f, text_size.y * 9.f, 0.05f};
         raylib::Texture texture = TextureLibrary::get().get(texture_name);
-        GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-        raylib::DrawBillboard(cam.camera, texture, icon_pos,
+        GameCam* cam = globals::game_cam();
+        if (!cam) return;
+        raylib::DrawBillboard(cam->camera, texture, icon_pos,
                               (size / 96.f) / 3.f,  //
                               color);
     }

@@ -7,6 +7,7 @@
 #include "theme.h"
 #include "ui_context.h"
 #include "widget.h"
+#include "../runtime_globals.h"
 
 namespace ui {
 
@@ -54,7 +55,7 @@ inline void draw_colored_text(const TranslatableString& content,
             // Disable this warning when we are in debug mode since dev facing
             // UI is okay to be too small at the moment
 
-            if (!GLOBALS.get<bool>("debug_ui_enabled")) {
+            if (!globals::debug_ui_enabled()) {
                 //  For accessibility reasons, we want to make sure we are
                 //  drawing text thats larger than 28px @ 1080p
                 float pct_1080 = (WIN_HF() / 1080.f);

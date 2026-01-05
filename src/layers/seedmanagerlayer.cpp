@@ -2,6 +2,7 @@
 #include "seedmanagerlayer.h"
 
 #include "../dataclass/names.h"
+#include "../engine/runtime_globals.h"
 #include "../network/network.h"
 
 bool SeedManagerLayer::is_user_host() {
@@ -48,7 +49,7 @@ bool SeedManagerLayer::onKeyPressed(KeyPressedEvent& event) {
 }
 
 void SeedManagerLayer::onUpdate(float) {
-    map_ptr = (GLOBALS.get_ptr<Map>(strings::globals::MAP));
+    map_ptr = globals::map();
     if (!map_ptr) return;
 
     if (!map_ptr->showSeedInputBox) {

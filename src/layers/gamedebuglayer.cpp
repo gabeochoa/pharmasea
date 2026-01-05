@@ -3,6 +3,7 @@
 
 #include "../drawing_util.h"
 #include "../engine/event.h"
+#include "../engine/runtime_globals.h"
 #include "../external_include.h"
 //
 #include "../engine.h"
@@ -30,13 +31,13 @@ void GameDebugLayer::onDraw(float dt) {
     if (!MenuState::s_in_game()) return;
     if (GameState::get().is(game::State::Paused)) return;
 
-    bool debug_ui = GLOBALS.get<bool>("debug_ui_enabled");
+    bool debug_ui = globals::debug_ui_enabled();
     if (!debug_ui) return;
     draw_debug_ui(dt);
 }
 
 void GameDebugLayer::draw_debug_ui(float dt) {
-    auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+    auto* map_ptr = globals::map();
     using namespace ui;
     begin(ui_context, dt);
 

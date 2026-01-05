@@ -124,7 +124,7 @@
     <ClInclude Include="..\src\engine\font_util.h" />
     <ClInclude Include="..\src\engine\gamepad_axis_with_dir.h" />
     <ClInclude Include="..\src\engine\globals.h" />
-    <ClInclude Include="..\src\engine\globals_register.h" />
+    <ClInclude Include="..\src\engine\runtime_globals.h" />
     <ClInclude Include="..\src\engine\graphics.h" />
     <ClInclude Include="..\src\engine\is_server.h" />
     <ClInclude Include="..\src\engine\keymap.h" />
@@ -265,7 +265,7 @@
     <ClCompile Include="..\src\dataclass\upgrades.cpp" />
     <ClCompile Include="..\src\engine\app.cpp" />
     <ClCompile Include="..\src\engine\files.cpp" />
-    <ClCompile Include="..\src\engine\globals_register.cpp" />
+    <ClCompile Include="..\src\engine\runtime_globals.cpp" />
     <ClCompile Include="..\src\engine\keymap.cpp" />
     <ClCompile Include="..\src\engine\network\webrequest.cpp" />
     <ClCompile Include="..\src\engine\path_request_manager.cpp" />
