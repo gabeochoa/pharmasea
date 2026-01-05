@@ -87,7 +87,7 @@ void GnsClient::startup() {
 
     SteamNetworkingConfigValue_t opt;
     opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged,
-               (void *) Client::SteamNetConnectionStatusChangedCallback);
+               (void *) GnsClient::SteamNetConnectionStatusChangedCallback);
     connection = interface->ConnectByIPAddress(address, 1, &opt);
     if (connection == k_HSteamNetConnection_Invalid) {
         log_warn("Failed to create connection");
