@@ -28,6 +28,7 @@ kanban-plugin: basic
 
 ## infra changes
 
+- [ ] BUILD PERF: Optimize magic_enum usage (accounts for 350+ seconds of template instantiation). Options: explicit instantiation in magic_enum_instantiations.cpp, reduce MAGIC_ENUM_RANGE_MAX for non-keycode enums, provide manual enum_name/enum_cast for hot-path enums (i18n, EntityType, ConfigKey), move usages to .cpp files instead of headers
 - [ ] collision for player to change to cylinder
 - [ ] pressing two movement at the same time while moving camera sometimes feels weird
 - [ ] In pause menu, remap key bindings in layer for arrows keys to choose options

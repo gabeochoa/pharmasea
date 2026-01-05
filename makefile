@@ -13,8 +13,9 @@ GNS_LIBDIR := vendor
 
 RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) -DNDEBUG
 
-TIMEFLAG = -ftime-trace
-# TIMEFLAG =
+# -ftime-trace is useful for profiling but makes ccache uncacheable
+# Use: make TIMEFLAG=-ftime-trace when you need build profiling
+TIMEFLAG ?=
 
 # Optimized flags for debug builds (fewer expensive warnings)
 DEBUG_WARNING_FLAGS = -Wall -Wextra -Wuninitialized -Wshadow -Wno-conversion \

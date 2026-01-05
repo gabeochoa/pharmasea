@@ -52,5 +52,6 @@ using tl::unexpected;
 // Also includes afterhours color plugin
 #include "engine/graphics.h"
 
-// afterhours helpers
-#include "afterhours/src/bitset_utils.h"
+// Full afterhours ECS (Entity, System, EntityHelper, etc.)
+// This is used in nearly all components and systems
+#include "ah.h"
