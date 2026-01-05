@@ -38,7 +38,10 @@ void Files::create(const FilesConfig& config) {
     created = true;
 }
 
-Files& Files::get() { return instance; }
+Files& Files::get() {
+    invariant(created);
+    return instance;
+}
 
 Files::Files(const FilesConfig& config)
     : root(config.root_folder), settings_file(config.settings_file_name) {

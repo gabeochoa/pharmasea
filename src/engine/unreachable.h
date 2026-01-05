@@ -1,7 +1,11 @@
 
 #pragma once
 
+#include "assert.h"
+
 [[noreturn]] inline void unreachable() {
+    // Make this fail loudly in debug builds.
+    invariant(false);
     // Uses compiler specific extensions if possible.
     // Even if no extension is used, undefined behavior is still raised by
     // an empty function body and the noreturn attribute.

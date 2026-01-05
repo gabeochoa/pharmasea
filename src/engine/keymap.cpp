@@ -219,7 +219,13 @@ const std::vector<int> KeyMap::get_valid_keys(const menu::State& state,
 }
 
 std::string KeyMap::name_for_key(int input) {
-    KeyboardKey key = magic_enum::enum_cast<KeyboardKey>(input).value();
+    auto key_opt = magic_enum::enum_cast<KeyboardKey>(input);
+    if (!key_opt.has_value()) {
+        // This should only happen if we somehow stored an invalid keycode.
+        invariant(false);
+        return "KEY_UNKNOWN";
+    }
+    KeyboardKey key = *key_opt;
     return std::string(magic_enum::enum_name(key));
 }
 
@@ -806,7 +812,12 @@ nlohmann::json KeyMap::anyinput_to_json(const AnyInput& key) {
 
 AnyInput KeyMap::json_to_anyinput(const nlohmann::json& json) {
     int type_as_int = json["type"].get<int>();
-    InputType type = magic_enum::enum_value<InputType>(type_as_int);
+    if (type_as_int < 0 ||
+        type_as_int >= static_cast<int>(magic_enum::enum_count<InputType>())) {
+        VALIDATE(false, fmt::format("keymap: invalid input type {}", type_as_int));
+        return 0;
+    }
+    InputType type = static_cast<InputType>(type_as_int);
 
     auto jvalue = json["value"];
 
@@ -814,15 +825,29 @@ AnyInput KeyMap::json_to_anyinput(const nlohmann::json& json) {
         case InputType::Keyboard:
             return jvalue.get<int>();
         case InputType::Gamepad:
-            return magic_enum::enum_cast<GamepadButton>(
-                       jvalue.get<std::string>())
-                .value();
+            if (auto b = magic_enum::enum_cast<GamepadButton>(
+                    jvalue.get<std::string>());
+                b.has_value()) {
+                return *b;
+            }
+            VALIDATE(false,
+                     fmt::format("keymap: invalid gamepad button '{}'",
+                                 jvalue.get<std::string>()));
+            return raylib::GAMEPAD_BUTTON_UNKNOWN;
         case InputType::GamepadWithAxis:
-            return GamepadAxisWithDir{
-                .axis = magic_enum::enum_cast<GamepadAxis>(
-                            jvalue["axis"].get<std::string>())
-                            .value(),
-                .dir = jvalue["dir"].get<float>()};
+            {
+                const auto axis_str = jvalue["axis"].get<std::string>();
+                const auto axis_opt =
+                    magic_enum::enum_cast<GamepadAxis>(axis_str);
+                if (!axis_opt.has_value()) {
+                    VALIDATE(false,
+                             fmt::format("keymap: invalid gamepad axis '{}'",
+                                         axis_str));
+                    return 0;
+                }
+                return GamepadAxisWithDir{.axis = *axis_opt,
+                                          .dir = jvalue["dir"].get<float>()};
+            }
     }
     log_warn("couldnt find matching AnyInput for json");
     return jvalue.get<int>();
@@ -870,12 +895,23 @@ nlohmann::json KeyMap::serializeFullMap() {
 // Function to deserialize JSON to FullMap
 void KeyMap::deserializeFullMap(const nlohmann::json& serializedMap) {
     for (auto it = serializedMap.begin(); it != serializedMap.end(); ++it) {
-        menu::State state =
-            magic_enum::enum_cast<menu::State>(it.key()).value();
+        const auto state_opt = magic_enum::enum_cast<menu::State>(it.key());
+        if (!state_opt.has_value()) {
+            VALIDATE(false,
+                     fmt::format("keymap: invalid menu::State '{}'", it.key()));
+            continue;
+        }
+        menu::State state = *state_opt;
         LayerMapping layerMapping;
         for (const auto& [inputNameStr, inputArray] : it.value().items()) {
-            InputName inputName =
-                magic_enum::enum_cast<InputName>(inputNameStr).value();
+            const auto name_opt =
+                magic_enum::enum_cast<InputName>(inputNameStr);
+            if (!name_opt.has_value()) {
+                VALIDATE(false, fmt::format("keymap: invalid InputName '{}'",
+                                            inputNameStr));
+                continue;
+            }
+            InputName inputName = *name_opt;
 
             AnyInputs anyInputs;
             for (const auto& anyInput : inputArray) {

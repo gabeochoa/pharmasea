@@ -33,7 +33,10 @@ struct App {
     bool onWindowFullscreen(WindowFullscreenEvent& event);
     void loop(float dt);
 
-    std::array<Layer*, 32> layerstack;
+    // Important: value-initialize so elements start as nullptr.
+    // `App` is constructed via placement-new into a static `instance`, so we
+    // cannot rely on static zero-initialization here.
+    std::array<Layer*, 32> layerstack{};
     int max_layer = -1;
 
     // TODO create a render texture library?

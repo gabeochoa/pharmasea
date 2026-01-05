@@ -5,6 +5,7 @@
 #include <tuple>
 #include <unordered_map>
 //
+#include "assert.h"
 #include "files.h"
 #include "statemanager.h"
 #include "util.h"
@@ -88,16 +89,22 @@ struct AnyInputLess {
         }
         if (std::holds_alternative<GamepadAxisWithDir>(key)) {
             const auto axis_with_dir = std::get<GamepadAxisWithDir>(key);
-            return 1000 +
-                   100 *
-                       (magic_enum::enum_index<GamepadAxis>(axis_with_dir.axis)
-                            .value()) +
-                   (int) (axis_with_dir.dir);
+            const auto axis_idx =
+                magic_enum::enum_index<GamepadAxis>(axis_with_dir.axis);
+            if (!axis_idx.has_value()) {
+                invariant(false);
+                return 0;
+            }
+            return 1000 + 100 * (*axis_idx) + static_cast<int>(axis_with_dir.dir);
         }
         if (std::holds_alternative<GamepadButton>(key)) {
             const auto button = std::get<GamepadButton>(key);
-            return 2000 + (size_t) magic_enum::enum_index<GamepadButton>(button)
-                              .value();
+            const auto button_idx = magic_enum::enum_index<GamepadButton>(button);
+            if (!button_idx.has_value()) {
+                invariant(false);
+                return 0;
+            }
+            return 2000 + static_cast<size_t>(*button_idx);
         }
         return 0;
     }
