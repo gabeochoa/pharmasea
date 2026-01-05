@@ -20,7 +20,8 @@ namespace network {
 namespace internal {
 
 struct Client_t {
-    int client_id;
+    HSteamNetConnection conn = k_HSteamNetConnection_Invalid;
+    int client_id = -1;  // Assigned by authoritative network::Server
 };
 
 enum struct InternalServerAnnouncement {
@@ -37,15 +38,15 @@ struct Server {
     HSteamNetPollGroup poll_group;
     inline static Server *callback_instance;
     bool running = false;
-    std::function<void(Client_t &, std::string)> process_message_cb;
+    std::function<void(HSteamNetConnection, std::string)> process_message_cb;
     // TODO add setter and make private
-    std::function<void(int)> onClientDisconnect;
+    std::function<void(HSteamNetConnection)> onClientDisconnect;
     std::function<void(HSteamNetConnection, std::string,
                        InternalServerAnnouncement)>
         onSendClientAnnouncement;
 
     void set_process_message(
-        const std::function<void(Client_t &client, std::string)> &cb) {
+        const std::function<void(HSteamNetConnection, std::string)> &cb) {
         process_message_cb = cb;
     }
 
@@ -55,6 +56,7 @@ struct Server {
         onSendClientAnnouncement = cb;
     }
 
+    // Track active connections (client_id is assigned above transport layer).
     std::map<HSteamNetConnection, Client_t> clients;
 
     explicit Server(int port) {
@@ -149,11 +151,11 @@ struct Server {
             std::string cmd;
             cmd.assign((const char *) incoming_msg->m_pData,
                        incoming_msg->m_cbSize);
-            Client_t client = clients[incoming_msg->m_conn];
+            HSteamNetConnection conn = incoming_msg->m_conn;
             incoming_msg->Release();
 
             //
-            this->process_message_cb(client, cmd);
+            if (this->process_message_cb) this->process_message_cb(conn, cmd);
         };
         auto poll_connection_state_changes = [&]() {
             Server::callback_instance = this;
@@ -237,54 +239,14 @@ struct Server {
    private:
     void process_connection_ended(
         SteamNetConnectionStatusChangedCallback_t *info) {
-        InternalServerAnnouncement annoucement_type;
         // Ignore if they were not previously connected.  (If they
         // disconnected before we accepted the connection.)
         if (info->m_eOldState == k_ESteamNetworkingConnectionState_Connected) {
-            // Locate the client.  Note that it should have been found,
-            // because this is the only codepath where we remove clients
-            // (except on shutdown), and connection change callbacks are
-            // dispatched in queue order.
             auto itClient = clients.find(info->m_hConn);
-            assert(itClient != clients.end());
-
-            std::string temp;
-            // Select appropriate log messages
-            const char *pszDebugLogAction;
-            if (info->m_info.m_eState ==
-                k_ESteamNetworkingConnectionState_ProblemDetectedLocally) {
-                pszDebugLogAction = "problem detected locally";
-                temp = fmt::format("Alas, {} hath fallen into shadow.  ({})",
-                                   itClient->second.client_id,
-                                   info->m_info.m_szEndDebug);
-                annoucement_type = InternalServerAnnouncement::Warn;
-            } else {
-                // Note that here we could check the reason code to see
-                // if it was a "usual" connection or an "unusual" one.
-                pszDebugLogAction = "closed by peer";
-                temp = fmt::format("{}; {} hath departed", temp,
-                                   itClient->second.client_id);
-                annoucement_type = InternalServerAnnouncement::Warn;
+            if (itClient != clients.end()) {
+                clients.erase(itClient);
             }
-
-            // Spew something to our own log.  Note that because we put
-            // their nick as the connection description, it will show
-            // up, along with their transport-specific data (e.g. their
-            // IP address)
-            log_warn("Connection {} {}, reason {}: {}\n",
-                     info->m_info.m_szConnectionDescription, pszDebugLogAction,
-                     info->m_info.m_eEndReason, info->m_info.m_szEndDebug);
-
-            // TODO change keepalive timeout to be lower?
-
-            int client_id = (int) itClient->second.client_id;
-
-            if (onClientDisconnect) onClientDisconnect(client_id);
-
-            clients.erase(itClient);
-
-            // Send a message so everybody else knows what happened
-            send_announcement_to_all(temp, annoucement_type);
+            if (onClientDisconnect) onClientDisconnect(info->m_hConn);
 
         } else {
             VALIDATE(info->m_eOldState ==
@@ -329,52 +291,8 @@ struct Server {
             return;
         }
 
-        std::string temp;
-
-        // Generate a random nick.  A random temporary nick
-        // is really dumb and not how you would write a real chat
-        // server. You would want them to have some sort of signon
-        // message, and you would keep their client in a state of limbo
-        // (connected, but not logged on) until them.  I'm trying to
-        // keep this example code really simple.
-        int nick_id = 10000 + (rand() % 100000);
-
-        // Send them a welcome message
-        temp = fmt::format("Your id is '{}'", nick_id);
-        send_announcement_to_client(info->m_hConn, temp,
-                                    InternalServerAnnouncement::Info);
-
-        // Also send them a list of everybody who is already connected
-        if (clients.empty()) {
-            send_announcement_to_client(info->m_hConn,
-                                        "Thou art utterly alone.",
-                                        InternalServerAnnouncement::Info);
-        } else {
-            temp =
-                fmt::format("{} companions greet you:", (int) clients.size());
-            for (auto &c : clients)
-                send_announcement_to_client(
-                    info->m_hConn,
-                    fmt::format("{}, your id is: {}", temp, c.second.client_id),
-                    InternalServerAnnouncement::Info);
-        }
-
-        // Add them to the client list, using std::map wacky syntax
-        clients[info->m_hConn];
-
-        clients[info->m_hConn].client_id = nick_id;
-        interface->SetConnectionName(info->m_hConn,
-                                     fmt::format("{}", nick_id).c_str());
-
-        // Let everybody else know who they are for now
-        temp = fmt::format(
-            "Hark!  A stranger hath joined this merry host.  For "
-            "now we shall call them '{}'",
-            nick_id);
-        send_announcement_to_all(temp, InternalServerAnnouncement::Info,
-                                 [&](const Client_t &client) {
-                                     return client.client_id == nick_id;
-                                 });
+        clients[info->m_hConn] = Client_t{.conn = info->m_hConn, .client_id = -1};
+        interface->SetConnectionName(info->m_hConn, "unassigned");
     }
 
     void connection_changed_callback(
@@ -424,29 +342,17 @@ struct IServer {
     [[nodiscard]] virtual bool is_running() const = 0;
 
     virtual void set_process_message(
-        const std::function<void(Client_t &client, std::string)> &cb) = 0;
-    virtual void set_announcement_cb(
-        const std::function<void(HSteamNetConnection, std::string,
-                                 InternalServerAnnouncement)> &cb) = 0;
+        const std::function<void(HSteamNetConnection, std::string)> &cb) = 0;
     virtual void set_on_client_disconnect(
-        const std::function<void(int)> &cb) = 0;
-    virtual void set_on_send_client_announcement(
-        const std::function<void(HSteamNetConnection, std::string,
-                                 InternalServerAnnouncement)> &cb) = 0;
+        const std::function<void(HSteamNetConnection)> &cb) = 0;
 
     virtual void startup() = 0;
     virtual bool run() = 0;
 
-    virtual void send_message_to_all(
-        const char *buffer, uint32 size,
-        const std::function<bool(Client_t &)> &exclude = nullptr) = 0;
-
     virtual void send_message_to_connection(HSteamNetConnection conn,
                                             const char *buffer,
-                                            uint32 size) = 0;
-
-    // Used by authoritative server to build join/leave packets.
-    [[nodiscard]] virtual std::vector<int> connected_client_ids() const = 0;
+                                            uint32 size,
+                                            Channel channel) = 0;
 };
 
 // GameNetworkingSockets implementation (existing behavior).
@@ -456,71 +362,38 @@ struct GnsServer : public Server, public IServer {
     [[nodiscard]] bool is_running() const override { return Server::running; }
 
     void set_process_message(
-        const std::function<void(Client_t &client, std::string)> &cb) override {
+        const std::function<void(HSteamNetConnection, std::string)> &cb) override {
         Server::set_process_message(cb);
     }
-    void set_announcement_cb(
-        const std::function<void(HSteamNetConnection, std::string,
-                                 InternalServerAnnouncement)> &cb) override {
-        Server::set_announcement_cb(cb);
-    }
     void set_on_client_disconnect(
-        const std::function<void(int)> &cb) override {
+        const std::function<void(HSteamNetConnection)> &cb) override {
         this->onClientDisconnect = cb;
-    }
-    void set_on_send_client_announcement(
-        const std::function<void(HSteamNetConnection, std::string,
-                                 InternalServerAnnouncement)> &cb) override {
-        this->onSendClientAnnouncement = cb;
     }
 
     void startup() override { Server::startup(); }
     bool run() override { return Server::run(); }
 
-    void send_message_to_all(
-        const char *buffer, uint32 size,
-        const std::function<bool(Client_t &)> &exclude = nullptr) override {
-        Server::send_message_to_all(buffer, size, exclude);
-    }
-
     void send_message_to_connection(HSteamNetConnection conn, const char *buffer,
-                                    uint32 size) override {
-        Server::send_message_to_connection(conn, buffer, size);
-    }
-
-    [[nodiscard]] std::vector<int> connected_client_ids() const override {
-        std::vector<int> ids;
-        ids.reserve(this->clients.size());
-        for (const auto &kv : this->clients) ids.push_back(kv.second.client_id);
-        return ids;
+                                    uint32 size,
+                                    Channel channel) override {
+        this->interface->SendMessageToConnection(conn, buffer, size, channel,
+                                                 nullptr);
     }
 };
 
 // In-process implementation (no sockets).
 struct LocalServer : public IServer {
-    // Match existing Server's public surface used by authoritative layer.
-    std::map<HSteamNetConnection, Client_t> clients;
     bool running = false;
 
     [[nodiscard]] bool is_running() const override { return running; }
 
     void set_process_message(
-        const std::function<void(Client_t &client, std::string)> &cb) override {
+        const std::function<void(HSteamNetConnection, std::string)> &cb) override {
         process_message_cb = cb;
     }
-    void set_announcement_cb(
-        const std::function<void(HSteamNetConnection, std::string,
-                                 InternalServerAnnouncement)> &cb) override {
-        onSendClientAnnouncement = cb;
-    }
     void set_on_client_disconnect(
-        const std::function<void(int)> &cb) override {
+        const std::function<void(HSteamNetConnection)> &cb) override {
         onClientDisconnect = cb;
-    }
-    void set_on_send_client_announcement(
-        const std::function<void(HSteamNetConnection, std::string,
-                                 InternalServerAnnouncement)> &cb) override {
-        onSendClientAnnouncement = cb;
     }
 
     void startup() override {
@@ -536,45 +409,12 @@ struct LocalServer : public IServer {
     bool run() override {
         if (!running) return false;
 
-        // Process connection events (assign ids to Client_t, mimic GNS behavior).
-        for (int i = 0; i < 64; ++i) {
-            auto maybe_conn = local::pop_connect_event();
-            if (!maybe_conn.has_value()) break;
-            HSteamNetConnection conn = *maybe_conn;
-
-            int client_id = -1;
-            {
-                std::lock_guard<std::mutex> lock(local::hub().m);
-                auto it = local::hub().client_ids.find(conn);
-                if (it != local::hub().client_ids.end()) client_id = it->second;
-            }
-            if (client_id < 0) continue;
-
-            clients[conn].client_id = client_id;
-
-            if (onSendClientAnnouncement) {
-                onSendClientAnnouncement(
-                    conn, fmt::format("Your id is '{}'", client_id),
-                    InternalServerAnnouncement::Info);
-            }
-        }
-
         // Process disconnect events.
         for (int i = 0; i < 64; ++i) {
             auto maybe_conn = local::pop_disconnect_event();
             if (!maybe_conn.has_value()) break;
             HSteamNetConnection conn = *maybe_conn;
-
-            auto itClient = clients.find(conn);
-            if (itClient != clients.end()) {
-                int client_id = itClient->second.client_id;
-                clients.erase(itClient);
-                if (onClientDisconnect) onClientDisconnect(client_id);
-                if (onSendClientAnnouncement) {
-                    onSendClientAnnouncement(
-                        conn, "Disconnected", InternalServerAnnouncement::Warn);
-                }
-            }
+            if (onClientDisconnect) onClientDisconnect(conn);
         }
 
         // Drain some client->server messages.
@@ -583,34 +423,16 @@ struct LocalServer : public IServer {
             if (!maybe.has_value()) break;
             HSteamNetConnection conn = maybe->first;
             std::string &msg = maybe->second;
-
-            auto it = clients.find(conn);
-            if (it == clients.end()) continue;
-            if (process_message_cb) process_message_cb(it->second, msg);
+            if (process_message_cb) process_message_cb(conn, msg);
         }
 
         return true;
     }
 
-    void send_message_to_all(
-        const char *buffer, uint32 size,
-        const std::function<bool(Client_t &)> &exclude = nullptr) override {
-        for (auto &c : clients) {
-            if (exclude && exclude(c.second)) continue;
-            send_message_to_connection(c.first, buffer, size);
-        }
-    }
-
     void send_message_to_connection(HSteamNetConnection conn, const char *buffer,
-                                    uint32 size) override {
+                                    uint32 size,
+                                    Channel) override {
         local::push_to_client(conn, std::string(buffer, buffer + size));
-    }
-
-    [[nodiscard]] std::vector<int> connected_client_ids() const override {
-        std::vector<int> ids;
-        ids.reserve(clients.size());
-        for (const auto &kv : clients) ids.push_back(kv.second.client_id);
-        return ids;
     }
 
     ~LocalServer() override {
@@ -619,10 +441,8 @@ struct LocalServer : public IServer {
     }
 
    private:
-    std::function<void(Client_t &, std::string)> process_message_cb;
-    std::function<void(int)> onClientDisconnect;
-    std::function<void(HSteamNetConnection, std::string, InternalServerAnnouncement)>
-        onSendClientAnnouncement;
+    std::function<void(HSteamNetConnection, std::string)> process_message_cb;
+    std::function<void(HSteamNetConnection)> onClientDisconnect;
 };
 
 }  // namespace internal

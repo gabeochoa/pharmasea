@@ -12,25 +12,18 @@ void reset() {
     std::lock_guard<std::mutex> lock(g_hub.m);
     g_hub.server_running = false;
     g_hub.next_conn = (HSteamNetConnection) 1;
-    g_hub.next_client_id = 10000;
-    g_hub.client_ids.clear();
-    g_hub.connect_events.clear();
     g_hub.disconnect_events.clear();
     g_hub.to_server.clear();
     g_hub.endpoints.clear();
 }
 
-std::optional<std::pair<HSteamNetConnection, int>> connect_client() {
+std::optional<HSteamNetConnection> connect_client() {
     std::lock_guard<std::mutex> lock(g_hub.m);
     if (!g_hub.server_running) return std::nullopt;
 
     HSteamNetConnection conn = g_hub.next_conn++;
-    int client_id = g_hub.next_client_id++;
-
-    g_hub.client_ids.emplace(conn, client_id);
     g_hub.endpoints.emplace(conn, Hub::Endpoint{});
-    g_hub.connect_events.push_back(conn);
-    return std::make_pair(conn, client_id);
+    return conn;
 }
 
 void disconnect_client(HSteamNetConnection conn) {
@@ -79,14 +72,6 @@ bool is_connection_alive(HSteamNetConnection conn) {
     if (it == g_hub.endpoints.end()) return false;
     if (it->second.disconnected) return false;
     return true;
-}
-
-std::optional<HSteamNetConnection> pop_connect_event() {
-    std::lock_guard<std::mutex> lock(g_hub.m);
-    if (g_hub.connect_events.empty()) return std::nullopt;
-    HSteamNetConnection out = g_hub.connect_events.front();
-    g_hub.connect_events.pop_front();
-    return out;
 }
 
 std::optional<HSteamNetConnection> pop_disconnect_event() {

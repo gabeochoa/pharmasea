@@ -2,7 +2,9 @@
 
 #pragma once
 
+#include <optional>
 #include <thread>
+#include <unordered_map>
 //
 #include "../engine/atomic_queue.h"
 #include "../engine/tracy.h"
@@ -52,6 +54,11 @@ struct Server {
     AtomicQueue<ClientPacket> incoming_packet_queue;
     AtomicQueue<ClientPacket> packet_queue;
     std::unique_ptr<internal::IServer> server_p;
+    // Connection <-> client_id mapping owned by authoritative server layer.
+    // Transport should not assign ids.
+    std::unordered_map<HSteamNetConnection, int> conn_to_client_id;
+    std::unordered_map<int, HSteamNetConnection> client_id_to_conn;
+    int next_client_id = 10000;
     std::map<int, std::shared_ptr<Entity>> players;
     std::unique_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
@@ -87,18 +94,11 @@ struct Server {
         }
         log_info("Setting up server callbacks");
         server_p->set_process_message(
-            [this](const internal::Client_t& incoming_client,
-                   const std::string& msg) {
-                this->server_enqueue_message_string(incoming_client, msg);
+            [this](HSteamNetConnection conn, const std::string& msg) {
+                this->server_enqueue_message_string(conn, msg);
             });
         server_p->set_on_client_disconnect(
-            [this](int client_id) { this->process_player_leave(client_id); });
-
-        server_p->set_on_send_client_announcement(
-            [this](HSteamNetConnection conn, const std::string& msg,
-                   internal::InternalServerAnnouncement type) {
-                this->send_announcement(conn, msg, type);
-            });
+            [this](HSteamNetConnection conn) { this->process_disconnect(conn); });
         log_info("Calling server_p->startup()");
         server_p->startup();
         log_info("server_p->startup() completed, running state: {}",
@@ -146,8 +146,12 @@ struct Server {
     void process_map_seed_info(const internal::Client_t& incoming_client,
                                const ClientPacket& orig_packet);
 
-    void server_enqueue_message_string(
-        const internal::Client_t& incoming_client, const std::string& msg);
+    void server_enqueue_message_string(HSteamNetConnection conn,
+                                       const std::string& msg);
+    void process_disconnect(HSteamNetConnection conn);
+    [[nodiscard]] int allocate_client_id();
+    [[nodiscard]] std::optional<int> lookup_client_id(HSteamNetConnection conn) const;
+    [[nodiscard]] std::vector<int> connected_client_ids() const;
 
     void server_process_message_string(const ClientMessage& client_message);
     void server_process_packet(const internal::Client_t&, const ClientPacket&);

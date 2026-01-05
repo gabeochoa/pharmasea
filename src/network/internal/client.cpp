@@ -217,7 +217,7 @@ void LocalClient::startup() {
         connection = k_HSteamNetConnection_Invalid;
         return;
     }
-    connection = maybe->first;
+    connection = *maybe;
     running = true;
 
     // Local connections are immediate; mimic "Connected" callback.

@@ -21,13 +21,7 @@ struct Hub {
 
     // Allocate small integer handles; these are NOT real Steam connections.
     HSteamNetConnection next_conn = (HSteamNetConnection) 1;
-    int next_client_id = 10000;
 
-    // client_id per connection handle
-    std::unordered_map<HSteamNetConnection, int> client_ids;
-
-    // connection lifecycle
-    std::deque<HSteamNetConnection> connect_events;
     std::deque<HSteamNetConnection> disconnect_events;
 
     // message queues
@@ -48,9 +42,8 @@ Hub& hub();
 // Clears all state and disables server_running.
 void reset();
 
-// Client-side: request a connection. Returns connection handle and assigned
-// client_id (transport-level).
-std::optional<std::pair<HSteamNetConnection, int>> connect_client();
+// Client-side: request a connection. Returns connection handle.
+std::optional<HSteamNetConnection> connect_client();
 
 // Client-side: request disconnect for a connection handle.
 void disconnect_client(HSteamNetConnection conn);
@@ -67,7 +60,6 @@ std::optional<std::string> pop_to_client(HSteamNetConnection conn);
 bool is_connection_alive(HSteamNetConnection conn);
 
 // Server-side: poll lifecycle events.
-std::optional<HSteamNetConnection> pop_connect_event();
 std::optional<HSteamNetConnection> pop_disconnect_event();
 
 }  // namespace local

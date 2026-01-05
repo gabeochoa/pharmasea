@@ -517,7 +517,7 @@ void Server::process_player_leave(int client_id) {
     players.erase(player_match);
 
     std::vector<int> ids;
-    ids = server_p->connected_client_ids();
+    ids = connected_client_ids();
     // Since we are the host, we can use the internal::Client_t to figure
     // out the id / name
     send_client_packet_to_all(
@@ -605,7 +605,7 @@ void Server::process_player_join_packet(
     // TODO i looked into std::transform but kept getting std::out of range
     // errors
     std::vector<int> ids;
-    ids = server_p->connected_client_ids();
+    ids = connected_client_ids();
     // Since we are the host, we can use the internal::Client_t to figure
     // out the id / name
     send_client_packet_to_all(
@@ -680,9 +680,10 @@ void Server::process_map_seed_info(const internal::Client_t&,
     pharmacy_map->update_seed(info.seed);
 }
 
-void Server::server_enqueue_message_string(
-    const internal::Client_t& incoming_client, const std::string& msg) {
-    incoming_message_queue.push_back(std::make_pair(incoming_client, msg));
+void Server::server_enqueue_message_string(HSteamNetConnection conn,
+                                          const std::string& msg) {
+    incoming_message_queue.push_back(
+        std::make_pair(internal::Client_t{.conn = conn, .client_id = -1}, msg));
 }
 
 void Server::server_process_message_string(
@@ -690,11 +691,56 @@ void Server::server_process_message_string(
     TRACY_ZONE_SCOPED;
     // Note: not using structured binding since they cannot be captured by
     // lambda expr yet
-    const internal::Client_t& incoming_client = client_message.first;
+    internal::Client_t incoming_client = client_message.first;
     const std::string& msg = client_message.second;
 
     const ClientPacket packet = network::deserialize_to_packet(msg);
-    server_process_packet(incoming_client, packet);
+    // Resolve/assign client_id based on transport connection.
+    ClientPacket resolved = packet;
+    std::optional<int> maybe_id = lookup_client_id(incoming_client.conn);
+    if (resolved.msg_type == ClientPacket::MsgType::PlayerJoin) {
+        if (!maybe_id.has_value()) {
+            int new_id = allocate_client_id();
+            conn_to_client_id[incoming_client.conn] = new_id;
+            client_id_to_conn[new_id] = incoming_client.conn;
+            incoming_client.client_id = new_id;
+        } else {
+            incoming_client.client_id = *maybe_id;
+        }
+        resolved.client_id = incoming_client.client_id;
+    } else {
+        if (!maybe_id.has_value()) {
+            // Ignore messages from unjoined connections.
+            return;
+        }
+        incoming_client.client_id = *maybe_id;
+        resolved.client_id = incoming_client.client_id;
+    }
+    server_process_packet(incoming_client, resolved);
+}
+
+int Server::allocate_client_id() { return next_client_id++; }
+
+std::optional<int> Server::lookup_client_id(HSteamNetConnection conn) const {
+    auto it = conn_to_client_id.find(conn);
+    if (it == conn_to_client_id.end()) return std::nullopt;
+    return it->second;
+}
+
+std::vector<int> Server::connected_client_ids() const {
+    std::vector<int> ids;
+    ids.reserve(client_id_to_conn.size());
+    for (const auto& kv : client_id_to_conn) ids.push_back(kv.first);
+    return ids;
+}
+
+void Server::process_disconnect(HSteamNetConnection conn) {
+    auto it = conn_to_client_id.find(conn);
+    if (it == conn_to_client_id.end()) return;
+    int client_id = it->second;
+    conn_to_client_id.erase(it);
+    client_id_to_conn.erase(client_id);
+    process_player_leave(client_id);
 }
 
 void Server::server_process_packet(const internal::Client_t& incoming_client,
@@ -744,15 +790,21 @@ void Server::send_client_packet_to_client(HSteamNetConnection conn,
     // type
     Buffer buffer = serialize_to_buffer(packet);
     server_p->send_message_to_connection(conn, buffer.c_str(),
-                                         (uint32) buffer.size());
+                                         (uint32) buffer.size(), packet.channel);
 }
 
 void Server::send_client_packet_to_all(
     const ClientPacket& packet,
     const std::function<bool(internal::Client_t&)>& exclude) {
     Buffer buffer = serialize_to_buffer(packet);
-    server_p->send_message_to_all(buffer.c_str(), (uint32) buffer.size(),
-                                  exclude);
+    // Broadcast only to joined clients (client_id_to_conn).
+    for (const auto& kv : client_id_to_conn) {
+        internal::Client_t tmp{.conn = kv.second, .client_id = kv.first};
+        if (exclude && exclude(tmp)) continue;
+        server_p->send_message_to_connection(kv.second, buffer.c_str(),
+                                             (uint32) buffer.size(),
+                                             packet.channel);
+    }
 }
 
 }  // namespace network
