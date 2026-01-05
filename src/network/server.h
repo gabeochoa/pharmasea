@@ -55,7 +55,6 @@ struct Server {
     std::map<int, std::shared_ptr<Entity>> players;
     std::unique_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
-    std::thread::id thread_id;
     std::thread server_thread;
     std::thread pathfinding_thread;
 

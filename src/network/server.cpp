@@ -1,6 +1,7 @@
 #include "server.h"
 
 #include <algorithm>
+#include <atomic>
 #include <cctype>
 #include <chrono>
 #include <thread>
@@ -65,7 +66,15 @@ void Server::start(int port) {
 }
 
 void Server::queue_packet(const ClientPacket& p) {
-    if (!g_server) return;
+    if (!g_server) {
+        // This can happen if a caller queues a packet before hosting starts,
+        // or after shutdown while UI/network objects are still unwinding.
+        static std::atomic_flag warned = ATOMIC_FLAG_INIT;
+        if (!warned.test_and_set()) {
+            log_warn("Server::queue_packet called with no active server; dropping packet");
+        }
+        return;
+    }
     g_server->incoming_packet_queue.push_back(p);
 }
 void Server::forward_packet(const ClientPacket& p) {
@@ -96,7 +105,7 @@ std::thread::id Server::get_thread_id() {
     if (!g_server) return {};
     if (g_server->server_thread.joinable())
         return g_server->server_thread.get_id();
-    return g_server->thread_id;
+    return {};
 }
 
 void Server::shutdown() {
@@ -161,7 +170,6 @@ void Server::send_player_rare_data() {
 void Server::run() {
     TRACY_ZONE_SCOPED;
     thread_role::set(thread_role::Role::Server);
-    thread_id = std::this_thread::get_id();
 
     // Ensure Afterhours' default collection matches the server thread's
     // collection. (Some serialization paths call afterhours::EntityHelper

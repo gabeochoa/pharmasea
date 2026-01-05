@@ -12,7 +12,7 @@ extern long long total_ping;
 extern long long there_ping;
 extern long long return_ping;
 
-struct Client {
+struct PlayerClient {
     // TODO eventually generate room codes instead of IP address
     // can be some hash of the real ip that the we can decode
     struct ConnectionInfo {
@@ -34,7 +34,7 @@ struct Client {
     float next_ping_reset = 0.2f;
     float next_ping = 0.0f;
 
-    Client();
+    PlayerClient();
     void update_username(const std::string& new_name);
     void lock_in_ip();
     void tick(float dt);
