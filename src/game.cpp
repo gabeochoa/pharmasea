@@ -175,8 +175,14 @@ void startup() {
 
     network::init_connections();
 
-    MenuState::get().reset();
-    GameState::get().reset();
+    // In local-only mode, networking init decides the menu flow (boot to lobby).
+    // Don't immediately override it back to Root.
+    if (!network::LOCAL_ONLY) {
+        MenuState::get().reset();
+        GameState::get().reset();
+    } else {
+        log_info("[local-only] skipping MenuState/GameState reset after init");
+    }
 
     App::get().loadLayers({{
         //

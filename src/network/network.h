@@ -180,12 +180,16 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
         // In local-only mode, boot straight into the Network lobby flow.
         // If username is missing, NetworkLayer will prompt for it.
         if (network::LOCAL_ONLY) {
+            log_info("[local-only] reset_connections: entering Network menu");
             MenuState::get().set(menu::State::Network);
             GameState::get().set(game::State::InMenu);
 
             if (!Settings::get().data.username.empty()) {
+                log_info("[local-only] username present; auto-hosting");
                 network_info->lock_in_username();
                 network_info->set_role(Role::s_Host);
+            } else {
+                log_info("[local-only] username missing; waiting for user input");
             }
             return;
         }
