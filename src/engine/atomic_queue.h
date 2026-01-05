@@ -1,47 +1,53 @@
 
 #pragma once
 
-// NOTE: Despite the name, this is a concurrent queue implementation.
-// TODO(threading): Stop depending on Tracy's vendored copy and move this to a
-// dedicated, project-owned third-party dependency (or our own impl).
+// NOTE: Despite the name, this is a thread-safe queue implementation.
 //
-// We use moodycamel::ConcurrentQueue for correctness: the previous
-// mutex+deque wrapper returned references after unlocking, which was UB.
+// This is a minimal mutex-based queue with a safe API (no reference returned
+// after unlocking). It is intended to prevent UB/races in producer/consumer
+// paths without pulling in a heavier dependency.
+//
+// TODO(threading): Consider replacing with a dedicated MPMC queue (e.g.
+// moodycamel::ConcurrentQueue) if/when we want lock-free behavior. Tracy's
+// vendored concurrentqueue differs from upstream and isn't a drop-in.
 
-#include <atomic>
 #include <cstddef>
+#include <deque>
+#include <mutex>
 #include <utility>
-
-#include "../../vendor/tracy/client/tracy_concurrentqueue.h"
 
 template<typename T>
 struct AtomicQueue {
     void push_back(const T& value) {
-        q.enqueue(value);
-        m_size.fetch_add(1, std::memory_order_relaxed);
+        std::lock_guard<std::mutex> lock(m_mutex);
+        q.push_back(value);
     }
 
     void push_back(T&& value) {
-        q.enqueue(std::move(value));
-        m_size.fetch_add(1, std::memory_order_relaxed);
+        std::lock_guard<std::mutex> lock(m_mutex);
+        q.push_back(std::move(value));
     }
 
     // Pops an item if available. Returns false if empty.
     bool try_pop_front(T& out) {
-        if (!q.try_dequeue(out)) return false;
-        m_size.fetch_sub(1, std::memory_order_relaxed);
+        std::lock_guard<std::mutex> lock(m_mutex);
+        if (q.empty()) return false;
+        out = std::move(q.front());
+        q.pop_front();
         return true;
     }
 
     [[nodiscard]] bool empty() const {
-        return size() == 0;
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return q.empty();
     }
 
     [[nodiscard]] size_t size() const {
-        return m_size.load(std::memory_order_relaxed);
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return q.size();
     }
 
    private:
-    tracy::moodycamel::ConcurrentQueue<T> q;
-    std::atomic<size_t> m_size{0};
+    mutable std::mutex m_mutex;
+    std::deque<T> q;
 };
