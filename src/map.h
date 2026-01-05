@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "entity_helper.h"
@@ -14,6 +15,23 @@ constexpr int MAX_MAP_SIZE = 25;
 constexpr int MAX_SEED_LENGTH = 20;
 
 extern std::vector<std::string> EXAMPLE_MAP;
+
+namespace ps::concepts {
+
+template<typename Archive>
+concept HasZppBitsKind = requires { std::remove_cvref_t<Archive>::kind(); };
+
+template<typename Archive>
+concept ZppBitsOutArchive =
+    HasZppBitsKind<Archive> &&
+    (std::remove_cvref_t<Archive>::kind() == zpp::bits::kind::out);
+
+template<typename Archive>
+concept ZppBitsInArchive =
+    HasZppBitsKind<Archive> &&
+    (std::remove_cvref_t<Archive>::kind() == zpp::bits::kind::in);
+
+}  // namespace ps::concepts
 
 struct Map {
     // This gets called on every network frame because
@@ -87,10 +105,8 @@ struct Map {
         // StdSmartPtr-based entity graph serialization.
 
         std::string world_blob;
-        if constexpr (requires {
-                          std::remove_cvref_t<decltype(archive)>::kind();
-                      } && std::remove_cvref_t<decltype(archive)>::kind() ==
-                               zpp::bits::kind::out) {
+        using ArchiveT = decltype(archive);
+        if constexpr (ps::concepts::ZppBitsOutArchive<ArchiveT>) {
             world_blob = snapshot_blob::encode_current_world();
         }
 
@@ -105,10 +121,7 @@ struct Map {
             self.showMinimap    //
         );
 
-        if constexpr (requires {
-                          std::remove_cvref_t<decltype(archive)>::kind();
-                      } && std::remove_cvref_t<decltype(archive)>::kind() ==
-                               zpp::bits::kind::in) {
+        if constexpr (ps::concepts::ZppBitsInArchive<ArchiveT>) {
             const bool ok =
                 snapshot_blob::decode_into_current_world(world_blob);
             VALIDATE(ok, "failed to decode world snapshot blob");

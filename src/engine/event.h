@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../external_include.h"
+#include <concepts>
 #include "gamepad_axis_with_dir.h"
 
 enum class EventType {
@@ -65,11 +66,17 @@ struct Event {
         return getCategoryFlags() & cat;
     }
 };
+
+template<typename T>
+concept DispatchableEvent =
+    std::derived_from<T, Event> &&
+    requires { { T::getStaticType() } -> std::same_as<EventType>; };
+
 struct EventDispatcher {
     explicit EventDispatcher(Event& e) : event(e) {}
     Event& event;
 
-    template<typename T>
+    template<DispatchableEvent T>
     bool dispatch(const std::function<bool(T&)>& func) {
         if (event.getEventType() == T::getStaticType()) {
             event.handled = func(*(T*) &event);

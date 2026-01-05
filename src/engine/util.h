@@ -135,7 +135,7 @@ inline std::string space_between_caps(const std::string_view& input) {
     return result;
 }
 
-template<typename T>
+template<ps::concepts::Enum T>
 inline std::string convertToSnakeCase(T type) {
     return snake_case(magic_enum::enum_name(type));
 }

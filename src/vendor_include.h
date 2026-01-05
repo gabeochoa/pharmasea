@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/graphics.h"
+#include "engine/concepts.h"
 
 namespace reasings {
 // TODO decide if we wnat to use static inline
@@ -98,47 +99,44 @@ constexpr auto serialize(auto& archive, BoundingBox& data) {
 #endif
 
 // For bitwise operations
-template<typename T>
-constexpr auto operator~(T a) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return static_cast<T>(~static_cast<int>(a));
+template<ps::concepts::BitwiseEnum T>
+[[nodiscard]] constexpr T operator~(T a) noexcept {
+    using ps::concepts::to_underlying;
+    return static_cast<T>(~to_underlying(a));
 }
 
-template<typename T>
-constexpr auto operator|(T a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return static_cast<T>((static_cast<int>(a) | static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+[[nodiscard]] constexpr T operator|(T a, T b) noexcept {
+    using ps::concepts::to_underlying;
+    return static_cast<T>(to_underlying(a) | to_underlying(b));
 }
 
-template<typename T>
-constexpr auto operator&(T a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return static_cast<T>((static_cast<int>(a) & static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+[[nodiscard]] constexpr T operator&(T a, T b) noexcept {
+    using ps::concepts::to_underlying;
+    return static_cast<T>(to_underlying(a) & to_underlying(b));
 }
 
-template<typename T>
-constexpr auto operator^(T a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return static_cast<T>((static_cast<int>(a) ^ static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+[[nodiscard]] constexpr T operator^(T a, T b) noexcept {
+    using ps::concepts::to_underlying;
+    return static_cast<T>(to_underlying(a) ^ to_underlying(b));
 }
 
-template<typename T>
-constexpr auto operator|=(T& a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return reinterpret_cast<T&>(
-        (reinterpret_cast<int&>(a) |= static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+constexpr T& operator|=(T& a, T b) noexcept {
+    a = (a | b);
+    return a;
 }
 
-template<typename T>
-constexpr auto operator&=(T& a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return reinterpret_cast<T&>(
-        (reinterpret_cast<int&>(a) &= static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+constexpr T& operator&=(T& a, T b) noexcept {
+    a = (a & b);
+    return a;
 }
 
-template<typename T>
-constexpr auto operator^=(T& a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return reinterpret_cast<T&>(
-        (reinterpret_cast<int&>(a) ^= static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+constexpr T& operator^=(T& a, T b) noexcept {
+    a = (a ^ b);
+    return a;
 }
