@@ -15,15 +15,10 @@ struct GlobalValueRegister {
 
     template<typename T>
     [[nodiscard]] T* get_ptr(const std::string& name) const {
-        // TODO: do we want to catch the exception here?
-        try {
-            return static_cast<T*>(globals.at(name));
-        } catch (const std::exception&) {
-            // TODO turn this back on
-            // log_warn("Trying to fetch global of name: {} but it doesnt
-            // exist", name);
-            return nullptr;
-        }
+        // TODO do we want to catch the exception here?
+        auto it = globals.find(name);
+        if (it == globals.end()) return nullptr;
+        return static_cast<T*>(it->second);
     }
 
     // TODO better error message here please

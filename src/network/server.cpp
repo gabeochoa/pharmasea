@@ -101,13 +101,6 @@ void Server::play_sound(vec2 position, strings::sounds::SoundId sound) {
     );
 }
 
-std::thread::id Server::get_thread_id() {
-    if (!g_server) return {};
-    if (g_server->server_thread.joinable())
-        return g_server->server_thread.get_id();
-    return {};
-}
-
 void Server::shutdown() {
     log_info("Server::shutdown() called");
     if (!g_server) {
