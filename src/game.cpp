@@ -175,13 +175,9 @@ void startup() {
 
     network::init_connections();
 
-    // In local-only mode, networking init decides the menu flow (boot to lobby).
-    // Don't immediately override it back to Root.
     if (!network::LOCAL_ONLY) {
         MenuState::get().reset();
         GameState::get().reset();
-    } else {
-        log_info("[local-only] skipping MenuState/GameState reset after init");
     }
 
     App::get().loadLayers({{
@@ -276,7 +272,6 @@ void process_dev_flags(int argc, char* argv[]) {
     argh::parser cmdl(argc, argv);
     network::ENABLE_REMOTE_IP = true;
     network::LOCAL_ONLY = cmdl[{"--local"}];
-    log_info("DevFlags: local_only={}", network::LOCAL_ONLY);
 
     // Store flag values for re-application after settings load
     disable_models_flag = cmdl[{"--disable-models", "-M"}];
