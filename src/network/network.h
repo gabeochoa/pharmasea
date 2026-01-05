@@ -137,6 +137,7 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
 
     static void init_connections() {
         log_info("init_connections() called");
+        log_info("init_connections(): local_only={}", network::LOCAL_ONLY);
 #ifdef BUILD_WITHOUT_STEAM
         log_info(
             "BUILD_WITHOUT_STEAM is defined, calling "
