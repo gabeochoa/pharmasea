@@ -5,6 +5,17 @@
 
 #include "std_include.h"
 
+// tl::expected - stable header-only library
+#include <expected.hpp>
+// Alias tl::expected into std namespace for afterhours compatibility
+#ifndef __cpp_lib_expected
+#define __cpp_lib_expected 1
+namespace std {
+using tl::expected;
+using tl::unexpected;
+}  // namespace std
+#endif
+
 // fmt (header-only usage)
 #ifndef FMT_HEADER_ONLY
 #define FMT_HEADER_ONLY
@@ -12,9 +23,6 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <fmt/xchar.h>
-
-// afterhours helpers
-#include "afterhours/src/bitset_utils.h"
 
 // nlohmann json
 #include <nlohmann/json.hpp>
@@ -39,3 +47,10 @@
 #define AFTER_HOURS_REPLACE_VALIDATE
 #endif
 #include "log/log.h"
+
+// raylib wrapped in namespace with type aliases (vec2, vec3, Color, etc.)
+// Also includes afterhours color plugin
+#include "engine/graphics.h"
+
+// afterhours helpers
+#include "afterhours/src/bitset_utils.h"
