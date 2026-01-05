@@ -119,7 +119,11 @@ void GameLayer::draw_world(float dt) {
     const auto network_debug_mode_on =
         GLOBALS.get_or_default<bool>("network_ui_enabled", false);
     if (network_debug_mode_on) {
-        map_ptr = GLOBALS.get_ptr<Map>("server_map");
+        // NOTE(threading): The authoritative server map is mutated on the
+        // dedicated server thread. Rendering it directly on the main thread is
+        // a data race. If we want server-side debug rendering, publish a
+        // snapshot from the server thread instead.
+        // TODO(threading): Add a server->main snapshot for safe debug draw.
     }
 
     // Shader-based lighting (Half-Lambert + Blinn-Phong).

@@ -8,6 +8,7 @@
 //
 #include "../engine/network/webrequest.h"
 #include "../engine/statemanager.h"
+#include "../engine/thread_role.h"
 #include "../engine/trigger_on_dt.h"
 #include "types.h"
 //
@@ -47,7 +48,6 @@ struct RoleInfoMixin {
     Role desired_role = Role::s_None;
     std::unique_ptr<Client> client;
     std::thread::id client_thread_id;
-    std::thread::id server_thread_id;
 
     [[nodiscard]] bool is_host() { return desired_role & s_Host; }
     [[nodiscard]] bool is_client() { return desired_role & s_Client; }
@@ -55,6 +55,8 @@ struct RoleInfoMixin {
     [[nodiscard]] bool missing_role() { return !has_role(); }
 
     void set_role(Role role) {
+        // This function runs on the main/client thread.
+        thread_role::set(thread_role::Role::ClientMain);
         log_info("set_role called with role: {}", (int) role);
         const auto _setup_client = [&]() {
             log_info("_setup_client lambda called - creating Client instance");
@@ -86,12 +88,7 @@ struct RoleInfoMixin {
                 break;
         }
 
-        server_thread_id = Server::get_thread_id();
-        GLOBALS.set("server_thread_id", &server_thread_id);
-        log_info("Server thread ID set: {}", (void*) &server_thread_id);
-
         client_thread_id = std::this_thread::get_id();
-        GLOBALS.set("client_thread_id", &client_thread_id);
         log_info("set_role completed successfully");
     }
 };
@@ -117,15 +114,9 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
     ~Info() {
         log_info("network::Info destructor called");
         desired_role = Role::s_None;
-        // cleanup server
-        {
-            if (server_thread_id == std::thread::id()) {
-                log_info("No server thread to clean up (thread_id is default)");
-                return;
-            }
-            log_info("Stopping server and joining thread");
-            Server::shutdown();
-        }
+        // Cleanup server (idempotent).
+        log_info("Stopping server and joining thread");
+        Server::shutdown();
         log_info("network::Info destructor completed");
     }
 

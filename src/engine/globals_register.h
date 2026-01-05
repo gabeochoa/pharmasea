@@ -8,18 +8,17 @@
 
 struct GlobalValueRegister {
     std::map<std::string, void*> globals;
+    // TODO(threading): `GLOBALS` is not thread-safe as a container (concurrent
+    // read/write on `globals` is UB). Either:
+    // - enforce a "freeze after init" rule (no `set()` once threads start), or
+    // - add synchronization / move to a typed runtime context.
 
     template<typename T>
     [[nodiscard]] T* get_ptr(const std::string& name) const {
         // TODO do we want to catch the exception here?
-        try {
-            return static_cast<T*>(globals.at(name));
-        } catch (const std::exception&) {
-            // TODO turn this back on
-            // log_warn("Trying to fetch global of name: {} but it doesnt
-            // exist", name);
-            return nullptr;
-        }
+        auto it = globals.find(name);
+        if (it == globals.end()) return nullptr;
+        return static_cast<T*>(it->second);
     }
 
     // TODO better error message here please
@@ -31,8 +30,6 @@ struct GlobalValueRegister {
     template<typename T>
     [[nodiscard]] T get_or_default(const std::string& name,
                                    T default_value) const {
-        if (!contains(name)) return default_value;
-
         auto* t = get_ptr<T>(name);
         if (t) {
             return *t;

@@ -2,6 +2,7 @@
 
 #include "../camera.h"
 #include "../engine/layer.h"
+#include "../engine/globals_register.h"
 #include "ah.h"
 
 struct GameLayer : public Layer {

@@ -29,7 +29,6 @@ struct Server {
     ~Server();
 
     static void play_sound(vec2 position, strings::sounds::SoundId sound);
-    [[nodiscard]] static std::thread::id get_thread_id();
 
     //
     void send_player_location_packet(int client_id, const vec3& pos,
@@ -55,7 +54,6 @@ struct Server {
     std::map<int, std::shared_ptr<Entity>> players;
     std::unique_ptr<Map> pharmacy_map;
     std::atomic<bool> running;
-    std::thread::id thread_id;
     std::thread server_thread;
     std::thread pathfinding_thread;
 
