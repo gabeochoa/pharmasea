@@ -66,7 +66,8 @@ App::App(const AppSettings& settings) {
 
 void App::loadLayers(const std::vector<Layer*>& layers) {
     for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
-        invariant(max_layer + 1 < static_cast<int>(layerstack.size()));
+        invariant(max_layer + 1 < static_cast<int>(layerstack.size()),
+                  "App::layerstack overflow (too many layers loaded)");
         layerstack[++max_layer] = *it;
     }
     log_info("Loaded {} layers", max_layer);

@@ -15,20 +15,21 @@
 #endif
 
 #if PHARMASEA_INVARIANTS_ENABLED
-#define invariant(condition)                                                     \
+#define invariant(condition, msg_expr)                                           \
     do {                                                                         \
         const bool _pharmasea_ok = static_cast<bool>(condition);                 \
         if (!_pharmasea_ok) {                                                    \
             std::cerr << "Invariant failed: " << #condition << " (" << __FILE__  \
-                      << ":" << __LINE__ << ")\n";                               \
+                      << ":" << __LINE__ << "): " << (msg_expr) << "\n";         \
             assert(false);                                                       \
         }                                                                        \
     } while (0)
 #else
 // NOTE: don't evaluate `condition` in production builds.
-#define invariant(condition)                                                     \
+#define invariant(condition, msg_expr)                                           \
     do {                                                                         \
         (void) sizeof(condition);                                                \
+        (void) sizeof(msg_expr);                                                 \
     } while (0)
 #endif
 
@@ -51,7 +52,7 @@
 #define M_ASSERT(condition, msg_expr)                                            \
     do {                                                                         \
         /* Keep M_ASSERT as debug-only, message is ignored intentionally. */      \
-        invariant(condition);                                                    \
+        invariant((condition), "M_ASSERT failed");                               \
         (void) sizeof(msg_expr);                                                  \
     } while (0)
 

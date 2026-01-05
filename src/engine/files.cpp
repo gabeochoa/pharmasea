@@ -39,7 +39,7 @@ void Files::create(const FilesConfig& config) {
 }
 
 Files& Files::get() {
-    invariant(created);
+    invariant(created, "Files::get() called before Files::create()");
     return instance;
 }
 

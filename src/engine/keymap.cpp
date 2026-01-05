@@ -222,7 +222,7 @@ std::string KeyMap::name_for_key(int input) {
     auto key_opt = magic_enum::enum_cast<KeyboardKey>(input);
     if (!key_opt.has_value()) {
         // This should only happen if we somehow stored an invalid keycode.
-        invariant(false);
+        invariant(false, "KeyMap::name_for_key received invalid keycode");
         return "KEY_UNKNOWN";
     }
     KeyboardKey key = *key_opt;

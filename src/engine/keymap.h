@@ -92,7 +92,7 @@ struct AnyInputLess {
             const auto axis_idx =
                 magic_enum::enum_index<GamepadAxis>(axis_with_dir.axis);
             if (!axis_idx.has_value()) {
-                invariant(false);
+                invariant(false, "AnyInputLess: GamepadAxis had no enum_index");
                 return 0;
             }
             return 1000 + 100 * (*axis_idx) + static_cast<int>(axis_with_dir.dir);
@@ -101,7 +101,8 @@ struct AnyInputLess {
             const auto button = std::get<GamepadButton>(key);
             const auto button_idx = magic_enum::enum_index<GamepadButton>(button);
             if (!button_idx.has_value()) {
-                invariant(false);
+                invariant(false,
+                          "AnyInputLess: GamepadButton had no enum_index");
                 return 0;
             }
             return 2000 + static_cast<size_t>(*button_idx);
