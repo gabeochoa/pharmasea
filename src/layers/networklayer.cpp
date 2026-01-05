@@ -148,15 +148,22 @@ void NetworkLayer::draw_username_with_edit(Rectangle username, float) {
 void NetworkLayer::draw_role_selector_screen(float) {
     network_selection_screen.draw_background();
 
+    // In local mode, show "Start" instead of "Host" since there's no networking
+    auto host_button_text = network::LOCAL_ONLY ? strings::i18n::START
+                                                : strings::i18n::HOST;
     if (network_selection_screen.button(
-            "HostButton", TranslatableString(strings::i18n::HOST))) {
+            "HostButton", TranslatableString(host_button_text))) {
         log_info("Host button clicked - attempting to set role to Host");
         network_info->set_role(network::Info::Role::s_Host);
         log_info("Host button clicked - set_role call completed");
     }
-    if (network_selection_screen.button(
-            "JoinButton", TranslatableString(strings::i18n::JOIN))) {
-        network_info->set_role(network::Info::Role::s_Client);
+
+    // Hide Join button in local mode - there's no one to join
+    if (!network::LOCAL_ONLY) {
+        if (network_selection_screen.button(
+                "JoinButton", TranslatableString(strings::i18n::JOIN))) {
+            network_info->set_role(network::Info::Role::s_Client);
+        }
     }
 
     if (network_selection_screen.button(
@@ -243,10 +250,18 @@ void NetworkLayer::draw_connected_screen(float) {
             }
         }
 
-        if (lobby_screen.button(
-                "DisconnectButton",
-                TranslatableString(strings::i18n::DISCONNECT))) {
-            network::Info::reset_connections();
+        // In local mode, show "Back" and go to main menu
+        // In network mode, show "Disconnect" and reset connections
+        auto disconnect_text = network::LOCAL_ONLY ? strings::i18n::BACK_BUTTON
+                                                   : strings::i18n::DISCONNECT;
+        if (lobby_screen.button("DisconnectButton",
+                                TranslatableString(disconnect_text))) {
+            if (network::LOCAL_ONLY) {
+                MenuState::get().clear_history();
+                MenuState::get().set(menu::State::Root);
+            } else {
+                network::Info::reset_connections();
+            }
         }
     }
 

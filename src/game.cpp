@@ -175,8 +175,10 @@ void startup() {
 
     network::init_connections();
 
-    MenuState::get().reset();
-    GameState::get().reset();
+    if (!network::LOCAL_ONLY) {
+        MenuState::get().reset();
+        GameState::get().reset();
+    }
 
     App::get().loadLayers({{
         //
@@ -225,6 +227,7 @@ void process_dev_flags(int argc, char* argv[]) {
             "--disable-sound",
             "-S",
             "--bypass-menu",
+            "--local",
             "--exit-on-bypass-complete",
             "--record-input",
             "--intro",
@@ -268,6 +271,7 @@ void process_dev_flags(int argc, char* argv[]) {
 
     argh::parser cmdl(argc, argv);
     network::ENABLE_REMOTE_IP = true;
+    network::LOCAL_ONLY = cmdl[{"--local"}];
 
     // Store flag values for re-application after settings load
     disable_models_flag = cmdl[{"--disable-models", "-M"}];

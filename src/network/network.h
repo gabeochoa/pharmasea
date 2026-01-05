@@ -65,6 +65,12 @@ struct RoleInfoMixin {
             log_info("_setup_client lambda completed");
         };
 
+        // Local-only mode does not support joining by IP; treat "Client" as
+        // "Host local" so the UI remains usable.
+        if (network::LOCAL_ONLY && role == Role::s_Client) {
+            role = Role::s_Host;
+        }
+
         switch (role) {
             case Role::s_Host: {
                 log_info("set user's role to host");
@@ -154,7 +160,9 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
 
     static void reset_connections() {
         network_info = std::make_unique<network::Info>();
-        if (network::ENABLE_REMOTE_IP) {
+        if (network::LOCAL_ONLY) {
+            my_remote_ip_address = "Local only";
+        } else if (network::ENABLE_REMOTE_IP) {
             my_remote_ip_address = get_remote_ip_address().value_or("");
         } else {
             my_remote_ip_address = "(DEV) network disabled";
