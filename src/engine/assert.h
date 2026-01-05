@@ -1,21 +1,69 @@
 
 #pragma once
 
-#include <stdio.h>
-
 #include <cassert>
+#include <iostream>
 
-#define VALIDATE(x, ...)                       \
-    {                                          \
-        if (!(x)) {                            \
-            std::cout << "Assertion failed: "; \
-            std::cout << __VA_ARGS__;          \
-            std::cout << "\n";                 \
-            assert(x);                         \
-        }                                      \
-    }
+// Invariants:
+// - Enabled in debug builds by default.
+// - Compiled out when `NDEBUG` is defined (typical "production" builds).
+// - You can force-enable invariants in release by defining PHARMASEA_FORCE_INVARIANTS.
+#if !defined(NDEBUG) || defined(PHARMASEA_FORCE_INVARIANTS)
+#define PHARMASEA_INVARIANTS_ENABLED 1
+#else
+#define PHARMASEA_INVARIANTS_ENABLED 0
+#endif
 
-#define M_ASSERT(x, ...) VALIDATE(x, __VA__ARGS__)
+#if PHARMASEA_INVARIANTS_ENABLED
+#define INVARIANT(condition)                                                     \
+    do {                                                                         \
+        const bool _pharmasea_ok = static_cast<bool>(condition);                 \
+        if (!_pharmasea_ok) {                                                    \
+            std::cerr << "Invariant failed: " << #condition << " (" << __FILE__  \
+                      << ":" << __LINE__ << ")\n";                               \
+            assert(false);                                                       \
+        }                                                                        \
+    } while (0)
+
+#define INVARIANT_MSG(condition, msg_expr)                                       \
+    do {                                                                         \
+        const bool _pharmasea_ok = static_cast<bool>(condition);                 \
+        if (!_pharmasea_ok) {                                                    \
+            std::cerr << "Invariant failed: " << #condition << " (" << __FILE__  \
+                      << ":" << __LINE__ << "): " << (msg_expr) << "\n";         \
+            assert(false);                                                       \
+        }                                                                        \
+    } while (0)
+#else
+// NOTE: don't evaluate `condition` in production builds.
+#define INVARIANT(condition)                                                     \
+    do {                                                                         \
+        (void) sizeof(condition);                                                \
+    } while (0)
+#define INVARIANT_MSG(condition, msg_expr)                                       \
+    do {                                                                         \
+        (void) sizeof(condition);                                                \
+        (void) sizeof(msg_expr);                                                 \
+    } while (0)
+#endif
+
+// VALIDATE:
+// - Always runs (even in production builds).
+// - Prints a helpful message if it fails.
+// - Triggers an assert in debug builds.
+#define VALIDATE(condition, msg_expr)                                            \
+    do {                                                                         \
+        const bool _pharmasea_ok = static_cast<bool>(condition);                 \
+        if (!_pharmasea_ok) {                                                    \
+            std::cerr << "Validation failed: " << #condition << " (" << __FILE__ \
+                      << ":" << __LINE__ << "): " << (msg_expr) << "\n";         \
+            if (PHARMASEA_INVARIANTS_ENABLED) {                                   \
+                assert(false);                                                   \
+            }                                                                    \
+        }                                                                        \
+    } while (0)
+
+#define M_ASSERT(condition, msg_expr) INVARIANT_MSG((condition), (msg_expr))
 
 #define M_TEST_IMPL(x, y, op, op_string, ...)                          \
     {                                                                  \
@@ -37,7 +85,7 @@
     M_TEST_IMPL(x, y, <=, " was not less than ", __VA_ARGS__)
 
 #define M_TEST_GEQ(x, y, ...) \
-    M_TEST_IMPL(x, y, <=, " was not greater than ", __VA_ARGS__)
+    M_TEST_IMPL(x, y, >=, " was not greater than ", __VA_ARGS__)
 
 #define M_TEST_NEQ(x, y, ...) \
     M_TEST_IMPL(x, y, !=, " was equal to ", __VA_ARGS__)
