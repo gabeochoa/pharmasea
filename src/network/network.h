@@ -46,7 +46,7 @@ struct RoleInfoMixin {
     };
 
     Role desired_role = Role::s_None;
-    std::unique_ptr<PlayerClient> client;
+    std::unique_ptr<Client> client;
     std::thread::id client_thread_id;
     std::thread::id server_thread_id;
 
@@ -60,9 +60,8 @@ struct RoleInfoMixin {
         thread_role::set(thread_role::Role::ClientMain);
         log_info("set_role called with role: {}", (int) role);
         const auto _setup_client = [&]() {
-            log_info(
-                "_setup_client lambda called - creating PlayerClient instance");
-            client = std::make_unique<PlayerClient>();
+            log_info("_setup_client lambda called - creating Client instance");
+            client = std::make_unique<Client>();
             client->update_username(Settings::get().data.username);
             log_info("_setup_client lambda completed");
         };

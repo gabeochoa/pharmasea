@@ -17,7 +17,7 @@
 
 namespace network {
 
-PlayerClient::PlayerClient() {
+Client::Client() {
     // Ensure Afterhours' default collection matches the client thread's
     // collection. (Some serialization paths call afterhours::EntityHelper
     // directly.)
@@ -33,17 +33,17 @@ PlayerClient::PlayerClient() {
     GLOBALS.set("map", map.get());
 }
 
-void PlayerClient::update_username(const std::string& new_name) {
+void Client::update_username(const std::string& new_name) {
     client_p->username = new_name;
 }
 
-void PlayerClient::lock_in_ip() {
+void Client::lock_in_ip() {
     conn_info.ip_set = true;
     client_p->set_address(conn_info.host_ip_address);
     client_p->startup();
 }
 
-void PlayerClient::tick(float dt) {
+void Client::tick(float dt) {
     next_tick = next_tick - dt;
 
     client_p->run();
@@ -67,7 +67,7 @@ void PlayerClient::tick(float dt) {
     }
 }
 
-void PlayerClient::send_ping_packet(int my_id, float dt) {
+void Client::send_ping_packet(int my_id, float dt) {
     next_ping = next_ping - dt;
     if (next_ping > 0) return;
     next_ping = next_ping_reset;
@@ -85,12 +85,12 @@ void PlayerClient::send_ping_packet(int my_id, float dt) {
 }
 
 // TODO :DUPE: this is duplicated with the version in internal/client
-void PlayerClient::send_packet_to_server(ClientPacket packet) {
+void Client::send_packet_to_server(ClientPacket packet) {
     Buffer buffer = serialize_to_buffer(packet);
     client_p->send_string_to_server(buffer, packet.channel);
 }
 
-void PlayerClient::send_player_input_packet(int my_id) {
+void Client::send_player_input_packet(int my_id) {
     // TODO if we add support for local players we need them all to have
     // their own unique network ids otherwise we cant distinguish when
     // sending player updates
@@ -111,7 +111,7 @@ void PlayerClient::send_player_input_packet(int my_id) {
     send_packet_to_server(packet);
 }
 
-void PlayerClient::send_current_menu_state() {
+void Client::send_current_menu_state() {
     ClientPacket packet({
         .client_id = SERVER_CLIENT_ID,
         .msg_type = ClientPacket::MsgType::GameState,
@@ -123,7 +123,7 @@ void PlayerClient::send_current_menu_state() {
     Server::forward_packet(packet);
 }
 
-void PlayerClient::send_updated_seed(const std::string& seed) {
+void Client::send_updated_seed(const std::string& seed) {
     ClientPacket packet{
         .client_id = SERVER_CLIENT_ID,
         .msg_type = ClientPacket::MsgType::MapSeed,
@@ -133,7 +133,7 @@ void PlayerClient::send_updated_seed(const std::string& seed) {
     Server::queue_packet(packet);
 }
 
-void PlayerClient::client_process_message_string(const std::string& msg) {
+void Client::client_process_message_string(const std::string& msg) {
     auto add_new_player = [&](int client_id, const std::string& username) {
         if (remote_players.contains(client_id)) {
             log_warn("Why are we trying to add {}", client_id);
