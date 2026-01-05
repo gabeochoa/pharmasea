@@ -2,21 +2,28 @@
 #pragma once
 
 #include <map>
-#include <mutex>
 #include <string>
 
 // #include "log.h"
 
 struct GlobalValueRegister {
     std::map<std::string, void*> globals;
-    mutable std::mutex mtx;
+    // TODO(threading): `GLOBALS` is not thread-safe as a container (concurrent
+    // read/write on `globals` is UB). Either:
+    // - enforce a "freeze after init" rule (no `set()` once threads start), or
+    // - add synchronization / move to a typed runtime context.
 
     template<typename T>
     [[nodiscard]] T* get_ptr(const std::string& name) const {
-        std::lock_guard<std::mutex> lock(mtx);
-        auto it = globals.find(name);
-        if (it == globals.end()) return nullptr;
-        return static_cast<T*>(it->second);
+        // TODO: do we want to catch the exception here?
+        try {
+            return static_cast<T*>(globals.at(name));
+        } catch (const std::exception&) {
+            // TODO turn this back on
+            // log_warn("Trying to fetch global of name: {} but it doesnt
+            // exist", name);
+            return nullptr;
+        }
     }
 
     // TODO better error message here please
@@ -37,7 +44,6 @@ struct GlobalValueRegister {
 
     template<typename T>
     void set(const std::string& name, T* value) {
-        std::lock_guard<std::mutex> lock(mtx);
         globals[name] = static_cast<void*>(value);
     }
 
@@ -55,7 +61,6 @@ struct GlobalValueRegister {
     // it seems like today that no one uses this but people seem to like
     // get_or_default
     [[nodiscard]] bool contains(const std::string& name) const {
-        std::lock_guard<std::mutex> lock(mtx);
         return globals.find(name) != globals.end();
     }
 };
