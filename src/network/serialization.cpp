@@ -1,5 +1,6 @@
 #include "serialization.h"
 
+#include "../engine/assert.h"
 #include "../engine/log.h"
 #include "../entity.h"
 #include "../globals.h"
@@ -17,8 +18,8 @@ void deserialize_to_entity(Entity* entity, const std::string& msg) {
     const bool ok = snapshot_blob::decode_into_entity(*entity, msg);
     if (!ok) {
         log_error("deserialize_to_entity failed (invalid snapshot blob)");
+        INVARIANT_MSG(ok, "deserialize_to_entity failed (invalid snapshot blob)");
     }
-    assert(ok);
 }
 
 ClientPacket deserialize_to_packet(const std::string& msg) {
