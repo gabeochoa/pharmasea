@@ -42,6 +42,6 @@ struct AtomicQueue {
     }
 
    private:
-    moodycamel::ConcurrentQueue<T> q;
+    tracy::moodycamel::ConcurrentQueue<T> q;
     std::atomic<size_t> m_size{0};
 };
