@@ -11,7 +11,6 @@
 #include <cctype>
 #include <cmath>
 #include <cstdlib>  // For using the system function
-#include <regex>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -83,15 +82,6 @@ static std::vector<std::string> split_string(const std::string& str,
     strings.push_back(str.substr(prev));
 
     return strings;
-}
-
-inline std::vector<std::string> split_re(const std::string& input,
-                                         const std::string& regex) {
-    // passing -1 as the submatch index parameter performs splitting
-    const static std::regex re(regex);
-    std::sregex_token_iterator first{input.begin(), input.end(), re, -1};
-    std::sregex_token_iterator last;
-    return std::vector<std::string>{first, last};
 }
 
 inline std::string remove_underscores(const std::string_view& input) {

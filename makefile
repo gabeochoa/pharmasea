@@ -13,8 +13,8 @@ GNS_LIBDIR := vendor
 
 RELEASE_FLAGS = -std=c++2a $(RAYLIB_FLAGS) -DNDEBUG
 
-# TIMEFLAG = -ftime-trace
-TIMEFLAG =
+TIMEFLAG = -ftime-trace
+# TIMEFLAG =
 
 # Optimized flags for debug builds (fewer expensive warnings)
 DEBUG_WARNING_FLAGS = -Wall -Wextra -Wuninitialized -Wshadow -Wno-conversion \

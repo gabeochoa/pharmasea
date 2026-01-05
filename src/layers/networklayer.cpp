@@ -1,6 +1,8 @@
 
 #include "networklayer.h"
 
+#include <regex>
+
 #include "../components/has_name.h"
 #include "../engine/toastmanager.h"
 #include "../local_ui.h"

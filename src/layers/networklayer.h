@@ -2,7 +2,6 @@
 #pragma once
 
 #include <memory>
-#include <regex>
 
 #include "../engine.h"
 #include "../external_include.h"
