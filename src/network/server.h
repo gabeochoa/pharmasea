@@ -101,9 +101,9 @@ struct Server {
         // selection screen
         log_info("Creating pharmacy_map with default_seed");
         pharmacy_map = std::make_unique<Map>("default_seed");
-        GLOBALS.set("server_map", pharmacy_map.get());
-        GLOBALS.set("server_players", &players);
-        GLOBALS.set("server", this);
+        GLOBALS.set_ptr("server_map", pharmacy_map.get());
+        GLOBALS.set_ptr("server_players", &players);
+        GLOBALS.set_ptr("server", this);
         log_info("Server constructor completed");
     }
 

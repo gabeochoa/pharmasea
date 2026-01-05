@@ -12,7 +12,7 @@ struct GameLayer : public Layer {
     raylib::RenderTexture2D game_render_texture;
 
     GameLayer() : Layer(strings::menu::GAME), cam(std::make_unique<GameCam>()) {
-        GLOBALS.set(strings::globals::GAME_CAM, cam.get());
+        GLOBALS.set_ptr(strings::globals::GAME_CAM, cam.get());
         game_render_texture = raylib::LoadRenderTexture(WIN_W(), WIN_H());
     }
 

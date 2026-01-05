@@ -61,7 +61,7 @@ App::App(const AppSettings& settings) {
     KeyMap::create();
 
     mainRT = raylib::LoadRenderTexture(width, height);
-    GLOBALS.set("mainRT", &mainRT);
+    GLOBALS.set_ptr("mainRT", &mainRT);
 }
 
 void App::loadLayers(const std::vector<Layer*>& layers) {
@@ -95,7 +95,7 @@ bool App::onWindowResize(WindowResizeEvent event) {
 
     UnloadRenderTexture(mainRT);
     mainRT = raylib::LoadRenderTexture(width, height);
-    GLOBALS.set("mainRT", &mainRT);
+    GLOBALS.set_ptr("mainRT", &mainRT);
     return true;
 }
 

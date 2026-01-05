@@ -20,20 +20,26 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     bool skip_ingredient_match = false;
 
     DebugSettingsLayer() : BaseGameRendererLayer("DebugSettings") {
-        GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
-        GLOBALS.set("no_clip_enabled", &no_clip_enabled);
-        GLOBALS.set("skip_ingredient_match", &skip_ingredient_match);
+        sync_globals();
+    }
+
+    void sync_globals() {
+        GLOBALS.set_value("debug_ui_enabled", debug_ui_enabled);
+        GLOBALS.set_value("no_clip_enabled", no_clip_enabled);
+        GLOBALS.set_value("skip_ingredient_match", skip_ingredient_match);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
         if (KeyMap::get_button(menu::State::Game, InputName::ToggleDebug) ==
             event.button) {
             debug_ui_enabled = !debug_ui_enabled;
+            sync_globals();
             return true;
         }
         if (KeyMap::get_button(menu::State::Game,
                                InputName::ToggleNetworkView) == event.button) {
             no_clip_enabled = !no_clip_enabled;
+            sync_globals();
             return true;
         }
 
@@ -41,6 +47,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                                InputName::SkipIngredientMatch) ==
             event.button) {
             skip_ingredient_match = !skip_ingredient_match;
+            sync_globals();
             return true;
         }
 
@@ -77,18 +84,21 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                                  InputName::SkipIngredientMatch) ==
             event.keycode) {
             skip_ingredient_match = !skip_ingredient_match;
+            sync_globals();
             return true;
         }
 
         if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleDebug) ==
             event.keycode) {
             debug_ui_enabled = !debug_ui_enabled;
+            sync_globals();
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::ToggleNetworkView) ==
             event.keycode) {
             no_clip_enabled = !no_clip_enabled;
+            sync_globals();
             return true;
         }
         if (!baseShouldRender()) return false;
@@ -183,6 +193,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                              CheckboxData{.selected = debug_ui_enabled});
                 result) {
                 debug_ui_enabled = result.as<bool>();
+                sync_globals();
             }
         }
 
@@ -196,6 +207,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                     Widget{control}, CheckboxData{.selected = no_clip_enabled});
                 result) {
                 no_clip_enabled = result.as<bool>();
+                sync_globals();
             }
         }
 
@@ -210,6 +222,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                              CheckboxData{.selected = skip_ingredient_match});
                 result) {
                 skip_ingredient_match = result.as<bool>();
+                sync_globals();
             }
         }
 
