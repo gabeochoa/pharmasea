@@ -102,7 +102,7 @@ struct Server {
         log_info("Calling server_p->startup()");
         server_p->startup();
         log_info("server_p->startup() completed, running state: {}",
-                 server_p->running ? "true" : "false");
+                 server_p->is_running() ? "true" : "false");
 
         // TODO add some kind of seed
         // selection screen

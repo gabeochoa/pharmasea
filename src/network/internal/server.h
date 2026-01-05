@@ -421,6 +421,8 @@ struct Server {
 struct IServer {
     virtual ~IServer() = default;
 
+    [[nodiscard]] virtual bool is_running() const = 0;
+
     virtual void set_process_message(
         const std::function<void(Client_t &client, std::string)> &cb) = 0;
     virtual void set_announcement_cb(
@@ -450,6 +452,8 @@ struct IServer {
 // GameNetworkingSockets implementation (existing behavior).
 struct GnsServer : public Server, public IServer {
     using Server::Server;
+
+    [[nodiscard]] bool is_running() const override { return Server::running; }
 
     void set_process_message(
         const std::function<void(Client_t &client, std::string)> &cb) override {
@@ -497,6 +501,8 @@ struct LocalServer : public IServer {
     // Match existing Server's public surface used by authoritative layer.
     std::map<HSteamNetConnection, Client_t> clients;
     bool running = false;
+
+    [[nodiscard]] bool is_running() const override { return running; }
 
     void set_process_message(
         const std::function<void(Client_t &client, std::string)> &cb) override {
