@@ -461,7 +461,9 @@ struct ProcessSpawnerSystem : public afterhours::System<Transform, IsSpawner> {
     }
 };
 
-struct ReduceImpatientCustomersSystem : public afterhours::System<HasPatience> {
+struct ReduceImpatientCustomersSystem
+    : public afterhours::System<HasPatience,
+                                afterhours::tags::All<EntityType::Customer>> {
     virtual ~ReduceImpatientCustomersSystem() = default;
 
     virtual bool should_run(const float) override {
@@ -478,10 +480,8 @@ struct ReduceImpatientCustomersSystem : public afterhours::System<HasPatience> {
         }
     }
 
-    virtual void for_each_with(Entity& entity, HasPatience& patience,
+    virtual void for_each_with(Entity&, HasPatience& patience,
                                float dt) override {
-        if (!check_type(entity, EntityType::Customer)) return;
-
         if (patience.should_pass_time()) {
             patience.pass_time(dt);
 
@@ -494,7 +494,9 @@ struct ReduceImpatientCustomersSystem : public afterhours::System<HasPatience> {
     }
 };
 
-struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
+struct ProcessPnumaticPipeMovementSystem
+    : public afterhours::System<
+          IsPnumaticPipe, afterhours::tags::All<EntityType::PnumaticPipe>> {
     virtual ~ProcessPnumaticPipeMovementSystem() = default;
 
     virtual bool should_run(const float) override {
@@ -511,11 +513,8 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
         }
     }
 
-    virtual void for_each_with(Entity& entity, float dt) override {
-        (void) dt;  // Unused parameter
-        if (!check_type(entity, EntityType::PnumaticPipe)) return;
-        if (entity.is_missing<IsPnumaticPipe>()) return;
-        const IsPnumaticPipe& ipp = entity.get<IsPnumaticPipe>();
+    virtual void for_each_with(Entity& entity, const IsPnumaticPipe& ipp,
+                               float) override {
 
         if (!ipp.has_pair()) return;
 
@@ -564,7 +563,8 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
     }
 };
 
-struct ProcessHasRopeSystem : public afterhours::System<> {
+struct ProcessHasRopeSystem
+    : public afterhours::System<CanHoldItem, HasRopeToItem> {
     virtual ~ProcessHasRopeSystem() = default;
 
     virtual bool should_run(const float) override {
@@ -581,15 +581,9 @@ struct ProcessHasRopeSystem : public afterhours::System<> {
         }
     }
 
-    // TODO use system filters
-    virtual void for_each_with(Entity& entity, float) override {
-        if (entity.is_missing<CanHoldItem>()) return;
-        if (entity.is_missing<HasRopeToItem>()) return;
-
-        HasRopeToItem& hrti = entity.get<HasRopeToItem>();
-
+    virtual void for_each_with(Entity& entity, const CanHoldItem& chi,
+                               HasRopeToItem& hrti, float) override {
         // No need to have rope if spout is put away
-        const CanHoldItem& chi = entity.get<CanHoldItem>();
         if (chi.is_holding_item()) {
             hrti.clear();
             return;
