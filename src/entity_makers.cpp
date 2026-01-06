@@ -7,6 +7,7 @@
 #include <ranges>
 
 #include "ah.h"
+#include "engine/runtime_globals.h"
 #include "components/bypass_automation_state.h"
 #include "components/can_change_settings_interactively.h"
 #include "components/can_hold_handtruck.h"
@@ -439,7 +440,7 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
     fast_forward.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity&, float dt) {
             const auto debug_mode_on =
-                GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+                globals::debug_ui_enabled();
 
             const float amt = debug_mode_on ? 100.f : 15.f;
 
@@ -1448,7 +1449,7 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     customer.addComponent<HasSpeechBubble>();
 
     const auto debug_mode_on =
-        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        globals::debug_ui_enabled();
     customer.get<HasBaseSpeed>().update(debug_mode_on ? 20.f : 5.f);
 
     // TODO if we do dirty-cups, we should have people leave them on any flat

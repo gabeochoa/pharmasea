@@ -8,6 +8,7 @@
 #include "../entity.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
+#include "../engine/runtime_globals.h"
 #include "../map.h"
 #include "base_game_renderer.h"
 
@@ -23,7 +24,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
     OptEntity get_player_entity() {
         // TODO why doesnt this work?
         // return EntityHelper::getFirstWithComponent<CollectsUserInput>();
-        auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+        auto* map_ptr = globals::world_map();
         if (!map_ptr) return {};
         return map_ptr->get_remote_with_cui();
     }
@@ -40,7 +41,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
             entity->get<CollectsCustomerFeedback>();
 
         const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+            globals::debug_ui_enabled();
         if (debug_mode_on) return true;
 
         if (feedback.block_state_change_reasons.any()) {

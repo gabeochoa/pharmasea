@@ -19,6 +19,7 @@
 #include "../dataclass/ingredient.h"
 #include "../engine/assert.h"
 #include "../engine/pathfinder.h"
+#include "../engine/runtime_globals.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "ingredient_helper.h"
@@ -397,7 +398,7 @@ void update_sophie(Entity& entity, float dt) {
     if (entity.is_missing<HasDayNightTimer>()) return;
 
     const auto debug_mode_on =
-        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        globals::debug_ui_enabled();
     HasDayNightTimer& ht = entity.get<HasDayNightTimer>();
     CollectsCustomerFeedback& feedback = entity.get<CollectsCustomerFeedback>();
 

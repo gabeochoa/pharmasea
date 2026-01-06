@@ -17,7 +17,7 @@
 #include "../components/is_pnumatic_pipe.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
-#include "../engine/globals_register.h"
+#include "../engine/runtime_globals.h"
 #include "../engine/log.h"
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
@@ -373,7 +373,7 @@ struct EndOfRoundCompletionValidationSystem
                                CollectsCustomerFeedback& feedback,
                                float dt) override {
         const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+            globals::debug_ui_enabled();
 
         // TODO i dont like that this is copy paste from layers/round_end
         if (SystemManager::get().is_bar_closed() &&

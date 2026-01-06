@@ -121,7 +121,7 @@ bool validate_drink_order(const Entity& customer, Drink orderedDrink,
     // Otherwise Something was wrong with the drink
 
     // For debug, if we have this set, just assume it was correct
-    if (GLOBALS.get_or_default<bool>("skip_ingredient_match", false)) {
+    if (globals::skip_ingredient_match()) {
         return true;
     }
 

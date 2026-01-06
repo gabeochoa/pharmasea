@@ -94,16 +94,13 @@ If you fix only one thing first: **replace/fix `AtomicQueue` and remove cross-th
 ### 2) `GLOBALS` is unsafe: data races + dangling pointers
 
 **Where**
-- `src/engine/globals_register.h` (`GlobalValueRegister`)
-- Used throughout (`GLOBALS.set`, `GLOBALS.get_ptr`, `GLOBALS.get_or_default`, etc).
+- `src/engine/runtime_globals.h` / `.cpp` (`namespace globals`)
+- Used throughout (e.g. `globals::server()`, `globals::map()`, `globals::debug_ui_enabled()`).
 
 **What’s wrong**
-- The registry stores `void*` with no ownership/lifetime tracking.
-  - Example: `GLOBALS.set("server_thread_id", &server_thread_id);` where `server_thread_id` is a **member** of `network::Info`.
-  - Example: `GLOBALS.set("server_thread_id", &thread_id);` where `thread_id` is a **member** of `network::Server`.
-  - When those objects are destroyed, the pointer in `GLOBALS` becomes dangling; later reads are UB.
-- The registry has **no mutex**:
-  - concurrent reads/writes (`set`, `get_ptr`, `contains`, etc.) are data races.
+- Even with typed storage and some atomics/mutexes, it’s still easy to create:
+  - **dangling pointers** (e.g. storing `network::Server*` and reading after shutdown if not cleared),
+  - **unsafe cross-thread dereferences** (making the pointer read atomic does not make the object thread-safe).
 - It is used to gate thread-specific behavior (`is_server()`), so a dangling `server_thread_id` can silently route logic to the wrong “side” (client vs server collection), or crash.
 
 **Why it matters**

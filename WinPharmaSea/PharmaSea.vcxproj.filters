@@ -125,7 +125,7 @@
     <ClInclude Include="..\src\engine\gamepad_axis_with_dir.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\engine\globals_register.h">
+    <ClInclude Include="..\src\engine\runtime_globals.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\engine\is_server.h">
@@ -755,7 +755,7 @@
     <ClCompile Include="..\src\preload.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\engine\globals_register.cpp">
+    <ClCompile Include="..\src\engine\runtime_globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\system\input_process_manager.cpp">

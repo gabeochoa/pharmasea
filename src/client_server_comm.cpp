@@ -7,6 +7,7 @@
 #include "components/is_drink.h"
 #include "dataclass/ingredient.h"
 #include "engine/random_engine.h"
+#include "engine/runtime_globals.h"
 #include "entity_helper.h"
 #include "entity_type.h"
 #include "network/server.h"
@@ -26,7 +27,8 @@ void set_show_minimap() {
             "you are calling a server only function from a client "
             "context, this is probably gonna crash");
     }
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    network::Server* server = globals::server();
+    if (!server) return;
     server->get_map_SERVER_ONLY()->showMinimap = true;
 }
 void set_hide_minimap() {
@@ -35,7 +37,8 @@ void set_hide_minimap() {
             "you are calling a server only function from a client "
             "context, this is probably gonna crash");
     }
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    network::Server* server = globals::server();
+    if (!server) return;
     server->get_map_SERVER_ONLY()->showMinimap = false;
 }
 
@@ -45,7 +48,8 @@ void update_seed(const std::string& seed) {
             "you are calling a server only function from a client "
             "context, this is probably gonna crash");
     }
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    network::Server* server = globals::server();
+    if (!server) return;
     server->get_map_SERVER_ONLY()->update_seed(seed);
 }
 std::string get_current_seed() {
@@ -54,7 +58,8 @@ std::string get_current_seed() {
             "you are calling a server only function from a client "
             "context, this is probably gonna crash");
     }
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    network::Server* server = globals::server();
+    if (!server) return "";
     return server->get_map_SERVER_ONLY()->seed;
 }
 
@@ -63,7 +68,7 @@ bool save_game_to_slot(int slot) {
         log_warn("save_game_to_slot called from non-server context");
         return false;
     }
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    network::Server* server = globals::server();
     if (!server) return false;
 
     // Capture snapshot from authoritative state.
@@ -92,7 +97,7 @@ bool load_game_from_slot(int slot) {
         log_warn("load_game_from_slot called from non-server context");
         return false;
     }
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    network::Server* server = globals::server();
     if (!server) return false;
 
     save_game::SaveGameFile loaded;

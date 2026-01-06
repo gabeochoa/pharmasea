@@ -36,6 +36,7 @@
 ///
 #include "../engine/pathfinder.h"
 #include "../engine/tracy.h"
+#include "../engine/runtime_globals.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../map.h"
@@ -101,7 +102,8 @@ void move_player_SERVER_ONLY(Entity& entity, game::State location) {
 
     // TODO if we have multiple local players then we need to specify which here
 
-    network::Server* server = GLOBALS.get_ptr<network::Server>("server");
+    network::Server* server = globals::server();
+    if (!server) return;
 
     int client_id = server->get_client_id_for_entity(entity);
     if (client_id == -1) {

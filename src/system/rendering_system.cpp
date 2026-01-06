@@ -24,6 +24,7 @@
 #include "../dataclass/upgrades.h"
 #include "../drawing_util.h"
 #include "../engine/settings.h"
+#include "../engine/runtime_globals.h"
 #include "../engine/texture_library.h"
 #include "../engine/ui/theme.h"
 #include "../engine/util.h"
@@ -827,8 +828,9 @@ void render_texture_billboard(const Transform& transform,
 
     vec3 position = transform.pos();
     raylib::Texture texture = TextureLibrary::get().get(texture_name);
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::DrawBillboard(cam.camera, texture,
+    GameCam* cam = globals::game_cam();
+    if (!cam) return;
+    raylib::DrawBillboard(cam->camera, texture,
                           vec3{position.x + (TILESIZE * 0.05f),  //
                                position.y + (TILESIZE * 2.f),    //
                                position.z},                      //
@@ -1005,19 +1007,21 @@ void render_ai_info(const Entity& entity, float) {
                                     position.z};
     switch (ai.state) {
         case IsAIControlled::State::Bathroom: {
-            GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+            GameCam* cam = globals::game_cam();
+            if (!cam) break;
             // TODO reuse the toilet upgrade one for now
             raylib::Texture texture = TextureLibrary::get().get("gotta_go");
-            raylib::DrawBillboard(cam.camera, texture,
+            raylib::DrawBillboard(cam->camera, texture,
                                   // move it a bit so that it doesnt overlap
                                   icon_position + vec3{0.f, 1.f, 0},
                                   0.75f * TILESIZE, raylib::WHITE);
         } break;
         case IsAIControlled::State::Pay: {
-            GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+            GameCam* cam = globals::game_cam();
+            if (!cam) break;
             // TODO reuse the store dollar sign one for now
             raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
-            raylib::DrawBillboard(cam.camera, texture,
+            raylib::DrawBillboard(cam->camera, texture,
                                   // move it a bit so that it doesnt overlap
                                   icon_position + vec3{0.f, 1.f, 0},
                                   0.75f * TILESIZE, raylib::WHITE);
@@ -1051,9 +1055,10 @@ void render_speech_bubble(const Entity& entity, float) {
 
     // TODO add way to turn on / off these icons
     if (true) {
-        GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+        GameCam* cam = globals::game_cam();
+        if (!cam) return;
         raylib::Texture texture = TextureLibrary::get().get(cod.icon_name());
-        raylib::DrawBillboard(cam.camera, texture,
+        raylib::DrawBillboard(cam->camera, texture,
                               // move it a bit so that it doesnt overlap
                               icon_position + vec3{0.f, 1.f, 0},
                               0.75f * TILESIZE, raylib::WHITE);
@@ -1197,8 +1202,9 @@ void render_smelly_toilet(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
     vec3 position = transform.pos();
 
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
-    raylib::DrawBillboard(cam.camera, texture,
+    GameCam* cam = globals::game_cam();
+    if (!cam) return;
+    raylib::DrawBillboard(cam->camera, texture,
                           vec3{position.x + (TILESIZE * 0.05f),  //
                                position.y + (TILESIZE * 2.f),    //
                                position.z},                      //
@@ -1228,7 +1234,8 @@ void render_normal(const Entity& entity, float dt) {
     }
 
     if (check_type(entity, EntityType::Face)) {
-        auto cam = GLOBALS.get_ptr<GameCam>(strings::globals::GAME_CAM);
+        auto* cam = globals::game_cam();
+        if (!cam) return;
         raylib::DrawBillboard(
             cam->camera, TextureLibrary::get().get(strings::textures::FACE),
             entity.get<Transform>().pos(), TILESIZE, WHITE);
@@ -1363,9 +1370,10 @@ void render_fishing_game(const Entity& entity, float) {
     // TODO read icon from score sheet
     //  ^ idk what i meant by this
     raylib::Texture texture = TextureLibrary::get().get("star_filled");
-    GameCam cam = GLOBALS.get<GameCam>(strings::globals::GAME_CAM);
+    GameCam* cam = globals::game_cam();
+    if (!cam) return;
     for (int i = 0; i < fishing.num_stars(); i++) {
-        raylib::DrawBillboard(cam.camera, texture,
+        raylib::DrawBillboard(cam->camera, texture,
                               vec3{position.x + x_offset,          //
                                    position.y + (TILESIZE * 2.f),  //
                                    position.z},                    //
@@ -1380,7 +1388,7 @@ void render_walkable_spots(float) {
     // segfault
     return;
 
-    if (!GLOBALS.get<bool>("debug_ui_enabled")) return;
+    if (!globals::debug_ui_enabled()) return;
 
     for (int i = -25; i < 25; i++) {
         for (int j = -25; j < 25; j++) {
@@ -1497,7 +1505,7 @@ struct OnFrameStartSystem : public afterhours::System<> {
 
 struct RenderWalkableSpotsSystem : public afterhours::System<> {
     virtual bool should_run(const float) override {
-        return GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        return globals::debug_ui_enabled();
     }
 
     virtual void once(const float) override {
@@ -1511,7 +1519,7 @@ struct RenderEntitySystem : public afterhours::System<Transform> {
     virtual bool should_run(const float) override { return true; }
 
     virtual void once(const float) const override {
-        debug_mode_on = GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        debug_mode_on = globals::debug_ui_enabled();
     }
 
     virtual void for_each_with(const Entity& entity, const Transform&,
