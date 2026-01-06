@@ -12,7 +12,11 @@
 #include <atomic>
 #include <mutex>
 
+namespace afterhours {
 struct Entity;
+}
+using Entity = afterhours::Entity;
+
 struct GameCam;
 struct Map;
 

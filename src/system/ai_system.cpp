@@ -24,6 +24,7 @@
 #include "../components/transform.h"
 #include "../entity_helper.h"
 #include "../entity_makers.h"
+#include "../engine/runtime_globals.h"
 #include "../globals.h"
 #include "../recipe_library.h"
 #include "ai_entity_helpers.h"
