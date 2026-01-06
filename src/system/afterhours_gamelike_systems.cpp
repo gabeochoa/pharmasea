@@ -400,8 +400,7 @@ void SystemManager::register_gamelike_systems() {
     // Bathroom override can preempt other transitions.
     systems.register_update_system(
         std::make_unique<system_manager::NeedsBathroomNowSystem>());
-    systems.register_update_system(
-        std::make_unique<system_manager::ProcessAiSystem>());
+    system_manager::register_ai_systems(systems);
     // Commit staged transitions after AI has had a chance to request them.
     systems.register_update_system(
         std::make_unique<system_manager::AICommitNextStateSystem>());
