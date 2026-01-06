@@ -24,7 +24,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
     OptEntity get_player_entity() {
         // TODO why doesnt this work?
         // return EntityHelper::getFirstWithComponent<CollectsUserInput>();
-        auto* map_ptr = globals::map();
+        auto* map_ptr = globals::world_map();
         if (!map_ptr) return {};
         return map_ptr->get_remote_with_cui();
     }

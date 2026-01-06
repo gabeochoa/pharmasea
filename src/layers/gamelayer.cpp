@@ -96,7 +96,7 @@ void GameLayer::onUpdate(float dt) {
     cam->updateCamera();
 
     //         jun 24-23 we need this so furniture shows up
-    auto* map_ptr = globals::map();
+    auto* map_ptr = globals::world_map();
     if (map_ptr) {
         // NOTE: today we need to grab things so that the client renders
         // what they server has access to
@@ -115,7 +115,7 @@ void draw_building(const Building& building) {
 }
 
 void GameLayer::draw_world(float dt) {
-    auto* map_ptr = globals::map();
+    auto* map_ptr = globals::world_map();
     const auto network_debug_mode_on =
         globals::network_ui_enabled();
     if (network_debug_mode_on) {
@@ -175,7 +175,7 @@ void GameLayer::onDraw(float dt) {
     TRACY_ZONE_SCOPED;
     if (!MenuState::s_in_game()) return;
 
-    auto* map_ptr = globals::map();
+    auto* map_ptr = globals::world_map();
 
     ext::clear_background(Color{200, 200, 200, 255});
     draw_world(dt);

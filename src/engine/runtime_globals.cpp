@@ -2,7 +2,7 @@
 
 namespace globals {
 
-static std::atomic<Map*> g_map{nullptr};
+static std::atomic<Map*> g_world_map{nullptr};
 static std::atomic<GameCam*> g_game_cam{nullptr};
 static std::atomic<Entity*> g_camera_target{nullptr};
 static std::atomic<Entity*> g_active_camera_target{nullptr};
@@ -15,8 +15,10 @@ static std::atomic<bool> g_skip_ingredient_match{false};
 static std::mutex g_network_ui_mutex;
 static bool g_network_ui_enabled = false;
 
-void set_map(Map* map) { g_map.store(map, std::memory_order_release); }
-Map* map() { return g_map.load(std::memory_order_acquire); }
+void set_world_map(Map* map) {
+    g_world_map.store(map, std::memory_order_release);
+}
+Map* world_map() { return g_world_map.load(std::memory_order_acquire); }
 
 void set_game_cam(GameCam* cam) {
     g_game_cam.store(cam, std::memory_order_release);

@@ -23,8 +23,12 @@ struct Server;
 namespace globals {
 
 // Pointers to runtime-owned objects (not thread-safe to dereference cross-thread).
-void set_map(Map* map);
-Map* map();
+void set_world_map(Map* map);
+Map* world_map();
+
+// Temporary compatibility aliases (prefer world_map()).
+inline void set_map(Map* map) { set_world_map(map); }
+inline Map* map() { return world_map(); }
 
 void set_game_cam(GameCam* cam);
 GameCam* game_cam();

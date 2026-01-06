@@ -30,7 +30,7 @@ Client::Client() {
     });
 
     map = std::make_unique<Map>("default_seed");
-    globals::set_map(map.get());
+    globals::set_world_map(map.get());
 }
 
 void Client::update_username(const std::string& new_name) {

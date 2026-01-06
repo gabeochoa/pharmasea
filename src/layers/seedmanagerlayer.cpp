@@ -49,7 +49,7 @@ bool SeedManagerLayer::onKeyPressed(KeyPressedEvent& event) {
 }
 
 void SeedManagerLayer::onUpdate(float) {
-    map_ptr = globals::map();
+    map_ptr = globals::world_map();
     if (!map_ptr) return;
 
     if (!map_ptr->showSeedInputBox) {

@@ -37,7 +37,7 @@ void GameDebugLayer::onDraw(float dt) {
 }
 
 void GameDebugLayer::draw_debug_ui(float dt) {
-    auto* map_ptr = globals::map();
+    auto* map_ptr = globals::world_map();
     using namespace ui;
     begin(ui_context, dt);
 
