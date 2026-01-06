@@ -205,7 +205,9 @@ struct ProcessGrabberItemsSystem
 };
 
 // System for processing conveyer items during in-round updates
-struct ProcessConveyerItemsSystem : public afterhours::System<> {
+struct ProcessConveyerItemsSystem : public afterhours::System<
+Transform, CanHoldItem, ConveysHeldItem, CanBeTakenFrom> {
+
     virtual ~ProcessConveyerItemsSystem() = default;
 
     virtual bool should_run(const float) override {
@@ -222,18 +224,10 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
         }
     }
 
-    // TODO use system filters
-    virtual void for_each_with(Entity& entity, float dt) override {
-        if (entity
-                .is_missing_any<CanHoldItem, ConveysHeldItem, CanBeTakenFrom>())
-            return;
-
-        const Transform& transform = entity.get<Transform>();
-
-        CanHoldItem& canHold = entity.get<CanHoldItem>();
-        CanBeTakenFrom& canBeTakenFrom = entity.get<CanBeTakenFrom>();
-        ConveysHeldItem& conveysHeldItem = entity.get<ConveysHeldItem>();
-
+    virtual void for_each_with(Entity& entity, Transform& transform,
+                               CanHoldItem& canHold,
+                               ConveysHeldItem& conveysHeldItem,
+                               CanBeTakenFrom& canBeTakenFrom, float dt) override {
         // we are not holding anything
         if (canHold.empty()) return;
 
