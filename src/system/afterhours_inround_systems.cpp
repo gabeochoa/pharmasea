@@ -58,15 +58,32 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
         }
     }
 
-    // TODO fold in function implementation
     virtual void for_each_with(Entity& entity, Transform& transform,
                                IsItemContainer& iic, Indexer& indexer,
-                               CanHoldItem& canHold, float dt) override {
-        (void) transform;  // Unused parameter
-        (void) iic;        // Unused parameter
-        (void) indexer;    // Unused parameter
-        (void) canHold;    // Unused parameter
-        process_is_container_and_should_update_item(entity, dt);
+                               CanHoldItem& canHold, float) override {
+        if (!iic.should_use_indexer()) return;
+
+        // user didnt change the index so we are good to wait
+        if (indexer.value_same_as_last_render()) return;
+
+        // Delete the currently held item
+        if (canHold.is_holding_item()) {
+            OptEntity held_opt = canHold.item();
+            if (held_opt) {
+                held_opt.asE().cleanup = true;
+            }
+            canHold.update(nullptr, entity_id::INVALID);
+        }
+
+        // Backfill with the new indexed item
+        if (!iic.hit_max()) {
+            iic.increment();
+            Entity& item = EntityHelper::createItem(iic.type(), transform.pos(),
+                                                    indexer.value());
+            canHold.update(item, entity.id);
+        }
+
+        indexer.mark_change_completed();
     }
 };
 

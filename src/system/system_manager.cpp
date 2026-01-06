@@ -220,33 +220,6 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
     backfill_empty_container(iic.type(), entity, pos);
 }
 
-void process_is_container_and_should_update_item(Entity& entity, float) {
-    if (entity.is_missing<IsItemContainer>()) return;
-    const IsItemContainer& iic = entity.get<IsItemContainer>();
-
-    if (!iic.should_use_indexer()) return;
-    if (entity.is_missing<Indexer>()) return;
-    Indexer& indexer = entity.get<Indexer>();
-    // user didnt change the index so we are good to wait
-    if (indexer.value_same_as_last_render()) return;
-
-    if (entity.is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity.get<CanHoldItem>();
-
-    // Delete the currently held item
-    if (canHold.is_holding_item()) {
-        OptEntity held_opt = canHold.item();
-        if (held_opt) {
-            held_opt.asE().cleanup = true;
-        }
-        canHold.update(nullptr, entity_id::INVALID);
-    }
-
-    auto pos = entity.get<Transform>().pos();
-    backfill_empty_container(iic.type(), entity, pos, indexer.value());
-    indexer.mark_change_completed();
-}
-
 void process_is_indexed_container_holding_incorrect_item(Entity& entity,
                                                          float) {
     // This function is for when you have an indexed container and you put the

@@ -11,7 +11,6 @@ namespace system_manager {
 void process_nux_updates(Entity& entity, float dt);
 void process_is_container_and_should_backfill_item(Entity& entity, float dt);
 void update_sophie(Entity& entity, float dt);
-void process_is_container_and_should_update_item(Entity& entity, float dt);
 void process_is_indexed_container_holding_incorrect_item(Entity& entity,
                                                          float dt);
 
