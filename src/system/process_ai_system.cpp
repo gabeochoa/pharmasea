@@ -707,6 +707,18 @@ struct AICleanVomitSystem
         return GameState::get().is_game_like();
     }
 
+    void wander_in_bar(Entity& entity, CanPathfind& pathfind, float dt) {
+        HasAITargetLocation& roam = entity.get<HasAITargetLocation>();
+        if (!roam.pos.has_value()) {
+            roam.pos =
+                ai::pick_random_walkable_in_building(entity, BAR_BUILDING)
+                    .value_or(entity.get<Transform>().as2());
+        }
+        bool reached = pathfind.travel_toward(
+            roam.pos.value(), ai::get_speed_for_entity(entity) * dt);
+        if (reached) roam.pos.reset();
+    }
+
     void for_each_with(Entity& entity, IsAIControlled& ctrl,
                        CanPathfind& pathfind, float dt) override {
 #if !__APPLE__
@@ -749,14 +761,7 @@ struct AICleanVomitSystem
                                   .orderByDist(entity.get<Transform>().as2())
                                   .gen_first();
             if (!vomit) {
-                HasAITargetLocation& roam = entity.get<HasAITargetLocation>();
-                if (!roam.pos.has_value()) {
-                    roam.pos = ai::pick_random_walkable_near(entity).value_or(
-                        entity.get<Transform>().as2());
-                }
-                bool reached = pathfind.travel_toward(
-                    roam.pos.value(), ai::get_speed_for_entity(entity) * dt);
-                if (reached) roam.pos.reset();
+                wander_in_bar(entity, pathfind, dt);
                 return;
             }
             tgt.entity.set(vomit.asE());
@@ -766,14 +771,7 @@ struct AICleanVomitSystem
         OptEntity vomit = tgt.entity.resolve();
         if (!vomit) {
             tgt.entity.clear();
-            HasAITargetLocation& roam = entity.get<HasAITargetLocation>();
-            if (!roam.pos.has_value()) {
-                roam.pos = ai::pick_random_walkable_near(entity).value_or(
-                    entity.get<Transform>().as2());
-            }
-            bool reached = pathfind.travel_toward(
-                roam.pos.value(), ai::get_speed_for_entity(entity) * dt);
-            if (reached) roam.pos.reset();
+            wander_in_bar(entity, pathfind, dt);
             return;
         }
 

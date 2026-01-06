@@ -2,6 +2,7 @@
 
 #include <optional>
 
+#include "../building_locations.h"
 #include "../components/has_ai_cooldown.h"
 #include "../components/transform.h"
 #include "../entity_helper.h"
@@ -27,6 +28,17 @@ namespace system_manager::ai {
         vec2 off = RandomEngine::get().get_vec(-10.f, 10.f);
         vec2 p = base + off;
         if (EntityHelper::isWalkable(p)) return p;
+    }
+    return std::nullopt;
+}
+
+[[nodiscard]] inline std::optional<vec2> pick_random_walkable_in_building(
+    const Entity& e, const Building& building, int attempts = 50) {
+    const vec2 base = e.get<Transform>().as2();
+    for (int i = 0; i < attempts; ++i) {
+        vec2 off = RandomEngine::get().get_vec(-10.f, 10.f);
+        vec2 p = base + off;
+        if (EntityHelper::isWalkable(p) && building.is_inside(p)) return p;
     }
     return std::nullopt;
 }
