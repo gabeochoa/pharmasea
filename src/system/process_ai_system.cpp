@@ -3,7 +3,6 @@
 #include <set>
 
 #include "../components/can_hold_item.h"
-#include "../components/has_waiting_queue.h"
 #include "../components/can_order_drink.h"
 #include "../components/has_ai_bathroom_state.h"
 #include "../components/has_ai_drink_state.h"
@@ -17,6 +16,7 @@
 #include "../components/has_last_interacted_customer.h"
 #include "../components/has_patience.h"
 #include "../components/has_speech_bubble.h"
+#include "../components/has_waiting_queue.h"
 #include "../components/has_work.h"
 #include "../components/is_bank.h"
 #include "../components/is_progression_manager.h"
@@ -480,20 +480,19 @@ struct AIPlayJukeboxSystem
     }
 
     OptEntity find_best_jukebox(Entity& entity) {
-        return
-            EntityQuery()
-                .whereType(EntityType::Jukebox)
-                .whereHasComponent<HasWaitingQueue>()
-                .whereLambda([](const Entity& e) {
-                    return !e.get<HasWaitingQueue>().is_full();
-                })
-                .whereCanPathfindTo(entity.get<Transform>().as2())
-                .orderByLambda([](const Entity& r1, const Entity& r2) {
-                    return r1.get<HasWaitingQueue>().get_next_pos() <
-                           r2.get<HasWaitingQueue>().get_next_pos();
-                })
-                .gen_first();
-    }   
+        return EntityQuery()
+            .whereType(EntityType::Jukebox)
+            .whereHasComponent<HasWaitingQueue>()
+            .whereLambda([](const Entity& e) {
+                return !e.get<HasWaitingQueue>().is_full();
+            })
+            .whereCanPathfindTo(entity.get<Transform>().as2())
+            .orderByLambda([](const Entity& r1, const Entity& r2) {
+                return r1.get<HasWaitingQueue>().get_next_pos() <
+                       r2.get<HasWaitingQueue>().get_next_pos();
+            })
+            .gen_first();
+    }
 
     void for_each_with(Entity& entity, IsAIControlled& ctrl,
                        [[maybe_unused]] CanPathfind&, float dt) override {
@@ -585,20 +584,19 @@ struct AIBathroomSystem
     }
 
     OptEntity find_best_toilet(Entity& entity) {
-        return
-            EntityQuery()
-                .whereHasComponent<IsToilet>()
-                .whereHasComponent<HasWaitingQueue>()
-                .whereLambda([](const Entity& e) {
-                    return !e.get<HasWaitingQueue>().is_full();
-                })
-                .whereCanPathfindTo(entity.get<Transform>().as2())
-                .orderByLambda([](const Entity& r1, const Entity& r2) {
-                    return r1.get<HasWaitingQueue>().get_next_pos() <
-                           r2.get<HasWaitingQueue>().get_next_pos();
-                })
-                .gen_first();
-    }   
+        return EntityQuery()
+            .whereHasComponent<IsToilet>()
+            .whereHasComponent<HasWaitingQueue>()
+            .whereLambda([](const Entity& e) {
+                return !e.get<HasWaitingQueue>().is_full();
+            })
+            .whereCanPathfindTo(entity.get<Transform>().as2())
+            .orderByLambda([](const Entity& r1, const Entity& r2) {
+                return r1.get<HasWaitingQueue>().get_next_pos() <
+                       r2.get<HasWaitingQueue>().get_next_pos();
+            })
+            .gen_first();
+    }
 
     void for_each_with(Entity& entity, IsAIControlled& ctrl,
                        CanPathfind& pathfind, float dt) override {

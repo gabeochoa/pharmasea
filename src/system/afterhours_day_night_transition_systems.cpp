@@ -33,66 +33,6 @@
 
 namespace system_manager {
 
-inline void delete_held_items_when_leaving_inround(Entity& entity) {
-    if (entity.is_missing<CanHoldItem>()) return;
-
-    CanHoldItem& canHold = entity.get<CanHoldItem>();
-    if (canHold.empty()) return;
-
-    // Mark it as deletable
-    // let go of the item
-    OptEntity held_opt = canHold.item();
-    if (held_opt) {
-        held_opt.asE().cleanup = true;
-    }
-    canHold.update(nullptr, entity_id::INVALID);
-}
-
-inline void reset_max_gen_when_after_deletion(Entity& entity) {
-    if (entity.is_missing<CanHoldItem>()) return;
-    if (entity.is_missing<IsItemContainer>()) return;
-
-    const CanHoldItem& canHold = entity.get<CanHoldItem>();
-    // If something wasnt deleted, then just ignore it for now
-    if (canHold.is_holding_item()) return;
-
-    entity.get<IsItemContainer>().reset_generations();
-}
-
-inline void update_new_max_customers(Entity& entity, float) {
-    if (entity.is_missing<HasProgression>()) return;
-
-    Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-    const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-
-    const HasDayNightTimer& hasTimer = sophie.get<HasDayNightTimer>();
-    const int day_count = hasTimer.days_passed();
-
-    if (check_type(entity, EntityType::CustomerSpawner)) {
-        float customer_spawn_multiplier =
-            irsm.get<float>(ConfigKey::CustomerSpawnMultiplier);
-        float round_length = irsm.get<float>(ConfigKey::RoundLength);
-
-        const int new_total =
-            (int) fmax(2.f,  // force 2 at the beginning of the game
-                             //
-                       day_count * 2.f * customer_spawn_multiplier);
-
-        // the div by 2 is so that everyone is spawned by half day, so
-        // theres time for you to make their drinks and them to pay before
-        // they are forced to leave
-        const float time_between = (round_length / new_total) / 2.f;
-
-        log_info("Updating progression, setting new spawn total to {}",
-                 new_total);
-        entity
-            .get<IsSpawner>()  //
-            .set_total(new_total)
-            .set_time_between(time_between);
-        return;
-    }
-}
-
 struct GenerateStoreOptionsSystem : public afterhours::System<> {
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
@@ -139,6 +79,32 @@ struct DeleteFloatingItemsWhenLeavingInRoundSystem
         } catch (...) {
             return false;
         }
+    }
+
+    inline void delete_held_items_when_leaving_inround(Entity& entity) {
+        if (entity.is_missing<CanHoldItem>()) return;
+
+        CanHoldItem& canHold = entity.get<CanHoldItem>();
+        if (canHold.empty()) return;
+
+        // Mark it as deletable
+        // let go of the item
+        OptEntity held_opt = canHold.item();
+        if (held_opt) {
+            held_opt.asE().cleanup = true;
+        }
+        canHold.update(nullptr, entity_id::INVALID);
+    }
+
+    inline void reset_max_gen_when_after_deletion(Entity& entity) {
+        if (entity.is_missing<CanHoldItem>()) return;
+        if (entity.is_missing<IsItemContainer>()) return;
+
+        const CanHoldItem& canHold = entity.get<CanHoldItem>();
+        // If something wasnt deleted, then just ignore it for now
+        if (canHold.is_holding_item()) return;
+
+        entity.get<IsItemContainer>().reset_generations();
     }
 
     virtual void for_each_with(Entity& entity, IsItem& ii, float) override {
