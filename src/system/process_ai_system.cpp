@@ -3,6 +3,7 @@
 #include <set>
 
 #include "../components/can_hold_item.h"
+#include "../components/has_waiting_queue.h"
 #include "../components/can_order_drink.h"
 #include "../components/has_ai_bathroom_state.h"
 #include "../components/has_ai_drink_state.h"
@@ -478,6 +479,22 @@ struct AIPlayJukeboxSystem
         return GameState::get().is_game_like();
     }
 
+    OptEntity find_best_jukebox(Entity& entity) {
+        return
+            EntityQuery()
+                .whereType(EntityType::Jukebox)
+                .whereHasComponent<HasWaitingQueue>()
+                .whereLambda([](const Entity& e) {
+                    return !e.get<HasWaitingQueue>().is_full();
+                })
+                .whereCanPathfindTo(entity.get<Transform>().as2())
+                .orderByLambda([](const Entity& r1, const Entity& r2) {
+                    return r1.get<HasWaitingQueue>().get_next_pos() <
+                           r2.get<HasWaitingQueue>().get_next_pos();
+                })
+                .gen_first();
+    }   
+
     void for_each_with(Entity& entity, IsAIControlled& ctrl,
                        [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
@@ -492,7 +509,7 @@ struct AIPlayJukeboxSystem
         HasAIJukeboxState& js = entity.get<HasAIJukeboxState>();
 
         if (!ai::entity_ref_valid(tgt.entity)) {
-            OptEntity best = ai::find_best_jukebox_with_space(entity);
+            OptEntity best = find_best_jukebox(entity);
             if (!best) {
                 set_new_customer_order(entity);
                 ai::reset_component<HasAIJukeboxState>(entity);
@@ -567,6 +584,22 @@ struct AIBathroomSystem
         return GameState::get().is_game_like();
     }
 
+    OptEntity find_best_toilet(Entity& entity) {
+        return
+            EntityQuery()
+                .whereHasComponent<IsToilet>()
+                .whereHasComponent<HasWaitingQueue>()
+                .whereLambda([](const Entity& e) {
+                    return !e.get<HasWaitingQueue>().is_full();
+                })
+                .whereCanPathfindTo(entity.get<Transform>().as2())
+                .orderByLambda([](const Entity& r1, const Entity& r2) {
+                    return r1.get<HasWaitingQueue>().get_next_pos() <
+                           r2.get<HasWaitingQueue>().get_next_pos();
+                })
+                .gen_first();
+    }   
+
     void for_each_with(Entity& entity, IsAIControlled& ctrl,
                        CanPathfind& pathfind, float dt) override {
 #if !__APPLE__
@@ -592,7 +625,7 @@ struct AIBathroomSystem
         HasAITargetEntity& tgt = entity.get<HasAITargetEntity>();
 
         if (!ai::entity_ref_valid(tgt.entity)) {
-            OptEntity best = ai::find_best_toilet_with_space(entity);
+            OptEntity best = find_best_toilet(entity);
             if (!best) return;
             tgt.entity.set(best.asE());
             ai::line_add_to_queue(entity, bs.line_wait, best.asE());
