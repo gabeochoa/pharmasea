@@ -370,7 +370,9 @@ Transform, CanHoldItem, ConveysHeldItem, CanBeTakenFrom> {
     }
 };
 
-struct ProcessGrabberFilterSystem : public afterhours::System<> {
+struct ProcessGrabberFilterSystem
+    : public afterhours::System<
+          CanHoldItem, afterhours::tags::All<EntityType::FilteredGrabber>> {
     virtual ~ProcessGrabberFilterSystem() = default;
 
     virtual bool should_run(const float) override {
@@ -387,11 +389,8 @@ struct ProcessGrabberFilterSystem : public afterhours::System<> {
         }
     }
 
-    // TODO use system filters
-    virtual void for_each_with(Entity& entity, float) override {
-        if (!check_type(entity, EntityType::FilteredGrabber)) return;
-        if (entity.is_missing<CanHoldItem>()) return;
-        CanHoldItem& canHold = entity.get<CanHoldItem>();
+    virtual void for_each_with(Entity& entity, CanHoldItem& canHold,
+                               float) override {
         if (canHold.empty()) return;
 
         // If we are holding something, then:
