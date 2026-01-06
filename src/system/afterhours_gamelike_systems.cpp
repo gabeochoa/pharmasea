@@ -83,7 +83,7 @@ struct RunTimerSystem : public afterhours::System<HasDayNightTimer> {
         // TODO add a way to pay ahead of time ?? design
     }
 
-    void execute_open_bar(Entity& entity, HasDayNightTimer& ht) {
+    void execute_open_bar(Entity& entity, HasDayNightTimer& ht, float dt) {
         if (entity.is_missing<IsProgressionManager>())
             log_error("system_manager::run_timer missing IsProgressionManager");
         progression::collect_progression_options(entity, dt);
@@ -97,7 +97,7 @@ struct RunTimerSystem : public afterhours::System<HasDayNightTimer> {
         ht.pass_time(dt);
         if (!ht.is_round_over()) return;
         ht.is_bar_open() ? execute_close_bar(entity, ht)
-                         : execute_open_bar(entity, ht);
+                         : execute_open_bar(entity, ht, dt);
     }
 };
 
