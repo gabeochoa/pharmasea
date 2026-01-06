@@ -277,11 +277,6 @@ void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
         .set_initial_state(IsAIControlled::State::CleanVomit)
         .enable_ability(IsAIControlled::AbilityCleanVomit);
 
-        // TODO this feel really brittle 
-    // CleanVomit state requires these components
-    mop_buddy.addComponent<HasAITargetEntity>();
-    mop_buddy.addComponent<HasAITargetLocation>();
-
     mop_buddy
         .addComponent<IsItem>()  //
         .clear_hb_filter()
@@ -1436,10 +1431,6 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
                            irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet))
         .set_ability_state(IsAIControlled::AbilityPlayJukebox,
                            irsm.has_upgrade_unlocked(UpgradeClass::Jukebox));
-
-    // QueueForRegister state requires these components
-    customer.addComponent<HasAITargetEntity>();
-    customer.addComponent<HasAIQueueState>();
 
     // TODO for now, eventually move to customer spawner
     if (has_order) {
