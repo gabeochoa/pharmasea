@@ -29,6 +29,7 @@
 #include "ai_entity_helpers.h"
 #include "ai_system.h"
 #include "ai_tags.h"
+#include "process_ai_system.h"
 #include "progression.h"
 #include "sophie.h"
 #include "system_manager.h"
@@ -321,59 +322,6 @@ struct AIOnEnterResetSystem
         }
 
         entity.disableTag(afterhours::tags::AITag::AINeedsResetting);
-    }
-};
-
-// TODO should we have a separate system for each job type?
-//
-// Note: afterhours tag filtering currently only applies on Apple platforms
-// (see vendor/afterhours/src/core/system.h). We still guard at runtime on other
-// platforms.
-struct ProcessAiSystem
-    : public afterhours::System<
-          IsAIControlled, CanPathfind,
-          afterhours::tags::None<afterhours::tags::AITag::AITransitionPending,
-                                 afterhours::tags::AITag::AINeedsResetting>> {
-    virtual bool should_run(const float) override {
-        return GameState::get().is_game_like();
-    }
-
-    virtual void for_each_with(Entity& entity, IsAIControlled& ctrl,
-                               [[maybe_unused]] CanPathfind&, float dt) override {
-#if !__APPLE__
-        // If tag filtering is not active, guard manually.
-        if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-        if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
-#endif
-        switch (ctrl.state) {
-            case IsAIControlled::State::Wander:
-                ai::process_state_wander(entity, ctrl, dt);
-                break;
-            case IsAIControlled::State::QueueForRegister:
-                ai::process_state_queue_for_register(entity, dt);
-                break;
-            case IsAIControlled::State::AtRegisterWaitForDrink:
-                ai::process_state_at_register_wait_for_drink(entity, dt);
-                break;
-            case IsAIControlled::State::Drinking:
-                ai::process_state_drinking(entity, dt);
-                break;
-            case IsAIControlled::State::Pay:
-                ai::process_state_pay(entity, dt);
-                break;
-            case IsAIControlled::State::PlayJukebox:
-                ai::process_state_play_jukebox(entity, dt);
-                break;
-            case IsAIControlled::State::Bathroom:
-                ai::process_state_bathroom(entity, dt);
-                break;
-            case IsAIControlled::State::CleanVomit:
-                ai::process_state_clean_vomit(entity, dt);
-                break;
-            case IsAIControlled::State::Leave:
-                ai::process_state_leave(entity, dt);
-                break;
-        }
     }
 };
 
