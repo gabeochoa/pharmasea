@@ -226,7 +226,6 @@ float get_speed_for_entity(Entity& entity) {
     return base_speed;
 }
 
-namespace {
 void process_state_wander(Entity& entity, IsAIControlled& ctrl, float dt) {
     (void) ai_tick_with_cooldown(entity, dt, 0.25f);
 
@@ -743,52 +742,6 @@ void process_state_leave(Entity& entity, float dt) {
     //
     (void) entity.get<CanPathfind>().travel_toward(
         vec2{GATHER_SPOT, GATHER_SPOT}, get_speed_for_entity(entity) * dt);
-}
-}  // namespace
-
-void process_ai_entity(Entity& entity, float dt) {
-    if (entity.is_missing<CanPathfind>()) return;
-    if (entity.is_missing<IsAIControlled>()) return;
-
-    // If we've already requested a transition this frame, stop processing.
-    if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
-
-    IsAIControlled& ctrl = entity.get<IsAIControlled>();
-
-    switch (ctrl.state) {
-        case IsAIControlled::State::Wander:
-            process_state_wander(entity, ctrl, dt);
-            break;
-        case IsAIControlled::State::QueueForRegister:
-            process_state_queue_for_register(entity, dt);
-            break;
-        case IsAIControlled::State::AtRegisterWaitForDrink:
-            process_state_at_register_wait_for_drink(entity, dt);
-            break;
-        case IsAIControlled::State::Drinking:
-            process_state_drinking(entity, dt);
-            break;
-
-        case IsAIControlled::State::Pay:
-            process_state_pay(entity, dt);
-            break;
-
-        case IsAIControlled::State::PlayJukebox:
-            process_state_play_jukebox(entity, dt);
-            break;
-
-        case IsAIControlled::State::Bathroom:
-            process_state_bathroom(entity, dt);
-            break;
-
-        case IsAIControlled::State::CleanVomit:
-            process_state_clean_vomit(entity, dt);
-            break;
-
-        case IsAIControlled::State::Leave:
-            process_state_leave(entity, dt);
-            break;
-    }
 }
 
 }  // namespace system_manager::ai

@@ -338,15 +338,42 @@ struct ProcessAiSystem
         return GameState::get().is_game_like();
     }
 
-    virtual void for_each_with(Entity& entity,
-                               [[maybe_unused]] IsAIControlled&,
+    virtual void for_each_with(Entity& entity, IsAIControlled& ctrl,
                                [[maybe_unused]] CanPathfind&, float dt) override {
 #if !__APPLE__
         // If tag filtering is not active, guard manually.
         if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
         if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
 #endif
-        ai::process_ai_entity(entity, dt);
+        switch (ctrl.state) {
+            case IsAIControlled::State::Wander:
+                ai::process_state_wander(entity, ctrl, dt);
+                break;
+            case IsAIControlled::State::QueueForRegister:
+                ai::process_state_queue_for_register(entity, dt);
+                break;
+            case IsAIControlled::State::AtRegisterWaitForDrink:
+                ai::process_state_at_register_wait_for_drink(entity, dt);
+                break;
+            case IsAIControlled::State::Drinking:
+                ai::process_state_drinking(entity, dt);
+                break;
+            case IsAIControlled::State::Pay:
+                ai::process_state_pay(entity, dt);
+                break;
+            case IsAIControlled::State::PlayJukebox:
+                ai::process_state_play_jukebox(entity, dt);
+                break;
+            case IsAIControlled::State::Bathroom:
+                ai::process_state_bathroom(entity, dt);
+                break;
+            case IsAIControlled::State::CleanVomit:
+                ai::process_state_clean_vomit(entity, dt);
+                break;
+            case IsAIControlled::State::Leave:
+                ai::process_state_leave(entity, dt);
+                break;
+        }
     }
 };
 
