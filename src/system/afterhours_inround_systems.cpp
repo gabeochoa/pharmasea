@@ -7,6 +7,7 @@
 #include "../components/has_day_night_timer.h"
 #include "../components/has_fishing_game.h"
 #include "../components/has_patience.h"
+#include "../components/has_subtype.h"
 #include "../components/has_rope_to_item.h"
 #include "../components/has_work.h"
 #include "../components/indexer.h"
@@ -107,12 +108,26 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
         }
     }
 
-    // TODO fold in function implementation
+    // This handles when you have an indexed container and you put the
+    // item back in but the index had changed.
+    // We need to clear the item because otherwise they will both
+    // live there which will cause overlap and grab issues.
     virtual void for_each_with(Entity& entity, Indexer& indexer,
-                               CanHoldItem& canHold, float dt) override {
-        (void) indexer;  // Unused parameter
-        (void) canHold;  // Unused parameter
-        process_is_indexed_container_holding_incorrect_item(entity, dt);
+                               CanHoldItem& canHold, float) override {
+        if (canHold.empty()) return;
+
+        int current_value = indexer.value();
+        OptEntity held_opt = canHold.item();
+        if (!held_opt) {
+            canHold.update(nullptr, entity_id::INVALID);
+            return;
+        }
+        int item_value = held_opt.asE().get<HasSubtype>().get_type_index();
+
+        if (current_value != item_value) {
+            held_opt.asE().cleanup = true;
+            canHold.update(nullptr, entity_id::INVALID);
+        }
     }
 };
 

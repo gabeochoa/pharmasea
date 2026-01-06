@@ -220,36 +220,6 @@ void process_is_container_and_should_backfill_item(Entity& entity, float) {
     backfill_empty_container(iic.type(), entity, pos);
 }
 
-void process_is_indexed_container_holding_incorrect_item(Entity& entity,
-                                                         float) {
-    // This function is for when you have an indexed container and you put the
-    // item back in but the index had changed.
-    //
-    // in this case we need to clear the item because otherwise they will both
-    // live there which will cause overlap and grab issues.
-
-    if (entity.is_missing<Indexer>()) return;
-    const Indexer& indexer = entity.get<Indexer>();
-
-    if (entity.is_missing<CanHoldItem>()) return;
-    CanHoldItem& canHold = entity.get<CanHoldItem>();
-
-    if (canHold.empty()) return;
-
-    int current_value = indexer.value();
-    OptEntity held_opt = canHold.item();
-    if (!held_opt) {
-        canHold.update(nullptr, entity_id::INVALID);
-        return;
-    }
-    int item_value = held_opt.asE().get<HasSubtype>().get_type_index();
-
-    if (current_value != item_value) {
-        held_opt.asE().cleanup = true;
-        canHold.update(nullptr, entity_id::INVALID);
-    }
-}
-
 void spawn_machines_for_newly_unlocked_drink_DONOTCALL(
     IsProgressionManager& ipm, Drink option) {
     // today we dont have a way to statically know which machines
