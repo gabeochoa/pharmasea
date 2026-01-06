@@ -392,8 +392,10 @@ struct PopOutWhenCollidingSystem
                                float) override {
         const auto no_clip_on =
             globals::no_clip_enabled();
+        // TODO: move this check into should_run
         if (no_clip_on) return;
 
+        // TODO: move this check into sysmem tags
         if (!check_type(entity, EntityType::Player)) return;
 
         OptEntity match =  //
