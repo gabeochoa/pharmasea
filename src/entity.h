@@ -11,9 +11,9 @@ using afterhours::EntityHandle;
 using afterhours::OptEntity;
 using afterhours::RefEntity;
 
-#include "entity_type.h"
-
 #include <optional>
+
+#include "entity_type.h"
 
 // TODO memory? we could keep track of deleted entities and reuse those ids if
 // we wanted to we'd have to be pretty disiplined about clearing people who
@@ -28,16 +28,16 @@ using Item = Entity;
 
 namespace afterhours {
 inline auto serialize(auto& archive, EntityHandle& handle) {
-    return archive(  //
-        handle.slot, //
-        handle.gen   //
+    return archive(   //
+        handle.slot,  //
+        handle.gen    //
     );
 }
 
 inline auto serialize(auto& archive, const EntityHandle& handle) {
-    return archive(  //
-        handle.slot, //
-        handle.gen   //
+    return archive(   //
+        handle.slot,  //
+        handle.gen    //
     );
 }
 

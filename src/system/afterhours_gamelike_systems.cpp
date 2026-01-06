@@ -8,8 +8,8 @@
 #include "../components/is_pnumatic_pipe.h"
 #include "../components/is_progression_manager.h"
 #include "../components/is_round_settings_manager.h"
-#include "../engine/runtime_globals.h"
 #include "../engine/log.h"
+#include "../engine/runtime_globals.h"
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
@@ -59,28 +59,28 @@ struct RunTimerSystem : public afterhours::System<HasDayNightTimer> {
     }
 
     void execute_close_bar(Entity& entity, HasDayNightTimer& ht) {
-            ht.close_bar();
-            if (entity.is_missing<IsBank>())
-                log_error("system_manager::run_timer missing IsBank");
-            // Upgrading this log to an error because it should never happen
-            // and if it never happens we can add the system filtering 
+        ht.close_bar();
+        if (entity.is_missing<IsBank>())
+            log_error("system_manager::run_timer missing IsBank");
+        // Upgrading this log to an error because it should never happen
+        // and if it never happens we can add the system filtering
 
-            // If we have more days until rent is due, we can skip the rent payment
-            if (ht.days_until() > 0) {
-                return;
-            }
+        // If we have more days until rent is due, we can skip the rent payment
+        if (ht.days_until() > 0) {
+            return;
+        }
 
-            IsBank& isbank = entity.get<IsBank>();
-            if (isbank.balance() < ht.rent_due()) {
-                log_error("you ran out of money, sorry");
-            }
+        IsBank& isbank = entity.get<IsBank>();
+        if (isbank.balance() < ht.rent_due()) {
+            log_error("you ran out of money, sorry");
+        }
 
-            isbank.withdraw(ht.rent_due());
-            ht.reset_rent_days();
-            // TODO update rent due amount
-            ht.update_amount_due(ht.rent_due() + 25);
+        isbank.withdraw(ht.rent_due());
+        ht.reset_rent_days();
+        // TODO update rent due amount
+        ht.update_amount_due(ht.rent_due() + 25);
 
-            // TODO add a way to pay ahead of time ?? design
+        // TODO add a way to pay ahead of time ?? design
     }
 
     void execute_open_bar(Entity& entity, HasDayNightTimer& ht) {
@@ -96,9 +96,8 @@ struct RunTimerSystem : public afterhours::System<HasDayNightTimer> {
                                float dt) override {
         ht.pass_time(dt);
         if (!ht.is_round_over()) return;
-        ht.is_bar_open() 
-        ?  execute_close_bar(entity, ht)
-        : execute_open_bar(entity, ht);
+        ht.is_bar_open() ? execute_close_bar(entity, ht)
+                         : execute_open_bar(entity, ht);
     }
 };
 
@@ -182,8 +181,7 @@ struct EndOfRoundCompletionValidationSystem
     virtual void for_each_with(Entity& entity, HasDayNightTimer& ht,
                                CollectsCustomerFeedback& feedback,
                                float dt) override {
-        const auto debug_mode_on =
-            globals::debug_ui_enabled();
+        const auto debug_mode_on = globals::debug_ui_enabled();
 
         // TODO i dont like that this is copy paste from layers/round_end
         if (SystemManager::get().is_bar_closed() &&

@@ -82,15 +82,15 @@ struct HasDayNightTimer : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.day_count,                  //
-            self.days_until_rent_due,        //
-            self.amount_due,                 //
-            self.day_length,                 //
-            self.night_length,               //
-            self.current_length,             //
-            self.is_day                      //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.day_count,                     //
+            self.days_until_rent_due,           //
+            self.amount_due,                    //
+            self.day_length,                    //
+            self.night_length,                  //
+            self.current_length,                //
+            self.is_day                         //
         );
     }
 };

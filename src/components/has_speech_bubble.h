@@ -19,11 +19,11 @@ struct HasSpeechBubble : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self._enabled,                   //
-            self.max_icon_name_length,       //
-            self.icon_name                   //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self._enabled,                      //
+            self.max_icon_name_length,          //
+            self.icon_name                      //
         );
     }
 };

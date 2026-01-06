@@ -33,4 +33,3 @@ constexpr std::uint32_t MaxEntitySnapshotBytes = 2u * 1024u * 1024u;  // 2 MiB
                                       const std::string& blob);
 
 }  // namespace snapshot_blob
-

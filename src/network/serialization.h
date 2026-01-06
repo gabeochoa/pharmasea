@@ -19,15 +19,15 @@ constexpr auto serialize(auto& archive, ClientPacket::PingInfo& info) {
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::AnnouncementInfo& info) {
-    return archive(  //
-        info.message, //
-        info.type     //
+    return archive(    //
+        info.message,  //
+        info.type      //
     );
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::MapInfo& info) {
     return archive(  //
-        info.map      //
+        info.map     //
     );
 }
 
@@ -38,7 +38,7 @@ constexpr auto serialize(auto& archive, ClientPacket::MapSeedInfo& info) {
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::GameStateInfo& info) {
-    return archive(  //
+    return archive(            //
         info.host_menu_state,  //
         info.host_game_state   //
     );
@@ -51,12 +51,12 @@ constexpr auto serialize(auto& archive, ClientPacket::PlayerControlInfo& info) {
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::PlayerJoinInfo& info) {
-    return archive(        //
-        info.all_clients,  //
-        info.client_id,    //
-        info.hashed_version, //
-        info.is_you,       //
-        info.username      //
+    return archive(           //
+        info.all_clients,     //
+        info.client_id,       //
+        info.hashed_version,  //
+        info.is_you,          //
+        info.username         //
     );
 }
 
@@ -78,27 +78,27 @@ constexpr auto serialize(auto& archive, ClientPacket::PlayerInfo& info) {
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::PlayerRareInfo& info) {
-    return archive(  //
-        info.client_id,  //
-        info.model_index, //
-        info.last_ping    //
+    return archive(        //
+        info.client_id,    //
+        info.model_index,  //
+        info.last_ping     //
     );
 }
 
 constexpr auto serialize(auto& archive, ClientPacket::PlaySoundInfo& info) {
-    return archive(  //
-        info.location[0], //
-        info.location[1], //
-        info.sound        //
+    return archive(        //
+        info.location[0],  //
+        info.location[1],  //
+        info.sound         //
     );
 }
 
 constexpr auto serialize(auto& archive, ClientPacket& packet) {
-    return archive(  //
-        packet.channel,   //
-        packet.client_id, //
-        packet.msg_type,  //
-        packet.msg        //
+    return archive(        //
+        packet.channel,    //
+        packet.client_id,  //
+        packet.msg_type,   //
+        packet.msg         //
     );
 }
 

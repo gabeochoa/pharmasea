@@ -8,7 +8,7 @@ struct IsFreeInStore : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
+        return archive(                        //
             static_cast<BaseComponent&>(self)  //
         );
     }

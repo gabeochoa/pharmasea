@@ -63,9 +63,9 @@ struct Building {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(      //
-            self.area,       //
-            self.bounds,     //
+        return archive(         //
+            self.area,          //
+            self.bounds,        //
             self.door_location  //
         );
     }

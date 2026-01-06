@@ -336,8 +336,7 @@ void trigger_cb_on_full_progress(Entity& entity, float) {
                 for (Entity& to_delete : ents) {
                     to_delete.cleanup = true;
                 }
-                network::Server* server =
-                    globals::server();
+                network::Server* server = globals::server();
                 if (server) {
                     server->get_map_SERVER_ONLY()
                         ->generate_load_save_room_map();

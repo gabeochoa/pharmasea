@@ -136,13 +136,13 @@ struct IsSpawner : public BaseComponent {
         //
         // TODO add macro to only show these for debug builds
         // Debug only
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.showsProgressBar,           //
-            self.countdown,                  //
-            self.spread,                     //
-            self.num_spawned,                //
-            self.max_spawned                 //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.showsProgressBar,              //
+            self.countdown,                     //
+            self.spread,                        //
+            self.num_spawned,                   //
+            self.max_spawned                    //
         );
     }
 };

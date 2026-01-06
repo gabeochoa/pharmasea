@@ -1,9 +1,8 @@
 
 #pragma once
 
-#include "base_component.h"
-
 #include "../entity_ref.h"
+#include "base_component.h"
 
 struct HasLastInteractedCustomer : public BaseComponent {
     EntityRef customer{};
@@ -12,9 +11,9 @@ struct HasLastInteractedCustomer : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.customer                    //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.customer                       //
         );
     }
 };

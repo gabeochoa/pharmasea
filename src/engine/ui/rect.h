@@ -13,10 +13,10 @@ inline Rectangle tpad(const Rectangle& r, float pct);
 inline Rectangle bpad(const Rectangle& r, float pct);
 
 inline raylib::Rectangle expand(const raylib::Rectangle& a, const vec4& b) {
-    return (Rectangle){a.x - b.x,            //
-                       a.y - b.y,            //
-                       a.width + b.x + b.z,  //
-                       a.height + b.y + b.w};
+    return (Rectangle) {a.x - b.x,            //
+                        a.y - b.y,            //
+                        a.width + b.x + b.z,  //
+                        a.height + b.y + b.w};
 }
 
 inline Rectangle expand_pct(const Rectangle& a, float pct) {

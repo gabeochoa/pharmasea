@@ -5,10 +5,10 @@
 #include "../components/collects_user_input.h"
 #include "../components/has_day_night_timer.h"
 #include "../components/transform.h"
+#include "../engine/runtime_globals.h"
 #include "../entity.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
-#include "../engine/runtime_globals.h"
 #include "../map.h"
 #include "base_game_renderer.h"
 
@@ -40,8 +40,7 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
         const CollectsCustomerFeedback& feedback =
             entity->get<CollectsCustomerFeedback>();
 
-        const auto debug_mode_on =
-            globals::debug_ui_enabled();
+        const auto debug_mode_on = globals::debug_ui_enabled();
         if (debug_mode_on) return true;
 
         if (feedback.block_state_change_reasons.any()) {

@@ -1,6 +1,4 @@
 
-#include "map.h"
-
 #include "ah.h"
 #include "building_locations.h"
 #include "camera.h"
@@ -25,6 +23,7 @@
 #include "entity_makers.h"
 #include "entity_query.h"
 #include "entity_type.h"
+#include "map.h"
 #include "map_generation/in_game_map_generation.h"
 #include "recipe_library.h"
 #include "save_game/save_game.h"

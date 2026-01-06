@@ -84,10 +84,10 @@ struct HasWork : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.hide_progress_bar_on_full,  //
-            self.pct_work_complete           //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.hide_progress_bar_on_full,     //
+            self.pct_work_complete              //
         );
         //
         // s.value1b(more_to_do);

@@ -223,21 +223,21 @@ struct ConfigData {
 
         friend zpp::bits::access;
         constexpr static auto serialize(auto& archive, auto& self) {
-            return archive(                  //
-                self.roundlength,            //
-                self.patiencemultiplier,     //
-                self.customerspawnmultiplier, //
-                self.pisstimer,              //
-                self.vomitfreqmultiplier,    //
-                self.drinkcostmultiplier,    //
-                self.vomitamountmultiplier,  //
-                self.test,                   //
-                self.maxdrinktime,           //
-                self.maxnumorders,           //
-                self.numstorespawns,         //
-                self.bladdersize,            //
-                self.storererollprice,       //
-                self.payprocesstime          //
+            return archive(                    //
+                self.roundlength,              //
+                self.patiencemultiplier,       //
+                self.customerspawnmultiplier,  //
+                self.pisstimer,                //
+                self.vomitfreqmultiplier,      //
+                self.drinkcostmultiplier,      //
+                self.vomitamountmultiplier,    //
+                self.test,                     //
+                self.maxdrinktime,             //
+                self.maxnumorders,             //
+                self.numstorespawns,           //
+                self.bladdersize,              //
+                self.storererollprice,         //
+                self.payprocesstime            //
             );
         }
     };
@@ -345,9 +345,9 @@ struct ConfigData {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(          //
-            self.unlocked_upgrades, //
-            self.data              //
+        return archive(              //
+            self.unlocked_upgrades,  //
+            self.data                //
         );
     }
 };

@@ -29,7 +29,8 @@ namespace system_manager::ai {
         .gen_first();
 }
 
-[[nodiscard]] inline OptEntity find_best_toilet_with_space(const Entity& ai_entity) {
+[[nodiscard]] inline OptEntity find_best_toilet_with_space(
+    const Entity& ai_entity) {
     return EntityQuery()
         .whereHasComponent<IsToilet>()
         .whereHasComponent<HasWaitingQueue>()
@@ -71,4 +72,3 @@ namespace system_manager::ai {
 }
 
 }  // namespace system_manager::ai
-

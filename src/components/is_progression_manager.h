@@ -168,17 +168,17 @@ struct IsProgressionManager : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.enabledDrinks,              //
-            self.enabledIngredients,         //
-            self.unlockedEntityTypes,        //
-            self.drinkOption1,               //
-            self.drinkOption2,               //
-            self.upgradeOption1,             //
-            self.upgradeOption2,             //
-            self.upgrade_index,              //
-            self.collectedOptions            //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.enabledDrinks,                 //
+            self.enabledIngredients,            //
+            self.unlockedEntityTypes,           //
+            self.drinkOption1,                  //
+            self.drinkOption2,                  //
+            self.upgradeOption1,                //
+            self.upgradeOption2,                //
+            self.upgrade_index,                 //
+            self.collectedOptions               //
         );
     }
 };

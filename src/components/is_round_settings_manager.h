@@ -15,7 +15,7 @@ struct IsRoundSettingsManager : public BaseComponent {
 
         friend zpp::bits::access;
         constexpr static auto serialize(auto& archive, auto& self) {
-            return archive(  //
+            return archive(              //
                 self.is_tutorial_active  //
             );
         }
@@ -174,9 +174,9 @@ struct IsRoundSettingsManager : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.config                      //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.config                         //
         );
     }
 };

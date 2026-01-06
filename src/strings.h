@@ -85,9 +85,9 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                            $
 #include <iostream>
 #include <string>
 
-#include "zpp_bits_include.h"
 #include "engine/log.h"
 #include "vendor_include.h"
+#include "zpp_bits_include.h"
 
 namespace strings {
 
@@ -487,11 +487,11 @@ struct TranslatableString {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(    //
-            self.content,  //
-            self.formatted, //
-            self.no_translate, //
-            self.params    //
+        return archive(         //
+            self.content,       //
+            self.formatted,     //
+            self.no_translate,  //
+            self.params         //
         );
     }
 };

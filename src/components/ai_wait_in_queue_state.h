@@ -21,11 +21,10 @@ struct AIWaitInQueueState {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            self.has_set_position_before,     //
-            self.previous_line_index,         //
-            self.queue_index                  //
+        return archive(                    //
+            self.has_set_position_before,  //
+            self.previous_line_index,      //
+            self.queue_index               //
         );
     }
 };
-

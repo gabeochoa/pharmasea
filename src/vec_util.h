@@ -49,12 +49,12 @@ template<typename T>
 inline float comp_max(const vec2& a) { return fmax(a.x, a.y); }
 
 constexpr BoundingBox get_bounds(vec3 position, vec3 size) {
-    return {(vec3){
+    return {(vec3) {
                 position.x - size.x / 2,
                 position.y - size.y / 2,
                 position.z - size.z / 2,
             },
-            (vec3){
+            (vec3) {
                 position.x + size.x / 2,
                 position.y + size.y / 2,
                 position.z + size.z / 2,

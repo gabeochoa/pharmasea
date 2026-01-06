@@ -14,12 +14,11 @@ struct HasAIJukeboxState : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.last_jukebox,                //
-            self.line_wait,                   //
-            self.timer                        //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.last_jukebox,                  //
+            self.line_wait,                     //
+            self.timer                          //
         );
     }
 };
-

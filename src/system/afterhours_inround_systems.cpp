@@ -225,8 +225,8 @@ struct ProcessConveyerItemsSystem : public afterhours::System<> {
 
         bool is_ipp = entity.has<IsPnumaticPipe>();
 
-        const auto _conveyer_filter = [&entity, &carried](const Entity& furn)
-            -> bool {
+        const auto _conveyer_filter = [&entity,
+                                       &carried](const Entity& furn) -> bool {
             // cant be us
             if (entity.id == furn.id) return false;
             // needs to be able to hold something
@@ -527,8 +527,7 @@ struct ProcessPnumaticPipeMovementSystem : public afterhours::System<> {
             Entity& other_item = other_item_opt.asE();
 
             // can we hold it?
-            if (!our_chi.can_hold(other_item, RespectFilter::ReqOnly))
-                return;
+            if (!our_chi.can_hold(other_item, RespectFilter::ReqOnly)) return;
 
             // take it
             our_chi.update(other_item, entity.id);

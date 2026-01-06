@@ -62,22 +62,22 @@ struct Data {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                //
-            self.engineVersion,        //
-            self.master_volume,        //
-            self.music_volume,         //
-            self.sound_volume,         //
-            self.show_streamer_safe_box, //
-            self.snapCameraTo90,       //
-            self.enable_postprocessing, //
-            self.enable_lighting,      //
-            self.isFullscreen,         //
-            self.vsync_enabled,        //
-            self.username,             //
-            self.last_ip_joined,       //
-            self.lang_name,            //
-            self.ui_theme,             //
-            self.resolution            //
+        return archive(                   //
+            self.engineVersion,           //
+            self.master_volume,           //
+            self.music_volume,            //
+            self.sound_volume,            //
+            self.show_streamer_safe_box,  //
+            self.snapCameraTo90,          //
+            self.enable_postprocessing,   //
+            self.enable_lighting,         //
+            self.isFullscreen,            //
+            self.vsync_enabled,           //
+            self.username,                //
+            self.last_ip_joined,          //
+            self.lang_name,               //
+            self.ui_theme,                //
+            self.resolution               //
         );
     }
 
@@ -117,8 +117,8 @@ struct LanguageInfo {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(  //
-            self.name,   //
+        return archive(    //
+            self.name,     //
             self.filename  //
         );
     }

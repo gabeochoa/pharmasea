@@ -54,7 +54,9 @@ bool debug_ui_enabled() {
 void set_no_clip_enabled(bool enabled) {
     g_no_clip_enabled.store(enabled, std::memory_order_release);
 }
-bool no_clip_enabled() { return g_no_clip_enabled.load(std::memory_order_acquire); }
+bool no_clip_enabled() {
+    return g_no_clip_enabled.load(std::memory_order_acquire);
+}
 
 void set_skip_ingredient_match(bool enabled) {
     g_skip_ingredient_match.store(enabled, std::memory_order_release);
@@ -73,4 +75,3 @@ bool network_ui_enabled() {
 }
 
 }  // namespace globals
-

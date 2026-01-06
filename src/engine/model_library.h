@@ -31,11 +31,11 @@ struct ModelInfo {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(        //
-            self.model_name,   //
-            self.size_scale,   //
-            self.position_offset, //
-            self.rotation_angle  //
+        return archive(            //
+            self.model_name,       //
+            self.size_scale,       //
+            self.position_offset,  //
+            self.rotation_angle    //
         );
     }
 };

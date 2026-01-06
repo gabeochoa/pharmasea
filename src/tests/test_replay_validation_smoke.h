@@ -16,12 +16,12 @@ inline void test_replay_validation_smoke() {
     VALIDATE(fs::exists(replay_path),
              "expected recorded replay to exist: " + replay_path.string());
 
-    // Ensure a matching validation spec is registered (registered on static init
-    // by src/tests/replay_specs.cpp).
+    // Ensure a matching validation spec is registered (registered on static
+    // init by src/tests/replay_specs.cpp).
     auto spec = replay_validation::get_spec("completed_first_day");
-    VALIDATE(spec.has_value(),
-             "expected replay validation spec to exist for completed_first_day");
+    VALIDATE(
+        spec.has_value(),
+        "expected replay validation spec to exist for completed_first_day");
 }
 
 }  // namespace tests
-

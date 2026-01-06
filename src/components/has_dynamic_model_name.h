@@ -42,7 +42,7 @@ struct HasDynamicModelName : public BaseComponent {
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         (void) self;
-        return archive(                      //
+        return archive(                        //
             static_cast<BaseComponent&>(self)  //
         );
 

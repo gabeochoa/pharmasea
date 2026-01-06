@@ -22,10 +22,10 @@ struct AnimationInfo {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(    //
-            self.anim_name, //
-            self.index,    //
-            self.frame,    //
+        return archive(       //
+            self.anim_name,   //
+            self.index,       //
+            self.frame,       //
             self.totalFrames  //
         );
     }

@@ -84,8 +84,7 @@ void person_update_given_new_pos(
             return EntityHelper::ForEachFlow::NormalFlow;
         });
 
-        const auto debug_mode_on =
-            globals::no_clip_enabled();
+        const auto debug_mode_on = globals::no_clip_enabled();
         if (debug_mode_on) {
             collided_entity_x = {};
             collided_entity_z = {};
@@ -390,8 +389,7 @@ struct PopOutWhenCollidingSystem
     virtual void for_each_with(Entity& entity, Transform& transform,
                                CanHoldHandTruck& chht, CanHoldFurniture& chf,
                                float) override {
-        const auto no_clip_on =
-            globals::no_clip_enabled();
+        const auto no_clip_on = globals::no_clip_enabled();
         // TODO: move this check into should_run
         if (no_clip_on) return;
 

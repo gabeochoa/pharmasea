@@ -113,7 +113,7 @@ void SeedManagerLayer::draw_minimap(float dt) {
         raylib::rlTranslatef(-5, 0, 7.f);
         float scale = 0.10f;
         raylib::rlScalef(scale, scale, scale);
-        raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){40.0f, 40.0f},
+        raylib::DrawPlane((vec3) {0.0f, -TILESIZE, 0.0f}, (vec2) {40.0f, 40.0f},
                           DARKGRAY);
         map_ptr->onDraw(dt);
     }

@@ -38,11 +38,11 @@ struct SaveGameHeader {
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         // NOTE: we serialize magic first so quick header reads can fail fast.
-        (void) archive(                //
-            self.magic,                //
-            self.save_version,         //
-            self.hashed_build_version, //
-            self.timestamp_epoch_seconds //
+        (void) archive(                   //
+            self.magic,                   //
+            self.save_version,            //
+            self.hashed_build_version,    //
+            self.timestamp_epoch_seconds  //
         );
 
         return archive(            //
@@ -64,8 +64,8 @@ struct SaveGameFile {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(  //
-            self.header,      //
+        return archive(        //
+            self.header,       //
             self.map_snapshot  //
         );
     }

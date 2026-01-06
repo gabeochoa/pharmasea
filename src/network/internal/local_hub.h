@@ -1,12 +1,12 @@
 #pragma once
 
+#include <steam/steamnetworkingtypes.h>
+
 #include <deque>
 #include <mutex>
 #include <optional>
 #include <string>
 #include <unordered_map>
-
-#include <steam/steamnetworkingtypes.h>
 
 namespace network {
 namespace internal {
@@ -65,4 +65,3 @@ std::optional<HSteamNetConnection> pop_disconnect_event();
 }  // namespace local
 }  // namespace internal
 }  // namespace network
-

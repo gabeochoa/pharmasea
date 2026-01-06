@@ -18,17 +18,6 @@
 // ---- Component type includes (the canonical "all components" list) ----
 
 #include "adds_ingredient.h"
-#include "has_ai_bathroom_state.h"
-#include "has_ai_cooldown.h"
-#include "has_ai_drink_state.h"
-#include "has_ai_jukebox_state.h"
-#include "has_ai_pay_state.h"
-#include "has_ai_queue_state.h"
-#include "has_ai_target_entity.h"
-#include "has_ai_target_location.h"
-#include "has_ai_wander_state.h"
-#include "is_ai_controlled.h"
-#include "is_customer.h"
 #include "base_component.h"
 #include "bypass_automation_state.h"
 #include "can_be_ghost_player.h"
@@ -48,6 +37,15 @@
 #include "collects_user_input.h"
 #include "conveys_held_item.h"
 #include "custom_item_position.h"
+#include "has_ai_bathroom_state.h"
+#include "has_ai_cooldown.h"
+#include "has_ai_drink_state.h"
+#include "has_ai_jukebox_state.h"
+#include "has_ai_pay_state.h"
+#include "has_ai_queue_state.h"
+#include "has_ai_target_entity.h"
+#include "has_ai_target_location.h"
+#include "has_ai_wander_state.h"
 #include "has_base_speed.h"
 #include "has_client_id.h"
 #include "has_day_night_timer.h"
@@ -63,7 +61,9 @@
 #include "has_waiting_queue.h"
 #include "has_work.h"
 #include "indexer.h"
+#include "is_ai_controlled.h"
 #include "is_bank.h"
+#include "is_customer.h"
 #include "is_drink.h"
 #include "is_free_in_store.h"
 #include "is_item.h"
@@ -100,78 +100,25 @@ namespace snapshot_blob {
 //   snapshot compatibility because the on-wire snapshot format serializes
 //   component payloads positionally in this exact order.
 using ComponentTypes = std::tuple<
-    Transform,
-    HasName,
-    CanHoldItem,
-    SimpleColoredBoxRenderer,
-    CanBeHighlighted,
-    CanHighlightOthers,
-    CanHoldFurniture,
-    CanBeGhostPlayer,
-    IsAIControlled,
-    ModelRenderer,
-    CanBePushed,
-    CustomHeldItemPosition,
-    HasWork,
-    HasBaseSpeed,
-    IsSolid,
-    HasPatience,
-    HasProgression,
-    IsRotatable,
-    CanGrabFromOtherFurniture,
-    ConveysHeldItem,
-    HasWaitingQueue,
-    CanBeTakenFrom,
-    IsItemContainer,
-    UsesCharacterModel,
-    HasDynamicModelName,
-    IsTriggerArea,
-    HasSpeechBubble,
-    Indexer,
-    IsSpawner,
-    HasRopeToItem,
-    HasSubtype,
-    IsItem,
-    IsDrink,
-    AddsIngredient,
-    CanOrderDrink,
-    IsPnumaticPipe,
-    IsProgressionManager,
-    IsFloorMarker,
-    IsBank,
-    IsFreeInStore,
-    IsToilet,
-    CanPathfind,
-    IsRoundSettingsManager,
-    HasFishingGame,
-    IsStoreSpawned,
-    HasLastInteractedCustomer,
-    CanChangeSettingsInteractively,
-    IsNuxManager,
-    IsNux,
-    CollectsUserInput,
-    IsSnappable,
-    HasClientID,
-    RespondsToUserInput,
-    CanHoldHandTruck,
-    RespondsToDayNight,
-    HasDayNightTimer,
-    CollectsCustomerFeedback,
-    IsSquirter,
-    CanBeHeld_HT,
-    CanBeHeld,
+    Transform, HasName, CanHoldItem, SimpleColoredBoxRenderer, CanBeHighlighted,
+    CanHighlightOthers, CanHoldFurniture, CanBeGhostPlayer, IsAIControlled,
+    ModelRenderer, CanBePushed, CustomHeldItemPosition, HasWork, HasBaseSpeed,
+    IsSolid, HasPatience, HasProgression, IsRotatable,
+    CanGrabFromOtherFurniture, ConveysHeldItem, HasWaitingQueue, CanBeTakenFrom,
+    IsItemContainer, UsesCharacterModel, HasDynamicModelName, IsTriggerArea,
+    HasSpeechBubble, Indexer, IsSpawner, HasRopeToItem, HasSubtype, IsItem,
+    IsDrink, AddsIngredient, CanOrderDrink, IsPnumaticPipe,
+    IsProgressionManager, IsFloorMarker, IsBank, IsFreeInStore, IsToilet,
+    CanPathfind, IsRoundSettingsManager, HasFishingGame, IsStoreSpawned,
+    HasLastInteractedCustomer, CanChangeSettingsInteractively, IsNuxManager,
+    IsNux, CollectsUserInput, IsSnappable, HasClientID, RespondsToUserInput,
+    CanHoldHandTruck, RespondsToDayNight, HasDayNightTimer,
+    CollectsCustomerFeedback, IsSquirter, CanBeHeld_HT, CanBeHeld,
     BypassAutomationState,
     // ---- Consolidated AI (Part B) ----
-    HasAICooldown,
-    HasAITargetEntity,
-    HasAITargetLocation,
-    HasAIQueueState,
-    HasAIDrinkState,
-    HasAIBathroomState,
-    HasAIPayState,
-    HasAIJukeboxState,
-    HasAIWanderState,
-    IsCustomer>;
+    HasAICooldown, HasAITargetEntity, HasAITargetLocation, HasAIQueueState,
+    HasAIDrinkState, HasAIBathroomState, HasAIPayState, HasAIJukeboxState,
+    HasAIWanderState, IsCustomer>;
 
 namespace detail {
 constexpr std::uint64_t kFnv1aOffset = 14695981039346656037ull;
@@ -213,4 +160,3 @@ inline constexpr std::uint64_t kComponentTypesChecksum =
     component_types_checksum();
 
 }  // namespace snapshot_blob
-

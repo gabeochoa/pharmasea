@@ -85,4 +85,3 @@ std::optional<HSteamNetConnection> pop_disconnect_event() {
 }  // namespace local
 }  // namespace internal
 }  // namespace network
-

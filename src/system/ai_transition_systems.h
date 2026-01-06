@@ -15,4 +15,3 @@ void register_ai_transition_systems(afterhours::SystemManager& systems);
 void register_ai_transition_commit_systems(afterhours::SystemManager& systems);
 
 }  // namespace system_manager
-

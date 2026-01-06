@@ -17,4 +17,3 @@ inline void reset_component(Entity& e) {
 }
 
 }  // namespace system_manager::ai
-

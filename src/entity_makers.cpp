@@ -1,13 +1,11 @@
 
 #include "entity_makers.h"
 
-#include "components/all_components.h"
-#include "afterhours/src/core/base_component.h"
-
 #include <ranges>
 
+#include "afterhours/src/core/base_component.h"
 #include "ah.h"
-#include "engine/runtime_globals.h"
+#include "components/all_components.h"
 #include "components/bypass_automation_state.h"
 #include "components/can_change_settings_interactively.h"
 #include "components/can_hold_handtruck.h"
@@ -19,11 +17,11 @@
 #include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
+#include "components/is_ai_controlled.h"
 #include "components/is_bank.h"
+#include "components/is_customer.h"
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
-#include "components/is_ai_controlled.h"
-#include "components/is_customer.h"
 #include "components/is_nux_manager.h"
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
@@ -34,6 +32,7 @@
 #include "components/responds_to_day_night.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
+#include "engine/runtime_globals.h"
 #include "engine/sound_library.h"
 #include "engine/ui/color.h"
 #include "engine/util.h"
@@ -439,8 +438,7 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
 
     fast_forward.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity&, float dt) {
-            const auto debug_mode_on =
-                globals::debug_ui_enabled();
+            const auto debug_mode_on = globals::debug_ui_enabled();
 
             const float amt = debug_mode_on ? 100.f : 15.f;
 
@@ -1427,8 +1425,9 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     customer.addComponent<IsCustomer>();
     customer.get<IsAIControlled>()
         .set_initial_state(IsAIControlled::State::QueueForRegister)
-        .set_ability_state(IsAIControlled::AbilityUseBathroom,
-                           irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet))
+        .set_ability_state(
+            IsAIControlled::AbilityUseBathroom,
+            irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet))
         .set_ability_state(IsAIControlled::AbilityPlayJukebox,
                            irsm.has_upgrade_unlocked(UpgradeClass::Jukebox));
 
@@ -1449,8 +1448,7 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
 
     customer.addComponent<HasSpeechBubble>();
 
-    const auto debug_mode_on =
-        globals::debug_ui_enabled();
+    const auto debug_mode_on = globals::debug_ui_enabled();
     customer.get<HasBaseSpeed>().update(debug_mode_on ? 20.f : 5.f);
 
     // TODO if we do dirty-cups, we should have people leave them on any flat

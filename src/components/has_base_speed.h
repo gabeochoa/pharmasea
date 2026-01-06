@@ -17,7 +17,7 @@ struct HasBaseSpeed : public BaseComponent {
     constexpr static auto serialize(auto& archive, auto& self) {
         // We dont serialize because its fully serverside
         (void) self;
-        return archive(                      //
+        return archive(                        //
             static_cast<BaseComponent&>(self)  //
         );
     }

@@ -397,8 +397,7 @@ void update_sophie(Entity& entity, float dt) {
     if (!check_type(entity, EntityType::Sophie)) return;
     if (entity.is_missing<HasDayNightTimer>()) return;
 
-    const auto debug_mode_on =
-        globals::debug_ui_enabled();
+    const auto debug_mode_on = globals::debug_ui_enabled();
     HasDayNightTimer& ht = entity.get<HasDayNightTimer>();
     CollectsCustomerFeedback& feedback = entity.get<CollectsCustomerFeedback>();
 

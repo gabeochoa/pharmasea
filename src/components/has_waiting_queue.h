@@ -57,10 +57,10 @@ struct HasWaitingQueue : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.next_line_position,         //
-            self.ppl_in_line                 //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.next_line_position,            //
+            self.ppl_in_line                    //
         );
     }
 };

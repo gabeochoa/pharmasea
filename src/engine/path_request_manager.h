@@ -1,10 +1,10 @@
 
 #pragma once
 
+#include <atomic>
 #include <chrono>
 #include <functional>
 #include <vector>
-#include <atomic>
 
 #include "../entity.h"
 #include "atomic_queue.h"

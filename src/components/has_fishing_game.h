@@ -113,15 +113,15 @@ struct HasFishingGame : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.started,                    //
-            self.direction,                  //
-            self.m_num_stars,                //
-            self.best_location,              //
-            self.score,                      //
-            self.progress,                   //
-            self.countdown                   //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.started,                       //
+            self.direction,                     //
+            self.m_num_stars,                   //
+            self.best_location,                 //
+            self.score,                         //
+            self.progress,                      //
+            self.countdown                      //
         );
     }
 };

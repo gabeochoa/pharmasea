@@ -43,12 +43,14 @@ struct IClient {
     // Provided by caller (outer network::Client)
     std::string username;
 
-    virtual void set_process_message(const std::function<void(std::string)> &cb) = 0;
+    virtual void set_process_message(
+        const std::function<void(std::string)> &cb) = 0;
     virtual void set_address(SteamNetworkingIPAddr addy) = 0;
     virtual void set_address(const std::string &ip) = 0;
     virtual void startup() = 0;
     virtual bool run() = 0;
-    virtual void send_string_to_server(const std::string &msg, Channel channel) = 0;
+    virtual void send_string_to_server(const std::string &msg,
+                                       Channel channel) = 0;
     [[nodiscard]] virtual bool is_connected() const = 0;
     [[nodiscard]] virtual bool is_not_connected() const = 0;
 
@@ -141,7 +143,9 @@ struct LocalClient : public IClient {
     [[nodiscard]] bool is_connected() const override {
         return connection != k_HSteamNetConnection_Invalid;
     }
-    [[nodiscard]] bool is_not_connected() const override { return !is_connected(); }
+    [[nodiscard]] bool is_not_connected() const override {
+        return !is_connected();
+    }
 };
 
 }  // namespace internal

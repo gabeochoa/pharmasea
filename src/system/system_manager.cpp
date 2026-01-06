@@ -8,10 +8,10 @@
 
 ///
 #include "../building_locations.h"
-#include "../components/has_ai_queue_state.h"
 #include "../components/can_change_settings_interactively.h"
 #include "../components/can_hold_item.h"
 #include "../components/custom_item_position.h"
+#include "../components/has_ai_queue_state.h"
 #include "../components/has_day_night_timer.h"
 #include "../components/has_name.h"
 #include "../components/has_subtype.h"
@@ -35,8 +35,8 @@
 #include "sophie.h"
 ///
 #include "../engine/pathfinder.h"
-#include "../engine/tracy.h"
 #include "../engine/runtime_globals.h"
+#include "../engine/tracy.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../map.h"

@@ -149,10 +149,10 @@ void NetworkLayer::draw_role_selector_screen(float) {
     network_selection_screen.draw_background();
 
     // In local mode, show "Start" instead of "Host" since there's no networking
-    auto host_button_text = network::LOCAL_ONLY ? strings::i18n::START
-                                                : strings::i18n::HOST;
-    if (network_selection_screen.button(
-            "HostButton", TranslatableString(host_button_text))) {
+    auto host_button_text =
+        network::LOCAL_ONLY ? strings::i18n::START : strings::i18n::HOST;
+    if (network_selection_screen.button("HostButton",
+                                        TranslatableString(host_button_text))) {
         log_info("Host button clicked - attempting to set role to Host");
         network_info->set_role(network::Info::Role::s_Host);
         log_info("Host button clicked - set_role call completed");

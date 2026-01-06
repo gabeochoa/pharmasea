@@ -56,10 +56,10 @@ struct IsItemContainer : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.gens,                       //
-            self.max_gens                    //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.gens,                          //
+            self.max_gens                       //
         );
         // item_type, uses_indexer, is_table_when_empty are set by entity type
         // during creation and don't need to be serialized - containers reset

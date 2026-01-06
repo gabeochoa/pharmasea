@@ -137,13 +137,13 @@ struct IsDrink : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self._supports_multiple,         //
-            self.num_completed,              //
-            self.ingredients,                //
-            self.unique_igs,                 //
-            self.underlying                  //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self._supports_multiple,            //
+            self.num_completed,                 //
+            self.ingredients,                   //
+            self.unique_igs,                    //
+            self.underlying                     //
         );
     }
 };

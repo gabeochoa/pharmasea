@@ -225,21 +225,21 @@ struct IsTriggerArea : public BaseComponent {
     constexpr static auto serialize(auto& archive, auto& self) {
         // These two are needed for drawing the percentage
         // TODO store the pct instead of sending two ints?
-        return archive(                         //
-            static_cast<BaseComponent&>(self),  //
-            self.last_validation_result.first,  //
-            self.last_validation_result.second, //
-            self.wanted_entrants,               //
-            self.current_entrants,              //
-            self.current_in_building,           //
-            self.entrantsRequired,              //
-            self.building,                      //
-            self.completion_time_max,           //
-            self.completion_time_passed,        //
-            self.type,                          //
-            self.max_title_length,              //
-            self._title,                        //
-            self._subtitle                      //
+        return archive(                          //
+            static_cast<BaseComponent&>(self),   //
+            self.last_validation_result.first,   //
+            self.last_validation_result.second,  //
+            self.wanted_entrants,                //
+            self.current_entrants,               //
+            self.current_in_building,            //
+            self.entrantsRequired,               //
+            self.building,                       //
+            self.completion_time_max,            //
+            self.completion_time_passed,         //
+            self.type,                           //
+            self.max_title_length,               //
+            self._title,                         //
+            self._subtitle                       //
         );
     }
 };

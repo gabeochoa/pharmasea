@@ -18,13 +18,12 @@ struct VersionLayer : public Layer {
 
     virtual void onDraw(float) override {
         if (MenuState::get().is(menu::State::Game)) {
-            const std::string ping_str = network::LOCAL_ONLY
-                                             ? std::string("ping local")
-                                             : fmt::format(
-                                                   "ping {}ms (to{},from{})",
-                                                   network::total_ping,
-                                                   network::there_ping,
-                                                   network::return_ping);
+            const std::string ping_str =
+                network::LOCAL_ONLY
+                    ? std::string("ping local")
+                    : fmt::format("ping {}ms (to{},from{})",
+                                  network::total_ping, network::there_ping,
+                                  network::return_ping);
 
             DrawTextEx(Preload::get().font, ping_str.c_str(),
                        {WIN_WF() - 225, 50}, 20, 0, WHITE);

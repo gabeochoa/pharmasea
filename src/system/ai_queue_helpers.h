@@ -10,7 +10,6 @@
 #include "../engine/assert.h"
 #include "../engine/log.h"
 #include "../entity.h"
-
 #include "ai_helper.h"
 
 namespace system_manager::ai {
@@ -32,7 +31,8 @@ inline void line_add_to_queue(Entity& entity, AIWaitInQueueState& s,
              "queue");
     HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
     int next_position = hwq.add_customer(entity).get_next_pos();
-    HasAITargetLocation& tl = entity.addComponentIfMissing<HasAITargetLocation>();
+    HasAITargetLocation& tl =
+        entity.addComponentIfMissing<HasAITargetLocation>();
     tl.pos = reg.get<Transform>().tile_infront((next_position + 1));
     s.has_set_position_before = true;
 }
@@ -50,7 +50,7 @@ inline void line_add_to_queue(Entity& entity, AIWaitInQueueState& s,
 }
 
 [[nodiscard]] inline bool line_can_move_up(const Entity& reg,
-                                          const Entity& customer) {
+                                           const Entity& customer) {
     VALIDATE(reg.has<HasWaitingQueue>(),
              "Trying to can_move_up for entity which doesn't have a waiting "
              "queue");
@@ -65,11 +65,13 @@ inline void line_add_to_queue(Entity& entity, AIWaitInQueueState& s,
         log_error("AI line state: add_to_queue must be called first");
     }
 
-    HasAITargetLocation& tl = entity.addComponentIfMissing<HasAITargetLocation>();
+    HasAITargetLocation& tl =
+        entity.addComponentIfMissing<HasAITargetLocation>();
     if (!tl.pos.has_value()) {
         tl.pos = reg.get<Transform>().tile_directly_infront();
     }
-    bool travel_result = entity.get<CanPathfind>().travel_toward(tl.pos.value(), distance);
+    bool travel_result =
+        entity.get<CanPathfind>().travel_toward(tl.pos.value(), distance);
 
     int spot_in_line = line_position_in_line(s, reg, entity);
     if (spot_in_line != 0) {
@@ -81,10 +83,11 @@ inline void line_add_to_queue(Entity& entity, AIWaitInQueueState& s,
         return false;
     }
 
-    // At position 0 (front of line), but must verify we've actually reached the target
-    // Only return true if we're actually at the target location
+    // At position 0 (front of line), but must verify we've actually reached the
+    // target Only return true if we're actually at the target location
     if (!travel_result) {
-        // Still moving toward target, update target to directly in front and continue
+        // Still moving toward target, update target to directly in front and
+        // continue
         tl.pos = reg.get<Transform>().tile_directly_infront();
         return false;
     }
@@ -94,7 +97,8 @@ inline void line_add_to_queue(Entity& entity, AIWaitInQueueState& s,
     return true;
 }
 
-inline void line_leave(AIWaitInQueueState& s, Entity& reg, const Entity& entity) {
+inline void line_leave(AIWaitInQueueState& s, Entity& reg,
+                       const Entity& entity) {
     VALIDATE(reg.has<HasWaitingQueue>(),
              "Trying to leave_line for entity which doesn't have a waiting "
              "queue");
@@ -104,4 +108,3 @@ inline void line_leave(AIWaitInQueueState& s, Entity& reg, const Entity& entity)
 }
 
 }  // namespace system_manager::ai
-

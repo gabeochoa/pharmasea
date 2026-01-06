@@ -81,8 +81,8 @@ template<typename T>
     T obj{};
     zpp::bits::in in{buf};
     if (auto result = in(  //
-            obj  //
-            );
+            obj            //
+        );
         zpp::bits::failure(result)) {
         return std::nullopt;
     }
@@ -178,8 +178,8 @@ bool SaveGameManager::save_slot(int slot, const Map& authoritative_map) {
     Buffer buffer;
     zpp::bits::out out{buffer};
     if (auto result = out(  //
-            file  //
-            );
+            file            //
+        );
         zpp::bits::failure(result)) {
         log_warn("save_game: serialize failed slot={} err={}", slot,
                  static_cast<int>(static_cast<std::errc>(result)));
@@ -201,8 +201,8 @@ bool SaveGameManager::load_file(const fs::path& path, SaveGameFile& out) {
 
     zpp::bits::in in{*data};
     if (auto result = in(  //
-            out  //
-            );
+            out            //
+        );
         zpp::bits::failure(result)) {
         log_warn("save_game: load_file {} decode_err={}", path.string(),
                  static_cast<int>(static_cast<std::errc>(result)));

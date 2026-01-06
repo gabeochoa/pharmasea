@@ -5,14 +5,13 @@
 #include "../components/has_ai_cooldown.h"
 #include "../components/transform.h"
 #include "../entity_helper.h"
-
 #include "ai_entity_helpers.h"
 
 namespace system_manager::ai {
 
 // Rate-limit AI work in states that don't need per-frame processing.
 [[nodiscard]] inline bool ai_tick_with_cooldown(Entity& entity, float dt,
-                                               float reset_to_seconds) {
+                                                float reset_to_seconds) {
     HasAICooldown& cd = entity.addComponentIfMissing<HasAICooldown>();
     cd.cooldown.reset_to = reset_to_seconds;
     cd.cooldown.tick(dt);
@@ -33,4 +32,3 @@ namespace system_manager::ai {
 }
 
 }  // namespace system_manager::ai
-

@@ -26,4 +26,3 @@ inline void set(Role r) { current = r; }
 inline bool is_server() { return current == Role::Server; }
 
 }  // namespace thread_role
-

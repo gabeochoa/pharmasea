@@ -12,9 +12,8 @@
 #include "../../engine/assert.h"
 #include "../../engine/toastmanager.h"
 #include "channel.h"
-#include "steam/isteamnetworkingsockets.h"
-
 #include "local_hub.h"
+#include "steam/isteamnetworkingsockets.h"
 
 namespace network {
 namespace internal {
@@ -291,7 +290,8 @@ struct Server {
             return;
         }
 
-        clients[info->m_hConn] = Client_t{.conn = info->m_hConn, .client_id = -1};
+        clients[info->m_hConn] =
+            Client_t{.conn = info->m_hConn, .client_id = -1};
         interface->SetConnectionName(info->m_hConn, "unassigned");
     }
 
@@ -350,8 +350,7 @@ struct IServer {
     virtual bool run() = 0;
 
     virtual void send_message_to_connection(HSteamNetConnection conn,
-                                            const char *buffer,
-                                            uint32 size,
+                                            const char *buffer, uint32 size,
                                             Channel channel) = 0;
 };
 
@@ -362,7 +361,8 @@ struct GnsServer : public Server, public IServer {
     [[nodiscard]] bool is_running() const override { return Server::running; }
 
     void set_process_message(
-        const std::function<void(HSteamNetConnection, std::string)> &cb) override {
+        const std::function<void(HSteamNetConnection, std::string)> &cb)
+        override {
         Server::set_process_message(cb);
     }
     void set_on_client_disconnect(
@@ -373,8 +373,8 @@ struct GnsServer : public Server, public IServer {
     void startup() override { Server::startup(); }
     bool run() override { return Server::run(); }
 
-    void send_message_to_connection(HSteamNetConnection conn, const char *buffer,
-                                    uint32 size,
+    void send_message_to_connection(HSteamNetConnection conn,
+                                    const char *buffer, uint32 size,
                                     Channel channel) override {
         this->interface->SendMessageToConnection(conn, buffer, size, channel,
                                                  nullptr);
@@ -388,7 +388,8 @@ struct LocalServer : public IServer {
     [[nodiscard]] bool is_running() const override { return running; }
 
     void set_process_message(
-        const std::function<void(HSteamNetConnection, std::string)> &cb) override {
+        const std::function<void(HSteamNetConnection, std::string)> &cb)
+        override {
         process_message_cb = cb;
     }
     void set_on_client_disconnect(
@@ -429,8 +430,8 @@ struct LocalServer : public IServer {
         return true;
     }
 
-    void send_message_to_connection(HSteamNetConnection conn, const char *buffer,
-                                    uint32 size,
+    void send_message_to_connection(HSteamNetConnection conn,
+                                    const char *buffer, uint32 size,
                                     Channel) override {
         local::push_to_client(conn, std::string(buffer, buffer + size));
     }

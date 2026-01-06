@@ -15,7 +15,7 @@
 namespace network {
 namespace internal {
 
-static void send_packet_to_server(IClient& client, const ClientPacket& packet) {
+static void send_packet_to_server(IClient &client, const ClientPacket &packet) {
     Buffer buffer = serialize_to_buffer(packet);
     client.send_string_to_server(buffer, packet.channel);
 }

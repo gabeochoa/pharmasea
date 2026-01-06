@@ -33,10 +33,10 @@ struct HasPatience : public BaseComponent {
     constexpr static auto serialize(auto& archive, auto& self) {
         // TODO since we only need the pct to render,
         // we should save the pct and just serialize that
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.amount_left_s,              //
-            self.max_patience_s              //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.amount_left_s,                 //
+            self.max_patience_s                 //
         );
     }
 };

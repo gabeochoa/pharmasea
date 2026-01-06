@@ -74,7 +74,9 @@ void Server::queue_packet(const ClientPacket& p) {
         // or after shutdown while UI/network objects are still unwinding.
         static std::atomic_flag warned = ATOMIC_FLAG_INIT;
         if (!warned.test_and_set()) {
-            log_warn("Server::queue_packet called with no active server; dropping packet");
+            log_warn(
+                "Server::queue_packet called with no active server; dropping "
+                "packet");
         }
         return;
     }
@@ -686,7 +688,7 @@ void Server::process_map_seed_info(const internal::Client_t&,
 }
 
 void Server::server_enqueue_message_string(HSteamNetConnection conn,
-                                          const std::string& msg) {
+                                           const std::string& msg) {
     incoming_message_queue.push_back(
         std::make_pair(internal::Client_t{.conn = conn, .client_id = -1}, msg));
 }
@@ -794,8 +796,8 @@ void Server::send_client_packet_to_client(HSteamNetConnection conn,
     // TODO write logs for how much data to understand avg packet size per
     // type
     Buffer buffer = serialize_to_buffer(packet);
-    server_p->send_message_to_connection(conn, buffer.c_str(),
-                                         (uint32) buffer.size(), packet.channel);
+    server_p->send_message_to_connection(
+        conn, buffer.c_str(), (uint32) buffer.size(), packet.channel);
 }
 
 void Server::send_client_packet_to_all(
@@ -806,9 +808,8 @@ void Server::send_client_packet_to_all(
     for (const auto& kv : client_id_to_conn) {
         internal::Client_t tmp{.conn = kv.second, .client_id = kv.first};
         if (exclude && exclude(tmp)) continue;
-        server_p->send_message_to_connection(kv.second, buffer.c_str(),
-                                             (uint32) buffer.size(),
-                                             packet.channel);
+        server_p->send_message_to_connection(
+            kv.second, buffer.c_str(), (uint32) buffer.size(), packet.channel);
     }
 }
 

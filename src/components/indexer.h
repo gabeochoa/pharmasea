@@ -53,10 +53,10 @@ struct Indexer : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.index,                      //
-            self.max_value                   //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.index,                         //
+            self.max_value                      //
         );
         // s.value1b(changed);
     }

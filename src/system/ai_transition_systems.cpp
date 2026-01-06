@@ -20,7 +20,9 @@ namespace system_manager {
 
 // Override: request Bathroom regardless of pending transition.
 struct NeedsBathroomNowSystem : public afterhours::System<IsAIControlled> {
-    bool should_run(const float) override { return GameState::get().is_game_like(); }
+    bool should_run(const float) override {
+        return GameState::get().is_game_like();
+    }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
         // Don't interrupt these states (matches previous logic).
@@ -41,16 +43,19 @@ struct NeedsBathroomNowSystem : public afterhours::System<IsAIControlled> {
 // Applies staged AI transitions (next_state -> state) and sets reset tag.
 // Uses tag filtering to only run for entities with pending transitions.
 struct AICommitNextStateSystem
-    : public afterhours::System<IsAIControlled,
-                                afterhours::tags::Any<
-                                    afterhours::tags::AITag::AITransitionPending>> {
-    bool should_run(const float) override { return GameState::get().is_game_like(); }
+    : public afterhours::System<
+          IsAIControlled,
+          afterhours::tags::Any<afterhours::tags::AITag::AITransitionPending>> {
+    bool should_run(const float) override {
+        return GameState::get().is_game_like();
+    }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
 #if !__APPLE__
         // Tag filtering is Apple-only in afterhours today; guard manually on
         // other platforms to avoid iterating/processing every AI entity.
-        if (!entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
+        if (!entity.hasTag(afterhours::tags::AITag::AITransitionPending))
+            return;
 #endif
         const bool has_next = ai.has_next_state();
         if (!has_next) {
@@ -108,9 +113,13 @@ struct AIForceLeaveCommitSystem : public afterhours::System<IsAIControlled> {
 
 // Ensures AI entities have the required components for their current state.
 // - For newly-spawned entities: adds missing components
-// - For entities with AINeedsResetting tag: resets components to clear stale data
-struct AISetupStateComponentsSystem : public afterhours::System<IsAIControlled> {
-    bool should_run(const float) override { return GameState::get().is_game_like(); }
+// - For entities with AINeedsResetting tag: resets components to clear stale
+// data
+struct AISetupStateComponentsSystem
+    : public afterhours::System<IsAIControlled> {
+    bool should_run(const float) override {
+        return GameState::get().is_game_like();
+    }
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
         bool reset = entity.hasTag(afterhours::tags::AITag::AINeedsResetting);
@@ -123,7 +132,9 @@ struct AISetupStateComponentsSystem : public afterhours::System<IsAIControlled> 
             }
         };
 
-        auto remove = [&]<typename T>() { entity.removeComponentIfExists<T>(); };
+        auto remove = [&]<typename T>() {
+            entity.removeComponentIfExists<T>();
+        };
 
         switch (ai.state) {
             case IsAIControlled::State::Wander:
@@ -153,7 +164,8 @@ struct AISetupStateComponentsSystem : public afterhours::System<IsAIControlled> 
             case IsAIControlled::State::Bathroom:
                 remove.template operator()<HasAITargetLocation>();
                 add_or_reset.template operator()<HasAITargetEntity>();
-                // Don't reset HasAIBathroomState - it holds next_state from commit
+                // Don't reset HasAIBathroomState - it holds next_state from
+                // commit
                 entity.addComponentIfMissing<HasAIBathroomState>();
                 break;
 
@@ -187,22 +199,20 @@ struct AISetupStateComponentsSystem : public afterhours::System<IsAIControlled> 
 };
 
 void register_ai_transition_systems(afterhours::SystemManager& systems) {
-    // Set up state components for AI entities (adds missing, resets on transition).
+    // Set up state components for AI entities (adds missing, resets on
+    // transition).
     systems.register_update_system(
         std::make_unique<AISetupStateComponentsSystem>());
     // Bathroom override can preempt other transitions.
-    systems.register_update_system(
-        std::make_unique<NeedsBathroomNowSystem>());
+    systems.register_update_system(std::make_unique<NeedsBathroomNowSystem>());
 }
 
 void register_ai_transition_commit_systems(afterhours::SystemManager& systems) {
     // Commit staged transitions after AI has had a chance to request them.
-    systems.register_update_system(
-        std::make_unique<AICommitNextStateSystem>());
+    systems.register_update_system(std::make_unique<AICommitNextStateSystem>());
     // Force-leave override runs after normal commits.
     systems.register_update_system(
         std::make_unique<AIForceLeaveCommitSystem>());
 }
 
 }  // namespace system_manager
-

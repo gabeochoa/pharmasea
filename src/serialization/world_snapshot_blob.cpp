@@ -1,12 +1,11 @@
 #include "world_snapshot_blob.h"
 
+#include <bitset>
+
 #include "../components/all_components.h"
 #include "../engine/log.h"
 #include "../entity_helper.h"
-
 #include "../zpp_bits_include.h"
-
-#include <bitset>
 
 namespace snapshot_blob {
 
@@ -44,17 +43,17 @@ std::errc serde_read(InArchive& in, afterhours::Entity& e) {
 }
 
 static const auto& component_serdes() {
-    constexpr size_t kNum =
-        std::tuple_size_v<snapshot_blob::ComponentTypes>;
+    constexpr size_t kNum = std::tuple_size_v<snapshot_blob::ComponentTypes>;
     static_assert(kNum <= 255, "component count must fit in uint8_t");
 
     static const std::array<ComponentSerde, kNum> kSerdes = [] {
         std::array<ComponentSerde, kNum> out{};
         [&]<size_t... Is>(std::index_sequence<Is...>) {
-            ((out[Is] = ComponentSerde{
-                  &serde_has<std::tuple_element_t<Is, ComponentTypes>>,
-                  &serde_write<std::tuple_element_t<Is, ComponentTypes>>,
-                  &serde_read<std::tuple_element_t<Is, ComponentTypes>>}),
+            ((out[Is] =
+                  ComponentSerde{
+                      &serde_has<std::tuple_element_t<Is, ComponentTypes>>,
+                      &serde_write<std::tuple_element_t<Is, ComponentTypes>>,
+                      &serde_read<std::tuple_element_t<Is, ComponentTypes>>}),
              ...);
         }(std::make_index_sequence<kNum>{});
         return out;
@@ -69,16 +68,20 @@ constexpr std::uint32_t kWorldSnapshotVersion = 3;
 constexpr size_t kSnapshotComponentCount =
     std::tuple_size_v<snapshot_blob::ComponentTypes>;
 using SnapshotComponentMask = std::bitset<kSnapshotComponentCount>;
-constexpr size_t kSnapshotComponentMaskWords = (kSnapshotComponentCount + 63) / 64;
+constexpr size_t kSnapshotComponentMaskWords =
+    (kSnapshotComponentCount + 63) / 64;
 
 template<typename Archive>
-std::errc serialize_snapshot_mask(Archive& archive, SnapshotComponentMask& mask) {
+std::errc serialize_snapshot_mask(Archive& archive,
+                                  SnapshotComponentMask& mask) {
     // NOTE: We do NOT use bitsery::ext::StdBitset here because it relies on
-    // std::bitset::to_ullong(), which throws for N > 64 when higher bits are set.
+    // std::bitset::to_ullong(), which throws for N > 64 when higher bits are
+    // set.
     for (size_t word_i = 0; word_i < kSnapshotComponentMaskWords; ++word_i) {
         std::uint64_t word = 0;
 
-        if constexpr (std::remove_cvref_t<Archive>::kind() == zpp::bits::kind::in) {
+        if constexpr (std::remove_cvref_t<Archive>::kind() ==
+                      zpp::bits::kind::in) {
             // Reader
             if (auto result = archive(word); zpp::bits::failure(result)) {
                 return result;
@@ -106,19 +109,19 @@ std::errc serialize_snapshot_mask(Archive& archive, SnapshotComponentMask& mask)
 
 std::errc write_entity(OutArchive& out, afterhours::Entity& e) {
     // Versioned entity record.
-    if (auto result = out(  //
+    if (auto result = out(          //
             kEntitySnapshotVersion  //
-            );
+        );
         zpp::bits::failure(result)) {
         return result;
     }
 
     if (auto result = out(  //
-            e.id,          //
-            e.entity_type, //
-            e.tags,        //
-            e.cleanup      //
-            );
+            e.id,           //
+            e.entity_type,  //
+            e.tags,         //
+            e.cleanup       //
+        );
         zpp::bits::failure(result)) {
         return result;
     }
@@ -162,19 +165,19 @@ std::errc write_entity(OutArchive& out, afterhours::Entity& e) {
     // Versioned entity record.
     std::uint32_t ver = 0;
     if (auto result = in(  //
-            ver  //
-            );
+            ver            //
+        );
         zpp::bits::failure(result)) {
         return result;
     }
     if (ver != kEntitySnapshotVersion) return std::errc::protocol_error;
 
-    if (auto result = in(  //
-            e.id,          //
-            e.entity_type, //
-            e.tags,        //
-            e.cleanup      //
-            );
+    if (auto result = in(   //
+            e.id,           //
+            e.entity_type,  //
+            e.tags,         //
+            e.cleanup       //
+        );
         zpp::bits::failure(result)) {
         return result;
     }
@@ -228,8 +231,8 @@ std::string encode_current_world() {
 
     uint32_t version = kWorldSnapshotVersion;
     if (auto result = out(  //
-            version  //
-            );
+            version         //
+        );
         zpp::bits::failure(result)) {
         return {};
     }
@@ -239,8 +242,8 @@ std::string encode_current_world() {
     for (const auto& sp : ents)
         if (sp) ++count;
     if (auto result = out(  //
-            count  //
-            );
+            count           //
+        );
         zpp::bits::failure(result)) {
         return {};
     }
@@ -261,8 +264,8 @@ bool decode_into_current_world(const std::string& blob) {
 
     uint32_t version = 0;
     if (auto result = in(  //
-            version  //
-            );
+            version        //
+        );
         zpp::bits::failure(result)) {
         return false;
     }
@@ -270,8 +273,8 @@ bool decode_into_current_world(const std::string& blob) {
 
     uint32_t num_entities = 0;
     if (auto result = in(  //
-            num_entities  //
-            );
+            num_entities   //
+        );
         zpp::bits::failure(result)) {
         return false;
     }
@@ -290,4 +293,3 @@ bool decode_into_current_world(const std::string& blob) {
 }
 
 }  // namespace snapshot_blob
-

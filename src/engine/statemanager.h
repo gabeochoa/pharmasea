@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include <iostream>
 #include <functional>
+#include <iostream>
 #include <stack>
 #include <vector>
 

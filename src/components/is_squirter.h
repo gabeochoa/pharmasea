@@ -51,14 +51,14 @@ struct IsSquirter : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.pos,                        //
-            self.held_item_id,               //
-            self.held_drink_id,              //
-            self.working,                    //
-            self.sq_time,                    //
-            self.sq_time_reset               //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.pos,                           //
+            self.held_item_id,                  //
+            self.held_drink_id,                 //
+            self.working,                       //
+            self.sq_time,                       //
+            self.sq_time_reset                  //
         );
     }
 };

@@ -11,8 +11,7 @@ concept Enum = std::is_enum_v<T>;
 // (This matches how the code currently treats enums: cast to an integer type,
 // do the bit op, cast back.)
 template<typename T>
-concept BitwiseEnum =
-    Enum<T> && std::is_integral_v<std::underlying_type_t<T>>;
+concept BitwiseEnum = Enum<T> && std::is_integral_v<std::underlying_type_t<T>>;
 
 template<BitwiseEnum E>
 [[nodiscard]] constexpr std::underlying_type_t<E> to_underlying(E e) noexcept {
@@ -20,4 +19,3 @@ template<BitwiseEnum E>
 }
 
 }  // namespace ps::concepts
-

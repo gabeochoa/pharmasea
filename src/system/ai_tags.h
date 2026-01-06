@@ -26,4 +26,3 @@ enum class AITag : afterhours::TagId {
 
 static_assert(magic_enum::enum_count<EntityType>() <= 60,
               "EntityType tags must not collide with AI tag IDs");
-

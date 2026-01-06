@@ -4,8 +4,8 @@
 #include "../components/can_order_drink.h"
 #include "../components/has_base_speed.h"
 #include "../components/is_round_settings_manager.h"
-#include "../entity_helper.h"
 #include "../engine/runtime_globals.h"
+#include "../entity_helper.h"
 #include "../recipe_library.h"
 
 namespace system_manager::ai {

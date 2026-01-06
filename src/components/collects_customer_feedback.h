@@ -19,10 +19,10 @@ struct CollectsCustomerFeedback : public BaseComponent {
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         // NOTE: waiting_time fields are intentionally NOT serialized.
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.block_state_change_reasons, //
-            self.block_state_change_locations //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.block_state_change_reasons,    //
+            self.block_state_change_locations   //
         );
     }
 

@@ -187,9 +187,8 @@ bool Settings::load_save_file() {
     settings::InArchive in{buf_str};
     const auto result = in(tmp);
     if (zpp::bits::failure(result)) {
-        log_warn(
-            "Settings deserialize failed (err={}); resetting to defaults",
-            static_cast<int>(static_cast<std::errc>(result)));
+        log_warn("Settings deserialize failed (err={}); resetting to defaults",
+                 static_cast<int>(static_cast<std::errc>(result)));
         data = settings::Data();
     } else {
         data = tmp;

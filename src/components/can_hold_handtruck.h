@@ -2,10 +2,9 @@
 
 #pragma once
 
+#include "../entity_ref.h"
 #include "../vendor_include.h"
 #include "base_component.h"
-
-#include "../entity_ref.h"
 
 struct CanHoldHandTruck : public BaseComponent {
     [[nodiscard]] bool empty() const {
@@ -28,10 +27,10 @@ struct CanHoldHandTruck : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.held_hand_truck,            //
-            self.pos                         //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.held_hand_truck,               //
+            self.pos                            //
         );
     }
 };

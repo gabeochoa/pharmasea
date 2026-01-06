@@ -110,7 +110,8 @@ void startup() {
         //
         240,
         //
-        WIN_W(), WIN_H(),
+        WIN_W(),
+        WIN_H(),
         //
         strings::GAME_NAME,
         //

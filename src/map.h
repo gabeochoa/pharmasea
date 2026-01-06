@@ -97,7 +97,8 @@ struct Map {
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         // Pointer-free snapshot surface:
-        // - We serialize the entire world into a byte blob (no pointer linking).
+        // - We serialize the entire world into a byte blob (no pointer
+        // linking).
         // - Then we serialize map metadata (was_generated, seed, hashed_seed).
         // - Then showMinimap.
         //
@@ -113,12 +114,12 @@ struct Map {
         // Serialize as raw bytes: length + 1-byte chars.
         // (Bitsery's `container4b`/`text4b` mean 4-bytes-per-element, which
         // is NOT what we want for a byte blob.)
-        auto result = archive(  //
-            world_blob,         //
-            self.was_generated, //
-            self.seed,          //
-            self.hashed_seed,   //
-            self.showMinimap    //
+        auto result = archive(   //
+            world_blob,          //
+            self.was_generated,  //
+            self.seed,           //
+            self.hashed_seed,    //
+            self.showMinimap     //
         );
 
         if constexpr (ps::concepts::ZppBitsInArchive<ArchiveT>) {

@@ -116,8 +116,7 @@ void draw_building(const Building& building) {
 
 void GameLayer::draw_world(float dt) {
     auto* map_ptr = globals::world_map();
-    const auto network_debug_mode_on =
-        globals::network_ui_enabled();
+    const auto network_debug_mode_on = globals::network_ui_enabled();
     if (network_debug_mode_on) {
         // NOTE(threading): The authoritative server map is mutated on the
         // dedicated server thread. Rendering it directly on the main thread is
@@ -140,8 +139,8 @@ void GameLayer::draw_world(float dt) {
             raylib::BeginShaderMode(*lighting_shader);
         }
 
-        raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f}, (vec2){256.0f, 256.0f},
-                          DARKGRAY);
+        raylib::DrawPlane((vec3) {0.0f, -TILESIZE, 0.0f},
+                          (vec2) {256.0f, 256.0f}, DARKGRAY);
         if (map_ptr) map_ptr->onDraw(dt);
 
         if (lighting_shader) {

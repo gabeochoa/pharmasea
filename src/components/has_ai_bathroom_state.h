@@ -18,13 +18,12 @@ struct HasAIBathroomState : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.line_wait,                   //
-            self.use_toilet_timer,            //
-            self.floor_timer,                 //
-            self.next_state                   //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.line_wait,                     //
+            self.use_toilet_timer,              //
+            self.floor_timer,                   //
+            self.next_state                     //
         );
     }
 };
-

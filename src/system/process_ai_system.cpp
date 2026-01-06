@@ -43,7 +43,8 @@ namespace system_manager {
 namespace {
 
 void request_next_state(Entity& entity, IsAIControlled& ctrl,
-                        IsAIControlled::State s, bool override_existing = false) {
+                        IsAIControlled::State s,
+                        bool override_existing = false) {
     if (override_existing) {
         ctrl.clear_next_state();
     }
@@ -604,8 +605,7 @@ struct AIBathroomSystem
             return;
         }
         Entity& toilet = opt_toilet.asE();
-        entity.get<Transform>().turn_to_face_pos(
-            toilet.get<Transform>().as2());
+        entity.get<Transform>().turn_to_face_pos(toilet.get<Transform>().as2());
         IsToilet& istoilet = toilet.get<IsToilet>();
 
         const auto on_finished = [&]() {
@@ -613,8 +613,8 @@ struct AIBathroomSystem
             tgt.entity.clear();
             entity.get<CanOrderDrink>().empty_bladder();
             istoilet.end_use();
-            (void) pathfind.travel_toward(vec2{0, 0},
-                                          ai::get_speed_for_entity(entity) * dt);
+            (void) pathfind.travel_toward(
+                vec2{0, 0}, ai::get_speed_for_entity(entity) * dt);
             request_next_state(entity, ctrl, bs.next_state);
         };
 
@@ -628,9 +628,9 @@ struct AIBathroomSystem
         }
 
         int previous_position = bs.line_wait.previous_line_index;
-        bool reached_front = ai::line_try_to_move_closer(
-            bs.line_wait, toilet, entity,
-            ai::get_speed_for_entity(entity) * dt);
+        bool reached_front =
+            ai::line_try_to_move_closer(bs.line_wait, toilet, entity,
+                                        ai::get_speed_for_entity(entity) * dt);
         int new_position = bs.line_wait.previous_line_index;
 
         if (previous_position != new_position && bs.floor_timer.initialized) {
@@ -686,16 +686,16 @@ struct AICleanVomitSystem
         HasAITargetEntity& tgt = entity.get<HasAITargetEntity>();
 
         if (!ai::entity_ref_valid(tgt.entity)) {
-            auto other_ais =
-                EntityQuery()
-                    .whereNotID(entity.id)
-                    .whereHasComponent<IsAIControlled>()
-                    .whereLambda([](const Entity& e) {
-                        if (e.is_missing<IsAIControlled>()) return false;
-                        return e.get<IsAIControlled>().has_ability(
-                            IsAIControlled::AbilityCleanVomit);
-                    })
-                    .gen();
+            auto other_ais = EntityQuery()
+                                 .whereNotID(entity.id)
+                                 .whereHasComponent<IsAIControlled>()
+                                 .whereLambda([](const Entity& e) {
+                                     if (e.is_missing<IsAIControlled>())
+                                         return false;
+                                     return e.get<IsAIControlled>().has_ability(
+                                         IsAIControlled::AbilityCleanVomit);
+                                 })
+                                 .gen();
             std::set<int> existing_targets;
             for (const Entity& mop : other_ais) {
                 if (mop.is_missing<HasAITargetEntity>()) continue;
@@ -707,15 +707,14 @@ struct AICleanVomitSystem
             bool more_boys_than_vomit =
                 existing_targets.size() < other_ais.size();
 
-            OptEntity vomit =
-                EntityQuery()
-                    .whereType(EntityType::Vomit)
-                    .whereLambda([&](const Entity& v) {
-                        if (more_boys_than_vomit) return true;
-                        return !existing_targets.contains(v.id);
-                    })
-                    .orderByDist(entity.get<Transform>().as2())
-                    .gen_first();
+            OptEntity vomit = EntityQuery()
+                                  .whereType(EntityType::Vomit)
+                                  .whereLambda([&](const Entity& v) {
+                                      if (more_boys_than_vomit) return true;
+                                      return !existing_targets.contains(v.id);
+                                  })
+                                  .orderByDist(entity.get<Transform>().as2())
+                                  .gen_first();
             if (!vomit) {
                 HasAITargetLocation& roam = entity.get<HasAITargetLocation>();
                 if (!roam.pos.has_value()) {
@@ -745,9 +744,9 @@ struct AICleanVomitSystem
             return;
         }
 
-        bool reached = pathfind.travel_toward(
-            vomit->get<Transform>().as2(),
-            ai::get_speed_for_entity(entity) * dt);
+        bool reached =
+            pathfind.travel_toward(vomit->get<Transform>().as2(),
+                                   ai::get_speed_for_entity(entity) * dt);
         if (!reached) return;
 
         if (!vomit->has<HasWork>()) return;
@@ -765,8 +764,10 @@ struct AICleanVomitSystem
 
 void register_ai_systems(afterhours::SystemManager& systems) {
     systems.register_update_system(std::make_unique<AIWanderSystem>());
-    systems.register_update_system(std::make_unique<AIQueueForRegisterSystem>());
-    systems.register_update_system(std::make_unique<AIAtRegisterWaitForDrinkSystem>());
+    systems.register_update_system(
+        std::make_unique<AIQueueForRegisterSystem>());
+    systems.register_update_system(
+        std::make_unique<AIAtRegisterWaitForDrinkSystem>());
     systems.register_update_system(std::make_unique<AIDrinkingSystem>());
     systems.register_update_system(std::make_unique<AIPaySystem>());
     systems.register_update_system(std::make_unique<AIPlayJukeboxSystem>());

@@ -22,7 +22,8 @@ class ContainerConverter {
 
     // Dont make explicit
     template<class TargetContainer>
-    requires std::constructible_from<TargetContainer, container_cast_begin_t<SourceContainer>,
+    requires std::constructible_from<TargetContainer,
+                                     container_cast_begin_t<SourceContainer>,
                                      container_cast_end_t<SourceContainer>>
     operator TargetContainer() const {
         return TargetContainer(s_.begin(), s_.end());

@@ -12,4 +12,3 @@ struct IsCustomer : public BaseComponent {
         return archive(static_cast<BaseComponent&>(self));
     }
 };
-

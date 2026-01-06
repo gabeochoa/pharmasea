@@ -26,7 +26,8 @@ struct Server;
 
 namespace globals {
 
-// Pointers to runtime-owned objects (not thread-safe to dereference cross-thread).
+// Pointers to runtime-owned objects (not thread-safe to dereference
+// cross-thread).
 void set_world_map(Map* map);
 Map* world_map();
 
@@ -61,4 +62,3 @@ void set_network_ui_enabled(bool enabled);
 bool network_ui_enabled();
 
 }  // namespace globals
-

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "base_component.h"
-
 #include <optional>
+
+#include "base_component.h"
 
 // Authoritative high-level AI controller state.
 struct IsAIControlled : public BaseComponent {
@@ -19,13 +19,13 @@ struct IsAIControlled : public BaseComponent {
     } state = State::Wander;
 
     // Staged transition target (for two-phase "decide then commit" updates).
-    // When set, systems should avoid mutating the authoritative `state` directly
-    // and instead allow a commit step to apply this value.
+    // When set, systems should avoid mutating the authoritative `state`
+    // directly and instead allow a commit step to apply this value.
     std::optional<State> next_state;
 
-    // AI-only capability flags (what states/behaviors this controller is allowed
-    // to enter). This intentionally lives on the AI controller so players don't
-    // accidentally "inherit" AI-only components.
+    // AI-only capability flags (what states/behaviors this controller is
+    // allowed to enter). This intentionally lives on the AI controller so
+    // players don't accidentally "inherit" AI-only components.
     enum AbilityFlags : uint32_t {
         AbilityNone = 0,
         AbilityCleanVomit = 1u << 0,
@@ -50,9 +50,10 @@ struct IsAIControlled : public BaseComponent {
     }
 
     // Optional: preserve current “wandering is a pause” behavior.
-    // TODO: Revisit this. We currently use resume_state as a "return to previous
-    // task" slot when Wander is used as a temporary pause; ensure this is still
-    // the right abstraction once AI decisions/interrupts are formalized.
+    // TODO: Revisit this. We currently use resume_state as a "return to
+    // previous task" slot when Wander is used as a temporary pause; ensure this
+    // is still the right abstraction once AI decisions/interrupts are
+    // formalized.
     State resume_state = State::Wander;
 
     // Setup helper (for makers) so call sites can chain configuration.
@@ -98,13 +99,12 @@ struct IsAIControlled : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.state,                       //
-            self.next_state,                  //
-            self.abilities,                   //
-            self.resume_state                 //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.state,                         //
+            self.next_state,                    //
+            self.abilities,                     //
+            self.resume_state                   //
         );
     }
 };
-

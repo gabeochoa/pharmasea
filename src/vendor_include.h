@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine/graphics.h"
 #include "engine/concepts.h"
+#include "engine/graphics.h"
 
 namespace reasings {
 // TODO decide if we wnat to use static inline

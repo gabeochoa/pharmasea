@@ -34,11 +34,11 @@ struct IsBank : public BaseComponent {
         friend zpp::bits::access;
         constexpr static auto serialize(auto& archive, auto& self) {
             // animation stuff
-            return archive(             //
-                self.amount,           //
-                self.extra,            //
-                self.remainingTime,     //
-                self.remainingTimeTotal //
+            return archive(              //
+                self.amount,             //
+                self.extra,              //
+                self.remainingTime,      //
+                self.remainingTimeTotal  //
             );
         }
     };
@@ -96,12 +96,12 @@ struct IsBank : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                      //
-            static_cast<BaseComponent&>(self), //
-            self.num_in_cart,                //
-            self.num_transactions,           //
-            self.transactions,               //
-            self.coins                       //
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.num_in_cart,                   //
+            self.num_transactions,              //
+            self.transactions,                  //
+            self.coins                          //
         );
     }
 };

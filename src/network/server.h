@@ -7,9 +7,9 @@
 #include <unordered_map>
 //
 #include "../engine/atomic_queue.h"
+#include "../engine/runtime_globals.h"
 #include "../engine/tracy.h"
 #include "../engine/trigger_on_dt.h"
-#include "../engine/runtime_globals.h"
 #include "../entity.h"
 #include "types.h"
 //
@@ -96,8 +96,9 @@ struct Server {
             [this](HSteamNetConnection conn, const std::string& msg) {
                 this->server_enqueue_message_string(conn, msg);
             });
-        server_p->set_on_client_disconnect(
-            [this](HSteamNetConnection conn) { this->process_disconnect(conn); });
+        server_p->set_on_client_disconnect([this](HSteamNetConnection conn) {
+            this->process_disconnect(conn);
+        });
         log_info("Calling server_p->startup()");
         server_p->startup();
         log_info("server_p->startup() completed, running state: {}",
@@ -147,7 +148,8 @@ struct Server {
                                        const std::string& msg);
     void process_disconnect(HSteamNetConnection conn);
     [[nodiscard]] int allocate_client_id();
-    [[nodiscard]] std::optional<int> lookup_client_id(HSteamNetConnection conn) const;
+    [[nodiscard]] std::optional<int> lookup_client_id(
+        HSteamNetConnection conn) const;
     [[nodiscard]] std::vector<int> connected_client_ids() const;
 
     void server_process_message_string(const ClientMessage& client_message);
