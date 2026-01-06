@@ -13,7 +13,7 @@ namespace system_manager::ai {
 // Rate-limit AI work in states that don't need per-frame processing.
 [[nodiscard]] inline bool ai_tick_with_cooldown(Entity& entity, float dt,
                                                float reset_to_seconds) {
-    HasAICooldown& cd = ensure_component<HasAICooldown>(entity);
+    HasAICooldown& cd = entity.addComponentIfMissing<HasAICooldown>();
     cd.cooldown.reset_to = reset_to_seconds;
     cd.cooldown.tick(dt);
     if (!cd.cooldown.ready()) return false;

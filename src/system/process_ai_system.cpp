@@ -130,9 +130,8 @@ struct AIWanderSystem
 
         (void) ai::ai_tick_with_cooldown(entity, dt, 0.25f);
 
-        HasAITargetLocation& tgt =
-            ai::ensure_component<HasAITargetLocation>(entity);
-        HasAIWanderState& ws = ai::ensure_component<HasAIWanderState>(entity);
+        HasAITargetLocation& tgt = entity.get<HasAITargetLocation>();
+        HasAIWanderState& ws = entity.get<HasAIWanderState>();
 
         if (!tgt.pos.has_value()) {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
@@ -183,9 +182,8 @@ struct AIQueueForRegisterSystem
         (void) ai::ai_tick_with_cooldown(entity, dt, 0.10f);
         if (entity.is_missing<CanOrderDrink>()) return;
 
-        HasAITargetEntity& tgt =
-            ai::ensure_component<HasAITargetEntity>(entity);
-        HasAIQueueState& qs = ai::ensure_component<HasAIQueueState>(entity);
+        HasAITargetEntity& tgt = entity.get<HasAITargetEntity>();
+        HasAIQueueState& qs = entity.get<HasAIQueueState>();
 
         if (!ai::entity_ref_valid(tgt.entity)) {
             OptEntity best = ai::find_best_register_with_space(entity);
@@ -244,8 +242,7 @@ struct AIAtRegisterWaitForDrinkSystem
         if (entity.is_missing<CanOrderDrink>()) return;
         if (!ai::ai_tick_with_cooldown(entity, dt, 0.50f)) return;
 
-        HasAITargetEntity& tgt =
-            ai::ensure_component<HasAITargetEntity>(entity);
+        HasAITargetEntity& tgt = entity.get<HasAITargetEntity>();
         OptEntity opt_reg = tgt.entity.resolve();
         if (!opt_reg) {
             tgt.entity.clear();
@@ -296,7 +293,7 @@ struct AIAtRegisterWaitForDrinkSystem
         ourCHI.update(drink, entity.id);
         regCHI.update(nullptr, entity_id::INVALID);
 
-        HasAIQueueState& qs = ai::ensure_component<HasAIQueueState>(entity);
+        HasAIQueueState& qs = entity.get<HasAIQueueState>();
         ai::line_leave(qs.line_wait, reg, entity);
 
         canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
@@ -344,9 +341,8 @@ struct AIDrinkingSystem
         CanOrderDrink& cod = entity.get<CanOrderDrink>();
         if (cod.order_state != CanOrderDrink::OrderState::DrinkingNow) return;
 
-        HasAITargetLocation& tgt =
-            ai::ensure_component<HasAITargetLocation>(entity);
-        HasAIDrinkState& ds = ai::ensure_component<HasAIDrinkState>(entity);
+        HasAITargetLocation& tgt = entity.get<HasAITargetLocation>();
+        HasAIDrinkState& ds = entity.get<HasAIDrinkState>();
 
         if (!tgt.pos.has_value()) {
             float drink_time = irsm.get<float>(ConfigKey::MaxDrinkTime);
@@ -414,9 +410,8 @@ struct AIPaySystem
         if (entity.is_missing<CanOrderDrink>()) return;
         if (!ai::ai_tick_with_cooldown(entity, dt, 0.10f)) return;
 
-        HasAITargetEntity& tgt =
-            ai::ensure_component<HasAITargetEntity>(entity);
-        HasAIPayState& ps = ai::ensure_component<HasAIPayState>(entity);
+        HasAITargetEntity& tgt = entity.get<HasAITargetEntity>();
+        HasAIPayState& ps = entity.get<HasAIPayState>();
 
         if (!ai::entity_ref_valid(tgt.entity)) {
             OptEntity best = ai::find_best_register_with_space(entity);
@@ -492,9 +487,8 @@ struct AIPlayJukeboxSystem
         if (entity.is_missing<CanOrderDrink>()) return;
         if (!ai::ai_tick_with_cooldown(entity, dt, 0.10f)) return;
 
-        HasAITargetEntity& tgt =
-            ai::ensure_component<HasAITargetEntity>(entity);
-        HasAIJukeboxState& js = ai::ensure_component<HasAIJukeboxState>(entity);
+        HasAITargetEntity& tgt = entity.get<HasAITargetEntity>();
+        HasAIJukeboxState& js = entity.get<HasAIJukeboxState>();
 
         if (!ai::entity_ref_valid(tgt.entity)) {
             OptEntity best = ai::find_best_jukebox_with_space(entity);
@@ -586,18 +580,15 @@ struct AIBathroomSystem
         }
 
         if (!ai::needs_bathroom_now(entity)) {
-            HasAIBathroomState& bs =
-                ai::ensure_component<HasAIBathroomState>(entity);
+            HasAIBathroomState& bs = entity.get<HasAIBathroomState>();
             request_next_state(entity, ctrl, bs.next_state);
             return;
         }
 
         if (!ai::ai_tick_with_cooldown(entity, dt, 0.10f)) return;
 
-        HasAIBathroomState& bs =
-            ai::ensure_component<HasAIBathroomState>(entity);
-        HasAITargetEntity& tgt =
-            ai::ensure_component<HasAITargetEntity>(entity);
+        HasAIBathroomState& bs = entity.get<HasAIBathroomState>();
+        HasAITargetEntity& tgt = entity.get<HasAITargetEntity>();
 
         if (!ai::entity_ref_valid(tgt.entity)) {
             OptEntity best = ai::find_best_toilet_with_space(entity);
@@ -692,8 +683,7 @@ struct AICleanVomitSystem
         if (ctrl.state != IsAIControlled::State::CleanVomit) return;
         if (!ctrl.has_ability(IsAIControlled::AbilityCleanVomit)) return;
 
-        HasAITargetEntity& tgt =
-            ai::ensure_component<HasAITargetEntity>(entity);
+        HasAITargetEntity& tgt = entity.get<HasAITargetEntity>();
 
         if (!ai::entity_ref_valid(tgt.entity)) {
             auto other_ais =
@@ -727,8 +717,7 @@ struct AICleanVomitSystem
                     .orderByDist(entity.get<Transform>().as2())
                     .gen_first();
             if (!vomit) {
-                HasAITargetLocation& roam =
-                    ai::ensure_component<HasAITargetLocation>(entity);
+                HasAITargetLocation& roam = entity.get<HasAITargetLocation>();
                 if (!roam.pos.has_value()) {
                     roam.pos = ai::pick_random_walkable_near(entity).value_or(
                         entity.get<Transform>().as2());
@@ -745,8 +734,7 @@ struct AICleanVomitSystem
         OptEntity vomit = tgt.entity.resolve();
         if (!vomit) {
             tgt.entity.clear();
-            HasAITargetLocation& roam =
-                ai::ensure_component<HasAITargetLocation>(entity);
+            HasAITargetLocation& roam = entity.get<HasAITargetLocation>();
             if (!roam.pos.has_value()) {
                 roam.pos = ai::pick_random_walkable_near(entity).value_or(
                     entity.get<Transform>().as2());

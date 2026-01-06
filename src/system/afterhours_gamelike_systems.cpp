@@ -275,45 +275,49 @@ struct AIOnEnterResetSystem
         if (!entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
 #endif
 
-        // Keep this cheap and conservative; do not erase state that must carry
-        // information across transitions (e.g. Bathroom's return-to slot).
+        // Set up components required for each state on entry.
+        // This allows state systems to use .get<>() directly.
         switch (ai.state) {
             case IsAIControlled::State::Wander: {
                 entity.removeComponentIfExists<HasAITargetEntity>();
-                entity.removeComponentIfExists<HasAITargetLocation>();
+                ai::reset_component<HasAITargetLocation>(entity);
                 ai::reset_component<HasAIWanderState>(entity);
             } break;
             case IsAIControlled::State::QueueForRegister: {
-                entity.removeComponentIfExists<HasAITargetEntity>();
                 entity.removeComponentIfExists<HasAITargetLocation>();
+                ai::reset_component<HasAITargetEntity>(entity);
                 ai::reset_component<HasAIQueueState>(entity);
             } break;
             case IsAIControlled::State::AtRegisterWaitForDrink: {
-                // Keep target register entity if present; no blanket resets.
+                // Keep target register entity and queue state if present; no blanket resets.
+                // These should already exist from QueueForRegister.
+                entity.addComponentIfMissing<HasAITargetEntity>();
+                entity.addComponentIfMissing<HasAIQueueState>();
             } break;
             case IsAIControlled::State::Drinking: {
                 entity.removeComponentIfExists<HasAITargetEntity>();
-                entity.removeComponentIfExists<HasAITargetLocation>();
+                ai::reset_component<HasAITargetLocation>(entity);
                 ai::reset_component<HasAIDrinkState>(entity);
             } break;
             case IsAIControlled::State::Bathroom: {
-                entity.removeComponentIfExists<HasAITargetEntity>();
                 entity.removeComponentIfExists<HasAITargetLocation>();
+                ai::reset_component<HasAITargetEntity>(entity);
                 // Do NOT reset HasAIBathroomState here; commit encodes next_state.
+                entity.addComponentIfMissing<HasAIBathroomState>();
             } break;
             case IsAIControlled::State::Pay: {
-                entity.removeComponentIfExists<HasAITargetEntity>();
                 entity.removeComponentIfExists<HasAITargetLocation>();
+                ai::reset_component<HasAITargetEntity>(entity);
                 ai::reset_component<HasAIPayState>(entity);
             } break;
             case IsAIControlled::State::PlayJukebox: {
-                entity.removeComponentIfExists<HasAITargetEntity>();
                 entity.removeComponentIfExists<HasAITargetLocation>();
+                ai::reset_component<HasAITargetEntity>(entity);
                 ai::reset_component<HasAIJukeboxState>(entity);
             } break;
             case IsAIControlled::State::CleanVomit: {
-                entity.removeComponentIfExists<HasAITargetEntity>();
-                entity.removeComponentIfExists<HasAITargetLocation>();
+                ai::reset_component<HasAITargetEntity>(entity);
+                ai::reset_component<HasAITargetLocation>(entity);
             } break;
             case IsAIControlled::State::Leave: {
                 entity.removeComponentIfExists<HasAITargetEntity>();

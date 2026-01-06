@@ -32,7 +32,7 @@ inline void line_add_to_queue(Entity& entity, AIWaitInQueueState& s,
              "queue");
     HasWaitingQueue& hwq = reg.get<HasWaitingQueue>();
     int next_position = hwq.add_customer(entity).get_next_pos();
-    HasAITargetLocation& tl = ensure_component<HasAITargetLocation>(entity);
+    HasAITargetLocation& tl = entity.addComponentIfMissing<HasAITargetLocation>();
     tl.pos = reg.get<Transform>().tile_infront((next_position + 1));
     s.has_set_position_before = true;
 }
@@ -65,7 +65,7 @@ inline void line_add_to_queue(Entity& entity, AIWaitInQueueState& s,
         log_error("AI line state: add_to_queue must be called first");
     }
 
-    HasAITargetLocation& tl = ensure_component<HasAITargetLocation>(entity);
+    HasAITargetLocation& tl = entity.addComponentIfMissing<HasAITargetLocation>();
     if (!tl.pos.has_value()) {
         tl.pos = reg.get<Transform>().tile_directly_infront();
     }
