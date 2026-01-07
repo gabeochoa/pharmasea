@@ -1,0 +1,19 @@
+{
+  "name": "choicehoney_logo_anim",
+  "frameWidth": 1024,
+  "frameHeight": 512,
+  "frameCount": 54,
+  "fps": 30,
+  "columns": 8,
+  "rows": 7,
+  "background": "#000000",
+  "notes": {
+    "sequence": [
+      "solid pepper silhouette (no text)",
+      "knife outline slices horizontally",
+      "cover slice tips forward like a domino (2.5D)",
+      "text reveals top-to-bottom as wipe",
+      "slice dissolves away leaving final logo"
+    ]
+  }
+}
