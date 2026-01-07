@@ -41,161 +41,159 @@ struct ConfigData {
         int storererollprice;
 
         template<typename T>
-        void set(const ConfigKey& key, const T&) {
+        void set(const ConfigKey& key, const T& value) {
+            if constexpr (std::is_same_v<T, float>) {
+                switch (key) {
+                    case ConfigKey::RoundLength:
+                        roundlength = value;
+                        break;
+                    case ConfigKey::PatienceMultiplier:
+                        patiencemultiplier = value;
+                        break;
+                    case ConfigKey::CustomerSpawnMultiplier:
+                        customerspawnmultiplier = value;
+                        break;
+                    case ConfigKey::PissTimer:
+                        pisstimer = value;
+                        break;
+                    case ConfigKey::VomitFreqMultiplier:
+                        vomitfreqmultiplier = value;
+                        break;
+                    case ConfigKey::DrinkCostMultiplier:
+                        drinkcostmultiplier = value;
+                        break;
+                    case ConfigKey::VomitAmountMultiplier:
+                        vomitamountmultiplier = value;
+                        break;
+                    case ConfigKey::Test:
+                        test = value;
+                        break;
+                    case ConfigKey::MaxDrinkTime:
+                        maxdrinktime = value;
+                        break;
+                    case ConfigKey::MaxDwellTime:
+                        maxdwelltime = value;
+                        break;
+                    case ConfigKey::PayProcessTime:
+                        payprocesstime = value;
+                        break;
+                    case ConfigKey::MaxNumOrders:
+                    case ConfigKey::NumStoreSpawns:
+                    case ConfigKey::BladderSize:
+                    case ConfigKey::StoreRerollPrice:
+                        log_error(
+                            "Setting value for {} but not supported for float",
+                            key_name(key));
+                        break;
+                }
+                return;
+            }
+
+            if constexpr (std::is_same_v<T, int>) {
+                switch (key) {
+                    case ConfigKey::RoundLength:
+                    case ConfigKey::PatienceMultiplier:
+                    case ConfigKey::CustomerSpawnMultiplier:
+                    case ConfigKey::PissTimer:
+                    case ConfigKey::VomitFreqMultiplier:
+                    case ConfigKey::DrinkCostMultiplier:
+                    case ConfigKey::VomitAmountMultiplier:
+                    case ConfigKey::Test:
+                    case ConfigKey::MaxDrinkTime:
+                    case ConfigKey::MaxDwellTime:
+                    case ConfigKey::PayProcessTime:
+                        log_error(
+                            "Setting value for {} but not supported for int",
+                            key_name(key));
+                        break;
+                    case ConfigKey::MaxNumOrders:
+                        maxnumorders = value;
+                        break;
+                    case ConfigKey::NumStoreSpawns:
+                        numstorespawns = value;
+                        break;
+                    case ConfigKey::BladderSize:
+                        bladdersize = value;
+                        break;
+                    case ConfigKey::StoreRerollPrice:
+                        storererollprice = value;
+                        break;
+                }
+                return;
+            }
+
             log_error("Setting value for {} but not supported for {}",
                       key_name(key), type_name<T>());
-            return T();
-        }
-
-        template<>
-        void set(const ConfigKey& key, const float& value) {
-            switch (key) {
-                case ConfigKey::RoundLength:
-                    roundlength = value;
-                    break;
-                case ConfigKey::PatienceMultiplier:
-                    patiencemultiplier = value;
-                    break;
-                case ConfigKey::CustomerSpawnMultiplier:
-                    customerspawnmultiplier = value;
-                    break;
-                case ConfigKey::PissTimer:
-                    pisstimer = value;
-                    break;
-                case ConfigKey::VomitFreqMultiplier:
-                    vomitfreqmultiplier = value;
-                    break;
-                case ConfigKey::DrinkCostMultiplier:
-                    drinkcostmultiplier = value;
-                    break;
-                case ConfigKey::VomitAmountMultiplier:
-                    vomitamountmultiplier = value;
-                    break;
-                case ConfigKey::Test:
-                    test = value;
-                    break;
-                case ConfigKey::MaxDrinkTime:
-                    maxdrinktime = value;
-                    break;
-                case ConfigKey::MaxDwellTime:
-                    maxdwelltime = value;
-                    break;
-                case ConfigKey::PayProcessTime:
-                    payprocesstime = value;
-                    break;
-                case ConfigKey::MaxNumOrders:
-                case ConfigKey::NumStoreSpawns:
-                case ConfigKey::BladderSize:
-                case ConfigKey::StoreRerollPrice:
-                    log_error(
-                        "Setting value for {} but not supported for float",
-                        key_name(key));
-                    break;
-            }
-        }
-
-        template<>
-        void set(const ConfigKey& key, const int& value) {
-            switch (key) {
-                case ConfigKey::RoundLength:
-                case ConfigKey::PatienceMultiplier:
-                case ConfigKey::CustomerSpawnMultiplier:
-                case ConfigKey::PissTimer:
-                case ConfigKey::VomitFreqMultiplier:
-                case ConfigKey::DrinkCostMultiplier:
-                case ConfigKey::VomitAmountMultiplier:
-                case ConfigKey::Test:
-                case ConfigKey::MaxDrinkTime:
-                case ConfigKey::MaxDwellTime:
-                case ConfigKey::PayProcessTime:
-                    log_error("Setting value for {} but not supported for int",
-                              key_name(key));
-                    break;
-                case ConfigKey::MaxNumOrders:
-                    maxnumorders = value;
-                    break;
-                case ConfigKey::NumStoreSpawns:
-                    numstorespawns = value;
-                    break;
-                case ConfigKey::BladderSize:
-                    bladdersize = value;
-                    break;
-                case ConfigKey::StoreRerollPrice:
-                    storererollprice = value;
-                    break;
-            }
         }
 
         template<typename T>
         [[nodiscard]] T get(const ConfigKey& key) const {
+            if constexpr (std::is_same_v<T, float>) {
+                switch (key) {
+                    case ConfigKey::RoundLength:
+                        return roundlength;
+                    case ConfigKey::PatienceMultiplier:
+                        return patiencemultiplier;
+                    case ConfigKey::CustomerSpawnMultiplier:
+                        return customerspawnmultiplier;
+                    case ConfigKey::PissTimer:
+                        return pisstimer;
+                    case ConfigKey::VomitFreqMultiplier:
+                        return vomitfreqmultiplier;
+                    case ConfigKey::DrinkCostMultiplier:
+                        return drinkcostmultiplier;
+                    case ConfigKey::VomitAmountMultiplier:
+                        return vomitamountmultiplier;
+                    case ConfigKey::Test:
+                        return test;
+                    case ConfigKey::MaxDrinkTime:
+                        return maxdrinktime;
+                    case ConfigKey::MaxDwellTime:
+                        return maxdwelltime;
+                    case ConfigKey::PayProcessTime:
+                        return payprocesstime;
+                    case ConfigKey::MaxNumOrders:
+                    case ConfigKey::NumStoreSpawns:
+                    case ConfigKey::BladderSize:
+                    case ConfigKey::StoreRerollPrice:
+                        break;
+                }
+                log_error("Fetching value for {} but not supported for float",
+                          key_name(key));
+                return 0.f;
+            }
+
+            if constexpr (std::is_same_v<T, int>) {
+                switch (key) {
+                    case ConfigKey::RoundLength:
+                    case ConfigKey::PatienceMultiplier:
+                    case ConfigKey::CustomerSpawnMultiplier:
+                    case ConfigKey::PissTimer:
+                    case ConfigKey::VomitFreqMultiplier:
+                    case ConfigKey::DrinkCostMultiplier:
+                    case ConfigKey::VomitAmountMultiplier:
+                    case ConfigKey::Test:
+                    case ConfigKey::MaxDrinkTime:
+                    case ConfigKey::MaxDwellTime:
+                    case ConfigKey::PayProcessTime:
+                        break;
+                    case ConfigKey::MaxNumOrders:
+                        return maxnumorders;
+                    case ConfigKey::NumStoreSpawns:
+                        return numstorespawns;
+                    case ConfigKey::BladderSize:
+                        return bladdersize;
+                    case ConfigKey::StoreRerollPrice:
+                        return storererollprice;
+                }
+                log_error("Fetching value for {} but not supported for int",
+                          key_name(key));
+                return 0;
+            }
+
             log_error("Fetching value for {} but not supported for {}",
                       key_name(key), type_name<T>());
             return T();
-        }
-
-        template<>
-        [[nodiscard]] float get(const ConfigKey& key) const {
-            switch (key) {
-                case ConfigKey::RoundLength:
-                    return roundlength;
-                case ConfigKey::PatienceMultiplier:
-                    return patiencemultiplier;
-                case ConfigKey::CustomerSpawnMultiplier:
-                    return customerspawnmultiplier;
-                case ConfigKey::PissTimer:
-                    return pisstimer;
-                case ConfigKey::VomitFreqMultiplier:
-                    return vomitfreqmultiplier;
-                case ConfigKey::DrinkCostMultiplier:
-                    return drinkcostmultiplier;
-                case ConfigKey::VomitAmountMultiplier:
-                    return vomitamountmultiplier;
-                case ConfigKey::Test:
-                    return test;
-                case ConfigKey::MaxDrinkTime:
-                    return maxdrinktime;
-                case ConfigKey::MaxDwellTime:
-                    return maxdwelltime;
-                case ConfigKey::PayProcessTime:
-                    return payprocesstime;
-                case ConfigKey::MaxNumOrders:
-                case ConfigKey::NumStoreSpawns:
-                case ConfigKey::BladderSize:
-                case ConfigKey::StoreRerollPrice:
-                    break;
-            }
-            log_error("Fetching value for {} but not supported for float",
-                      key_name(key));
-            return 0.f;
-        }
-
-        template<>
-        [[nodiscard]] int get(const ConfigKey& key) const {
-            switch (key) {
-                case ConfigKey::RoundLength:
-                case ConfigKey::PatienceMultiplier:
-                case ConfigKey::CustomerSpawnMultiplier:
-                case ConfigKey::PissTimer:
-                case ConfigKey::VomitFreqMultiplier:
-                case ConfigKey::DrinkCostMultiplier:
-                case ConfigKey::VomitAmountMultiplier:
-                case ConfigKey::Test:
-                case ConfigKey::MaxDrinkTime:
-                case ConfigKey::MaxDwellTime:
-                case ConfigKey::PayProcessTime:
-                    break;
-                case ConfigKey::MaxNumOrders:
-                    return maxnumorders;
-                case ConfigKey::NumStoreSpawns:
-                    return numstorespawns;
-                case ConfigKey::BladderSize:
-                    return bladdersize;
-                case ConfigKey::StoreRerollPrice:
-                    return storererollprice;
-            }
-            log_error("Fetching value for {} but not supported for int",
-                      key_name(key));
-            return 0.f;
         }
 
         [[nodiscard]] bool contains(const ConfigKey& key) const {

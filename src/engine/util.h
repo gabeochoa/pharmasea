@@ -135,12 +135,12 @@ constexpr float clamp(float a, float mn, float mx) {
 }
 
 static float round_nearest(float value, int decimal_places) {
-    const float multiplier = std::powf(10.0, decimal_places);
+    const float multiplier = (float) std::pow(10.0, decimal_places);
     return std::round(value * multiplier) / multiplier;
 }
 
 static float round_down(float value, int decimal_places) {
-    const float multiplier = std::powf(10.0, decimal_places);
+    const float multiplier = (float) std::pow(10.0, decimal_places);
     return std::floor(value * multiplier) / multiplier;
 }
 

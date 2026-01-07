@@ -36,7 +36,7 @@ inline void hash_combine(std::size_t& s, const T& v) {
 }
 
 template<>
-struct std::hash<FZInfo> {
+struct hash<FZInfo> {
     std::size_t operator()(const FZInfo& info) const {
         using std::hash;
         using std::size_t;
