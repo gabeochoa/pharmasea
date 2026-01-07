@@ -150,8 +150,7 @@ struct CanPathfind : public BaseComponent {
             self.parent,                        //
             self.start,                         //
             self.goal,                          //
-            self.path_size,                     //
-            self.path                           //
+            self.path_size                      //
         );
     }
 };
