@@ -79,60 +79,7 @@ void generate_store_options();
 void move_purchased_furniture();
 }  // namespace store
 void update_dynamic_trigger_area_settings(Entity& entity, float dt);
-void count_all_possible_trigger_area_entrants(Entity& entity, float dt);
-void count_in_building_trigger_area_entrants(Entity& entity, float dt);
-void count_trigger_area_entrants(Entity& entity, float dt);
-void update_trigger_area_percent(Entity& entity, float dt);
 void trigger_cb_on_full_progress(Entity& entity, float dt);
-
-void count_all_possible_trigger_area_entrants(Entity& entity, float) {
-    if (entity.is_missing<IsTriggerArea>()) return;
-
-    size_t count = EQ(SystemManager::get().oldAll)
-                       .whereType(EntityType::Player)
-                       .gen_count();
-
-    entity.get<IsTriggerArea>().update_all_entrants(static_cast<int>(count));
-}
-
-void count_trigger_area_entrants(Entity& entity, float) {
-    if (entity.is_missing<IsTriggerArea>()) return;
-
-    size_t count = EQ(SystemManager::get().oldAll)
-                       .whereType(EntityType::Player)
-                       .whereCollides(entity.get<Transform>().expanded_bounds(
-                           {0, TILESIZE, 0}))
-                       .gen_count();
-
-    entity.get<IsTriggerArea>().update_entrants(static_cast<int>(count));
-}
-
-void count_in_building_trigger_area_entrants(Entity& entity, float) {
-    if (entity.is_missing<IsTriggerArea>()) return;
-
-    std::optional<Building> building = entity.get<IsTriggerArea>().building;
-    if (!building) return;
-
-    size_t count =
-        EQ(SystemManager::get().oldAll)
-            .whereType(EntityType::Player)
-            .whereInside(building.value().min(), building.value().max())
-            .gen_count();
-
-    entity.get<IsTriggerArea>().update_entrants_in_building(
-        static_cast<int>(count));
-}
-
-void update_trigger_area_percent(Entity& entity, float dt) {
-    if (entity.is_missing<IsTriggerArea>()) return;
-    IsTriggerArea& ita = entity.get<IsTriggerArea>();
-
-    ita.should_wave()  //
-        ? ita.increase_progress(dt)
-        : ita.decrease_progress(dt);
-
-    if (!ita.should_progress()) ita.decrease_cooldown(dt);
-}
 
 void trigger_cb_on_full_progress(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
@@ -901,21 +848,40 @@ struct UpdateDynamicTriggerAreaSettingsSystem
 
 struct CountAllPossibleTriggerAreaEntrantsSystem
     : public afterhours::System<IsTriggerArea> {
+    int count = 0;
+
     virtual bool should_run(const float) override { return true; }
 
-    virtual void for_each_with(Entity& entity, IsTriggerArea&,
-                               float dt) override {
-        count_all_possible_trigger_area_entrants(entity, dt);
+    virtual void once(float) override {
+        count = static_cast<int>(EQ(SystemManager::get().oldAll)
+                                     .whereType(EntityType::Player)
+                                     .gen_count());
+    }
+
+    virtual void for_each_with(Entity&, IsTriggerArea& ita, float) override {
+        ita.update_all_entrants(count);
     }
 };
 
 struct CountInBuildingTriggerAreaEntrantsSystem
     : public afterhours::System<IsTriggerArea> {
+    std::unordered_map<BuildingType, int> counts;
+
     virtual bool should_run(const float) override { return true; }
 
-    virtual void for_each_with(Entity& entity, IsTriggerArea&,
-                               float dt) override {
-        count_in_building_trigger_area_entrants(entity, dt);
+    virtual void once(float) override {
+        for (BuildingType type : magic_enum::enum_values<BuildingType>()) {
+            const Building& b = get_building(type);
+            counts[type] = static_cast<int>(EQ(SystemManager::get().oldAll)
+                                                .whereType(EntityType::Player)
+                                                .whereInside(b.min(), b.max())
+                                                .gen_count());
+        }
+    }
+
+    virtual void for_each_with(Entity&, IsTriggerArea& ita, float) override {
+        if (!ita.building) return;
+        ita.update_entrants_in_building(counts[ita.building->id]);
     }
 };
 
@@ -923,9 +889,15 @@ struct CountTriggerAreaEntrantsSystem
     : public afterhours::System<IsTriggerArea> {
     virtual bool should_run(const float) override { return true; }
 
-    virtual void for_each_with(Entity& entity, IsTriggerArea&,
-                               float dt) override {
-        count_trigger_area_entrants(entity, dt);
+    virtual void for_each_with(Entity& entity, IsTriggerArea& ita,
+                               float) override {
+        size_t count = EQ(SystemManager::get().oldAll)
+                           .whereType(EntityType::Player)
+                           .whereCollides(entity.get<Transform>().expanded_bounds(
+                               {0, TILESIZE, 0}))
+                           .gen_count();
+
+        ita.update_entrants(static_cast<int>(count));
     }
 };
 
@@ -933,9 +905,12 @@ struct UpdateTriggerAreaPercentSystem
     : public afterhours::System<IsTriggerArea> {
     virtual bool should_run(const float) override { return true; }
 
-    virtual void for_each_with(Entity& entity, IsTriggerArea&,
-                               float dt) override {
-        update_trigger_area_percent(entity, dt);
+    virtual void for_each_with(Entity&, IsTriggerArea& ita, float dt) override {
+        ita.should_wave()  //
+            ? ita.increase_progress(dt)
+            : ita.decrease_progress(dt);
+
+        if (!ita.should_progress()) ita.decrease_cooldown(dt);
     }
 };
 

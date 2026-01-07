@@ -112,7 +112,7 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
     // item back in but the index had changed.
     // We need to clear the item because otherwise they will both
     // live there which will cause overlap and grab issues.
-    virtual void for_each_with(Entity& entity, Indexer& indexer,
+    virtual void for_each_with(Entity&, Indexer& indexer,
                                CanHoldItem& canHold, float) override {
         if (canHold.empty()) return;
 
@@ -513,7 +513,7 @@ struct ProcessPnumaticPipeMovementSystem
         }
     }
 
-    virtual void for_each_with(Entity& entity, const IsPnumaticPipe& ipp,
+    virtual void for_each_with(Entity& entity, IsPnumaticPipe& ipp,
                                float) override {
 
         if (!ipp.has_pair()) return;
@@ -581,7 +581,7 @@ struct ProcessHasRopeSystem
         }
     }
 
-    virtual void for_each_with(Entity& entity, const CanHoldItem& chi,
+    virtual void for_each_with(Entity& entity, CanHoldItem& chi,
                                HasRopeToItem& hrti, float) override {
         // No need to have rope if spout is put away
         if (chi.is_holding_item()) {
