@@ -287,14 +287,75 @@ struct Transform : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(                         //
-            static_cast<BaseComponent&>(self),  //
-            self.visual_offset,                 //
-            self.raw_position,                  //
-            self.position,                      //
-            self.facing,                        //
-            self._size                          //
+        // Packed format: 5 x int16[3] + 1 x int16 = 32 bytes
+        // But we save by not serializing full floats
+        constexpr float kPosScale = 100.0f;   // 0.01 unit precision
+        constexpr float kAngScale = 10.0f;    // 0.1 degree precision
+        constexpr int16_t kWarnThreshold = 30000;  // Warn at ~300 units
+        
+        using ArchiveKind = std::remove_cvref_t<decltype(archive)>;
+        constexpr bool is_writing = ArchiveKind::kind() == zpp::bits::kind::out;
+        constexpr bool is_reading = ArchiveKind::kind() == zpp::bits::kind::in;
+        
+        // Pack all vec3 fields into int16 arrays
+        std::array<int16_t, 3> vo_packed{};      // visual_offset
+        std::array<int16_t, 3> raw_pos_packed{}; // raw_position
+        std::array<int16_t, 3> pos_packed{};     // position
+        std::array<int16_t, 3> size_packed{};    // _size
+        int16_t facing_packed = 0;
+        
+        if constexpr (is_writing) {
+            // Helper to pack with range warning
+            auto pack = [&](vec3 v) -> std::array<int16_t, 3> {
+                for (int i = 0; i < 3; ++i) {
+                    float val = (i == 0) ? v.x : (i == 1) ? v.y : v.z;
+                    float scaled = val * kPosScale;
+                    if (std::abs(scaled) > kWarnThreshold) {
+                        log_warn("NETSTAT: Transform near limit: axis={} val={}", i, val);
+                    }
+                }
+                return {
+                    static_cast<int16_t>(std::clamp(v.x * kPosScale, -32768.f, 32767.f)),
+                    static_cast<int16_t>(std::clamp(v.y * kPosScale, -32768.f, 32767.f)),
+                    static_cast<int16_t>(std::clamp(v.z * kPosScale, -32768.f, 32767.f))
+                };
+            };
+            
+            vo_packed = pack(self.visual_offset);
+            raw_pos_packed = pack(self.raw_position);
+            pos_packed = pack(self.position);
+            size_packed = pack(self._size);
+            facing_packed = static_cast<int16_t>(self.facing * kAngScale);
+        }
+        
+        // Single archive call with all packed fields
+        auto result = archive(
+            static_cast<BaseComponent&>(self),
+            vo_packed,
+            raw_pos_packed,
+            pos_packed,
+            size_packed,
+            facing_packed
         );
+        
+        if constexpr (is_reading) {
+            // Unpack all fields
+            auto unpack = [&](const std::array<int16_t, 3>& p) -> vec3 {
+                return {
+                    static_cast<float>(p[0]) / kPosScale,
+                    static_cast<float>(p[1]) / kPosScale,
+                    static_cast<float>(p[2]) / kPosScale
+                };
+            };
+            
+            self.visual_offset = unpack(vo_packed);
+            self.raw_position = unpack(raw_pos_packed);
+            self.position = unpack(pos_packed);
+            self._size = unpack(size_packed);
+            self.facing = static_cast<float>(facing_packed) / kAngScale;
+        }
+        
+        return result;
     }
 };
 
