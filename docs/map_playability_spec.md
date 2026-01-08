@@ -59,6 +59,51 @@ adjacency (N/S/E/W). Diagonal-only adjacency does not count.
 - The bar footprint is ~**20×20** for MVP.
 - The outside-facing shell (outer walls / silhouette) is stable over time.
 
+## Protected tiles (generation-time constraints)
+
+Certain tiles must remain walkable and unobstructed during map generation. These
+"protected tiles" should not have furniture, decorations, or obstacles placed on
+them by the decoration stage or any auto-placement system.
+
+### Queue strip tiles
+
+The tiles directly in front of the register where customers queue:
+
+- Positions: `register_tile + facing * (1..max_queue_size)`
+- Current queue length: **3 tiles** (`HasWaitingQueue::max_queue_size`)
+- These tiles must be walkable floor (`.`) at generation time
+
+### Entrance throat tiles
+
+The opening(s) in the outer wall that connect outside to inside:
+
+- Width: **1–3 tiles** per entrance
+- Must connect to a walkable path leading to the register queue
+
+### Critical path corridor
+
+The shortest path from `CustomerSpawner` to the register queue front:
+
+- All tiles on this path must remain walkable
+- Decoration should avoid placing obstacles on or immediately adjacent to this path
+- The path must stay under `bfs::MAX_PATH_LENGTH` (50 tiles) distance
+
+### Implementation note
+
+The placement stage in `day1_required_placement.cpp` tracks protected tiles in a
+`blocked` bitmap and excludes them when placing other required entities:
+
+```cpp
+// Protect queue strip + found path
+std::vector<std::vector<bool>> blocked(h, std::vector<bool>(w, false));
+for (int dj = 1; dj <= HasWaitingQueue::max_queue_size; dj++) {
+    blocked[reg.i][reg.j + dj] = true;
+}
+for (const grid::Cell& p : path) {
+    blocked[p.i][p.j] = true;
+}
+```
+
 ## Failure taxonomy + deterministic retry policy
 
 ### Outcomes
@@ -75,4 +120,48 @@ adjacency (N/S/E/W). Diagonal-only adjacency does not count.
 - Default retry cap: **25 attempts**.
 - If all attempts fail, surface a clear reason code (first hard failure) so the
   player/dev can reroll or adjust generator knobs.
+
+## Coordinate convention
+
+### Grid to world mapping
+
+- `grid[i][j]` corresponds to world position `(x = i * TILESIZE, y = j * TILESIZE)`
+- Row index `i` = world X axis
+- Column index `j` = world Y/Z axis
+
+### Origin marker
+
+- The `0` character marks the origin tile in ASCII
+- After offset, this tile should map to world `(0, 0)`
+- **Known quirk**: `find_origin()` in `generation::helper` uses swapped indices;
+  treat this as tech debt to resolve in future cleanup
+
+### "Right wall" entrance
+
+- "Entrance on the right (+x) wall" = **last row** of ASCII grid (not last column)
+- The entrance gap connects outside walkable area to inside
+
+## Seed determinism
+
+### Stage-specific seeds
+
+Each pipeline stage derives its RNG seed from the base seed:
+
+| Stage | Seed derivation | Example |
+|-------|-----------------|---------|
+| Layout | `hash(seed + ":layout:" + attempt)` | `"alpha:layout:0"` |
+| Placement | `hash(seed + ":place:" + attempt)` | `"alpha:place:0"` |
+| Decoration | `hash(seed + ":decor:" + attempt)` | `"alpha:decor:0"` |
+
+### Attempt index behavior
+
+- The `attempt_index` increments on layout/placement failures (rerolls)
+- Same `(seed, attempt_index)` always produces the same output
+- Max attempts: **25** (`DEFAULT_REROLL_ATTEMPTS`)
+
+### Cross-platform determinism
+
+- RNG uses `std::mt19937` seeded via `hashString()`
+- Layout algorithms should avoid floating-point operations that vary by platform
+- WFC may have platform-specific behavior; fallback to Simple layout is acceptable
 

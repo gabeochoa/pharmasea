@@ -2,6 +2,53 @@
 
 This document is a **planning note only**. It outlines a roadmap to update map generation without prescribing immediate code changes.
 
+## Implementation Status Summary
+
+| Phase | Status | Key Files |
+|-------|--------|-----------|
+| Phase 1 — Playability Spec | **COMPLETE** | `docs/map_playability_spec.md`, `src/map_generation/playability_spec.h` |
+| Phase 2 — Explicit Pipeline | **COMPLETE** | `src/map_generation/pipeline.cpp`, `day1_required_placement.cpp`, `day1_validation.cpp` |
+| Phase 3 — WFC Under Pipeline | **COMPLETE** | `src/map_generation/layout_wfc.cpp`, `ascii_grid.cpp` |
+| Phase 4 — Regression Coverage | **COMPLETE** | `src/tests/test_map_playability.h` (seed suite with 20 seeds) |
+| Phase 5 — Generator Decision | **COMPLETE** | `docs/map_generator_decision.md` |
+| Phase 6 — New Generator | Not Started | Room-graph / BSP selected |
+
+## Current Architecture
+
+```mermaid
+flowchart LR
+    subgraph pipeline [Generation Pipeline]
+        Seed --> ArchetypeSelect
+        ArchetypeSelect --> LayoutStage
+        LayoutStage --> PlacementStage
+        PlacementStage --> ValidationStage
+        ValidationStage -->|pass| Output
+        ValidationStage -->|fail| Retry
+        Retry -->|attempt < 25| LayoutStage
+    end
+    
+    subgraph layouts [Layout Providers]
+        Simple[layout_simple.cpp]
+        WFC[layout_wfc.cpp]
+    end
+    
+    LayoutStage --> Simple
+    LayoutStage --> WFC
+```
+
+**Archetype probabilities** (from `pipeline.cpp::pick_archetype_from_seed`):
+- OpenHall: 40%
+- MultiRoom: 35%
+- BackRoom: 15%
+- LoopRing: 10%
+
+**Key implementation files**:
+- `src/map_generation/pipeline.cpp` — orchestration with retry loop
+- `src/map_generation/day1_required_placement.cpp` — places R, C, S, d, g, f, +, t
+- `src/map_generation/day1_validation.cpp` — ASCII + routing checks
+- `src/map_generation/ascii_grid.cpp` — utilities (BFS, normalize, scrub)
+- `src/map_generation/playability_spec.h` — code-level spec with `validate_ascii_day1()`
+
 ## Context (current architecture)
 
 - **ASCII seam**: Map generators ultimately produce a `std::vector<std::string>` “tile map”. A single step (ASCII → entities) spawns entities and then validates.
@@ -372,9 +419,9 @@ Implications for map-gen:
 
 ## Phased roadmap (tasks + deliverables)
 
-### Phase 1 — Lock the “start-of-day playable” spec
+### Phase 1 — Lock the "start-of-day playable" spec ✅ COMPLETE
 
-#### Task 1 — Write the Playability Spec (one source of truth)
+#### Task 1 — Write the Playability Spec (one source of truth) ✅
 
 Produce a concise spec (bulleted rules) covering:
 
@@ -388,9 +435,11 @@ Produce a concise spec (bulleted rules) covering:
 **Deliverable:** A single spec that code/tests can reference.
 
 - Canonical doc: `docs/map_playability_spec.md`
-- (This doc keeps an embedded “Playability Spec” section for context, but the companion doc is the source of truth.)
+- (This doc keeps an embedded "Playability Spec" section for context, but the companion doc is the source of truth.)
 
-#### Task 2 — Define failure taxonomy + retry policy
+> **Implemented**: `docs/map_playability_spec.md` exists with all required elements.
+
+#### Task 2 — Define failure taxonomy + retry policy ✅
 
 Define which failures are:
 
@@ -403,9 +452,11 @@ and set a deterministic retry policy: `seed + attempt_index`, bounded by a confi
 
 - Canonical doc: `docs/map_playability_spec.md` (includes default retry cap: 25)
 
-### Phase 2 — Refactor to an explicit pipeline (no new generator yet)
+> **Implemented**: `FailureClass::Repairable` / `RerollOnly` enums in `playability_spec.h`. `DEFAULT_REROLL_ATTEMPTS = 25`.
 
-#### Task 1 — Introduce a tiny generator interface
+### Phase 2 — Refactor to an explicit pipeline (no new generator yet) ✅ COMPLETE
+
+#### Task 1 — Introduce a tiny generator interface ✅
 
 Define an interface that returns the ASCII tile map:
 
@@ -415,7 +466,9 @@ Keep the “ASCII seam” and keep “instantiate + validate” as a single down
 
 **Deliverable:** A single entry point that current in-game generation can call, regardless of the layout source.
 
-#### Task 2 — Split into stages (keep ASCII between stages)
+> **Implemented**: `src/map_generation/pipeline.h` defines `generate_ascii(seed, context)`.
+
+#### Task 2 — Split into stages (keep ASCII between stages) ✅
 
 Refactor conceptually into:
 
@@ -423,29 +476,37 @@ Refactor conceptually into:
 
 **Deliverable:** Code structure that makes the stage boundaries obvious, even if early versions still reuse existing layout logic.
 
-#### Task 3 — Add archetype selection (still using current layout logic)
+> **Implemented**: Separate files — `layout_simple.cpp`, `layout_wfc.cpp`, `day1_required_placement.cpp`, `day1_validation.cpp`.
+
+#### Task 3 — Add archetype selection (still using current layout logic) ✅
 
 Add a concept of “bar style” selection (weighted/random by seed), even if it initially maps to parameter variations of the existing generator.
 
 **Deliverable:** Seeds produce consistent archetype choices; archetype is visible in the resulting layout.
 
-### Phase 3 — Bring WFC under the same pipeline
+> **Implemented**: `BarArchetype` enum + `pick_archetype_from_seed()` in `pipeline.cpp`.
 
-#### Task 1 — Treat WFC as a layout provider only
+### Phase 3 — Bring WFC under the same pipeline ✅ COMPLETE
+
+#### Task 1 — Treat WFC as a layout provider only ✅
 
 Wrap WFC so it produces only the layout (ASCII lines), then feed it into the shared placement + validation stages.
 
 **Deliverable:** WFC is selectable as a layout source without bypassing required placement or playability validation.
 
-#### Task 2 — Ensure WFC layouts obey the Playability Spec via shared validation
+> **Implemented**: `layout_wfc.cpp` + `grid::scrub_to_layout_only()` feeds WFC output into shared stages.
+
+#### Task 2 — Ensure WFC layouts obey the Playability Spec via shared validation ✅
 
 If WFC outputs fail often, rely on deterministic repair/retry first; only then consider changing pattern sets or constraints.
 
 **Deliverable:** WFC maps either pass validation or fail deterministically with a clear reason code (repair vs reroll).
 
-### Phase 4 — Add deterministic regression coverage
+> **Implemented**: Same `validate_day1_ascii_plus_routing()` used for both Simple and WFC. Fallback logic in `pipeline.cpp` tries Simple if WFC fails all attempts.
 
-#### Task 1 — Create a seed suite
+### Phase 4 — Add deterministic regression coverage ✅ COMPLETE
+
+#### Task 1 — Create a seed suite ✅
 
 Create a seed list and basic properties:
 
@@ -455,7 +516,17 @@ Create a seed list and basic properties:
 
 **Deliverable:** A minimal regression test suite that runs in CI and guards against accidental playability regressions.
 
-### Phase 5 — Choose the next generator (short-list + decision)
+> **Implemented**: `src/tests/test_map_playability.h` contains:
+> - Unit tests (missing origin, disconnected, happy path)
+> - Seed suite with 20 fixed seeds testing all archetypes
+> - Required entity count validation
+> - 4-neighbor connectivity checks
+> - WFC-specific test coverage
+
+### Phase 5 — Choose the next generator (short-list + decision) ✅ COMPLETE
+
+> **Decision note**: `docs/map_generator_decision.md`
+> **Selected**: Room-graph / BSP + Rasterization as primary, WFC as alternate.
 
 #### Task 1 — Lock evaluation criteria (before comparing)
 
@@ -490,9 +561,9 @@ Select:
 - 1 secondary generator to keep as an alternate (optional)
 - Rationale mapped to the evaluation criteria
 
-**Deliverable:** A short decision note (in this doc or `docs/`) explaining the choice and the “why”.
+**Deliverable:** A short decision note (in this doc or `docs/`) explaining the choice and the "why".
 
-### Phase 6 — Implement the chosen generator behind the pipeline
+### Phase 6 — Implement the chosen generator behind the pipeline 🔲 NOT STARTED (blocked on Phase 5)
 
 #### Task 1 — Implement layout-only first
 

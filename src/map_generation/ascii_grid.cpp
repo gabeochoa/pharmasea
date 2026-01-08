@@ -167,4 +167,75 @@ void scrub_to_layout_only(std::vector<std::string>& lines) {
     }
 }
 
+namespace {
+
+// Count walkable neighbors (only EMPTY and ORIGIN are walkable for this check)
+int count_walkable_neighbors(const std::vector<std::string>& lines, int i,
+                             int j) {
+    int count = 0;
+    // Up
+    if (is_walkable_for_routing(get(lines, i - 1, j))) count++;
+    // Down
+    if (is_walkable_for_routing(get(lines, i + 1, j))) count++;
+    // Left
+    if (is_walkable_for_routing(get(lines, i, j - 1))) count++;
+    // Right
+    if (is_walkable_for_routing(get(lines, i, j + 1))) count++;
+    return count;
+}
+
+// Check if a character is a wall that can be opened
+bool is_openable_wall(char ch) {
+    return ch == generation::WALL || ch == generation::WALL2;
+}
+
+}  // namespace
+
+void remove_1x1_rooms(std::vector<std::string>& lines) {
+    auto [h, w] = dims(lines);
+    if (h <= 2 || w <= 2) return;
+
+    bool changed = true;
+    int iterations = 0;
+    const int max_iterations = 100;  // Safety limit
+
+    while (changed && iterations < max_iterations) {
+        changed = false;
+        iterations++;
+
+        // Remove isolated 1x1 rooms (walkable tiles with 0 walkable neighbors)
+        for (int i = 1; i < h - 1; i++) {
+            for (int j = 1; j < w - 1; j++) {
+                char ch = get(lines, i, j);
+                if (!is_walkable_for_routing(ch)) continue;
+
+                int neighbors = count_walkable_neighbors(lines, i, j);
+                if (neighbors == 0) {
+                    // This is a 1x1 room - try to open a wall to connect it
+                    if (i + 1 < h - 1 && is_openable_wall(get(lines, i + 1, j))) {
+                        set(lines, i + 1, j, generation::EMPTY);
+                        changed = true;
+                        continue;
+                    }
+                    if (j + 1 < w - 1 && is_openable_wall(get(lines, i, j + 1))) {
+                        set(lines, i, j + 1, generation::EMPTY);
+                        changed = true;
+                        continue;
+                    }
+                    if (i > 1 && is_openable_wall(get(lines, i - 1, j))) {
+                        set(lines, i - 1, j, generation::EMPTY);
+                        changed = true;
+                        continue;
+                    }
+                    if (j > 1 && is_openable_wall(get(lines, i, j - 1))) {
+                        set(lines, i, j - 1, generation::EMPTY);
+                        changed = true;
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+}
+
 }  // namespace mapgen::grid

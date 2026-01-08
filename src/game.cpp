@@ -99,6 +99,8 @@ bool GENERATE_MAP = false;
 std::string GENERATE_MAP_SEED = "";
 std::string LOAD_SAVE_TARGET = "";
 bool LOAD_SAVE_ENABLED = false;
+bool MAP_VIEWER = false;
+std::string MAP_VIEWER_SEED = "";
 
 void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues
@@ -233,12 +235,14 @@ void process_dev_flags(int argc, char* argv[]) {
             "--record-input",
             "--intro",
             "--test_map_generation",
-            "--replay-validate"};
+            "--replay-validate",
+            "--map-viewer"};
         static const std::set<std::string> with_value = {
             "--replay",
             "--bypass-rounds",
             "--generate-map",
             "--load-save",
+            "--seed",
         };
 
         // Accept --flag=value form for value flags.
@@ -260,7 +264,8 @@ void process_dev_flags(int argc, char* argv[]) {
         if (is_known_flag(arg)) {
             // If this flag expects a value, skip the next token.
             if ((arg == "--replay" || arg == "--bypass-rounds" ||
-                 arg == "--generate-map" || arg == "--load-save") &&
+                 arg == "--generate-map" || arg == "--load-save" ||
+                 arg == "--seed") &&
                 i + 1 < argc) {
                 ++i;
             }
@@ -429,6 +434,30 @@ void process_dev_flags(int argc, char* argv[]) {
         TEST_MAP_GENERATION = true;
     }
 
+    if (cmdl[{"--map-viewer"}]) {
+        MAP_VIEWER = true;
+        ENABLE_SOUND = false;
+        log_info("--map-viewer flag detected");
+    }
+
+    // Parse --seed=xyz or --seed xyz
+    const auto parse_seed = [&](const std::string& val) {
+        if (val.empty()) return;
+        MAP_VIEWER_SEED = val;
+        log_info("--seed set to '{}'", MAP_VIEWER_SEED);
+    };
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i] ? argv[i] : "";
+        const std::string prefix = "--seed=";
+        if (arg.rfind(prefix, 0) == 0) {
+            parse_seed(arg.substr(prefix.size()));
+            continue;
+        }
+        if (arg == "--seed" && i + 1 < argc) {
+            parse_seed(argv[++i] ? argv[i] : "");
+        }
+    }
+
 #endif
 }
 
@@ -476,6 +505,52 @@ int main(int argc, char* argv[]) {
                   << " rows=" << ctx.rows << " cols=" << ctx.cols << std::endl;
         for (const std::string& line : out.lines) {
             std::cout << line << std::endl;
+        }
+        return 0;
+    }
+
+    if (MAP_VIEWER) {
+        // Use seed from --seed flag, or default
+        std::string seed = MAP_VIEWER_SEED.empty() ? "default_seed" : MAP_VIEWER_SEED;
+        
+        log_info("Executable Path: {}", fs::current_path());
+        log_info("Canon Path: {}", fs::canonical(fs::current_path()));
+
+        // Minimal app initialization for map viewer
+        App::create(App::AppSettings{
+            240,
+            WIN_W(),
+            WIN_H(),
+            "PharmaSea Map Viewer",
+            raylib::LOG_ERROR,
+        });
+
+        Files::create(FilesConfig{
+            strings::GAME_FOLDER,
+            SETTINGS_FILE_NAME,
+        });
+
+        // Load settings for lighting/rendering preferences
+        Settings::get().load_save_file();
+        Settings::get().refresh_settings();
+
+        // Load assets
+        Preload::create();
+        register_all_components();
+
+        // Don't initialize network for viewer mode
+        // network::init_connections();
+
+        // Load only the MapViewerLayer
+        App::get().loadLayers({{
+            new FPSLayer(),
+            new MapViewerLayer(seed),
+        }});
+
+        try {
+            App::get().run();
+        } catch (const std::exception& e) {
+            std::cout << "Map viewer exception: " << e.what() << std::endl;
         }
         return 0;
     }

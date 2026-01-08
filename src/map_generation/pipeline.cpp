@@ -78,6 +78,10 @@ GeneratedAscii generate_ascii(const std::string& seed,
                 fmt::format("{}:place:{}", normalized_seed, attempt))));
 
             if (!place_required_day1(lines, rng)) continue;
+
+            // Remove 1x1 rooms that may have been created by entity placement
+            grid::remove_1x1_rooms(lines);
+
             if (!validate_day1_ascii_plus_routing(lines)) continue;
             return lines;
         }

@@ -32,4 +32,9 @@ void ensure_single_origin(std::vector<std::string>& lines);
 // entities.
 void scrub_to_layout_only(std::vector<std::string>& lines);
 
+// Removes 1x1 enclosed walkable areas by opening walls to merge them with
+// adjacent spaces. Call this after entity placement to fix rooms that became
+// enclosed due to furniture placement.
+void remove_1x1_rooms(std::vector<std::string>& lines);
+
 }  // namespace mapgen::grid

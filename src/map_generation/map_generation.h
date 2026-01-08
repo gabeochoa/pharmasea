@@ -54,11 +54,21 @@ struct helper {
     vec2 x = {0, 0};
     vec2 z = {0, 0};
 
+    // World offset applied to all generated entities (default centers on
+    // BAR_BUILDING)
+    vec2 world_offset = {0, 0};
+
     explicit helper(const std::vector<std::string>& l) : lines(l) {}
+
+    helper& set_world_offset(vec2 offset) {
+        world_offset = offset;
+        return *this;
+    }
 
     vec2 generate(std::function<Entity&()>&& add_to_map = nullptr) {
         vec2 origin = find_origin();
         log_info(" origin : {}", origin);
+        log_info(" world_offset : {}", world_offset);
 
         const auto default_create = []() -> Entity& {
             return EntityHelper::createEntity();
@@ -70,7 +80,7 @@ struct helper {
             auto line = lines[i];
             for (int j = 0; j < (int) line.size(); j++) {
                 vec2 raw_location = vec2{i * TILESIZE, j * TILESIZE};
-                vec2 location = raw_location - origin;
+                vec2 location = raw_location - origin + world_offset;
                 auto ch = get_char(i, j);
                 if (add_to_map) {
                     generate_entity_from_character(add_to_map, ch, location);
