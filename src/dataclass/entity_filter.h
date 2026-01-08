@@ -247,9 +247,9 @@ struct EntityFilter {
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(         //
+            self.subtype_index, //
             self.flags,         //
-            self.entity_type,   //
-            self.subtype_index  //
+            self.entity_type    //
         );
     }
 };

@@ -62,8 +62,8 @@ static const auto& component_serdes() {
     return kSerdes;
 }
 
-constexpr std::uint32_t kEntitySnapshotVersion = 3;
-constexpr std::uint32_t kWorldSnapshotVersion = 3;
+constexpr std::uint32_t kEntitySnapshotVersion = 4;
+constexpr std::uint32_t kWorldSnapshotVersion = 4;
 
 constexpr size_t kSnapshotComponentCount =
     std::tuple_size_v<snapshot_blob::ComponentTypes>;
