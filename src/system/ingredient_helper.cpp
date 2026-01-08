@@ -1,8 +1,9 @@
 
 #include "ingredient_helper.h"
 
+#include "../ah.h"
 #include "../components/indexer.h"
-#include "../engine/bitset_utils.h"
+#include "../components/is_store_spawned.h"
 #include "../entity_helper.h"
 #include "../recipe_library.h"
 
@@ -116,6 +117,7 @@ IngredientHelper::get_machines_req_for_recipe(Drink drink) {
         get_req_ingredients_for_drink(drink), [&needed](size_t index) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(index);
             needed[ig] = IngredientHelper::get_machines_for_ingredient(ig);
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
 
     return needed;
@@ -126,6 +128,8 @@ bool IngredientHelper::has_machines_required_for_ingredient(
     const auto doesAnyExist =
         [&ents](const std::function<bool(const Entity&)>& filter) {
             for (const Entity& e : ents) {
+                // TODO replace with actual entityquery
+                if (e.has<IsStoreSpawned>()) continue;
                 if (filter(e)) return true;
             }
             return false;

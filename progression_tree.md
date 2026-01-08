@@ -100,6 +100,17 @@ Supply and Demand, my man
 __enable dynamic pricing__
 __need way to check how many people are behind you in line__
 
+Utility Billing
+Automate for Less
+(Machines are 25% cheaper to purchase but incur daily operational costs)
+__machine_cost_multiplier 0.75__
+__enable_utility_billing__
+
+Credit Line
+Business as Usual
+(Missing rent triggers the Loan Shark instead of Game Over)
+__enable_debt_recovery__
+
 Tablet Ordering
 but now a robot does that
 (customers will order and will pick it up later)
@@ -431,5 +442,9 @@ SmallTown -- scales 0.5 --> drink_cost_multiplier
 SmallTown -- sets --> has_city_multiplier
 
 req{has_city_multiplier} -. not set .-> SmallTown
+
+UtilityBilling -- scales 0.75 --> machine_cost
+
+CreditLine -- enables --> loan_shark_system
 
 ```

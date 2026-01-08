@@ -1,16 +1,11 @@
 
 #pragma once
 
+#include "../ah.h"
 #include "../engine.h"
-#include "../engine/bitset_utils.h"
 #include "../engine/layer.h"
 #include "../engine/ui/ui.h"
 #include "../external_include.h"
-#include "../network/network.h"
-
-//
-#include "../components/is_round_settings_manager.h"
-#include "../entity_query.h"
 
 using namespace ui;
 
@@ -46,75 +41,9 @@ struct BasePauseLayer : public Layer {
 
     virtual void onUpdate(float) override {}
 
-    void draw_upgrades(Rectangle window, Rectangle rect) {
-        OptEntity sophie = EntityQuery()
-                               .whereHasComponent<IsRoundSettingsManager>()
-                               .gen_first();
-        if (!sophie) return;
+    void reset_network();
 
-        const IsRoundSettingsManager& irsm =
-            sophie->get<IsRoundSettingsManager>();
-        const ConfigData& config = irsm.config;
-
-        if (config.unlocked_upgrades.count() == 0) return;
-
-        if (config.unlocked_upgrades.count() > 100) {
-            log_warn("More upgrades than we can display");
-        }
-
-        auto upgrades = rect::bpad(window, 90);
-
-        std::vector<Rectangle> rects;
-        upgrades = rect::lpad(upgrades, 10);
-        upgrades = rect::rpad(upgrades, 90);
-        auto rows = rect::hsplit<10>(upgrades, 20);
-        for (auto r : rows) {
-            auto cols = rect::vsplit<10>(r, 20);
-            for (auto c : cols) {
-                rects.push_back(c);
-            }
-        }
-
-        int i = 0;
-
-        std::shared_ptr<UpgradeImpl> hovered_upgrade = nullptr;
-
-        bitset_utils::for_each_enabled_bit(
-            config.unlocked_upgrades, [&](size_t index) {
-                UpgradeClass uc = magic_enum::enum_value<UpgradeClass>(index);
-
-                if (i > (int) rects.size()) return;
-
-                Widget icon = Widget{rects[i]};
-
-                auto upgradeImpl = make_upgrade(uc);
-
-                if (irsm.is_upgrade_active(upgradeImpl->type)) {
-                    div(icon, ui::theme::Usage::Primary);
-                }
-
-                image(icon, upgradeImpl->icon_name);
-                if (hoverable(icon)) {
-                    hovered_upgrade = upgradeImpl;
-                }
-                i++;
-            });
-
-        if (hovered_upgrade) {
-            div(rect, ui::theme::Usage::Background);
-
-            const auto [header, rest] = rect::hsplit<2>(rect);
-
-            const auto icon = rect::rpad(header, 80);
-            const auto name = rect::lpad(header, 10);
-            image(icon, hovered_upgrade->icon_name);
-            text(name, hovered_upgrade->name);
-
-            const auto [flavor, desc] = rect::hsplit<2>(rest);
-            text(flavor, hovered_upgrade->flavor_text);
-            text(desc, hovered_upgrade->description);
-        }
-    }
+    void draw_upgrades(Rectangle window, Rectangle rect);
 
     virtual void onDraw(float dt) override {
         // Note: theres no pausing outside the game, so dont render
@@ -149,17 +78,19 @@ struct BasePauseLayer : public Layer {
             GameState::get().go_back();
         }
         if (button(Widget{settings},
-                   TranslatableString(strings::i18n::SETTINGS))) {
+                   TranslatableString(strings::i18n::Settings))) {
             MenuState::get().set(menu::State::Settings);
         }
 
-        // TODO add debug check
-        if (button(Widget{config}, NO_TRANSLATE("RELOAD CONFIGS"))) {
-            Preload::get().reload_config();
-        }
-        if (button(Widget{quit}, TranslatableString(strings::i18n::QUIT))) {
-            network::Info::reset_connections();
+        if (button(Widget{config}, TranslatableString(strings::i18n::QUIT))) {
+            reset_network();
             return;
+        }
+
+        const auto debug_mode_on = globals::debug_ui_enabled();
+        if (debug_mode_on &&
+            button(Widget{quit}, NO_TRANSLATE("RELOAD CONFIGS"))) {
+            Preload::get().reload_config();
         }
         end();
     }

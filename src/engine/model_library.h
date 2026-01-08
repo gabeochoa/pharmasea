@@ -2,10 +2,14 @@
 #pragma once
 
 // Note move to cpp if we create one
+#include <algorithm>
+#include <string>
+
 #include "files.h"
 //
-#include "library.h"
-#include "raylib.h"
+#include "../ah.h"
+#include "gltf_loader.h"
+#include "graphics.h"
 #include "singleton.h"
 
 // TODO enforce it on object creation?
@@ -24,13 +28,15 @@ struct ModelInfo {
     float rotation_angle = 0;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.text1b(model_name, MAX_MODEL_NAME_LENGTH);
-        s.value4b(size_scale);
-        s.object(position_offset);
-        s.value4b(rotation_angle);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(            //
+            self.model_name,       //
+            self.size_scale,       //
+            self.position_offset,  //
+            self.rotation_angle    //
+        );
     }
 };
 
@@ -53,20 +59,78 @@ struct ModelLibrary {
         return impl.get(name);
     }
 
+    [[nodiscard]] bool contains(const std::string& name) const {
+        return impl.contains(name);
+    }
+
     void load(ModelLoadingInfo mli) {
         const auto full_filename =
             Files::get().fetch_resource_path(mli.folder, mli.filename);
         impl.load(full_filename.c_str(), mli.libraryname);
     }
 
+    // Lazy loading support
+    void register_lazy_model(const std::string& name, ModelLoadingInfo info) {
+        lazy_model_configs[name] = info;
+    }
+    void ensure_loaded(const std::string& name) {
+        if (!impl.contains(name)) {
+            auto it = lazy_model_configs.find(name);
+            if (it != lazy_model_configs.end()) {
+                log_info("Loading lazy model {} on-demand", name);
+                load(it->second);
+            }
+        }
+    }
+    [[nodiscard]] raylib::Model get_and_load_if_needed(
+        const std::string& name) {
+        ensure_loaded(name);
+        return get(name);
+    }
+
     void unload_all() { impl.unload_all(); }
     [[nodiscard]] auto size() { return impl.size(); }
 
    private:
-    struct ModelLibraryImpl : Library<raylib::Model> {
+    // Storage for lazy-loaded model configurations
+    std::unordered_map<std::string, ModelLoadingInfo> lazy_model_configs;
+    struct ModelLibraryImpl : afterhours::Library<raylib::Model> {
         virtual raylib::Model convert_filename_to_object(
             const char*, const char* filename) override {
-            return raylib::LoadModel(filename);
+            std::string path(filename);
+            std::string lower = path;
+            std::transform(lower.begin(), lower.end(), lower.begin(),
+                           ::tolower);
+
+            const bool is_gltf =
+                lower.ends_with(".gltf") || lower.ends_with(".glb");
+
+            if (is_gltf) {
+                std::string warn;
+                std::string err;
+                auto loaded = gltf_loader::load_model(path, warn, err);
+                if (!warn.empty()) {
+                    log_warn("gltf warning {}: {}", filename, warn);
+                }
+                if (loaded.has_value()) {
+                    log_info("Loaded GLTF model {}", filename);
+                    return loaded.value();
+                }
+                log_warn("gltf load failed for {}: {} — using fallback cube",
+                         filename, err);
+            }
+
+            auto model = raylib::LoadModel(filename);
+            const bool looksInvalid =
+                (model.meshes == nullptr) || (model.meshCount <= 0);
+            if (looksInvalid) {
+                log_warn("LoadModel failed for {} — returning fallback cube",
+                         filename);
+                auto mesh = raylib::GenMeshCube(1.0f, 1.0f, 1.0f);
+                auto fallback = raylib::LoadModelFromMesh(mesh);
+                return fallback;
+            }
+            return model;
         }
 
         virtual void unload(raylib::Model model) override {
@@ -100,7 +164,7 @@ struct ModelInfoLibrary {
         return impl.get(name);
     }
 
-    void load(ModelLoadingInfo mli) {
+    void load(const ModelLoadingInfo& mli) {
         const auto full_filename =
             Files::get().fetch_resource_path(mli.folder, mli.filename);
         impl.load(full_filename.c_str(), mli.library_name.c_str());
@@ -116,7 +180,7 @@ struct ModelInfoLibrary {
     [[nodiscard]] auto size() { return impl.size(); }
 
    private:
-    struct ModelInfoLibraryImpl : Library<ModelInfo> {
+    struct ModelInfoLibraryImpl : afterhours::Library<ModelInfo> {
         virtual ModelInfo convert_filename_to_object(const char* name,
                                                      const char*) override {
             return ModelInfo{

@@ -2,15 +2,18 @@
 
 #include "../engine.h"
 #include "../engine/app.h"
-#include "../engine/ui/ui.h"
+#include "../engine/svg_renderer.h"
 #include "../engine/util.h"
 #include "../external_include.h"
+#include "../local_ui.h"
 
 struct MenuLayer : public Layer {
+    SVGRenderer svg;
     std::shared_ptr<ui::UIContext> ui_context;
 
     MenuLayer()
         : Layer(strings::menu::MENU),
+          svg(SVGRenderer("main_menu")),
           ui_context(std::make_shared<ui::UIContext>()) {}
 
     virtual ~MenuLayer() {}
@@ -56,51 +59,34 @@ struct MenuLayer : public Layer {
 
         begin(ui_context, dt);
 
-        auto window = Rectangle{0, 0, WIN_WF(), WIN_HF()};
-        auto [top, rest] = rect::hsplit(window, 33);
-        auto [body, footer] = rect::hsplit(rest, 66);
+        svg.draw_background();
 
-        // Title
-        {
-            auto text_loc = rect::lpad(top, 15);
-            text(Widget{text_loc}, TranslatableString(strings::GAME_NAME));
+        svg.text("Title", TranslatableString(strings::GAME_NAME));
+
+        if (svg.button("PlayButton", TranslatableString(strings::i18n::Play))) {
+            MenuState::get().set(menu::State::Network);
         }
 
-        // Buttons
-        {
-            auto [rect1, rect2, rect3, rect4] =
-                rect::hsplit<4>(rect::hpad(body, 15), 20);
-
-            if (button(Widget{rect1},
-                       TranslatableString(strings::i18n::PLAY))) {
-                MenuState::get().set(menu::State::Network);
-            }
-            if (button(Widget{rect2},
-                       TranslatableString(strings::i18n::ABOUT))) {
-                MenuState::get().set(menu::State::About);
-            }
-            if (button(Widget{rect3},
-                       TranslatableString(strings::i18n::SETTINGS))) {
-                MenuState::get().set(menu::State::Settings);
-            }
-            if (button(Widget{rect4},
-                       TranslatableString(strings::i18n::EXIT))) {
-                App::get().close();
-            }
+        if (svg.button("SettingsButton",
+                       TranslatableString(strings::i18n::Settings))) {
+            MenuState::get().set(menu::State::Settings);
         }
 
-        // Ext Buttons
-        {
-            auto ext_buttons = rect::rpad(rect::lpad(footer, 80), 90);
-            auto [b1, b2] = rect::vsplit<2>(ext_buttons, 20);
+        if (svg.button("AboutButton",
+                       TranslatableString(strings::i18n::About))) {
+            MenuState::get().set(menu::State::About);
+        }
 
-            if (image_button(Widget{b1}, "discord")) {
-                util::open_url(strings::urls::DISCORD);
-            }
-            // TODO chose the right color based on the theme
-            if (image_button(Widget{b2}, "itch-white")) {
-                util::open_url(strings::urls::ITCH);
-            }
+        if (svg.button("ExitButton", TranslatableString(strings::i18n::Exit))) {
+            App::get().close();
+        }
+
+        if (svg.button("discord", NO_TRANSLATE(""))) {
+            util::open_url(strings::urls::DISCORD);
+        }
+
+        if (svg.button("itch-white", NO_TRANSLATE(""))) {
+            util::open_url(strings::urls::ITCH);
         }
 
         end();
