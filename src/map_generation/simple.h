@@ -687,70 +687,75 @@ inline void addOrigin(std::vector<char>& grid, int width, int height) {
     grid[midx * width + midy] = generation::ORIGIN;
 }
 
-// Generate a map by directly placing walls extending from boundaries
-inline std::vector<char> something(int width, int height, int num_walls,
-                                   [[maybe_unused]] bool should_print) {
+// Original seed-based room generation (used by default/tests)
+inline std::vector<char> something(int width, int height, int num_seeds_in,
+                                   bool should_print) {
+    char a = 48;
+
     std::vector<char> grid;
     grid.reserve(width * height);
     for (int i = 0; i < width * height; i++) {
         grid.push_back(generation::EMPTY);
     }
 
-    // Add boundary walls first
-    addBoundaryWall(grid, width, height);
+    // get seeds
+    std::vector<vec2> seeds;
+    int num_seeds = std::max(1, num_seeds_in);
+    seeds.reserve(num_seeds);
+    for (int i = 0; i < num_seeds; i++) {
+        seeds.push_back(RandomEngine::get().get_vec(0, width, 0, height));
+    }
 
-    // Add random walls extending from boundaries
-    for (int w = 0; w < num_walls; w++) {
-        // Pick a random edge to extend from (0=top, 1=bottom, 2=left, 3=right)
-        int edge = RandomEngine::get().get_int(0, 3);
-        // Random length (3 to half the dimension)
-        int minLen = 3;
-        int maxLen = (edge < 2 ? height : width) / 2;
-        int length = RandomEngine::get().get_int(minLen, maxLen);
+    for (size_t i = 0; i < seeds.size(); i++) {
+        vec2 seed = seeds[i];
+        int index = (int) (floor(seed.x) * height + floor(seed.y));
+        grid[index] = (char) (a + i);
+    }
 
-        if (edge == 0) {
-            // Extend down from top
-            int col = RandomEngine::get().get_int(2, width - 3);
-            for (int i = 1; i < 1 + length && i < height - 1; i++) {
-                grid[i * width + col] = generation::WALL;
+    auto print_g = [&]() {
+        std::cout << grid.size() << std::endl;
+        std::cout << "====" << std::endl;
+        int i = 0;
+        for (auto c : grid) {
+            std::cout << c;
+            i++;
+            if (i >= width) {
+                i = 0;
+                std::cout << std::endl;
             }
-        } else if (edge == 1) {
-            // Extend up from bottom
-            int col = RandomEngine::get().get_int(2, width - 3);
-            for (int i = height - 2; i > height - 2 - length && i > 0; i--) {
-                grid[i * width + col] = generation::WALL;
-            }
-        } else if (edge == 2) {
-            // Extend right from left
-            int row = RandomEngine::get().get_int(2, height - 3);
-            for (int j = 1; j < 1 + length && j < width - 1; j++) {
-                grid[row * width + j] = generation::WALL;
-            }
-        } else {
-            // Extend left from right
-            int row = RandomEngine::get().get_int(2, height - 3);
-            for (int j = width - 2; j > width - 2 - length && j > 0; j--) {
-                grid[row * width + j] = generation::WALL;
-            }
+        }
+        std::cout << std::endl;
+    };
+
+    if (should_print) print_g();
+
+    while (any_empty(grid, width, height)) {
+        int not_expanded = 0;
+        for (size_t i = 0; i < seeds.size(); i++) {
+            bool expanded = expandRoom(grid, width, height, (char) (a + i));
+            if (!expanded) not_expanded++;
+        }
+        if (not_expanded) {
+            break;
         }
     }
 
-    // Thin out any thick wall sections
+    removeSmallRooms(grid, width, height);
+    addDoorsBetweenRooms(grid, width, height);
+    unifyWalls(grid, width, height);
+    addBoundaryWall(grid, width, height);
+    // Remove short wall segments that jut out from boundary
+    removeAwkwardBoundaryWalls(grid, width, height);
+    // Remove floating wall clusters that don't connect to boundary
+    removeFloatingWallClusters(grid, width, height);
+    removeSmallRoomRegions(grid, width, height);
+    // Thin out any thick wall blobs
     thinWallBlobs(grid, width, height);
-
-    // Widen 1-wide corridors to at least 2 wide
+    // Widen 1-wide corridors
     widenNarrowCorridors(grid, width, height);
-
-    // Remove floating walls
+    // Clean up any walls that got disconnected
     removeFloatingWallClusters(grid, width, height);
 
-    // Fill small isolated regions
-    removeSmallRoomRegions(grid, width, height);
-
-    // Remove any 1x1 enclosed areas
-    remove1x1Rooms(grid, width, height);
-
-    // Ensure all areas are connected
     char label = 'A';
     do {
         label = labelConnectedSections(grid, width, height);
@@ -758,14 +763,18 @@ inline std::vector<char> something(int width, int height, int num_walls,
         removeLabelSections(grid, width, height);
     } while (label > 'B');
 
+    // Remove any 1x1 enclosed walkable areas
+    remove1x1Rooms(grid, width, height);
+
     makeEntrance(grid, width, height);
     addOrigin(grid, width, height);
+    if (should_print) print_g();
 
     return grid;
 }
 
 inline std::vector<char> something(int width, int height) {
-    // Number of walls to generate. For 20x20, this gives ~4-6 walls.
-    int default_num_walls = (int) ((width + height) / 8);
-    return something(width, height, default_num_walls, false);
+    // Default number of seeds for room generation
+    int default_num_seeds = (int) ((width * height) / 20);
+    return something(width, height, default_num_seeds, false);
 }

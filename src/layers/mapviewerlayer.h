@@ -17,6 +17,9 @@
 #include "../map_generation/pipeline.h"
 #include "ah.h"
 
+// For EXAMPLE_MAP
+extern std::vector<std::string> EXAMPLE_MAP;
+
 // A debug layer for visualizing generated maps without running the full game.
 // Launched via: ./pharmasea.exe --map-viewer --seed=xyz
 struct MapViewerLayer : public Layer {
@@ -39,18 +42,30 @@ struct MapViewerLayer : public Layer {
         globals::set_game_cam(cam.get());
         render_texture = raylib::LoadRenderTexture(WIN_W(), WIN_H());
 
-        // Generate and print ASCII map to console
-        mapgen::GenerationContext ctx;
-        mapgen::GeneratedAscii ascii = mapgen::generate_ascii(seed, ctx);
-        archetype = ascii.archetype;
-
         std::cout << "\n=== Map Viewer ===" << std::endl;
         std::cout << "Seed: " << seed << std::endl;
-        std::cout << "Archetype: " << archetype_to_string(archetype) << std::endl;
-        std::cout << "Size: " << ctx.rows << "x" << ctx.cols << std::endl;
-        std::cout << "\nASCII Map:" << std::endl;
-        for (const std::string& line : ascii.lines) {
-            std::cout << line << std::endl;
+
+        if (seed == "default_seed") {
+            // Use DEFAULT_MAP from settings.json
+            std::cout << "Using DEFAULT_MAP from settings.json" << std::endl;
+            std::cout << "Size: " << EXAMPLE_MAP.size() << " lines" << std::endl;
+            std::cout << "\nASCII Map:" << std::endl;
+            for (const std::string& line : EXAMPLE_MAP) {
+                std::cout << line << std::endl;
+            }
+        } else {
+            // Generate and print ASCII map to console
+            mapgen::GenerationContext ctx;
+            mapgen::GeneratedAscii ascii = mapgen::generate_ascii(seed, ctx);
+            archetype = ascii.archetype;
+
+            std::cout << "Archetype: " << archetype_to_string(archetype)
+                      << std::endl;
+            std::cout << "Size: " << ctx.rows << "x" << ctx.cols << std::endl;
+            std::cout << "\nASCII Map:" << std::endl;
+            for (const std::string& line : ascii.lines) {
+                std::cout << line << std::endl;
+            }
         }
         std::cout << "\nControls: WASD=pan, QE=rotate, Mouse wheel=zoom, ESC=exit"
                   << std::endl;
@@ -60,8 +75,7 @@ struct MapViewerLayer : public Layer {
         globals::set_world_map(map.get());
         map->ensure_generated_map(seed);
 
-        // Center camera on BAR_BUILDING since entities are now offset to be
-        // inside the bar building area
+        // Center camera on BAR_BUILDING for all maps
         vec2 bar_center = BAR_BUILDING.center();
         camera_target = {bar_center.x, 0.f, bar_center.y};
     }

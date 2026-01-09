@@ -13,8 +13,11 @@ namespace mapgen {
 
 vec2 generate_default_seed(const std::vector<std::string>& example_map) {
     generation::helper helper(example_map);
-    // Default seed also uses BAR_BUILDING offset for consistency
-    helper.set_world_offset(BAR_BUILDING.center());
+    // Default seed uses BAR_BUILDING offset with manual adjustment
+    vec2 offset = BAR_BUILDING.center();
+    offset.x += 10.5f; 
+    offset.y -= 10.f; 
+    helper.set_world_offset(offset);
     helper.generate();
     // Entities created during generation land in Afterhours' temp list; merge
     // before validation (and any EQ()/EntityQuery usage) so queries can see
