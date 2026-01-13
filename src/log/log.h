@@ -3,6 +3,7 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
+#include <cassert>
 #include <iostream>
 #include <mutex>
 #include <string>
