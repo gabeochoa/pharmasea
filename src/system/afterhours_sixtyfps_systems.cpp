@@ -79,285 +79,6 @@ void generate_store_options();
 void move_purchased_furniture();
 }  // namespace store
 void update_dynamic_trigger_area_settings(Entity& entity, float dt);
-void trigger_cb_on_full_progress(Entity& entity, float dt);
-
-void trigger_cb_on_full_progress(Entity& entity, float) {
-    if (entity.is_missing<IsTriggerArea>()) return;
-    IsTriggerArea& ita = entity.get<IsTriggerArea>();
-    if (ita.progress() < 1.f) return;
-
-    if (should_gate_trigger_fires(ita) && ita.active_entrants() > 0) {
-        if (g_trigger_fired_while_occupied.contains(entity.id)) {
-            return;
-        }
-        g_trigger_fired_while_occupied.insert(entity.id);
-    }
-
-    ita.reset_cooldown();
-
-    const auto _choose_option = [](int option_chosen) {
-        for (RefEntity door : EntityQuery()
-                                  .whereType(EntityType::Door)
-                                  .whereInside(PROGRESSION_BUILDING.min(),
-                                               PROGRESSION_BUILDING.max())
-                                  .gen()) {
-            door.get().addComponentIfMissing<IsSolid>();
-        }
-
-        GameState::get().transition_to_game();
-
-        for (RefEntity player : EQ(SystemManager::get().oldAll)
-                                    .whereType(EntityType::Player)
-                                    .whereInside(PROGRESSION_BUILDING.min(),
-                                                 PROGRESSION_BUILDING.max())
-                                    .gen()) {
-            move_player_SERVER_ONLY(player, game::State::InGame);
-        }
-
-        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-        IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
-        IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
-
-        switch (ipm.upgrade_type()) {
-            case UpgradeType::None:
-                break;
-            case UpgradeType::Upgrade: {
-                const UpgradeClass& option =
-                    (option_chosen == 0 ? ipm.upgradeOption1
-                                        : ipm.upgradeOption2);
-                auto optionImpl = make_upgrade(option);
-                optionImpl->onUnlock(irsm.config, ipm);
-                irsm.selected_upgrades.push_back(optionImpl);
-                irsm.config.mark_upgrade_unlocked(option);
-                generate_machines_for_new_upgrades();
-            } break;
-            case UpgradeType::Drink: {
-                Drink option =
-                    option_chosen == 0 ? ipm.drinkOption1 : ipm.drinkOption2;
-
-                ipm.unlock_drink(option);
-                auto possibleNewIGs = get_req_ingredients_for_drink(option);
-                bitset_utils::for_each_enabled_bit(
-                    possibleNewIGs, [&ipm](size_t index) {
-                        Ingredient ig =
-                            magic_enum::enum_value<Ingredient>(index);
-                        ipm.unlock_ingredient(ig);
-                        return bitset_utils::ForEachFlow::NormalFlow;
-                    });
-
-                spawn_machines_for_newly_unlocked_drink_DONOTCALL(ipm, option);
-            } break;
-        }
-
-        ipm.next_round();
-        system_manager::progression::update_upgrade_variables();
-    };
-
-    switch (ita.type) {
-        case IsTriggerArea::Store_Reroll: {
-            system_manager::store::cleanup_old_store_options();
-            system_manager::store::generate_store_options();
-            OptEntity sophie =
-                EntityQuery().whereType(EntityType::Sophie).gen_first();
-            if (sophie.valid()) {
-                IsBank& bank = sophie->get<IsBank>();
-                IsRoundSettingsManager& irsm =
-                    sophie->get<IsRoundSettingsManager>();
-                int reroll_price = irsm.get<int>(ConfigKey::StoreRerollPrice);
-                bank.withdraw(reroll_price);
-                irsm.config.permanently_modify(ConfigKey::StoreRerollPrice,
-                                               Operation::Add, 25);
-            }
-
-        } break;
-        case IsTriggerArea::Unset:
-            log_warn("Completed trigger area wait time but was Unset type");
-            break;
-        case IsTriggerArea::ModelTest_BackToLobby: {
-            GameState::get().transition_to_lobby();
-
-            const auto ents = EQ().getAllInRange(MODEL_TEST_BUILDING.min(),
-                                                 MODEL_TEST_BUILDING.max());
-
-            for (Entity& to_delete : ents) {
-                if (to_delete.has<IsTriggerArea>()) continue;
-                to_delete.cleanup = true;
-            }
-
-            for (RefEntity player : EQ(SystemManager::get().oldAll)
-                                        .whereType(EntityType::Player)
-                                        .gen()) {
-                move_player_SERVER_ONLY(player, game::State::Lobby);
-            }
-        } break;
-        case IsTriggerArea::Lobby_ModelTest: {
-            GameState::get().transition_to_model_test();
-            if (is_server()) {
-                network::Server* server = globals::server();
-                if (server) {
-                    server->get_map_SERVER_ONLY()->generate_model_test_map();
-                }
-            }
-
-            for (RefEntity player : EQ(SystemManager::get().oldAll)
-                                        .whereType(EntityType::Player)
-                                        .gen()) {
-                move_player_SERVER_ONLY(player, game::State::ModelTest);
-            }
-        } break;
-        case IsTriggerArea::Lobby_LoadSave: {
-            GameState::get().set(game::State::LoadSaveRoom);
-            if (is_server()) {
-                network::Server* server = globals::server();
-                if (server) {
-                    server->get_map_SERVER_ONLY()
-                        ->generate_load_save_room_map();
-                }
-            }
-            for (RefEntity player : EQ(SystemManager::get().oldAll)
-                                        .whereType(EntityType::Player)
-                                        .gen()) {
-                move_player_SERVER_ONLY(player, game::State::LoadSaveRoom);
-            }
-        } break;
-
-        case IsTriggerArea::Lobby_PlayGame: {
-            GameState::get().transition_to_game();
-            for (RefEntity player : EQ(SystemManager::get().oldAll)
-                                        .whereType(EntityType::Player)
-                                        .gen()) {
-                move_player_SERVER_ONLY(player, game::State::InGame);
-            }
-        } break;
-        case IsTriggerArea::Progression_Option1:
-            _choose_option(0);
-            break;
-        case IsTriggerArea::Progression_Option2:
-            _choose_option(1);
-            break;
-        case IsTriggerArea::Store_BackToPlanning: {
-            system_manager::store::move_purchased_furniture();
-
-            GameState::get().transition_to_game();
-
-            for (RefEntity player :
-                 EQ(SystemManager::get().oldAll)
-                     .whereType(EntityType::Player)
-                     .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
-                     .gen()) {
-                move_player_SERVER_ONLY(player, game::State::InGame);
-            }
-        } break;
-
-        case IsTriggerArea::LoadSave_BackToLobby: {
-            GameState::get().transition_to_lobby();
-
-            const auto ents = EQ().getAllInRange(LOAD_SAVE_BUILDING.min(),
-                                                 LOAD_SAVE_BUILDING.max());
-            for (Entity& to_delete : ents) {
-                to_delete.cleanup = true;
-            }
-
-            for (RefEntity player : EQ(SystemManager::get().oldAll)
-                                        .whereType(EntityType::Player)
-                                        .gen()) {
-                move_player_SERVER_ONLY(player, game::State::Lobby);
-            }
-        } break;
-
-        case IsTriggerArea::LoadSave_LoadSlot: {
-            int slot_num = entity.has<HasSubtype>()
-                               ? entity.get<HasSubtype>().get_type_index()
-                               : 1;
-            if (slot_num < 1) slot_num = 1;
-
-            const bool delete_mode = g_load_save_delete_mode;
-            if (delete_mode) {
-                bool ok = server_only::delete_game_slot(slot_num);
-                if (!ok) break;
-
-                // Refresh room by clearing entities in the building and
-                // regenerating.
-                const auto ents = EQ().getAllInRange(LOAD_SAVE_BUILDING.min(),
-                                                     LOAD_SAVE_BUILDING.max());
-                for (Entity& to_delete : ents) {
-                    to_delete.cleanup = true;
-                }
-                network::Server* server = globals::server();
-                if (server) {
-                    server->get_map_SERVER_ONLY()
-                        ->generate_load_save_room_map();
-                    server->force_send_map_state();
-                }
-                break;
-            }
-
-            bool ok = server_only::load_game_from_slot(slot_num);
-            if (!ok) break;
-
-            // Always land in planning (InGame).
-            GameState::get().transition_to_game();
-            for (RefEntity player : EQ(SystemManager::get().oldAll)
-                                        .whereType(EntityType::Player)
-                                        .gen()) {
-                move_player_SERVER_ONLY(player, game::State::InGame);
-            }
-        } break;
-
-        case IsTriggerArea::LoadSave_ToggleDeleteMode: {
-            g_load_save_delete_mode = !g_load_save_delete_mode;
-            network::Server::forward_packet(network::ClientPacket{
-                .channel = Channel::RELIABLE,
-                .client_id = network::SERVER_CLIENT_ID,
-                .msg_type = network::ClientPacket::MsgType::Announcement,
-                .msg =
-                    network::ClientPacket::AnnouncementInfo{
-                        .message = g_load_save_delete_mode ? "Delete mode ON"
-                                                           : "Delete mode OFF",
-                        .type = g_load_save_delete_mode
-                                    ? AnnouncementType::Warning
-                                    : AnnouncementType::Message,
-                    },
-            });
-        } break;
-
-        case IsTriggerArea::Planning_SaveSlot: {
-            if (SystemManager::get().is_bar_closed()) {
-                network::Server::forward_packet(network::ClientPacket{
-                    .channel = Channel::RELIABLE,
-                    .client_id = network::SERVER_CLIENT_ID,
-                    .msg_type = network::ClientPacket::MsgType::Announcement,
-                    .msg =
-                        network::ClientPacket::AnnouncementInfo{
-                            .message =
-                                "Can't save right now (planning/daytime only).",
-                            .type = AnnouncementType::Warning,
-                        },
-                });
-                break;
-            }
-            int slot_num = entity.has<HasSubtype>()
-                               ? entity.get<HasSubtype>().get_type_index()
-                               : 1;
-            if (slot_num < 1) slot_num = 1;
-            bool ok = server_only::save_game_to_slot(slot_num);
-            network::Server::forward_packet(network::ClientPacket{
-                .channel = Channel::RELIABLE,
-                .client_id = network::SERVER_CLIENT_ID,
-                .msg_type = network::ClientPacket::MsgType::Announcement,
-                .msg =
-                    network::ClientPacket::AnnouncementInfo{
-                        .message =
-                            ok ? fmt::format("Saved to slot {:02d}", slot_num)
-                               : fmt::format("Failed to save slot {:02d}",
-                                             slot_num),
-                        .type = ok ? AnnouncementType::Message
-                                   : AnnouncementType::Error,
-                    },
-            });
-        } break;
-    }
-}
 
 void update_dynamic_trigger_area_settings(Entity& entity, float) {
     if (entity.is_missing<IsTriggerArea>()) return;
@@ -920,7 +641,288 @@ struct TriggerCbOnFullProgressSystem
 
     virtual void for_each_with(Entity& entity, IsTriggerArea&,
                                float dt) override {
-        trigger_cb_on_full_progress(entity, dt);
+        (void)dt;
+        if (entity.is_missing<IsTriggerArea>()) return;
+        IsTriggerArea& ita = entity.get<IsTriggerArea>();
+        if (ita.progress() < 1.f) return;
+
+        if (should_gate_trigger_fires(ita) && ita.active_entrants() > 0) {
+            if (g_trigger_fired_while_occupied.contains(entity.id)) {
+                return;
+            }
+            g_trigger_fired_while_occupied.insert(entity.id);
+        }
+
+        ita.reset_cooldown();
+
+        const auto _choose_option = [](int option_chosen) {
+            for (RefEntity door : EntityQuery()
+                                      .whereType(EntityType::Door)
+                                      .whereInside(PROGRESSION_BUILDING.min(),
+                                                   PROGRESSION_BUILDING.max())
+                                      .gen()) {
+                door.get().addComponentIfMissing<IsSolid>();
+            }
+
+            GameState::get().transition_to_game();
+
+            for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                        .whereType(EntityType::Player)
+                                        .whereInside(PROGRESSION_BUILDING.min(),
+                                                     PROGRESSION_BUILDING.max())
+                                        .gen()) {
+                move_player_SERVER_ONLY(player, game::State::InGame);
+            }
+
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            IsProgressionManager& ipm = sophie.get<IsProgressionManager>();
+            IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+            switch (ipm.upgrade_type()) {
+                case UpgradeType::None:
+                    break;
+                case UpgradeType::Upgrade: {
+                    const UpgradeClass& option =
+                        (option_chosen == 0 ? ipm.upgradeOption1
+                                            : ipm.upgradeOption2);
+                    auto optionImpl = make_upgrade(option);
+                    optionImpl->onUnlock(irsm.config, ipm);
+                    irsm.selected_upgrades.push_back(optionImpl);
+                    irsm.config.mark_upgrade_unlocked(option);
+                    generate_machines_for_new_upgrades();
+                } break;
+                case UpgradeType::Drink: {
+                    Drink option =
+                        option_chosen == 0 ? ipm.drinkOption1 : ipm.drinkOption2;
+
+                    ipm.unlock_drink(option);
+                    auto possibleNewIGs = get_req_ingredients_for_drink(option);
+                    bitset_utils::for_each_enabled_bit(
+                        possibleNewIGs, [&ipm](size_t index) {
+                            Ingredient ig =
+                                magic_enum::enum_value<Ingredient>(index);
+                            ipm.unlock_ingredient(ig);
+                            return bitset_utils::ForEachFlow::NormalFlow;
+                        });
+
+                    spawn_machines_for_newly_unlocked_drink_DONOTCALL(ipm,
+                                                                      option);
+                } break;
+            }
+
+            ipm.next_round();
+            system_manager::progression::update_upgrade_variables();
+        };
+
+        switch (ita.type) {
+            case IsTriggerArea::Store_Reroll: {
+                system_manager::store::cleanup_old_store_options();
+                system_manager::store::generate_store_options();
+                OptEntity sophie =
+                    EntityQuery().whereType(EntityType::Sophie).gen_first();
+                if (sophie.valid()) {
+                    IsBank& bank = sophie->get<IsBank>();
+                    IsRoundSettingsManager& irsm =
+                        sophie->get<IsRoundSettingsManager>();
+                    int reroll_price =
+                        irsm.get<int>(ConfigKey::StoreRerollPrice);
+                    bank.withdraw(reroll_price);
+                    irsm.config.permanently_modify(ConfigKey::StoreRerollPrice,
+                                                   Operation::Add, 25);
+                }
+
+            } break;
+            case IsTriggerArea::Unset:
+                log_warn("Completed trigger area wait time but was Unset type");
+                break;
+            case IsTriggerArea::ModelTest_BackToLobby: {
+                GameState::get().transition_to_lobby();
+
+                const auto ents = EQ().getAllInRange(MODEL_TEST_BUILDING.min(),
+                                                     MODEL_TEST_BUILDING.max());
+
+                for (Entity& to_delete : ents) {
+                    if (to_delete.has<IsTriggerArea>()) continue;
+                    to_delete.cleanup = true;
+                }
+
+                for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                            .whereType(EntityType::Player)
+                                            .gen()) {
+                    move_player_SERVER_ONLY(player, game::State::Lobby);
+                }
+            } break;
+            case IsTriggerArea::Lobby_ModelTest: {
+                GameState::get().transition_to_model_test();
+                if (is_server()) {
+                    network::Server* server = globals::server();
+                    if (server) {
+                        server->get_map_SERVER_ONLY()
+                            ->generate_model_test_map();
+                    }
+                }
+
+                for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                            .whereType(EntityType::Player)
+                                            .gen()) {
+                    move_player_SERVER_ONLY(player, game::State::ModelTest);
+                }
+            } break;
+            case IsTriggerArea::Lobby_LoadSave: {
+                GameState::get().set(game::State::LoadSaveRoom);
+                if (is_server()) {
+                    network::Server* server = globals::server();
+                    if (server) {
+                        server->get_map_SERVER_ONLY()
+                            ->generate_load_save_room_map();
+                    }
+                }
+                for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                            .whereType(EntityType::Player)
+                                            .gen()) {
+                    move_player_SERVER_ONLY(player, game::State::LoadSaveRoom);
+                }
+            } break;
+
+            case IsTriggerArea::Lobby_PlayGame: {
+                GameState::get().transition_to_game();
+                for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                            .whereType(EntityType::Player)
+                                            .gen()) {
+                    move_player_SERVER_ONLY(player, game::State::InGame);
+                }
+            } break;
+            case IsTriggerArea::Progression_Option1:
+                _choose_option(0);
+                break;
+            case IsTriggerArea::Progression_Option2:
+                _choose_option(1);
+                break;
+            case IsTriggerArea::Store_BackToPlanning: {
+                system_manager::store::move_purchased_furniture();
+
+                GameState::get().transition_to_game();
+
+                for (RefEntity player :
+                     EQ(SystemManager::get().oldAll)
+                         .whereType(EntityType::Player)
+                         .whereInside(STORE_BUILDING.min(), STORE_BUILDING.max())
+                         .gen()) {
+                    move_player_SERVER_ONLY(player, game::State::InGame);
+                }
+            } break;
+
+            case IsTriggerArea::LoadSave_BackToLobby: {
+                GameState::get().transition_to_lobby();
+
+                const auto ents = EQ().getAllInRange(LOAD_SAVE_BUILDING.min(),
+                                                     LOAD_SAVE_BUILDING.max());
+                for (Entity& to_delete : ents) {
+                    to_delete.cleanup = true;
+                }
+
+                for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                            .whereType(EntityType::Player)
+                                            .gen()) {
+                    move_player_SERVER_ONLY(player, game::State::Lobby);
+                }
+            } break;
+
+            case IsTriggerArea::LoadSave_LoadSlot: {
+                int slot_num = entity.has<HasSubtype>()
+                                   ? entity.get<HasSubtype>().get_type_index()
+                                   : 1;
+                if (slot_num < 1) slot_num = 1;
+
+                const bool delete_mode = g_load_save_delete_mode;
+                if (delete_mode) {
+                    bool ok = server_only::delete_game_slot(slot_num);
+                    if (!ok) break;
+
+                    // Refresh room by clearing entities in the building and
+                    // regenerating.
+                    const auto ents = EQ().getAllInRange(
+                        LOAD_SAVE_BUILDING.min(), LOAD_SAVE_BUILDING.max());
+                    for (Entity& to_delete : ents) {
+                        to_delete.cleanup = true;
+                    }
+                    network::Server* server = globals::server();
+                    if (server) {
+                        server->get_map_SERVER_ONLY()
+                            ->generate_load_save_room_map();
+                        server->force_send_map_state();
+                    }
+                    break;
+                }
+
+                bool ok = server_only::load_game_from_slot(slot_num);
+                if (!ok) break;
+
+                // Always land in planning (InGame).
+                GameState::get().transition_to_game();
+                for (RefEntity player : EQ(SystemManager::get().oldAll)
+                                            .whereType(EntityType::Player)
+                                            .gen()) {
+                    move_player_SERVER_ONLY(player, game::State::InGame);
+                }
+            } break;
+
+            case IsTriggerArea::LoadSave_ToggleDeleteMode: {
+                g_load_save_delete_mode = !g_load_save_delete_mode;
+                network::Server::forward_packet(network::ClientPacket{
+                    .channel = Channel::RELIABLE,
+                    .client_id = network::SERVER_CLIENT_ID,
+                    .msg_type = network::ClientPacket::MsgType::Announcement,
+                    .msg =
+                        network::ClientPacket::AnnouncementInfo{
+                            .message = g_load_save_delete_mode
+                                           ? "Delete mode ON"
+                                           : "Delete mode OFF",
+                            .type = g_load_save_delete_mode
+                                        ? AnnouncementType::Warning
+                                        : AnnouncementType::Message,
+                        },
+                });
+            } break;
+
+            case IsTriggerArea::Planning_SaveSlot: {
+                if (SystemManager::get().is_bar_closed()) {
+                    network::Server::forward_packet(network::ClientPacket{
+                        .channel = Channel::RELIABLE,
+                        .client_id = network::SERVER_CLIENT_ID,
+                        .msg_type =
+                            network::ClientPacket::MsgType::Announcement,
+                        .msg =
+                            network::ClientPacket::AnnouncementInfo{
+                                .message =
+                                    "Can't save right now (planning/daytime only).",
+                                .type = AnnouncementType::Warning,
+                            },
+                    });
+                    break;
+                }
+                int slot_num = entity.has<HasSubtype>()
+                                   ? entity.get<HasSubtype>().get_type_index()
+                                   : 1;
+                if (slot_num < 1) slot_num = 1;
+                bool ok = server_only::save_game_to_slot(slot_num);
+                network::Server::forward_packet(network::ClientPacket{
+                    .channel = Channel::RELIABLE,
+                    .client_id = network::SERVER_CLIENT_ID,
+                    .msg_type = network::ClientPacket::MsgType::Announcement,
+                    .msg =
+                        network::ClientPacket::AnnouncementInfo{
+                            .message =
+                                ok ? fmt::format("Saved to slot {:02d}",
+                                                 slot_num)
+                                   : fmt::format("Failed to save slot {:02d}",
+                                                 slot_num),
+                            .type = ok ? AnnouncementType::Message
+                                       : AnnouncementType::Error,
+                        },
+                });
+            } break;
+        }
     }
 };
 
@@ -939,6 +941,7 @@ struct ResetHighlightedSystem : public afterhours::System<CanBeHighlighted> {
     }
 };
 
+// TODO split into two systems one for snappable and one for non-snappable
 struct TransformSnapperSystem : public afterhours::System<Transform> {
     virtual void for_each_with(Entity& entity, Transform& transform,
                                float) override {
