@@ -25,7 +25,8 @@ DEBUG_WARNING_FLAGS = -Wall -Wextra -Wuninitialized -Wshadow -Wno-conversion \
 RELEASE_WARNING_FLAGS = -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
                         -Wconversion
 
-# MCP support
+# MCP support (default on, can disable with ENABLE_MCP=0)
+ENABLE_MCP ?= 1
 MCP_FLAGS =
 ifeq ($(ENABLE_MCP),1)
     MCP_FLAGS = -DAFTER_HOURS_ENABLE_MCP

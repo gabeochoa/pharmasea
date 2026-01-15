@@ -1,3 +1,5 @@
+# MCP screenshots
+mcp_screenshots/
 **/x64/Debug/*
 **/x64/.vs/*
 *.dSYM

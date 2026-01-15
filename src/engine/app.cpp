@@ -20,10 +20,25 @@
 #ifdef AFTER_HOURS_ENABLE_MCP
 #include <afterhours/src/plugins/mcp_server.h>
 
+#include <condition_variable>
+
 extern bool MCP_ENABLED;
 
 namespace {
-std::vector<uint8_t> capture_screenshot_png() {
+struct ScreenshotState {
+  std::mutex mutex;
+  std::condition_variable cv;
+  bool requested = false;
+  bool ready = false;
+  std::vector<uint8_t> data;
+};
+
+ScreenshotState& screenshot_state() {
+  static ScreenshotState state;
+  return state;
+}
+
+std::vector<uint8_t> capture_screenshot_png_main_thread() {
   App& app = App::get();
   raylib::Image image = raylib::LoadImageFromTexture(app.get_main_texture());
   if (image.data == nullptr) {
@@ -42,6 +57,40 @@ std::vector<uint8_t> capture_screenshot_png() {
   std::vector<uint8_t> result(png_data, png_data + file_size);
   raylib::MemFree(png_data);
   return result;
+}
+
+std::vector<uint8_t> capture_screenshot_png() {
+  auto& state = screenshot_state();
+  std::unique_lock<std::mutex> lock(state.mutex);
+  state.requested = true;
+  state.ready = false;
+  state.data.clear();
+  state.cv.notify_all();
+
+  if (!state.cv.wait_for(lock, std::chrono::milliseconds(2000),
+                         [&state] { return state.ready; })) {
+    state.requested = false;
+    return {};
+  }
+  return state.data;
+}
+
+void process_screenshot_request_if_needed() {
+  auto& state = screenshot_state();
+  std::unique_lock<std::mutex> lock(state.mutex);
+  if (!state.requested || state.ready) {
+    return;
+  }
+  lock.unlock();
+
+  std::vector<uint8_t> data = capture_screenshot_png_main_thread();
+
+  lock.lock();
+  state.data = std::move(data);
+  state.ready = true;
+  state.requested = false;
+  lock.unlock();
+  state.cv.notify_all();
 }
 
 void init_mcp_server() {
@@ -278,6 +327,11 @@ void App::loop(float dt) {
     simulated_input::update(dt);
 
     draw_all_to_texture(dt);
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (MCP_ENABLED) {
+        process_screenshot_request_if_needed();
+    }
+#endif
     render_to_screen();
 
     // Check Input

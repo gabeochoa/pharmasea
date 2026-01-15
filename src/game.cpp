@@ -450,6 +450,10 @@ void process_dev_flags(int argc, char* argv[]) {
         MCP_ENABLED = true;
         log_info("--mcp flag detected");
     }
+#else
+    if (cmdl[{"--mcp"}]) {
+        log_warn("--mcp flag ignored: build was compiled without MCP support");
+    }
 #endif
 
     // Parse --seed=xyz or --seed xyz
