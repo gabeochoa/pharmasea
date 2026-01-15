@@ -17,6 +17,64 @@
 #include "shader_library.h"
 #include "simulated_input/simulated_input.h"
 
+#ifdef AFTER_HOURS_ENABLE_MCP
+#include <afterhours/src/plugins/mcp_server.h>
+
+extern bool MCP_ENABLED;
+
+namespace {
+std::vector<uint8_t> capture_screenshot_png() {
+  App& app = App::get();
+  raylib::Image image = raylib::LoadImageFromTexture(app.get_main_texture());
+  if (image.data == nullptr) {
+    return {};
+  }
+  raylib::ImageFlipVertical(&image);
+
+  int file_size = 0;
+  unsigned char* png_data = raylib::ExportImageToMemory(image, ".png", &file_size);
+  raylib::UnloadImage(image);
+
+  if (png_data == nullptr || file_size <= 0) {
+    return {};
+  }
+
+  std::vector<uint8_t> result(png_data, png_data + file_size);
+  raylib::MemFree(png_data);
+  return result;
+}
+
+void init_mcp_server() {
+  if (!MCP_ENABLED) {
+    return;
+  }
+
+  afterhours::mcp::MCPConfig config;
+  config.get_screen_size = []() {
+    return std::make_pair(WIN_W(), WIN_H());
+  };
+  config.capture_screenshot = capture_screenshot_png;
+  config.mouse_move = [](int x, int y) {
+    raylib::Rectangle rect{static_cast<float>(x), static_cast<float>(y), 1.0f, 1.0f};
+    input_injector::schedule_mouse_click_at(rect);
+  };
+  config.mouse_click = [](int x, int y, int /* button */) {
+    raylib::Rectangle rect{static_cast<float>(x), static_cast<float>(y), 1.0f, 1.0f};
+    input_injector::schedule_mouse_click_at(rect);
+    input_injector::inject_scheduled_click();
+  };
+  config.key_down = [](int keycode) {
+    input_injector::set_key_down(keycode);
+  };
+  config.key_up = [](int keycode) {
+    input_injector::set_key_up(keycode);
+  };
+
+  afterhours::mcp::init(config);
+}
+} // namespace
+#endif
+
 App App::instance;
 bool App::created = false;
 
@@ -182,17 +240,35 @@ void App::run() {
         if (layer) layer->onStartup();
     }
 
+#ifdef AFTER_HOURS_ENABLE_MCP
+    init_mcp_server();
+#endif
+
     running = true;
     while (running && !raylib::WindowShouldClose()) {
         float dt = raylib::GetFrameTime();
         this->loop(dt);
     }
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (MCP_ENABLED) {
+        afterhours::mcp::shutdown();
+    }
+#endif
+
     simulated_input::stop();
     raylib::CloseWindow();
 }
 
 void App::loop(float dt) {
     TRACY_ZONE_SCOPED;
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (MCP_ENABLED) {
+        afterhours::mcp::update();
+        input_injector::update_key_hold(dt);
+    }
+#endif
 
     for (Layer* layer : layerstack) {
         if (layer) layer->onUpdate(dt);
@@ -215,6 +291,13 @@ void App::loop(float dt) {
         MouseMap::get().forEachMouseInput(
             std::bind(&App::processEvent, this, std::placeholders::_1));
     }
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (MCP_ENABLED) {
+        input_injector::release_scheduled_click();
+    }
+#endif
+
     TRACY_FRAME_MARK("app::loop");
 }
 

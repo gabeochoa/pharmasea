@@ -39,6 +39,11 @@ struct App {
     // TODO create a render texture library?
     raylib::RenderTexture2D mainRT;
 
+   public:
+    [[nodiscard]] raylib::Texture2D get_main_texture() const { return mainRT.texture; }
+
+   private:
+
     bool running = false;
     int width;
     int height;

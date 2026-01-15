@@ -102,6 +102,10 @@ bool LOAD_SAVE_ENABLED = false;
 bool MAP_VIEWER = false;
 std::string MAP_VIEWER_SEED = "";
 
+#ifdef AFTER_HOURS_ENABLE_MCP
+bool MCP_ENABLED = false;
+#endif
+
 void startup() {
     // TODO :INFRA: need to test on lower framerates, there seems to be issues
     // with network initlization
@@ -236,7 +240,8 @@ void process_dev_flags(int argc, char* argv[]) {
             "--intro",
             "--test_map_generation",
             "--replay-validate",
-            "--map-viewer"};
+            "--map-viewer",
+            "--mcp"};
         static const std::set<std::string> with_value = {
             "--replay",
             "--bypass-rounds",
@@ -439,6 +444,13 @@ void process_dev_flags(int argc, char* argv[]) {
         ENABLE_SOUND = false;
         log_info("--map-viewer flag detected");
     }
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (cmdl[{"--mcp"}]) {
+        MCP_ENABLED = true;
+        log_info("--mcp flag detected");
+    }
+#endif
 
     // Parse --seed=xyz or --seed xyz
     const auto parse_seed = [&](const std::string& val) {

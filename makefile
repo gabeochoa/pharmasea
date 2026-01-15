@@ -25,7 +25,13 @@ DEBUG_WARNING_FLAGS = -Wall -Wextra -Wuninitialized -Wshadow -Wno-conversion \
 RELEASE_WARNING_FLAGS = -Wall -Wextra -Wpedantic -Wuninitialized -Wshadow \
                         -Wconversion
 
-FLAGS = -std=c++2a $(DEBUG_WARNING_FLAGS) -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TIMEFLAG)
+# MCP support
+MCP_FLAGS =
+ifeq ($(ENABLE_MCP),1)
+    MCP_FLAGS = -DAFTER_HOURS_ENABLE_MCP
+endif
+
+FLAGS = -std=c++2a $(DEBUG_WARNING_FLAGS) -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TIMEFLAG) $(MCP_FLAGS)
 
 # LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \
