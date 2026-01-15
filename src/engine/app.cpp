@@ -7,7 +7,6 @@
 #include "tracy.h"
 //
 #include "event.h"
-#include "globals_register.h"
 #include "keymap.h"
 #include "mouse_map.h"
 #include "raylib.h"
@@ -16,18 +15,133 @@
 #include "log.h"
 #include "settings.h"
 #include "shader_library.h"
+#include "simulated_input/simulated_input.h"
 
-std::shared_ptr<App> App_single;
+#ifdef AFTER_HOURS_ENABLE_MCP
+#include <afterhours/src/plugins/mcp_server.h>
 
-/*
- * TODO was for model testing
-void App::start_remove_invisible() {
-    auto discard_alpha_shader = ShaderLibrary::get().get("discard_alpha");
-    raylib::BeginShaderMode(discard_alpha_shader);
+#include <condition_variable>
+
+extern bool MCP_ENABLED;
+
+namespace {
+struct ScreenshotState {
+  std::mutex mutex;
+  std::condition_variable cv;
+  bool requested = false;
+  bool ready = false;
+  std::vector<uint8_t> data;
+};
+
+ScreenshotState& screenshot_state() {
+  static ScreenshotState state;
+  return state;
 }
 
-void App::end_remove_invisible() { raylib::EndShaderMode(); }
-*/
+std::vector<uint8_t> capture_screenshot_png_main_thread() {
+  App& app = App::get();
+  raylib::Image image = raylib::LoadImageFromTexture(app.get_main_texture());
+  if (image.data == nullptr) {
+    return {};
+  }
+  raylib::ImageFlipVertical(&image);
+
+  int file_size = 0;
+  unsigned char* png_data = raylib::ExportImageToMemory(image, ".png", &file_size);
+  raylib::UnloadImage(image);
+
+  if (png_data == nullptr || file_size <= 0) {
+    return {};
+  }
+
+  std::vector<uint8_t> result(png_data, png_data + file_size);
+  raylib::MemFree(png_data);
+  return result;
+}
+
+std::vector<uint8_t> capture_screenshot_png() {
+  auto& state = screenshot_state();
+  std::unique_lock<std::mutex> lock(state.mutex);
+  state.requested = true;
+  state.ready = false;
+  state.data.clear();
+  state.cv.notify_all();
+
+  if (!state.cv.wait_for(lock, std::chrono::milliseconds(2000),
+                         [&state] { return state.ready; })) {
+    state.requested = false;
+    return {};
+  }
+  return state.data;
+}
+
+void process_screenshot_request_if_needed() {
+  auto& state = screenshot_state();
+  std::unique_lock<std::mutex> lock(state.mutex);
+  if (!state.requested || state.ready) {
+    return;
+  }
+  lock.unlock();
+
+  std::vector<uint8_t> data = capture_screenshot_png_main_thread();
+
+  lock.lock();
+  state.data = std::move(data);
+  state.ready = true;
+  state.requested = false;
+  lock.unlock();
+  state.cv.notify_all();
+}
+
+void init_mcp_server() {
+  if (!MCP_ENABLED) {
+    return;
+  }
+
+  afterhours::mcp::MCPConfig config;
+  config.get_screen_size = []() {
+    return std::make_pair(WIN_W(), WIN_H());
+  };
+  config.capture_screenshot = capture_screenshot_png;
+  config.mouse_move = [](int x, int y) {
+    raylib::Rectangle rect{static_cast<float>(x), static_cast<float>(y), 1.0f, 1.0f};
+    input_injector::schedule_mouse_click_at(rect);
+  };
+  config.mouse_click = [](int x, int y, int /* button */) {
+    raylib::Rectangle rect{static_cast<float>(x), static_cast<float>(y), 1.0f, 1.0f};
+    input_injector::schedule_mouse_click_at(rect);
+    input_injector::inject_scheduled_click();
+  };
+  config.key_down = [](int keycode) {
+    input_injector::set_key_down(keycode);
+  };
+  config.key_up = [](int keycode) {
+    input_injector::set_key_up(keycode);
+  };
+
+  afterhours::mcp::init(config);
+}
+} // namespace
+#endif
+
+App App::instance;
+bool App::created = false;
+
+void App::create(const AppSettings& pt) {
+    if (created) {
+        log_error("Trying to create App twice");
+        return;
+    }
+    new (&instance) App(pt);
+    created = true;
+}
+
+App& App::get() {
+    if (!created) {
+        log_error("trying to fetch app but none was created");
+    }
+    return instance;
+}
 
 void App::start_post_processing() {
     if (!Settings::get().data.enable_postprocessing) return;
@@ -53,16 +167,19 @@ App::App(const AppSettings& settings) {
     KeyMap::create();
 
     mainRT = raylib::LoadRenderTexture(width, height);
-    GLOBALS.set("mainRT", &mainRT);
+}
+
+void App::loadLayers(const std::vector<Layer*>& layers) {
+    for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
+        layerstack[++max_layer] = *it;
+    }
+    log_info("Loaded {} layers", max_layer);
 }
 
 App::~App() {
     UnloadRenderTexture(mainRT);
     // TODO do we need to / can we remove mainRT from globals
 }
-
-void App::pushLayer(Layer* layer) { layerstack.push(layer); }
-void App::pushOverlay(Layer* layer) { layerstack.pushOverlay(layer); }
 
 void App::onEvent(Event& event) {
     EventDispatcher dispatcher(event);
@@ -83,7 +200,6 @@ bool App::onWindowResize(WindowResizeEvent event) {
 
     UnloadRenderTexture(mainRT);
     mainRT = raylib::LoadRenderTexture(width, height);
-    GLOBALS.set("mainRT", &mainRT);
     return true;
 }
 
@@ -139,6 +255,7 @@ void App::processEvent(Event& e) {
     TRACY_ZONE_SCOPED;
 
     this->onEvent(e);
+    input_recorder::record(e);
     if (e.handled) {
         return;
     }
@@ -147,11 +264,15 @@ void App::processEvent(Event& e) {
     // if they handle it then no need for the lower ones to get the rest
     // eg imagine UI pause menu blocking game UI elements
     //    we wouldnt want the player to click pass the pause menu
-    for (auto it = layerstack.end(); it != layerstack.begin();) {
-        (*--it)->onEvent(e);
+
+    int i = max_layer;
+    while (i >= 0) {
+        Layer* layer = layerstack[i];
+        if (layer) layer->onEvent(e);
         if (e.handled) {
             break;
         }
+        i--;
     }
 }
 
@@ -163,22 +284,54 @@ void App::run() {
 #else
     log_info("Tracing is not enabled");
 #endif
+
+    for (Layer* layer : layerstack) {
+        if (layer) layer->onStartup();
+    }
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+    init_mcp_server();
+#endif
+
     running = true;
     while (running && !raylib::WindowShouldClose()) {
         float dt = raylib::GetFrameTime();
         this->loop(dt);
     }
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (MCP_ENABLED) {
+        afterhours::mcp::shutdown();
+    }
+#endif
+
+    simulated_input::stop();
     raylib::CloseWindow();
 }
 
 void App::loop(float dt) {
     TRACY_ZONE_SCOPED;
 
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (MCP_ENABLED) {
+        afterhours::mcp::update();
+        input_injector::update_key_hold(dt);
+    }
+#endif
+
     for (Layer* layer : layerstack) {
-        layer->onUpdate(dt);
+        if (layer) layer->onUpdate(dt);
     }
 
+    // Replay recorded input and handle bypass injections/holds
+    simulated_input::update(dt);
+
     draw_all_to_texture(dt);
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (MCP_ENABLED) {
+        process_screenshot_request_if_needed();
+    }
+#endif
     render_to_screen();
 
     // Check Input
@@ -192,6 +345,13 @@ void App::loop(float dt) {
         MouseMap::get().forEachMouseInput(
             std::bind(&App::processEvent, this, std::placeholders::_1));
     }
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (MCP_ENABLED) {
+        input_injector::release_scheduled_click();
+    }
+#endif
+
     TRACY_FRAME_MARK("app::loop");
 }
 
@@ -200,7 +360,7 @@ void App::draw_all_to_texture(float dt) {
 
     raylib::BeginTextureMode(mainRT);
     for (Layer* layer : layerstack) {
-        layer->onDraw(dt);
+        if (layer) layer->onDraw(dt);
     }
     raylib::EndTextureMode();
 }

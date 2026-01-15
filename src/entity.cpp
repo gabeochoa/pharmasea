@@ -1,24 +1,19 @@
 
 #include "entity.h"
 
-Entity::~Entity() {
-    for (auto itr = componentArray.begin(); itr != componentArray.end();
-         itr++) {
-        if (itr->second) delete (itr->second);
-    }
-    componentArray.clear();
-}
-
-const std::string_view Entity::name() const {
-    return magic_enum::enum_name<EntityType>(type);
-}
+#include "ah.h"
+#include "entity_type.h"
 
 bool check_type(const Entity& entity, EntityType type) {
-    return type == entity.type;
+    return entity.hasTag(type);
 }
 
 bool check_if_drink(const Entity& entity) {
-    switch (entity.type) {
+    EntityType type = get_entity_type(entity);
+    switch (type) {
+        case EntityType::Pitcher:
+        case EntityType::Drink:
+            return true;
         case EntityType::Unknown:
         case EntityType::x:
         case EntityType::y:
@@ -43,6 +38,7 @@ bool check_if_drink(const Entity& entity) {
         case EntityType::Blender:
         case EntityType::SodaMachine:
         case EntityType::Cupboard:
+        case EntityType::PitcherCupboard:
         case EntityType::Squirter:
         case EntityType::FilteredGrabber:
         case EntityType::PnumaticPipe:
@@ -57,22 +53,45 @@ bool check_if_drink(const Entity& entity) {
         case EntityType::DraftTap:
         case EntityType::Toilet:
         case EntityType::Guitar:
+        case EntityType::ChampagneHolder:
+        case EntityType::Jukebox:
+        case EntityType::AITargetLocation:
+        case EntityType::InteractiveSettingChanger:
+        case EntityType::Door:
+        case EntityType::SodaFountain:
         case EntityType::SodaSpout:
+        case EntityType::Champagne:
         case EntityType::Alcohol:
         case EntityType::Fruit:
         case EntityType::FruitJuice:
         case EntityType::SimpleSyrup:
         case EntityType::Mop:
+        case EntityType::HandTruck:
         case EntityType::Trash:
-        case EntityType::PitcherCupboard:
-        case EntityType::ChampagneHolder:
-        case EntityType::Champagne:
-        case EntityType::Jukebox:
-        case EntityType::AITargetLocation:
             return false;
-        case EntityType::Pitcher:
-        case EntityType::Drink:
-            return true;
     }
     return false;
+}
+
+EntityType get_entity_type(const Entity& entity) {
+    // Use bitset operations to find the first set bit (much faster than
+    // iterating enum values)
+    int first_bit = bitset_utils::get_first_enabled_bit(entity.tags);
+
+    if (first_bit == -1) {
+        // No tags set
+        log_error("Entity has no tags set: {}", entity.tags.to_string());
+        return EntityType::Unknown;
+    }
+
+    // Check if multiple tags are set by counting bits
+    // If count > 1, return Unknown (entities should only have one EntityType
+    // tag)
+    if (entity.tags.count() > 1) {
+        log_error("Entity has multiple tags set: {}", entity.tags.to_string());
+        return EntityType::Unknown;
+    }
+
+    // Cast the bit index to EntityType
+    return static_cast<EntityType>(first_bit);
 }

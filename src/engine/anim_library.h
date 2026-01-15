@@ -4,10 +4,9 @@
 // Note move to cpp if we create one
 #include "files.h"
 //
-#include "library.h"
+#include "../ah.h"
 #include "singleton.h"
 
-// TODO enforce it on object creation?
 constexpr int MAX_ANIM_NAME_LENGTH = 100;
 
 struct AnimationInfo {
@@ -20,14 +19,15 @@ struct AnimationInfo {
     int totalFrames;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.text1b(anim_name, MAX_ANIM_NAME_LENGTH);
-        s.value4b(index);
-
-        s.value4b(frame);
-        s.value4b(totalFrames);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(       //
+            self.anim_name,   //
+            self.index,       //
+            self.frame,       //
+            self.totalFrames  //
+        );
     }
 };
 
@@ -58,12 +58,18 @@ struct AnimLibrary {
         const auto full_filename =
             Files::get().fetch_resource_path(mli.folder, mli.filename);
         impl.load(full_filename.c_str(), mli.libraryname);
+        if (strlen(mli.libraryname) > MAX_ANIM_NAME_LENGTH) {
+            log_warn(
+                "Loadded animation {} but name is longer than our max length "
+                "which means there might be conflicts on serialization",
+                mli.libraryname);
+        }
     }
 
     void unload_all() { impl.unload_all(); }
 
    private:
-    struct AnimLibraryImpl : Library<Animation> {
+    struct AnimLibraryImpl : afterhours::Library<Animation> {
         virtual Animation convert_filename_to_object(
             const char*, const char* filename) override {
             unsigned int temp_num_anims;

@@ -2,17 +2,15 @@
 
 #pragma once
 
-#include "../engine/random.h"
+#include "../engine/random_engine.h"
 #include "../strings.h"
 #include "base_component.h"
 
 struct UsesCharacterModel : public BaseComponent {
     UsesCharacterModel() : index(0), changed(true) {}
 
-    virtual ~UsesCharacterModel() {}
-
     auto& switch_to_random_model() {
-        index = randIn(0, strings::character_models.size() - 1);
+        index = RandomEngine::get().get_index(strings::character_models);
         changed = true;
         return *this;
     }
@@ -22,8 +20,8 @@ struct UsesCharacterModel : public BaseComponent {
         changed = true;
     }
 
-    [[nodiscard]] const std::string& fetch_model_name() const {
-        return strings::character_models[index];
+    [[nodiscard]] std::string fetch_model_name() const {
+        return std::string(strings::character_models[index]);
     }
 
     [[nodiscard]] bool value_same_as_last_render() const {
@@ -46,12 +44,13 @@ struct UsesCharacterModel : public BaseComponent {
     int index;
     bool changed;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(index);
-        s.value1b(changed);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.index,                         //
+            self.changed                        //
+        );
     }
 };

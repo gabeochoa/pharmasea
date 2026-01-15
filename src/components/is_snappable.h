@@ -4,12 +4,12 @@
 #include "base_component.h"
 
 struct IsSnappable : public BaseComponent {
-    virtual ~IsSnappable() {}
-
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                        //
+            static_cast<BaseComponent&>(self)  //
+        );
     }
 };

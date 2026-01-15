@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <concepts>
+
 #include "../external_include.h"
 #include "gamepad_axis_with_dir.h"
 
@@ -65,12 +67,18 @@ struct Event {
         return getCategoryFlags() & cat;
     }
 };
+
+template<typename T>
+concept DispatchableEvent = std::derived_from<T, Event> && requires {
+    { T::getStaticType() } -> std::same_as<EventType>;
+};
+
 struct EventDispatcher {
     explicit EventDispatcher(Event& e) : event(e) {}
     Event& event;
 
-    template<typename T>
-    bool dispatch(std::function<bool(T&)> func) {
+    template<DispatchableEvent T>
+    bool dispatch(const std::function<bool(T&)>& func) {
         if (event.getEventType() == T::getStaticType()) {
             event.handled = func(*(T*) &event);
             return true;

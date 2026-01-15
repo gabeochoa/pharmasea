@@ -1,13 +1,13 @@
 
 #pragma once
 
+#include "log/log.h"
+//
+#include "ah.h"
+using afterhours::Entity;
 #include "engine/assert.h"
-#include "engine/log.h"
 #include "external_include.h"
 //
-
-using EntityID = int;
-struct Entity;
 
 enum JobType {
     NoJob = 0,
@@ -19,9 +19,9 @@ enum JobType {
     Mopping,
     Bathroom,
     PlayJukebox,
+    Wandering,
 
     // Not used yet
-    Wandering,
     EnterStore,
     WaitInQueueForPickup,
     Leaving,
@@ -45,14 +45,15 @@ struct Job {
     vec2 end;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(type);
-        s.value4b(state);
-
-        s.object(start);
-        s.object(end);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(  //
+            self.type,   //
+            self.state,  //
+            self.start,  //
+            self.end     //
+        );
     }
 
    public:

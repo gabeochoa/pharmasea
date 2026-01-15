@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../engine/constexpr_containers.h"
-#include "../entity_helper.h"
+#include "../engine/runtime_globals.h"
 #include "base_game_renderer.h"
 
 constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //
@@ -9,10 +9,7 @@ constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //
 );
 
 constexpr CEMap<int, game::State, CHOOSABLE_STATES> choosable_game_states = {{{
-    {2, game::State::InRound},
-    {3, game::State::Planning},
-    {5, game::State::Progression},
-    {6, game::State::Store},
+    {2, game::State::InGame},
     {7, game::State::ModelTest},
     {1, game::State::Lobby},
 }}};
@@ -24,20 +21,26 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     bool skip_ingredient_match = false;
 
     DebugSettingsLayer() : BaseGameRendererLayer("DebugSettings") {
-        GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
-        GLOBALS.set("no_clip_enabled", &no_clip_enabled);
-        GLOBALS.set("skip_ingredient_match", &skip_ingredient_match);
+        sync_globals();
+    }
+
+    void sync_globals() {
+        globals::set_debug_ui_enabled(debug_ui_enabled);
+        globals::set_no_clip_enabled(no_clip_enabled);
+        globals::set_skip_ingredient_match(skip_ingredient_match);
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
         if (KeyMap::get_button(menu::State::Game, InputName::ToggleDebug) ==
             event.button) {
             debug_ui_enabled = !debug_ui_enabled;
+            sync_globals();
             return true;
         }
         if (KeyMap::get_button(menu::State::Game,
                                InputName::ToggleNetworkView) == event.button) {
             no_clip_enabled = !no_clip_enabled;
+            sync_globals();
             return true;
         }
 
@@ -45,6 +48,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                                InputName::SkipIngredientMatch) ==
             event.button) {
             skip_ingredient_match = !skip_ingredient_match;
+            sync_globals();
             return true;
         }
 
@@ -81,18 +85,21 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                                  InputName::SkipIngredientMatch) ==
             event.keycode) {
             skip_ingredient_match = !skip_ingredient_match;
+            sync_globals();
             return true;
         }
 
         if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleDebug) ==
             event.keycode) {
             debug_ui_enabled = !debug_ui_enabled;
+            sync_globals();
             return true;
         }
         if (KeyMap::get_key_code(menu::State::Game,
                                  InputName::ToggleNetworkView) ==
             event.keycode) {
             no_clip_enabled = !no_clip_enabled;
+            sync_globals();
             return true;
         }
         if (!baseShouldRender()) return false;
@@ -187,6 +194,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                              CheckboxData{.selected = debug_ui_enabled});
                 result) {
                 debug_ui_enabled = result.as<bool>();
+                sync_globals();
             }
         }
 
@@ -200,6 +208,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                     Widget{control}, CheckboxData{.selected = no_clip_enabled});
                 result) {
                 no_clip_enabled = result.as<bool>();
+                sync_globals();
             }
         }
 
@@ -214,6 +223,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                              CheckboxData{.selected = skip_ingredient_match});
                 result) {
                 skip_ingredient_match = result.as<bool>();
+                sync_globals();
             }
         }
 

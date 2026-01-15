@@ -18,7 +18,14 @@
 #include "../engine/log.h"
 #include "../engine/time.h"
 
+namespace afterhours {
+struct SystemManager;
+}  // namespace afterhours
+
 namespace system_manager {
+
+void register_render_systems(afterhours::SystemManager& systems);
+
 namespace render_manager {
 
 void draw_valid_colored_box(const Transform& transform,
@@ -42,10 +49,9 @@ void render_progress_bar(const Entity& entity, float);
 void render_waiting_queue(const Entity& entity, float);
 void render_walkable_spots(float);
 
-void render_trash_marker(const Entity& entity);
-void render_dollarsign_marker(const Entity& entity);
-
 void render(const Entity&, float, bool);
+
+void on_frame_start();
 
 }  // namespace render_manager
 

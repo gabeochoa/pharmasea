@@ -1,25 +1,24 @@
 
 #pragma once
 
+#include "../engine/constexpr_containers.h"
 #include "../engine/keymap.h"
 #include "base_component.h"
 
 struct CollectsUserInput : public BaseComponent {
-    virtual ~CollectsUserInput() {}
-
     auto& reset() {
-        pressed.reset();
+        array_reset(pressed);
         return *this;
     }
 
-    auto& write(InputName input) {
+    auto& write(InputName input, float value) {
         int index = magic_enum::enum_integer<InputName>(input);
-        pressed[index] = true;
+        pressed[index] = value;
         return *this;
     }
 
     auto& publish(float dt, float camAngle) {
-        if (pressed.any()) {
+        if (array_contains_any_value(pressed)) {
             inputs.push_back({pressed, dt, camAngle});
             reset();
         }
@@ -43,9 +42,12 @@ struct CollectsUserInput : public BaseComponent {
 
     InputSet pressed;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        (void) self;
+        return archive(                        //
+            static_cast<BaseComponent&>(self)  //
+        );
     }
 };

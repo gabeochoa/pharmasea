@@ -1,14 +1,26 @@
 
 #pragma once
 
+#include <functional>
 #include <iostream>
 #include <stack>
+#include <vector>
 
 #include "log.h"
 #include "singleton.h"
 
 template<typename T>
 struct StateManager2 {
+    // TODO(threading): Today this is a process-wide singleton and the host runs
+    // a dedicated server thread. That means `MenuState`/`GameState` can be
+    // read on the server thread (e.g. for state packets) while being mutated
+    // on the main thread (UI/input/client receive), which is a data race.
+    //
+    // Planned fix (Option B): make the server thread NOT touch this singleton.
+    // Instead, send state transitions main->server via a queue, and keep a
+    // server-local cached copy for packet emission. This preserves "client is
+    // king in menus, host is king in game" without sharing the same object
+    // across threads.
     [[nodiscard]] T read() const { return state; }
     [[nodiscard]] T previous() const { return prev.top(); }
 
@@ -110,12 +122,10 @@ namespace game {
 enum State {
     InMenu = 0,
     Lobby = 1,
-    InRound = 2,
-    Planning = 3,
+    InGame = 2,
     Paused = 4,
-    Progression = 5,
-    Store = 6,
     ModelTest = 7,
+    LoadSaveRoom = 8,
 };
 
 inline std::ostream& operator<<(std::ostream& os, const State& state) {
@@ -140,9 +150,6 @@ struct GameState : public StateManager2<game::State> {
         set(game::State::Paused);
         return read();
     }
-
-    [[nodiscard]] bool in_round() const { return is(game::State::InRound); }
-    [[nodiscard]] bool in_planning() const { return is(game::State::Planning); }
 
     [[nodiscard]] bool is_paused() const { return is(game::State::Paused); }
 
@@ -169,27 +176,13 @@ struct GameState : public StateManager2<game::State> {
     // - world timer
     // - pipe matching
     // - map validation
-    [[nodiscard]] bool is_game_like() const {
-        return is(game::State::InRound) || is(game::State::Planning);
-    }
+    [[nodiscard]] bool is_game_like() const { return is(game::State::InGame); }
 
     [[nodiscard]] bool should_render_timer() const {
-        return is(game::State::InRound) || is(game::State::Planning);
+        return is(game::State::InGame);
     }
 
-    game::State toggle_planning() {
-        // TODO need logic here to stop loops
-        if (is(game::State::Planning)) {
-            set(game::State::InRound);
-        } else if (is(game::State::InRound)) {
-            set(game::State::Planning);
-        }
-        return read();
-    }
-
+    void transition_to_game() { return set(game::State::InGame); }
     void transition_to_lobby() { return set(game::State::Lobby); }
     void transition_to_model_test() { return set(game::State::ModelTest); }
-    void transition_to_planning() { return set(game::State::Planning); }
-    void transition_to_store() { return set(game::State::Store); }
-    void transition_to_inround() { return set(game::State::InRound); }
 };
