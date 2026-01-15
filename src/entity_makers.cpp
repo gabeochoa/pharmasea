@@ -40,6 +40,7 @@
 #include "entity_helper.h"
 #include "entity_id.h"
 #include "entity_type.h"
+#include "system/ai_tags.h"
 //
 #include "client_server_comm.h"
 #include "components/adds_ingredient.h"
@@ -830,6 +831,18 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
         .update_face(PINK)
         .update_base(PINK);
     trigger_area.addComponent<IsTriggerArea>(type);
+    trigger_area.enableTag(
+        afterhours::tags::TriggerTag::TriggerAreaHasDynamicText);
+
+    switch (type) {
+        case IsTriggerArea::LoadSave_ToggleDeleteMode:
+        case IsTriggerArea::Planning_SaveSlot:
+            trigger_area.enableTag(
+                afterhours::tags::TriggerTag::GateTriggerWhileOccupied);
+            break;
+        default:
+            break;
+    }
 }
 
 void make_draft(Entity& draft, vec2 pos) {

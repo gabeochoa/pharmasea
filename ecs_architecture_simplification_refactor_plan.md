@@ -53,7 +53,6 @@ Trigger logic currently spans:
 
 - `IsTriggerArea` data (progress/cooldown/entrants rules)
 - Multiple per-frame systems in `afterhours_sixtyfps_systems.cpp` (counting entrants, progress, callbacks)
-- Global state like `g_trigger_fired_while_occupied` to gate fire-once behavior
 - Large callback switch logic that lives far from the trigger component/system (and mixes store/progression/state transitions)
 
 ### 4) AI is both “state in components” and “state in a job enum”
@@ -301,7 +300,6 @@ The key is: **systems implement interaction types**; entity makers only configur
   - **Fields**: `action_type` (enum), `action_payload` (small POD: ints/enums)
   - Example actions: `ChangeGameState`, `LoadSaveSlot`, `StoreReroll`, `PickProgressionOption`, `StartMinigame`, `TeleportPlayers`.
 - **`HasAreaRuntime`**
-  - Tracks occupant count, “fired_while_occupied” flag, last_fire_time, etc.
 
 This converts triggers from “distributed logic + globals + large switch statements” into a single **AreaSystem** that:
 
