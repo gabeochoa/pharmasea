@@ -1,14 +1,14 @@
 
 // System includes - each system is in its own header file to improve build
 // times
+#include "input_process_manager.h"
+
+#include "input_process_manager_utilities.h"
 #include "inround/pass_time_for_active_fishing_games_system.h"
 #include "inround/reset_empty_work_furniture_system.h"
-#include "input_process_manager_utilities.h"
 #include "planning/cart_management_system.h"
 #include "planning/pop_out_when_colliding_system.h"
 #include "planning/update_held_furniture_position_system.h"
-
-#include "input_process_manager.h"
 
 namespace system_manager {
 
@@ -296,10 +296,13 @@ namespace planning {
 
 void register_input_systems(afterhours::SystemManager& systems) {
     systems.register_update_system(
-        std::make_unique<system_manager::planning::UpdateHeldFurniturePositionSystem>());
-    systems.register_update_system(std::make_unique<system_manager::planning::CartManagementSystem>());
+        std::make_unique<
+            system_manager::planning::UpdateHeldFurniturePositionSystem>());
     systems.register_update_system(
-        std::make_unique<system_manager::planning::PopOutWhenCollidingSystem>());
+        std::make_unique<system_manager::planning::CartManagementSystem>());
+    systems.register_update_system(
+        std::make_unique<
+            system_manager::planning::PopOutWhenCollidingSystem>());
 }
 
 void rotate_furniture(const Entity& player) {
@@ -425,9 +428,11 @@ namespace inround {
 
 void register_input_systems(afterhours::SystemManager& systems) {
     systems.register_update_system(
-        std::make_unique<system_manager::inround::ResetEmptyWorkFurnitureSystem>());
+        std::make_unique<
+            system_manager::inround::ResetEmptyWorkFurnitureSystem>());
     systems.register_update_system(
-        std::make_unique<system_manager::inround::PassTimeForActiveFishingGamesSystem>());
+        std::make_unique<
+            system_manager::inround::PassTimeForActiveFishingGamesSystem>());
 }
 
 void handle_drop(Entity& player) {
