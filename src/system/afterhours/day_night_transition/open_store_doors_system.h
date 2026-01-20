@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../../../ah.h"
-#include "../../../components/has_day_night_timer.h"
 #include "../../../building_locations.h"
+#include "../../../components/has_day_night_timer.h"
 #include "../../../components/is_solid.h"
 #include "../../../engine/statemanager.h"
 #include "../../../entity_helper.h"
