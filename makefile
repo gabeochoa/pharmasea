@@ -117,6 +117,9 @@ release: clean all
 	cp -r resources release/
 	cp -r vendor release/
 
+test: all
+	timeout 60 ./pharmasea.exe --local --replay=completed_first_day -M
+
 modeltest:
 	$(CXX) -std=c++2a -g $(RAYLIB_FLAGS) $(RAYLIB_LIB) -Ivendor/ model_test.cpp;./a.out
 
