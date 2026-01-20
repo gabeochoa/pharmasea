@@ -27,7 +27,6 @@
 #include "../../components/is_store_spawned.h"
 #include "../../components/is_trigger_area.h"
 #include "../../components/transform.h"
-#include "../core/system_manager.h"
 #include "../../engine/assert.h"
 #include "../../engine/log.h"
 #include "../../engine/pathfinder.h"
@@ -38,6 +37,7 @@
 #include "../../entity_query.h"
 #include "../../entity_type.h"
 #include "../../network/server.h"
+#include "../core/system_manager.h"
 #include "expected.hpp"
 
 namespace system_manager {

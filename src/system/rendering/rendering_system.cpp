@@ -21,7 +21,6 @@
 #include "../../components/is_squirter.h"
 #include "../../components/is_toilet.h"
 #include "../../components/transform.h"
-#include "../core/system_manager.h"
 #include "../../dataclass/upgrades.h"
 #include "../../drawing_util.h"
 #include "../../engine/runtime_globals.h"
@@ -33,6 +32,7 @@
 #include "../../entity_query.h"
 #include "../../preload.h"
 #include "../../vendor_include.h"
+#include "../core/system_manager.h"
 #include "raylib.h"
 //
 #include "../../engine/frustum.h"

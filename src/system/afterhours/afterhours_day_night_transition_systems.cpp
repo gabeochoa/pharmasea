@@ -27,9 +27,9 @@
 #include "../../entity_query.h"
 #include "../../globals.h"
 #include "../../network/server.h"
-#include "magic_enum/magic_enum.hpp"
-#include "../helpers/store_management_helpers.h"
 #include "../core/system_manager.h"
+#include "../helpers/store_management_helpers.h"
+#include "magic_enum/magic_enum.hpp"
 
 namespace system_manager {
 

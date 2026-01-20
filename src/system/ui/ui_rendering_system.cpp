@@ -11,11 +11,11 @@
 #include "../../components/has_waiting_queue.h"
 #include "../../components/is_bank.h"
 #include "../../components/model_renderer.h"
-#include "../core/system_manager.h"
 #include "../../engine/assert.h"
 #include "../../engine/log.h"
 #include "../../entity_helper.h"
 #include "../../entity_query.h"
+#include "../core/system_manager.h"
 
 namespace system_manager {
 namespace ui {

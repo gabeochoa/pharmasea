@@ -7,8 +7,8 @@
 #include "../../components/has_day_night_timer.h"
 #include "../../components/has_fishing_game.h"
 #include "../../components/has_patience.h"
-#include "../../components/has_subtype.h"
 #include "../../components/has_rope_to_item.h"
+#include "../../components/has_subtype.h"
 #include "../../components/has_work.h"
 #include "../../components/indexer.h"
 #include "../../components/is_item.h"
@@ -31,10 +31,10 @@
 #include "../../network/server.h"
 #include "../../vec_util.h"
 #include "../../vendor_include.h"
-#include "afterhours_systems.h"
+#include "../core/system_manager.h"
 #include "../helpers/ingredient_helper.h"
 #include "../input/input_process_manager.h"
-#include "../core/system_manager.h"
+#include "afterhours_systems.h"
 
 namespace system_manager {
 
@@ -112,8 +112,8 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
     // item back in but the index had changed.
     // We need to clear the item because otherwise they will both
     // live there which will cause overlap and grab issues.
-    virtual void for_each_with(Entity&, Indexer& indexer,
-                               CanHoldItem& canHold, float) override {
+    virtual void for_each_with(Entity&, Indexer& indexer, CanHoldItem& canHold,
+                               float) override {
         if (canHold.empty()) return;
 
         int current_value = indexer.value();
@@ -205,9 +205,9 @@ struct ProcessGrabberItemsSystem
 };
 
 // System for processing conveyer items during in-round updates
-struct ProcessConveyerItemsSystem : public afterhours::System<
-Transform, CanHoldItem, ConveysHeldItem, CanBeTakenFrom> {
-
+struct ProcessConveyerItemsSystem
+    : public afterhours::System<Transform, CanHoldItem, ConveysHeldItem,
+                                CanBeTakenFrom> {
     virtual ~ProcessConveyerItemsSystem() = default;
 
     virtual bool should_run(const float) override {
@@ -227,7 +227,8 @@ Transform, CanHoldItem, ConveysHeldItem, CanBeTakenFrom> {
     virtual void for_each_with(Entity& entity, Transform& transform,
                                CanHoldItem& canHold,
                                ConveysHeldItem& conveysHeldItem,
-                               CanBeTakenFrom& canBeTakenFrom, float dt) override {
+                               CanBeTakenFrom& canBeTakenFrom,
+                               float dt) override {
         // we are not holding anything
         if (canHold.empty()) return;
 
@@ -515,7 +516,6 @@ struct ProcessPnumaticPipeMovementSystem
 
     virtual void for_each_with(Entity& entity, IsPnumaticPipe& ipp,
                                float) override {
-
         if (!ipp.has_pair()) return;
 
         OptEntity paired_pipe = EntityQuery()

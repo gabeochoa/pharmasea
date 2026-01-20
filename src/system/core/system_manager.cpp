@@ -3,8 +3,8 @@
 #include "system_manager.h"
 
 #include "../afterhours/afterhours_systems.h"
-#include "entity.h"
 #include "../helpers/store_management_helpers.h"
+#include "entity.h"
 
 ///
 #include "../../building_locations.h"
@@ -43,11 +43,11 @@
 #include "../../network/server.h"
 #include "../ai/ai_system.h"
 #include "../helpers/ingredient_helper.h"
-#include "../input/input_process_manager.h"
-#include "magic_enum/magic_enum.hpp"
 #include "../helpers/progression.h"
+#include "../input/input_process_manager.h"
 #include "../rendering/rendering_system.h"
 #include "../ui/ui_rendering_system.h"
+#include "magic_enum/magic_enum.hpp"
 
 namespace system_manager {
 

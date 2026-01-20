@@ -16,12 +16,12 @@
 #include "../../entity_type.h"
 #include "../../globals.h"
 #include "../../vec_util.h"
-#include "afterhours_systems.h"
 #include "../ai/ai_transition_systems.h"
 #include "../ai/process_ai_system.h"
-#include "../helpers/progression.h"
 #include "../core/sophie.h"
 #include "../core/system_manager.h"
+#include "../helpers/progression.h"
+#include "afterhours_systems.h"
 
 namespace system_manager {
 
