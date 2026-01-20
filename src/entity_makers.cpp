@@ -40,7 +40,7 @@
 #include "entity_helper.h"
 #include "entity_id.h"
 #include "entity_type.h"
-#include "system/ai_tags.h"
+#include "system/ai/ai_tags.h"
 //
 #include "client_server_comm.h"
 #include "components/adds_ingredient.h"
@@ -82,7 +82,7 @@
 #include "entity_query.h"
 #include "recipe_library.h"
 #include "strings.h"
-#include "system/system_manager.h"
+#include "system/core/system_manager.h"
 
 namespace items {
 // Returns true if item was cleaned up

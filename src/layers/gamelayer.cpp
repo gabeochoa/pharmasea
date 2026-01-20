@@ -18,7 +18,7 @@
 #include "../entity_type.h"
 #include "../lighting_runtime.h"
 #include "../map.h"
-#include "../system/system_manager.h"
+#include "../system/core/system_manager.h"
 #include "raylib.h"
 GameLayer::~GameLayer() { raylib::UnloadRenderTexture(game_render_texture); }
 

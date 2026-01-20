@@ -28,7 +28,7 @@
 #include "recipe_library.h"
 #include "save_game/save_game.h"
 #include "strings.h"
-#include "system/system_manager.h"
+#include "system/core/system_manager.h"
 #include "vec_util.h"
 
 vec3 lobby_origin = LOBBY_BUILDING.to3();

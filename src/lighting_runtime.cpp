@@ -9,7 +9,7 @@
 #include "engine/util.h"
 #include "entity_query.h"
 #include "entity_type.h"
-#include "system/system_manager.h"
+#include "system/core/system_manager.h"
 
 namespace {
 

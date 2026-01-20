@@ -5,7 +5,7 @@
 #include "entity_id.h"
 #include "entity_query.h"
 #include "entity_type.h"
-#include "system/input_process_manager.h"
+#include "system/input/input_process_manager.h"
 
 // Thread-specific EntityCollections
 // Each thread manages its own collection independently

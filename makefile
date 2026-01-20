@@ -60,7 +60,7 @@ endif
 LIBS += $(BACKWARD_DW_LIBS) $(BACKWARD_UNWIND_LIBS) $(BACKWARD_PLATFORM_LIBS)
 
 # SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp)
-SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp src/network/**/*.cpp)
+SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp src/network/**/*.cpp src/system/**/*.cpp)
 H_FILES := $(wildcard src/**/*.h src/engine/**/*.h) 
 OBJ_DIR := ./output
 OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
@@ -148,6 +148,15 @@ clean:
 	mkdir -p $(OBJ_DIR)/src/components/
 	mkdir -p $(OBJ_DIR)/src/engine/ui/
 	mkdir -p $(OBJ_DIR)/src/system/
+	mkdir -p $(OBJ_DIR)/src/system/afterhours/
+	mkdir -p $(OBJ_DIR)/src/system/ai/
+	mkdir -p $(OBJ_DIR)/src/system/core/
+	mkdir -p $(OBJ_DIR)/src/system/helpers/
+	mkdir -p $(OBJ_DIR)/src/system/input/
+	mkdir -p $(OBJ_DIR)/src/system/rendering/
+	mkdir -p $(OBJ_DIR)/src/system/sixtyfps/
+	mkdir -p $(OBJ_DIR)/src/system/trigger/
+	mkdir -p $(OBJ_DIR)/src/system/ui/
 	mkdir -p $(OBJ_DIR)/src/intro/
 	mkdir -p $(OBJ_DIR)/vendor/tracy/
 	mkdir -p $(OBJ_DIR)/vendor/backward/

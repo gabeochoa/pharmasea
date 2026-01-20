@@ -2,7 +2,7 @@
 
 #include "has_dynamic_model_name.h"
 
-#include "../system/system_manager.h"
+#include "../system/core/system_manager.h"
 
 std::string HasDynamicModelName::fetch(const Entity& owner) const {
     if (!initialized) {

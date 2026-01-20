@@ -10,7 +10,7 @@
 #include "entity_helper.h"
 #include "entity_type.h"
 #include "post_deserialize_fixups.h"
-#include "system/system_manager.h"
+#include "system/core/system_manager.h"
 #include "util.h"
 
 namespace server_only {

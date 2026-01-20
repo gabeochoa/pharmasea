@@ -3,7 +3,7 @@
 
 #include "../components/can_pathfind.h"
 #include "../entity.h"
-#include "../system/input_process_manager.h"
+#include "../system/input/input_process_manager.h"
 #include "bfs.h"
 
 static std::shared_ptr<PathRequestManager> g_path_request_manager;

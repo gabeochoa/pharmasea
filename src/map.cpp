@@ -10,7 +10,7 @@
 #include "external_include.h"
 //
 #include "entity_helper.h"
-#include "system/system_manager.h"
+#include "system/core/system_manager.h"
 
 void Map::update_map(const Map& new_map) {
     this->showMinimap = new_map.showMinimap;

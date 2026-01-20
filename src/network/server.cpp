@@ -19,7 +19,7 @@
 #include "../entity_helper.h"
 #include "../globals.h"  // for HASHED_VERSION
 #include "../save_game/save_game.h"
-#include "../system/system_manager.h"
+#include "../system/core/system_manager.h"
 #include "serialization.h"
 
 namespace network {

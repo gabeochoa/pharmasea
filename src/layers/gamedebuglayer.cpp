@@ -23,7 +23,7 @@
 #include "../engine/statemanager.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
-#include "../system/system_manager.h"
+#include "../system/core/system_manager.h"
 #include "raylib.h"
 
 void GameDebugLayer::onUpdate(float) {}

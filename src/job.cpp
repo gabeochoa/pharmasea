@@ -9,7 +9,7 @@
 #include "entity_helper.h"
 #include "entity_query.h"
 #include "globals.h"
-#include "system/logging_system.h"
+#include "system/helpers/logging_system.h"
 
 // inline Job* create_wandering_job(vec2 _start) {
 // // TODO add cooldown so that not all time is spent here
