@@ -1,5 +1,6 @@
 
 #define AFTER_HOURS_REPLACE_LOGGING
+#define AFTER_HOURS_REPLACE_VALIDATE
 #include "log/log.h"
 #define AFTER_HOURS_SYSTEM
 #include "afterhours/ah.h"

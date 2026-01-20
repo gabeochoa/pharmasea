@@ -5,3 +5,11 @@
 [submodule "vendor/cereal"]
 	path = vendor/cereal
 	url = https://github.com/USCiLab/cereal
+
+[submodule "third_party/raylib"]
+	path = third_party/raylib
+	url = https://github.com/raysan5/raylib
+
+[submodule "third_party/GameNetworkingSockets"]
+	path = third_party/GameNetworkingSockets
+	url = https://github.com/ValveSoftware/GameNetworkingSockets.git

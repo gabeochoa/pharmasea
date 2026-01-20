@@ -461,10 +461,9 @@ struct TranslatableString {
         return set_param(param, fmt::format("{}", arg));
     }
 
-    template<>
     auto& set_param(const strings::i18nParam& param,
                     const TranslatableString& arg) {
-        return set_param(param, fmt::format("{}", arg.underlying_TL_ONLY()));
+        return set_param(param, arg.underlying_TL_ONLY());
     }
 
     [[nodiscard]] bool is_formatted() const { return formatted; }

@@ -2,6 +2,12 @@
 
 #pragma once
 
+// IMPORTANT: raymath includes <math.h>. If that header is first included while
+// inside `namespace raylib { ... }`, libstdc++ will end up defining `std` as
+// `raylib::std` and compilation breaks on Linux. Pre-include it in the global
+// namespace so the later include becomes a no-op due to header guards.
+#include <math.h>
+
 #ifdef __APPLE__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
