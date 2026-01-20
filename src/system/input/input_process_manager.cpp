@@ -1,44 +1,14 @@
 
+// System includes - each system is in its own header file to improve build
+// times
+#include "inround/pass_time_for_active_fishing_games_system.h"
+#include "inround/reset_empty_work_furniture_system.h"
+#include "input_process_manager_utilities.h"
+#include "planning/cart_management_system.h"
+#include "planning/pop_out_when_colliding_system.h"
+#include "planning/update_held_furniture_position_system.h"
+
 #include "input_process_manager.h"
-
-#include <algorithm>
-
-#include "../../ah.h"
-#include "../../building_locations.h"
-#include "../../camera.h"
-#include "../../components/can_be_ghost_player.h"
-#include "../../components/can_be_held.h"
-#include "../../components/can_highlight_others.h"
-#include "../../components/can_hold_furniture.h"
-#include "../../components/can_hold_handtruck.h"
-#include "../../components/can_hold_item.h"
-#include "../../components/collects_user_input.h"
-#include "../../components/has_base_speed.h"
-#include "../../components/has_day_night_timer.h"
-#include "../../components/has_fishing_game.h"
-#include "../../components/has_work.h"
-#include "../../components/is_bank.h"
-#include "../../components/is_drink.h"
-#include "../../components/is_free_in_store.h"
-#include "../../components/is_item.h"
-#include "../../components/is_item_container.h"
-#include "../../components/is_rotatable.h"
-#include "../../components/is_solid.h"
-#include "../../components/is_store_spawned.h"
-#include "../../components/is_trigger_area.h"
-#include "../../components/transform.h"
-#include "../../engine/assert.h"
-#include "../../engine/log.h"
-#include "../../engine/pathfinder.h"
-#include "../../engine/runtime_globals.h"
-#include "../../entity.h"
-#include "../../entity_helper.h"
-#include "../../entity_id.h"
-#include "../../entity_query.h"
-#include "../../entity_type.h"
-#include "../../network/server.h"
-#include "../core/system_manager.h"
-#include "expected.hpp"
 
 namespace system_manager {
 
@@ -324,169 +294,12 @@ void fishing_game(Entity& player, float frame_dt) {
 
 namespace planning {
 
-struct CartManagementSystem
-    : public afterhours::System<
-          IsFloorMarker, afterhours::tags::All<EntityType::FloorMarker>> {
-    OptEntity sophie;
-
-    virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie->get<HasDayNightTimer>();
-            return hastimer.is_bar_closed();
-        } catch (...) {
-            return false;
-        }
-    }
-
-    virtual void for_each_with(Entity&, IsFloorMarker& ifm, float) override {
-        if (ifm.type != IsFloorMarker::Store_PurchaseArea) return;
-
-        int amount_in_cart = 0;
-
-        for (size_t i = 0; i < ifm.num_marked(); i++) {
-            EntityID id = ifm.marked_ids()[i];
-            OptEntity marked_entity = EntityHelper::getEntityForID(id);
-            if (!marked_entity) continue;
-
-            if (marked_entity->has<IsFreeInStore>()) continue;
-            if (marked_entity->is_missing<IsStoreSpawned>()) continue;
-
-            amount_in_cart +=
-                std::max(0, get_price_for_entity_type(
-                                get_entity_type(marked_entity.asE())));
-        }
-
-        if (sophie.has_value()) {
-            IsBank& bank = sophie->get<IsBank>();
-            bank.update_cart(amount_in_cart);
-        }
-
-        OptEntity purchase_area =
-            EQ().whereTriggerAreaOfType(
-                    IsTriggerArea::Type::Store_BackToPlanning)
-                .gen_first();
-        if (purchase_area.valid()) {
-            (void) purchase_area->get<IsTriggerArea>().should_progress();
-        }
-    }
-};
-
-struct PopOutWhenCollidingSystem
-    : public afterhours::System<Transform, CanHoldHandTruck, CanHoldFurniture> {
-    virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            return hastimer.is_bar_closed();
-        } catch (...) {
-            return false;
-        }
-    }
-
-    virtual void for_each_with(Entity& entity, Transform& transform,
-                               CanHoldHandTruck& chht, CanHoldFurniture& chf,
-                               float) override {
-        const auto no_clip_on = globals::no_clip_enabled();
-        // TODO: move this check into should_run
-        if (no_clip_on) return;
-
-        // TODO: move this check into sysmem tags
-        if (!check_type(entity, EntityType::Player)) return;
-
-        OptEntity match =  //
-            EntityQuery()
-                .whereNotID(entity.id)
-                .whereHasComponent<IsSolid>()
-                .whereInRange(transform.as2(), 0.7f)
-                .whereLambdaExistsAndTrue([](const Entity& other) {
-                    if (other.is_missing<CanBeHeld_HT>()) return true;
-                    return !other.get<CanBeHeld_HT>().is_held();
-                })
-                .include_store_entities()
-                .gen_first();
-
-        if (!match) {
-            return;
-        }
-
-        if (chht.is_holding()) {
-            OptEntity hand_truck =
-                EntityHelper::getEntityForID(chht.hand_truck_id());
-            if (match->id == chht.hand_truck_id()) {
-                return;
-            }
-            if (chht.is_holding() &&
-                match->id ==
-                    hand_truck->get<CanHoldFurniture>().furniture_id()) {
-                return;
-            }
-        }
-
-        if (chf.is_holding_furniture()) return;
-        if (chf.furniture_id() == match->id) return;
-
-        vec2 new_position = transform.as2();
-
-        int i = static_cast<int>(new_position.x);
-        int j = static_cast<int>(new_position.y);
-        for (int a = 0; a < 8; a++) {
-            auto position = (vec2{(float) i + (bfs::neigh_x[a]),
-                                  (float) j + (bfs::neigh_y[a])});
-            if (EntityHelper::isWalkable(position)) {
-                new_position = position;
-                break;
-            }
-        }
-
-        transform.update(vec::to3(new_position));
-    }
-};
-
-struct UpdateHeldFurniturePositionSystem
-    : public afterhours::System<CanHoldFurniture, Transform> {
-    virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-
-        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-        const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-        return hastimer.is_bar_closed();
-    }
-
-    virtual void for_each_with([[maybe_unused]] Entity& entity,
-                               CanHoldFurniture& can_hold_furniture,
-                               Transform& transform, float) override {
-        if (can_hold_furniture.empty()) return;
-
-        auto new_pos = transform.pos();
-        if (transform.face_direction() &
-            Transform::FrontFaceDirection::FORWARD) {
-            new_pos.z += TILESIZE;
-        }
-        if (transform.face_direction() & Transform::FrontFaceDirection::RIGHT) {
-            new_pos.x += TILESIZE;
-        }
-        if (transform.face_direction() & Transform::FrontFaceDirection::BACK) {
-            new_pos.z -= TILESIZE;
-        }
-        if (transform.face_direction() & Transform::FrontFaceDirection::LEFT) {
-            new_pos.x -= TILESIZE;
-        }
-
-        OptEntity furniture =
-            EntityHelper::getEntityForID(can_hold_furniture.furniture_id());
-        furniture->get<Transform>().update(new_pos);
-    }
-};
-
 void register_input_systems(afterhours::SystemManager& systems) {
     systems.register_update_system(
-        std::make_unique<UpdateHeldFurniturePositionSystem>());
-    systems.register_update_system(std::make_unique<CartManagementSystem>());
+        std::make_unique<system_manager::planning::UpdateHeldFurniturePositionSystem>());
+    systems.register_update_system(std::make_unique<system_manager::planning::CartManagementSystem>());
     systems.register_update_system(
-        std::make_unique<PopOutWhenCollidingSystem>());
+        std::make_unique<system_manager::planning::PopOutWhenCollidingSystem>());
 }
 
 void rotate_furniture(const Entity& player) {
@@ -609,57 +422,12 @@ void handle_grab_or_drop(Entity& player) {
 }  // namespace planning
 
 namespace inround {
-struct ResetEmptyWorkFurnitureSystem
-    : public afterhours::System<HasWork, CanHoldItem> {
-    virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_bar_open();
-        } catch (...) {
-            return false;
-        }
-    }
-
-    void for_each_with(Entity&, HasWork& hasWork, CanHoldItem& chi,
-                       float) override {
-        if (!hasWork.should_reset_on_empty()) return;
-        if (chi.empty()) {
-            hasWork.reset_pct();
-            return;
-        }
-    }
-};
-
-struct PassTimeForActiveFishingGamesSystem
-    : public afterhours::System<HasFishingGame> {
-    virtual ~PassTimeForActiveFishingGamesSystem() = default;
-
-    virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            if (hastimer.needs_to_process_change) return false;
-            return hastimer.is_bar_open();
-        } catch (...) {
-            return false;
-        }
-    }
-
-    virtual void for_each_with(Entity&, HasFishingGame& fishingGame,
-                               float dt) override {
-        fishingGame.pass_time(dt);
-    }
-};
 
 void register_input_systems(afterhours::SystemManager& systems) {
     systems.register_update_system(
-        std::make_unique<ResetEmptyWorkFurnitureSystem>());
+        std::make_unique<system_manager::inround::ResetEmptyWorkFurnitureSystem>());
     systems.register_update_system(
-        std::make_unique<PassTimeForActiveFishingGamesSystem>());
+        std::make_unique<system_manager::inround::PassTimeForActiveFishingGamesSystem>());
 }
 
 void handle_drop(Entity& player) {
