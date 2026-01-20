@@ -6,6 +6,7 @@
 #include "entity_query.h"
 #include "entity_type.h"
 #include "system/input/input_process_manager.h"
+#include "system/input/is_collidable.h"
 
 // Thread-specific EntityCollections
 // Each thread manages its own collection independently

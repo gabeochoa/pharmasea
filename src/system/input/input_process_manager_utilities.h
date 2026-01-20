@@ -38,6 +38,7 @@
 #include "../../network/server.h"
 #include "../../system/core/system_manager.h"
 #include "expected.hpp"
+#include "is_collidable.h"
 
 namespace system_manager {
 
@@ -49,9 +50,6 @@ void person_update_given_new_pos(
 
 namespace input_process_manager {
 
-// return true if the item has collision and is currently collidable
-bool is_collidable(const Entity& entity, OptEntity other);
-bool is_collidable(const Entity& entity, const Entity& other);
 void collect_user_input(Entity& entity, float dt);
 void process_player_movement_input(Entity& entity, float dt,
                                    float cam_angle_deg, InputName input_name,

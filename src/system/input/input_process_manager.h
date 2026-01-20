@@ -3,6 +3,7 @@
 #include "../../engine/keymap.h"
 #include "../../entity.h"
 #include "../../vendor_include.h"
+#include "is_collidable.h"
 
 namespace afterhours {
 struct SystemManager;
@@ -11,9 +12,6 @@ struct SystemManager;
 namespace system_manager {
 
 namespace input_process_manager {
-
-[[nodiscard]] bool is_collidable(const Entity& entity, OptEntity other = {});
-[[nodiscard]] bool is_collidable(const Entity& entity, const Entity& other);
 
 void collect_user_input(Entity& entity, float dt);
 
