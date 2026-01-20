@@ -14,7 +14,6 @@
 #include "../../components/is_trigger_area.h"
 #include "../../components/simple_colored_box_renderer.h"
 #include "../../components/transform.h"
-#include "../core/system_manager.h"
 #include "../../dataclass/ingredient.h"
 #include "../../engine/runtime_globals.h"
 #include "../../engine/statemanager.h"
@@ -23,6 +22,7 @@
 #include "../../network/server.h"
 #include "../../save_game/save_game.h"
 #include "../ai/ai_tags.h"
+#include "../core/system_manager.h"
 #include "../helpers/progression.h"
 #include "../helpers/store_management_helpers.h"
 

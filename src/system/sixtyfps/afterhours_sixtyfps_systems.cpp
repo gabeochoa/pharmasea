@@ -27,7 +27,6 @@
 #include "../../components/simple_colored_box_renderer.h"
 #include "../../components/transform.h"
 #include "../../components/uses_character_model.h"
-#include "../core/system_manager.h"
 #include "../../dataclass/ingredient.h"
 #include "../../engine/runtime_globals.h"
 #include "../../engine/statemanager.h"
@@ -39,6 +38,7 @@
 #include "../../network/server.h"
 #include "../../save_game/save_game.h"
 #include "../../vec_util.h"
+#include "../core/system_manager.h"
 #include "../trigger/trigger_area_systems.h"
 
 namespace system_manager {

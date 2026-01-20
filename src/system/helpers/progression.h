@@ -6,10 +6,10 @@
 #include "../../components/has_day_night_timer.h"
 #include "../../components/is_progression_manager.h"
 #include "../../components/is_round_settings_manager.h"
-#include "../core/system_manager.h"
 #include "../../dataclass/upgrades.h"
 #include "../../entity_helper.h"
 #include "../../entity_query.h"
+#include "../core/system_manager.h"
 #include "magic_enum/magic_enum.hpp"
 
 namespace system_manager {
