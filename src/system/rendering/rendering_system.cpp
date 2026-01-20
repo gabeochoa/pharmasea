@@ -1491,44 +1491,13 @@ void render(const Entity& entity, float dt, bool is_debug) {
 
 }  // namespace render_manager
 
-}  // namespace system_manager
+// System includes - each system is in its own header file to improve build
+// times
+#include "systems/on_frame_start_system.h"
+#include "systems/render_entity_system.h"
+#include "systems/render_walkable_spots_system.h"
 
-namespace system_manager {
-
-struct OnFrameStartSystem : public afterhours::System<> {
-    virtual bool should_run(const float) override { return true; }
-
-    virtual void once(const float) override {
-        render_manager::on_frame_start();
-    }
-};
-
-struct RenderWalkableSpotsSystem : public afterhours::System<> {
-    virtual bool should_run(const float) override {
-        return globals::debug_ui_enabled();
-    }
-
-    virtual void once(const float) override {
-        render_manager::render_walkable_spots(0);
-    }
-};
-
-struct RenderEntitySystem : public afterhours::System<Transform> {
-    mutable bool debug_mode_on = false;
-
-    virtual bool should_run(const float) override { return true; }
-
-    virtual void once(const float) const override {
-        debug_mode_on = globals::debug_ui_enabled();
-    }
-
-    virtual void for_each_with(const Entity& entity, const Transform&,
-                               float dt) const override {
-        render_manager::render(entity, dt, debug_mode_on);
-    }
-};
-
-void register_render_systems(afterhours::SystemManager& systems) {
+void register_render_systems(::afterhours::SystemManager& systems) {
     systems.register_render_system(std::make_unique<OnFrameStartSystem>());
     systems.register_render_system(
         std::make_unique<RenderWalkableSpotsSystem>());
