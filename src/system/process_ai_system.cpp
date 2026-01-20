@@ -29,8 +29,6 @@
 #include "../entity_query.h"
 #include "../globals.h"
 #include "ai_entity_helpers.h"
-#include "ai_helper.h"
-#include "ai_queue_helpers.h"
 #include "ai_system.h"
 #include "ai_tags.h"
 #include "ai_targeting.h"
