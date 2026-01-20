@@ -23,6 +23,7 @@ struct OnDayEndedSystem : public afterhours::System<RespondsToDayNight> {
 
     virtual void for_each_with(Entity&, RespondsToDayNight& rtdn,
                                float) override {
+        // TODO look into this
         rtdn.call_day_ended();
     }
 };

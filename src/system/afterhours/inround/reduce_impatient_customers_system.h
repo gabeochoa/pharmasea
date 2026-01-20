@@ -31,15 +31,15 @@ struct ReduceImpatientCustomersSystem
 
     virtual void for_each_with(Entity&, HasPatience& patience,
                                float dt) override {
-        if (patience.should_pass_time()) {
-            patience.pass_time(dt);
+        if (!patience.should_pass_time()) return;
 
-            // TODO actually do something when they get mad
-            if (patience.pct() <= 0) {
-                patience.reset();
-                log_warn("You wont like me when im angry");
-            }
-        }
+        patience.pass_time(dt);
+
+        if (patience.pct() > 0) return;
+
+        // TODO actually do something when they get mad
+        patience.reset();
+        log_warn("You wont like me when im angry");
     }
 };
 
