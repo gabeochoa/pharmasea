@@ -51,6 +51,9 @@ void render_job_visual(const Entity& entity, float) {
 }  // namespace job_system
 namespace render_manager {
 
+bool is_some_player_near(const Entities& remote_players, vec2 spot,
+                         float distance = 4.f);
+
 struct ProgressBarConfig {
     enum Type { Horizontal, Vertical } type = Horizontal;
     vec3 position = {0, 0, 0};
@@ -1115,8 +1118,8 @@ void render_price(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
-    bool someone_close =
-        SystemManager::get().is_some_player_near(transform.as2(), 2.f);
+    bool someone_close = is_some_player_near(
+        SystemManager::get().remote_players, transform.as2(), 2.f);
     if (!someone_close) return;
 
     vec3 location = transform.raw() + vec3{0, 0.5f * TILESIZE, 0.5f * TILESIZE};
@@ -1139,8 +1142,8 @@ void render_machine_name(const Entity& entity, int font_size = 200) {
 
     const Transform& transform = entity.get<Transform>();
 
-    bool someone_close =
-        SystemManager::get().is_some_player_near(transform.as2(), 2.f);
+    bool someone_close = is_some_player_near(
+        SystemManager::get().remote_players, transform.as2(), 2.f);
     if (!someone_close) return;
 
     // TODO rotate the name with the camera?
@@ -1321,8 +1324,8 @@ void render_progress_bar(const Entity& entity, float) {
     if (entity.is_missing<Transform>()) return;
     const Transform& transform = entity.get<Transform>();
 
-    bool someone_close =
-        SystemManager::get().is_some_player_near(transform.as2());
+    bool someone_close = is_some_player_near(
+        SystemManager::get().remote_players, transform.as2());
     if (!someone_close) return;
 
     DrawProgressBar(ProgressBarConfig{
@@ -1441,6 +1444,19 @@ void render_held_furniture_preview(const Entity& entity, float) {
     vec3 size = (transform.size() * 1.2f);
     DrawCubeCustom(drop_location, size.x, size.y, size.z, 0,
                    walkable ? GREEN : RED, walkable ? GREEN : RED);
+}
+
+bool is_some_player_near(const Entities& remote_players, vec2 spot,
+                         float distance) {
+    bool someone_close = false;
+    for (auto& player : remote_players) {
+        auto pos = player->get<Transform>().as2();
+        if (vec::distance(pos, spot) < distance) {
+            someone_close = true;
+            break;
+        }
+    }
+    return someone_close;
 }
 
 }  // namespace render_manager

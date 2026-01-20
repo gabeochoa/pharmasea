@@ -123,16 +123,6 @@ void Map::generate_store_map() {
 }
 ```
 
-- `SystemManager::_create_nuxes` (`src/system/system_manager.cpp`)
-  - Large, multi‑step tutorial flow with nested branching and entity creation.
-
-```412:850:/Users/gabeochoa/p/pharmasea/src/system/system_manager.cpp
-bool _create_nuxes(Entity&) {
-    // ... multiple tutorial steps, each with their own branching
-    log_info("created nuxes");
-    return true;
-}
-```
 
 - `ProcessConveyerItemsSystem::for_each_with`
   - Multiple decision paths around conveyer direction, matching, and

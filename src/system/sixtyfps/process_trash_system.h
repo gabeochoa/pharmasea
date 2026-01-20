@@ -7,13 +7,13 @@
 
 namespace system_manager {
 
-struct ProcessTrashSystem : public afterhours::System<CanHoldItem> {
+struct ProcessTrashSystem
+    : public afterhours::System<CanHoldItem,
+                                afterhours::tags::All<EntityType::Trash>> {
     virtual bool should_run(const float) override { return true; }
 
-    virtual void for_each_with(Entity& entity, CanHoldItem& trashCHI,
-                               float) override {
-        if (!check_type(entity, EntityType::Trash)) return;
-
+    virtual void for_each_with([[maybe_unused]] Entity& entity,
+                               CanHoldItem& trashCHI, float) override {
         // If we arent holding anything, nothing to delete
         if (trashCHI.empty()) return;
 

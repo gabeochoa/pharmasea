@@ -6,6 +6,7 @@
 #include "../../entity_query.h"
 
 namespace system_manager::ai {
+// TODO merge into shared utilities
 
 [[nodiscard]] inline OptEntity find_best_register_with_space(
     const Entity& ai_entity) {

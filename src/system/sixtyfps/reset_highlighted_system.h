@@ -6,9 +6,8 @@
 namespace system_manager {
 
 struct ResetHighlightedSystem : public afterhours::System<CanBeHighlighted> {
-    virtual void for_each_with(Entity& entity, CanBeHighlighted& cbh,
-                               float) override {
-        cbh.update(entity, false);
+    virtual void for_each_with(Entity&, CanBeHighlighted& cbh, float) override {
+        cbh.update(false);
     }
 };
 

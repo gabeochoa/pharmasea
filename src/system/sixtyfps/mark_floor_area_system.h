@@ -11,13 +11,13 @@
 namespace system_manager {
 
 struct MarkItemInFloorAreaSystem
-    : public afterhours::System<IsFloorMarker, Transform> {
+    : public afterhours::System<
+          IsFloorMarker, Transform,
+          afterhours::tags::All<EntityType::FloorMarker>> {
     virtual bool should_run(const float) override { return true; }
 
     virtual void for_each_with(Entity& entity, IsFloorMarker& ifm,
                                Transform& transform, float) override {
-        if (!check_type(entity, EntityType::FloorMarker)) return;
-
         std::vector<int> ids =
             // TODO do we need to do this now or can we use merge_temp
             EQ(SystemManager::get().oldAll)

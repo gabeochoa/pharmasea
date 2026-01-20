@@ -13,6 +13,7 @@ struct HighlightFacingFurnitureSystem
     virtual void for_each_with(Entity& entity, CanHighlightOthers& cho,
                                Transform& transform, float) override {
         OptEntity match = EntityQuery()
+                              .whereNotID(entity.id)
                               .whereHasComponent<CanBeHighlighted>()
                               .whereInRange(transform.as2(), cho.reach())
                               .include_store_entities()
@@ -20,7 +21,7 @@ struct HighlightFacingFurnitureSystem
                               .gen_first();
         if (!match) return;
 
-        match->get<CanBeHighlighted>().update(entity, true);
+        match->get<CanBeHighlighted>().update(true);
     }
 };
 

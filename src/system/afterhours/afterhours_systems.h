@@ -8,7 +8,6 @@
 
 namespace system_manager {
 
-void process_nux_updates(Entity& entity, float dt);
 void process_is_container_and_should_backfill_item(Entity& entity, float dt);
 void update_sophie(Entity& entity, float dt);
 

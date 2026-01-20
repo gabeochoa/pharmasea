@@ -6,12 +6,13 @@
 
 namespace system_manager {
 
-struct ClearAllFloorMarkersSystem : public afterhours::System<IsFloorMarker> {
+struct ClearAllFloorMarkersSystem
+    : public afterhours::System<
+          IsFloorMarker, afterhours::tags::All<EntityType::FloorMarker>> {
     virtual bool should_run(const float) override { return true; }
 
-    virtual void for_each_with(Entity& entity, IsFloorMarker& ifm,
+    virtual void for_each_with([[maybe_unused]] Entity&, IsFloorMarker& ifm,
                                float) override {
-        if (!check_type(entity, EntityType::FloorMarker)) return;
         ifm.clear();
     }
 };

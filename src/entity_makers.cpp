@@ -401,15 +401,7 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
                               pos, ui::color::baby_blue, ui::color::baby_pink);
 
     map_randomizer.addComponent<HasName>().update("");
-
-    map_randomizer.get<CanBeHighlighted>().set_on_change(
-        [](Entity&, bool is_highlighted) {
-            if (is_highlighted) {
-                server_only::set_show_minimap();
-            } else {
-                server_only::set_hide_minimap();
-            }
-        });
+    map_randomizer.addComponent<CanBeHighlighted>();
 
     map_randomizer.addComponent<HasWork>().init(
         [](Entity& randomizer, HasWork& hasWork, Entity&, float dt) {

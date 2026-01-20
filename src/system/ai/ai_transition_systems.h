@@ -2,6 +2,7 @@
 
 #include "../../ah.h"
 
+// TODO merge into process_ai_system.h
 namespace system_manager {
 
 // Registers AI setup and pre-processing systems (run before AI state systems):

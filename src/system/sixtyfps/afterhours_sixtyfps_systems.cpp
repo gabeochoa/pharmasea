@@ -12,19 +12,12 @@
 #include "process_trash_system.h"
 #include "refetch_dynamic_model_names_system.h"
 #include "reset_highlighted_system.h"
+#include "show_minimap_when_highlighted_system.h"
 #include "transform_snapper_system.h"
 #include "update_character_model_system.h"
 #include "update_held_handtruck_system.h"
 #include "update_held_item_system.h"
 #include "update_settings_changer_system.h"
-
-namespace system_manager {
-
-// Forward declarations for functions implemented elsewhere
-bool _create_nuxes(Entity& entity);
-void process_nux_updates(Entity& entity, float dt);
-
-}  // namespace system_manager
 
 void SystemManager::register_sixtyfps_systems() {
     // This system should run in all states (lobby, game, model test, etc.)
@@ -60,6 +53,8 @@ void SystemManager::register_sixtyfps_systems() {
         std::make_unique<system_manager::RefetchDynamicModelNamesSystem>());
     systems.register_update_system(
         std::make_unique<system_manager::HighlightFacingFurnitureSystem>());
+    systems.register_update_system(
+        std::make_unique<system_manager::ShowMinimapWhenHighlightedSystem>());
     systems.register_update_system(
         std::make_unique<system_manager::UpdateHeldItemPositionSystem>());
     systems.register_update_system(
