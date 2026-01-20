@@ -28,48 +28,41 @@ void SystemManager::register_day_night_transition_systems() {
                 std::make_unique<
                     system_manager::
                         DeleteFloatingItemsWhenLeavingInRoundSystem>());
-            systems.register_update_system(
-                std::make_unique<system_manager::TellCustomersToLeaveSystem>());
-
-            systems.register_update_system(
-                std::make_unique<
-                    system_manager::ResetToiletWhenLeavingInRoundSystem>());
-            systems.register_update_system(
-                std::make_unique<
-                    system_manager::
-                        ResetCustomerSpawnerWhenLeavingInRoundSystem>());
-            systems.register_update_system(
-                std::make_unique<
-                    system_manager::UpdateNewMaxCustomersSystem>());
-            systems.register_update_system(
-                std::make_unique<system_manager::OnNightEndedTriggerSystem>());
-            systems.register_update_system(
-                std::make_unique<system_manager::OnDayStartedTriggerSystem>());
-            systems.register_update_system(
-                std::make_unique<
-                    system_manager::OnRoundFinishedTriggerSystem>());
+            // TODO: Add remaining systems when their headers are created
+            // systems.register_update_system(
+            //     std::make_unique<system_manager::TellCustomersToLeaveSystem>());
+            // systems.register_update_system(
+            //     std::make_unique<system_manager::ResetToiletWhenLeavingInRoundSystem>());
+            // systems.register_update_system(
+            //     std::make_unique<system_manager::ResetCustomerSpawnerWhenLeavingInRoundSystem>());
+            // systems.register_update_system(
+            //     std::make_unique<system_manager::UpdateNewMaxCustomersSystem>());
+            // systems.register_update_system(
+            //     std::make_unique<system_manager::OnNightEndedTriggerSystem>());
+            // systems.register_update_system(
+            //     std::make_unique<system_manager::OnDayStartedTriggerSystem>());
+            // systems.register_update_system(
+            //     std::make_unique<system_manager::OnRoundFinishedTriggerSystem>());
 #if ENABLE_DEV_FLAGS
             systems.register_update_system(
-                std::make_unique<system_manager::BypassRoundTrackerSystem>());
+                std::make_unique<system_manager::BypassInitSystem>());
 #endif
         }
         systems.register_update_system(
             std::make_unique<system_manager::CleanUpOldStoreOptionsSystem>());
         systems.register_update_system(
             std::make_unique<system_manager::OnDayEndedSystem>());
-        systems.register_update_system(
-            std::make_unique<
-                system_manager::ResetRegisterQueueWhenLeavingInRoundSystem>());
-        systems.register_update_system(
-            std::make_unique<system_manager::CloseBuildingsWhenNightSystem>());
-        systems.register_update_system(
-            std::make_unique<system_manager::OnNightStartedSystem>());
-        systems.register_update_system(
-            std::make_unique<
-                system_manager::ReleaseMopBuddyAtStartOfDaySystem>());
-        systems.register_update_system(
-            std::make_unique<
-                system_manager::DeleteTrashWhenLeavingPlanningSystem>());
+        // TODO: Add remaining systems when their headers are created
+        // systems.register_update_system(
+        //     std::make_unique<system_manager::ResetRegisterQueueWhenLeavingInRoundSystem>());
+        // systems.register_update_system(
+        //     std::make_unique<system_manager::CloseBuildingsWhenNightSystem>());
+        // systems.register_update_system(
+        //     std::make_unique<system_manager::OnNightStartedSystem>());
+        // systems.register_update_system(
+        //     std::make_unique<system_manager::ReleaseMopBuddyAtStartOfDaySystem>());
+        // systems.register_update_system(
+        //     std::make_unique<system_manager::DeleteTrashWhenLeavingPlanningSystem>());
     }
     // This one needs to run after the transition systems to clear the flag
     systems.register_update_system(
