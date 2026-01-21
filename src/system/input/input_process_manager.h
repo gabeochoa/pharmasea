@@ -26,7 +26,7 @@ void register_input_systems(afterhours::SystemManager& systems);
 
 }  // namespace inround
 
-void process_input(Entity& entity, const UserInput& input);
+void process_input(Entity& entity, const UserInputSnapshot& input);
 
 }  // namespace input_process_manager
 }  // namespace system_manager

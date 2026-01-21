@@ -3,7 +3,7 @@
 // This header contains serialization code that requires heavy includes
 // Only include this in .cpp files that actually need to serialize/deserialize
 
-#include "../engine/keymap.h"  // for UserInput, UserInputs, InputName, InputSet, InputAmount
+#include "../engine/keymap.h"  // for UserInputSnapshot, UserInputs, InputName, InputPresses, InputAmount
 #include "../entity.h"
 #include "../map.h"
 #include "../zpp_bits_include.h"

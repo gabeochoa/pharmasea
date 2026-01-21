@@ -7,19 +7,21 @@
 
 struct CollectsUserInput : public BaseComponent {
     auto& reset() {
-        array_reset(pressed);
+        array_reset(current_frame.presses);
         return *this;
     }
 
     auto& write(InputName input, float value) {
         int index = magic_enum::enum_integer<InputName>(input);
-        pressed[index] = value;
+        current_frame.presses[index] = value;
         return *this;
     }
 
     auto& publish(float dt, float camAngle) {
-        if (array_contains_any_value(pressed)) {
-            inputs.push_back({pressed, dt, camAngle});
+        if (array_contains_any_value(current_frame.presses)) {
+            current_frame.frame_dt = dt;
+            current_frame.cam_angle = camAngle;
+            inputs.push_back(current_frame);
             reset();
         }
         return *this;
@@ -33,14 +35,14 @@ struct CollectsUserInput : public BaseComponent {
     [[nodiscard]] UserInputs& inputs_NETWORK_ONLY() { return inputs; }
     void clear() { inputs.clear(); }
 
-    [[nodiscard]] InputSet read() const { return pressed; }
+    [[nodiscard]] UserInputSnapshot read() const { return current_frame; }
 
    private:
     // TODO I wonder if there is a way to combine all the inputs for the current
-    // frame into one InputSet but we need the dts
+    // frame into one InputPresses but we need the dts
     UserInputs inputs;
 
-    InputSet pressed;
+    UserInputSnapshot current_frame;
 
    public:
     friend zpp::bits::access;

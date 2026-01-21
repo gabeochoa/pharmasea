@@ -126,8 +126,10 @@ void collect_user_input(Entity& entity, float dt) {
     if (do_work > 0) cui.write(InputName::PlayerDoWork, 1.f);
 
     // run the input on the local client
-    system_manager::input_process_manager::process_input(
-        entity, {cui.read(), dt, camAngle});
+    UserInputSnapshot snapshot = cui.read();
+    snapshot.frame_dt = dt;
+    snapshot.cam_angle = camAngle;
+    system_manager::input_process_manager::process_input(entity, snapshot);
 
     // Actually save the inputs if there were any
     cui.publish(dt, camAngle);
@@ -879,7 +881,7 @@ void handle_grab_or_drop(Entity& player) {
 
 }  // namespace inround
 
-void process_input(Entity& entity, const UserInput& input) {
+void process_input(Entity& entity, const UserInputSnapshot& input) {
     const auto _proc_single_input_name = [](Entity& entity,
                                             const InputName& input_name,
                                             float input_amount, float frame_dt,
@@ -959,14 +961,14 @@ void process_input(Entity& entity, const UserInput& input) {
         }
     };
 
-    const InputSet input_set = std::get<0>(input);
-    const float frame_dt = std::get<1>(input);
-    const float cam_angle = std::get<2>(input);
+    const InputPresses& presses = input.presses;
+    const float frame_dt = input.frame_dt;
+    const float cam_angle = input.cam_angle;
 
     size_t i = 0;
     while (i < magic_enum::enum_count<InputName>()) {
         auto input_name = magic_enum::enum_value<InputName>(i);
-        float input_amount = input_set[i];
+        float input_amount = presses[i];
         if (input_amount > 0.f) {
             _proc_single_input_name(entity, input_name, input_amount, frame_dt,
                                     cam_angle);

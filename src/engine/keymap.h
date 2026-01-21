@@ -70,9 +70,16 @@ enum InputName {
 };
 
 using InputAmount = float;
-using InputSet = std::array<InputAmount, magic_enum::enum_count<InputName>()>;
-using UserInput = std::tuple<InputSet, float, float>;
-using UserInputs = std::vector<UserInput>;
+using InputPresses =
+    std::array<InputAmount, magic_enum::enum_count<InputName>()>;
+
+struct UserInputSnapshot {
+    InputPresses presses;  // All input values for this frame
+    float frame_dt;        // Delta time for this frame
+    float cam_angle;       // Camera angle at time of input
+};
+
+using UserInputs = std::vector<UserInputSnapshot>;
 
 // TODO: had a bit of trouble trying to serialize "full map" which
 // we need to do if we want to allow remapping of keys
