@@ -6,10 +6,14 @@
 #include "base_component.h"
 
 struct CollectsUserInput : public BaseComponent {
-    auto& reset() {
+    auto& reset_current_frame() {
         array_reset(current_frame.presses);
+        current_frame.frame_dt = 0.f;
+        current_frame.cam_angle = 0.f;
         return *this;
     }
+
+    auto& reset() { return reset_current_frame(); }
 
     auto& write(InputName input, float value) {
         int index = magic_enum::enum_integer<InputName>(input);
@@ -17,13 +21,27 @@ struct CollectsUserInput : public BaseComponent {
         return *this;
     }
 
-    auto& publish(float dt, float camAngle) {
+    auto& set_frame_metadata(float dt, float camAngle) {
+        current_frame.frame_dt = dt;
+        current_frame.cam_angle = camAngle;
+        return *this;
+    }
+
+    [[nodiscard]] bool has_current_frame_input() const {
+        return array_contains_any_value(current_frame.presses);
+    }
+
+    auto& queue_current_frame() {
         if (array_contains_any_value(current_frame.presses)) {
-            current_frame.frame_dt = dt;
-            current_frame.cam_angle = camAngle;
             inputs.push_back(current_frame);
-            reset();
         }
+        return *this;
+    }
+
+    auto& publish(float dt, float camAngle) {
+        set_frame_metadata(dt, camAngle);
+        queue_current_frame();
+        reset_current_frame();
         return *this;
     }
 
@@ -34,6 +52,14 @@ struct CollectsUserInput : public BaseComponent {
 
     [[nodiscard]] UserInputs& inputs_NETWORK_ONLY() { return inputs; }
     void clear() { inputs.clear(); }
+    [[nodiscard]] size_t pending_count() const { return inputs.size(); }
+
+    bool consume_next(UserInputSnapshot& out) {
+        if (inputs.empty()) return false;
+        out = inputs.front();
+        inputs.erase(inputs.begin());
+        return true;
+    }
 
     [[nodiscard]] UserInputSnapshot read() const { return current_frame; }
 

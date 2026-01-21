@@ -2,6 +2,8 @@
 
 #include "system_manager.h"
 
+#include <algorithm>
+
 #include "../afterhours/afterhours_systems.h"
 #include "../helpers/store_management_helpers.h"
 #include "entity.h"
@@ -340,24 +342,40 @@ void SystemManager::update_local_players(const Entities& players, float dt) {
     for (const auto& entity : players) {
         system_manager::input_process_manager::collect_user_input(*entity, dt);
     }
+    process_inputs(players, UserInputs{});
 }
 
-struct PlayerInputSystem : public afterhours::System<CollectsUserInput> {
-    void for_each_with(Entity& entity, CollectsUserInput& cui, float) override {
-        for (auto input : cui.inputs_NETWORK_ONLY()) {
-            system_manager::input_process_manager::process_input(entity, input);
-        }
-    }
-};
-
 void SystemManager::register_input_systems() {
-    input_systems.register_update_system(std::make_unique<PlayerInputSystem>());
+    system_manager::input_process_manager::register_input_systems(
+        input_systems);
 }
 
 void SystemManager::process_inputs(const Entities& entities,
                                    const UserInputs&) {
     // TODO think about why this is const
-    input_systems.tick(const_cast<Entities&>(entities), 1 / 120.f);
+    auto& mutable_entities = const_cast<Entities&>(entities);
+
+    if (!is_server()) {
+        input_systems.tick(mutable_entities, 1 / 120.f);
+        return;
+    }
+
+    size_t max_pending = 0;
+    for (const auto& entity : entities) {
+        if (!entity) continue;
+        if (entity->is_missing<CollectsUserInput>()) continue;
+        max_pending = std::max(
+            max_pending, entity->get<CollectsUserInput>().pending_count());
+    }
+
+    if (max_pending == 0) {
+        input_systems.tick(mutable_entities, 1 / 120.f);
+        return;
+    }
+
+    for (size_t i = 0; i < max_pending; ++i) {
+        input_systems.tick(mutable_entities, 1 / 120.f);
+    }
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {

@@ -14,6 +14,7 @@ namespace system_manager {
 namespace input_process_manager {
 
 void collect_user_input(Entity& entity, float dt);
+void register_input_systems(afterhours::SystemManager& systems);
 
 namespace planning {
 void register_input_systems(afterhours::SystemManager& systems);
@@ -25,8 +26,6 @@ namespace inround {
 void register_input_systems(afterhours::SystemManager& systems);
 
 }  // namespace inround
-
-void process_input(Entity& entity, const UserInputSnapshot& input);
 
 }  // namespace input_process_manager
 }  // namespace system_manager

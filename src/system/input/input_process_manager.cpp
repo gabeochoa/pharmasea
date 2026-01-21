@@ -10,6 +10,10 @@
 #include "planning/cart_management_system.h"
 #include "planning/pop_out_when_colliding_system.h"
 #include "planning/update_held_furniture_position_system.h"
+#include "../../components/action_requests.h"
+#include "../../components/control_state.h"
+#include "../../components/responds_to_user_input.h"
+#include "../../engine/is_server.h"
 
 namespace system_manager {
 
@@ -75,6 +79,7 @@ namespace input_process_manager {
 void collect_user_input(Entity& entity, float dt) {
     if (entity.is_missing<CollectsUserInput>()) return;
     CollectsUserInput& cui = entity.get<CollectsUserInput>();
+    cui.reset_current_frame();
 
     // Theres no players not in game menu state,
     const menu::State state = menu::State::Game;
@@ -125,14 +130,10 @@ void collect_user_input(Entity& entity, float dt) {
     float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
     if (do_work > 0) cui.write(InputName::PlayerDoWork, 1.f);
 
-    // run the input on the local client
-    UserInputSnapshot snapshot = cui.read();
-    snapshot.frame_dt = dt;
-    snapshot.cam_angle = camAngle;
-    system_manager::input_process_manager::process_input(entity, snapshot);
+    cui.set_frame_metadata(dt, camAngle);
 
     // Actually save the inputs if there were any
-    cui.publish(dt, camAngle);
+    cui.queue_current_frame();
 }
 
 void process_player_movement_input(Entity& entity, float dt,
@@ -881,100 +882,150 @@ void handle_grab_or_drop(Entity& player) {
 
 }  // namespace inround
 
-void process_input(Entity& entity, const UserInputSnapshot& input) {
-    const auto _proc_single_input_name = [](Entity& entity,
-                                            const InputName& input_name,
-                                            float input_amount, float frame_dt,
-                                            float cam_angle) {
-        switch (input_name) {
-            case InputName::PlayerLeft:
-            case InputName::PlayerRight:
-            case InputName::PlayerForward:
-            case InputName::PlayerBack:
-                return process_player_movement_input(
-                    entity, frame_dt, cam_angle, input_name, input_amount);
-            default:
-                break;
+namespace {
+
+float press_for(const UserInputSnapshot& input, InputName name) {
+    return input.presses[static_cast<size_t>(name)];
+}
+
+void handle_pickup_input(Entity& entity) {
+    bool has_item = entity.has<CanHoldItem>()
+                        ? !entity.get<CanHoldItem>().empty()
+                        : false;
+    bool has_handtruck =
+        entity.has<CanHoldHandTruck>()
+            ? entity.get<CanHoldHandTruck>().is_holding()
+            : false;
+    log_info(
+        "pickup: PlayerPickup dispatch game_like={} daytime={} has_item={} "
+        "has_handtruck={}",
+        GameState::get().is_game_like(), SystemManager::get().is_bar_closed(),
+        has_item, has_handtruck);
+    if (GameState::get().is_game_like()) {
+        // Planning mode is when it's daytime, in-round mode is when it's
+        // nighttime
+        if (SystemManager::get().is_bar_closed()) {
+            log_info("pickup: using planning grab/drop");
+            planning::handle_grab_or_drop(entity);
+        } else {
+            log_info("pickup: using inround grab/drop");
+            inround::handle_grab_or_drop(entity);
         }
-
-        // Because of predictive input, we run this _proc_single as the
-        // client and as the server
-        //
-        // For the client we only care about player movement, so if we are
-        // not the server then just skip the rest
-
-        // TODO we would like to disable this so placing preview works
-        // however it breaks all pickup/drop on non host client...
-        // if (!is_server()) return;
-        //
-        // ^^^ This breaks clientside held furniture, which means the
-        // preview wont work with this
-
-        switch (input_name) {
-            case InputName::PlayerRotateFurniture:
-                planning::rotate_furniture(entity);
-                break;
-            case InputName::PlayerHandTruckInteract:
-                if (GameState::get().is_game_like()) {
-                    // inround::handle_hand_truck(entity);
-                    planning::handle_grab_or_drop(entity);
-                }
-                break;
-            case InputName::PlayerPickup:
-                // grab_or_drop(entity);
-                {
-                    bool has_item = entity.has<CanHoldItem>()
-                                        ? !entity.get<CanHoldItem>().empty()
-                                        : false;
-                    bool has_handtruck =
-                        entity.has<CanHoldHandTruck>()
-                            ? entity.get<CanHoldHandTruck>().is_holding()
-                            : false;
-                    log_info(
-                        "pickup: PlayerPickup dispatch game_like={} daytime={} "
-                        "has_item={} has_handtruck={}",
-                        GameState::get().is_game_like(),
-                        SystemManager::get().is_bar_closed(), has_item,
-                        has_handtruck);
-                    if (GameState::get().is_game_like()) {
-                        // Planning mode is when it's daytime, in-round mode
-                        // is when it's nighttime
-                        if (SystemManager::get().is_bar_closed()) {
-                            log_info("pickup: using planning grab/drop");
-                            planning::handle_grab_or_drop(entity);
-                        } else {
-                            log_info("pickup: using inround grab/drop");
-                            inround::handle_grab_or_drop(entity);
-                        }
-                    } else {
-                        // probably want to handle messing around in the
-                        // lobby?
-                    }
-                }
-                break;
-            case InputName::PlayerDoWork: {
-                work_furniture(entity, frame_dt);
-                fishing_game(entity, frame_dt);
-            } break;
-            default:
-                break;
-        }
-    };
-
-    const InputPresses& presses = input.presses;
-    const float frame_dt = input.frame_dt;
-    const float cam_angle = input.cam_angle;
-
-    size_t i = 0;
-    while (i < magic_enum::enum_count<InputName>()) {
-        auto input_name = magic_enum::enum_value<InputName>(i);
-        float input_amount = presses[i];
-        if (input_amount > 0.f) {
-            _proc_single_input_name(entity, input_name, input_amount, frame_dt,
-                                    cam_angle);
-        }
-        i++;
+    } else {
+        // probably want to handle messing around in the lobby?
     }
+}
+
+}  // namespace
+
+struct InputRouterSystem
+    : public afterhours::System<CollectsUserInput, ControlState, ActionRequests,
+                                RespondsToUserInput> {
+    void for_each_with(Entity&, CollectsUserInput& cui, ControlState& control,
+                       ActionRequests& actions, float) override {
+        control.reset();
+        actions.reset();
+
+        UserInputSnapshot snapshot{};
+        if (is_server()) {
+            if (!cui.consume_next(snapshot)) {
+                return;
+            }
+        } else {
+            snapshot = cui.read();
+            if (!cui.has_current_frame_input()) {
+                cui.reset_current_frame();
+                return;
+            }
+        }
+
+        control.frame_dt = snapshot.frame_dt;
+        control.cam_angle = snapshot.cam_angle;
+        control.move_forward = press_for(snapshot, InputName::PlayerForward);
+        control.move_back = press_for(snapshot, InputName::PlayerBack);
+        control.move_left = press_for(snapshot, InputName::PlayerLeft);
+        control.move_right = press_for(snapshot, InputName::PlayerRight);
+
+        actions.pickup = press_for(snapshot, InputName::PlayerPickup) > 0.f;
+        actions.rotate_furniture =
+            press_for(snapshot, InputName::PlayerRotateFurniture) > 0.f;
+        actions.do_work = press_for(snapshot, InputName::PlayerDoWork);
+        actions.handtruck_interact =
+            press_for(snapshot, InputName::PlayerHandTruckInteract) > 0.f;
+
+        if (!is_server()) {
+            cui.reset_current_frame();
+        }
+    }
+};
+
+struct InputMovementSystem
+    : public afterhours::System<ControlState, RespondsToUserInput> {
+    void for_each_with(Entity& entity, ControlState& control,
+                       RespondsToUserInput&, float) override {
+        if (!control.has_movement()) return;
+
+        if (control.move_forward > 0.f) {
+            process_player_movement_input(entity, control.frame_dt,
+                                          control.cam_angle,
+                                          InputName::PlayerForward,
+                                          control.move_forward);
+        }
+        if (control.move_back > 0.f) {
+            process_player_movement_input(entity, control.frame_dt,
+                                          control.cam_angle,
+                                          InputName::PlayerBack,
+                                          control.move_back);
+        }
+        if (control.move_left > 0.f) {
+            process_player_movement_input(entity, control.frame_dt,
+                                          control.cam_angle,
+                                          InputName::PlayerLeft,
+                                          control.move_left);
+        }
+        if (control.move_right > 0.f) {
+            process_player_movement_input(entity, control.frame_dt,
+                                          control.cam_angle,
+                                          InputName::PlayerRight,
+                                          control.move_right);
+        }
+    }
+};
+
+struct InputActionSystem
+    : public afterhours::System<ControlState, ActionRequests,
+                                RespondsToUserInput> {
+    void for_each_with(Entity& entity, ControlState& control,
+                       ActionRequests& actions, RespondsToUserInput&,
+                       float) override {
+        if (!actions.any()) return;
+
+        if (actions.pickup) {
+            handle_pickup_input(entity);
+        }
+
+        if (actions.rotate_furniture) {
+            planning::rotate_furniture(entity);
+        }
+
+        if (actions.do_work > 0.f) {
+            work_furniture(entity, control.frame_dt);
+            fishing_game(entity, control.frame_dt);
+        }
+
+        if (actions.handtruck_interact) {
+            if (GameState::get().is_game_like()) {
+                // inround::handle_hand_truck(entity);
+                planning::handle_grab_or_drop(entity);
+            }
+        }
+    }
+};
+
+void register_input_systems(afterhours::SystemManager& systems) {
+    systems.register_update_system(std::make_unique<InputRouterSystem>());
+    systems.register_update_system(std::make_unique<InputMovementSystem>());
+    systems.register_update_system(std::make_unique<InputActionSystem>());
 }
 }  // namespace input_process_manager
 }  // namespace system_manager
