@@ -37,6 +37,10 @@ struct CollectsUserInput : public BaseComponent {
 
     [[nodiscard]] UserInputSnapshot read() const { return current_frame; }
 
+    void set_inputs_SERVER_ONLY(const UserInputs& new_inputs) {
+        this->inputs = new_inputs;
+    }
+
    private:
     // TODO I wonder if there is a way to combine all the inputs for the current
     // frame into one InputPresses but we need the dts

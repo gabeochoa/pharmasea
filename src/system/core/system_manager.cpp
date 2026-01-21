@@ -10,6 +10,7 @@
 #include "../../building_locations.h"
 #include "../../components/can_change_settings_interactively.h"
 #include "../../components/can_hold_item.h"
+#include "../../components/collects_user_input.h"
 #include "../../components/custom_item_position.h"
 #include "../../components/has_ai_queue_state.h"
 #include "../../components/has_day_night_timer.h"
@@ -341,15 +342,22 @@ void SystemManager::update_local_players(const Entities& players, float dt) {
     }
 }
 
-void SystemManager::process_inputs(const Entities& entities,
-                                   const UserInputs& inputs) {
-    for (const auto& entity : entities) {
-        if (entity->is_missing<RespondsToUserInput>()) continue;
-        for (auto input : inputs) {
-            system_manager::input_process_manager::process_input(*entity,
-                                                                 input);
+struct PlayerInputSystem : public afterhours::System<CollectsUserInput> {
+    void for_each_with(Entity& entity, CollectsUserInput& cui, float) override {
+        for (auto input : cui.inputs_NETWORK_ONLY()) {
+            system_manager::input_process_manager::process_input(entity, input);
         }
     }
+};
+
+void SystemManager::register_input_systems() {
+    input_systems.register_update_system(std::make_unique<PlayerInputSystem>());
+}
+
+void SystemManager::process_inputs(const Entities& entities,
+                                   const UserInputs&) {
+    // TODO think about why this is const
+    input_systems.tick(const_cast<Entities&>(entities), 1 / 120.f);
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {

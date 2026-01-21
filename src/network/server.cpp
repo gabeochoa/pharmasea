@@ -8,6 +8,7 @@
 
 #include "../building_locations.h"
 #include "../client_server_comm.h"
+#include "../components/collects_user_input.h"
 #include "../components/has_client_id.h"
 #include "../components/has_name.h"
 #include "../components/uses_character_model.h"
@@ -453,6 +454,8 @@ void Server::process_player_control_packet(
 
     // vvv i think we already did this but not 100% sure
     // TODO interpolate our old position and new position so its smoother
+    player->template get<CollectsUserInput>().set_inputs_SERVER_ONLY(
+        info.inputs);
     SystemManager::get().process_inputs(Entities{player}, info.inputs);
     auto updated_position = player->get<Transform>().pos();
 

@@ -33,10 +33,12 @@ struct SystemManager {
     // Note: mutable because render() is non-const but render_entities() is
     // const
     mutable afterhours::SystemManager systems;
+    mutable afterhours::SystemManager input_systems;
 
     SystemManager() {
         // Register afterhours systems
         register_afterhours_systems();
+        register_input_systems();
     }
 
     void render_entities(const Entities& entities, float dt) const;
@@ -60,6 +62,7 @@ struct SystemManager {
     void register_planning_systems();
     void register_render_systems();
     void register_day_night_transition_systems();
+    void register_input_systems();
 
     void every_frame_update(const Entities& entity_list, float dt);
 };
