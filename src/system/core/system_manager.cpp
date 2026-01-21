@@ -2,8 +2,6 @@
 
 #include "system_manager.h"
 
-#include <algorithm>
-
 #include "../afterhours/afterhours_systems.h"
 #include "../helpers/store_management_helpers.h"
 #include "entity.h"
@@ -354,28 +352,7 @@ void SystemManager::process_inputs(const Entities& entities,
                                    const UserInputs&) {
     // TODO think about why this is const
     auto& mutable_entities = const_cast<Entities&>(entities);
-
-    if (!is_server()) {
-        input_systems.tick(mutable_entities, 1 / 120.f);
-        return;
-    }
-
-    size_t max_pending = 0;
-    for (const auto& entity : entities) {
-        if (!entity) continue;
-        if (entity->is_missing<CollectsUserInput>()) continue;
-        max_pending = std::max(
-            max_pending, entity->get<CollectsUserInput>().pending_count());
-    }
-
-    if (max_pending == 0) {
-        input_systems.tick(mutable_entities, 1 / 120.f);
-        return;
-    }
-
-    for (size_t i = 0; i < max_pending; ++i) {
-        input_systems.tick(mutable_entities, 1 / 120.f);
-    }
+    input_systems.tick(mutable_entities, 1 / 120.f);
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {

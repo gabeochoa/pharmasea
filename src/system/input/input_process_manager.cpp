@@ -10,8 +10,7 @@
 #include "planning/cart_management_system.h"
 #include "planning/pop_out_when_colliding_system.h"
 #include "planning/update_held_furniture_position_system.h"
-#include "../../components/action_requests.h"
-#include "../../components/control_state.h"
+#include "../../components/player_input_queue.h"
 #include "../../components/responds_to_user_input.h"
 #include "../../engine/is_server.h"
 
@@ -916,116 +915,177 @@ void handle_pickup_input(Entity& entity) {
     }
 }
 
+void queue_snapshot(PlayerInputQueue& queue, const UserInputSnapshot& snapshot) {
+    const float forward = press_for(snapshot, InputName::PlayerForward);
+    const float back = press_for(snapshot, InputName::PlayerBack);
+    const float left = press_for(snapshot, InputName::PlayerLeft);
+    const float right = press_for(snapshot, InputName::PlayerRight);
+
+    if (forward > 0.f || back > 0.f || left > 0.f || right > 0.f) {
+        queue.move_steps.push_back(PlayerInputQueue::MoveStep{
+            .frame_dt = snapshot.frame_dt,
+            .cam_angle = snapshot.cam_angle,
+            .forward = forward,
+            .back = back,
+            .left = left,
+            .right = right,
+        });
+    }
+
+    if (press_for(snapshot, InputName::PlayerPickup) > 0.f) {
+        queue.pickup_presses += 1;
+    }
+
+    if (press_for(snapshot, InputName::PlayerRotateFurniture) > 0.f) {
+        queue.rotate_presses += 1;
+    }
+
+    const float do_work = press_for(snapshot, InputName::PlayerDoWork);
+    if (do_work > 0.f) {
+        queue.work_steps.push_back(PlayerInputQueue::WorkStep{
+            .frame_dt = snapshot.frame_dt,
+            .amount = do_work,
+        });
+    }
+
+    if (press_for(snapshot, InputName::PlayerHandTruckInteract) > 0.f) {
+        queue.handtruck_presses += 1;
+    }
+}
+
 }  // namespace
 
-struct InputRouterSystem
-    : public afterhours::System<CollectsUserInput, ControlState, ActionRequests,
+struct InputDemuxSystem
+    : public afterhours::System<CollectsUserInput, PlayerInputQueue,
                                 RespondsToUserInput> {
-    void for_each_with(Entity&, CollectsUserInput& cui, ControlState& control,
-                       ActionRequests& actions, float) override {
-        control.reset();
-        actions.reset();
+    void for_each_with(Entity&, CollectsUserInput& cui,
+                       PlayerInputQueue& queue, RespondsToUserInput&,
+                       float) override {
+        queue.reset();
 
         UserInputSnapshot snapshot{};
         if (is_server()) {
-            if (!cui.consume_next(snapshot)) {
-                return;
+            while (cui.consume_next(snapshot)) {
+                queue_snapshot(queue, snapshot);
             }
-        } else {
-            snapshot = cui.read();
-            if (!cui.has_current_frame_input()) {
-                cui.reset_current_frame();
-                return;
-            }
+            return;
         }
 
-        control.frame_dt = snapshot.frame_dt;
-        control.cam_angle = snapshot.cam_angle;
-        control.move_forward = press_for(snapshot, InputName::PlayerForward);
-        control.move_back = press_for(snapshot, InputName::PlayerBack);
-        control.move_left = press_for(snapshot, InputName::PlayerLeft);
-        control.move_right = press_for(snapshot, InputName::PlayerRight);
-
-        actions.pickup = press_for(snapshot, InputName::PlayerPickup) > 0.f;
-        actions.rotate_furniture =
-            press_for(snapshot, InputName::PlayerRotateFurniture) > 0.f;
-        actions.do_work = press_for(snapshot, InputName::PlayerDoWork);
-        actions.handtruck_interact =
-            press_for(snapshot, InputName::PlayerHandTruckInteract) > 0.f;
-
-        if (!is_server()) {
+        snapshot = cui.read();
+        if (!cui.has_current_frame_input()) {
             cui.reset_current_frame();
+            return;
         }
+
+        queue_snapshot(queue, snapshot);
+        cui.reset_current_frame();
     }
 };
 
-struct InputMovementSystem
-    : public afterhours::System<ControlState, RespondsToUserInput> {
-    void for_each_with(Entity& entity, ControlState& control,
+struct PlayerMoveInputSystem
+    : public afterhours::System<PlayerInputQueue, RespondsToUserInput> {
+    void for_each_with(Entity& entity, PlayerInputQueue& queue,
                        RespondsToUserInput&, float) override {
-        if (!control.has_movement()) return;
+        if (!queue.has_moves()) return;
 
-        if (control.move_forward > 0.f) {
-            process_player_movement_input(entity, control.frame_dt,
-                                          control.cam_angle,
-                                          InputName::PlayerForward,
-                                          control.move_forward);
+        for (const auto& step : queue.move_steps) {
+            if (step.forward > 0.f) {
+                process_player_movement_input(entity, step.frame_dt,
+                                              step.cam_angle,
+                                              InputName::PlayerForward,
+                                              step.forward);
+            }
+            if (step.back > 0.f) {
+                process_player_movement_input(
+                    entity, step.frame_dt, step.cam_angle,
+                    InputName::PlayerBack, step.back);
+            }
+            if (step.left > 0.f) {
+                process_player_movement_input(entity, step.frame_dt,
+                                              step.cam_angle,
+                                              InputName::PlayerLeft, step.left);
+            }
+            if (step.right > 0.f) {
+                process_player_movement_input(entity, step.frame_dt,
+                                              step.cam_angle,
+                                              InputName::PlayerRight,
+                                              step.right);
+            }
         }
-        if (control.move_back > 0.f) {
-            process_player_movement_input(entity, control.frame_dt,
-                                          control.cam_angle,
-                                          InputName::PlayerBack,
-                                          control.move_back);
-        }
-        if (control.move_left > 0.f) {
-            process_player_movement_input(entity, control.frame_dt,
-                                          control.cam_angle,
-                                          InputName::PlayerLeft,
-                                          control.move_left);
-        }
-        if (control.move_right > 0.f) {
-            process_player_movement_input(entity, control.frame_dt,
-                                          control.cam_angle,
-                                          InputName::PlayerRight,
-                                          control.move_right);
-        }
+
+        queue.move_steps.clear();
     }
 };
 
-struct InputActionSystem
-    : public afterhours::System<ControlState, ActionRequests,
-                                RespondsToUserInput> {
-    void for_each_with(Entity& entity, ControlState& control,
-                       ActionRequests& actions, RespondsToUserInput&,
-                       float) override {
-        if (!actions.any()) return;
+struct PlayerPickupInputSystem
+    : public afterhours::System<PlayerInputQueue, RespondsToUserInput> {
+    void for_each_with(Entity& entity, PlayerInputQueue& queue,
+                       RespondsToUserInput&, float) override {
+        if (!queue.has_pickup()) return;
 
-        if (actions.pickup) {
+        for (int i = 0; i < queue.pickup_presses; ++i) {
             handle_pickup_input(entity);
         }
 
-        if (actions.rotate_furniture) {
+        queue.pickup_presses = 0;
+    }
+};
+
+struct PlayerRotateInputSystem
+    : public afterhours::System<PlayerInputQueue, RespondsToUserInput> {
+    void for_each_with(Entity& entity, PlayerInputQueue& queue,
+                       RespondsToUserInput&, float) override {
+        if (!queue.has_rotate()) return;
+
+        for (int i = 0; i < queue.rotate_presses; ++i) {
             planning::rotate_furniture(entity);
         }
 
-        if (actions.do_work > 0.f) {
-            work_furniture(entity, control.frame_dt);
-            fishing_game(entity, control.frame_dt);
+        queue.rotate_presses = 0;
+    }
+};
+
+struct PlayerWorkInputSystem
+    : public afterhours::System<PlayerInputQueue, RespondsToUserInput> {
+    void for_each_with(Entity& entity, PlayerInputQueue& queue,
+                       RespondsToUserInput&, float) override {
+        if (!queue.has_work()) return;
+
+        for (const auto& step : queue.work_steps) {
+            work_furniture(entity, step.frame_dt);
+            fishing_game(entity, step.frame_dt);
         }
 
-        if (actions.handtruck_interact) {
+        queue.work_steps.clear();
+    }
+};
+
+struct PlayerHandtruckInputSystem
+    : public afterhours::System<PlayerInputQueue, RespondsToUserInput> {
+    void for_each_with(Entity& entity, PlayerInputQueue& queue,
+                       RespondsToUserInput&, float) override {
+        if (!queue.has_handtruck()) return;
+
+        for (int i = 0; i < queue.handtruck_presses; ++i) {
             if (GameState::get().is_game_like()) {
                 // inround::handle_hand_truck(entity);
                 planning::handle_grab_or_drop(entity);
             }
         }
+
+        queue.handtruck_presses = 0;
     }
 };
 
 void register_input_systems(afterhours::SystemManager& systems) {
-    systems.register_update_system(std::make_unique<InputRouterSystem>());
-    systems.register_update_system(std::make_unique<InputMovementSystem>());
-    systems.register_update_system(std::make_unique<InputActionSystem>());
+    systems.register_update_system(std::make_unique<InputDemuxSystem>());
+    systems.register_update_system(std::make_unique<PlayerMoveInputSystem>());
+    systems.register_update_system(std::make_unique<PlayerPickupInputSystem>());
+    systems.register_update_system(
+        std::make_unique<PlayerRotateInputSystem>());
+    systems.register_update_system(std::make_unique<PlayerWorkInputSystem>());
+    systems.register_update_system(
+        std::make_unique<PlayerHandtruckInputSystem>());
 }
 }  // namespace input_process_manager
 }  // namespace system_manager

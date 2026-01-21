@@ -17,7 +17,6 @@
 
 // ---- Component type includes (the canonical "all components" list) ----
 
-#include "action_requests.h"
 #include "adds_ingredient.h"
 #include "base_component.h"
 #include "bypass_automation_state.h"
@@ -36,7 +35,7 @@
 #include "can_pathfind.h"
 #include "collects_customer_feedback.h"
 #include "collects_user_input.h"
-#include "control_state.h"
+#include "player_input_queue.h"
 #include "conveys_held_item.h"
 #include "custom_item_position.h"
 #include "has_ai_bathroom_state.h"
