@@ -23,12 +23,9 @@ struct ActionRequests : public BaseComponent {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
+        (void) self;
         return archive(                        //
-            static_cast<BaseComponent&>(self),  //
-            self.pickup,                        //
-            self.rotate_furniture,              //
-            self.handtruck_interact,            //
-            self.do_work                         //
+            static_cast<BaseComponent&>(self)  //
         );
     }
 };
