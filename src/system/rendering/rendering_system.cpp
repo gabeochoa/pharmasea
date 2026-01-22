@@ -39,6 +39,32 @@
 #include "../../engine/shader_library.h"
 
 namespace system_manager {
+
+namespace {
+// Helper to draw billboards from either atlas or individual texture
+void draw_billboard_from_texture_or_atlas(raylib::Camera3D camera,
+                                          const std::string& texture_name,
+                                          vec3 position, float size,
+                                          raylib::Color tint = raylib::WHITE) {
+    // Check atlases first
+    const char* atlas_names[] = {"keyboard_atlas", "xbox_atlas", "drinks_atlas",
+                                 "upgrades_atlas"};
+    for (const char* atlas_name : atlas_names) {
+        if (!TextureAtlasLibrary::get().contains(atlas_name)) continue;
+        const auto& atlas = TextureAtlasLibrary::get().get(atlas_name);
+        if (atlas.contains(texture_name)) {
+            raylib::Rectangle src = atlas.get_source_rect(texture_name);
+            raylib::DrawBillboardRec(camera, atlas.texture, src, position, {size, size}, tint);
+            return;
+        }
+    }
+
+    // Fall back to individual texture
+    raylib::Texture texture = TextureLibrary::get().get(texture_name);
+    raylib::DrawBillboard(camera, texture, position, size, tint);
+}
+}  // namespace
+
 namespace job_system {
 
 void render_job_visual(const Entity& entity, float) {
@@ -830,15 +856,15 @@ void render_texture_billboard(const Transform& transform,
     // TODO cant seem to find trash texture, and is crashing?
 
     vec3 position = transform.pos();
-    raylib::Texture texture = TextureLibrary::get().get(texture_name);
     GameCam* cam = globals::game_cam();
     if (!cam) return;
-    raylib::DrawBillboard(cam->camera, texture,
-                          vec3{position.x + (TILESIZE * 0.05f),  //
-                               position.y + (TILESIZE * 2.f),    //
-                               position.z},                      //
-                          0.75f * TILESIZE,                      //
-                          raylib::WHITE);
+    draw_billboard_from_texture_or_atlas(
+        cam->camera, texture_name,
+        vec3{position.x + (TILESIZE * 0.05f),  //
+             position.y + (TILESIZE * 2.f),    //
+             position.z},                      //
+        0.75f * TILESIZE,                      //
+        raylib::WHITE);
 }
 
 void render_billboard_at_entity(const OptEntity& opt_entity,
@@ -1013,21 +1039,21 @@ void render_ai_info(const Entity& entity, float) {
             GameCam* cam = globals::game_cam();
             if (!cam) break;
             // TODO reuse the toilet upgrade one for now
-            raylib::Texture texture = TextureLibrary::get().get("gotta_go");
-            raylib::DrawBillboard(cam->camera, texture,
-                                  // move it a bit so that it doesnt overlap
-                                  icon_position + vec3{0.f, 1.f, 0},
-                                  0.75f * TILESIZE, raylib::WHITE);
+            draw_billboard_from_texture_or_atlas(
+                cam->camera, "gotta_go",
+                // move it a bit so that it doesnt overlap
+                icon_position + vec3{0.f, 1.f, 0}, 0.75f * TILESIZE,
+                raylib::WHITE);
         } break;
         case IsAIControlled::State::Pay: {
             GameCam* cam = globals::game_cam();
             if (!cam) break;
             // TODO reuse the store dollar sign one for now
-            raylib::Texture texture = TextureLibrary::get().get("dollar_sign");
-            raylib::DrawBillboard(cam->camera, texture,
-                                  // move it a bit so that it doesnt overlap
-                                  icon_position + vec3{0.f, 1.f, 0},
-                                  0.75f * TILESIZE, raylib::WHITE);
+            draw_billboard_from_texture_or_atlas(
+                cam->camera, "dollar_sign",
+                // move it a bit so that it doesnt overlap
+                icon_position + vec3{0.f, 1.f, 0}, 0.75f * TILESIZE,
+                raylib::WHITE);
         } break;
         case IsAIControlled::State::Wander:
         case IsAIControlled::State::QueueForRegister:
@@ -1060,11 +1086,10 @@ void render_speech_bubble(const Entity& entity, float) {
     if (true) {
         GameCam* cam = globals::game_cam();
         if (!cam) return;
-        raylib::Texture texture = TextureLibrary::get().get(cod.icon_name());
-        raylib::DrawBillboard(cam->camera, texture,
-                              // move it a bit so that it doesnt overlap
-                              icon_position + vec3{0.f, 1.f, 0},
-                              0.75f * TILESIZE, raylib::WHITE);
+        draw_billboard_from_texture_or_atlas(
+            cam->camera, cod.icon_name(),
+            // move it a bit so that it doesnt overlap
+            icon_position + vec3{0.f, 1.f, 0}, 0.75f * TILESIZE, raylib::WHITE);
     }
 
     // Render 3D models or fallback cubes

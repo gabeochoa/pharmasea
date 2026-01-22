@@ -416,24 +416,16 @@ Preload::Preload() {
     // shaders
     total_units += 2;  // see load_shaders
 
-    // textures
+    // textures (atlases + individual textures)
     {
         int texture_count = 0;
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "drinks",
-            [&](const std::string&, const std::string&) { texture_count++; });
+        // 4 atlases: keyboard, xbox, drinks, upgrades
+        texture_count += 4;
+        // external folder still loaded individually
         Files::get().for_resources_in_folder(
             strings::settings::IMAGES, "external",
             [&](const std::string&, const std::string&) { texture_count++; });
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "upgrade",
-            [&](const std::string&, const std::string&) { texture_count++; });
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "controls/keyboard_default",
-            [&](const std::string&, const std::string&) { texture_count++; });
-        Files::get().for_resources_in_folder(
-            strings::settings::IMAGES, "controls/xbox_default",
-            [&](const std::string&, const std::string&) { texture_count++; });
+        // textures.json entries
         load_json_config_file("textures.json", [&](const nlohmann::json& c) {
             texture_count += static_cast<int>(c["textures"].size());
         });
@@ -729,18 +721,22 @@ void Preload::load_drink_recipes(const std::function<void()>& tick) {
 }
 
 void Preload::load_textures(const std::function<void()>& tick) {
-    // TODO add a warning for when you are loading two images with the same name
-    // because we dont distinguish between folders this is more likely than youd
-    // think
-    // TODO add support for prepending the folder name to the texture name
+    // Load texture atlases (replaces individual file loading for these folders)
+    TextureAtlasLibrary::get().load_from_config("keyboard_atlas");
+    if (tick) tick();
 
-    Files::get().for_resources_in_folder(
-        strings::settings::IMAGES, "drinks",
-        [&](const std::string& name, const std::string& filename) {
-            TextureLibrary::get().load(filename.c_str(), name.c_str());
-            if (tick) tick();
-        });
+    TextureAtlasLibrary::get().load_from_config("xbox_atlas");
+    if (tick) tick();
 
+    TextureAtlasLibrary::get().load_from_config("drinks_atlas");
+    if (tick) tick();
+
+    TextureAtlasLibrary::get().load_from_config("upgrades_atlas");
+    if (tick) tick();
+
+    log_info("Loaded {} texture atlases", TextureAtlasLibrary::get().size());
+
+    // External folder still loaded individually (not atlased)
     Files::get().for_resources_in_folder(
         strings::settings::IMAGES, "external",
         [&](const std::string& name, const std::string& filename) {
@@ -748,31 +744,7 @@ void Preload::load_textures(const std::function<void()>& tick) {
             if (tick) tick();
         });
 
-    Files::get().for_resources_in_folder(
-        strings::settings::IMAGES, "upgrade",
-        [&](const std::string& name, const std::string& filename) {
-            TextureLibrary::get().load(filename.c_str(), name.c_str());
-            if (tick) tick();
-        });
-
-    // TODO how safe is the path combination here esp for mac vs windows
-    Files::get().for_resources_in_folder(
-        strings::settings::IMAGES, "controls/keyboard_default",
-        [&](const std::string& name, const std::string& filename) {
-            TextureLibrary::get().load(filename.c_str(), name.c_str());
-            if (tick) tick();
-        });
-
-    // TODO how safe is the path combination here esp for mac vs windows
-    Files::get().for_resources_in_folder(
-        strings::settings::IMAGES, "controls/xbox_default",
-        [&](const std::string& name, const std::string& filename) {
-            TextureLibrary::get().load(filename.c_str(), name.c_str());
-            if (tick) tick();
-        });
-
-    // Now load the one off ones
-
+    // Load individual textures from textures.json
     load_json_config_file("textures.json", [&](const nlohmann::json& contents) {
         auto textures = contents["textures"];
 

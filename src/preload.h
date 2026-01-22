@@ -16,6 +16,7 @@
 #include "engine/music_library.h"
 #include "engine/shader_library.h"
 #include "engine/sound_library.h"
+#include "engine/texture_atlas.h"
 #include "engine/texture_library.h"
 #include "globals.h"
 #include "resources/fonts/Karmina_Regular_256.h"
@@ -42,6 +43,7 @@ struct Preload {
         }
 
         TextureLibrary::get().unload_all();
+        TextureAtlasLibrary::get().unload_all();
         MusicLibrary::get().unload_all();
         ModelLibrary::get().unload_all();
         SoundLibrary::get().unload_all();

@@ -167,6 +167,20 @@ inline void draw_image(vec2 pos, raylib::Texture texture, float scale,
         z_index);
 }
 
+inline void draw_image_from_atlas(vec2 pos, raylib::Texture texture,
+                                  raylib::Rectangle source_rect, float scale,
+                                  int z_index) {
+    callback_registry.register_call(
+        context,
+        [=]() {
+            raylib::Rectangle dest{pos.x, pos.y, source_rect.width * scale,
+                                   source_rect.height * scale};
+            raylib::DrawTexturePro(texture, source_rect, dest, vec2{0, 0}, 0.f,
+                                   WHITE);
+        },
+        z_index);
+}
+
 inline void draw_focus_ring(const Widget& widget, bool rounded = false) {
     if (!focus::matches(widget.id)) return;
     Rectangle rect = widget.get_rect();
@@ -174,6 +188,32 @@ inline void draw_focus_ring(const Widget& widget, bool rounded = false) {
     rect = rect::expand(rect, {pixels, pixels, pixels, pixels});
     internal::draw_rect(rect, widget.z_index, ui::theme::Usage::Accent, rounded,
                         true /* outline only */);
+}
+
+// Unified helper: tries atlases first, falls back to individual texture
+inline void draw_texture_or_atlas(vec2 pos, vec2 size,
+                                  const std::string& texture_name,
+                                  int z_index) {
+    // Atlas names to check in order
+    static const char* atlas_names[] = {"keyboard_atlas", "xbox_atlas",
+                                        "drinks_atlas", "upgrades_atlas"};
+
+    for (const char* atlas_name : atlas_names) {
+        if (!TextureAtlasLibrary::get().contains(atlas_name)) continue;
+        const auto& atlas = TextureAtlasLibrary::get().get(atlas_name);
+        if (!atlas.contains(texture_name)) continue;
+
+        raylib::Rectangle src = atlas.get_source_rect(texture_name);
+        const vec2 tex_size = {src.width, src.height};
+        draw_image_from_atlas(pos, atlas.texture, src,
+                              calculateScale(size, tex_size), z_index);
+        return;
+    }
+
+    // Fall back to individual texture
+    const raylib::Texture texture = TextureLibrary::get().get(texture_name);
+    const vec2 tex_size = {(float)texture.width, (float)texture.height};
+    draw_image(pos, texture, calculateScale(size, tex_size), z_index);
 }
 
 }  // namespace internal

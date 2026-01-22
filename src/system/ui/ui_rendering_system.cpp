@@ -13,6 +13,8 @@
 #include "../../components/model_renderer.h"
 #include "../../engine/assert.h"
 #include "../../engine/log.h"
+#include "../../engine/texture_atlas.h"
+#include "../../engine/texture_library.h"
 #include "../../entity_helper.h"
 #include "../../entity_query.h"
 #include "../core/system_manager.h"
@@ -21,7 +23,8 @@ namespace system_manager {
 namespace ui {
 
 struct OrderCard {
-    raylib::Texture icon;
+    // TODO make a type for this
+    std::string icon_name;
     float pct_time_left;
     int z_index;
 };
@@ -61,12 +64,9 @@ void render_current_register_queue(float dt) {
                 if (entity.get<HasSpeechBubble>().disabled()) continue;
                 // if (!entity.get<HasPatience>().should_pass_time()) continue;
 
-                raylib::Texture texture =  //
-                    TextureLibrary::get().get(
-                        entity.get<CanOrderDrink>().icon_name());
-
                 orders_to_render.emplace_back(OrderCard{
-                    texture, entity.get<HasPatience>().pct(), (int) index});
+                    entity.get<CanOrderDrink>().icon_name(),
+                    entity.get<HasPatience>().pct(), (int) index});
             }
         }
     }
@@ -117,8 +117,22 @@ void render_current_register_queue(float dt) {
             ::ui::get_default_progress_bar_color(card.pct_time_left));
 
         float scale = 2.f;
-        raylib::DrawTextureEx(card.icon, {card_index_rect.x, card_index_rect.y},
-                              0, scale, WHITE);
+        // Try drinks atlas first, fall back to texture library
+        if (TextureAtlasLibrary::get().contains("drinks_atlas") &&
+            TextureAtlasLibrary::get().get("drinks_atlas").contains(
+                card.icon_name)) {
+            const auto& atlas = TextureAtlasLibrary::get().get("drinks_atlas");
+            raylib::Rectangle src = atlas.get_source_rect(card.icon_name);
+            raylib::Rectangle dest{card_index_rect.x, card_index_rect.y,
+                                   src.width * scale, src.height * scale};
+            raylib::DrawTexturePro(atlas.texture, src, dest, {0, 0}, 0, WHITE);
+        } else {
+            raylib::Texture texture =
+                TextureLibrary::get().get(card.icon_name);
+            raylib::DrawTextureEx(texture,
+                                  {card_index_rect.x, card_index_rect.y}, 0,
+                                  scale, WHITE);
+        }
     }
 }
 
