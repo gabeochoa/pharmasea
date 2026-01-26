@@ -56,7 +56,6 @@ void process_player_movement_input(Entity& entity, float dt,
                                    float input_amount);
 void work_furniture(Entity& player, float frame_dt);
 void fishing_game(Entity& player, float frame_dt);
-void process_input(Entity& entity, const UserInputSnapshot& input);
 
 }  // namespace input_process_manager
 

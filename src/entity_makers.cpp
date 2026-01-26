@@ -246,6 +246,7 @@ void make_player(Entity& player, vec3 p) {
     // note: these are added to some remote players
     // ie the one the client is controlling
     player.addComponent<CollectsUserInput>();
+    player.addComponent<PlayerInputQueue>();
     player.addComponent<IsSolid>();
 
     // This one is only added to local players
