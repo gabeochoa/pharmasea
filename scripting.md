@@ -39,31 +39,47 @@ This document describes the hot-reload system for PharmaScript, enabling live co
 Each hot-reloadable system needs a C-linkage factory function:
 
 ```cpp
-// src/system/hot/movement_system.h
-#pragma once
-#include "../ah.h"
-#include "../../components/transform.h"
-#include "../../components/velocity.h"
+// src/system/hot/example_hot_system.cpp
+#include <cstdint>
+#include <cstdio>
+#include "hot_ah.h"  // Use hot_ah.h instead of ah.h (avoids logging globals)
 
-struct MovementSystem : public afterhours::System<Transform, Velocity> {
-    void for_each_with(Entity& entity, Transform& pos, Velocity& vel, float dt) override {
-        pos.x += vel.dx * dt;
-        pos.y += vel.dy * dt;
+namespace hot_system {
+
+constexpr uint64_t TYPE_HASH = 0x48535F4558414D50;  // Unique per system
+
+struct ExampleHotSystem : public afterhours::System<> {
+    uint64_t type_hash() const override { return TYPE_HASH; }
+
+    void once(const float dt) override {
+        static int frame_count = 0;
+        if (++frame_count % 300 == 0) {
+            printf("[ExampleHotSystem] alive! frame=%d\n", frame_count);
+        }
+    }
+
+    void for_each_with(afterhours::Entity& entity, float dt) override {
+        // Called for each entity
     }
 };
 
-// Factory functions for hot-reload
+}  // namespace hot_system
+
 extern "C" {
-    afterhours::SystemBase* create_system() {
-        return new MovementSystem();
+    afterhours::SystemBase* phs_create_system() {
+        return new hot_system::ExampleHotSystem();
     }
 
-    void destroy_system(afterhours::SystemBase* sys) {
+    void phs_destroy_system(afterhours::SystemBase* sys) {
         delete sys;
     }
 
-    const char* system_name() {
-        return "MovementSystem";
+    uint64_t phs_type_hash() {
+        return hot_system::TYPE_HASH;
+    }
+
+    int phs_system_type() {  // 0=Update, 1=FixedUpdate, 2=Render
+        return 0;
     }
 }
 ```
@@ -71,11 +87,16 @@ extern "C" {
 ### Compilation Command
 
 ```bash
-# Compile single system to dylib
-clang++ -std=c++20 -O2 -shared -fPIC \
-    -I./src -I./vendor/afterhours/src \
-    src/system/hot/movement_system.cpp \
-    -o build/hot/movement_system.dylib
+# Compile single system to dylib (via make)
+make hot
+
+# Or manually:
+clang++ -std=c++2a -g -shared -fPIC \
+    -I/opt/homebrew/Cellar/raylib/5.5/include -Ivendor/raylib \
+    -Ivendor/afterhours -Ivendor -Ivendor/ -iquote src \
+    -DFMT_HEADER_ONLY -DFMT_USE_NONTYPE_TEMPLATE_PARAMETERS=0 -DFMT_CONSTEVAL= \
+    src/system/hot/example_hot_system.cpp \
+    -o build/hot/example_hot_system.dylib
 ```
 
 ### HotReloadManager
@@ -213,6 +234,25 @@ void HotReloadManager::recompile_and_reload(const std::string& name) {
 | Component changes | Requires restart (memory layout changes) |
 | Compile time | Use PCH, minimize includes |
 | macOS code signing | May need to disable for dev builds |
+
+### Notes From Current Implementation (Jan 2026)
+
+- PCH mismatch: using `-include src/pch.hpp` in the hot compile caused
+  `__OPTIMIZE__` macro conflicts when the main build uses `-g`. Fix: remove PCH
+  for hot compiles (or match optimization flags exactly).
+- Missing include paths: hot compile needed raylib headers and vendor defines
+  (`-I/opt/homebrew/Cellar/raylib/5.5/include`, `-Ivendor/raylib`,
+  FMT defines). Without these, hot compile fails.
+- Logging conflicts: afterhours' `logging.h` clashed with project `log.h`.
+  Fix: define `AFTER_HOURS_REPLACE_LOGGING` in `hot_ah.h`.
+- `expected.hpp` conflicts: `<expected.hpp>` resolved to different versions in
+  main vs hot. Fix: include `-Ivendor/afterhours` before `-Ivendor` so both use
+  the same header.
+- Component ID mismatch: systems that access components in a hot-loaded dylib
+  can crash because `afterhours::components::get_type_id<T>()` uses static
+  counters per binary. Hot dylib and main exe get different component IDs.
+  Current safe path: hot-reload only systems with **no component access**,
+  or move component access to the main binary and call into a hot function.
 
 ### Directory Structure
 

@@ -4,6 +4,7 @@ mcp_screenshots/
 **/x64/.vs/*
 *.dSYM
 .cache/
+.ccache/
 .DS_Store
 **/.vs
 .vscode/
