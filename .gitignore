@@ -33,3 +33,4 @@ art_storage/*
 
 # Ignore precompiled header cache
 src/pch.hpp.gch
+libGameNetworkingSockets.dylib.bak
