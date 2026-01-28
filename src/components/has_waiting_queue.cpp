@@ -9,7 +9,7 @@
 HasWaitingQueue& HasWaitingQueue::add_customer(const Entity& customer) {
     log_info("we are adding {} {} to the line in position {}", customer.id,
              str(get_entity_type(customer)), next_line_position);
-    ppl_in_line[next_line_position] = customer.id;
+    ppl_in_line[next_line_position].set_id(customer.id);
     next_line_position++;
 
     VALIDATE(has_matching_person(customer.id) >= 0,
@@ -21,12 +21,12 @@ void HasWaitingQueue::dump_contents() const {
     log_info("dumping contents of ppl_in_line");
     for (int i = 0; i < max_queue_size; i++) {
         log_info("index: {}, set? {}, id {}", i, has_person_in_position(i),
-                 has_person_in_position(i) ? ppl_in_line[i] : -1);
+                 has_person_in_position(i) ? ppl_in_line[i].id : -1);
     }
 }
 
 bool HasWaitingQueue::matching_id(int id, int i) const {
-    return has_person_in_position(i) ? ppl_in_line[i] == id : false;
+    return has_person_in_position(i) ? ppl_in_line[i].id == id : false;
 }
 
 int HasWaitingQueue::get_customer_position(int id) const {

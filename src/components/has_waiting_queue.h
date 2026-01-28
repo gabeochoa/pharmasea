@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "../entity_id.h"
+#include "../entity_ref.h"
 #include "base_component.h"
-
-using EntityID = int;
 
 struct HasWaitingQueue : public BaseComponent {
     static constexpr int max_queue_size = 3;
@@ -16,16 +16,16 @@ struct HasWaitingQueue : public BaseComponent {
     [[nodiscard]] bool has_space() const {
         return next_line_position < max_queue_size;
     }
-    [[nodiscard]] EntityID person(int i) const { return ppl_in_line[i]; }
-    [[nodiscard]] EntityID person(size_t i) const { return ppl_in_line[i]; }
+    [[nodiscard]] EntityID person(int i) const { return ppl_in_line[i].id; }
+    [[nodiscard]] EntityID person(size_t i) const { return ppl_in_line[i].id; }
 
     [[nodiscard]] bool has_person_in_position(size_t i) const {
-        return (ppl_in_line[i] != -1);
+        return ppl_in_line[i].has_value();
     }
 
     void clear() {
         for (int i = 0; i < max_queue_size; ++i) {
-            ppl_in_line[i] = -1;
+            ppl_in_line[i].clear();
         }
         next_line_position = 0;
     }
@@ -34,24 +34,24 @@ struct HasWaitingQueue : public BaseComponent {
         for (int i = index; i < max_queue_size - 1; ++i) {
             ppl_in_line[i] = ppl_in_line[i + 1];
         }
-        ppl_in_line[max_queue_size - 1] = {};
+        ppl_in_line[max_queue_size - 1].clear();
 
         next_line_position--;
     }
 
     [[nodiscard]] int get_next_pos() const { return next_line_position; }
 
-    // These impl are in job.cpp
+    // These impl are in has_waiting_queue.cpp
     [[nodiscard]] bool matching_id(int id, int i) const;
     [[nodiscard]] bool has_matching_person(int id) const;
     [[nodiscard]] int get_customer_position(int id) const;
     HasWaitingQueue& add_customer(const Entity& customer);
 
    private:
-    std::array<EntityID, max_queue_size> ppl_in_line;
+    std::array<EntityRef, max_queue_size> ppl_in_line;
     int next_line_position = 0;
 
-    // These impl are in job.cpp
+    // These impl are in has_waiting_queue.cpp
     void dump_contents() const;
 
    public:

@@ -2,7 +2,7 @@
 
 #include <optional>
 
-#include "entity_helper.h"
+#include "entity.h"
 #include "entity_id.h"
 
 // A "persistence-friendly" entity reference:
@@ -28,26 +28,11 @@ struct EntityRef {
         handle.reset();
     }
 
-    void set(Entity& e) {
-        id = e.id;
-        // Handle will be invalid until the entity is merged/assigned a slot.
-        const afterhours::EntityHandle h = EntityHelper::handle_for(e);
-        if (h.valid()) {
-            handle = h;
-        } else {
-            handle.reset();
-        }
-    }
-
-    [[nodiscard]] OptEntity resolve() const {
-        if (handle.has_value()) {
-            OptEntity opt = EntityHelper::resolve(*handle);
-            if (opt) return opt;
-        }
-        // Fallback preserves legacy behavior (including temp-entity scans via
-        // PharmaSea's EntityHelper::getEntityForID wrapper).
-        return EntityHelper::getEntityForID(id);
-    }
+    // Implemented in entity_ref.cpp to break circular dependency
+    void set(Entity& e);
+    [[nodiscard]] OptEntity resolve() const;
+    // Like resolve(), but crashes if entity is missing. Use when entity must exist.
+    [[nodiscard]] Entity& resolve_enforced() const;
 
    public:
     friend zpp::bits::access;

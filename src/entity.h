@@ -8,6 +8,7 @@
 #include "zpp_bits_include.h"
 using afterhours::Entity;
 using afterhours::EntityHandle;
+using afterhours::EntityID;
 using afterhours::OptEntity;
 using afterhours::RefEntity;
 

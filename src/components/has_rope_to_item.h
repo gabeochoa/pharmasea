@@ -3,14 +3,14 @@
 #pragma once
 
 #include "../entity_helper.h"
+#include "../entity_id.h"
+#include "../entity_ref.h"
 #include "base_component.h"
-
-using EntityID = int;
 
 struct HasRopeToItem : public BaseComponent {
     void clear() {
-        for (EntityID id : rope) {
-            EntityHelper::markIDForCleanup(id);
+        for (EntityRef& ref : rope) {
+            EntityHelper::markIDForCleanup(ref.id);
         }
         rope.clear();
         rope_length = (int) rope.size();
@@ -24,7 +24,9 @@ struct HasRopeToItem : public BaseComponent {
     [[nodiscard]] bool was_generated() const { return generated; }
 
     void add(Item& i) {
-        rope.push_back(i.id);
+        EntityRef ref{};
+        ref.set(i);
+        rope.push_back(ref);
         rope_length = (int) rope.size();
     }
 
@@ -34,7 +36,7 @@ struct HasRopeToItem : public BaseComponent {
     vec2 path_to;
     bool generated = false;
     int rope_length = 0;
-    std::vector<EntityID> rope;
+    std::vector<EntityRef> rope;
 
    public:
     friend zpp::bits::access;

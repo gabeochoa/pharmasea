@@ -2,10 +2,6 @@
 
 #include "../entity_helper.h"
 
-OptEntity CanHoldItem::item() const {
-    return EntityHelper::getEntityForID(held_item_id);
-}
+OptEntity CanHoldItem::item() const { return held_item.resolve(); }
 
-OptEntity CanHoldItem::const_item() const {
-    return EntityHelper::getEntityForID(held_item_id);
-}
+OptEntity CanHoldItem::const_item() const { return held_item.resolve(); }

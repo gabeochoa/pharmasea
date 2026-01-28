@@ -9,7 +9,7 @@ kanban-plugin: basic
 - Core Features: 6 items
 - Save/Load: 6 items
 - ECS Refactor: 4 items
-- Afterhours Migration: 10 items (3 done)
+- Afterhours Migration: 10 items (8 done)
 - Afterhours Gaps: 12 items
 - Infra Changes: 15 items
 - Code Health: 22 items
@@ -86,14 +86,19 @@ Pointer-free serialization migration - see `docs/active/afterhours_pointer_free_
 **Phase 0 - Prep:**
 - [ ] Remove/gate debug `printf`s in `src/network/serialization.cpp`
 
-**Phase 1 - Handle system in afterhours:**
-- [ ] Implement `EntityHandle` + slots/free-list/dense-index in `vendor/afterhours`
-- [ ] Add `id_to_slot` and make `getEntityForID` O(1)
-- [ ] Rewrite cleanup/delete paths to keep slots/dense indices correct and bump generation
-- [ ] Add `EntityQuery::gen_handles()` and `gen_first_handle()`
+**Phase 1 - Handle system in afterhours:** ✅ DONE
+- [x] Implement `EntityHandle` + slots/free-list/dense-index in `vendor/afterhours`
+- [x] Add `id_to_slot` and make `getEntityForID` O(1)
+- [x] Rewrite cleanup/delete paths to keep slots/dense indices correct and bump generation
+- [x] Add `EntityQuery::gen_handles()` and `gen_first_handle()`
 
-**Phase 2 - Migrate pharmasea:**
-- [ ] Audit and migrate remaining serialized entity relationships to handles
+**Phase 2 - Migrate pharmasea:** ✅ DONE
+- [x] Audit and migrate remaining serialized entity relationships to handles
+  - can_hold_item.h: EntityRef for held_item, last_held
+  - is_squirter.h: EntityRef for held_item, held_drink
+  - adds_ingredient.h: EntityRef for parent
+  - has_rope_to_item.h: std::vector<EntityRef> for rope
+  - has_waiting_queue.h: std::array<EntityRef> for ppl_in_line
 
 **Phase 3 - Snapshot DTOs:** (mostly done)
 - [x] Add snapshot DTO layer (`world_snapshot_blob`)
@@ -102,7 +107,7 @@ Pointer-free serialization migration - see `docs/active/afterhours_pointer_free_
 - [ ] Add save versioning + migration hooks
 
 **Decisions to lock down:**
-- [ ] Handle layout: prefer `uint32_t slot/gen` for stable wire format
+- [x] Handle layout: prefer `uint32_t slot/gen` for stable wire format
 - [ ] Temp entity behavior: "no handles until merge" vs "handles on create"
 - [ ] Save/load fixups: define when to resolve references after load
 

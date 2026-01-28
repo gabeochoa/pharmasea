@@ -10,6 +10,7 @@
 #include "../dataclass/entity_filter.h"
 #include "../entity.h"
 #include "../entity_id.h"
+#include "../entity_ref.h"
 #include "../entity_type.h"
 #include "has_subtype.h"
 #include "is_item.h"
@@ -31,7 +32,7 @@ struct CanHoldItem : public BaseComponent {
     }
 
     CanHoldItem& update(Entity& item, int entity_id) {
-        held_item_id = item.id;
+        held_item.set(item);
         // Defensive: this should always be an item, but avoid hard-crashing if
         // an unexpected entity is passed in.
         if (item.has<IsItem>()) {
@@ -42,7 +43,7 @@ struct CanHoldItem : public BaseComponent {
                 "missing IsItem",
                 item.id);
         }
-        last_held_id = item.id;
+        last_held.set(item);
         if (held_by == EntityType::Unknown) {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
@@ -53,14 +54,14 @@ struct CanHoldItem : public BaseComponent {
     }
 
     CanHoldItem& update(std::nullptr_t, int) {
-        held_item_id = entity_id::INVALID;
+        held_item.clear();
         return *this;
     }
 
     [[nodiscard]] OptEntity item() const;
     [[nodiscard]] OptEntity const_item() const;
 
-    [[nodiscard]] EntityID item_id() const { return held_item_id; }
+    [[nodiscard]] EntityID item_id() const { return held_item.id; }
 
     CanHoldItem& set_filter(EntityFilter ef) {
         filter = ef;
@@ -89,11 +90,11 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] const EntityFilter& get_filter() const { return filter; }
     [[nodiscard]] EntityType hb_type() const { return held_by; }
 
-    [[nodiscard]] EntityID last_id() const { return last_held_id; }
+    [[nodiscard]] EntityID last_id() const { return last_held.id; }
 
    private:
-    EntityID last_held_id = entity_id::INVALID;
-    EntityID held_item_id = entity_id::INVALID;
+    EntityRef last_held{};
+    EntityRef held_item{};
     EntityType held_by;
     EntityFilter filter;
 
@@ -103,8 +104,8 @@ struct CanHoldItem : public BaseComponent {
         return archive(                         //
             static_cast<BaseComponent&>(self),  //
             self.held_by,                       //
-            self.held_item_id,                  //
-            self.last_held_id,                  //
+            self.held_item,                     //
+            self.last_held,                     //
             self.filter                         //
         );
     }

@@ -9,6 +9,7 @@
 #include "../entity.h"
 #include "../entity_helper.h"
 #include "../entity_id.h"
+#include "../entity_ref.h"
 #include "base_component.h"
 
 struct AddsIngredient : public BaseComponent {
@@ -24,7 +25,7 @@ struct AddsIngredient : public BaseComponent {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");
         }
-        Entity& parent_entity = EntityHelper::getEnforcedEntityForID(parent);
+        Entity& parent_entity = parent.resolve_enforced();
         return fetcher(parent_entity, entity);
     }
     void set(const IngredientFetcherFn& fn) { fetcher = fn; }
@@ -43,24 +44,24 @@ struct AddsIngredient : public BaseComponent {
     void decrement_uses() {
         num_uses--;
         if (!on_decrement) return;
-        Entity& parent_entity = EntityHelper::getEnforcedEntityForID(parent);
+        Entity& parent_entity = parent.resolve_enforced();
         on_decrement(parent_entity);
     }
     [[nodiscard]] int uses_left() const { return num_uses; }
 
     [[nodiscard]] bool validate(Entity& entity) const {
         if (!validation) return true;
-        Entity& parent_entity = EntityHelper::getEnforcedEntityForID(parent);
+        Entity& parent_entity = parent.resolve_enforced();
         return validation(parent_entity, entity);
     }
 
     auto& set_parent(EntityID id) {
-        parent = id;
+        parent.set_id(id);
         return *this;
     }
 
    private:
-    EntityID parent = entity_id::INVALID;
+    EntityRef parent{};
     IngredientFetcherFn fetcher = nullptr;
     ValidationFn validation = nullptr;
     OnDecrementFn on_decrement = nullptr;
