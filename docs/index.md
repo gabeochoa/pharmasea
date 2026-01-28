@@ -5,12 +5,9 @@
 
 | Document | Description |
 |----------|-------------|
-| [todo.md](active/todo.md) | Kanban-style task list (backlog, in-progress, bugs, completed) |
-| [load_save_game.md](active/load_save_game.md) | Save/load system with diagetic PS2-style room UI |
-| [scripting.md](active/scripting.md) | C++ hot-reload system design (PharmaScript deferred) |
-| [ecs_architecture_simplification_refactor_plan.md](active/ecs_architecture_simplification_refactor_plan.md) | Major ECS refactor: consolidate attachments, AI, interactions, areas |
+| [todo.md](active/todo.md) | Task tracker (backlog, bugs, infra, save/load, ECS refactor) |
 | [contract_system_plan.md](active/contract_system_plan.md) | Parallel ECS execution via deferred mutation contracts |
-| [afterhours_pointer_free_next_steps_plan.md](active/afterhours_pointer_free_next_steps_plan.md) | AfterHours library migration next steps |
+| [afterhours_pointer_free_next_steps_plan.md](active/afterhours_pointer_free_next_steps_plan.md) | AfterHours library migration - pointer-free serialization |
 
 ## Reference
 *Evergreen documentation*
@@ -37,6 +34,9 @@
 
 | Document | Description |
 |----------|-------------|
+| [load_save_game.md](archive/load_save_game.md) | Save/load system design (Phase 1 complete, tasks extracted) |
+| [scripting.md](archive/scripting.md) | C++ hot-reload + PharmaScript design (deferred) |
+| [ecs_architecture_simplification_refactor_plan.md](archive/ecs_architecture_simplification_refactor_plan.md) | ECS refactor plan (tasks extracted) |
 | [afterhours_handle_system_migration.md](archive/afterhours_handle_system_migration.md) | Completed migration to handle-based entity system |
 | [ai_process_to_systems_plan.md](archive/ai_process_to_systems_plan.md) | AI system refactoring plan (completed) |
 | [complexity_reduction.md](archive/complexity_reduction.md) | Phase 1 complexity analysis report |

@@ -6,7 +6,9 @@ kanban-plugin: basic
 
 **Quick Stats:**
 - Backlog: 17 items
-- Infra Changes: 23 items (includes ECS refactors + afterhours migration)
+- Save/Load: 6 items
+- ECS Refactor: 4 items
+- Infra Changes: 23 items (includes afterhours migration)
 - Code Health: 22 items
 - Bugs: 7 items (2 no-repro, 5 active)
 - Design Decisions: 18 items
@@ -34,6 +36,24 @@ kanban-plugin: basic
 - [ ] Investigate Fiber jobs: http://gdcvault.com/play/1022186/Parallelizing-the-Naughty-Dog-Engine
 - [ ] Create / Use a flatmap/flatset for better cache locality on smaller data sets
 - [ ] Should we be using arena allocators?
+
+
+## save/load follow-ups
+
+- [ ] Expand save slot count to 12 and finalize room layout
+- [ ] Replace temp planning save trigger with final Save Station design
+- [ ] CLI `--load-save <path>` should run post-load reinit pass (like slot loads do)
+- [ ] Add header metadata: `display_name` and `playtime_seconds`
+- [ ] Phase 2: narrow snapshot to hybrid delta (furniture only, not transient items)
+- [ ] FruitJuice dynamic model name can't be reconstructed after load (missing persisted subtype/state)
+
+
+## ecs refactor tasks
+
+- [ ] Review `CanHold*` components for consolidation (see archived ECS plan)
+- [ ] Replace `optional<vec2>` with Location typedef in AI targeting
+- [ ] Finalize AI data split: what belongs in `IsCustomer` vs per-state components
+- [ ] Validate AI split against planned features (thief/VIP/karaoke)
 
 
 ## infra changes
