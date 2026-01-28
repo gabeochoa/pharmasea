@@ -5,38 +5,45 @@ kanban-plugin: basic
 # Pub Panic! Task Tracker
 
 **Quick Stats:**
-- Backlog: 17 items
+- Priority Fixes: 7 bugs + 4 UX issues
+- Core Features: 6 items
 - Save/Load: 6 items
 - ECS Refactor: 4 items
-- Infra Changes: 23 items (includes afterhours migration)
+- Afterhours Migration: 10 items (3 done)
+- Afterhours Gaps: 12 items
+- Infra Changes: 15 items
 - Code Health: 22 items
-- Bugs: 7 items (2 no-repro, 5 active)
-- Design Decisions: 18 items
-- Completed: 24 items
+- Low Priority: 14 items
+- Undecided: 6 design questions
+- Completed: 28 items
 
 ---
 
-## backlog
+## priority fixes (bugs)
 
-- [ ] WARN: need a way to warn that UI elements are offscreen "purpling"
-- [ ] Add "powered by raylib" intro card (and other intro cards) like cat v roomba: https://github.com/raysan5/raylib-games/tree/master/cat_vs_roomba/src
-- [ ] Create Doors
-- [ ] Add a pause menu with textual options
-- [ ] Add system for exporting resources to code for easier binary packaging ([see branch packager](https://web.archive.org/web/20210923054249/https://veridisquot.net/singlefilegames.html))
-- [ ] Create Nav mesh for "walkability"
-- [ ] Add some way for entities to subscribe to certain keys so we can more easily keep track of what keys are being requested over lifetime
-- [ ] Fix corner walls
-- [ ] Upgrade Astar to ThetaStar (worth doing?)
-- [ ] support for tile sheets
-- [ ] Consider using https://github.com/raysan5/rres for resources
-- [ ] Particle system?
+- [ ] mojito model is big square
+- [ ] mai tai has no model
+- [ ] pathfinding crashes when rendering the waiting queue (disabled for now)
+- [ ] lime doesnt want to go into drink when cup is in register
+- [ ] lime wont go in unless i add lime juice first?
+- [ ] toilet hitbox is messed up
+- [ ] vomit hitbox is hard especially without mop
+
+## priority fixes (UX)
+
+- [ ] Text doesnt rotate based on the camera (should billboard properly)
+- [ ] Not clear you can cycle through alcohols (add UI hint)
+- [ ] settings dropdown doesnt respect selected language (i18n bug)
+- [ ] add confirmation dialog when switching resolution and languages
+
+## core features
+
+- [ ] Particle system (effects for drinks, vomit, etc.)
+- [ ] Tile sheet support
 - [ ] Spritesheet animator
-- [ ] consider switching to https://github.com/graphitemaster/0xABAD1DEA for all of our static globals
-- [ ] Look into if its worth using fmod for sound: https://www.fmod.com/
-- [ ] Investigate Fiber jobs: http://gdcvault.com/play/1022186/Parallelizing-the-Naughty-Dog-Engine
-- [ ] Create / Use a flatmap/flatset for better cache locality on smaller data sets
-- [ ] Should we be using arena allocators?
-
+- [ ] Create Doors (visual only - animate when walked through, no gameplay effect)
+- [ ] Practice mode to learn new recipes (not just tutorial)
+- [ ] First round patience should be 2x (gentler onboarding)
 
 ## save/load follow-ups
 
@@ -47,7 +54,6 @@ kanban-plugin: basic
 - [ ] Phase 2: narrow snapshot to hybrid delta (furniture only, not transient items)
 - [ ] FruitJuice dynamic model name can't be reconstructed after load (missing persisted subtype/state)
 
-
 ## ecs refactor tasks
 
 - [ ] Review `CanHold*` components for consolidation (see archived ECS plan)
@@ -55,137 +61,154 @@ kanban-plugin: basic
 - [ ] Finalize AI data split: what belongs in `IsCustomer` vs per-state components
 - [ ] Validate AI split against planned features (thief/VIP/karaoke)
 
-
 ## infra changes
 
-- [ ] BUILD PERF: Optimize magic_enum usage (accounts for 350+ seconds of template instantiation). Options: explicit instantiation in magic_enum_instantiations.cpp, reduce MAGIC_ENUM_RANGE_MAX for non-keycode enums, provide manual enum_name/enum_cast for hot-path enums (i18n, EntityType, ConfigKey), move usages to .cpp files instead of headers
+- [ ] BUILD PERF: Optimize magic_enum usage (accounts for 350+ seconds of template instantiation)
 - [ ] collision for player to change to cylinder
 - [ ] pressing two movement at the same time while moving camera sometimes feels weird
 - [ ] In pause menu, remap key bindings in layer for arrows keys to choose options
-- [ ] rendering oreder for text background is weird
+- [ ] rendering order for text background is weird
 - [ ] likely dont need to queue network packets since we always send the full state
+- [ ] AttachmentSystem: unify held item/furniture/handtruck/rope via generic parent→child attachment
+- [ ] Progress/Cooldown components + ProgressRender: centralize timers/progress bars
+- [ ] TriggerAreaSystem: own entrants counting, validation, progress/cooldown and activation
+- [ ] GameState change hooks (StateManager on_change)
+- [ ] Entity Tags/Groups (+ TaggedQuery): bitset tags like Store, Permanent, CleanupOnRoundEnd
+- [ ] EntityRegistry (id → shared_ptr): O(1) lookup for ids
+- [ ] CollisionCategory/CollisionFilter components: data-driven collision layers
+- [ ] PrefabLibrary (data-driven entity builders): move repetitive makers to JSON prefabs
+- [ ] BillboardText/WorldLabel component + system
 
-- [ ] AttachmentSystem (+ Attachment/Attachable): unify held item/furniture/handtruck/rope via generic parent→child attachment with local offsets/orientation/collidability; removes duplicated update math and special-cases; reduces desyncs.
-- [ ] Progress/Cooldown components + ProgressRender: centralize timers/progress bars (work, patience, fishing, triggers) and a single HUD/bar renderer; fewer bespoke render paths and less UI drift.
-- [ ] TriggerAreaSystem: own entrants counting, validation, progress/cooldown and activation; removes scattered trigger logic and TODOs in systems; clearer round/lobby/store flows.
-- [ ] GameState change hooks (StateManager on_change): register once to handle player moves, store open/close, resets; eliminates manual cross-calls sprinkled across systems; safer transitions.
-- [ ] Entity Tags/Groups (+ TaggedQuery): bitset tags like Store, Permanent, CleanupOnRoundEnd; simplifies queries and bulk operations; replaces ad‑hoc include_store_entities and type checks.
-- [ ] EntityRegistry (id → shared_ptr): O(1) lookup for ids; removes linear scans in helper; safer hand-offs for systems needing shared ownership.
-- [ ] CollisionCategory/CollisionFilter components: data-driven collision layers and exceptions (e.g., attached items, MopBuddy/holder, rope); replaces hardcoded branches in is_collidable; easier to reason about.
-- [ ] PrefabLibrary (data-driven entity builders): move repetitive makers to JSON prefabs (like drinks/recipes already); shrinks large makers file; reduces human error and speeds iteration.
-- [ ] BillboardText/WorldLabel component + system: single way to draw floating names/prices/speech bubbles/progress labels; consistent styling/sizing and fewer one-offs.
-- [ ] Ability + Cooldown pattern: normalize “do work” interactions (squirter, indexer, adds_ingredient) using Progress/Cooldown; reduces bespoke timers/flags and makes balance easier.
-- [ ] LifecycleSystem (deletion/cleanup policies): tag-driven bulk delete/persist on state changes; removes bespoke cleanup loops and TODOs about tagging.
-- [ ] EventBus (GameEvents): small pub/sub around existing event pattern for AttachmentChanged, TriggerActivated, UpgradeUnlocked, StateChanged; decouples systems and reduces globals traffic.
-- [ ] TransformFollower sockets (named anchors): define front/right/top sockets for precise child placement while following; deletes face-direction math scattered across updates.
-- [ ] InputContext system: drive KeyMap by context (Menu/Game/Paused) instead of hardcoding; clarifies input paths and fixes edge-cases when menus overlap gameplay.
+## afterhours migration (in progress)
 
-// merged from afterhours planning
-- [ ] vendor/afterhours: switch all includes to the local wrapper `src/ah.h` (ensures `ENABLE_AFTERHOURS_BITSERY_SERIALIZE` and bitsery includes). Update: `src/layers/gamelayer.h`, `src/job.h`, `src/components/base_component.h`, `src/entity.h`.
-- [ ] vendor/afterhours: stop including internal headers like `afterhours/src/base_component.h`; include only the public `afterhours/ah.h` via our wrapper.
-- [ ] vendor/afterhours: centralize serialization on vendor implementations. Enable `ENABLE_AFTERHOURS_BITSERY_SERIALIZE` via build flags and remove local serializers for `afterhours::Entity` and `afterhours::BaseComponent` in `src/entity.h` and `src/components/base_component.h`. Verify network roundtrips.
-- [ ] vendor/afterhours: standardize on `afterhours::Entities`/`afterhours::RefEntity` aliases; remove duplicate `using` aliases in `src/entity_helper.h` and elsewhere.
-- [ ] vendor/afterhours: evaluate migrating `EntityHelper` functionality (create/get/delete, range/collision queries, cleanup) to vendor equivalents to reduce duplication; replace linear scans with registry/lookup if provided.
-- [ ] vendor/afterhours: compare our `EntityQuery` to vendor query APIs; if equivalent (whereHasComponent/whereInRange/orderByDist), migrate usage to vendor to shrink maintenance.
-- [ ] vendor/afterhours: review job/task facilities; decide whether to adapt `src/job.h` to vendor API or keep custom; document decision.
-- [ ] vendor/afterhours: check for vendor component-registration utilities for polymorphic serialization; replace manual `MyPolymorphicClasses` maintenance if available.
-- [ ] vendor/afterhours: ensure submodule is initialized and pinned (`.gitmodules`); build uses `-Ivendor/` include path. Add CI guard to fail if submodule missing. Resolve nested submodules (e.g., `vendor/cereal`) by adding URLs or vendoring headers to avoid update failures.
+Pointer-free serialization migration - see `docs/active/afterhours_pointer_free_next_steps_plan.md` for full context.
 
-## code health (readability, stability, and build hygiene)
+**Phase 0 - Prep:**
+- [ ] Remove/gate debug `printf`s in `src/network/serialization.cpp`
 
-- [ ] Create a precompiled header (pch.hpp) for heavyweight third-party headers (raylib/rlgl/raymath, fmt, nlohmann/json, bitsery, magic_enum, argh) to reduce compile times
-- [ ] Split src/engine/graphics.h into graphics_types.h (types + declarations, no raylib includes) and graphics.cpp (definitions); move operator<< implementations out of the header
-- [ ] In src/engine/model_library.h, forward declare `namespace raylib { struct Model; }` and move raylib includes and model conversion logic into a new model_library.cpp
-- [ ] Introduce a lightweight network/fwd.h or network/api.h used by src/game.cpp instead of including heavy network/network.h; refactor call sites accordingly
-- [ ] Run Include-What-You-Use (IWYU) across src/; add a scripts/run_iwyu.sh that consumes compile_commands.json and fix reported over-includes
-- [ ] Reduce transitive includes in public headers: include only what you use, prefer forward declarations for Files, Library, Singleton where only refs/pointers are needed
-- [ ] Avoid including <raymath.h> and <rlgl.h> from headers; include them only in .cpp files that need them
-- [ ] Isolate template-heavy headers (bitsery, serialization) to dedicated headers included only by .cpp that need them; avoid pulling them into broadly included headers
-- [ ] Add -ftime-trace to a build target to profile compile hotspots and track before/after improvements; check in a short report
-- [ ] Enable sanitizers in Debug builds: ASan + UBSan by default; TSan for network tests
-- [ ] Add clang-tidy with bugprone-*, clang-analyzer-*, cppcoreguidelines-*, readability-*, performance-*; wire it into CI and a local script
-- [ ] Turn warnings into errors in CI and raise warning level: -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wold-style-cast -Wimplicit-fallthrough
-- [ ] Strengthen types: replace naked int/float parameters with enum class and strong typedefs (EntityId, PlayerId); use std::chrono for durations
-- [ ] Prefer std::unique_ptr/std::shared_ptr for ownership; use gsl::not_null for non-owning pointers
-- [ ] Add RAII wrappers for raylib resources (Model/Texture/Sound) with proper unload in destructors to prevent leaks and double-frees
-- [ ] Use tl::expected (vendor expected.hpp) for fallible operations (file IO, network parsing) instead of bool/error out-params
-- [ ] Apply [[nodiscard]] and noexcept where appropriate for public APIs to catch ignored results and enable better codegen
-- [ ] Add unit tests for serialization/deserialization (e.g., ModelInfo) and basic network message round-trips; add fuzz tests for malformed inputs
-- [ ] Add guard helpers for index/bounds checks and precondition asserts; replace undefined behavior with explicit errors
-- [ ] Add a crash handler with backward-cpp to capture symbolized stack traces in Debug builds
-- [ ] Document include policy and code style; add a pre-commit hook to run format, clang-tidy (local-only), and basic static checks
-- [ ] Audit and minimize global/singleton usage; make access thread-safe or pass explicit context; wrap network:: globals with atomics or accessors
+**Phase 1 - Handle system in afterhours:**
+- [ ] Implement `EntityHandle` + slots/free-list/dense-index in `vendor/afterhours`
+- [ ] Add `id_to_slot` and make `getEntityForID` O(1)
+- [ ] Rewrite cleanup/delete paths to keep slots/dense indices correct and bump generation
+- [ ] Add `EntityQuery::gen_handles()` and `gen_first_handle()`
 
+**Phase 2 - Migrate pharmasea:**
+- [ ] Audit and migrate remaining serialized entity relationships to handles
+
+**Phase 3 - Snapshot DTOs:** (mostly done)
+- [x] Add snapshot DTO layer (`world_snapshot_blob`)
+- [x] Switch save-game to snapshot payloads
+- [x] Remove `PointerLinkingContext` from network and save contexts
+- [ ] Add save versioning + migration hooks
+
+**Decisions to lock down:**
+- [ ] Handle layout: prefer `uint32_t slot/gen` for stable wire format
+- [ ] Temp entity behavior: "no handles until merge" vs "handles on create"
+- [ ] Save/load fixups: define when to resolve references after load
+
+## afterhours gaps
+
+Track features that should be in afterhours library rather than pharmasea:
+
+- [ ] UI offscreen warning system ("purpling" detection)
+- [ ] Entity key subscription (track which entities want which keys)
+- [ ] Arena allocators (already in afterhours, evaluate usage)
+- [ ] vendor/afterhours: switch all includes to local wrapper `src/ah.h`
+- [ ] vendor/afterhours: stop including internal headers
+- [ ] vendor/afterhours: centralize serialization on vendor implementations
+- [ ] vendor/afterhours: standardize on `afterhours::Entities`/`afterhours::RefEntity` aliases
+- [ ] vendor/afterhours: evaluate migrating `EntityHelper` functionality to vendor
+- [ ] vendor/afterhours: compare our `EntityQuery` to vendor query APIs
+- [ ] vendor/afterhours: review job/task facilities
+- [ ] vendor/afterhours: check for vendor component-registration utilities
+- [ ] vendor/afterhours: ensure submodule is initialized and pinned
+
+## code health
+
+- [ ] Create a precompiled header (pch.hpp) for heavyweight third-party headers
+- [ ] Split src/engine/graphics.h into graphics_types.h and graphics.cpp
+- [ ] In src/engine/model_library.h, forward declare Model and move includes to .cpp
+- [ ] Introduce a lightweight network/fwd.h or network/api.h
+- [ ] Run Include-What-You-Use (IWYU) across src/
+- [ ] Reduce transitive includes in public headers
+- [ ] Avoid including <raymath.h> and <rlgl.h> from headers
+- [ ] Isolate template-heavy headers (bitsery, serialization)
+- [ ] Add -ftime-trace to profile compile hotspots
+- [ ] Enable sanitizers in Debug builds: ASan + UBSan
+- [ ] Add clang-tidy with bugprone-*, clang-analyzer-*, etc.
+- [ ] Turn warnings into errors in CI (-Wall -Wextra -Wshadow etc.)
+- [ ] Strengthen types: replace naked int/float with enum class and strong typedefs
+- [ ] Prefer std::unique_ptr/std::shared_ptr for ownership
+- [ ] Add RAII wrappers for raylib resources (Model/Texture/Sound)
+- [ ] Use tl::expected for fallible operations
+- [ ] Apply [[nodiscard]] and noexcept where appropriate
+- [ ] Add unit tests for serialization/deserialization
+- [ ] Add guard helpers for index/bounds checks
+- [ ] Add a crash handler with backward-cpp
+- [ ] Document include policy and code style
+- [ ] Audit and minimize global/singleton usage
+
+## low priority
+
+- [ ] Resource export for binary packaging (single-file distribution)
+- [ ] Nav mesh for walkability (later for endgame with many customers)
+- [ ] Upgrade A* to Theta* (smoother diagonals)
+- [ ] Consider raysan5/rres for resources
+- [ ] 0xABAD1DEA for static globals
+- [ ] Look into FMOD for sound
+- [ ] Investigate Fiber jobs (Naughty Dog style)
+- [ ] Flatmap/flatset for cache locality
+- [ ] Ability + Cooldown pattern for interactions
+- [ ] LifecycleSystem (deletion/cleanup policies)
+- [ ] EventBus (GameEvents)
+- [ ] TransformFollower sockets (named anchors)
+- [ ] InputContext system (Menu/Game/Paused)
+- [ ] Pause menu with textual options (rethink entire menu UI)
+
+## undecided (need design discussion)
+
+- [ ] Simple Syrup doesn't disappear after one use (intentional or bug?)
+- [ ] Penalty for wasting ingredients? (tie to "clean at end of day"?)
+- [ ] Should alcohol be multi-use bottles? (fundamentally changes gameplay)
+- [ ] Why should you clean up the bar? (need clear consequence)
+- [ ] Not enough customers to need automation? (balance question)
+- [ ] What is the "one main gameplay item"? (core loop discussion)
 
 ## no repro
 
 - [ ] cosmopolitan model is invisible
-- [ ] PS4 Controller touchpad causing “mouse camera rotation”<br>clicking the touchpad & analog stick in the opposite direction cam rotates that way
-
-
-## design decisions
-
-- [ ] Simple Syrup doesnt dissapear after one use and its kinda the only one that does that…
-- [ ] penalty if you make too much extra? waste too much ingredients
-- [ ] Text doesnt rotate based on the camera
-- [ ] Not clear you can cycle through alcohols
-- [ ] guys keep coming back to register. eventually need to add money system or something
-- [ ] Should alcohol have to be put back? should it be like the soda / simple syrup
-- [ ] add practice mode to learn recipe
-- [ ] why should you clean up the bar? do people not want to come in? <br><br>cant serve until its clean?
-- [ ] Should the roomba only spawn by default for single player games? Should it spawn at the beginning ever?
-- [ ] warn player when they are deleting something that we need
-- [ ] need to add some ui to saw how many or when more people will spawn as its not clear
-- [ ] should customers be able to look like players?
-- [ ] add an are you sure? when switching resolution and languages
-- [ ] settings dropdown doesnt respect selected language
-- [ ] more likely to vomit if they waited longer for their drink?
-- [ ] should the day be longer based on number of customers
-- [ ] waiting reason overlaps with customer count at 1600x900 but not 1080p (fixed but need to look into sizing)
-- [ ] should alcohols be multi-use and then you throw out the empty bottle
-- [ ] patience for first round should be double or triple?
-- [ ] not enough customers to need automation?
-
-
-## broke
-
-- [ ] mojito model is big square
-- [ ] mai tai has no model
-- [ ] having pathfinding crashes when rendering the waiting queue (disabled it for now )
-- [ ] lime doesnt want to go into drink when cup is in register
-- [ ] lime wont go in unless i add lime juice first?
-- [ ] toilet hitbox is messed up
-- [ ] vomit hitbox is hard especially without mop
+- [ ] PS4 Controller touchpad causing "mouse camera rotation"
 
 ## completed
 
 - [x] joining twice from a remote computer crashes the host
 - [x] drop preview box sometimes has the wrong color
-- [x] bug where you cant place the table next to the register (disabled bounds checking on placement for now)
-- [x] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
-- [x] remove job system and switch to just tons of components HasPath, CanWaitInQueue, CanIdle, CanMop, etc
+- [x] bug where you cant place the table next to the register
+- [x] Cant repro but i got the FF box to show trash icon inside
+- [x] remove job system and switch to components
 - [x] add reroll to shop
 - [x] need preview for where item will go
 - [x] Tell the player how many customers are coming this round
-- [x] hard to tell that a new machine/stockpile has been spawned in after you get an upgrade
-- [x] at round 3 the people got stuck in line as if there was an invis person at the front
+- [x] hard to tell that a new machine/stockpile has been spawned
+- [x] at round 3 the people got stuck in line
 - [x] highlight spots on the map where this thing can go
-- [x] day 3 doesnt work, i think it skips unlock screen and that breaks it
-- [x] During planning its hard to know what each machine it, not obvious
+- [x] day 3 doesnt work
+- [x] During planning its hard to know what each machine is
 - [x] default language is reverse which is confusing
 - [x] vomit is broken not working
 - [x] Add purchasing medicine cab
 - [x] Roomba keeps getting stuck at exit
-- [x] BUG: Hide pause buttons from non-host since they dont really do anything anyway
-- [x] Client player cant change settings because menu::State is being overriden by host
-- [x] - you can fill up the cup while its in the cupboard
-- [x] We probably need some way in Progression screen to know what the new drink's recipe is like
+- [x] Hide pause buttons from non-host
+- [x] Client player cant change settings
+- [x] you can fill up the cup while its in the cupboard
+- [x] Progression screen should show new drink's recipe
 - [x] if you take the drink back from the customer you crash
-- [x] Automatically teleport new players when joining InRound / Planning etc
+- [x] Automatically teleport new players when joining
 - [x] controls dont work for gamepad in settings during game
-
-
-
+- [x] warn player when deleting required items
+- [x] show incoming customer count/timing UI
+- [x] corner walls (fixed by wall mesh change)
+- [x] raylib intro card (powered by raylib splash)
 
 %% kanban:settings
 ```
