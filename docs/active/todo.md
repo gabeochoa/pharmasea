@@ -1,6 +1,16 @@
 ---
-
 kanban-plugin: basic
+---
+
+# Pub Panic! Task Tracker
+
+**Quick Stats:**
+- Backlog: 17 items
+- Infra Changes: 23 items (includes ECS refactors + afterhours migration)
+- Code Health: 22 items
+- Bugs: 7 items (2 no-repro, 5 active)
+- Design Decisions: 18 items
+- Completed: 24 items
 
 ---
 
@@ -109,12 +119,12 @@ kanban-plugin: basic
 - [ ] should customers be able to look like players?
 - [ ] add an are you sure? when switching resolution and languages
 - [ ] settings dropdown doesnt respect selected language
-- [ ] - more likely to vomit if they waited longer for their drink ?
+- [ ] more likely to vomit if they waited longer for their drink?
 - [ ] should the day be longer based on number of customers
-- [ ] - waiting reason overlaps with customer count at 1600x900 but not 1080p<br><br>- fixed but need to look into how the sizing works cause it should be proportional
-- [ ] - should alcohols be multi-use and then you throw out the empty bottle
-- [ ] - patience for first round should be double or triple?
-- [ ] - not enough customers to need automation?
+- [ ] waiting reason overlaps with customer count at 1600x900 but not 1080p (fixed but need to look into sizing)
+- [ ] should alcohols be multi-use and then you throw out the empty bottle
+- [ ] patience for first round should be double or triple?
+- [ ] not enough customers to need automation?
 
 
 ## broke
@@ -125,14 +135,13 @@ kanban-plugin: basic
 - [ ] lime doesnt want to go into drink when cup is in register
 - [ ] lime wont go in unless i add lime juice first?
 - [ ] toilet hitbox is messed up
-- [ ] - vomit hitbox is hard especially without mop
+- [ ] vomit hitbox is hard especially without mop
 
-## complete
+## completed
 
-**Complete**
 - [x] joining twice from a remote computer crashes the host
 - [x] drop preview box sometimes has the wrong color
-- [x - bug where you cant place the table next to the register<br>- => (i’ve disable bounds checking on placement for now)
+- [x] bug where you cant place the table next to the register (disabled bounds checking on placement for now)
 - [x] Cant repro but i got the FF box to show trash icon inside. putting it back in the trash and taking out fixed it
 - [x] remove job system and switch to just tons of components HasPath, CanWaitInQueue, CanIdle, CanMop, etc
 - [x] add reroll to shop
