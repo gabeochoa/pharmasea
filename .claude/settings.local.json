@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(find:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Skill(10x-engineer:brainstorming)",
+      "Skill(10x-engineer:writing-plans)",
+      "Skill(10x-engineer:subagent-driven-development)",
+      "Bash(make:*)",
+      "Bash(clang++:*)",
+      "Bash(test:*)"
     ]
   }
 }
