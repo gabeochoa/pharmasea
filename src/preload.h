@@ -10,14 +10,14 @@
 #include "engine/singleton.h"
 #include "raylib.h"
 //
+#include "afterhours/src/plugins/sound_system.h"
 #include "engine/files.h"
+#include "globals.h"
 #include "libraries/font_library.h"
 #include "libraries/model_library.h"
-#include "afterhours/src/plugins/sound_system.h"
 #include "libraries/shader_library.h"
 #include "libraries/texture_atlas.h"
 #include "libraries/texture_library.h"
-#include "globals.h"
 #include "resources/fonts/Karmina_Regular_256.h"
 
 inline raylib::Font load_karmina_regular() {

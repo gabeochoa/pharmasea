@@ -35,6 +35,7 @@
 #include "raylib.h"
 #include "sophie.h"
 ///
+#include "../../engine/input_helper.h"
 #include "../../engine/pathfinder.h"
 #include "../../engine/runtime_globals.h"
 #include "../../engine/tracy.h"
@@ -46,7 +47,6 @@
 #include "../helpers/ingredient_helper.h"
 #include "../helpers/progression.h"
 #include "../input/input_process_manager.h"
-#include "../../engine/input_helper.h"
 #include "../rendering/rendering_system.h"
 #include "../ui/ui_rendering_system.h"
 #include "magic_enum/magic_enum.hpp"

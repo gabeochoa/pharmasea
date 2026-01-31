@@ -4,6 +4,7 @@
 #include <ranges>
 
 #include "afterhours/src/core/base_component.h"
+#include "afterhours/src/plugins/sound_system.h"
 #include "ah.h"
 #include "components/all_components.h"
 #include "components/bypass_automation_state.h"
@@ -33,7 +34,6 @@
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
 #include "engine/runtime_globals.h"
-#include "afterhours/src/plugins/sound_system.h"
 #include "engine/ui/color.h"
 #include "engine/util.h"
 #include "entity.h"

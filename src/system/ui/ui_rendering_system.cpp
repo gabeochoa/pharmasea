@@ -13,10 +13,10 @@
 #include "../../components/model_renderer.h"
 #include "../../engine/assert.h"
 #include "../../engine/log.h"
-#include "../../libraries/texture_atlas.h"
-#include "../../libraries/texture_library.h"
 #include "../../entity_helper.h"
 #include "../../entity_query.h"
+#include "../../libraries/texture_atlas.h"
+#include "../../libraries/texture_library.h"
 #include "../core/system_manager.h"
 
 namespace system_manager {
@@ -64,9 +64,9 @@ void render_current_register_queue(float dt) {
                 if (entity.get<HasSpeechBubble>().disabled()) continue;
                 // if (!entity.get<HasPatience>().should_pass_time()) continue;
 
-                orders_to_render.emplace_back(OrderCard{
-                    entity.get<CanOrderDrink>().icon_name(),
-                    entity.get<HasPatience>().pct(), (int) index});
+                orders_to_render.emplace_back(
+                    OrderCard{entity.get<CanOrderDrink>().icon_name(),
+                              entity.get<HasPatience>().pct(), (int) index});
             }
         }
     }
@@ -119,16 +119,16 @@ void render_current_register_queue(float dt) {
         float scale = 2.f;
         // Try drinks atlas first, fall back to texture library
         if (TextureAtlasLibrary::get().contains("drinks_atlas") &&
-            TextureAtlasLibrary::get().get("drinks_atlas").contains(
-                card.icon_name)) {
+            TextureAtlasLibrary::get()
+                .get("drinks_atlas")
+                .contains(card.icon_name)) {
             const auto& atlas = TextureAtlasLibrary::get().get("drinks_atlas");
             raylib::Rectangle src = atlas.get_source_rect(card.icon_name);
             raylib::Rectangle dest{card_index_rect.x, card_index_rect.y,
                                    src.width * scale, src.height * scale};
             raylib::DrawTexturePro(atlas.texture, src, dest, {0, 0}, 0, WHITE);
         } else {
-            raylib::Texture texture =
-                TextureLibrary::get().get(card.icon_name);
+            raylib::Texture texture = TextureLibrary::get().get(card.icon_name);
             raylib::DrawTextureEx(texture,
                                   {card_index_rect.x, card_index_rect.y}, 0,
                                   scale, WHITE);

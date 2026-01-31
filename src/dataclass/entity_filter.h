@@ -246,10 +246,10 @@ struct EntityFilter {
    public:
     friend zpp::bits::access;
     constexpr static auto serialize(auto& archive, auto& self) {
-        return archive(         //
-            self.subtype_index, //
-            self.flags,         //
-            self.entity_type    //
+        return archive(          //
+            self.subtype_index,  //
+            self.flags,          //
+            self.entity_type     //
         );
     }
 };

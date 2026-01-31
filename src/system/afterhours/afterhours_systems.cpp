@@ -1,7 +1,7 @@
 #include "afterhours_systems.h"
 
-#include "afterhours/src/plugins/sound_system.h"
 #include "../core/system_manager.h"
+#include "afterhours/src/plugins/sound_system.h"
 
 // Layered input system for polling-based input
 #include "../../game_actions.h"

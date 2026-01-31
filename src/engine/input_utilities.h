@@ -13,8 +13,8 @@
 #include <vector>
 
 #include "afterhours/src/plugins/input_system.h"
-#include "magic_enum/magic_enum.hpp"
 #include "gamepad_axis_with_dir.h"
+#include "magic_enum/magic_enum.hpp"
 
 namespace afterhours::input_ext {
 
@@ -45,14 +45,14 @@ inline std::string icon_for_axis(const AxisT& axis) {
 }
 
 namespace detail {
-template<typename T> struct is_variant : std::false_type {};
-template<typename... Ts> struct is_variant<std::variant<Ts...>> : std::true_type {};
-}
+template<typename T>
+struct is_variant : std::false_type {};
+template<typename... Ts>
+struct is_variant<std::variant<Ts...>> : std::true_type {};
+}  // namespace detail
 
 // name_for_input - overload for int (keyboard key)
-inline std::string name_for_input(int keycode) {
-    return name_for_key(keycode);
-}
+inline std::string name_for_input(int keycode) { return name_for_key(keycode); }
 
 // name_for_input - overload for button
 inline std::string name_for_input(raylib::GamepadButton button) {
@@ -61,18 +61,21 @@ inline std::string name_for_input(raylib::GamepadButton button) {
 
 // name_for_input - overload for variant types (dispatches via std::visit)
 template<typename VariantT,
-         std::enable_if_t<detail::is_variant<std::decay_t<VariantT>>::value, int> = 0>
+         std::enable_if_t<detail::is_variant<std::decay_t<VariantT>>::value,
+                          int> = 0>
 inline std::string name_for_input(const VariantT& input) {
-    return std::visit([](const auto& val) -> std::string {
-        using T = std::decay_t<decltype(val)>;
-        if constexpr (std::is_same_v<T, int>) {
-            return name_for_key(val);
-        } else if constexpr (std::is_same_v<T, raylib::GamepadButton>) {
-            return afterhours::input::name_for_button(val);
-        } else {
-            return name_for_axis(val);
-        }
-    }, input);
+    return std::visit(
+        [](const auto& val) -> std::string {
+            using T = std::decay_t<decltype(val)>;
+            if constexpr (std::is_same_v<T, int>) {
+                return name_for_key(val);
+            } else if constexpr (std::is_same_v<T, raylib::GamepadButton>) {
+                return afterhours::input::name_for_button(val);
+            } else {
+                return name_for_axis(val);
+            }
+        },
+        input);
 }
 
 // icon_for_input - overload for int (keyboard key)
@@ -87,18 +90,21 @@ inline std::string icon_for_input(raylib::GamepadButton button) {
 
 // icon_for_input - overload for variant types (dispatches via std::visit)
 template<typename VariantT,
-         std::enable_if_t<detail::is_variant<std::decay_t<VariantT>>::value, int> = 0>
+         std::enable_if_t<detail::is_variant<std::decay_t<VariantT>>::value,
+                          int> = 0>
 inline std::string icon_for_input(const VariantT& input) {
-    return std::visit([](const auto& val) -> std::string {
-        using T = std::decay_t<decltype(val)>;
-        if constexpr (std::is_same_v<T, int>) {
-            return afterhours::input::icon_for_key(val);
-        } else if constexpr (std::is_same_v<T, raylib::GamepadButton>) {
-            return afterhours::input::icon_for_button(val);
-        } else {
-            return icon_for_axis(val);
-        }
-    }, input);
+    return std::visit(
+        [](const auto& val) -> std::string {
+            using T = std::decay_t<decltype(val)>;
+            if constexpr (std::is_same_v<T, int>) {
+                return afterhours::input::icon_for_key(val);
+            } else if constexpr (std::is_same_v<T, raylib::GamepadButton>) {
+                return afterhours::input::icon_for_button(val);
+            } else {
+                return icon_for_axis(val);
+            }
+        },
+        input);
 }
 
 // Query functions - missing from afterhours::input
@@ -113,7 +119,8 @@ inline std::optional<int> get_first_key(const ValidInputsT& inputs) {
 }
 
 template<typename ValidInputsT>
-inline std::optional<raylib::GamepadButton> get_first_button(const ValidInputsT& inputs) {
+inline std::optional<raylib::GamepadButton> get_first_button(
+    const ValidInputsT& inputs) {
     for (const auto& input : inputs) {
         if (std::holds_alternative<raylib::GamepadButton>(input)) {
             return std::get<raylib::GamepadButton>(input);
@@ -145,7 +152,8 @@ inline bool contains_key(const ValidInputsT& inputs, int keycode) {
 }
 
 template<typename ValidInputsT>
-inline bool contains_button(const ValidInputsT& inputs, raylib::GamepadButton button) {
+inline bool contains_button(const ValidInputsT& inputs,
+                            raylib::GamepadButton button) {
     for (const auto& input : inputs) {
         if (std::holds_alternative<raylib::GamepadButton>(input) &&
             std::get<raylib::GamepadButton>(input) == button) {
@@ -156,7 +164,8 @@ inline bool contains_button(const ValidInputsT& inputs, raylib::GamepadButton bu
 }
 
 template<typename ValidInputsT, typename AxisT = ::GamepadAxisWithDir>
-inline bool contains_axis(const ValidInputsT& inputs, raylib::GamepadAxis axis) {
+inline bool contains_axis(const ValidInputsT& inputs,
+                          raylib::GamepadAxis axis) {
     for (const auto& input : inputs) {
         if (std::holds_alternative<AxisT>(input) &&
             std::get<AxisT>(input).axis == axis) {
@@ -167,12 +176,14 @@ inline bool contains_axis(const ValidInputsT& inputs, raylib::GamepadAxis axis) 
 }
 
 template<typename... ValidInputsT>
-inline bool contains_key_in_any(int keycode, const ValidInputsT&... inputs_list) {
+inline bool contains_key_in_any(int keycode,
+                                const ValidInputsT&... inputs_list) {
     return (contains_key(inputs_list, keycode) || ...);
 }
 
 template<typename... ValidInputsT>
-inline bool contains_button_in_any(raylib::GamepadButton button, const ValidInputsT&... inputs_list) {
+inline bool contains_button_in_any(raylib::GamepadButton button,
+                                   const ValidInputsT&... inputs_list) {
     return (contains_button(inputs_list, button) || ...);
 }
 
@@ -190,7 +201,8 @@ inline std::vector<int> get_all_keys(const ValidInputsT& inputs) {
 
 // Extract all gamepad buttons from a ValidInputs collection
 template<typename ValidInputsT>
-inline std::vector<raylib::GamepadButton> get_all_buttons(const ValidInputsT& inputs) {
+inline std::vector<raylib::GamepadButton> get_all_buttons(
+    const ValidInputsT& inputs) {
     std::vector<raylib::GamepadButton> buttons;
     for (const auto& input : inputs) {
         if (std::holds_alternative<raylib::GamepadButton>(input)) {
@@ -200,8 +212,8 @@ inline std::vector<raylib::GamepadButton> get_all_buttons(const ValidInputsT& in
     return buttons;
 }
 
-// Polling functions - check if any input in a collection is currently pressed/down
-// These are the polling alternatives to event-based input handling
+// Polling functions - check if any input in a collection is currently
+// pressed/down These are the polling alternatives to event-based input handling
 
 // Check if any key in the valid inputs is just pressed this frame
 template<typename ValidInputsT>
@@ -231,7 +243,8 @@ inline bool is_any_key_down(const ValidInputsT& inputs) {
 
 // Check if any gamepad button in the valid inputs is just pressed this frame
 template<typename ValidInputsT>
-inline bool is_any_button_just_pressed(const ValidInputsT& inputs, int gamepad_id = 0) {
+inline bool is_any_button_just_pressed(const ValidInputsT& inputs,
+                                       int gamepad_id = 0) {
     for (const auto& input : inputs) {
         if (std::holds_alternative<raylib::GamepadButton>(input)) {
             if (afterhours::input::is_gamepad_button_pressed(
@@ -259,7 +272,8 @@ inline bool is_any_button_down(const ValidInputsT& inputs, int gamepad_id = 0) {
 
 // Check if any input (key or button) in the valid inputs is just pressed
 template<typename ValidInputsT>
-inline bool is_any_input_just_pressed(const ValidInputsT& inputs, int gamepad_id = 0) {
+inline bool is_any_input_just_pressed(const ValidInputsT& inputs,
+                                      int gamepad_id = 0) {
     return is_any_key_just_pressed(inputs) ||
            is_any_button_just_pressed(inputs, gamepad_id);
 }
@@ -267,8 +281,7 @@ inline bool is_any_input_just_pressed(const ValidInputsT& inputs, int gamepad_id
 // Check if any input (key or button) in the valid inputs is currently down
 template<typename ValidInputsT>
 inline bool is_any_input_down(const ValidInputsT& inputs, int gamepad_id = 0) {
-    return is_any_key_down(inputs) ||
-           is_any_button_down(inputs, gamepad_id);
+    return is_any_key_down(inputs) || is_any_button_down(inputs, gamepad_id);
 }
 
 }  // namespace afterhours::input_ext

@@ -85,7 +85,7 @@ void Settings::update_window_size(afterhours::window_manager::Resolution rez) {
 
     // Update the window size directly via window_manager
     afterhours::window_manager::set_window_size(data.resolution.width,
-                                                 data.resolution.height);
+                                                data.resolution.height);
 }
 
 void Settings::update_fullscreen(bool fs_enabled) {
@@ -166,8 +166,9 @@ void Settings::update_vsync_enabled(bool vsync_enabled) {
     size_t closest_index = 0;
     int min_diff = std::numeric_limits<int>::max();
     for (size_t i = 0; i < resolutions.size(); i++) {
-        const int diff = std::abs(data.resolution.width - resolutions[i].width) +
-                         std::abs(data.resolution.height - resolutions[i].height);
+        const int diff =
+            std::abs(data.resolution.width - resolutions[i].width) +
+            std::abs(data.resolution.height - resolutions[i].height);
         if (diff < min_diff) {
             min_diff = diff;
             closest_index = i;

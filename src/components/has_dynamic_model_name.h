@@ -3,10 +3,10 @@
 #pragma once
 
 #include "../engine/assert.h"
-#include "../libraries/model_library.h"
 #include "../engine/statemanager.h"
 #include "../engine/util.h"
 #include "../entity.h"
+#include "../libraries/model_library.h"
 #include "../vendor_include.h"
 #include "base_component.h"
 

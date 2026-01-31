@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "../libraries/model_library.h"
 #include "../engine/util.h"
 #include "../entity.h"
+#include "../libraries/model_library.h"
 #include "base_component.h"
 
 struct ModelRenderer : public BaseComponent {
@@ -43,20 +43,19 @@ struct ModelRenderer : public BaseComponent {
         // enum (4 bytes). Otherwise serialize the string for custom models.
         using ArchiveKind = std::remove_cvref_t<decltype(archive)>;
         constexpr bool is_reading = ArchiveKind::kind() == zpp::bits::kind::in;
-        
-        auto result = archive(
-            static_cast<BaseComponent&>(self),
-            self.source_type
-        );
-        
+
+        auto result =
+            archive(static_cast<BaseComponent&>(self), self.source_type);
+
         // For custom models (string-based), also serialize the model_name
         if (self.source_type == EntityType::Unknown) {
             result = archive(self.model_name);
         } else if constexpr (is_reading) {
             // Derive model_name from EntityType
-            self.model_name = util::convertToSnakeCase<EntityType>(self.source_type);
+            self.model_name =
+                util::convertToSnakeCase<EntityType>(self.source_type);
         }
-        
+
         return result;
     }
 };

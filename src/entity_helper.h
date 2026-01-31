@@ -3,10 +3,10 @@
 
 #include <thread>
 
-#include "engine/assert.h"
 #include "components/can_hold_item.h"
 #include "components/is_floor_marker.h"
 #include "components/transform.h"
+#include "engine/assert.h"
 #include "external_include.h"
 //
 #include "components/can_be_ghost_player.h"

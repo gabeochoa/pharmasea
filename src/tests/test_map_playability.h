@@ -100,10 +100,9 @@ inline void test_playability_happy_path() {
 // Fixed seed list for deterministic regression testing.
 // These seeds are chosen to exercise different archetype distributions.
 inline const std::vector<std::string> REGRESSION_SEEDS = {
-    "alpha",      "beta",       "gamma",   "delta",   "epsilon",
-    "zeta",       "eta",        "theta",   "iota",    "kappa",
-    "lambda",     "mu",         "nu",      "xi",      "omicron",
-    "pi",         "rho",        "sigma",   "tau",     "upsilon",
+    "alpha",   "beta", "gamma", "delta",  "epsilon", "zeta",    "eta",
+    "theta",   "iota", "kappa", "lambda", "mu",      "nu",      "xi",
+    "omicron", "pi",   "rho",   "sigma",  "tau",     "upsilon",
 };
 
 inline const char* archetype_name(mapgen::BarArchetype a) {
@@ -179,7 +178,8 @@ inline bool test_seed_has_required_entities(const std::string& seed) {
 // Run all seeds and collect statistics
 inline void test_seed_suite_all_valid() {
     int failed = 0;
-    int archetype_counts[4] = {0, 0, 0, 0};  // OpenHall, MultiRoom, BackRoom, LoopRing
+    int archetype_counts[4] = {0, 0, 0,
+                               0};  // OpenHall, MultiRoom, BackRoom, LoopRing
 
     for (const auto& seed : REGRESSION_SEEDS) {
         mapgen::GenerationContext ctx;
@@ -195,7 +195,7 @@ inline void test_seed_suite_all_valid() {
     }
 
     // Report archetype distribution
-    log_info("[seed-suite] Archetype distribution across {} seeds:", 
+    log_info("[seed-suite] Archetype distribution across {} seeds:",
              REGRESSION_SEEDS.size());
     log_info("  OpenHall:  {}", archetype_counts[0]);
     log_info("  MultiRoom: {}", archetype_counts[1]);
@@ -236,8 +236,8 @@ inline void test_seed_suite_connectivity() {
         auto report = mapgen::playability::validate_ascii_day1(result.lines);
         bool has_disconnect = false;
         for (const auto& f : report.failures) {
-            if (f.kind ==
-                mapgen::playability::FailureKind::DisconnectedWalkable_4Neighbor) {
+            if (f.kind == mapgen::playability::FailureKind::
+                              DisconnectedWalkable_4Neighbor) {
                 has_disconnect = true;
                 break;
             }
@@ -267,7 +267,8 @@ inline void test_wfc_seed_suite() {
         mapgen::GeneratedAscii result = mapgen::generate_ascii(wfc_seed, ctx);
 
         auto report = mapgen::playability::validate_ascii_day1(result.lines);
-        if (report.ok() && mapgen::validate_day1_ascii_plus_routing(result.lines)) {
+        if (report.ok() &&
+            mapgen::validate_day1_ascii_plus_routing(result.lines)) {
             passed++;
         } else {
             // WFC may fall back to simple, which is acceptable
@@ -275,7 +276,8 @@ inline void test_wfc_seed_suite() {
         }
     }
 
-    // WFC is allowed to fall back to simple layout, so we just check it doesn't crash
+    // WFC is allowed to fall back to simple layout, so we just check it doesn't
+    // crash
     log_info("[seed-suite] WFC tested {} seeds (fallback to simple is OK)",
              REGRESSION_SEEDS.size());
 }

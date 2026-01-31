@@ -28,13 +28,11 @@ struct HasName : public BaseComponent {
     constexpr static auto serialize(auto& archive, auto& self) {
         using ArchiveKind = std::remove_cvref_t<decltype(archive)>;
         constexpr bool is_reading = ArchiveKind::kind() == zpp::bits::kind::in;
-        
+
         // Always serialize the static flag
-        auto result = archive(
-            static_cast<BaseComponent&>(self),
-            self.is_static
-        );
-        
+        auto result =
+            archive(static_cast<BaseComponent&>(self), self.is_static);
+
         // Only serialize the actual name if it's not static
         if (!self.is_static) {
             result = archive(self.name_length, self._name);
@@ -43,7 +41,7 @@ struct HasName : public BaseComponent {
             self._name.clear();
             self.name_length = 0;
         }
-        
+
         return result;
     }
 };

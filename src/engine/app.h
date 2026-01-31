@@ -35,10 +35,11 @@ struct App {
     raylib::RenderTexture2D mainRT;
 
    public:
-    [[nodiscard]] raylib::Texture2D get_main_texture() const { return mainRT.texture; }
+    [[nodiscard]] raylib::Texture2D get_main_texture() const {
+        return mainRT.texture;
+    }
 
    private:
-
     bool running = false;
     int width;
     int height;

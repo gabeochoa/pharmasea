@@ -2,6 +2,7 @@
 #pragma once
 
 #include <fstream>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <unordered_map>
 
@@ -9,8 +10,6 @@
 #include "../engine/files.h"
 #include "../engine/singleton.h"
 #include "../strings.h"
-
-#include <nlohmann/json.hpp>
 
 struct TextureAtlasRegion {
     int x = 0;

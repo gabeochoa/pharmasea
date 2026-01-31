@@ -26,10 +26,13 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
     void handleInput() {
         if (GameState::get().is_not(game::State::InGame)) return;
 
-        // Polling-based recipe book toggle (replaces onKeyPressed/onGamepadButtonPressed handlers)
+        // Polling-based recipe book toggle (replaces
+        // onKeyPressed/onGamepadButtonPressed handlers)
 
-        // Close with Pause when showing - consume to prevent GameLayer from also pausing
-        if (should_show_recipes && input_helper::was_pressed(InputName::Pause)) {
+        // Close with Pause when showing - consume to prevent GameLayer from
+        // also pausing
+        if (should_show_recipes &&
+            input_helper::was_pressed(InputName::Pause)) {
             input_helper::consume_pressed(InputName::Pause);
             should_show_recipes = false;
             return;
@@ -57,8 +60,10 @@ struct RecipeBookLayer : public BaseGameRendererLayer {
 
         // Navigate right / next
         if (selected_recipe_debounce <= 0) {
-            bool right_pressed = input_helper::was_pressed(InputName::ValueRight);
-            bool next_pressed = input_helper::was_pressed(InputName::RecipeNext);
+            bool right_pressed =
+                input_helper::was_pressed(InputName::ValueRight);
+            bool next_pressed =
+                input_helper::was_pressed(InputName::RecipeNext);
 
             if (right_pressed || next_pressed) {
                 extern int num_recipes();

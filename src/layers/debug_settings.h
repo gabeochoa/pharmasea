@@ -38,7 +38,8 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     bool shouldRender() { return should_show_overlay; }
 
     void handleInput() {
-        // Polling-based debug toggles (replaces onKeyPressed/onGamepadButtonPressed handlers)
+        // Polling-based debug toggles (replaces
+        // onKeyPressed/onGamepadButtonPressed handlers)
 
         // Toggle debug UI
         if (input_helper::was_pressed(InputName::ToggleDebug)) {
@@ -63,7 +64,8 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
             should_show_overlay = !should_show_overlay;
         }
 
-        // Close overlay with Pause key when showing - consume to prevent GameLayer from also pausing
+        // Close overlay with Pause key when showing - consume to prevent
+        // GameLayer from also pausing
         if (should_show_overlay && baseShouldRender()) {
             if (input_helper::was_pressed(InputName::Pause)) {
                 input_helper::consume_pressed(InputName::Pause);
@@ -72,9 +74,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         }
     }
 
-    virtual void onUpdate(float) override {
-        handleInput();
-    }
+    virtual void onUpdate(float) override { handleInput(); }
 
     void draw_game_state_controls(Rectangle container) {
         using namespace ui;

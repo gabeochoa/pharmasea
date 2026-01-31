@@ -37,6 +37,7 @@
 #include "layers/gamedebuglayer.h"
 #include "layers/gamelayer.h"
 #include "layers/handlayer.h"
+#include "layers/mapviewerlayer.h"
 #include "layers/menulayer.h"
 #include "layers/networklayer.h"
 #include "layers/pauselayer.h"
@@ -48,7 +49,6 @@
 #include "layers/toastlayer.h"
 #include "layers/uitestlayer.h"
 #include "layers/versionlayer.h"
-#include "layers/mapviewerlayer.h"
 
 extern float DEADZONE;
 extern ui::UITheme UI_THEME;

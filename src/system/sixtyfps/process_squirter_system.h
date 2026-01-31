@@ -6,8 +6,8 @@
 #include "../../components/is_squirter.h"
 #include "../../components/transform.h"
 #include "../../entity_id.h"
-#include "../../entity_query.h"
 #include "../../entity_makers.h"
+#include "../../entity_query.h"
 #include "../../vec_util.h"
 
 namespace system_manager {

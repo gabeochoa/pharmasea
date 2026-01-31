@@ -27,15 +27,18 @@ void SeedManagerLayer::handleInput() {
     // otherwise pressing space will freeze you until you hit esc
     if (!map_ptr->showMinimap) return;
 
-    // Close seed input box with Pause key when showing - consume to prevent GameLayer from also pausing
-    if (map_ptr->showSeedInputBox && input_helper::was_pressed(InputName::Pause)) {
+    // Close seed input box with Pause key when showing - consume to prevent
+    // GameLayer from also pausing
+    if (map_ptr->showSeedInputBox &&
+        input_helper::was_pressed(InputName::Pause)) {
         input_helper::consume_pressed(InputName::Pause);
         map_ptr->showSeedInputBox = false;
         return;
     }
 
     // Open seed input box with PlayerPickup key when not showing
-    if (!map_ptr->showSeedInputBox && input_helper::was_pressed(InputName::PlayerPickup)) {
+    if (!map_ptr->showSeedInputBox &&
+        input_helper::was_pressed(InputName::PlayerPickup)) {
         input_helper::consume_pressed(InputName::PlayerPickup);
         map_ptr->showSeedInputBox = true;
         return;

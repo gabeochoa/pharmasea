@@ -9,9 +9,9 @@
 #include "../engine/app.h"
 #include "../engine/layer.h"
 #include "../engine/runtime_globals.h"
-#include "../libraries/shader_library.h"
 #include "../external_include.h"
 #include "../globals.h"
+#include "../libraries/shader_library.h"
 #include "../lighting_runtime.h"
 #include "../map.h"
 #include "../map_generation/pipeline.h"
@@ -36,9 +36,7 @@ struct MapViewerLayer : public Layer {
     float camera_pitch = -45.f * DEG2RAD;
 
     explicit MapViewerLayer(const std::string& map_seed)
-        : Layer("MapViewer"),
-          cam(std::make_unique<GameCam>()),
-          seed(map_seed) {
+        : Layer("MapViewer"), cam(std::make_unique<GameCam>()), seed(map_seed) {
         globals::set_game_cam(cam.get());
         render_texture = raylib::LoadRenderTexture(WIN_W(), WIN_H());
 
@@ -48,7 +46,8 @@ struct MapViewerLayer : public Layer {
         if (seed == "default_seed") {
             // Use DEFAULT_MAP from settings.json
             std::cout << "Using DEFAULT_MAP from settings.json" << std::endl;
-            std::cout << "Size: " << EXAMPLE_MAP.size() << " lines" << std::endl;
+            std::cout << "Size: " << EXAMPLE_MAP.size() << " lines"
+                      << std::endl;
             std::cout << "\nASCII Map:" << std::endl;
             for (const std::string& line : EXAMPLE_MAP) {
                 std::cout << line << std::endl;
@@ -67,8 +66,9 @@ struct MapViewerLayer : public Layer {
                 std::cout << line << std::endl;
             }
         }
-        std::cout << "\nControls: WASD=pan, QE=rotate, Mouse wheel=zoom, ESC=exit"
-                  << std::endl;
+        std::cout
+            << "\nControls: WASD=pan, QE=rotate, Mouse wheel=zoom, ESC=exit"
+            << std::endl;
 
         // Create the map with entities
         map = std::make_unique<Map>(seed);
@@ -131,8 +131,7 @@ struct MapViewerLayer : public Layer {
         // Mouse wheel for zoom
         float wheel = ext::get_mouse_wheel_move();
         camera_distance -= wheel * zoom_speed;
-        camera_distance =
-            std::clamp(camera_distance, 5.f, 50.f);
+        camera_distance = std::clamp(camera_distance, 5.f, 50.f);
 
         // Update camera position based on orbit controls
         float cos_pitch = cosf(camera_pitch);
@@ -166,8 +165,8 @@ struct MapViewerLayer : public Layer {
             }
 
             // Draw ground plane
-            raylib::DrawPlane((vec3){0.0f, -TILESIZE, 0.0f},
-                              (vec2){256.0f, 256.0f}, DARKGRAY);
+            raylib::DrawPlane((vec3) {0.0f, -TILESIZE, 0.0f},
+                              (vec2) {256.0f, 256.0f}, DARKGRAY);
 
             // Draw map entities
             if (map) {
@@ -181,13 +180,11 @@ struct MapViewerLayer : public Layer {
         raylib::EndMode3D();
 
         // Draw HUD info
-        raylib::DrawText(
-            fmt::format("Seed: {} | Archetype: {}", seed,
-                        archetype_to_string(archetype))
-                .c_str(),
-            10, 10, 20, WHITE);
+        raylib::DrawText(fmt::format("Seed: {} | Archetype: {}", seed,
+                                     archetype_to_string(archetype))
+                             .c_str(),
+                         10, 10, 20, WHITE);
         raylib::DrawText("WASD=pan, QE=rotate, Scroll=zoom, ESC=exit", 10, 35,
                          16, LIGHTGRAY);
     }
 };
-

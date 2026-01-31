@@ -31,7 +31,8 @@ struct EntityRef {
     // Implemented in entity_ref.cpp to break circular dependency
     void set(Entity& e);
     [[nodiscard]] OptEntity resolve() const;
-    // Like resolve(), but crashes if entity is missing. Use when entity must exist.
+    // Like resolve(), but crashes if entity is missing. Use when entity must
+    // exist.
     [[nodiscard]] Entity& resolve_enforced() const;
 
    public:

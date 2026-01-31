@@ -212,7 +212,7 @@ inline void draw_texture_or_atlas(vec2 pos, vec2 size,
 
     // Fall back to individual texture
     const raylib::Texture texture = TextureLibrary::get().get(texture_name);
-    const vec2 tex_size = {(float)texture.width, (float)texture.height};
+    const vec2 tex_size = {(float) texture.width, (float) texture.height};
     draw_image(pos, texture, calculateScale(size, tex_size), z_index);
 }
 

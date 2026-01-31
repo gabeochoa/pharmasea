@@ -40,8 +40,9 @@ extern int LOG_LEVEL;
 extern int __WIN_H;
 extern int __WIN_W;
 
-// TODO: Remove these macros and query the window_manager::ProvidesCurrentResolution
-// component directly everywhere. These are kept for now to minimize the migration scope.
+// TODO: Remove these macros and query the
+// window_manager::ProvidesCurrentResolution component directly everywhere.
+// These are kept for now to minimize the migration scope.
 [[nodiscard]] inline int WIN_W() { return __WIN_W; }
 [[nodiscard]] inline float WIN_WF() { return static_cast<float>(__WIN_W); }
 

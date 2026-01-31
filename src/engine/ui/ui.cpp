@@ -2,6 +2,7 @@
 
 #include "ui.h"
 
+#include "../../libraries/texture_library.h"
 #include "../../preload.h"
 #include "../../vec_util.h"
 #include "../assert.h"
@@ -11,7 +12,6 @@
 #include "../log.h"
 #include "../simulated_input/simulated_input.h"
 #include "../statemanager.h"
-#include "../../libraries/texture_library.h"
 #include "../type_name.h"
 #include "../uuid.h"
 #include "autolayout.h"

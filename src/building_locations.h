@@ -83,9 +83,7 @@ const Building MODEL_TEST_BUILDING =  //
         .set_area({100.f, -50.f, 30.f, 50.f});
 
 const Building LOBBY_BUILDING =  //
-    Building()
-        .set_id(BuildingType::Lobby)
-        .set_area({25.f, 5.f, 15.f, 15.f});
+    Building().set_id(BuildingType::Lobby).set_area({25.f, 5.f, 15.f, 15.f});
 const Building PROGRESSION_BUILDING =
     Building()
         .set_id(BuildingType::Progression)
@@ -97,9 +95,7 @@ const Building STORE_BUILDING =  //
         .set_area({-14.f, -38.f, 18.f, 30.f})
         .add_door(Building::DoorLocation::BottomRight);
 const Building BAR_BUILDING =  //
-    Building()
-        .set_id(BuildingType::Bar)
-        .set_area({-25.f, -5.f, 29.f, 30.f});
+    Building().set_id(BuildingType::Bar).set_area({-25.f, -5.f, 29.f, 30.f});
 
 // Diagetic "memory card" showroom.
 const Building LOAD_SAVE_BUILDING =  //
@@ -109,12 +105,18 @@ const Building LOAD_SAVE_BUILDING =  //
 
 inline const Building& get_building(BuildingType type) {
     switch (type) {
-        case BuildingType::ModelTest: return MODEL_TEST_BUILDING;
-        case BuildingType::Lobby: return LOBBY_BUILDING;
-        case BuildingType::Progression: return PROGRESSION_BUILDING;
-        case BuildingType::Store: return STORE_BUILDING;
-        case BuildingType::Bar: return BAR_BUILDING;
-        case BuildingType::LoadSave: return LOAD_SAVE_BUILDING;
+        case BuildingType::ModelTest:
+            return MODEL_TEST_BUILDING;
+        case BuildingType::Lobby:
+            return LOBBY_BUILDING;
+        case BuildingType::Progression:
+            return PROGRESSION_BUILDING;
+        case BuildingType::Store:
+            return STORE_BUILDING;
+        case BuildingType::Bar:
+            return BAR_BUILDING;
+        case BuildingType::LoadSave:
+            return LOAD_SAVE_BUILDING;
     }
     return LOBBY_BUILDING;  // fallback
 }

@@ -2,8 +2,8 @@
 
 #include "../../../ah.h"
 #include "../../../components/can_hold_item.h"
-#include "../../../components/has_work.h"
 #include "../../../components/has_day_night_timer.h"
+#include "../../../components/has_work.h"
 #include "../../../entity_helper.h"
 #include "../../core/system_manager.h"
 

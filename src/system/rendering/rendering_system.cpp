@@ -25,11 +25,11 @@
 #include "../../drawing_util.h"
 #include "../../engine/runtime_globals.h"
 #include "../../engine/settings.h"
-#include "../../libraries/texture_library.h"
 #include "../../engine/ui/theme.h"
 #include "../../engine/util.h"
 #include "../../entity_helper.h"
 #include "../../entity_query.h"
+#include "../../libraries/texture_library.h"
 #include "../../preload.h"
 #include "../../vendor_include.h"
 #include "../core/system_manager.h"
@@ -54,7 +54,8 @@ void draw_billboard_from_texture_or_atlas(raylib::Camera3D camera,
         const auto& atlas = TextureAtlasLibrary::get().get(atlas_name);
         if (atlas.contains(texture_name)) {
             raylib::Rectangle src = atlas.get_source_rect(texture_name);
-            raylib::DrawBillboardRec(camera, atlas.texture, src, position, {size, size}, tint);
+            raylib::DrawBillboardRec(camera, atlas.texture, src, position,
+                                     {size, size}, tint);
             return;
         }
     }

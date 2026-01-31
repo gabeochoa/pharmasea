@@ -212,12 +212,14 @@ void remove_1x1_rooms(std::vector<std::string>& lines) {
                 int neighbors = count_walkable_neighbors(lines, i, j);
                 if (neighbors == 0) {
                     // This is a 1x1 room - try to open a wall to connect it
-                    if (i + 1 < h - 1 && is_openable_wall(get(lines, i + 1, j))) {
+                    if (i + 1 < h - 1 &&
+                        is_openable_wall(get(lines, i + 1, j))) {
                         set(lines, i + 1, j, generation::EMPTY);
                         changed = true;
                         continue;
                     }
-                    if (j + 1 < w - 1 && is_openable_wall(get(lines, i, j + 1))) {
+                    if (j + 1 < w - 1 &&
+                        is_openable_wall(get(lines, i, j + 1))) {
                         set(lines, i, j + 1, generation::EMPTY);
                         changed = true;
                         continue;

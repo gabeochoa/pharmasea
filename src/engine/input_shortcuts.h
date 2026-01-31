@@ -1,7 +1,7 @@
 // src/engine/input_shortcuts.h
 //
-// Convenience wrappers that combine KeyMap::get_valid_inputs with input_utilities.
-// Provides a shorter API for common input checking patterns.
+// Convenience wrappers that combine KeyMap::get_valid_inputs with
+// input_utilities. Provides a shorter API for common input checking patterns.
 
 #pragma once
 
@@ -15,12 +15,14 @@ inline bool contains_key(menu::State state, InputName name, int keycode) {
         KeyMap::get_valid_inputs(state, name), keycode);
 }
 
-inline bool contains_button(menu::State state, InputName name, GamepadButton button) {
+inline bool contains_button(menu::State state, InputName name,
+                            GamepadButton button) {
     return afterhours::input_ext::contains_button(
         KeyMap::get_valid_inputs(state, name), button);
 }
 
-inline bool contains_axis(menu::State state, InputName name, raylib::GamepadAxis axis) {
+inline bool contains_axis(menu::State state, InputName name,
+                          raylib::GamepadAxis axis) {
     return afterhours::input_ext::contains_axis(
         KeyMap::get_valid_inputs(state, name), axis);
 }
@@ -40,7 +42,8 @@ inline std::optional<int> get_first_key(menu::State state, InputName name) {
         KeyMap::get_valid_inputs(state, name));
 }
 
-inline std::optional<GamepadButton> get_first_button(menu::State state, InputName name) {
+inline std::optional<GamepadButton> get_first_button(menu::State state,
+                                                     InputName name) {
     return afterhours::input_ext::get_first_button(
         KeyMap::get_valid_inputs(state, name));
 }

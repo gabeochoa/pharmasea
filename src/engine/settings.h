@@ -11,11 +11,11 @@
 #include "../external_include.h"
 //
 
+#include "afterhours/src/plugins/sound_system.h"
 #include "app.h"
 #include "files.h"
 #include "globals.h"
 #include "log.h"
-#include "afterhours/src/plugins/sound_system.h"
 #include "singleton.h"
 #include "util.h"
 // TODO we should not be reaches outside of engine
@@ -48,7 +48,8 @@ constexpr int MAX_LANG_LENGTH = 25;
 // https://developernote.com/2020/02/basic-ideas-of-version-tolerant-serialization-in-cpp/
 struct Data {
     int engineVersion = 0;
-    afterhours::window_manager::Resolution resolution = {.width = 1280, .height = 720};
+    afterhours::window_manager::Resolution resolution = {.width = 1280,
+                                                         .height = 720};
     std::string lang_name = "en_us";
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;

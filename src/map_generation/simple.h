@@ -200,7 +200,8 @@ void ensureInnerCorridor(std::vector<char>& grid, int width, int height) {
 // Remove interior walls that touch the boundary and create awkward pockets.
 // Valid patterns: room completely interior, or room uses boundary as one wall.
 // Invalid: walls that jut out from boundary creating small notches.
-void removeAwkwardBoundaryWalls(std::vector<char>& grid, int width, int height) {
+void removeAwkwardBoundaryWalls(std::vector<char>& grid, int width,
+                                int height) {
     // Check for interior walls adjacent to boundary that create small pockets
     // Remove wall segments that touch boundary but don't extend far enough
     const int min_wall_extension = 3;  // Walls must extend at least this far
@@ -321,7 +322,8 @@ void removeSmallRoomRegions(std::vector<char>& grid, int width, int height) {
                 for (int k = 0; k < 4; k++) {
                     int ni = ci + di[k];
                     int nj = cj + dj[k];
-                    if (ni < 0 || ni >= height || nj < 0 || nj >= width) continue;
+                    if (ni < 0 || ni >= height || nj < 0 || nj >= width)
+                        continue;
                     int nidx = ni * width + nj;
                     if (visited[nidx]) continue;
                     if (grid[nidx] != generation::EMPTY) continue;
@@ -340,8 +342,9 @@ void removeSmallRoomRegions(std::vector<char>& grid, int width, int height) {
     }
 }
 
-// Remove walls that create 1-wide corridors. Hallways should be at least 2 wide.
-// Detect pattern: wall-empty-wall (horizontal or vertical) and remove the wall.
+// Remove walls that create 1-wide corridors. Hallways should be at least 2
+// wide. Detect pattern: wall-empty-wall (horizontal or vertical) and remove the
+// wall.
 void widenNarrowCorridors(std::vector<char>& grid, int width, int height) {
     bool changed = true;
     while (changed) {
@@ -350,13 +353,16 @@ void widenNarrowCorridors(std::vector<char>& grid, int width, int height) {
             for (int j = 1; j < width - 1; j++) {
                 if (grid[i * width + j] != generation::EMPTY) continue;
 
-                // Check for vertical 1-wide corridor: wall-empty-wall horizontally
+                // Check for vertical 1-wide corridor: wall-empty-wall
+                // horizontally
                 bool wallLeft = (grid[i * width + (j - 1)] == generation::WALL);
-                bool wallRight = (grid[i * width + (j + 1)] == generation::WALL);
+                bool wallRight =
+                    (grid[i * width + (j + 1)] == generation::WALL);
 
                 if (wallLeft && wallRight) {
                     // This empty tile is in a 1-wide vertical corridor
-                    // Remove one of the walls (prefer interior wall over boundary)
+                    // Remove one of the walls (prefer interior wall over
+                    // boundary)
                     if (j - 1 > 0) {
                         grid[i * width + (j - 1)] = generation::EMPTY;
                         changed = true;
@@ -367,7 +373,8 @@ void widenNarrowCorridors(std::vector<char>& grid, int width, int height) {
                     continue;
                 }
 
-                // Check for horizontal 1-wide corridor: wall-empty-wall vertically
+                // Check for horizontal 1-wide corridor: wall-empty-wall
+                // vertically
                 bool wallUp = (grid[(i - 1) * width + j] == generation::WALL);
                 bool wallDown = (grid[(i + 1) * width + j] == generation::WALL);
 
@@ -398,14 +405,12 @@ void thinWallBlobs(std::vector<char>& grid, int width, int height) {
 
                 bool wallUp =
                     (i > 0 && grid[(i - 1) * width + j] == generation::WALL);
-                bool wallDown =
-                    (i < height - 1 &&
-                     grid[(i + 1) * width + j] == generation::WALL);
+                bool wallDown = (i < height - 1 &&
+                                 grid[(i + 1) * width + j] == generation::WALL);
                 bool wallLeft =
                     (j > 0 && grid[i * width + (j - 1)] == generation::WALL);
-                bool wallRight =
-                    (j < width - 1 &&
-                     grid[i * width + (j + 1)] == generation::WALL);
+                bool wallRight = (j < width - 1 && grid[i * width + (j + 1)] ==
+                                                       generation::WALL);
 
                 int wallNeighbors = (wallUp ? 1 : 0) + (wallDown ? 1 : 0) +
                                     (wallLeft ? 1 : 0) + (wallRight ? 1 : 0);
@@ -442,7 +447,6 @@ void thinWallBlobs(std::vector<char>& grid, int width, int height) {
                     changed = true;
                     continue;
                 }
-
             }
         }
     }
@@ -450,10 +454,12 @@ void thinWallBlobs(std::vector<char>& grid, int width, int height) {
 
 // Remove interior wall clusters that don't connect to the boundary.
 // These are "floating" walls that create awkward blocks in the middle of rooms.
-void removeFloatingWallClusters(std::vector<char>& grid, int width, int height) {
+void removeFloatingWallClusters(std::vector<char>& grid, int width,
+                                int height) {
     std::vector<bool> visited(grid.size(), false);
 
-    // First, mark all boundary walls as visited (they're connected by definition)
+    // First, mark all boundary walls as visited (they're connected by
+    // definition)
     for (int j = 0; j < width; j++) {
         if (grid[0 * width + j] == generation::WALL)
             visited[0 * width + j] = true;
@@ -461,7 +467,8 @@ void removeFloatingWallClusters(std::vector<char>& grid, int width, int height) 
             visited[(height - 1) * width + j] = true;
     }
     for (int i = 0; i < height; i++) {
-        if (grid[i * width + 0] == generation::WALL) visited[i * width + 0] = true;
+        if (grid[i * width + 0] == generation::WALL)
+            visited[i * width + 0] = true;
         if (grid[i * width + (width - 1)] == generation::WALL)
             visited[i * width + (width - 1)] = true;
     }
@@ -469,12 +476,14 @@ void removeFloatingWallClusters(std::vector<char>& grid, int width, int height) 
     // Now flood fill from boundary walls to find all connected walls
     std::queue<int> boundaryQ;
     for (int j = 0; j < width; j++) {
-        if (grid[0 * width + j] == generation::WALL) boundaryQ.push(0 * width + j);
+        if (grid[0 * width + j] == generation::WALL)
+            boundaryQ.push(0 * width + j);
         if (grid[(height - 1) * width + j] == generation::WALL)
             boundaryQ.push((height - 1) * width + j);
     }
     for (int i = 1; i < height - 1; i++) {
-        if (grid[i * width + 0] == generation::WALL) boundaryQ.push(i * width + 0);
+        if (grid[i * width + 0] == generation::WALL)
+            boundaryQ.push(i * width + 0);
         if (grid[i * width + (width - 1)] == generation::WALL)
             boundaryQ.push(i * width + (width - 1));
     }
@@ -539,7 +548,8 @@ void remove1x1Rooms(std::vector<char>& grid, int width, int height) {
             for (int j = 1; j < width - 1; j++) {
                 if (grid[i * width + j] != generation::EMPTY) continue;
 
-                int neighbors = countWalkableNeighbors(grid, width, height, i, j);
+                int neighbors =
+                    countWalkableNeighbors(grid, width, height, i, j);
                 if (neighbors == 0) {
                     // This is a 1x1 room - try to open a wall to connect it
                     // Prefer opening toward the interior (away from boundary)
@@ -675,7 +685,7 @@ void makeEntrance(std::vector<char>& grid, int width, int height) {
     int i = height - 1;  // Bottom edge
     for (int j = 1; j < width - 1; j++) {
         if (px(i, j) == generation::WALL && px(i - 1, j) == generation::EMPTY) {
-                grid[i * width + j] = generation::EMPTY;
+            grid[i * width + j] = generation::EMPTY;
             return;
         }
     }

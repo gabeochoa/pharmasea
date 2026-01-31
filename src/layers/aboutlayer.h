@@ -23,13 +23,15 @@ struct AboutLayer : public Layer {
     void handleInput() {
         if (MenuState::get().is_not(menu::State::About)) return;
 
-        // Polling-based back navigation (replaces onKeyPressed/onGamepadButtonPressed handlers)
+        // Polling-based back navigation (replaces
+        // onKeyPressed/onGamepadButtonPressed handlers)
         if (afterhours::input::is_key_pressed(raylib::KEY_ESCAPE)) {
             MenuState::get().go_back();
             return;
         }
         if (afterhours::input_ext::is_any_button_just_pressed(
-                KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack))) {
+                KeyMap::get_valid_inputs(menu::State::UI,
+                                         InputName::MenuBack))) {
             MenuState::get().go_back();
             return;
         }

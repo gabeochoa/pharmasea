@@ -14,7 +14,8 @@ namespace ui {
 namespace detail {
 inline bool layer_contains_key(menu::State state, int keycode) {
     for (auto name : magic_enum::enum_values<InputName>()) {
-        if (afterhours::input_ext::contains_key(KeyMap::get_valid_inputs(state, name), keycode)) {
+        if (afterhours::input_ext::contains_key(
+                KeyMap::get_valid_inputs(state, name), keycode)) {
             return true;
         }
     }
@@ -23,7 +24,8 @@ inline bool layer_contains_key(menu::State state, int keycode) {
 
 inline bool layer_contains_button(menu::State state, GamepadButton button) {
     for (auto name : magic_enum::enum_values<InputName>()) {
-        if (afterhours::input_ext::contains_button(KeyMap::get_valid_inputs(state, name), button)) {
+        if (afterhours::input_ext::contains_button(
+                KeyMap::get_valid_inputs(state, name), button)) {
             return true;
         }
     }
@@ -32,7 +34,8 @@ inline bool layer_contains_button(menu::State state, GamepadButton button) {
 
 inline bool layer_contains_axis(menu::State state, GamepadAxis axis) {
     for (auto name : magic_enum::enum_values<InputName>()) {
-        if (afterhours::input_ext::contains_axis(KeyMap::get_valid_inputs(state, name), axis)) {
+        if (afterhours::input_ext::contains_axis(
+                KeyMap::get_valid_inputs(state, name), axis)) {
             return true;
         }
     }
@@ -128,8 +131,8 @@ struct IUIContextInputManager {
 
     // Polling-based input methods that use GameAction
     [[nodiscard]] bool pressed(game::GameAction action) {
-        auto* collector =
-            afterhours::EntityHelper::get_singleton_cmp<afterhours::input::InputCollector>();
+        auto* collector = afterhours::EntityHelper::get_singleton_cmp<
+            afterhours::input::InputCollector>();
         if (!collector) return false;
 
         for (const auto& a : collector->inputs_pressed) {
@@ -142,8 +145,8 @@ struct IUIContextInputManager {
     }
 
     [[nodiscard]] bool is_held_down(game::GameAction action) {
-        auto* collector =
-            afterhours::EntityHelper::get_singleton_cmp<afterhours::input::InputCollector>();
+        auto* collector = afterhours::EntityHelper::get_singleton_cmp<
+            afterhours::input::InputCollector>();
         if (!collector) return false;
 
         for (const auto& a : collector->inputs) {

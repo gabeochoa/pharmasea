@@ -24,8 +24,9 @@ struct BasePauseLayer : public Layer {
     void handleInput() {
         if (GameState::get().is_not(enabled_state)) return;
 
-        // Polling-based pause toggle (replaces onKeyPressed/onGamepadButtonPressed handlers)
-        // Uses input_helper to properly handle consumed inputs
+        // Polling-based pause toggle (replaces
+        // onKeyPressed/onGamepadButtonPressed handlers) Uses input_helper to
+        // properly handle consumed inputs
         if (input_helper::was_pressed(InputName::Pause)) {
             input_helper::consume_pressed(InputName::Pause);
             GameState::get().go_back();
@@ -33,9 +34,7 @@ struct BasePauseLayer : public Layer {
         }
     }
 
-    virtual void onUpdate(float) override {
-        handleInput();
-    }
+    virtual void onUpdate(float) override { handleInput(); }
 
     void reset_network();
 

@@ -6,16 +6,18 @@
 #include "../engine/settings.h"
 
 void SettingsLayer::handleInput() {
-    // Polling-based Alt+Enter fullscreen toggle (replaces onKeyPressed handler logic)
-    // Check for Alt+Enter combo for fullscreen toggle
+    // Polling-based Alt+Enter fullscreen toggle (replaces onKeyPressed handler
+    // logic) Check for Alt+Enter combo for fullscreen toggle
     bool alt_down = afterhours::input::is_key_down(raylib::KEY_LEFT_ALT) ||
                     afterhours::input::is_key_down(raylib::KEY_RIGHT_ALT);
     bool enter_pressed = afterhours::input::is_key_pressed(raylib::KEY_ENTER);
-    bool alt_pressed = afterhours::input::is_key_pressed(raylib::KEY_LEFT_ALT) ||
-                       afterhours::input::is_key_pressed(raylib::KEY_RIGHT_ALT);
+    bool alt_pressed =
+        afterhours::input::is_key_pressed(raylib::KEY_LEFT_ALT) ||
+        afterhours::input::is_key_pressed(raylib::KEY_RIGHT_ALT);
     bool enter_down = afterhours::input::is_key_down(raylib::KEY_ENTER);
 
-    bool fs_key_pressed = (enter_pressed && alt_down) || (alt_pressed && enter_down);
+    bool fs_key_pressed =
+        (enter_pressed && alt_down) || (alt_pressed && enter_down);
 
     if (fs_key_pressed && fullscreen_debounce <= 0) {
         Settings::get().toggle_fullscreen();
@@ -361,7 +363,8 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
            InputName name) -> tl::expected<std::string, std::string> {
         const auto key = afterhours::input_ext::get_first_key(
             KeyMap::get_valid_inputs(state, name));
-        if (!key.has_value()) return tl::unexpected("input not used in this state");
+        if (!key.has_value())
+            return tl::unexpected("input not used in this state");
         return afterhours::input_ext::name_for_input(key.value());
     };
 
@@ -395,7 +398,8 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
            InputName name) -> tl::expected<std::string, std::string> {
         const auto key = afterhours::input_ext::get_first_key(
             KeyMap::get_valid_inputs(state, name));
-        if (!key.has_value()) return tl::unexpected("input not used in this state");
+        if (!key.has_value())
+            return tl::unexpected("input not used in this state");
         auto icon = afterhours::input_ext::icon_for_input(key.value());
         if (icon.empty()) return tl::unexpected("icon not found");
         return icon;

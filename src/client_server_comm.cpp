@@ -10,8 +10,8 @@
 #include "engine/runtime_globals.h"
 #include "entity_helper.h"
 #include "entity_type.h"
-#include "network/server.h"
 #include "libraries/recipe_library.h"
+#include "network/server.h"
 #include "save_file_load_fixers.h"
 #include "save_game/save_game.h"
 

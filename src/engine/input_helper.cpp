@@ -34,11 +34,10 @@ int g_max_gamepad = 0;
 bool g_initialized = false;
 
 // Convert pharmasea GamepadAxisWithDir to afterhours format
-afterhours::input::GamepadAxisWithDir convert_axis(const GamepadAxisWithDir& src) {
+afterhours::input::GamepadAxisWithDir convert_axis(
+    const GamepadAxisWithDir& src) {
     return afterhours::input::GamepadAxisWithDir{
-        .axis = src.axis,
-        .dir = static_cast<int>(src.dir)
-    };
+        .axis = src.axis, .dir = static_cast<int>(src.dir)};
 }
 
 // Local input checking that uses pharmasea's ext:: wrappers
@@ -57,8 +56,10 @@ float check_key_pressed(int keycode) {
     return ext::is_key_pressed(keycode) ? 1.f : 0.f;
 }
 
-float check_axis(int gamepad_id, const afterhours::input::GamepadAxisWithDir& axis_with_dir) {
-    const float mvt = raylib::GetGamepadAxisMovement(gamepad_id, axis_with_dir.axis);
+float check_axis(int gamepad_id,
+                 const afterhours::input::GamepadAxisWithDir& axis_with_dir) {
+    const float mvt =
+        raylib::GetGamepadAxisMovement(gamepad_id, axis_with_dir.axis);
     if (axis_with_dir.dir > 0 && mvt > DEADZONE) {
         return mvt;
     }
@@ -79,7 +80,6 @@ float check_button_pressed(int gamepad_id, raylib::GamepadButton button) {
 // Returns {medium, value} for "down" state
 std::pair<afterhours::input::DeviceMedium, float> check_action_down(
     int gamepad_id, const afterhours::input::ValidInputs& valid_inputs) {
-
     using Medium = afterhours::input::DeviceMedium;
     Medium medium = Medium::None;
     float value = 0.f;
@@ -110,7 +110,6 @@ std::pair<afterhours::input::DeviceMedium, float> check_action_down(
 // Returns {medium, value} for "pressed" state (just this frame)
 std::pair<afterhours::input::DeviceMedium, float> check_action_pressed(
     int gamepad_id, const afterhours::input::ValidInputs& valid_inputs) {
-
     using Medium = afterhours::input::DeviceMedium;
     Medium medium = Medium::None;
     float value = 0.f;
@@ -153,7 +152,8 @@ void build_layer_mapping(menu::State state, LayerMapping& layer_mapping) {
             if (std::holds_alternative<int>(input)) {
                 ah_inputs.push_back(std::get<int>(input));
             } else if (std::holds_alternative<GamepadAxisWithDir>(input)) {
-                ah_inputs.push_back(convert_axis(std::get<GamepadAxisWithDir>(input)));
+                ah_inputs.push_back(
+                    convert_axis(std::get<GamepadAxisWithDir>(input)));
             } else if (std::holds_alternative<raylib::GamepadButton>(input)) {
                 ah_inputs.push_back(std::get<raylib::GamepadButton>(input));
             }
@@ -167,7 +167,7 @@ void build_layer_mapping(menu::State state, LayerMapping& layer_mapping) {
 // Build mapping from KeyMap's default keys
 void build_mapping_from_keymap() {
     // Force KeyMap to initialize (void cast to suppress nodiscard warning)
-    (void)KeyMap::get();
+    (void) KeyMap::get();
 
     build_layer_mapping(menu::State::Game, g_mapping[menu::State::Game]);
     build_layer_mapping(menu::State::UI, g_mapping[menu::State::UI]);
@@ -189,7 +189,8 @@ int fetch_max_gamepad_id() {
 }
 
 // Poll all inputs for all layers
-// We poll all layers so that consumption works regardless of which layer is checked
+// We poll all layers so that consumption works regardless of which layer is
+// checked
 void poll_inputs(float dt) {
     g_max_gamepad = std::max(0, fetch_max_gamepad_id());
     g_collector.inputs.clear();
@@ -198,42 +199,55 @@ void poll_inputs(float dt) {
     // Poll all layers so consumption works for any layer
     for (const auto& [layer, layer_mapping] : g_mapping) {
         for (const auto& [action, valid_inputs] : layer_mapping) {
-            for (int gamepad_id = 0; gamepad_id <= g_max_gamepad; gamepad_id++) {
-                // Check "down" state using local_input (supports synthetic keys)
+            for (int gamepad_id = 0; gamepad_id <= g_max_gamepad;
+                 gamepad_id++) {
+                // Check "down" state using local_input (supports synthetic
+                // keys)
                 {
                     const auto [down_medium, down_amount] =
-                        local_input::check_action_down(gamepad_id, valid_inputs);
+                        local_input::check_action_down(gamepad_id,
+                                                       valid_inputs);
                     if (down_amount > 0.f) {
-                        // Only add if not already present (avoid duplicates from shared inputs)
+                        // Only add if not already present (avoid duplicates
+                        // from shared inputs)
                         bool already_present = false;
                         for (const auto& existing : g_collector.inputs) {
-                            if (existing.action == action && existing.id == gamepad_id) {
+                            if (existing.action == action &&
+                                existing.id == gamepad_id) {
                                 already_present = true;
                                 break;
                             }
                         }
                         if (!already_present) {
                             g_collector.inputs.push_back(
-                                afterhours::input::ActionDone(down_medium, gamepad_id, action, down_amount, dt));
+                                afterhours::input::ActionDone(
+                                    down_medium, gamepad_id, action,
+                                    down_amount, dt));
                         }
                     }
                 }
                 // Check "pressed" state (just this frame)
                 {
                     const auto [pressed_medium, pressed_amount] =
-                        local_input::check_action_pressed(gamepad_id, valid_inputs);
+                        local_input::check_action_pressed(gamepad_id,
+                                                          valid_inputs);
                     if (pressed_amount > 0.f) {
-                        // Only add if not already present (avoid duplicates from shared inputs)
+                        // Only add if not already present (avoid duplicates
+                        // from shared inputs)
                         bool already_present = false;
-                        for (const auto& existing : g_collector.inputs_pressed) {
-                            if (existing.action == action && existing.id == gamepad_id) {
+                        for (const auto& existing :
+                             g_collector.inputs_pressed) {
+                            if (existing.action == action &&
+                                existing.id == gamepad_id) {
                                 already_present = true;
                                 break;
                             }
                         }
                         if (!already_present) {
                             g_collector.inputs_pressed.push_back(
-                                afterhours::input::ActionDone(pressed_medium, gamepad_id, action, pressed_amount, dt));
+                                afterhours::input::ActionDone(
+                                    pressed_medium, gamepad_id, action,
+                                    pressed_amount, dt));
                         }
                     }
                 }
@@ -259,9 +273,7 @@ void init() {
 }
 
 // Called each frame before input collection to poll raw input
-void poll(float dt) {
-    poll_inputs(dt);
-}
+void poll(float dt) { poll_inputs(dt); }
 
 float is_down(InputName name) {
     for (const auto& action : g_collector.inputs) {
