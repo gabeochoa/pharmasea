@@ -2,6 +2,7 @@
 #include "entity_query.h"
 
 #include "components/can_hold_furniture.h"
+#include "engine/assert.h"
 #include "components/can_hold_item.h"
 #include "components/is_drink.h"
 #include "engine/pathfinder.h"

@@ -3,7 +3,7 @@
 
 #include <thread>
 
-#include "assert.h"
+#include "engine/assert.h"
 #include "components/can_hold_item.h"
 #include "components/is_floor_marker.h"
 #include "components/transform.h"
@@ -20,7 +20,6 @@
 #include "engine/statemanager.h"
 #include "entity.h"
 #include "entity_makers.h"
-#include "job.h"
 
 enum struct NamedEntity {
     Sophie,
