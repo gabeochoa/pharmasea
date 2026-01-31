@@ -9,8 +9,6 @@
 enum class EventType {
     None = 0,
     WindowClose,
-    WindowResize,
-    WindowFullscreen,
     WindowFocus,
     WindowLostFocus,
     WindowMoved,
@@ -109,26 +107,6 @@ struct CharPressedEvent : public KeyEvent {
     CharPressedEvent(int k, int r) : KeyEvent(k), repeatCount(r) {}
     int repeatCount;
     [[nodiscard]] int getRepeatCount() const { return repeatCount; }
-};
-
-struct WindowResizeEvent : public Event {
-    unsigned int width, height;
-    WindowResizeEvent(unsigned int w, unsigned int h) : width(w), height(h) {}
-
-    // std::string toString() const override {
-    // return fmt::format("WindowResizeEvent: {}, {}", Width, Height);
-    // }
-
-    MACRO_EVENT_TYPE(WindowResize)
-    MACRO_EVENT_CATEGORY(EventCategoryApplication)
-};
-
-struct WindowFullscreenEvent : public Event {
-    bool on;
-    explicit WindowFullscreenEvent(bool enable) : on(enable) {}
-
-    MACRO_EVENT_TYPE(WindowFullscreen)
-    MACRO_EVENT_CATEGORY(EventCategoryApplication)
 };
 
 struct GamepadButtonPressedEvent : public Event {

@@ -57,10 +57,21 @@ int Settings::get_ui_theme_selected_index() {
 }
 
 void Settings::update_resolution_from_index(int index) {
-    update_window_size(rez::ResolutionExplorer::get().fetch(index));
+    auto* provider = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesAvailableWindowResolutions>();
+    if (!provider) {
+        log_warn("ProvidesAvailableWindowResolutions not initialized");
+        return;
+    }
+    const auto& resolutions = provider->fetch_data();
+    if (index < 0 || index >= static_cast<int>(resolutions.size())) {
+        log_warn("Resolution index {} out of range", index);
+        return;
+    }
+    update_window_size(resolutions[index]);
 }
 
-void Settings::update_window_size(rez::ResolutionInfo rez) {
+void Settings::update_window_size(afterhours::window_manager::Resolution rez) {
     data.resolution = rez;
 
     data.resolution.width = static_cast<int>(
@@ -69,21 +80,25 @@ void Settings::update_window_size(rez::ResolutionInfo rez) {
     data.resolution.height = static_cast<int>(
         fminf(2160.f, fmaxf((float) data.resolution.height, 720.f)));
 
-    //
-    WindowResizeEvent* event =
-        new WindowResizeEvent(data.resolution.width, data.resolution.height);
-
     __WIN_W = data.resolution.width;
     __WIN_H = data.resolution.height;
 
-    App::get().processEvent(*event);
-    delete event;
+    // Update the window size directly via window_manager
+    afterhours::window_manager::set_window_size(data.resolution.width,
+                                                 data.resolution.height);
 }
 
 void Settings::update_fullscreen(bool fs_enabled) {
     data.isFullscreen = fs_enabled;
-    WindowFullscreenEvent* event = new WindowFullscreenEvent(fs_enabled);
-    App::get().processEvent(*event);
+
+    bool isFullscreenOn = raylib::IsWindowFullscreen();
+
+    // Already in desired state
+    if (fs_enabled == isFullscreenOn) {
+        return;
+    }
+
+    raylib::ToggleFullscreen();
 }
 
 void Settings::toggle_fullscreen() { update_fullscreen(!data.isFullscreen); }
@@ -135,22 +150,47 @@ void Settings::update_vsync_enabled(bool vsync_enabled) {
 }
 
 [[nodiscard]] int Settings::get_current_resolution_index() const {
-    int index = rez::ResolutionExplorer::get().index(data.resolution);
-    // If we somehow got a resolution enabled that isnt in our valid
-    // resolutions its likely because we went into fullscreen and the
-    // monitor was different
-    // TODO windows
-    // This is most likely on windows since we cant read the possible
-    // monitor settings yet, once we add that code we should be good
-    if (index == -1) {
-        rez::ResolutionExplorer::get().add(data.resolution);
-        index = rez::ResolutionExplorer::get().index(data.resolution);
+    auto* provider = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesAvailableWindowResolutions>();
+    if (!provider) {
+        return 0;
     }
-    return index;
+
+    const auto& resolutions = provider->fetch_data();
+    for (size_t i = 0; i < resolutions.size(); i++) {
+        if (resolutions[i] == data.resolution) {
+            return static_cast<int>(i);
+        }
+    }
+
+    // If current resolution is not in the list, find the closest match
+    size_t closest_index = 0;
+    int min_diff = std::numeric_limits<int>::max();
+    for (size_t i = 0; i < resolutions.size(); i++) {
+        const int diff = std::abs(data.resolution.width - resolutions[i].width) +
+                         std::abs(data.resolution.height - resolutions[i].height);
+        if (diff < min_diff) {
+            min_diff = diff;
+            closest_index = i;
+        }
+    }
+    return static_cast<int>(closest_index);
 }
 
 [[nodiscard]] std::vector<std::string> Settings::resolution_options() const {
-    return rez::ResolutionExplorer::get().fetch_options();
+    auto* provider = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesAvailableWindowResolutions>();
+    if (!provider) {
+        return {};
+    }
+
+    std::vector<std::string> options;
+    const auto& resolutions = provider->fetch_data();
+    options.reserve(resolutions.size());
+    for (const auto& res : resolutions) {
+        options.push_back(fmt::format("{}x{}", res.width, res.height));
+    }
+    return options;
 }
 
 [[nodiscard]] std::string Settings::last_used_ip() const {
@@ -287,10 +327,6 @@ void Settings::update_language_name(const std::string& l) {
 // This function is used by the load to kick raylib into
 // the right config
 void Settings::refresh_settings() {
-    // Force a resolution fetch so that after the settings loads we have
-    // them ready
-    rez::ResolutionExplorer::get().load_resolution_options();
-
     // Refresh the language files
     load_language_options();
 

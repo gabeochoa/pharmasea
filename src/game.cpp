@@ -126,6 +126,15 @@ void startup() {
         //
     });
 
+    // Initialize window_manager singleton components for resolution tracking
+    {
+        Entity& config_entity = ::EntityHelper::createPermanentEntity();
+        auto current_rez = afterhours::window_manager::fetch_current_resolution();
+        auto available_rez = afterhours::window_manager::fetch_available_resolutions();
+        afterhours::window_manager::add_singleton_components(
+            config_entity, current_rez, 240, available_rez);
+    }
+
     // -------- Its unlikely anything should go above this line ----- //
 
     // Doesnt strictly need to be before preload but just to be safe
@@ -544,6 +553,15 @@ int main(int argc, char* argv[]) {
             "PharmaSea Map Viewer",
             raylib::LOG_ERROR,
         });
+
+        // Initialize window_manager singleton components for resolution tracking
+        {
+            Entity& config_entity = ::EntityHelper::createPermanentEntity();
+            auto current_rez = afterhours::window_manager::fetch_current_resolution();
+            auto available_rez = afterhours::window_manager::fetch_available_resolutions();
+            afterhours::window_manager::add_singleton_components(
+                config_entity, current_rez, 240, available_rez);
+        }
 
         Files::create(FilesConfig{
             strings::GAME_FOLDER,

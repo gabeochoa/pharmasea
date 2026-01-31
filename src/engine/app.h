@@ -28,9 +28,6 @@ struct App {
     void loadLayers(const std::vector<Layer*>& layers);
 
    private:
-    void onEvent(Event& event);
-    bool onWindowResize(WindowResizeEvent event);
-    bool onWindowFullscreen(WindowFullscreenEvent& event);
     void loop(float dt);
 
     std::array<Layer*, 32> layerstack;
@@ -48,8 +45,8 @@ struct App {
     int width;
     int height;
 
-    int prev_width = -1;
-    int prev_height = -1;
+    // Track last known resolution to detect changes
+    afterhours::window_manager::Resolution last_resolution = {0, 0};
 
     App() {}
     // disable copying

@@ -12,17 +12,24 @@
 //
 
 #include "app.h"
-#include "event.h"
 #include "files.h"
 #include "globals.h"
 #include "log.h"
 #include "../libraries/music_library.h"
-#include "resolution.h"
 #include "singleton.h"
 #include "../libraries/sound_library.h"
 #include "util.h"
 // TODO we should not be reaches outside of engine
 #include "../strings.h"
+
+// zpp::bits serialization for afterhours::window_manager::Resolution
+namespace afterhours {
+namespace window_manager_serialization {
+constexpr auto serialize(auto& archive, window_manager::Resolution& self) {
+    return archive(self.width, self.height);
+}
+}  // namespace window_manager_serialization
+}  // namespace afterhours
 
 namespace settings {
 
@@ -42,7 +49,7 @@ constexpr int MAX_LANG_LENGTH = 25;
 // https://developernote.com/2020/02/basic-ideas-of-version-tolerant-serialization-in-cpp/
 struct Data {
     int engineVersion = 0;
-    rez::ResolutionInfo resolution = {.width = 1280, .height = 720};
+    afterhours::window_manager::Resolution resolution = {.width = 1280, .height = 720};
     std::string lang_name = "en_us";
     // Volume percent [0, 1] for everything
     float master_volume = 0.5f;
@@ -146,7 +153,7 @@ struct Settings {
     }
 
     void update_resolution_from_index(int index);
-    void update_window_size(rez::ResolutionInfo rez);
+    void update_window_size(afterhours::window_manager::Resolution rez);
     void update_fullscreen(bool fs_enabled);
     void toggle_fullscreen();
     void update_last_used_ip_address(const std::string& ip);

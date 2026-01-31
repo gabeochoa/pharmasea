@@ -1,8 +1,6 @@
 
 #include "app.h"
 
-#include "resolution.h"
-
 #define ENABLE_TRACING 1
 #include "tracy.h"
 //
@@ -181,80 +179,11 @@ App::~App() {
     // TODO do we need to / can we remove mainRT from globals
 }
 
-void App::onEvent(Event& event) {
-    EventDispatcher dispatcher(event);
-    dispatcher.dispatch<WindowResizeEvent>(
-        std::bind(&App::onWindowResize, this, std::placeholders::_1));
-
-    dispatcher.dispatch<WindowFullscreenEvent>(
-        std::bind(&App::onWindowFullscreen, this, std::placeholders::_1));
-}
-
-bool App::onWindowResize(WindowResizeEvent event) {
-    log_trace("Got Window Resize Event: {}, {}", event.width, event.height);
-
-    width = event.width;
-    height = event.height;
-
-    raylib::SetWindowSize(width, height);
-
-    UnloadRenderTexture(mainRT);
-    mainRT = raylib::LoadRenderTexture(width, height);
-    return true;
-}
-
-bool App::onWindowFullscreen(WindowFullscreenEvent& event) {
-    log_trace("Got Window Fullscreen toggle Event");
-
-    bool isFullscreenOn = raylib::IsWindowFullscreen();
-
-    // We want to turn it on and its already on
-    if (event.on && isFullscreenOn) {
-        return true;
-    }
-
-    // turn off and already off
-    if (!event.on && !isFullscreenOn) {
-        return true;
-    }
-
-    if (event.on && !isFullscreenOn) {
-        prev_width = width;
-        prev_height = height;
-
-        int monitor = raylib::GetCurrentMonitor();
-
-        int mon_width = raylib::GetMonitorWidth(monitor);
-        int mon_height = raylib::GetMonitorHeight(monitor);
-
-        Settings::get().update_window_size(
-            rez::ResolutionInfo{.width = mon_width, .height = mon_height});
-
-        raylib::ToggleFullscreen();
-        return true;
-    }
-
-    if (!event.on && isFullscreenOn) {
-        raylib::ToggleFullscreen();
-
-        if (prev_width == -1) prev_width = width;
-        if (prev_height == -1) prev_height = height;
-
-        Settings::get().update_window_size(
-            rez::ResolutionInfo{.width = prev_width, .height = prev_height});
-
-        return true;
-    }
-
-    log_warn("Trying to process fs event but got to an unhandled state {} {}",
-             event.on, isFullscreenOn);
-    return false;
-}
+void App::close() { running = false; }
 
 void App::processEvent(Event& e) {
     TRACY_ZONE_SCOPED;
 
-    this->onEvent(e);
     input_recorder::record(e);
     if (e.handled) {
         return;
@@ -275,8 +204,6 @@ void App::processEvent(Event& e) {
         i--;
     }
 }
-
-void App::close() { running = false; }
 
 void App::run() {
 #ifdef ENABLE_TRACING
@@ -311,6 +238,26 @@ void App::run() {
 
 void App::loop(float dt) {
     TRACY_ZONE_SCOPED;
+
+    // Check for resolution changes via window_manager component
+    {
+        auto current_resolution = afterhours::window_manager::fetch_current_resolution();
+        if (!(current_resolution == last_resolution)) {
+            log_trace("Resolution changed from {}x{} to {}x{}",
+                     last_resolution.width, last_resolution.height,
+                     current_resolution.width, current_resolution.height);
+
+            width = current_resolution.width;
+            height = current_resolution.height;
+            last_resolution = current_resolution;
+
+            __WIN_W = width;
+            __WIN_H = height;
+
+            UnloadRenderTexture(mainRT);
+            mainRT = raylib::LoadRenderTexture(width, height);
+        }
+    }
 
 #ifdef AFTER_HOURS_ENABLE_MCP
     if (MCP_ENABLED) {
