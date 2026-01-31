@@ -15,9 +15,8 @@
 #include "files.h"
 #include "globals.h"
 #include "log.h"
-#include "../libraries/music_library.h"
+#include "afterhours/src/plugins/sound_system.h"
 #include "singleton.h"
-#include "../libraries/sound_library.h"
 #include "util.h"
 // TODO we should not be reaches outside of engine
 #include "../strings.h"

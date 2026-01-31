@@ -111,20 +111,19 @@ void Settings::update_master_volume(float nv) {
     data.master_volume = util::clamp(nv, 0.f, 1.f);
     log_trace("master volume changed to {}", data.master_volume);
 
-    MusicLibrary::get().update_volume(data.music_volume);
-    SoundLibrary::get().update_volume(data.sound_volume);
-
-    raylib::SetMasterVolume(data.master_volume);
+    afterhours::sound_system::set_music_volume(data.music_volume);
+    afterhours::sound_system::set_sound_volume(data.sound_volume);
+    afterhours::sound_system::set_master_volume(data.master_volume);
 }
 
 void Settings::update_music_volume(float nv) {
     data.music_volume = util::clamp(nv, 0.f, 1.f);
-    MusicLibrary::get().update_volume(data.music_volume);
+    afterhours::sound_system::set_music_volume(data.music_volume);
 }
 
 void Settings::update_sound_volume(float nv) {
     data.sound_volume = util::clamp(nv, 0.f, 1.f);
-    SoundLibrary::get().update_volume(data.sound_volume);
+    afterhours::sound_system::set_sound_volume(data.sound_volume);
 }
 
 void Settings::update_streamer_safe_box(bool sssb) {

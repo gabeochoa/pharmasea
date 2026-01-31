@@ -820,7 +820,7 @@ void Preload::load_map_generation_info() {
 
 void Preload::load_sounds(const std::function<void()>& tick) {
     auto load_and_tick = [&](const char* file, const char* name) {
-        SoundLibrary::get().load(
+        afterhours::sound_system::SoundLibrary::get().load(
             Files::get()
                 .fetch_resource_path(strings::settings::SOUNDS, file)
                 .c_str(),
@@ -852,7 +852,7 @@ void Preload::load_sounds(const std::function<void()>& tick) {
     Files::get().for_resources_in_folder(
         strings::settings::SOUNDS, "pa_announcements",
         [&](const std::string& name, const std::string& filename) {
-            SoundLibrary::get().load(
+            afterhours::sound_system::SoundLibrary::get().load(
                 filename.c_str(),
                 fmt::format("pa_announcements_{}", name).c_str());
             if (tick) tick();
@@ -860,14 +860,14 @@ void Preload::load_sounds(const std::function<void()>& tick) {
 }
 
 void Preload::load_music(const std::function<void()>& tick) {
-    MusicLibrary::get().load(
+    afterhours::sound_system::MusicLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::MUSIC, "jaunt.ogg")
             .c_str(),
         "supermarket");
     if (tick) tick();
 
-    MusicLibrary::get().load(
+    afterhours::sound_system::MusicLibrary::get().load(
         Files::get()
             .fetch_resource_path(strings::settings::MUSIC, "theme.ogg")
             .c_str(),

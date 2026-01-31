@@ -33,7 +33,7 @@
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
 #include "engine/runtime_globals.h"
-#include "libraries/sound_library.h"
+#include "afterhours/src/plugins/sound_system.h"
 #include "engine/ui/color.h"
 #include "engine/util.h"
 #include "entity.h"

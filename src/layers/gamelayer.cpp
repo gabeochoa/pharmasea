@@ -5,6 +5,7 @@
 #include "../drawing_util.h"
 #include "../engine/input_utilities.h"
 #include "../engine/ui/color.h"
+#include "../engine/ui/sound.h"
 #include "../external_include.h"
 //
 #include "../globals.h"
@@ -73,11 +74,7 @@ bool GameLayer::onMouseButtonDown(Mouse::MouseButtonDownEvent& event) {
 
 void GameLayer::play_music() {
     if (ENABLE_SOUND) {
-        auto m = MusicLibrary::get().get(strings::music::SUPERMARKET);
-        if (!IsMusicStreamPlaying(m)) {
-            PlayMusicStream(m);
-        }
-        UpdateMusicStream(m);
+        Music::play(strings::music::SUPERMARKET);
     }
 }
 

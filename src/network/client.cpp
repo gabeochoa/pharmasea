@@ -1,5 +1,4 @@
 
-
 #include "client.h"
 
 #include "../building_locations.h"
@@ -8,7 +7,7 @@
 #include "../components/has_name.h"
 #include "../engine/log.h"
 #include "../engine/runtime_globals.h"
-#include "../libraries/sound_library.h"
+#include "../engine/ui/sound.h"
 #include "../engine/time.h"
 #include "../engine/toastmanager.h"
 #include "../post_deserialize_fixups.h"
@@ -322,7 +321,7 @@ void Client::client_process_message_string(const std::string& msg) {
             // info.location[1],
             // };
 
-            SoundLibrary::get().play(strings::sounds::to_name(info.sound));
+            Sounds::play(info.sound);
 
         } break;
 

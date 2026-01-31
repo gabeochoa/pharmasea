@@ -13,9 +13,8 @@
 #include "engine/files.h"
 #include "libraries/font_library.h"
 #include "libraries/model_library.h"
-#include "libraries/music_library.h"
+#include "afterhours/src/plugins/sound_system.h"
 #include "libraries/shader_library.h"
-#include "libraries/sound_library.h"
 #include "libraries/texture_atlas.h"
 #include "libraries/texture_library.h"
 #include "globals.h"
@@ -44,9 +43,9 @@ struct Preload {
 
         TextureLibrary::get().unload_all();
         TextureAtlasLibrary::get().unload_all();
-        MusicLibrary::get().unload_all();
+        afterhours::sound_system::MusicLibrary::get().unload_all();
         ModelLibrary::get().unload_all();
-        SoundLibrary::get().unload_all();
+        afterhours::sound_system::SoundLibrary::get().unload_all();
         ShaderLibrary::get().unload_all();
         FontLibrary::get().unload_all();
     }

@@ -136,7 +136,6 @@
     <ClInclude Include="..\src\engine\log_macros.h" />
     <ClInclude Include="..\src\engine\model_library.h" />
     <ClInclude Include="..\src\engine\mouse_map.h" />
-    <ClInclude Include="..\src\engine\music_library.h" />
     <ClInclude Include="..\src\engine\navmesh.h" />
     <ClInclude Include="..\src\engine\network\webrequest.h" />
     <ClInclude Include="..\src\engine\pathfinder.h" />
@@ -149,7 +148,6 @@
     <ClInclude Include="..\src\engine\settings.h" />
     <ClInclude Include="..\src\engine\shader_library.h" />
     <ClInclude Include="..\src\engine\singleton.h" />
-    <ClInclude Include="..\src\engine\sound_library.h" />
     <ClInclude Include="..\src\engine\statemanager.h" />
     <ClInclude Include="..\src\engine\svg_renderer.h" />
     <ClInclude Include="..\src\engine\texture_library.h" />

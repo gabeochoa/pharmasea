@@ -127,12 +127,14 @@ void startup() {
     });
 
     // Initialize window_manager singleton components for resolution tracking
+    // and sound_system singleton components for sound playback
     {
         Entity& config_entity = ::EntityHelper::createPermanentEntity();
         auto current_rez = afterhours::window_manager::fetch_current_resolution();
         auto available_rez = afterhours::window_manager::fetch_available_resolutions();
         afterhours::window_manager::add_singleton_components(
             config_entity, current_rez, 240, available_rez);
+        afterhours::sound_system::add_singleton_components(config_entity);
     }
 
     // -------- Its unlikely anything should go above this line ----- //

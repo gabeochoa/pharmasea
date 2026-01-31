@@ -3,6 +3,7 @@
 #include "../engine.h"
 #include "../engine/app.h"
 #include "../engine/svg_renderer.h"
+#include "../engine/ui/sound.h"
 #include "../engine/util.h"
 #include "../external_include.h"
 #include "../local_ui.h"
@@ -35,14 +36,7 @@ struct MenuLayer : public Layer {
 
     void play_music() {
         if (ENABLE_SOUND) {
-            // TODO better music playing wrapper so we can not duplicate this
-            // everwhere
-            // TODO music stops playing when you grab title bar
-            auto m = MusicLibrary::get().get(strings::music::THEME);
-            if (!raylib::IsMusicStreamPlaying(m)) {
-                raylib::PlayMusicStream(m);
-            }
-            raylib::UpdateMusicStream(m);
+            Music::play(strings::music::THEME);
         }
     }
 
