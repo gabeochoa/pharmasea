@@ -4,6 +4,7 @@
 #include <regex>
 
 #include "../components/has_name.h"
+#include "../engine/input_utilities.h"
 #include "../engine/toastmanager.h"
 #include "../local_ui.h"
 #include "../network/network.h"
@@ -61,8 +62,9 @@ bool NetworkLayer::onKeyPressed(KeyPressedEvent& event) {
 bool NetworkLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
     if (MenuState::get().is_not(menu::State::Network)) return false;
 
-    if (KeyMap::get_button(menu::State::UI, InputName::MenuBack) ==
-        event.button) {
+    if (afterhours::input_ext::contains_button(
+            KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack),
+            event.button)) {
         MenuState::get().go_back();
         return true;
     }

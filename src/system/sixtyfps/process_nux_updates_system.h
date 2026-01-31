@@ -4,6 +4,7 @@
 #include "../../components/all_components.h"
 #include "../../components/is_nux_manager.h"
 #include "../../components/is_round_settings_manager.h"
+#include "../../engine/input_utilities.h"
 #include "../../engine/statemanager.h"
 
 namespace system_manager {
@@ -138,7 +139,7 @@ struct ProcessNuxUpdatesSystem
                 const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
                     menu::State::Game, InputName::PlayerHandTruckInteract);
                 const auto tex_name =
-                    KeyMap::get().icon_for_input(valid_inputs[0]);
+                    afterhours::input_ext::icon_for_input(valid_inputs[0]);
 
                 auto& entity = EntityHelper::createEntity();
                 make_entity(entity, {EntityType::Unknown}, vec2{0, 0});
@@ -220,7 +221,7 @@ struct ProcessNuxUpdatesSystem
                 const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
                     menu::State::Game, InputName::PlayerDoWork);
                 const auto tex_name =
-                    KeyMap::get().icon_for_input(valid_inputs[0]);
+                    afterhours::input_ext::icon_for_input(valid_inputs[0]);
 
                 auto& entity = EntityHelper::createEntity();
                 make_entity(entity, {EntityType::Unknown}, vec2{-6.f, 1.f});
@@ -378,7 +379,7 @@ struct ProcessNuxUpdatesSystem
                 const AnyInputs valid_inputs = KeyMap::get_valid_inputs(
                     menu::State::Game, InputName::PlayerDoWork);
                 const auto tex_name =
-                    KeyMap::get().icon_for_input(valid_inputs[0]);
+                    afterhours::input_ext::icon_for_input(valid_inputs[0]);
 
                 auto& entity = EntityHelper::createEntity();
                 make_entity(entity, {EntityType::Unknown}, vec2{0, 0});

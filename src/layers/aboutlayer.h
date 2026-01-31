@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../engine/input_utilities.h"
 #include "../engine/layer.h"
 #include "../external_include.h"
 #include "raylib.h"
@@ -30,8 +31,9 @@ struct AboutLayer : public Layer {
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
         if (MenuState::get().is_not(menu::State::About)) return false;
-        if (KeyMap::get_button(menu::State::UI, InputName::MenuBack) ==
-            event.button) {
+        if (afterhours::input_ext::contains_button(
+                KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack),
+                event.button)) {
             MenuState::get().go_back();
             return true;
         }

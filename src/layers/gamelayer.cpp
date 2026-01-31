@@ -3,6 +3,7 @@
 
 #include "../building_locations.h"
 #include "../drawing_util.h"
+#include "../engine/input_utilities.h"
 #include "../engine/ui/color.h"
 #include "../external_include.h"
 //
@@ -26,8 +27,9 @@ bool GameLayer::onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
 
 bool GameLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
     if (!MenuState::s_in_game()) return false;
-    if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
-        event.button) {
+    if (afterhours::input_ext::contains_button(
+            KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
+            event.button)) {
         GameState::get().pause();
         return true;
     }
@@ -37,8 +39,9 @@ bool GameLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
 bool GameLayer::onKeyPressed(KeyPressedEvent& event) {
     if (!MenuState::s_in_game()) return false;
     // Note: You can only pause in game state, in planning no pause
-    if (KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
-        event.keycode) {
+    if (afterhours::input_ext::contains_key(
+            KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
+            event.keycode)) {
         GameState::get().pause();
         //  TODO obv need to have this fun on a timer or something instead
         //  of on esc

@@ -1,0 +1,178 @@
+// src/engine/input_utilities.h
+//
+// Self-contained input utilities module using afterhours types.
+// Designed to be portable to afterhours as a plugin once stable.
+//
+
+#pragma once
+
+#include <optional>
+#include <string>
+#include <type_traits>
+#include <variant>
+#include <vector>
+
+#include "afterhours/src/plugins/input_system.h"
+#include "magic_enum/magic_enum.hpp"
+
+namespace afterhours::input_ext {
+
+// Missing from afterhours::input (only has icon_for_key)
+inline std::string name_for_key(int keycode) {
+    auto key = magic_enum::enum_cast<raylib::KeyboardKey>(
+        static_cast<unsigned int>(keycode));
+    if (key.has_value()) {
+        return std::string(magic_enum::enum_name(key.value()));
+    }
+    return "Unknown";
+}
+
+// Missing from afterhours::input - works with any GamepadAxisWithDir-like type
+template<typename AxisT>
+inline std::string name_for_axis(const AxisT& axis) {
+    std::string dir_str = (axis.dir > 0) ? "+" : "-";
+    auto axis_name = magic_enum::enum_name(axis.axis);
+    return std::string(axis_name) + " " + dir_str;
+}
+
+// Missing from afterhours::input - works with any GamepadAxisWithDir-like type
+template<typename AxisT>
+inline std::string icon_for_axis(const AxisT& axis) {
+    std::string dir_str = (axis.dir > 0) ? "+" : "-";
+    auto axis_name = magic_enum::enum_name(axis.axis);
+    return "axis_" + std::string(axis_name) + "_" + dir_str;
+}
+
+namespace detail {
+template<typename T> struct is_variant : std::false_type {};
+template<typename... Ts> struct is_variant<std::variant<Ts...>> : std::true_type {};
+}
+
+// name_for_input - overload for int (keyboard key)
+inline std::string name_for_input(int keycode) {
+    return name_for_key(keycode);
+}
+
+// name_for_input - overload for button
+inline std::string name_for_input(raylib::GamepadButton button) {
+    return afterhours::input::name_for_button(button);
+}
+
+// name_for_input - overload for variant types (dispatches via std::visit)
+template<typename VariantT,
+         std::enable_if_t<detail::is_variant<std::decay_t<VariantT>>::value, int> = 0>
+inline std::string name_for_input(const VariantT& input) {
+    return std::visit([](const auto& val) -> std::string {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, int>) {
+            return name_for_key(val);
+        } else if constexpr (std::is_same_v<T, raylib::GamepadButton>) {
+            return afterhours::input::name_for_button(val);
+        } else {
+            return name_for_axis(val);
+        }
+    }, input);
+}
+
+// icon_for_input - overload for int (keyboard key)
+inline std::string icon_for_input(int keycode) {
+    return afterhours::input::icon_for_key(keycode);
+}
+
+// icon_for_input - overload for button
+inline std::string icon_for_input(raylib::GamepadButton button) {
+    return afterhours::input::icon_for_button(button);
+}
+
+// icon_for_input - overload for variant types (dispatches via std::visit)
+template<typename VariantT,
+         std::enable_if_t<detail::is_variant<std::decay_t<VariantT>>::value, int> = 0>
+inline std::string icon_for_input(const VariantT& input) {
+    return std::visit([](const auto& val) -> std::string {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, int>) {
+            return afterhours::input::icon_for_key(val);
+        } else if constexpr (std::is_same_v<T, raylib::GamepadButton>) {
+            return afterhours::input::icon_for_button(val);
+        } else {
+            return icon_for_axis(val);
+        }
+    }, input);
+}
+
+// Query functions - missing from afterhours::input
+template<typename ValidInputsT>
+inline std::optional<int> get_first_key(const ValidInputsT& inputs) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<int>(input)) {
+            return std::get<int>(input);
+        }
+    }
+    return std::nullopt;
+}
+
+template<typename ValidInputsT>
+inline std::optional<raylib::GamepadButton> get_first_button(const ValidInputsT& inputs) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<raylib::GamepadButton>(input)) {
+            return std::get<raylib::GamepadButton>(input);
+        }
+    }
+    return std::nullopt;
+}
+
+template<typename ValidInputsT, typename AxisT = GamepadAxisWithDir>
+inline std::optional<AxisT> get_first_axis(const ValidInputsT& inputs) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<AxisT>(input)) {
+            return std::get<AxisT>(input);
+        }
+    }
+    return std::nullopt;
+}
+
+// Reverse lookup - missing from afterhours::input
+template<typename ValidInputsT>
+inline bool contains_key(const ValidInputsT& inputs, int keycode) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<int>(input) &&
+            std::get<int>(input) == keycode) {
+            return true;
+        }
+    }
+    return false;
+}
+
+template<typename ValidInputsT>
+inline bool contains_button(const ValidInputsT& inputs, raylib::GamepadButton button) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<raylib::GamepadButton>(input) &&
+            std::get<raylib::GamepadButton>(input) == button) {
+            return true;
+        }
+    }
+    return false;
+}
+
+template<typename ValidInputsT, typename AxisT = GamepadAxisWithDir>
+inline bool contains_axis(const ValidInputsT& inputs, raylib::GamepadAxis axis) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<AxisT>(input) &&
+            std::get<AxisT>(input).axis == axis) {
+            return true;
+        }
+    }
+    return false;
+}
+
+template<typename... ValidInputsT>
+inline bool contains_key_in_any(int keycode, const ValidInputsT&... inputs_list) {
+    return (contains_key(inputs_list, keycode) || ...);
+}
+
+template<typename... ValidInputsT>
+inline bool contains_button_in_any(raylib::GamepadButton button, const ValidInputsT&... inputs_list) {
+    return (contains_button(inputs_list, button) || ...);
+}
+
+}  // namespace afterhours::input_ext

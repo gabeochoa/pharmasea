@@ -144,22 +144,6 @@ struct KeyMap {
 
     static void forEachCharTyped(const std::function<void(Event&)>& cb);
     void forEachInputInMap(const std::function<void(Event&)>& cb) const;
-    [[nodiscard]] static int get_key_code(const menu::State& state,
-                                          const InputName& name);
-
-    [[nodiscard]] static const tl::expected<GamepadAxisWithDir,
-                                            KeyMapInputRequestError>
-    get_axis(const menu::State& state, const InputName& name);
-
-    [[nodiscard]] static GamepadButton get_button(const menu::State& state,
-                                                  const InputName& name);
-
-    static bool does_layer_map_contain_key(const menu::State& state,
-                                           int keycode);
-    [[nodiscard]] static bool does_layer_map_contain_button(
-        const menu::State& state, GamepadButton button);
-    [[nodiscard]] static bool does_layer_map_contain_axis(
-        const menu::State state, GamepadAxis axis);
 
     [[nodiscard]] static const AnyInputs get_valid_inputs(
         const menu::State& state, const InputName& name);
@@ -167,15 +151,7 @@ struct KeyMap {
     [[nodiscard]] static const std::vector<int> get_valid_keys(
         const menu::State& state, const InputName& name);
 
-    std::string name_for_key(int input);
-    std::string name_for_button(GamepadButton input);
-    std::string name_for_input(AnyInput input);
-
-    std::string icon_for_input(AnyInput input);
-
    private:
-    std::map<AnyInput, std::string, AnyInputLess> input_to_human_name;
-    std::map<AnyInput, std::string, AnyInputLess> input_to_icon;
     FullMap mapping;
 
     KeyMap() {

@@ -2,6 +2,7 @@
 #include "seedmanagerlayer.h"
 
 #include "../dataclass/names.h"
+#include "../engine/input_utilities.h"
 #include "../engine/runtime_globals.h"
 #include "../network/network.h"
 
@@ -32,15 +33,17 @@ bool SeedManagerLayer::onKeyPressed(KeyPressedEvent& event) {
     if (!map_ptr->showMinimap) return false;
 
     if (map_ptr->showSeedInputBox &&
-        KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
-            event.keycode) {
+        afterhours::input_ext::contains_key(
+            KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
+            event.keycode)) {
         map_ptr->showSeedInputBox = false;
         return true;
     }
 
     if (!map_ptr->showSeedInputBox &&
-        KeyMap::get_key_code(menu::State::Game, InputName::PlayerPickup) ==
-            event.keycode) {
+        afterhours::input_ext::contains_key(
+            KeyMap::get_valid_inputs(menu::State::Game, InputName::PlayerPickup),
+            event.keycode)) {
         map_ptr->showSeedInputBox = true;
         return true;
     }

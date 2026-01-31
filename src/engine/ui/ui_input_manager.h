@@ -2,10 +2,40 @@
 #pragma once
 #include "../../vendor_include.h"
 #include "../input_helper.h"
+#include "../input_utilities.h"
 #include "../keymap.h"
 #include "sound.h"
 
 namespace ui {
+
+namespace detail {
+inline bool layer_contains_key(menu::State state, int keycode) {
+    for (auto name : magic_enum::enum_values<InputName>()) {
+        if (afterhours::input_ext::contains_key(KeyMap::get_valid_inputs(state, name), keycode)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool layer_contains_button(menu::State state, GamepadButton button) {
+    for (auto name : magic_enum::enum_values<InputName>()) {
+        if (afterhours::input_ext::contains_button(KeyMap::get_valid_inputs(state, name), button)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool layer_contains_axis(menu::State state, GamepadAxis axis) {
+    for (auto name : magic_enum::enum_values<InputName>()) {
+        if (afterhours::input_ext::contains_axis(KeyMap::get_valid_inputs(state, name), axis)) {
+            return true;
+        }
+    }
+    return false;
+}
+}  // namespace detail
 
 struct IUIContextInputManager {
     const menu::State STATE = menu::State::UI;
@@ -77,15 +107,18 @@ struct IUIContextInputManager {
     [[nodiscard]] bool process_keyevent(const KeyPressedEvent& event) {
         int code = event.keycode;
         anything_pressed = code;
-        if (!KeyMap::does_layer_map_contain_key(STATE, code)) {
+        if (!detail::layer_contains_key(STATE, code)) {
             return false;
         }
-        // TODO make this a map if we have more
-        if (code == KeyMap::get_key_code(STATE, InputName::WidgetMod)) {
+        auto widget_mod_key = afterhours::input_ext::get_first_key(
+            KeyMap::get_valid_inputs(STATE, InputName::WidgetMod));
+        if (widget_mod_key.has_value() && code == widget_mod_key.value()) {
             mod = code;
             return true;
         }
-        if (code == KeyMap::get_key_code(STATE, InputName::WidgetCtrl)) {
+        auto widget_ctrl_key = afterhours::input_ext::get_first_key(
+            KeyMap::get_valid_inputs(STATE, InputName::WidgetCtrl));
+        if (widget_ctrl_key.has_value() && code == widget_ctrl_key.value()) {
             mod = code;
             return true;
         }
@@ -101,7 +134,7 @@ struct IUIContextInputManager {
         const GamepadButtonPressedEvent& event) {
         GamepadButton code = event.button;
         anything_pressed = code;
-        if (!KeyMap::does_layer_map_contain_button(STATE, code)) {
+        if (!detail::layer_contains_button(STATE, code)) {
             return false;
         }
         button = code;
@@ -111,7 +144,7 @@ struct IUIContextInputManager {
     [[nodiscard]] bool process_gamepad_axis_event(GamepadAxisMovedEvent event) {
         GamepadAxisWithDir info = event.data;
         anything_pressed = info;
-        if (!KeyMap::does_layer_map_contain_axis(STATE, info.axis)) {
+        if (!detail::layer_contains_axis(STATE, info.axis)) {
             return false;
         }
         axis_info = info;
@@ -124,43 +157,50 @@ struct IUIContextInputManager {
     }
 
     [[nodiscard]] bool pressedButtonWithoutEat(const InputName& name) const {
-        GamepadButton code = KeyMap::get_button(STATE, name);
-        return _pressedWithoutEat(code);
+        auto code = afterhours::input_ext::get_first_button(
+            KeyMap::get_valid_inputs(STATE, name));
+        if (!code.has_value()) return false;
+        return _pressedButtonWithoutEat(code.value());
     }
 
     void eatButton() { button = raylib::GAMEPAD_BUTTON_UNKNOWN; }
 
     [[nodiscard]] bool pressed(const InputName& name) {
-        int code = KeyMap::get_key_code(STATE, name);
-        bool a = _pressedWithoutEat(code);
-        if (a) {
-            ui::sounds::select();
-            eatKey();
-            return a;
+        auto key_opt = afterhours::input_ext::get_first_key(
+            KeyMap::get_valid_inputs(STATE, name));
+        if (key_opt.has_value()) {
+            bool a = _pressedWithoutEat(key_opt.value());
+            if (a) {
+                ui::sounds::select();
+                eatKey();
+                return a;
+            }
         }
 
-        GamepadButton butt = KeyMap::get_button(STATE, name);
-        bool b = _pressedButtonWithoutEat(butt);
-        if (b) {
-            ui::sounds::select();
-            eatButton();
-            return b;
+        auto butt = afterhours::input_ext::get_first_button(
+            KeyMap::get_valid_inputs(STATE, name));
+        if (butt.has_value()) {
+            bool b = _pressedButtonWithoutEat(butt.value());
+            if (b) {
+                ui::sounds::select();
+                eatButton();
+                return b;
+            }
         }
 
-        bool c = KeyMap::get_axis(STATE, name)
-                     .map([&](GamepadAxisWithDir axis) -> bool {
-                         return axis_info.axis == axis.axis &&
-                                ((axis.dir - axis_info.dir) >= EPSILON);
-                     })
-                     .map_error([&](auto exp) {
-                         this->handleBadGamepadAxis(exp, STATE, name);
-                     })
-                     .value_or(false);
-        if (c) {
-            ui::sounds::select();
-            eatAxis();
+        auto axis_opt = afterhours::input_ext::get_first_axis(
+            KeyMap::get_valid_inputs(STATE, name));
+        if (axis_opt.has_value()) {
+            auto axis = axis_opt.value();
+            bool c = axis_info.axis == axis.axis &&
+                     ((axis.dir - axis_info.dir) >= EPSILON);
+            if (c) {
+                ui::sounds::select();
+                eatAxis();
+                return c;
+            }
         }
-        return c;
+        return false;
     }
 
     void handleBadGamepadAxis(const KeyMapInputRequestError&, menu::State,
@@ -178,8 +218,10 @@ struct IUIContextInputManager {
     }
     // TODO is there a better way to do eat(string)?
     [[nodiscard]] bool pressedWithoutEat(const InputName& name) const {
-        int code = KeyMap::get_key_code(STATE, name);
-        return _pressedWithoutEat(code);
+        auto code = afterhours::input_ext::get_first_key(
+            KeyMap::get_valid_inputs(STATE, name));
+        if (!code.has_value()) return false;
+        return _pressedWithoutEat(code.value());
     }
 
     void eatKey() { key = int(); }

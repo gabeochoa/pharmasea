@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/constexpr_containers.h"
+#include "../engine/input_utilities.h"
 #include "../engine/runtime_globals.h"
 #include "base_game_renderer.h"
 
@@ -31,22 +32,24 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     }
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
-        if (KeyMap::get_button(menu::State::Game, InputName::ToggleDebug) ==
-            event.button) {
+        if (afterhours::input_ext::contains_button(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleDebug),
+                event.button)) {
             debug_ui_enabled = !debug_ui_enabled;
             sync_globals();
             return true;
         }
-        if (KeyMap::get_button(menu::State::Game,
-                               InputName::ToggleNetworkView) == event.button) {
+        if (afterhours::input_ext::contains_button(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleNetworkView),
+                event.button)) {
             no_clip_enabled = !no_clip_enabled;
             sync_globals();
             return true;
         }
 
-        if (KeyMap::get_button(menu::State::Game,
-                               InputName::SkipIngredientMatch) ==
-            event.button) {
+        if (afterhours::input_ext::contains_button(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::SkipIngredientMatch),
+                event.button)) {
             skip_ingredient_match = !skip_ingredient_match;
             sync_globals();
             return true;
@@ -54,8 +57,9 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
 
         if (!baseShouldRender()) return false;
 
-        if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
-            event.button) {
+        if (afterhours::input_ext::contains_button(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
+                event.button)) {
             GameState::get().go_back();
             return true;
         }
@@ -65,15 +69,16 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
 
     bool onKeyPressed(KeyPressedEvent& event) override {
         if (should_show_overlay &&
-            KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
-                event.keycode) {
+            afterhours::input_ext::contains_key(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
+                event.keycode)) {
             should_show_overlay = false;
             return true;
         }
 
-        if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::ToggleDebugSettings) ==
-            event.keycode) {
+        if (afterhours::input_ext::contains_key(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleDebugSettings),
+                event.keycode)) {
             should_show_overlay = !should_show_overlay;
             return true;
         }
@@ -81,23 +86,24 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         // TODO can we catch if you are using get_button in onKeyPressed and
         // warn?
 
-        if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::SkipIngredientMatch) ==
-            event.keycode) {
+        if (afterhours::input_ext::contains_key(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::SkipIngredientMatch),
+                event.keycode)) {
             skip_ingredient_match = !skip_ingredient_match;
             sync_globals();
             return true;
         }
 
-        if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleDebug) ==
-            event.keycode) {
+        if (afterhours::input_ext::contains_key(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleDebug),
+                event.keycode)) {
             debug_ui_enabled = !debug_ui_enabled;
             sync_globals();
             return true;
         }
-        if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::ToggleNetworkView) ==
-            event.keycode) {
+        if (afterhours::input_ext::contains_key(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleNetworkView),
+                event.keycode)) {
             no_clip_enabled = !no_clip_enabled;
             sync_globals();
             return true;

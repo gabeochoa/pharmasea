@@ -1,6 +1,7 @@
 
 #include "settingslayer.h"
 
+#include "../engine/input_utilities.h"
 #include "../engine/settings.h"
 
 bool SettingsLayer::onKeyPressed(KeyPressedEvent& event) {
@@ -44,8 +45,9 @@ bool SettingsLayer::onKeyPressed(KeyPressedEvent& event) {
 bool SettingsLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
     if (MenuState::get().is_not(menu::State::Settings)) return false;
 
-    if (KeyMap::get_button(menu::State::UI, InputName::MenuBack) ==
-        event.button) {
+    if (afterhours::input_ext::contains_button(
+            KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack),
+            event.button)) {
         exit_without_save();
         return true;
     }
@@ -369,16 +371,17 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
            InputName name) -> tl::expected<std::string, std::string> {
         const auto keys = KeyMap::get_valid_keys(state, name);
         if (keys.empty()) return tl::unexpected("input not used in this state");
-        return KeyMap::get().name_for_input(keys[0]);
+        return afterhours::input_ext::name_for_input(keys[0]);
     };
 
     const auto _get_label_for_gamepad =
         [](menu::State state,
            InputName name) -> tl::expected<std::string, std::string> {
-        const auto button = KeyMap::get_button(state, name);
-        if (button == raylib::GAMEPAD_BUTTON_UNKNOWN)
+        const auto button = afterhours::input_ext::get_first_button(
+            KeyMap::get_valid_inputs(state, name));
+        if (!button.has_value())
             return tl::unexpected("input not used in this state");
-        return KeyMap::get().name_for_input(button);
+        return afterhours::input_ext::name_for_input(button.value());
     };
     const auto _get_label =
         [=, *this](menu::State state,
@@ -401,7 +404,7 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
            InputName name) -> tl::expected<std::string, std::string> {
         const auto keys = KeyMap::get_valid_keys(state, name);
         if (keys.empty()) return tl::unexpected("input not used in this state");
-        auto icon = KeyMap::get().icon_for_input(keys[0]);
+        auto icon = afterhours::input_ext::icon_for_input(keys[0]);
         if (icon.empty()) return tl::unexpected("icon not found");
         return icon;
     };
@@ -409,10 +412,11 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
     const auto _get_icon_for_gamepad =
         [](menu::State state,
            InputName name) -> tl::expected<std::string, std::string> {
-        const auto button = KeyMap::get_button(state, name);
-        if (button == raylib::GAMEPAD_BUTTON_UNKNOWN)
+        const auto button = afterhours::input_ext::get_first_button(
+            KeyMap::get_valid_inputs(state, name));
+        if (!button.has_value())
             return tl::unexpected("input not used in this state");
-        return KeyMap::get().icon_for_input(button);
+        return afterhours::input_ext::icon_for_input(button.value());
     };
 
     const auto _get_icon =

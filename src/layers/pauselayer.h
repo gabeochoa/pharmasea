@@ -3,6 +3,7 @@
 
 #include "../ah.h"
 #include "../engine.h"
+#include "../engine/input_utilities.h"
 #include "../engine/layer.h"
 #include "../engine/ui/ui.h"
 #include "../external_include.h"
@@ -21,8 +22,9 @@ struct BasePauseLayer : public Layer {
 
     bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
         if (GameState::get().is_not(enabled_state)) return false;
-        if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
-            event.button) {
+        if (afterhours::input_ext::contains_button(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
+                event.button)) {
             GameState::get().go_back();
             return true;
         }
@@ -31,8 +33,9 @@ struct BasePauseLayer : public Layer {
 
     bool onKeyPressed(KeyPressedEvent& event) override {
         if (GameState::get().is_not(enabled_state)) return false;
-        if (KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
-            event.keycode) {
+        if (afterhours::input_ext::contains_key(
+                KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
+                event.keycode)) {
             GameState::get().go_back();
             return true;
         }

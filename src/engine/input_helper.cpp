@@ -303,7 +303,8 @@ float is_down_for_layer(menu::State layer, InputName name) {
         return 0.f;
     }
     // For non-active layer, check input directly from mapping
-    log_warn("Fetching key {} for non-active layer {}",
+    // Note: This is expected behavior when explicitly querying a specific layer
+    log_trace("Fetching key {} for non-active layer {}",
              magic_enum::enum_name(name), magic_enum::enum_name(layer));
     auto layer_it = g_mapping.find(layer);
     if (layer_it == g_mapping.end()) {
@@ -338,7 +339,8 @@ bool was_pressed_for_layer(menu::State layer, InputName name) {
         return false;
     }
     // For non-active layer, check input directly from mapping
-    log_warn("Fetching key {} for non-active layer {}",
+    // Note: This is expected behavior when explicitly querying a specific layer
+    log_trace("Fetching key {} for non-active layer {}",
              magic_enum::enum_name(name), magic_enum::enum_name(layer));
     auto layer_it = g_mapping.find(layer);
     if (layer_it == g_mapping.end()) {

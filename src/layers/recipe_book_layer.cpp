@@ -4,6 +4,7 @@
 #include "../ah.h"
 #include "../components/is_progression_manager.h"
 #include "../dataclass/ingredient.h"
+#include "../engine/input_utilities.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
 #include "../recipe_library.h"
@@ -42,8 +43,9 @@ Drink get_drink_for_selected_id(int selected_recipe) {
 }
 
 bool RecipeBookLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-    if (KeyMap::get_button(menu::State::Game, InputName::ShowRecipeBook) ==
-        event.button) {
+    if (afterhours::input_ext::contains_button(
+            KeyMap::get_valid_inputs(menu::State::Game, InputName::ShowRecipeBook),
+            event.button)) {
         should_show_recipes = !should_show_recipes;
         return true;
     }
@@ -58,8 +60,9 @@ bool RecipeBookLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
     }
 
     if (selected_recipe_debounce <= 0 &&
-        KeyMap::get_button(menu::State::Game, InputName::RecipeNext) ==
-            event.button) {
+        afterhours::input_ext::contains_button(
+            KeyMap::get_valid_inputs(menu::State::Game, InputName::RecipeNext),
+            event.button)) {
         selected_recipe = (selected_recipe + 1) % num_recipes();
         selected_recipe_debounce = selected_recipe_debounce_reset;
         return true;
@@ -72,14 +75,16 @@ bool RecipeBookLayer::onKeyPressed(KeyPressedEvent& event) {
     if (GameState::get().is_not(game::State::InGame)) return false;
 
     if (should_show_recipes &&
-        KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
-            event.keycode) {
+        afterhours::input_ext::contains_key(
+            KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
+            event.keycode)) {
         should_show_recipes = false;
         return true;
     }
 
-    if (KeyMap::get_key_code(menu::State::Game, InputName::ShowRecipeBook) ==
-        event.keycode) {
+    if (afterhours::input_ext::contains_key(
+            KeyMap::get_valid_inputs(menu::State::Game, InputName::ShowRecipeBook),
+            event.keycode)) {
         should_show_recipes = !should_show_recipes;
         return true;
     }
@@ -87,17 +92,20 @@ bool RecipeBookLayer::onKeyPressed(KeyPressedEvent& event) {
     if (!baseShouldRender()) return false;
 
     if (selected_recipe_debounce <= 0 &&
-        KeyMap::get_key_code(menu::State::UI, InputName::ValueLeft) ==
-            event.keycode) {
+        afterhours::input_ext::contains_key(
+            KeyMap::get_valid_inputs(menu::State::UI, InputName::ValueLeft),
+            event.keycode)) {
         selected_recipe = (int) fmax(0, selected_recipe - 1);
         selected_recipe_debounce = selected_recipe_debounce_reset;
         return true;
     }
     if (selected_recipe_debounce <= 0 &&
-        (KeyMap::get_key_code(menu::State::UI, InputName::ValueRight) ==
-             event.keycode ||
-         KeyMap::get_key_code(menu::State::Game, InputName::RecipeNext) ==
-             event.keycode)) {
+        (afterhours::input_ext::contains_key(
+             KeyMap::get_valid_inputs(menu::State::UI, InputName::ValueRight),
+             event.keycode) ||
+         afterhours::input_ext::contains_key(
+             KeyMap::get_valid_inputs(menu::State::Game, InputName::RecipeNext),
+             event.keycode))) {
         selected_recipe = (int) fmin(num_recipes() - 1, selected_recipe + 1);
         selected_recipe_debounce = selected_recipe_debounce_reset;
         return true;
