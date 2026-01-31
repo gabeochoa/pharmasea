@@ -175,4 +175,28 @@ inline bool contains_button_in_any(raylib::GamepadButton button, const ValidInpu
     return (contains_button(inputs_list, button) || ...);
 }
 
+// Extract all keyboard keys from a ValidInputs collection
+template<typename ValidInputsT>
+inline std::vector<int> get_all_keys(const ValidInputsT& inputs) {
+    std::vector<int> keys;
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<int>(input)) {
+            keys.push_back(std::get<int>(input));
+        }
+    }
+    return keys;
+}
+
+// Extract all gamepad buttons from a ValidInputs collection
+template<typename ValidInputsT>
+inline std::vector<raylib::GamepadButton> get_all_buttons(const ValidInputsT& inputs) {
+    std::vector<raylib::GamepadButton> buttons;
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<raylib::GamepadButton>(input)) {
+            buttons.push_back(std::get<raylib::GamepadButton>(input));
+        }
+    }
+    return buttons;
+}
+
 }  // namespace afterhours::input_ext

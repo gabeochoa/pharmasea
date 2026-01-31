@@ -148,9 +148,6 @@ struct KeyMap {
     [[nodiscard]] static const AnyInputs get_valid_inputs(
         const menu::State& state, const InputName& name);
 
-    [[nodiscard]] static const std::vector<int> get_valid_keys(
-        const menu::State& state, const InputName& name);
-
    private:
     FullMap mapping;
 

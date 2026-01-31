@@ -60,23 +60,6 @@ const AnyInputs KeyMap::get_valid_inputs(const menu::State& state,
     return KeyMap::get().mapping[state][name];
 }
 
-const std::vector<int> KeyMap::get_valid_keys(const menu::State& state,
-                                              const InputName& name) {
-    const AnyInputs allInputs = get_valid_inputs(state, name);
-    std::vector<int> keys;
-    for (const auto& input : allInputs) {
-        std::visit(util::overloaded{
-                       //
-                       [&](int keycode) { keys.push_back(keycode); },  //
-                       [](GamepadAxisWithDir) {},                      //
-                       [](GamepadButton) {},                           //
-                       [](auto) {},                                    //
-                   },
-                   input);
-    }
-    return keys;
-}
-
 void KeyMap::load_controller_db() {
     auto controller_db_fn = Files::get().game_controller_db();
     std::ifstream ifs(controller_db_fn);

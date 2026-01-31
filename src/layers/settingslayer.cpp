@@ -369,9 +369,10 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
     const auto _get_label_for_key =
         [](menu::State state,
            InputName name) -> tl::expected<std::string, std::string> {
-        const auto keys = KeyMap::get_valid_keys(state, name);
-        if (keys.empty()) return tl::unexpected("input not used in this state");
-        return afterhours::input_ext::name_for_input(keys[0]);
+        const auto key = afterhours::input_ext::get_first_key(
+            KeyMap::get_valid_inputs(state, name));
+        if (!key.has_value()) return tl::unexpected("input not used in this state");
+        return afterhours::input_ext::name_for_input(key.value());
     };
 
     const auto _get_label_for_gamepad =
@@ -402,9 +403,10 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
     const auto _get_icon_for_key =
         [](menu::State state,
            InputName name) -> tl::expected<std::string, std::string> {
-        const auto keys = KeyMap::get_valid_keys(state, name);
-        if (keys.empty()) return tl::unexpected("input not used in this state");
-        auto icon = afterhours::input_ext::icon_for_input(keys[0]);
+        const auto key = afterhours::input_ext::get_first_key(
+            KeyMap::get_valid_inputs(state, name));
+        if (!key.has_value()) return tl::unexpected("input not used in this state");
+        auto icon = afterhours::input_ext::icon_for_input(key.value());
         if (icon.empty()) return tl::unexpected("icon not found");
         return icon;
     };
