@@ -1,3 +1,4 @@
+#pragma once
 
 #include "external_include.h"
 
@@ -17,12 +18,6 @@
 // this #define ENABLE_TRACING 1 #include "engine/tracy.h"
 #define ZoneScoped
 
-#define ENABLE_DEV_FLAGS 1
-
-#if ENABLE_DEV_FLAGS
-#include <argh.h>
-#endif
-
 ///
 #include "globals.h"
 ///
@@ -31,24 +26,7 @@
 //
 #include "strings.h"
 //
-#include "layers/aboutlayer.h"
-#include "layers/debug_settings.h"
-#include "layers/fpslayer.h"
-#include "layers/gamedebuglayer.h"
-#include "layers/gamelayer.h"
-#include "layers/handlayer.h"
-#include "layers/mapviewerlayer.h"
-#include "layers/menulayer.h"
-#include "layers/networklayer.h"
-#include "layers/pauselayer.h"
-#include "layers/recipe_book_layer.h"
-#include "layers/round_end_reason_layer.h"
-#include "layers/seedmanagerlayer.h"
-#include "layers/settingslayer.h"
-#include "layers/streamersafelayer.h"
-#include "layers/toastlayer.h"
-#include "layers/uitestlayer.h"
-#include "layers/versionlayer.h"
+#include "layers/all_layers.h"
 
 extern float DEADZONE;
 extern ui::UITheme UI_THEME;

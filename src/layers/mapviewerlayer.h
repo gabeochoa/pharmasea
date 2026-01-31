@@ -9,6 +9,7 @@
 #include "../engine/app.h"
 #include "../engine/layer.h"
 #include "../engine/runtime_globals.h"
+#include "../engine/settings.h"
 #include "../external_include.h"
 #include "../globals.h"
 #include "../libraries/shader_library.h"
