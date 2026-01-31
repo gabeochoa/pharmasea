@@ -55,9 +55,7 @@ struct SettingsLayer : public Layer {
         Preload::get().write_keymap();
     }
 
-    virtual bool onKeyPressed(KeyPressedEvent& event) override;
-    virtual bool onGamepadButtonPressed(
-        GamepadButtonPressedEvent& event) override;
+    void handleInput();
     virtual void onUpdate(float dt) override;
 
     void save_and_exit();

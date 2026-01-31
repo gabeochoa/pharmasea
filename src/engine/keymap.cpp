@@ -3,58 +3,6 @@
 
 #include "graphics.h"
 
-void KeyMap::forEachCharTyped(const std::function<void(Event&)>& cb) {
-    int character = raylib::GetCharPressed();
-    while (character) {
-        CharPressedEvent* event = new CharPressedEvent(character, 0);
-        cb(*event);
-        delete event;
-        character = raylib::GetCharPressed();
-    }
-}
-
-void KeyMap::forEachInputInMap(const std::function<void(Event&)>& cb) const {
-    for (const auto& fm_kv : mapping) {
-        for (const auto& lm_kv : fm_kv.second) {
-            for (const auto& input : lm_kv.second) {
-                std::visit(
-                    util::overloaded{
-                        [&](int keycode) {
-                            if (ext::is_key_pressed(keycode)) {
-                                KeyPressedEvent* event =
-                                    new KeyPressedEvent(keycode, 0);
-                                cb(*event);
-                                delete event;
-                            }
-                        },
-                        [&](GamepadAxisWithDir axis_with_dir) {
-                            float mvt = ext::get_gamepad_axis_movement(0, axis_with_dir.axis);
-                            if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > DEADZONE) {
-                                GamepadAxisMovedEvent* event =
-                                    new GamepadAxisMovedEvent(
-                                        GamepadAxisWithDir(
-                                            {.axis = axis_with_dir.axis,
-                                             .dir = abs(mvt)}));
-
-                                cb(*event);
-                                delete event;
-                            }
-                        },
-                        [&](GamepadButton button) {
-                            if (raylib::IsGamepadButtonPressed(0, button)) {
-                                GamepadButtonPressedEvent* event =
-                                    new GamepadButtonPressedEvent(button);
-                                cb(*event);
-                                delete event;
-                            }
-                        },
-                        [](auto) {}},
-                    input);
-            }
-        }
-    }
-}
-
 const AnyInputs KeyMap::get_valid_inputs(const menu::State& state,
                                          const InputName& name) {
     return KeyMap::get().mapping[state][name];

@@ -4,9 +4,7 @@
 #define ENABLE_TRACING 1
 #include "tracy.h"
 //
-#include "event.h"
 #include "keymap.h"
-#include "mouse_map.h"
 #include "raylib.h"
 //
 
@@ -14,6 +12,12 @@
 #include "settings.h"
 #include "../libraries/shader_library.h"
 #include "simulated_input/simulated_input.h"
+
+// Layered input system
+#include "../game_actions.h"
+#include "../input_mapping_setup.h"
+#include "../input_mapping_persistence.h"
+#include "input_helper.h"
 
 #ifdef AFTER_HOURS_ENABLE_MCP
 #include <afterhours/src/plugins/mcp_server.h>
@@ -181,30 +185,6 @@ App::~App() {
 
 void App::close() { running = false; }
 
-void App::processEvent(Event& e) {
-    TRACY_ZONE_SCOPED;
-
-    input_recorder::record(e);
-    if (e.handled) {
-        return;
-    }
-
-    // Have the top most layers get the event first,
-    // if they handle it then no need for the lower ones to get the rest
-    // eg imagine UI pause menu blocking game UI elements
-    //    we wouldnt want the player to click pass the pause menu
-
-    int i = max_layer;
-    while (i >= 0) {
-        Layer* layer = layerstack[i];
-        if (layer) layer->onEvent(e);
-        if (e.handled) {
-            break;
-        }
-        i--;
-    }
-}
-
 void App::run() {
 #ifdef ENABLE_TRACING
     log_info("Tracing is enabled");
@@ -266,6 +246,9 @@ void App::loop(float dt) {
     }
 #endif
 
+    // Poll input for all states (menu and game)
+    input_helper::poll(dt);
+
     for (Layer* layer : layerstack) {
         if (layer) layer->onUpdate(dt);
     }
@@ -280,18 +263,6 @@ void App::loop(float dt) {
     }
 #endif
     render_to_screen();
-
-    // Check Input
-    {
-        KeyMap::get().forEachInputInMap(
-            std::bind(&App::processEvent, this, std::placeholders::_1));
-
-        KeyMap::get().forEachCharTyped(
-            std::bind(&App::processEvent, this, std::placeholders::_1));
-
-        MouseMap::get().forEachMouseInput(
-            std::bind(&App::processEvent, this, std::placeholders::_1));
-    }
 
 #ifdef AFTER_HOURS_ENABLE_MCP
     if (MCP_ENABLED) {

@@ -3,6 +3,10 @@
 #include "afterhours/src/plugins/sound_system.h"
 #include "../core/system_manager.h"
 
+// Layered input system for polling-based input
+#include "../../game_actions.h"
+#include "../../input_mapping_setup.h"
+
 // Static singleton storage definitions for afterhours sound_system
 std::shared_ptr<afterhours::sound_system::SoundLibrary>
     afterhours::sound_system::SoundLibrary_single;
@@ -19,4 +23,7 @@ void SystemManager::register_afterhours_systems() {
 
     // Register sound system update (handles music stream updates)
     afterhours::sound_system::register_update_systems(systems);
+
+    // Register layered input system (polls keyboard/gamepad each frame)
+    afterhours::layered_input<menu::State>::register_update_systems(systems);
 }

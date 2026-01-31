@@ -20,24 +20,19 @@ struct AboutLayer : public Layer {
           ui_context(std::make_shared<ui::UIContext>()) {}
     virtual ~AboutLayer() {}
 
-    bool onKeyPressed(KeyPressedEvent& event) override {
-        if (MenuState::get().is_not(menu::State::About)) return false;
-        if (event.keycode == raylib::KEY_ESCAPE) {
-            MenuState::get().go_back();
-            return true;
-        }
-        return ui_context->process_keyevent(event);
-    }
+    void handleInput() {
+        if (MenuState::get().is_not(menu::State::About)) return;
 
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
-        if (MenuState::get().is_not(menu::State::About)) return false;
-        if (afterhours::input_ext::contains_button(
-                KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack),
-                event.button)) {
+        // Polling-based back navigation (replaces onKeyPressed/onGamepadButtonPressed handlers)
+        if (afterhours::input::is_key_pressed(raylib::KEY_ESCAPE)) {
             MenuState::get().go_back();
-            return true;
+            return;
         }
-        return ui_context->process_gamepad_button_event(event);
+        if (afterhours::input_ext::is_any_button_just_pressed(
+                KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack))) {
+            MenuState::get().go_back();
+            return;
+        }
     }
 
     virtual void onUpdate(float) override {
@@ -47,6 +42,8 @@ struct AboutLayer : public Layer {
         // Does pause not support this ^^ solution?
         if (MenuState::get().is_not(menu::State::About)) return;
         raylib::SetExitKey(raylib::KEY_NULL);
+
+        handleInput();
     }
 
     virtual void onDraw(float dt) override {

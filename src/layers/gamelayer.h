@@ -18,11 +18,9 @@ struct GameLayer : public Layer {
 
     virtual ~GameLayer();
 
-    bool onGamepadAxisMoved(GamepadAxisMovedEvent&) override;
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override;
-    bool onKeyPressed(KeyPressedEvent& event) override;
-    bool onMouseButtonUp(Mouse::MouseButtonUpEvent& event) override;
-    bool onMouseButtonDown(Mouse::MouseButtonDownEvent& event) override;
+    // Polling-based input handling (replaces event handlers)
+    void handle_input();
+
     void play_music();
 
     virtual void onUpdate(float dt) override;

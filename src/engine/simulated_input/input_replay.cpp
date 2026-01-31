@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "../app.h"
-#include "../event.h"
 #include "../log.h"
 #include "../statemanager.h"
 #include "replay_validation.h"
@@ -81,13 +80,12 @@ void dispatch(const ReplayEvent& ev) {
 
     if (ev.type == ReplayEvent::Type::Key) {
         if (ev.action == "down") {
-            KeyPressedEvent e(ev.code, 0);
-            App::get().processEvent(e);
+            // Note: Event dispatch removed - using polling-based input now
             input_injector::set_key_down(ev.code);
             log_info("replay: key {} down", ev.code);
         } else if (ev.action == "up") {
             input_injector::set_key_up(ev.code);
-            log_info("replay: key {} up (no explicit event)", ev.code);
+            log_info("replay: key {} up", ev.code);
         }
         return;
     }
@@ -95,16 +93,11 @@ void dispatch(const ReplayEvent& ev) {
     if (ev.type == ReplayEvent::Type::Mouse) {
         int button_code = ev.code;
         if (ev.action == "down") {
-            Mouse::MouseButtonDownEvent e(button_code);
-            App::get().processEvent(e);
-            Mouse::MouseButtonPressedEvent e2(button_code);
-            App::get().processEvent(e2);
+            // Note: Event dispatch removed - using polling-based input now
+            // Mouse state is handled via ui::focus::mouse_info
             log_info("replay: mouse {} down", button_code);
         } else if (ev.action == "up") {
-            Mouse::MouseButtonUpEvent e(button_code);
-            App::get().processEvent(e);
-            Mouse::MouseButtonReleasedEvent e2(button_code);
-            App::get().processEvent(e2);
+            // Note: Event dispatch removed - using polling-based input now
             log_info("replay: mouse {} up", button_code);
         }
     }
@@ -120,8 +113,7 @@ void dispatch(const ReplayEvent& ev) {
                 raylib::SetMousePosition(static_cast<int>(x),
                                          static_cast<int>(y));
                 ui::focus::mouse_info.pos = {x, y};
-                Mouse::MouseMovedEvent move_event(x, y);
-                App::get().processEvent(move_event);
+                // Note: Event dispatch removed - using polling-based input now
                 log_info("replay: mouse move {} {}", x, y);
             } catch (...) {
                 log_error("replay: failed to parse mouse move '{}'", coord);

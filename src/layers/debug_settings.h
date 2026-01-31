@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/constexpr_containers.h"
+#include "../engine/input_helper.h"
 #include "../engine/input_utilities.h"
 #include "../engine/runtime_globals.h"
 #include "base_game_renderer.h"
@@ -31,94 +32,49 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
         globals::set_skip_ingredient_match(skip_ingredient_match);
     }
 
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
-        if (afterhours::input_ext::contains_button(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleDebug),
-                event.button)) {
-            debug_ui_enabled = !debug_ui_enabled;
-            sync_globals();
-            return true;
-        }
-        if (afterhours::input_ext::contains_button(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleNetworkView),
-                event.button)) {
-            no_clip_enabled = !no_clip_enabled;
-            sync_globals();
-            return true;
-        }
-
-        if (afterhours::input_ext::contains_button(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::SkipIngredientMatch),
-                event.button)) {
-            skip_ingredient_match = !skip_ingredient_match;
-            sync_globals();
-            return true;
-        }
-
-        if (!baseShouldRender()) return false;
-
-        if (afterhours::input_ext::contains_button(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
-                event.button)) {
-            GameState::get().go_back();
-            return true;
-        }
-
-        return ui_context->process_gamepad_button_event(event);
-    }
-
-    bool onKeyPressed(KeyPressedEvent& event) override {
-        if (should_show_overlay &&
-            afterhours::input_ext::contains_key(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
-                event.keycode)) {
-            should_show_overlay = false;
-            return true;
-        }
-
-        if (afterhours::input_ext::contains_key(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleDebugSettings),
-                event.keycode)) {
-            should_show_overlay = !should_show_overlay;
-            return true;
-        }
-
-        // TODO can we catch if you are using get_button in onKeyPressed and
-        // warn?
-
-        if (afterhours::input_ext::contains_key(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::SkipIngredientMatch),
-                event.keycode)) {
-            skip_ingredient_match = !skip_ingredient_match;
-            sync_globals();
-            return true;
-        }
-
-        if (afterhours::input_ext::contains_key(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleDebug),
-                event.keycode)) {
-            debug_ui_enabled = !debug_ui_enabled;
-            sync_globals();
-            return true;
-        }
-        if (afterhours::input_ext::contains_key(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::ToggleNetworkView),
-                event.keycode)) {
-            no_clip_enabled = !no_clip_enabled;
-            sync_globals();
-            return true;
-        }
-        if (!baseShouldRender()) return false;
-
-        return ui_context->process_keyevent(event);
-    }
-
     virtual ~DebugSettingsLayer() {}
 
     virtual bool shouldSkipRender() override { return !shouldRender(); }
     bool shouldRender() { return should_show_overlay; }
 
-    virtual void onUpdate(float) override {}
+    void handleInput() {
+        // Polling-based debug toggles (replaces onKeyPressed/onGamepadButtonPressed handlers)
+
+        // Toggle debug UI
+        if (input_helper::was_pressed(InputName::ToggleDebug)) {
+            debug_ui_enabled = !debug_ui_enabled;
+            sync_globals();
+        }
+
+        // Toggle no-clip
+        if (input_helper::was_pressed(InputName::ToggleNetworkView)) {
+            no_clip_enabled = !no_clip_enabled;
+            sync_globals();
+        }
+
+        // Toggle skip ingredient match
+        if (input_helper::was_pressed(InputName::SkipIngredientMatch)) {
+            skip_ingredient_match = !skip_ingredient_match;
+            sync_globals();
+        }
+
+        // Toggle debug settings overlay
+        if (input_helper::was_pressed(InputName::ToggleDebugSettings)) {
+            should_show_overlay = !should_show_overlay;
+        }
+
+        // Close overlay with Pause key when showing - consume to prevent GameLayer from also pausing
+        if (should_show_overlay && baseShouldRender()) {
+            if (input_helper::was_pressed(InputName::Pause)) {
+                input_helper::consume_pressed(InputName::Pause);
+                should_show_overlay = false;
+            }
+        }
+    }
+
+    virtual void onUpdate(float) override {
+        handleInput();
+    }
 
     void draw_game_state_controls(Rectangle container) {
         using namespace ui;

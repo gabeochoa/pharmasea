@@ -1,9 +1,12 @@
 
 #pragma once
+#include "../../game_actions.h"
 #include "../../vendor_include.h"
 #include "../input_helper.h"
 #include "../input_utilities.h"
 #include "../keymap.h"
+#include "../log.h"
+#include "afterhours/src/plugins/input_system.h"
 #include "sound.h"
 
 namespace ui {
@@ -53,6 +56,19 @@ struct IUIContextInputManager {
         yscrolled = ext::get_mouse_wheel_move();
 
         lastDt = dt;
+        poll_input();
+    }
+
+    void poll_input() {
+        // Reset per-frame state
+        chars_this_frame.clear();
+
+        // Buffer all characters pressed this frame (for text fields)
+        int ch = afterhours::input::get_char_pressed();
+        while (ch != 0) {
+            chars_this_frame += static_cast<char>(ch);
+            ch = afterhours::input::get_char_pressed();
+        }
     }
 
     virtual void cleanup() {
@@ -83,7 +99,8 @@ struct IUIContextInputManager {
     int mod = -1;
     GamepadButton button;
     GamepadAxisWithDir axis_info;
-    int keychar = -1;
+    int keychar = -1;  // Deprecated: use chars_this_frame
+    std::string chars_this_frame;
     int modchar = -1;
     float yscrolled;
     // TODO can we use timer stuff for this? we have tons of these around
@@ -99,108 +116,72 @@ struct IUIContextInputManager {
                mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
     }
 
-    [[nodiscard]] bool process_char_press_event(const CharPressedEvent& event) {
-        keychar = event.keycode;
-        return true;
+    // Backwards-compatible getter for keychar
+    [[nodiscard]] int get_keychar() const {
+        return chars_this_frame.empty() ? 0
+                                        : static_cast<int>(chars_this_frame[0]);
     }
 
-    [[nodiscard]] bool process_keyevent(const KeyPressedEvent& event) {
-        int code = event.keycode;
-        anything_pressed = code;
-        if (!detail::layer_contains_key(STATE, code)) {
-            return false;
-        }
-        auto widget_mod_key = afterhours::input_ext::get_first_key(
-            KeyMap::get_valid_inputs(STATE, InputName::WidgetMod));
-        if (widget_mod_key.has_value() && code == widget_mod_key.value()) {
-            mod = code;
-            return true;
-        }
-        auto widget_ctrl_key = afterhours::input_ext::get_first_key(
-            KeyMap::get_valid_inputs(STATE, InputName::WidgetCtrl));
-        if (widget_ctrl_key.has_value() && code == widget_ctrl_key.value()) {
-            mod = code;
-            return true;
-        }
-
-        // TODO same as above, but a separate map
-        modchar = code;
-
-        key = code;
-        return true;
+    [[nodiscard]] const std::string& get_chars_this_frame() const {
+        return chars_this_frame;
     }
 
-    [[nodiscard]] bool process_gamepad_button_event(
-        const GamepadButtonPressedEvent& event) {
-        GamepadButton code = event.button;
-        anything_pressed = code;
-        if (!detail::layer_contains_button(STATE, code)) {
-            return false;
+    // Polling-based input methods that use GameAction
+    [[nodiscard]] bool pressed(game::GameAction action) {
+        auto* collector =
+            afterhours::EntityHelper::get_singleton_cmp<afterhours::input::InputCollector>();
+        if (!collector) return false;
+
+        for (const auto& a : collector->inputs_pressed) {
+            if (a.action == static_cast<int>(action)) {
+                ui::sounds::select();
+                return true;
+            }
         }
-        button = code;
-        return true;
+        return false;
     }
 
-    [[nodiscard]] bool process_gamepad_axis_event(GamepadAxisMovedEvent event) {
-        GamepadAxisWithDir info = event.data;
-        anything_pressed = info;
-        if (!detail::layer_contains_axis(STATE, info.axis)) {
+    [[nodiscard]] bool is_held_down(game::GameAction action) {
+        auto* collector =
+            afterhours::EntityHelper::get_singleton_cmp<afterhours::input::InputCollector>();
+        if (!collector) return false;
+
+        for (const auto& a : collector->inputs) {
+            if (a.action == static_cast<int>(action)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    [[nodiscard]] bool is_held_down_debounced(game::GameAction action) {
+        const bool is_held = is_held_down(action);
+        if (!is_held) return false;
+        if (keyHeldDownTimer < keyHeldDownTimerReset) {
+            keyHeldDownTimer += lastDt;
             return false;
         }
-        axis_info = info;
+        keyHeldDownTimer = 0.f;
         return true;
     }
 
     [[nodiscard]] bool _pressedButtonWithoutEat(GamepadButton butt) const {
         if (butt == raylib::GAMEPAD_BUTTON_UNKNOWN) return false;
-        return button == butt;
+        return afterhours::input::is_gamepad_button_pressed(0, butt);
     }
 
     [[nodiscard]] bool pressedButtonWithoutEat(const InputName& name) const {
-        auto code = afterhours::input_ext::get_first_button(
-            KeyMap::get_valid_inputs(STATE, name));
-        if (!code.has_value()) return false;
-        return _pressedButtonWithoutEat(code.value());
+        return input_helper::was_pressed(name);
     }
 
     void eatButton() { button = raylib::GAMEPAD_BUTTON_UNKNOWN; }
 
     [[nodiscard]] bool pressed(const InputName& name) {
-        auto key_opt = afterhours::input_ext::get_first_key(
-            KeyMap::get_valid_inputs(STATE, name));
-        if (key_opt.has_value()) {
-            bool a = _pressedWithoutEat(key_opt.value());
-            if (a) {
-                ui::sounds::select();
-                eatKey();
-                return a;
-            }
+        bool result = input_helper::was_pressed(name);
+        if (result) {
+            ui::sounds::select();
         }
-
-        auto butt = afterhours::input_ext::get_first_button(
-            KeyMap::get_valid_inputs(STATE, name));
-        if (butt.has_value()) {
-            bool b = _pressedButtonWithoutEat(butt.value());
-            if (b) {
-                ui::sounds::select();
-                eatButton();
-                return b;
-            }
-        }
-
-        auto axis_opt = afterhours::input_ext::get_first_axis(
-            KeyMap::get_valid_inputs(STATE, name));
-        if (axis_opt.has_value()) {
-            auto axis = axis_opt.value();
-            bool c = axis_info.axis == axis.axis &&
-                     ((axis.dir - axis_info.dir) >= EPSILON);
-            if (c) {
-                ui::sounds::select();
-                eatAxis();
-                return c;
-            }
-        }
-        return false;
+        return result;
     }
 
     void handleBadGamepadAxis(const KeyMapInputRequestError&, menu::State,
@@ -214,14 +195,11 @@ struct IUIContextInputManager {
 
     [[nodiscard]] bool _pressedWithoutEat(int code) const {
         if (code == raylib::KEY_NULL) return false;
-        return key == code || mod == code;
+        return afterhours::input::is_key_pressed(code);
     }
     // TODO is there a better way to do eat(string)?
     [[nodiscard]] bool pressedWithoutEat(const InputName& name) const {
-        auto code = afterhours::input_ext::get_first_key(
-            KeyMap::get_valid_inputs(STATE, name));
-        if (!code.has_value()) return false;
-        return _pressedWithoutEat(code.value());
+        return input_helper::was_pressed(name);
     }
 
     void eatKey() { key = int(); }

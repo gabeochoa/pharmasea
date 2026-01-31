@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../app.h"
-#include "../event.h"
 #include "../keymap.h"
 #include "../ui/focus.h"
 

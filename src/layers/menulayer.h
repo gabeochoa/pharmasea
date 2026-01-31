@@ -19,21 +19,6 @@ struct MenuLayer : public Layer {
 
     virtual ~MenuLayer() {}
 
-    bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) override {
-        if (MenuState::get().is_not(menu::State::Root)) return false;
-        return ui_context->process_gamepad_axis_event(event);
-    }
-
-    bool onKeyPressed(KeyPressedEvent& event) override {
-        if (MenuState::get().is_not(menu::State::Root)) return false;
-        return ui_context->process_keyevent(event);
-    }
-
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
-        if (MenuState::get().is_not(menu::State::Root)) return false;
-        return ui_context->process_gamepad_button_event(event);
-    }
-
     void play_music() {
         if (ENABLE_SOUND) {
             Music::play(strings::music::THEME);

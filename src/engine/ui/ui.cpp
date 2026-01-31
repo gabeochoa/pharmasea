@@ -5,7 +5,6 @@
 #include "../../preload.h"
 #include "../../vec_util.h"
 #include "../assert.h"
-#include "../event.h"
 #include "../font_sizer.h"
 #include "../gamepad_axis_with_dir.h"
 #include "../keymap.h"
@@ -560,16 +559,15 @@ ElementResult textfield(const Widget& widget, const TextfieldData& data) {
         bool changed = false;
 
         if (focus::matches(widget.id)) {
-            // TODO what does this mean
-            if (context->keychar != int()) {
+            // Handle character input from polling-based buffering
+            if (!context->get_chars_this_frame().empty()) {
                 if (validation_test(
                         validationFlag,
                         TextfieldValidationDecisionFlag::StopNewInput)) {
                     log_warn("tried to type {} but hit validation error",
-                             context->keychar);
+                             context->get_chars_this_frame());
                 } else {
-                    state->buffer.asT().append(
-                        std::string(1, (char) context->keychar));
+                    state->buffer.asT().append(context->get_chars_this_frame());
                     changed = true;
                 }
             }

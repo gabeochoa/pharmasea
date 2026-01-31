@@ -77,16 +77,13 @@ void collect_user_input(Entity& entity, float dt) {
     if (entity.is_missing<CollectsUserInput>()) return;
     CollectsUserInput& cui = entity.get<CollectsUserInput>();
 
-    // Use Game layer explicitly - player input is always game context
-    constexpr auto layer = menu::State::Game;
-
     // TODO right now when you press two at the same time you move faster
     float left, right, up, down;
 
-    float key_left = input_helper::is_down_for_layer(layer, InputName::PlayerLeft);
-    float key_right = input_helper::is_down_for_layer(layer, InputName::PlayerRight);
-    float key_up = input_helper::is_down_for_layer(layer, InputName::PlayerForward);
-    float key_down = input_helper::is_down_for_layer(layer, InputName::PlayerBack);
+    float key_left = input_helper::is_down(InputName::PlayerLeft);
+    float key_right = input_helper::is_down(InputName::PlayerRight);
+    float key_up = input_helper::is_down(InputName::PlayerForward);
+    float key_down = input_helper::is_down(InputName::PlayerBack);
 
     // we need to rotate these controls based on the camera
     auto* cam = globals::game_cam();
@@ -107,7 +104,7 @@ void collect_user_input(Entity& entity, float dt) {
     if (up > 0) cui.write(InputName::PlayerForward, up);
     if (down > 0) cui.write(InputName::PlayerBack, down);
 
-    bool pickup = input_helper::was_pressed_for_layer(layer, InputName::PlayerPickup);
+    bool pickup = input_helper::was_pressed(InputName::PlayerPickup);
     if (pickup) {
         log_info("input: PlayerPickup (space) requested for entity {}",
                  entity.id);
@@ -115,13 +112,13 @@ void collect_user_input(Entity& entity, float dt) {
     }
 
     bool handtruck_interact =
-        input_helper::was_pressed_for_layer(layer, InputName::PlayerHandTruckInteract);
+        input_helper::was_pressed(InputName::PlayerHandTruckInteract);
     if (handtruck_interact) cui.write(InputName::PlayerHandTruckInteract, 1.f);
 
-    bool rotate = input_helper::was_pressed_for_layer(layer, InputName::PlayerRotateFurniture);
+    bool rotate = input_helper::was_pressed(InputName::PlayerRotateFurniture);
     if (rotate) cui.write(InputName::PlayerRotateFurniture, 1.f);
 
-    float do_work = input_helper::is_down_for_layer(layer, InputName::PlayerDoWork);
+    float do_work = input_helper::is_down(InputName::PlayerDoWork);
     if (do_work > 0) cui.write(InputName::PlayerDoWork, 1.f);
 
     // run the input on the local client

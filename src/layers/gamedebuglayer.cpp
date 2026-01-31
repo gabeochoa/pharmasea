@@ -2,7 +2,6 @@
 #include "gamedebuglayer.h"
 
 #include "../drawing_util.h"
-#include "../engine/event.h"
 #include "../engine/runtime_globals.h"
 #include "../external_include.h"
 //

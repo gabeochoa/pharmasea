@@ -1,62 +1,52 @@
 
 #include "settingslayer.h"
 
+#include "../ah.h"
 #include "../engine/input_utilities.h"
 #include "../engine/settings.h"
 
-bool SettingsLayer::onKeyPressed(KeyPressedEvent& event) {
-    bool fs_key_pressed = (event.keycode == raylib::KEY_ENTER &&
-                           (raylib::IsKeyDown(raylib::KEY_LEFT_ALT) ||
-                            raylib::IsKeyDown(raylib::KEY_RIGHT_ALT))) ||
-                          //
-                          (event.keycode == raylib::KEY_LEFT_ALT &&
-                           raylib::IsKeyDown(raylib::KEY_ENTER)) ||
-                          //
-                          (event.keycode == raylib::KEY_RIGHT_ALT &&
-                           raylib::IsKeyDown(raylib::KEY_ENTER));
-    if (fs_key_pressed) {
-        if (fullscreen_debounce <= 0) {
-            Settings::get().toggle_fullscreen();
-            fullscreen_debounce = fullscreen_debounce_reset;
-            return true;
+void SettingsLayer::handleInput() {
+    // Polling-based Alt+Enter fullscreen toggle (replaces onKeyPressed handler logic)
+    // Check for Alt+Enter combo for fullscreen toggle
+    bool alt_down = afterhours::input::is_key_down(raylib::KEY_LEFT_ALT) ||
+                    afterhours::input::is_key_down(raylib::KEY_RIGHT_ALT);
+    bool enter_pressed = afterhours::input::is_key_pressed(raylib::KEY_ENTER);
+    bool alt_pressed = afterhours::input::is_key_pressed(raylib::KEY_LEFT_ALT) ||
+                       afterhours::input::is_key_pressed(raylib::KEY_RIGHT_ALT);
+    bool enter_down = afterhours::input::is_key_down(raylib::KEY_ENTER);
+
+    bool fs_key_pressed = (enter_pressed && alt_down) || (alt_pressed && enter_down);
+
+    if (fs_key_pressed && fullscreen_debounce <= 0) {
+        Settings::get().toggle_fullscreen();
+        fullscreen_debounce = fullscreen_debounce_reset;
+    }
+
+    if (MenuState::get().is_not(menu::State::Settings)) return;
+
+    // Polling-based Escape key for navigation
+    if (afterhours::input::is_key_pressed(raylib::KEY_ESCAPE)) {
+        if (activeWindow != ActiveWindow::Root) {
+            activeWindow = ActiveWindow::Root;
+        } else {
+            MenuState::get().go_back();
         }
-        // we still want to return true here so that when we debounce it
-        // doesnt hit "enter" for the other layers
-        return true;
+        return;
     }
 
-    if (MenuState::get().is_not(menu::State::Settings)) return false;
-
-    //
-    if (event.keycode == raylib::KEY_ESCAPE &&
-        activeWindow != ActiveWindow::Root) {
-        activeWindow = ActiveWindow::Root;
-        return true;
-    }
-
-    if (event.keycode == raylib::KEY_ESCAPE) {
-        MenuState::get().go_back();
-        return true;
-    }
-
-    return ui_context->process_keyevent(event);
-}
-
-bool SettingsLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-    if (MenuState::get().is_not(menu::State::Settings)) return false;
-
-    if (afterhours::input_ext::contains_button(
-            KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack),
-            event.button)) {
+    // Polling-based gamepad MenuBack
+    if (afterhours::input_ext::is_any_button_just_pressed(
+            KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack))) {
         exit_without_save();
-        return true;
+        return;
     }
-
-    return ui_context->process_gamepad_button_event(event);
 }
 
 void SettingsLayer::onUpdate(float dt) {
     if (fullscreen_debounce > 0) fullscreen_debounce -= dt;
+
+    handleInput();
+
     if (MenuState::get().is_not(menu::State::Settings)) return;
     raylib::SetExitKey(raylib::KEY_NULL);
 }

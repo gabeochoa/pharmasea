@@ -1,9 +1,13 @@
 
-
 #include "game.h"
 
 #include "engine/assert.h"
 #include "engine/input_helper.h"
+
+// Layered input system
+#include "game_actions.h"
+#include "input_mapping_setup.h"
+#include "input_mapping_persistence.h"
 
 // Global flag storage for re-application after settings load
 bool disable_models_flag = false;
@@ -126,15 +130,33 @@ void startup() {
         //
     });
 
+        Entity& singleton_entity= ::EntityHelper::createPermanentEntity();
     // Initialize window_manager singleton components for resolution tracking
     // and sound_system singleton components for sound playback
     {
-        Entity& config_entity = ::EntityHelper::createPermanentEntity();
         auto current_rez = afterhours::window_manager::fetch_current_resolution();
         auto available_rez = afterhours::window_manager::fetch_available_resolutions();
         afterhours::window_manager::add_singleton_components(
-            config_entity, current_rez, 240, available_rez);
-        afterhours::sound_system::add_singleton_components(config_entity);
+            singleton_entity, current_rez, 240, available_rez);
+        afterhours::sound_system::add_singleton_components(singleton_entity);
+    }
+
+    // Initialize layered input system for polling-based input
+    {
+        afterhours::layered_input<menu::State>::add_singleton_components(
+            singleton_entity,
+            game::create_default_layered_mapping(),
+            game::get_initial_input_layer()
+        );
+
+        // Register callback to switch input layer when menu state changes
+        MenuState::get().register_on_change([](menu::State new_state, menu::State) {
+            auto* mapper = afterhours::EntityHelper::get_singleton_cmp<
+                afterhours::ProvidesLayeredInputMapping<menu::State>>();
+            if (mapper) {
+                mapper->set_active_layer(new_state);
+            }
+        });
     }
 
     // -------- Its unlikely anything should go above this line ----- //
@@ -556,13 +578,23 @@ int main(int argc, char* argv[]) {
             raylib::LOG_ERROR,
         });
 
+        Entity& singleton_entity = ::EntityHelper::createPermanentEntity();
+
         // Initialize window_manager singleton components for resolution tracking
         {
-            Entity& config_entity = ::EntityHelper::createPermanentEntity();
             auto current_rez = afterhours::window_manager::fetch_current_resolution();
             auto available_rez = afterhours::window_manager::fetch_available_resolutions();
             afterhours::window_manager::add_singleton_components(
-                config_entity, current_rez, 240, available_rez);
+                singleton_entity, current_rez, 240, available_rez);
+        }
+
+        // Initialize layered input system for polling-based input
+        {
+            afterhours::layered_input<menu::State>::add_singleton_components(
+                singleton_entity,
+                game::create_default_layered_mapping(),
+                game::get_initial_input_layer()
+            );
         }
 
         Files::create(FilesConfig{

@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "event.h"
 #include "files.h"
 #include "layer.h"
 #include "singleton.h"
@@ -23,7 +22,6 @@ struct App {
 
     void run();
     void close();
-    void processEvent(Event& e);
 
     void loadLayers(const std::vector<Layer*>& layers);
 

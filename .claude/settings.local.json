@@ -8,7 +8,11 @@
       "Skill(10x-engineer:subagent-driven-development)",
       "Bash(make:*)",
       "Bash(clang++:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(ls:*)",
+      "Bash(xargs:*)",
+      "Skill(10x-engineer:dispatching-parallel-agents)",
+      "Bash(sl status:*)"
     ]
   }
 }

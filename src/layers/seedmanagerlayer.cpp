@@ -1,7 +1,9 @@
 
 #include "seedmanagerlayer.h"
 
+#include "../ah.h"
 #include "../dataclass/names.h"
+#include "../engine/input_helper.h"
 #include "../engine/input_utilities.h"
 #include "../engine/runtime_globals.h"
 #include "../network/network.h"
@@ -13,42 +15,31 @@ bool SeedManagerLayer::is_user_host() {
     return false;
 }
 
-bool SeedManagerLayer::onCharPressedEvent(CharPressedEvent& event) {
-    if (GameState::get().is(game::State::Paused)) return false;
-    if (MenuState::get().is_not(menu::State::Game)) return false;
-    if (!is_user_host()) return false;
-    if (!map_ptr) return false;
+void SeedManagerLayer::handleInput() {
+    if (!map_ptr) return;
 
-    return ui_context.get()->process_char_press_event(event);
-}
-
-bool SeedManagerLayer::onKeyPressed(KeyPressedEvent& event) {
-    if (GameState::get().is(game::State::Paused)) return false;
-    if (GameState::get().is_not(game::State::Lobby)) return false;
-    if (MenuState::get().is_not(menu::State::Game)) return false;
-    if (!is_user_host()) return false;
-    if (!map_ptr) return false;
+    // Polling-based seed input box toggle (replaces onKeyPressed handler)
+    if (GameState::get().is(game::State::Paused)) return;
+    if (GameState::get().is_not(game::State::Lobby)) return;
+    if (MenuState::get().is_not(menu::State::Game)) return;
+    if (!is_user_host()) return;
     // We need this check to guarantee that you are near the box
     // otherwise pressing space will freeze you until you hit esc
-    if (!map_ptr->showMinimap) return false;
+    if (!map_ptr->showMinimap) return;
 
-    if (map_ptr->showSeedInputBox &&
-        afterhours::input_ext::contains_key(
-            KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
-            event.keycode)) {
+    // Close seed input box with Pause key when showing - consume to prevent GameLayer from also pausing
+    if (map_ptr->showSeedInputBox && input_helper::was_pressed(InputName::Pause)) {
+        input_helper::consume_pressed(InputName::Pause);
         map_ptr->showSeedInputBox = false;
-        return true;
+        return;
     }
 
-    if (!map_ptr->showSeedInputBox &&
-        afterhours::input_ext::contains_key(
-            KeyMap::get_valid_inputs(menu::State::Game, InputName::PlayerPickup),
-            event.keycode)) {
+    // Open seed input box with PlayerPickup key when not showing
+    if (!map_ptr->showSeedInputBox && input_helper::was_pressed(InputName::PlayerPickup)) {
+        input_helper::consume_pressed(InputName::PlayerPickup);
         map_ptr->showSeedInputBox = true;
-        return true;
+        return;
     }
-
-    return ui_context.get()->process_keyevent(event);
 }
 
 void SeedManagerLayer::onUpdate(float) {
@@ -58,6 +49,8 @@ void SeedManagerLayer::onUpdate(float) {
     if (!map_ptr->showSeedInputBox) {
         tempSeed = map_ptr->seed;
     }
+
+    handleInput();
 }
 
 void SeedManagerLayer::draw_seed_input(float dt) {

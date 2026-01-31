@@ -4,6 +4,7 @@
 #include <memory>
 #include <set>
 
+#include "../input_helper.h"
 #include "ui_context.h"
 #include "widget.h"
 
@@ -92,23 +93,27 @@ inline void handle_tabbing(const Widget& widget) {
     // Do we mark the widget type with "nextable"? (tab will always work but
     // not very discoverable
     if (matches(widget.id)) {
-        if (
-            //
-            context->pressed(InputName::WidgetNext) ||
-            context->pressed(InputName::ValueDown)
-            // TODO add support for holding down tab
-            // get().is_held_down_debounced(InputName::WidgetNext) ||
-            // get().is_held_down_debounced(InputName::ValueDown)
-        ) {
+        bool widget_next = context->pressed(InputName::WidgetNext);
+        bool value_down = context->pressed(InputName::ValueDown);
+        if (widget_next || value_down) {
+            // Consume the input so other widgets don't also respond to it
+            if (widget_next) {
+                input_helper::consume_pressed(InputName::WidgetNext);
+            }
+            if (value_down) {
+                input_helper::consume_pressed(InputName::ValueDown);
+            }
             set(ROOT_ID);
             if (context->is_held_down(InputName::WidgetMod)) {
                 set(last_processed);
             }
         }
         if (context->pressed(InputName::ValueUp)) {
+            input_helper::consume_pressed(InputName::ValueUp);
             set(last_processed);
         }
         if (context->pressed(InputName::WidgetBack)) {
+            input_helper::consume_pressed(InputName::WidgetBack);
             set(last_processed);
         }
     }

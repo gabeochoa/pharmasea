@@ -100,16 +100,18 @@ struct MapViewerLayer : public Layer {
         return "Unknown";
     }
 
-    bool onKeyPressed(KeyPressedEvent& event) override {
-        if (event.keycode == raylib::KEY_ESCAPE) {
+    void handleInput() {
+        // Polling-based ESC check (replaces onKeyPressed handler)
+        if (afterhours::input::is_key_pressed(raylib::KEY_ESCAPE)) {
             App::get().close();
-            return true;
+            return;
         }
-        return false;
     }
 
     virtual void onUpdate(float dt) override {
         raylib::SetExitKey(raylib::KEY_NULL);
+
+        handleInput();
 
         // Camera controls
         const float pan_speed = 10.f * dt;

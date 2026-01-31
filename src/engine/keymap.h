@@ -9,7 +9,6 @@
 #include "statemanager.h"
 #include "util.h"
 //
-#include "event.h"
 #include "gamepad_axis_with_dir.h"
 #include "log.h"
 #include "singleton.h"
@@ -141,9 +140,6 @@ inline std::ostream& operator<<(std::ostream& os,
 SINGLETON_FWD(KeyMap)
 struct KeyMap {
     SINGLETON(KeyMap)
-
-    static void forEachCharTyped(const std::function<void(Event&)>& cb);
-    void forEachInputInMap(const std::function<void(Event&)>& cb) const;
 
     [[nodiscard]] static const AnyInputs get_valid_inputs(
         const menu::State& state, const InputName& name);

@@ -3,6 +3,7 @@
 
 #include "../building_locations.h"
 #include "../drawing_util.h"
+#include "../engine/input_helper.h"
 #include "../engine/input_utilities.h"
 #include "../engine/ui/color.h"
 #include "../engine/ui/sound.h"
@@ -24,52 +25,30 @@
 #include "raylib.h"
 GameLayer::~GameLayer() { raylib::UnloadRenderTexture(game_render_texture); }
 
-bool GameLayer::onGamepadAxisMoved(GamepadAxisMovedEvent&) { return false; }
-
-bool GameLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-    if (!MenuState::s_in_game()) return false;
-    if (afterhours::input_ext::contains_button(
-            KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
-            event.button)) {
-        GameState::get().pause();
-        return true;
+void GameLayer::handle_input() {
+    if (!MenuState::s_in_game()) {
+        return;
     }
-    return false;
-}
 
-bool GameLayer::onKeyPressed(KeyPressedEvent& event) {
-    if (!MenuState::s_in_game()) return false;
-    // Note: You can only pause in game state, in planning no pause
-    if (afterhours::input_ext::contains_key(
-            KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
-            event.keycode)) {
+    // Handle pressed-this-frame actions (triggers once on press)
+    if (input_helper::was_pressed(InputName::Pause)) {
+        input_helper::consume_pressed(InputName::Pause);
         GameState::get().pause();
-        //  TODO obv need to have this fun on a timer or something instead
-        //  of on esc
-        // SoundLibrary::get().play_random_match("pa_announcements_");
-        return true;
     }
-    return false;
-}
 
-bool GameLayer::onMouseButtonUp(Mouse::MouseButtonUpEvent& event) {
-    if (!MenuState::s_in_game()) return false;
-    // TODO remove protected ew
-    // TODO better button naming
-    if (event.GetMouseButton() == Mouse::MouseCode::Button0) {
+    // Handle mouse for cursor visibility (direct polling)
+    // Note: We check current state vs previous to detect transitions
+    static bool was_left_down = false;
+    bool is_left_down = raylib::IsMouseButtonDown(raylib::MOUSE_BUTTON_LEFT);
+
+    if (is_left_down && !was_left_down) {
+        // Just pressed
+        raylib::HideCursor();
+    } else if (!is_left_down && was_left_down) {
+        // Just released
         raylib::ShowCursor();
     }
-    return false;
-}
-
-bool GameLayer::onMouseButtonDown(Mouse::MouseButtonDownEvent& event) {
-    if (!MenuState::s_in_game()) return false;
-    // TODO remove protected ew
-    // TODO better button naming
-    if (event.GetMouseButton() == Mouse::MouseCode::Button0) {
-        raylib::HideCursor();
-    }
-    return false;
+    was_left_down = is_left_down;
 }
 
 void GameLayer::play_music() {
@@ -80,6 +59,10 @@ void GameLayer::play_music() {
 
 void GameLayer::onUpdate(float dt) {
     TRACY_ZONE_SCOPED;
+
+    // Handle input via polling
+    handle_input();
+
     if (MenuState::s_in_game()) play_music();
 
     if (!GameState::get().should_update()) return;

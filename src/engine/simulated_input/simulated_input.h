@@ -8,7 +8,6 @@
 #include "../../globals.h"
 #include "../../network/network.h"
 #include "../app.h"
-#include "../event.h"
 #include "../files.h"
 #include "../log.h"
 #include "../settings.h"
@@ -31,7 +30,6 @@ bool is_key_synthetically_down(int keycode);
 namespace input_recorder {
 void enable(const std::filesystem::path& path);
 bool is_enabled();
-void record(const Event& event);
 void record_state_change(const char* label, int value);
 void shutdown();
 void update_poll();

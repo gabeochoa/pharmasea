@@ -3,6 +3,7 @@
 
 #include "../ah.h"
 #include "../engine.h"
+#include "../engine/input_helper.h"
 #include "../engine/input_utilities.h"
 #include "../engine/layer.h"
 #include "../engine/ui/ui.h"
@@ -20,29 +21,21 @@ struct BasePauseLayer : public Layer {
     }
     virtual ~BasePauseLayer() {}
 
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
-        if (GameState::get().is_not(enabled_state)) return false;
-        if (afterhours::input_ext::contains_button(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
-                event.button)) {
+    void handleInput() {
+        if (GameState::get().is_not(enabled_state)) return;
+
+        // Polling-based pause toggle (replaces onKeyPressed/onGamepadButtonPressed handlers)
+        // Uses input_helper to properly handle consumed inputs
+        if (input_helper::was_pressed(InputName::Pause)) {
+            input_helper::consume_pressed(InputName::Pause);
             GameState::get().go_back();
-            return true;
+            return;
         }
-        return ui_context->process_gamepad_button_event(event);
     }
 
-    bool onKeyPressed(KeyPressedEvent& event) override {
-        if (GameState::get().is_not(enabled_state)) return false;
-        if (afterhours::input_ext::contains_key(
-                KeyMap::get_valid_inputs(menu::State::Game, InputName::Pause),
-                event.keycode)) {
-            GameState::get().go_back();
-            return true;
-        }
-        return ui_context->process_keyevent(event);
+    virtual void onUpdate(float) override {
+        handleInput();
     }
-
-    virtual void onUpdate(float) override {}
 
     void reset_network();
 

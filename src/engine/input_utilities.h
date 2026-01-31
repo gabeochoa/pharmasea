@@ -14,6 +14,7 @@
 
 #include "afterhours/src/plugins/input_system.h"
 #include "magic_enum/magic_enum.hpp"
+#include "gamepad_axis_with_dir.h"
 
 namespace afterhours::input_ext {
 
@@ -121,7 +122,7 @@ inline std::optional<raylib::GamepadButton> get_first_button(const ValidInputsT&
     return std::nullopt;
 }
 
-template<typename ValidInputsT, typename AxisT = GamepadAxisWithDir>
+template<typename ValidInputsT, typename AxisT = ::GamepadAxisWithDir>
 inline std::optional<AxisT> get_first_axis(const ValidInputsT& inputs) {
     for (const auto& input : inputs) {
         if (std::holds_alternative<AxisT>(input)) {
@@ -154,7 +155,7 @@ inline bool contains_button(const ValidInputsT& inputs, raylib::GamepadButton bu
     return false;
 }
 
-template<typename ValidInputsT, typename AxisT = GamepadAxisWithDir>
+template<typename ValidInputsT, typename AxisT = ::GamepadAxisWithDir>
 inline bool contains_axis(const ValidInputsT& inputs, raylib::GamepadAxis axis) {
     for (const auto& input : inputs) {
         if (std::holds_alternative<AxisT>(input) &&
@@ -197,6 +198,77 @@ inline std::vector<raylib::GamepadButton> get_all_buttons(const ValidInputsT& in
         }
     }
     return buttons;
+}
+
+// Polling functions - check if any input in a collection is currently pressed/down
+// These are the polling alternatives to event-based input handling
+
+// Check if any key in the valid inputs is just pressed this frame
+template<typename ValidInputsT>
+inline bool is_any_key_just_pressed(const ValidInputsT& inputs) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<int>(input)) {
+            if (afterhours::input::is_key_pressed(std::get<int>(input))) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Check if any key in the valid inputs is currently held down
+template<typename ValidInputsT>
+inline bool is_any_key_down(const ValidInputsT& inputs) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<int>(input)) {
+            if (afterhours::input::is_key_down(std::get<int>(input))) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Check if any gamepad button in the valid inputs is just pressed this frame
+template<typename ValidInputsT>
+inline bool is_any_button_just_pressed(const ValidInputsT& inputs, int gamepad_id = 0) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<raylib::GamepadButton>(input)) {
+            if (afterhours::input::is_gamepad_button_pressed(
+                    gamepad_id, std::get<raylib::GamepadButton>(input))) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Check if any gamepad button in the valid inputs is currently held down
+template<typename ValidInputsT>
+inline bool is_any_button_down(const ValidInputsT& inputs, int gamepad_id = 0) {
+    for (const auto& input : inputs) {
+        if (std::holds_alternative<raylib::GamepadButton>(input)) {
+            if (afterhours::input::is_gamepad_button_down(
+                    gamepad_id, std::get<raylib::GamepadButton>(input))) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Check if any input (key or button) in the valid inputs is just pressed
+template<typename ValidInputsT>
+inline bool is_any_input_just_pressed(const ValidInputsT& inputs, int gamepad_id = 0) {
+    return is_any_key_just_pressed(inputs) ||
+           is_any_button_just_pressed(inputs, gamepad_id);
+}
+
+// Check if any input (key or button) in the valid inputs is currently down
+template<typename ValidInputsT>
+inline bool is_any_input_down(const ValidInputsT& inputs, int gamepad_id = 0) {
+    return is_any_key_down(inputs) ||
+           is_any_button_down(inputs, gamepad_id);
 }
 
 }  // namespace afterhours::input_ext

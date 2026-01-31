@@ -25,8 +25,7 @@ struct SeedManagerLayer : public Layer {
     virtual ~SeedManagerLayer() {}
 
     bool is_user_host();
-    bool onCharPressedEvent(CharPressedEvent& event) override;
-    bool onKeyPressed(KeyPressedEvent& event) override;
+    void handleInput();
     virtual void onUpdate(float) override;
     void draw_seed_input(float dt);
     void draw_minimap(float dt);

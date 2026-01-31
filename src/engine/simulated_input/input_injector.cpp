@@ -26,8 +26,7 @@ static std::array<int, 512> synthetic_press_delay{};
 void release_scheduled_click() {
     if (pending_click.has_pending && ui::focus::mouse_info.leftDown) {
         ui::focus::mouse_info.leftDown = false;
-        Mouse::MouseButtonUpEvent up_event(Mouse::MouseCode::ButtonLeft);
-        App::get().processEvent(up_event);
+        // Note: Event dispatch removed - using polling-based input now
         pending_click.has_pending = false;
     }
 }
@@ -43,8 +42,7 @@ void inject_scheduled_click() {
 
     ui::focus::mouse_info.pos = pending_click.pos;
     ui::focus::mouse_info.leftDown = true;
-    Mouse::MouseButtonDownEvent down_event(Mouse::MouseCode::ButtonLeft);
-    App::get().processEvent(down_event);
+    // Note: Event dispatch removed - using polling-based input now
 }
 
 void hold_key_for_duration(int keycode, float duration) {
@@ -98,8 +96,8 @@ bool consume_synthetic_press(int keycode) {
 void update_key_hold(float dt) {
     if (!pending_key_hold.is_holding) return;
 
-    KeyPressedEvent event(pending_key_hold.keycode, 0);
-    App::get().processEvent(event);
+    // Note: Event dispatch removed - using polling-based input now
+    // The key is already set via synthetic_keys state
 
     pending_key_hold.remaining_time -= dt;
     if (pending_key_hold.remaining_time <= 0.0f) {

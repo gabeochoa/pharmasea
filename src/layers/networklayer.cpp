@@ -3,6 +3,7 @@
 
 #include <regex>
 
+#include "../ah.h"
 #include "../components/has_name.h"
 #include "../engine/input_utilities.h"
 #include "../engine/toastmanager.h"
@@ -44,40 +45,22 @@ void NetworkLayer::NetworkLayer::onStartup() {
 
 NetworkLayer::~NetworkLayer() { network::Info::shutdown_connections(); }
 
-bool NetworkLayer::onCharPressedEvent(CharPressedEvent& event) {
-    if (MenuState::get().is_not(menu::State::Network)) return false;
-    return ui_context->process_char_press_event(event);
-}
+void NetworkLayer::handleInput() {
+    if (MenuState::get().is_not(menu::State::Network)) return;
 
-bool NetworkLayer::onGamepadAxisMoved(GamepadAxisMovedEvent& event) {
-    if (MenuState::get().is_not(menu::State::Network)) return false;
-    return ui_context->process_gamepad_axis_event(event);
-}
-
-bool NetworkLayer::onKeyPressed(KeyPressedEvent& event) {
-    if (MenuState::get().is_not(menu::State::Network)) return false;
-    return ui_context->process_keyevent(event);
-}
-
-bool NetworkLayer::onGamepadButtonPressed(GamepadButtonPressedEvent& event) {
-    if (MenuState::get().is_not(menu::State::Network)) return false;
-
-    if (afterhours::input_ext::contains_button(
-            KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack),
-            event.button)) {
+    // Polling-based gamepad MenuBack (replaces onGamepadButtonPressed handler)
+    if (afterhours::input_ext::is_any_button_just_pressed(
+            KeyMap::get_valid_inputs(menu::State::UI, InputName::MenuBack))) {
         MenuState::get().go_back();
-        return true;
+        return;
     }
-
-    return ui_context->process_gamepad_button_event(event);
 }
 
 void NetworkLayer::onUpdate(float dt) {
     // NOTE: this has to go above the checks since it always has to run
     network_info->tick(dt);
 
-    if (MenuState::get().is_not(menu::State::Network)) return;
-    // if we get here, then user clicked "join"
+    handleInput();
 }
 
 void NetworkLayer::handle_announcements() {

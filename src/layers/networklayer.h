@@ -31,10 +31,7 @@ struct NetworkLayer : public Layer {
     virtual void onStartup() override;
     virtual ~NetworkLayer();
 
-    bool onCharPressedEvent(CharPressedEvent& event) override;
-    bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) override;
-    bool onKeyPressed(KeyPressedEvent& event) override;
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override;
+    void handleInput();
     virtual void onUpdate(float dt) override;
     void handle_announcements();
 

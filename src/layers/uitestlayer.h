@@ -14,21 +14,6 @@ struct UITestLayer : public Layer {
 
     virtual ~UITestLayer() {}
 
-    bool onGamepadAxisMoved(GamepadAxisMovedEvent& event) override {
-        if (MenuState::get().is_not(menu::State::Root)) return false;
-        return ui_context->process_gamepad_axis_event(event);
-    }
-
-    bool onKeyPressed(KeyPressedEvent& event) override {
-        if (MenuState::get().is_not(menu::State::Root)) return false;
-        return ui_context->process_keyevent(event);
-    }
-
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
-        if (MenuState::get().is_not(menu::State::Root)) return false;
-        return ui_context->process_gamepad_button_event(event);
-    }
-
     virtual void onUpdate(float) override {
         if (MenuState::get().is_not(menu::State::UI)) return;
         raylib::SetExitKey(raylib::KEY_ESCAPE);
