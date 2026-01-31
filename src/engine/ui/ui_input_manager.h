@@ -1,6 +1,7 @@
 
 #pragma once
 #include "../../vendor_include.h"
+#include "../input_helper.h"
 #include "../keymap.h"
 #include "sound.h"
 
@@ -194,7 +195,7 @@ struct IUIContextInputManager {
     }
 
     [[nodiscard]] bool is_held_down(const InputName& name) {
-        return (bool) KeyMap::is_event(STATE, name);
+        return input_helper::is_down(name) > 0.f;
     }
 };
 }  // namespace ui

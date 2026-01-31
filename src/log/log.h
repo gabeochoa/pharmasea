@@ -3,6 +3,7 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
+#include <format>
 #include <iostream>
 #include <mutex>
 #include <string>
@@ -104,4 +105,19 @@ inline void log_once_per(fmt::format_string<Args...> fmt_str, Args&&... args) {
         }
     }
     log_info("{}", message);
+}
+
+// Overload matching afterhours signature (Duration, log_level, fmt_str, args...)
+// Used by vendor/afterhours/src/plugins/window_manager.h
+template<typename Duration, typename... Args>
+inline void log_once_per(Duration /*duration*/, int log_level,
+                         std::format_string<Args...> fmt_str, Args&&... args) {
+    // Map vendor log level to our LogLevel
+    LogLevel level = LogLevel::LOG_INFO;
+    if (log_level == 3) level = LogLevel::LOG_WARN;  // VENDOR_LOG_WARN
+    else if (log_level == 4) level = LogLevel::LOG_ERROR;  // VENDOR_LOG_ERROR
+
+    // TODO: Actually implement rate limiting with duration
+    const auto message = std::format(fmt_str, std::forward<Args>(args)...);
+    log_with_level(level, "{}", message);
 }

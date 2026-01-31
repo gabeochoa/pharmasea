@@ -20,7 +20,7 @@ void KeyMap::forEachInputInMap(const std::function<void(Event&)>& cb) const {
                 std::visit(
                     util::overloaded{
                         [&](int keycode) {
-                            if (visit_key(keycode) > 0.f) {
+                            if (ext::is_key_pressed(keycode)) {
                                 KeyPressedEvent* event =
                                     new KeyPressedEvent(keycode, 0);
                                 cb(*event);
@@ -28,20 +28,20 @@ void KeyMap::forEachInputInMap(const std::function<void(Event&)>& cb) const {
                             }
                         },
                         [&](GamepadAxisWithDir axis_with_dir) {
-                            float res = visit_axis(axis_with_dir);
-                            if (res > 0.f) {
+                            float mvt = ext::get_gamepad_axis_movement(0, axis_with_dir.axis);
+                            if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > DEADZONE) {
                                 GamepadAxisMovedEvent* event =
                                     new GamepadAxisMovedEvent(
                                         GamepadAxisWithDir(
                                             {.axis = axis_with_dir.axis,
-                                             .dir = res}));
+                                             .dir = abs(mvt)}));
 
                                 cb(*event);
                                 delete event;
                             }
                         },
                         [&](GamepadButton button) {
-                            if (visit_button(button) > 0.f) {
+                            if (raylib::IsGamepadButtonPressed(0, button)) {
                                 GamepadButtonPressedEvent* event =
                                     new GamepadButtonPressedEvent(button);
                                 cb(*event);
@@ -53,46 +53,6 @@ void KeyMap::forEachInputInMap(const std::function<void(Event&)>& cb) const {
             }
         }
     }
-}
-
-float KeyMap::is_event(const menu::State& state, const InputName& name) {
-    const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
-
-    float value = 0.f;
-    for (auto& input : valid_inputs) {
-        value = fmax(
-            value,
-            std::visit(util::overloaded{
-                           [](int keycode) { return visit_key_down(keycode); },
-                           [](GamepadAxisWithDir axis_with_dir) {
-                               return visit_axis(axis_with_dir);
-                           },
-                           [](GamepadButton button) {
-                               return visit_button_down(button);
-                           },
-                           [](auto) {}},
-                       input));
-    }
-    return value;
-}
-
-bool KeyMap::is_event_once_DO_NOT_USE(const menu::State& state,
-                                      const InputName& name) {
-    const AnyInputs valid_inputs = KeyMap::get_valid_inputs(state, name);
-
-    bool matches_named_event = false;
-    for (auto& input : valid_inputs) {
-        matches_named_event |= std::visit(
-            util::overloaded{
-                [](int keycode) { return visit_key(keycode) > 0.f; },
-                [](GamepadAxisWithDir axis_with_dir) {
-                    return visit_axis(axis_with_dir) > 0.f;
-                },
-                [](GamepadButton button) { return visit_button(button) > 0.f; },
-                [](auto) {}},
-            input);
-    }
-    return matches_named_event;
 }
 
 int KeyMap::get_key_code(const menu::State& state, const InputName& name) {
@@ -582,34 +542,6 @@ LayerMapping& KeyMap::get_or_create_layer_map(const menu::State& state) {
         mapping[state] = LayerMapping();
     }
     return mapping[state];
-}
-
-float KeyMap::visit_key(int keycode) {
-    return ext::is_key_pressed(keycode) ? 1.f : 0.f;
-}
-
-float KeyMap::visit_key_down(int keycode) {
-    return ext::is_key_down(keycode) ? 1.f : 0.f;
-}
-
-float KeyMap::visit_axis(GamepadAxisWithDir axis_with_dir) {
-    // Note: this one is a bit more complex because we have to check if you
-    // are pushing in the right direction while also checking the magnitude
-    float mvt = ext::get_gamepad_axis_movement(0, axis_with_dir.axis);
-    // Note: The 0.25 is how big the deadzone is
-    // TODO consider making the deadzone configurable?
-    if (util::sgn(mvt) == axis_with_dir.dir && abs(mvt) > DEADZONE) {
-        return abs(mvt);
-    }
-    return 0.f;
-}
-
-float KeyMap::visit_button(GamepadButton button) {
-    return IsGamepadButtonPressed(0, button) ? 1.f : 0.f;
-}
-
-float KeyMap::visit_button_down(GamepadButton button) {
-    return IsGamepadButtonDown(0, button) ? 1.f : 0.f;
 }
 
 // TODO this needs to not be in engine...

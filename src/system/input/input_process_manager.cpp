@@ -3,6 +3,7 @@
 // times
 #include "input_process_manager.h"
 
+#include "../../engine/input_helper.h"
 #include "input_process_manager_utilities.h"
 #include "inround/pass_time_for_active_fishing_games_system.h"
 #include "inround/reset_empty_work_furniture_system.h"
@@ -76,16 +77,16 @@ void collect_user_input(Entity& entity, float dt) {
     if (entity.is_missing<CollectsUserInput>()) return;
     CollectsUserInput& cui = entity.get<CollectsUserInput>();
 
-    // Theres no players not in game menu state,
-    const menu::State state = menu::State::Game;
+    // Use Game layer explicitly - player input is always game context
+    constexpr auto layer = menu::State::Game;
 
     // TODO right now when you press two at the same time you move faster
     float left, right, up, down;
 
-    float key_left = KeyMap::is_event(state, InputName::PlayerLeft);
-    float key_right = KeyMap::is_event(state, InputName::PlayerRight);
-    float key_up = KeyMap::is_event(state, InputName::PlayerForward);
-    float key_down = KeyMap::is_event(state, InputName::PlayerBack);
+    float key_left = input_helper::is_down_for_layer(layer, InputName::PlayerLeft);
+    float key_right = input_helper::is_down_for_layer(layer, InputName::PlayerRight);
+    float key_up = input_helper::is_down_for_layer(layer, InputName::PlayerForward);
+    float key_down = input_helper::is_down_for_layer(layer, InputName::PlayerBack);
 
     // we need to rotate these controls based on the camera
     auto* cam = globals::game_cam();
@@ -106,23 +107,21 @@ void collect_user_input(Entity& entity, float dt) {
     if (up > 0) cui.write(InputName::PlayerForward, up);
     if (down > 0) cui.write(InputName::PlayerBack, down);
 
-    bool pickup =
-        KeyMap::is_event_once_DO_NOT_USE(state, InputName::PlayerPickup);
+    bool pickup = input_helper::was_pressed_for_layer(layer, InputName::PlayerPickup);
     if (pickup) {
         log_info("input: PlayerPickup (space) requested for entity {}",
                  entity.id);
         cui.write(InputName::PlayerPickup, 1.f);
     }
 
-    bool handtruck_interact = KeyMap::is_event_once_DO_NOT_USE(
-        state, InputName::PlayerHandTruckInteract);
+    bool handtruck_interact =
+        input_helper::was_pressed_for_layer(layer, InputName::PlayerHandTruckInteract);
     if (handtruck_interact) cui.write(InputName::PlayerHandTruckInteract, 1.f);
 
-    bool rotate = KeyMap::is_event_once_DO_NOT_USE(
-        state, InputName::PlayerRotateFurniture);
+    bool rotate = input_helper::was_pressed_for_layer(layer, InputName::PlayerRotateFurniture);
     if (rotate) cui.write(InputName::PlayerRotateFurniture, 1.f);
 
-    float do_work = KeyMap::is_event(state, InputName::PlayerDoWork);
+    float do_work = input_helper::is_down_for_layer(layer, InputName::PlayerDoWork);
     if (do_work > 0) cui.write(InputName::PlayerDoWork, 1.f);
 
     // run the input on the local client

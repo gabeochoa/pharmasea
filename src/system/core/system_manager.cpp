@@ -46,6 +46,7 @@
 #include "../helpers/ingredient_helper.h"
 #include "../helpers/progression.h"
 #include "../input/input_process_manager.h"
+#include "../../engine/input_helper.h"
 #include "../rendering/rendering_system.h"
 #include "../ui/ui_rendering_system.h"
 #include "magic_enum/magic_enum.hpp"
@@ -337,6 +338,8 @@ void SystemManager::update_remote_players(const Entities& players, float) {
 
 void SystemManager::update_local_players(const Entities& players, float dt) {
     local_players = players;
+    // Poll raw input before collecting user input
+    input_helper::poll(dt);
     for (const auto& entity : players) {
         system_manager::input_process_manager::collect_user_input(*entity, dt);
     }

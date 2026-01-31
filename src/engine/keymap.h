@@ -144,10 +144,6 @@ struct KeyMap {
 
     static void forEachCharTyped(const std::function<void(Event&)>& cb);
     void forEachInputInMap(const std::function<void(Event&)>& cb) const;
-    [[nodiscard]] static float is_event(const menu::State& state,
-                                        const InputName& name);
-    [[nodiscard]] static bool is_event_once_DO_NOT_USE(const menu::State& state,
-                                                       const InputName& name);
     [[nodiscard]] static int get_key_code(const menu::State& state,
                                           const InputName& name);
 
@@ -190,16 +186,6 @@ struct KeyMap {
     LayerMapping& get_or_create_layer_map(const menu::State& state);
 
     static void load_controller_db();
-
-    [[nodiscard]] static float visit_key(int keycode);
-
-    [[nodiscard]] static float visit_key_down(int keycode);
-
-    [[nodiscard]] static float visit_axis(GamepadAxisWithDir axis_with_dir);
-
-    [[nodiscard]] static float visit_button(GamepadButton button);
-
-    [[nodiscard]] static float visit_button_down(GamepadButton button);
 
     // TODO this needs to not be in engine...
     void load_game_keys();

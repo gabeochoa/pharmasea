@@ -3,6 +3,7 @@
 #include "game.h"
 
 #include "engine/assert.h"
+#include "engine/input_helper.h"
 
 // Global flag storage for re-application after settings load
 bool disable_models_flag = false;
@@ -186,6 +187,9 @@ void startup() {
         MenuState::get().reset();
         GameState::get().reset();
     }
+
+    // Initialize input helper after state managers are ready
+    input_helper::init();
 
     App::get().loadLayers({{
         //
