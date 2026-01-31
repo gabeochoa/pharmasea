@@ -5,7 +5,7 @@
 #include "../ah.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/random_engine.h"
-#include "../recipe_library.h"
+#include "../libraries/recipe_library.h"
 #include "base_component.h"
 
 struct CanOrderDrink : public BaseComponent {

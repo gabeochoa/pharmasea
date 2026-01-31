@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../engine/assert.h"
-#include "../engine/model_library.h"
+#include "../libraries/model_library.h"
 #include "../engine/statemanager.h"
 #include "../engine/util.h"
 #include "../entity.h"

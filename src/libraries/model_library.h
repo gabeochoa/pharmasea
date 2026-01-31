@@ -5,12 +5,12 @@
 #include <algorithm>
 #include <string>
 
-#include "files.h"
+#include "../engine/files.h"
 //
 #include "../ah.h"
-#include "gltf_loader.h"
-#include "graphics.h"
-#include "singleton.h"
+#include "../engine/gltf_loader.h"
+#include "../engine/graphics.h"
+#include "../engine/singleton.h"
 
 // TODO enforce it on object creation?
 constexpr int MAX_MODEL_NAME_LENGTH = 100;

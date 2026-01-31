@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "ah.h"
-#include "dataclass/settings.h"
-#include "engine/singleton.h"
+#include "../ah.h"
+#include "../dataclass/settings.h"
+#include "../engine/singleton.h"
 
 SINGLETON_FWD(ConfigValueLibrary)
 struct ConfigValueLibrary {

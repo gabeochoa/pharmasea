@@ -2,7 +2,7 @@
 #pragma once
 
 #include "../../strings.h"
-#include "../sound_library.h"
+#include "../../libraries/sound_library.h"
 
 namespace ui {
 

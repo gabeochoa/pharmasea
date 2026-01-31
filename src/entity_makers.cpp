@@ -33,7 +33,7 @@
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
 #include "engine/runtime_globals.h"
-#include "engine/sound_library.h"
+#include "libraries/sound_library.h"
 #include "engine/ui/color.h"
 #include "engine/util.h"
 #include "entity.h"
@@ -80,7 +80,7 @@
 #include "components/uses_character_model.h"
 #include "dataclass/names.h"
 #include "entity_query.h"
-#include "recipe_library.h"
+#include "libraries/recipe_library.h"
 #include "strings.h"
 #include "system/core/system_manager.h"
 

@@ -25,7 +25,7 @@
 #include "../../drawing_util.h"
 #include "../../engine/runtime_globals.h"
 #include "../../engine/settings.h"
-#include "../../engine/texture_library.h"
+#include "../../libraries/texture_library.h"
 #include "../../engine/ui/theme.h"
 #include "../../engine/util.h"
 #include "../../entity_helper.h"
@@ -36,7 +36,7 @@
 #include "raylib.h"
 //
 #include "../../engine/frustum.h"
-#include "../../engine/shader_library.h"
+#include "../../libraries/shader_library.h"
 
 namespace system_manager {
 

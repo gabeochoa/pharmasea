@@ -7,7 +7,7 @@
 #include "../../components/is_floor_marker.h"
 #include "../../components/is_progression_manager.h"
 #include "../../components/is_round_settings_manager.h"
-#include "../../config_key_library.h"
+#include "../../libraries/config_key_library.h"
 #include "../../engine/log.h"
 #include "../../engine/random_engine.h"
 #include "../../entity_query.h"

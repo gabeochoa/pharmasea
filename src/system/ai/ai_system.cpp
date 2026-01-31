@@ -19,7 +19,7 @@
 #include "../../engine/runtime_globals.h"
 #include "../../entity.h"
 #include "../../entity_helper.h"
-#include "../../recipe_library.h"
+#include "../../libraries/recipe_library.h"
 #include "ai_entity_helpers.h"
 
 namespace system_manager::ai {

@@ -1,11 +1,11 @@
 
 #include "recipe_library.h"
 
-#include "components/is_round_settings_manager.h"
-#include "vendor_include.h"
+#include "../components/is_round_settings_manager.h"
+#include "../vendor_include.h"
 //
-#include "components/is_progression_manager.h"
-#include "entity_query.h"
+#include "../components/is_progression_manager.h"
+#include "../entity_query.h"
 
 // TODO at some point these should be one path instead of separate
 // so we can avoid weirdness

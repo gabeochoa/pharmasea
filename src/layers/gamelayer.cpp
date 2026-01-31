@@ -14,7 +14,7 @@
 #include "../engine.h"
 #include "../engine/layer.h"
 #include "../engine/settings.h"
-#include "../engine/shader_library.h"
+#include "../libraries/shader_library.h"
 #include "../entity_query.h"
 #include "../entity_type.h"
 #include "../lighting_runtime.h"

@@ -5,7 +5,7 @@
 #include "../../components/indexer.h"
 #include "../../components/is_store_spawned.h"
 #include "../../entity_helper.h"
-#include "../../recipe_library.h"
+#include "../../libraries/recipe_library.h"
 
 // TODO probably should move to the config json
 std::vector<EntityTuple> IngredientHelper::get_machines_for_ingredient(

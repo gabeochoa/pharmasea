@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../engine/model_library.h"
+#include "../libraries/model_library.h"
 #include "../engine/util.h"
 #include "../entity.h"
 #include "base_component.h"

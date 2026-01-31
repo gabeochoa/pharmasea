@@ -2,10 +2,10 @@
 #pragma once
 
 // Note move to cpp if we create one
-#include "files.h"
+#include "../engine/files.h"
 //
 #include "../ah.h"
-#include "singleton.h"
+#include "../engine/singleton.h"
 
 constexpr int MAX_ANIM_NAME_LENGTH = 100;
 

@@ -7,7 +7,7 @@
 #include "../../../components/is_round_settings_manager.h"
 #include "../../../components/is_store_spawned.h"
 #include "../../../components/transform.h"
-#include "../../../config_key_library.h"
+#include "../../../libraries/config_key_library.h"
 #include "../../../engine/log.h"
 #include "../../../engine/random_engine.h"
 #include "../../../engine/statemanager.h"

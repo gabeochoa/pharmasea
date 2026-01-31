@@ -11,7 +11,7 @@
 #include "entity_helper.h"
 #include "entity_type.h"
 #include "network/server.h"
-#include "recipe_library.h"
+#include "libraries/recipe_library.h"
 #include "save_file_load_fixers.h"
 #include "save_game/save_game.h"
 

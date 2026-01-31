@@ -3,8 +3,8 @@
 #pragma once
 
 #include "../ah.h"
-#include "is_server.h"
-#include "singleton.h"
+#include "../engine/is_server.h"
+#include "../engine/singleton.h"
 
 SINGLETON_FWD(SoundLibrary)
 struct SoundLibrary {

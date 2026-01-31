@@ -2,7 +2,7 @@
 #pragma once
 
 #include "../ah.h"
-#include "singleton.h"
+#include "../engine/singleton.h"
 
 SINGLETON_FWD(TextureLibrary)
 struct TextureLibrary {

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ah.h"
-#include "dataclass/ingredient.h"
-#include "engine/singleton.h"
-#include "entity_type.h"
+#include "../ah.h"
+#include "../dataclass/ingredient.h"
+#include "../engine/singleton.h"
+#include "../entity_type.h"
 
 struct Recipe {
     Drink drink;

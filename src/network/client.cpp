@@ -8,7 +8,7 @@
 #include "../components/has_name.h"
 #include "../engine/log.h"
 #include "../engine/runtime_globals.h"
-#include "../engine/sound_library.h"
+#include "../libraries/sound_library.h"
 #include "../engine/time.h"
 #include "../engine/toastmanager.h"
 #include "../post_deserialize_fixups.h"

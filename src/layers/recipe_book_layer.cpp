@@ -7,7 +7,7 @@
 #include "../engine/input_utilities.h"
 #include "../entity_helper.h"
 #include "../entity_query.h"
-#include "../recipe_library.h"
+#include "../libraries/recipe_library.h"
 #include "base_game_renderer.h"
 
 OptEntity get_ipm_entity() {

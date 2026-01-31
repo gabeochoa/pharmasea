@@ -6,9 +6,9 @@
 #include <unordered_map>
 
 #include "../ah.h"
+#include "../engine/files.h"
+#include "../engine/singleton.h"
 #include "../strings.h"
-#include "files.h"
-#include "singleton.h"
 
 #include <nlohmann/json.hpp>
 
@@ -165,4 +165,3 @@ struct TextureAtlasLibrary {
         }
     } impl;
 };
-

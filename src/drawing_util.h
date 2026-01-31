@@ -5,7 +5,7 @@
 #include "camera.h"
 #include "engine/log.h"
 #include "engine/runtime_globals.h"
-#include "engine/texture_library.h"
+#include "libraries/texture_library.h"
 #include "engine/ui/color.h"
 #include "globals.h"
 #include "raylib.h"

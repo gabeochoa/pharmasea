@@ -5,7 +5,7 @@
 
 #include "../ah.h"
 #include "../dataclass/ingredient.h"
-#include "../recipe_library.h"
+#include "../libraries/recipe_library.h"
 #include "../vendor_include.h"
 #include "base_component.h"
 

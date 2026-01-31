@@ -14,7 +14,7 @@
 
 #include "log.h"
 #include "settings.h"
-#include "shader_library.h"
+#include "../libraries/shader_library.h"
 #include "simulated_input/simulated_input.h"
 
 #ifdef AFTER_HOURS_ENABLE_MCP

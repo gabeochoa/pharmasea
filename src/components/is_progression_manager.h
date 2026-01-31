@@ -10,7 +10,7 @@
 #include "../dataclass/ingredient.h"
 #include "../dataclass/settings.h"
 #include "../dataclass/upgrade_class.h"
-#include "../recipe_library.h"
+#include "../libraries/recipe_library.h"
 #include "../strings.h"
 #include "base_component.h"
 

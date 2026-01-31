@@ -9,10 +9,10 @@ extern bool disable_models_flag;
 #include <utility>
 
 #include "afterhours/src/font_helper.h"
-#include "config_key_library.h"
+#include "libraries/config_key_library.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/settings.h"
-#include "engine/font_library.h"
+#include "libraries/font_library.h"
 #include "engine/keymap.h"
 #include "engine/settings.h"
 #include "engine/ui/theme.h"
@@ -22,7 +22,7 @@ extern bool disable_models_flag;
 #include "intro/raylib_intro_scene.h"
 #include "magic_enum/magic_enum.hpp"
 #include "map_generation/map_generation.h"
-#include "recipe_library.h"
+#include "libraries/recipe_library.h"
 #include "strings.h"
 
 // TODO move to a config?
