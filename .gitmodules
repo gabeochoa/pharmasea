@@ -1,7 +1,3 @@
 [submodule "vendor/afterhours"]
 	path = vendor/afterhours
 	url = git@github.com:gabeochoa/afterhours.git
-
-[submodule "vendor/cereal"]
-	path = vendor/cereal
-	url = git@github.com:USCiLab/cereal.git
