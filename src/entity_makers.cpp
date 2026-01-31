@@ -3,36 +3,46 @@
 
 #include <ranges>
 
-#include "components/ai_clean_vomit.h"
-#include "components/ai_close_tab.h"
-#include "components/ai_drinking.h"
-#include "components/ai_play_jukebox.h"
-#include "components/ai_use_bathroom.h"
-#include "components/ai_wait_in_queue.h"
+#include "afterhours/src/core/base_component.h"
+#include "ah.h"
+#include "components/all_components.h"
+#include "components/bypass_automation_state.h"
+#include "components/can_change_settings_interactively.h"
+#include "components/can_hold_handtruck.h"
 #include "components/can_pathfind.h"
+#include "components/collects_customer_feedback.h"
+#include "components/has_day_night_timer.h"
 #include "components/has_fishing_game.h"
 #include "components/has_last_interacted_customer.h"
 #include "components/has_progression.h"
 #include "components/has_rope_to_item.h"
 #include "components/has_subtype.h"
+#include "components/is_ai_controlled.h"
 #include "components/is_bank.h"
+#include "components/is_customer.h"
 #include "components/is_floor_marker.h"
 #include "components/is_free_in_store.h"
+#include "components/is_nux_manager.h"
 #include "components/is_pnumatic_pipe.h"
 #include "components/is_progression_manager.h"
 #include "components/is_round_settings_manager.h"
+#include "components/is_squirter.h"
 #include "components/is_store_spawned.h"
 #include "components/is_toilet.h"
+#include "components/responds_to_day_night.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/upgrade_class.h"
-#include "engine/bitset_utils.h"
-#include "engine/sound_library.h"
+#include "engine/runtime_globals.h"
+#include "afterhours/src/plugins/sound_system.h"
 #include "engine/ui/color.h"
 #include "engine/util.h"
 #include "entity.h"
+#include "entity_helper.h"
+#include "entity_id.h"
 #include "entity_type.h"
-#include "network/server.h"
+#include "system/ai/ai_tags.h"
 //
+#include "client_server_comm.h"
 #include "components/adds_ingredient.h"
 #include "components/can_be_ghost_player.h"
 #include "components/can_be_held.h"
@@ -44,17 +54,16 @@
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
 #include "components/can_order_drink.h"
-#include "components/can_perform_job.h"
 #include "components/collects_user_input.h"
 #include "components/conveys_held_item.h"
 #include "components/custom_item_position.h"
+#include "components/has_ai_cooldown.h"
 #include "components/has_base_speed.h"
 #include "components/has_client_id.h"
 #include "components/has_dynamic_model_name.h"
 #include "components/has_name.h"
 #include "components/has_patience.h"
 #include "components/has_speech_bubble.h"
-#include "components/has_timer.h"
 #include "components/has_waiting_queue.h"
 #include "components/has_work.h"
 #include "components/indexer.h"
@@ -71,8 +80,9 @@
 #include "components/uses_character_model.h"
 #include "dataclass/names.h"
 #include "entity_query.h"
-#include "recipe_library.h"
+#include "libraries/recipe_library.h"
 #include "strings.h"
+#include "system/core/system_manager.h"
 
 namespace items {
 // Returns true if item was cleaned up
@@ -82,22 +92,23 @@ bool _add_ingredient_to_drink_NO_VALIDATION(Entity& drink, Ingredient ing) {
 
     IngredientSoundType sound_type = ingredient::IngredientSoundType.at(ing);
 
+    strings::sounds::SoundId sound;
     switch (sound_type) {
         case Viscous:
             // TODO add new sounds for other ingredient types
         case Solid:
-            network::Server::play_sound(drink.get<Transform>().as2(),
-                                        strings::sounds::SOLID);
+            sound = strings::sounds::SoundId::SOLID;
             break;
         case Ice:
-            network::Server::play_sound(drink.get<Transform>().as2(),
-                                        strings::sounds::ICE);
+            sound = strings::sounds::SoundId::ICE;
             break;
         case Liquid:
-            network::Server::play_sound(drink.get<Transform>().as2(),
-                                        strings::sounds::WATER);
+            sound = strings::sounds::SoundId::WATER;
             break;
+        default:
+            return false;
     }
+    server_only::play_sound(drink.get<Transform>().as2(), sound);
     return true;
 }
 
@@ -109,12 +120,13 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
         }
     }
 
-    AddsIngredient& addsIG = toadd.get<AddsIngredient>();
+    AddsIngredient& addsIG = toadd.get<AddsIngredient>().set_parent(toadd.id);
     IngredientBitSet ingredients = addsIG.get(toadd);
 
     bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
         Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
         _add_ingredient_to_drink_NO_VALIDATION(drink, ig);
+        return bitset_utils::ForEachFlow::NormalFlow;
     });
 
     addsIG.decrement_uses();
@@ -129,57 +141,15 @@ bool _add_item_to_drink_NO_VALIDATION(Entity& drink, Item& toadd) {
 }  // namespace items
 
 void register_all_components() {
-    Entity* entity = new Entity();
-    entity->addAll<  //
-        Transform, HasName,
-        //
-        AICleanVomit, AIUseBathroom, AIDrinking, AIWaitInQueue, AICloseTab,
-        AIPlayJukebox,
-        // Is
-        IsRotatable, IsItem, IsSpawner, IsTriggerArea, IsSolid, IsItemContainer,
-        IsDrink, IsPnumaticPipe, IsProgressionManager, IsFloorMarker, IsBank,
-        IsFreeInStore, IsToilet, IsRoundSettingsManager, IsStoreSpawned,
-        //
-        AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
-        CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
-        CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
-        ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
-        CanOrderDrink, CanPathfind,
-        //
-        HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
-        HasBaseSpeed, HasRopeToItem, HasProgression, HasPatience,
-        HasFishingGame, HasLastInteractedCustomer,
-        // render
-        ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
-        //
-        >();
-    // TODO now that we have removeComponent we could remove some instead
-    // for example AddsIngredient could be removed when it runs out
-    // there might be some logic that relies on this not being removed though
-    // so be aware
-
-    // TODO test remove_all_components at some point
-    // VALIDATE(entity->has<ModelRenderer>(), "entity should have all
-    // components"); entity->removeComponent<ModelRenderer>();
-    // VALIDATE(entity->is_missing<ModelRenderer>(),
-    // "entity should not have all components");
-
-    // Now that they are all registered we can delete them
-    //
-    // since we dont have a destructor today TODO because we are copying
-    // components we have to delete these manually before the ent delete because
-    // otherwise it will leak the memory
-    //
-
-    for (auto it = entity->componentArray.cbegin(), next_it = it;
-         it != entity->componentArray.cend(); it = next_it) {
-        ++next_it;
-        BaseComponent* comp = it->second;
-        if (comp) delete comp;
-        entity->componentArray.erase(it);
-    }
-
-    delete entity;
+    // Register component IDs in Afterhours by calling get_type_id for each
+    // component type. This registers the types without instantiating them.
+    // Keep the list centralized in `components/all_components.h`.
+    [&]<size_t... Is>(std::index_sequence<Is...>) {
+        (afterhours::components::get_type_id<
+             std::tuple_element_t<Is, snapshot_blob::ComponentTypes>>(),
+         ...);
+    }(std::make_index_sequence<
+        std::tuple_size_v<snapshot_blob::ComponentTypes>>{});
 }
 
 void add_entity_components(Entity& entity) { entity.addComponent<Transform>(); }
@@ -213,17 +183,24 @@ void add_person_components(Entity& person, DebugOptions options = {}) {
     }
 }
 
-void make_entity(Entity& entity, const DebugOptions& options,
-                 vec3 p = {-2, 0, -2}) {
-    entity.type = options.type;
+void make_entity(Entity& entity, const DebugOptions& options, vec3 p) {
+    entity.enableTag(options.type);
 
     add_entity_components(entity);
     entity.get<Transform>().update(p);
 }
 
+void make_entity(Entity& entity, const DebugOptions& options, vec2 p) {
+    // This function exists because without it calling
+    // make_entity(..., {0,1}) would call the vec3 version
+    // but with y = 1 instead of z = 1 as youd expect
+    return make_entity(entity, options, vec::to3(p));
+}
+
 void add_player_components(Entity& player) {
     player.addComponent<CanHighlightOthers>();
     player.addComponent<CanHoldFurniture>();
+    player.addComponent<CanHoldHandTruck>();
     player.get<HasBaseSpeed>().update(7.5f);
     player.addComponent<HasName>();
     player.addComponent<HasClientID>();
@@ -281,22 +258,24 @@ void make_aiperson(Entity& person, const DebugOptions& options, vec3 p) {
     make_entity(person, options, p);
     add_person_components(person, options);
 
-    person.addComponent<CanPerformJob>();
-    person.addComponent<CanPathfind>();
+    person.addComponent<IsAIControlled>();
+    person.addComponent<HasAICooldown>();
+    person.addComponent<CanPathfind>().set_parent(person.id);
 }
 
-void make_mop_buddy(Entity& mop_buddy, vec2 pos) {
+void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
     make_aiperson(mop_buddy,
                   DebugOptions{.type = EntityType::MopBuddy,
                                .enableCharacterModel = false},
-                  vec::to3(pos));
+                  pos);
 
     mop_buddy.get<ModelRenderer>().update_model_name(
         util::convertToSnakeCase(EntityType::MopBuddy));
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
-    mop_buddy.get<CanPerformJob>().current = JobType::Mopping;
-    mop_buddy.addComponent<AICleanVomit>();
+    mop_buddy.get<IsAIControlled>()
+        .set_initial_state(IsAIControlled::State::CleanVomit)
+        .enable_ability(IsAIControlled::AbilityCleanVomit);
 
     mop_buddy
         .addComponent<IsItem>()  //
@@ -331,8 +310,18 @@ void make_furniture(Entity& furniture, const DebugOptions& options, vec2 pos,
     furniture.addComponent<SimpleColoredBoxRenderer>()
         .update_face(face)
         .update_base(base);
+
     if (ENABLE_MODELS) {
-        furniture.addComponent<ModelRenderer>(options.type);
+        auto model_name = util::convertToSnakeCase<EntityType>(options.type);
+        if (ModelInfoLibrary::get().has(model_name)) {
+            furniture.addComponent<ModelRenderer>(options.type);
+        }
+    }
+
+    if (furniture.is_missing<ModelRenderer>()) {
+        furniture.get<Transform>().update_visual_offset({0, -0.25f, 0});
+        furniture.get<Transform>().update_size(
+            {TILESIZE, TILESIZE * 0.5f, TILESIZE});
     }
 
     // we need to add it to set a default, so its here
@@ -354,14 +343,21 @@ void process_table_working(Entity& table, HasWork& hasWork, Entity& player,
     CanHoldItem& tableCHI = table.get<CanHoldItem>();
     if (tableCHI.empty()) return;
 
-    if (!tableCHI.item()->has<HasWork>()) return;
+    OptEntity item_opt = tableCHI.const_item();
+    if (!item_opt) {
+        tableCHI.update(nullptr, table.id);
+        return;
+    }
+    if (!item_opt->has<HasWork>()) return;
 
-    // TODO add comment on why we have to run the "itemHasWork" and not
-    // hasWork.call()
-    HasWork& itemHasWork = tableCHI.item()->get<HasWork>();
-    itemHasWork.call(hasWork, *tableCHI.item(), player, dt);
-
-    return;
+    Item& item = item_opt.asE();
+    // We have to call the item's hasWork because the table
+    // doesnt actually do anything, its the item that we are working
+    //
+    // It has to be this way otherwise you would be able to do work while just
+    // standing around which wouldnt make sense
+    HasWork& itemHasWork = item.get<HasWork>();
+    itemHasWork.call(hasWork, item, player, dt);
 }
 
 void make_table(Entity& table, vec2 pos) {
@@ -380,7 +376,8 @@ void make_character_switcher(Entity& character_switcher, vec2 pos) {
 
     // TODO add a wayt to let it know to translate
     character_switcher.addComponent<HasName>().update(
-        strings::i18n::CHARACTER_SWITCHER);
+        // TODO instead of HasName this should be HasI18nName
+        strings::pre_translation.at(strings::i18n::CHARACTER_SWITCHER));
 
     character_switcher.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity& person, float dt) {
@@ -404,44 +401,25 @@ void make_map_randomizer(Entity& map_randomizer, vec2 pos) {
                               pos, ui::color::baby_blue, ui::color::baby_pink);
 
     map_randomizer.addComponent<HasName>().update("");
-
-    map_randomizer.get<CanBeHighlighted>().set_on_change(
-        [](Entity&, bool is_highlighted) {
-            if (!is_server()) {
-                log_warn(
-                    "you are calling a server only function from a client "
-                    "context, this is probably gonna crash");
-            }
-            network::Server* server =
-                GLOBALS.get_ptr<network::Server>("server");
-            server->get_map_SERVER_ONLY()->showMinimap = is_highlighted;
-        });
+    map_randomizer.addComponent<CanBeHighlighted>();
 
     map_randomizer.addComponent<HasWork>().init(
         [](Entity& randomizer, HasWork& hasWork, Entity&, float dt) {
             if (GameState::get().is_not(game::State::Lobby)) return;
-            if (!is_server()) {
-                log_warn(
-                    "you are calling a server only function from a client "
-                    "context, this is probably gonna crash");
-            }
-            network::Server* server =
-                GLOBALS.get_ptr<network::Server>("server");
-
             const float amt = 1.5f;
             hasWork.increase_pct(amt * dt);
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
-
-                const auto name = get_random_name_rot13();
-                server->get_map_SERVER_ONLY()->update_seed(name);
+                server_only::update_seed(get_random_name_rot13());
             }
             HasName& hasName = randomizer.get<HasName>();
-            hasName.update(server->get_map_SERVER_ONLY()->seed);
+            hasName.update(server_only::get_current_seed());
         });
 }
 
 void make_fast_forward(Entity& fast_forward, vec2 pos) {
+    // TODO only show when you are nearby, hide the progress bar otherwise
+    //
     furniture::make_furniture(fast_forward,
                               DebugOptions{.type = EntityType::FastForward},
                               pos, ui::color::apricot, ui::color::apricot);
@@ -451,33 +429,51 @@ void make_fast_forward(Entity& fast_forward, vec2 pos) {
     // TODO translate
     fast_forward.addComponent<HasName>().update("Fast-Forward Day");
 
-    fast_forward.addComponent<HasWork>().init([](Entity&, HasWork& hasWork,
-                                                 Entity&, float dt) {
-        const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    fast_forward.addComponent<HasWork>().init(
+        [](Entity&, HasWork& hasWork, Entity&, float dt) {
+            const auto debug_mode_on = globals::debug_ui_enabled();
 
-        const float amt = debug_mode_on ? 100.f : 15.f;
+            const float amt = debug_mode_on ? 100.f : 15.f;
 
-        {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            HasTimer& ht = sophie.get<HasTimer>();
-            ht.pass_time(amt * dt);
-            hasWork.update_pct(1.f - ht.pct());
-        }
+            HasDayNightTimer& ht = sophie.get<HasDayNightTimer>();
 
-        // TODO i dont think the spawner is working correctly
-        {
-            IsSpawner& isp = EntityQuery()
-                                 .whereType(EntityType::CustomerSpawner)
-                                 .gen_first()
-                                 ->get<IsSpawner>();
-            isp.pass_time(amt * dt);
-        }
+            // can only ffwd if theres a good maount of the day left
+            if (ht.pct() <= 0.02f) return;
 
-        if (hasWork.is_work_complete()) {
-            hasWork.reset_pct();
-        }
-    });
+            {
+                ht.pass_time(amt * dt);
+                hasWork.update_pct(1.f - ht.pct());
+            }
+
+            // TODO i dont think the spawner is working correctly
+            {
+                IsSpawner& isp = EntityQuery()
+                                     .whereType(EntityType::CustomerSpawner)
+                                     .gen_first()
+                                     ->get<IsSpawner>();
+                isp.pass_time(amt * dt);
+            }
+
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+            }
+        });
+}
+
+void make_door(Entity& door, vec2 pos, Color) {
+    furniture::make_furniture(door, DebugOptions{.type = EntityType::Door}, pos,
+                              ui::color::ugly_yellow, ui::color::ugly_blue,
+                              true);
+
+    door.addComponent<RespondsToDayNight>()
+        // TODO this is a hack because the parent is not set automatically with
+        // afterhours
+        .set_parent(door.id)
+        .registerOnDayStarted(
+            [](Entity& door) { door.removeComponentIfExists<IsSolid>(); })
+        .registerOnNightStarted(
+            [](Entity& door) { door.addComponentIfMissing<IsSolid>(); });
 }
 
 void make_wall(Entity& wall, vec2 pos, Color c) {
@@ -540,8 +536,7 @@ void make_itemcontainer(Entity& container, const DebugOptions& options,
 
 void make_squirter(Entity& squ, vec2 pos) {
     furniture::make_furniture(squ, {EntityType::Squirter}, pos);
-    // TODO change how progress bar works to support this
-    // squ.addComponent<ShowsProgressBar>();
+    squ.addComponent<IsSquirter>();
 }
 
 void make_trash(Entity& trash, vec2 pos) {
@@ -557,9 +552,17 @@ void make_toilet(Entity& toilet, vec2 pos) {
 
     toilet.addComponent<IsToilet>();
 
+    // TODO should this happen with an upgrade?
+    toilet.addComponent<HasWaitingQueue>();
+
     toilet.addComponent<HasWork>().init(
         [](Entity& toilet, HasWork& hasWork, Entity& /*player*/, float dt) {
             IsToilet& istoilet = toilet.get<IsToilet>();
+
+            // Dont allow cleaning when someone is currently using it
+            if (istoilet.state == IsToilet::State::InUse) {
+                return;
+            }
 
             // TODO figure out a better number
             // recently cleaned
@@ -596,13 +599,17 @@ void make_ice_machine(Entity& machine, vec2 pos) {
     machine.addComponent<HasWork>().init(
         [](Entity&, HasWork& hasWork, Entity& player, float dt) {
             CanHoldItem& chi = player.get<CanHoldItem>();
-            if (chi.empty()) return;
-            std::shared_ptr<Item> item = chi.item();
-            if (!check_if_drink(*item)) return;
+            OptEntity item_opt = chi.item();
+            if (!item_opt) {
+                chi.update(nullptr, player.id);
+                return;
+            }
+            Item& item = item_opt.asE();
+            if (!check_if_drink(item)) return;
 
             Ingredient ing = Ingredient::IceCubes;
 
-            IsDrink& isdrink = item->get<IsDrink>();
+            IsDrink& isdrink = item.get<IsDrink>();
             if (isdrink.has_ingredient(ing)) return;
 
             const float amt = 1.0f;
@@ -610,8 +617,7 @@ void make_ice_machine(Entity& machine, vec2 pos) {
 
             if (hasWork.is_work_complete()) {
                 hasWork.reset_pct();
-
-                items::_add_ingredient_to_drink_NO_VALIDATION(*item, ing);
+                items::_add_ingredient_to_drink_NO_VALIDATION(item, ing);
             }
         });
 }
@@ -633,7 +639,7 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
     container.addComponent<Indexer>((int) ingredient::AlcoholsInCycle.size());
     container.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                               Entity&, float dt) {
-        if (GameState::get().is_not(game::State::InRound)) return;
+        if (SystemManager::get().is_bar_open()) return;
         const Indexer& indexer = owner.get<Indexer>();
         if (indexer.max() < 2) return;
 
@@ -723,6 +729,12 @@ void make_cupboard(Entity& cupboard, vec2 pos, int index) {
             .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
+void make_soda_fountain(Entity& soda_fountain, vec2 pos) {
+    furniture::make_furniture(soda_fountain,
+                              DebugOptions{.type = EntityType::SodaFountain},
+                              pos, ui::color::brown, ui::color::brown);
+}
+
 void make_soda_machine(Entity& soda_machine, vec2 pos) {
     furniture::make_itemcontainer(soda_machine,
                                   DebugOptions{.type = EntityType::SodaMachine},
@@ -743,7 +755,9 @@ void make_simple_syrup_holder(Entity& simple_syrup_holder, vec2 pos) {
         DebugOptions{.type = EntityType::SimpleSyrupHolder}, pos,
         EntityType::SimpleSyrup);
 
-    simple_syrup_holder.get<IsItemContainer>().set_max_generations(1);
+    simple_syrup_holder.get<IsItemContainer>()
+        .set_max_generations(1)
+        .enable_table_when_enable();
     // We are not setting a filter because we want this to just act like a
     // normal table if its empty
 }
@@ -752,13 +766,17 @@ void make_mopbuddy_holder(Entity& mopbuddy_holder, vec2 pos) {
     furniture::make_itemcontainer(
         mopbuddy_holder, DebugOptions{.type = EntityType::MopBuddyHolder}, pos,
         EntityType::MopBuddy);
-    mopbuddy_holder.get<IsItemContainer>().set_max_generations(1);
-    mopbuddy_holder.get<CanHoldItem>().set_filter(
-        EntityFilter()
-            .set_enabled_flags(EntityFilter::FilterDatumType::Name)
-            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                       EntityType::MopBuddy)
-            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
+    mopbuddy_holder.get<IsItemContainer>()
+        .set_max_generations(1)
+        .enable_table_when_enable();
+
+    // TODO If we decide to make it only the roomba
+    // mopbuddy_holder.get<CanHoldItem>().set_filter(
+    // EntityFilter()
+    // .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+    // .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+    // EntityType::MopBuddy)
+    // .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
 void make_mop_holder(Entity& mop_holder, vec2 pos) {
@@ -805,11 +823,57 @@ void make_trigger_area(Entity& trigger_area, vec3 pos, float width,
         .update_face(PINK)
         .update_base(PINK);
     trigger_area.addComponent<IsTriggerArea>(type);
+    trigger_area.enableTag(
+        afterhours::tags::TriggerTag::TriggerAreaHasDynamicText);
+
+    switch (type) {
+        case IsTriggerArea::LoadSave_ToggleDeleteMode:
+        case IsTriggerArea::Planning_SaveSlot:
+            trigger_area.enableTag(
+                afterhours::tags::TriggerTag::GateTriggerWhileOccupied);
+            break;
+        default:
+            break;
+    }
 }
 
 void make_draft(Entity& draft, vec2 pos) {
     furniture::make_furniture(draft, DebugOptions{.type = EntityType::DraftTap},
                               pos, ui::color::red, ui::color::yellow);
+
+    draft.addComponent<HasWork>().init(
+        [](Entity& draftmachine, HasWork& hasWork, Entity&, float dt) {
+            // TODO this logic is duplicated with _process_if_beer_tap
+            CanHoldItem& chi = draftmachine.get<CanHoldItem>();
+            OptEntity item_opt = chi.item();
+            if (!item_opt) {
+                chi.update(nullptr, draftmachine.id);
+                return;
+            }
+            Item& item = item_opt.asE();
+            if (!check_if_drink(item)) {
+                return;
+            }
+
+            Ingredient ing = Ingredient::Beer;
+
+            IsDrink& isdrink = item.get<IsDrink>();
+            if (isdrink.has_ingredient(ing)) {
+                if (!isdrink.supports_multiple()) return;
+            }
+
+            const float amt = 0.75f;
+            hasWork.increase_pct(amt * dt);
+
+            server_only::play_sound(item.get<Transform>().as2(),
+                                    // TODO replace with draft tap sound
+                                    strings::sounds::SoundId::BLENDER);
+
+            if (hasWork.is_work_complete()) {
+                hasWork.reset_pct();
+                items::_add_ingredient_to_drink_NO_VALIDATION(item, ing);
+            }
+        });
 }
 
 void make_blender(Entity& blender, vec2 pos) {
@@ -827,11 +891,14 @@ void make_sophie(Entity& sophie, vec3 pos) {
     sophie.addComponent<IsRoundSettingsManager>();
     IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    sophie.addComponent<HasTimer>(
-        HasTimer::Renderer::Round,
+    sophie.addComponent<HasDayNightTimer>(
         irsm.get_for_init<float>(ConfigKey::RoundLength));
+
+    sophie.addComponent<CollectsCustomerFeedback>();
+
     sophie.addComponent<IsProgressionManager>().init();
     sophie.addComponent<IsBank>();
+    sophie.addComponent<IsNuxManager>();
 }
 
 void make_vomit(Entity& vomit, const SpawnInfo& info) {
@@ -847,7 +914,7 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
 
     vomit.addComponent<HasWork>().init(
         [](Entity& vom, HasWork& hasWork, const Entity& player, float dt) {
-            if (GameState::get().is_not(game::State::InRound)) return;
+            // if (SystemManager::get().is_bar_open()) return;
 
             const auto validate =
                 [](const Entity& entity) -> std::pair<bool, float> {
@@ -858,9 +925,11 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
                 const CanHoldItem& playerCHI = entity.get<CanHoldItem>();
                 // not holding anything
                 if (playerCHI.empty()) return {true, 0.25f};
-                std::shared_ptr<Item> item = playerCHI.const_item();
+                OptEntity item_opt = playerCHI.const_item();
+                if (!item_opt) return {true, 0.25f};
+                const Item& item = item_opt.asE();
                 // Has to be holding mop
-                if (check_type(*item, EntityType::Mop)) return {true, 2.f};
+                if (check_type(item, EntityType::Mop)) return {true, 2.f};
 
                 // holding something other than mop
                 return {false, 0.f};
@@ -882,10 +951,47 @@ void make_vomit(Entity& vomit, const SpawnInfo& info) {
 
 }  // namespace furniture
 
+void make_hand_truck(Entity& hand_truck, vec2 pos) {
+    const DebugOptions options = {EntityType::HandTruck};
+    make_entity(hand_truck, options, pos);
+
+    hand_truck.get<Transform>().init({pos.x, 0, pos.y},
+                                     {TILESIZE, TILESIZE, TILESIZE});
+    hand_truck.addComponent<IsSolid>();
+    hand_truck.addComponent<SimpleColoredBoxRenderer>()
+        .update_face(BLUE)
+        .update_base(BLUE);
+
+    if (ENABLE_MODELS) {
+        auto model_name = util::convertToSnakeCase<EntityType>(options.type);
+        if (ModelInfoLibrary::get().has(model_name)) {
+            hand_truck.addComponent<ModelRenderer>(options.type);
+        }
+    }
+
+    if (hand_truck.is_missing<ModelRenderer>()) {
+        hand_truck.get<Transform>().update_visual_offset({0, -0.25f, 0});
+        hand_truck.get<Transform>().update_size(
+            {TILESIZE, TILESIZE * 0.5f, TILESIZE});
+    }
+
+    // we need to add it to set a default, so its here
+    hand_truck.addComponent<CustomHeldItemPosition>().init(
+        CustomHeldItemPosition::Positioner::Table);
+
+    hand_truck.addComponent<CanBeHeld_HT>();
+
+    // TODO this is needed to process "reach" for pickup/drop
+    hand_truck.addComponent<CanHighlightOthers>();
+
+    hand_truck.addComponent<CanBeHighlighted>();
+    hand_truck.addComponent<CanHoldFurniture>();
+}
+
 namespace items {
 
-void make_item(Item& item, const DebugOptions& options, vec2 p) {
-    make_entity(item, options, {p.x, 0, p.y});
+void make_item(Item& item, const DebugOptions& options, vec3 p) {
+    make_entity(item, options, p);
     item.addComponent<IsItem>();
     // TODO Not everyone needs this but easier for now
     item.addComponent<CustomHeldItemPosition>().init(
@@ -894,7 +1000,7 @@ void make_item(Item& item, const DebugOptions& options, vec2 p) {
     item.addComponent<ModelRenderer>(options.type);
 }
 
-void make_soda_spout(Item& soda_spout, vec2 pos) {
+void make_soda_spout(Item& soda_spout, vec3 pos) {
     make_item(soda_spout, {.type = EntityType::SodaSpout}, pos);
 
     soda_spout.get<IsItem>()
@@ -906,13 +1012,15 @@ void make_soda_spout(Item& soda_spout, vec2 pos) {
     // in the soda wand, id like to have it automatically figure it out but it
     // doesnt really work because we dont know what the player is trying to make
     // and so its easier if everything is soda
-    soda_spout.addComponent<AddsIngredient>(
-        [](const Entity&, Entity&) -> IngredientBitSet {
-            return IngredientBitSet().reset().set(Ingredient::Soda);
-        });
+    soda_spout
+        .addComponent<AddsIngredient>(
+            [](const Entity&, Entity&) -> IngredientBitSet {
+                return IngredientBitSet().reset().set(Ingredient::Soda);
+            })
+        .set_parent(soda_spout.id);
 }
 
-void make_mop(Item& mop, vec2 pos) {
+void make_mop(Item& mop, vec3 pos) {
     make_item(mop, {.type = EntityType::Mop}, pos);
 
     mop.get<IsItem>()
@@ -922,7 +1030,9 @@ void make_mop(Item& mop, vec2 pos) {
 }
 void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
                            float dt) {
-    if (GameState::get().is_not(game::State::InRound)) return;
+    // TODO should we only allow making drinks during the night time?
+    // if (SystemManager::get().is_bar_open()) return;
+    //
     if (drink.is_missing<IsItem>()) return;
     if (drink.is_missing<IsDrink>()) return;
 
@@ -936,6 +1046,8 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
     }
 
     const auto _process_if_beer_tap = [&]() {
+        // TODO this logic is duplicated with make_draft hasWork
+        //
         // TODO reset progress when taking out if not done
         if (!ii.is_held_by(EntityType::DraftTap)) return;
 
@@ -947,9 +1059,9 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
 
         const float amt = 0.75f;
         hasWork.increase_pct(amt * dt);
-        network::Server::play_sound(drink.get<Transform>().as2(),
-                                    // TODO replace with draft tap sound
-                                    strings::sounds::BLENDER);
+        server_only::play_sound(drink.get<Transform>().as2(),
+                                // TODO replace with draft tap sound
+                                strings::sounds::SoundId::BLENDER);
 
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
@@ -962,10 +1074,15 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         CanHoldItem& playerCHI = player.get<CanHoldItem>();
         // not holding anything
         if (playerCHI.empty()) return;
-        std::shared_ptr<Item> item = playerCHI.const_item();
+        OptEntity item_opt = playerCHI.item();
+        if (!item_opt) {
+            playerCHI.update(nullptr, player.id);
+            return;
+        }
+        Item& item = item_opt.asE();
         // not holding item that adds ingredients
-        if (item->is_missing<AddsIngredient>()) return;
-        const AddsIngredient& addsIG = item->get<AddsIngredient>();
+        if (item.is_missing<AddsIngredient>()) return;
+        const AddsIngredient& addsIG = item.get<AddsIngredient>();
 
         bool valid = addsIG.validate(drink);
         if (!valid) return;
@@ -977,6 +1094,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         bitset_utils::for_each_enabled_bit(ingredients, [&](size_t bit) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
             any |= isdrink.can_add(ig);
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
         if (!any) return;
 
@@ -985,8 +1103,8 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
         if (hasWork.is_work_complete()) {
             hasWork.reset_pct();
 
-            bool cleaned_up = _add_item_to_drink_NO_VALIDATION(drink, *item);
-            if (cleaned_up) playerCHI.update(nullptr, -1);
+            bool cleaned_up = _add_item_to_drink_NO_VALIDATION(drink, item);
+            if (cleaned_up) playerCHI.update(nullptr, entity_id::INVALID);
         }
     };
 
@@ -994,7 +1112,7 @@ void process_drink_working(Entity& drink, HasWork& hasWork, Entity& player,
     _process_add_ingredient();
 }
 
-void make_champagne(Item& alc, vec2 pos) {
+void make_champagne(Item& alc, vec3 pos) {
     make_item(alc, {.type = EntityType::Champagne}, pos);
 
     alc.addComponent<HasFishingGame>();
@@ -1007,6 +1125,7 @@ void make_champagne(Item& alc, vec2 pos) {
             // Only allow adding the ingredient if you opened the bottle
             return bottle.get<HasFishingGame>().has_score();
         })
+        .set_parent(alc.id)
         .set_num_uses(3);
 
     alc.addComponent<HasDynamicModelName>().init(
@@ -1017,7 +1136,7 @@ void make_champagne(Item& alc, vec2 pos) {
         });
 }
 
-void make_alcohol(Item& alc, vec2 pos, int index) {
+void make_alcohol(Item& alc, vec3 pos, int index) {
     make_item(alc, {.type = EntityType::Alcohol}, pos);
 
     // TODO have to change this to just be 0>size
@@ -1031,6 +1150,7 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
                return IngredientBitSet().reset().set(get_ingredient_from_index(
                    ingredient::AlcoholsInCycle[0] + hst.get_type_index()));
            })
+        .set_parent(alc.id)
         .set_num_uses(1);
 
     alc.addComponent<HasDynamicModelName>().init(
@@ -1043,7 +1163,7 @@ void make_alcohol(Item& alc, vec2 pos, int index) {
         });
 }
 
-void make_simple_syrup(Item& simple_syrup, vec2 pos) {
+void make_simple_syrup(Item& simple_syrup, vec3 pos) {
     make_item(simple_syrup, {.type = EntityType::SimpleSyrup}, pos);
 
     simple_syrup
@@ -1051,6 +1171,7 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
             [](const Entity&, Entity&) -> IngredientBitSet {
                 return IngredientBitSet().reset().set(Ingredient::SimpleSyrup);
             })
+        .set_parent(simple_syrup.id)
         .set_num_uses(-1);
 
     // Since theres only one of these and its inf uses, dont let it get deleted
@@ -1061,7 +1182,7 @@ void make_simple_syrup(Item& simple_syrup, vec2 pos) {
         .remove_hb_filter(EntityType::Blender);
 }
 
-void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
+void make_juice(Item& juice, vec3 pos, Ingredient fruit) {
     make_item(juice, {.type = EntityType::FruitJuice}, pos);
 
     juice
@@ -1070,6 +1191,7 @@ void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
                 return IngredientBitSet().reset().set(
                     ingredient::BlendConvert.at(fruit));
             })
+        .set_parent(juice.id)
         .set_num_uses(1);
 
     juice.addComponent<HasDynamicModelName>().init(
@@ -1080,7 +1202,7 @@ void make_juice(Item& juice, vec2 pos, Ingredient fruit) {
         });
 }
 
-void make_fruit(Item& fruit, vec2 pos, int index) {
+void make_fruit(Item& fruit, vec3 pos, int index) {
     make_item(fruit, {.type = EntityType::Fruit}, pos);
 
     fruit.addComponent<HasSubtype>(0, (int) ingredient::Fruits.size(), index);
@@ -1092,6 +1214,7 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
                 return IngredientBitSet().reset().set(
                     ingredient::Fruits[0 + hst.get_type_index()]);
             })
+        .set_parent(fruit.id)
         .set_num_uses(1);
 
     fruit.addComponent<HasDynamicModelName>().init(
@@ -1103,7 +1226,7 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
         });
     fruit.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                           Entity& /* person */, float dt) {
-        if (GameState::get().is_not(game::State::InRound)) return;
+        if (SystemManager::get().is_bar_open()) return;
         const IsItem& ii = owner.get<IsItem>();
         const HasSubtype& hasSubtype = owner.get<HasSubtype>();
         Ingredient fruit_type = ingredient::Fruits[hasSubtype.get_type_index()];
@@ -1116,8 +1239,8 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
             return;
         }
 
-        network::Server::play_sound(owner.get<Transform>().as2(),
-                                    strings::sounds::BLENDER);
+        server_only::play_sound(owner.get<Transform>().as2(),
+                                strings::sounds::SoundId::BLENDER);
 
         const float amt = 0.75f;
         hasWork.increase_pct(amt * dt);
@@ -1137,16 +1260,15 @@ void make_fruit(Item& fruit, vec2 pos, int index) {
 
             // create juice
             auto& juice = EntityHelper::createEntity();
-            make_juice(juice, owner.get<Transform>().as2(), fruit_type);
+            make_juice(juice, owner.get<Transform>().pos(), fruit_type);
 
             CanHoldItem& blenderCHI = blender->get<CanHoldItem>();
-            blenderCHI.update(EntityHelper::getEntityAsSharedPtr(juice),
-                              blender->id);
+            blenderCHI.update(juice, blender->id);
         }
     });
 }
 
-void make_drink(Item& drink, vec2 pos) {
+void make_drink(Item& drink, vec3 pos) {
     make_item(drink, {.type = EntityType::Drink}, pos);
 
     drink.addComponent<IsDrink>();
@@ -1167,7 +1289,7 @@ void make_drink(Item& drink, vec2 pos) {
         });
 }
 
-void make_pitcher(Item& pitcher, vec2 pos) {
+void make_pitcher(Item& pitcher, vec3 pos) {
     make_item(pitcher, {.type = EntityType::Pitcher}, pos);
 
     pitcher.addComponent<IsDrink>().turn_on_support_multiple(10);
@@ -1176,6 +1298,7 @@ void make_pitcher(Item& pitcher, vec2 pos) {
             [](const Entity& pitcher, Entity&) -> IngredientBitSet {
                 return pitcher.get<IsDrink>().ing();
             })
+        .set_parent(pitcher.id)
         .set_validator([](const Entity& pitcher, const Entity& drink) -> bool {
             if (drink.is_missing<IsDrink>()) return false;
             const IsDrink& into_isdrink = drink.get<IsDrink>();
@@ -1210,11 +1333,12 @@ void make_pitcher(Item& pitcher, vec2 pos) {
         });
 }
 
-void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
+void make_item_type(Item& item, EntityType type, vec3 location, int index) {
     // log_info("generating new item {} of type {} at {} subtype{}", item.id,
     // type_name, pos, index);
 
-    // TODO make exhaustive
+    vec3 pos = (location);
+
     switch (type) {
         case EntityType::SodaSpout:
             return make_soda_spout(item, pos);
@@ -1234,12 +1358,60 @@ void make_item_type(Item& item, EntityType type, vec2 pos, int index) {
             return make_mop_buddy(item, pos);
         case EntityType::SimpleSyrup:
             return make_simple_syrup(item, pos);
-        default:
+            //
+        case EntityType::Unknown:
+        case EntityType::x:
+        case EntityType::y:
+        case EntityType::z:
+        case EntityType::RemotePlayer:
+        case EntityType::Player:
+        case EntityType::Customer:
+        case EntityType::Table:
+        case EntityType::CharacterSwitcher:
+        case EntityType::MapRandomizer:
+        case EntityType::Wall:
+        case EntityType::Conveyer:
+        case EntityType::Grabber:
+        case EntityType::Register:
+        case EntityType::SingleAlcohol:
+        case EntityType::AlcoholCabinet:
+        case EntityType::FruitBasket:
+        case EntityType::TriggerArea:
+        case EntityType::FloorMarker:
+        case EntityType::CustomerSpawner:
+        case EntityType::Sophie:
+        case EntityType::Blender:
+        case EntityType::SodaMachine:
+        case EntityType::Cupboard:
+        case EntityType::PitcherCupboard:
+        case EntityType::Squirter:
+        case EntityType::FilteredGrabber:
+        case EntityType::PnumaticPipe:
+        case EntityType::Vomit:
+        case EntityType::MopHolder:
+        case EntityType::FastForward:
+        case EntityType::MopBuddyHolder:
+        case EntityType::SimpleSyrupHolder:
+        case EntityType::IceMachine:
+        case EntityType::Face:
+        case EntityType::DraftTap:
+        case EntityType::Toilet:
+        case EntityType::Guitar:
+        case EntityType::ChampagneHolder:
+        case EntityType::Jukebox:
+        case EntityType::AITargetLocation:
+        case EntityType::InteractiveSettingChanger:
+        case EntityType::Door:
+        case EntityType::SodaFountain:
+        case EntityType::FruitJuice:
+        case EntityType::HandTruck:
+        case EntityType::Trash:
             break;
     }
-    log_warn(
+    log_error(
         "Trying to make item with item type {} but not handled in "
-        "make_item_type()",
+        "make_item_type() - this indicates a serialization bug or incorrect "
+        "entity setup",
         util::convertToSnakeCase<EntityType>(type));
 }
 
@@ -1255,12 +1427,17 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     const Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
     const IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
 
-    customer.get<CanPerformJob>().current = JobType::WaitInQueue;
+    customer.addComponent<IsCustomer>();
+    customer.get<IsAIControlled>()
+        .set_initial_state(IsAIControlled::State::QueueForRegister)
+        .set_ability_state(
+            IsAIControlled::AbilityUseBathroom,
+            irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet))
+        .set_ability_state(IsAIControlled::AbilityPlayJukebox,
+                           irsm.has_upgrade_unlocked(UpgradeClass::Jukebox));
+
     // TODO for now, eventually move to customer spawner
     if (has_order) {
-        customer.addComponent<AIDrinking>();
-        customer.addComponent<AIWaitInQueue>();
-        customer.addComponent<AICloseTab>();
         CanOrderDrink& cod = customer.addComponent<CanOrderDrink>();
         // If we are the first guy spawned this round, force the drink to be the
         // most recently unlocked one
@@ -1272,23 +1449,11 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
         }
     }
 
-    bool bathroom_unlocked =
-        irsm.has_upgrade_unlocked(UpgradeClass::UnlockToilet);
-    if (bathroom_unlocked) {
-        customer.addComponent<AIUseBathroom>();
-    }
-
-    bool jukebox_unlocked = irsm.has_upgrade_unlocked(UpgradeClass::Jukebox);
-    if (jukebox_unlocked) {
-        customer.addComponent<AIPlayJukebox>();
-    }
-
     customer.addComponent<HasPatience>().update_max(20.f);
 
     customer.addComponent<HasSpeechBubble>();
 
-    const auto debug_mode_on =
-        GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+    const auto debug_mode_on = globals::debug_ui_enabled();
     customer.get<HasBaseSpeed>().update(debug_mode_on ? 20.f : 5.f);
 
     // TODO if we do dirty-cups, we should have people leave them on any flat
@@ -1296,13 +1461,13 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
     customer
         .addComponent<IsSpawner>()  //
         .set_fn(&furniture::make_vomit)
-        .set_spawn_sound(strings::sounds::VOMIT)
+        .set_spawn_sound(strings::sounds::SoundId::VOMIT)
         .set_validation_fn([](Entity& entity, const SpawnInfo&) {
             const CanOrderDrink& cod = entity.get<CanOrderDrink>();
             // not vomiting since didnt have anything to drink yet
 
-            if (cod.num_orders_had <= 0) return false;
-            if (cod.num_alcoholic_drinks_had <= 0) return false;
+            if (cod.num_drinks_drank() <= 0) return false;
+            if (cod.num_alcoholic_drinks_drank() <= 0) return false;
 
             const Entity& sophie =
                 EntityHelper::getNamedEntity(NamedEntity::Sophie);
@@ -1315,8 +1480,8 @@ void make_customer(Entity& customer, const SpawnInfo& info, bool has_order) {
                 irsm.get<float>(ConfigKey::VomitFreqMultiplier);
 
             IsSpawner& vom_spewer = entity.get<IsSpawner>();
-            vom_spewer.set_total(static_cast<int>(cod.num_alcoholic_drinks_had *
-                                                  vomit_amount_multiplier));
+            vom_spewer.set_total(static_cast<int>(
+                cod.num_alcoholic_drinks_drank() * vomit_amount_multiplier));
             vom_spewer.set_time_between(5.f * vomit_freq_multiplier);
 
             bool should_vomit = true;
@@ -1368,19 +1533,18 @@ namespace furniture {
 void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
     make_entity(customer_spawner, {EntityType::CustomerSpawner}, pos);
 
-    // TODO maybe one day add some kind of ui that shows when the next
-    // person is coming? that migth be good to be part of the round
-    // timer ui?
+    const auto sfn = std::bind(&make_customer, std::placeholders::_1,
+                               std::placeholders::_2, true);
+
     customer_spawner.addComponent<SimpleColoredBoxRenderer>()
         .update_face(PINK)
         .update_base(PINK);
-    const auto sfn = std::bind(&make_customer, std::placeholders::_1,
-                               std::placeholders::_2, true);
 
     customer_spawner.addComponent<IsSpawner>()
         .set_fn(sfn)
         .set_total(2)
-        .set_time_between(1.f);
+        .set_time_between(5.f)
+        .enable_show_progress();
 
     customer_spawner.addComponent<HasProgression>();
 }
@@ -1394,6 +1558,40 @@ void make_jukebox(Entity& jukebox, vec2 pos) {
     furniture::make_furniture(jukebox, {EntityType::Jukebox}, pos);
     jukebox.addComponent<HasWaitingQueue>();
     jukebox.addComponent<HasLastInteractedCustomer>();
+}
+
+void make_interactive_settings_changet(
+    Entity& isc, vec2 pos, CanChangeSettingsInteractively::Style style) {
+    furniture::make_furniture(isc, {EntityType::InteractiveSettingChanger}, pos,
+                              PINK, PINK,
+                              // we make this static so its not highlightable
+                              // but we want it to be a little
+                              true);
+
+    isc.addComponent<HasName>();
+    isc.addComponent<CanChangeSettingsInteractively>(style);
+
+    isc.addComponent<HasWork>().init(
+        [](Entity& isc, HasWork& hasWork, Entity& /*player*/, float dt) {
+            const float amt = 2.f;
+            hasWork.increase_pct(amt * dt);
+            if (!hasWork.is_work_complete()) return;
+            hasWork.reset_pct();
+
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+            auto style = isc.get<CanChangeSettingsInteractively>().style;
+
+            switch (style) {
+                case CanChangeSettingsInteractively::ToggleIsTutorial: {
+                    irsm.interactive_settings.is_tutorial_active =
+                        !irsm.interactive_settings.is_tutorial_active;
+                } break;
+                case CanChangeSettingsInteractively::Unknown:
+                    break;
+            }
+        });
 }
 
 }  // namespace furniture
@@ -1417,6 +1615,10 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::MapRandomizer: {
             furniture::make_map_randomizer(entity, location);
+        } break;
+        case EntityType::Door: {
+            const auto d_color = Color{155, 75, 0, 255};
+            (furniture::make_door(entity, location, d_color));
         } break;
         case EntityType::Wall: {
             const auto d_color = Color{155, 75, 0, 255};
@@ -1445,6 +1647,9 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         } break;
         case EntityType::SodaMachine: {
             furniture::make_soda_machine(entity, location);
+        } break;
+        case EntityType::SodaFountain: {
+            furniture::make_soda_fountain(entity, location);
         } break;
         case EntityType::DraftTap: {
             furniture::make_draft(entity, location);
@@ -1488,14 +1693,14 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::IceMachine: {
             furniture::make_ice_machine(entity, location);
         } break;
-        case EntityType::SimpleSyrup: {
-            items::make_simple_syrup(entity, location);
-        } break;
         case EntityType::Face: {
             make_face(entity, pos);
         } break;
         case EntityType::Jukebox: {
             furniture::make_jukebox(entity, location);
+        } break;
+        case EntityType::HandTruck: {
+            make_hand_truck(entity, location);
         } break;
 
         // These return false
@@ -1517,10 +1722,19 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         case EntityType::AITargetLocation: {
             make_ai_target_location(entity, pos);
         } break;
+        case EntityType::InteractiveSettingChanger: {
+            log_warn(
+                "You should call 'make_interactive_setting_changer() manually "
+                "instead of using convert to type");
+            return false;
+        } break;
 
         // TODO is anyone even doing this?
+        case EntityType::SimpleSyrup: {
+            items::make_simple_syrup(entity, pos);
+        } break;
         case EntityType::MopBuddy: {
-            make_mop_buddy(entity, location);
+            make_mop_buddy(entity, pos);
             return false;
         } break;
         case EntityType::SingleAlcohol:
@@ -1550,7 +1764,7 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
         }
     }
 
-    if (entity.type == EntityType::Unknown) {
+    if (get_entity_type(entity) == EntityType::Unknown) {
         log_error(
             "Created an entity but somehow didnt get a type {}"
             "type",

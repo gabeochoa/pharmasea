@@ -3,11 +3,13 @@
 
 #include "../engine/layer.h"
 #include "../engine/statemanager.h"
-#include "../engine/texture_library.h"
+#include "../libraries/texture_library.h"
 
 struct HandLayer : public Layer {
     raylib::Texture texture;
-    HandLayer() : Layer("hand_layer") {
+    HandLayer() : Layer("hand_layer") {}
+
+    virtual void onStartup() override {
         texture = TextureLibrary::get().get("hand");
         // TODO disable
         // raylib::DisableCursor();

@@ -1,11 +1,15 @@
+# MCP screenshots
+mcp_screenshots/
 **/x64/Debug/*
 **/x64/.vs/*
 *.dSYM
 .cache/
+.ccache/
 .DS_Store
 **/.vs
 .vscode/
 log
+!src/log/
 game.obj
 WinPharmaSea/**/
 pharmasea/WinPharmaSea/**/
@@ -22,5 +26,11 @@ a.out
 release*
 recording.trace/
 output/
+build/
+.xmake/
 # until they are used in the project, hiding the kennynl folder
 art_storage/*
+
+# Ignore precompiled header cache
+src/pch.hpp.gch
+libGameNetworkingSockets.dylib.bak

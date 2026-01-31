@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "pharmasea": {
+      "command": "./pharmasea.exe",
+      "args": ["--mcp"],
+      "env": {}
+    }
+  }
+}
