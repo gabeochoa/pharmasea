@@ -4,7 +4,7 @@
 #include "../../ah.h"
 #include "../../components/indexer.h"
 #include "../../components/is_store_spawned.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 #include "../../libraries/recipe_library.h"
 
 // TODO probably should move to the config json

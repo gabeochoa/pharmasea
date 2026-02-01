@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../engine/ui/ui.h"
-#include "../../entity.h"
+#include "../../entities/entity.h"
 
 extern ui::UITheme UI_THEME;
 

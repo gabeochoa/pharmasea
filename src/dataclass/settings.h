@@ -13,7 +13,7 @@
 //
 #include "../engine/log.h"
 #include "../engine/util.h"
-#include "../entity_type.h"
+#include "../entities/entity_type.h"
 #include "ingredient.h"
 
 using ConfigValueType = std::variant<int, bool, float, EntityType, Drink>;

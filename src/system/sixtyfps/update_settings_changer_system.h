@@ -5,7 +5,7 @@
 #include "../../components/has_name.h"
 #include "../../components/is_round_settings_manager.h"
 #include "../../components/simple_colored_box_renderer.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 #include "../../external_include.h"
 
 namespace system_manager {

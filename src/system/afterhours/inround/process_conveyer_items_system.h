@@ -9,8 +9,8 @@
 #include "../../../components/transform.h"
 #include "../../../engine/pathfinder.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_helper.h"
-#include "../../../entity_query.h"
+#include "../../../entities/entity_helper.h"
+#include "../../../entities/entity_query.h"
 #include "../../../vec_util.h"
 #include "../../core/system_manager.h"
 

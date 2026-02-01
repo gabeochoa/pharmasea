@@ -5,8 +5,8 @@
 #include "../components/is_item.h"
 #include "../components/transform.h"
 #include "../engine/assert.h"
-#include "../entity.h"
-#include "../entity_helper.h"
+#include "../entities/entity.h"
+#include "../entities/entity_helper.h"
 #include "../network/serialization.h"
 #include "../vec_util.h"
 

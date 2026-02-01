@@ -4,7 +4,7 @@
 #include "../../components/can_hold_item.h"
 #include "../../components/is_drink.h"
 #include "../../dataclass/ingredient.h"
-#include "../../entity_makers.h"
+#include "../../entities/entity_makers.h"
 
 namespace system_manager {
 

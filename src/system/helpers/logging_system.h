@@ -3,8 +3,8 @@
 
 #include "../../components/transform.h"
 #include "../../engine/is_server.h"
-#include "../../entity.h"
-#include "../../entity_type.h"
+#include "../../entities/entity.h"
+#include "../../entities/entity_type.h"
 
 namespace system_manager {
 namespace logging_manager {

@@ -3,7 +3,7 @@
 #include "../../ah.h"
 #include "../../client_server_comm.h"
 #include "../../components/can_be_highlighted.h"
-#include "../../entity_type.h"
+#include "../../entities/entity_type.h"
 
 namespace system_manager {
 

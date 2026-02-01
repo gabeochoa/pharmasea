@@ -3,7 +3,7 @@
 #include "../../../ah.h"
 #include "../../../components/bypass_automation_state.h"
 #include "../../../components/has_day_night_timer.h"
-#include "../../../entity_helper.h"
+#include "../../../entities/entity_helper.h"
 #include "../../core/system_manager.h"
 
 namespace system_manager {

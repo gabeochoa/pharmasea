@@ -11,7 +11,7 @@
 #include "../../../components/has_ai_wander_state.h"
 #include "../../../components/is_ai_controlled.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_helper.h"
+#include "../../../entities/entity_helper.h"
 #include "../ai_entity_helpers.h"
 #include "../ai_system.h"
 #include "../ai_tags.h"

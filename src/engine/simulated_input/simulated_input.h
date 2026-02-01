@@ -3,7 +3,7 @@
 #include <filesystem>
 
 #include "../../components/bypass_automation_state.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 #include "../../external_include.h"
 #include "../../globals.h"
 #include "../../network/network.h"

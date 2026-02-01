@@ -7,8 +7,8 @@
 #include "building_locations.h"
 #include "components/transform.h"
 #include "engine/util.h"
-#include "entity_query.h"
-#include "entity_type.h"
+#include "entities/entity_query.h"
+#include "entities/entity_type.h"
 #include "system/core/system_manager.h"
 
 namespace {

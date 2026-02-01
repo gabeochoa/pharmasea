@@ -5,7 +5,7 @@
 #include "../../components/is_pnumatic_pipe.h"
 #include "../../components/model_renderer.h"
 #include "../../components/transform.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 #include "../../external_include.h"
 
 namespace system_manager {

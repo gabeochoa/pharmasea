@@ -9,8 +9,8 @@
 #include "../../../components/transform.h"
 #include "../../../dataclass/ingredient.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity.h"
-#include "../../../entity_helper.h"
+#include "../../../entities/entity.h"
+#include "../../../entities/entity_helper.h"
 #include "../../core/system_manager.h"
 
 namespace system_manager {

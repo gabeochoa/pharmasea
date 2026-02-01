@@ -5,7 +5,7 @@
 #include "../../ah.h"
 #include "../../building_locations.h"
 #include "../../components/is_trigger_area.h"
-#include "../../entity_query.h"
+#include "../../entities/entity_query.h"
 #include "../core/system_manager.h"
 
 namespace system_manager {

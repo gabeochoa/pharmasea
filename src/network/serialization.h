@@ -4,7 +4,7 @@
 // Only include this in .cpp files that actually need to serialize/deserialize
 
 #include "../engine/keymap.h"  // for UserInputSnapshot, UserInputs, InputName, InputPresses, InputAmount
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "../map.h"
 #include "../zpp_bits_include.h"
 #include "types.h"

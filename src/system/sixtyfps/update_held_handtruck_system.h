@@ -3,7 +3,7 @@
 #include "../../ah.h"
 #include "../../components/can_hold_handtruck.h"
 #include "../../components/transform.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 
 namespace system_manager {
 

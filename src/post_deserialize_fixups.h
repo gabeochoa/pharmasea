@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entity_helper.h"
+#include "entities/entity_helper.h"
 
 // When deserializing from a save file or over the network, some components keep
 // runtime-only state (callbacks) or self/relationship handles that should be

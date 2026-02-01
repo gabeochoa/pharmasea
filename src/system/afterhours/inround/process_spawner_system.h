@@ -6,9 +6,9 @@
 #include "../../../components/transform.h"
 #include "../../../dataclass/settings.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_helper.h"
-#include "../../../entity_makers.h"
-#include "../../../entity_query.h"
+#include "../../../entities/entity_helper.h"
+#include "../../../entities/entity_makers.h"
+#include "../../../entities/entity_query.h"
 #include "../../../network/server.h"
 #include "../../core/system_manager.h"
 

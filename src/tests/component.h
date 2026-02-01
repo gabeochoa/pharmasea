@@ -1,6 +1,6 @@
 
 
-#include "../entity.h"
+#include "../entities/entity.h"
 //
 #include "../engine/assert.h"
 #include "../engine/defer.h"

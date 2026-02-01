@@ -9,8 +9,8 @@
 #include "../../components/is_round_settings_manager.h"
 #include "../../engine/log.h"
 #include "../../engine/random_engine.h"
-#include "../../entity_query.h"
-#include "../../entity_type.h"
+#include "../../entities/entity_query.h"
+#include "../../entities/entity_type.h"
 #include "../../libraries/config_key_library.h"
 
 namespace system_manager {

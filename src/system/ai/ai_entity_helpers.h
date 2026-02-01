@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../entity.h"
-#include "../../entity_ref.h"
+#include "../../entities/entity.h"
+#include "../../entities/entity_ref.h"
 
 namespace system_manager::ai {
 

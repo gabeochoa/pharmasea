@@ -6,9 +6,9 @@
 #include "../components/has_day_night_timer.h"
 #include "../components/transform.h"
 #include "../engine/runtime_globals.h"
-#include "../entity.h"
-#include "../entity_helper.h"
-#include "../entity_query.h"
+#include "../entities/entity.h"
+#include "../entities/entity_helper.h"
+#include "../entities/entity_query.h"
 #include "../map.h"
 #include "base_game_renderer.h"
 

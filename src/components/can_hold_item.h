@@ -8,10 +8,10 @@
 #include "base_component.h"
 //
 #include "../dataclass/entity_filter.h"
-#include "../entity.h"
-#include "../entity_id.h"
-#include "../entity_ref.h"
-#include "../entity_type.h"
+#include "../entities/entity.h"
+#include "../entities/entity_id.h"
+#include "../entities/entity_ref.h"
+#include "../entities/entity_type.h"
 #include "has_subtype.h"
 #include "is_item.h"
 

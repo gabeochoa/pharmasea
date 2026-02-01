@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../entity_type.h"
+#include "../entities/entity_type.h"
 #include "base_component.h"
 
 struct IsItem : public BaseComponent {

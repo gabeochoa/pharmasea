@@ -8,7 +8,7 @@
 #include "../../../components/is_round_settings_manager.h"
 #include "../../../dataclass/settings.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_helper.h"
+#include "../../../entities/entity_helper.h"
 #include "../../core/system_manager.h"
 #include "../../helpers/ingredient_helper.h"
 

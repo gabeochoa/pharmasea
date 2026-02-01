@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "internal/client.h"
 //
 #include "types.h"

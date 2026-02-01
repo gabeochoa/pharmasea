@@ -4,7 +4,7 @@
 #include "../../building_locations.h"
 #include "../../components/can_order_drink.h"
 #include "../../components/transform.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 #include "../../vec_util.h"
 
 namespace system_manager {

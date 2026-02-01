@@ -2,8 +2,8 @@
 
 #include "../../ah.h"
 #include "../../components/can_hold_item.h"
-#include "../../entity_helper.h"
-#include "../../entity_id.h"
+#include "../../entities/entity_helper.h"
+#include "../../entities/entity_id.h"
 
 namespace system_manager {
 

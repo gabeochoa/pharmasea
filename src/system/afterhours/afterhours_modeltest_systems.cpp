@@ -11,9 +11,9 @@
 #include "../../components/transform.h"
 #include "../../dataclass/ingredient.h"
 #include "../../engine/statemanager.h"
-#include "../../entity_helper.h"
-#include "../../entity_id.h"
-#include "../../entity_type.h"
+#include "../../entities/entity_helper.h"
+#include "../../entities/entity_id.h"
+#include "../../entities/entity_type.h"
 
 namespace system_manager {
 

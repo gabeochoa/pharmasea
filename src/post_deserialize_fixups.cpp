@@ -7,8 +7,8 @@
 #include "components/can_pathfind.h"
 #include "components/responds_to_day_night.h"
 #include "engine/log.h"
-#include "entity_helper.h"
-#include "entity_id.h"
+#include "entities/entity_helper.h"
+#include "entities/entity_id.h"
 
 namespace post_deserialize_fixups {
 

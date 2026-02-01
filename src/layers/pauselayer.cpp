@@ -2,7 +2,7 @@
 #include "pauselayer.h"
 
 #include "../components/is_round_settings_manager.h"
-#include "../entity_query.h"
+#include "../entities/entity_query.h"
 #include "../network/api.h"
 
 void BasePauseLayer::reset_network() { network::reset_connections(); }

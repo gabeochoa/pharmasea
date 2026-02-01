@@ -6,7 +6,7 @@
 #include "../../../components/has_subtype.h"
 #include "../../../components/indexer.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_helper.h"
+#include "../../../entities/entity_helper.h"
 #include "../../core/system_manager.h"
 
 namespace system_manager {

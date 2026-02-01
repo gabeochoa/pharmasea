@@ -3,7 +3,7 @@
 #include "../../../ah.h"
 #include "../../../drawing_util.h"
 #include "../../../engine/runtime_globals.h"
-#include "../../../entity_helper.h"
+#include "../../../entities/entity_helper.h"
 
 struct RenderWalkableSpotsSystem : public ::afterhours::System<> {
     virtual bool should_run(const float) override {

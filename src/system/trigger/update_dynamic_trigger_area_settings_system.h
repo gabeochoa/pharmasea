@@ -8,7 +8,7 @@
 #include "../../components/is_round_settings_manager.h"
 #include "../../components/is_trigger_area.h"
 #include "../../components/simple_colored_box_renderer.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 #include "../../save_game/save_game.h"
 #include "../ai/ai_tags.h"
 

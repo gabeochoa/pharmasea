@@ -1,7 +1,7 @@
 #include "../components/has_day_night_timer.h"
 #include "../engine/assert.h"
 #include "../engine/simulated_input/replay_validation.h"
-#include "../entity_query.h"
+#include "../entities/entity_query.h"
 
 namespace {
 

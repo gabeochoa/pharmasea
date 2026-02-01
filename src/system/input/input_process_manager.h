@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../engine/keymap.h"
-#include "../../entity.h"
+#include "../../entities/entity.h"
 #include "../../vendor_include.h"
 #include "is_collidable.h"
 

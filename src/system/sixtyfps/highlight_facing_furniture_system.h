@@ -4,7 +4,7 @@
 #include "../../components/can_be_highlighted.h"
 #include "../../components/can_highlight_others.h"
 #include "../../components/transform.h"
-#include "../../entity_query.h"
+#include "../../entities/entity_query.h"
 
 namespace system_manager {
 

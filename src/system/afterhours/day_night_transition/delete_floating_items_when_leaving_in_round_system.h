@@ -6,7 +6,7 @@
 #include "../../../components/is_item.h"
 #include "../../../components/is_item_container.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_helper.h"
+#include "../../../entities/entity_helper.h"
 #include "../../core/system_manager.h"
 
 namespace system_manager {

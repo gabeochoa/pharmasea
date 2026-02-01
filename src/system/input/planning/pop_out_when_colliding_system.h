@@ -8,9 +8,9 @@
 #include "../../../components/can_hold_handtruck.h"
 #include "../../../components/has_day_night_timer.h"
 #include "../../../components/transform.h"
-#include "../../../entity_helper.h"
-#include "../../../entity_query.h"
-#include "../../../entity_type.h"
+#include "../../../entities/entity_helper.h"
+#include "../../../entities/entity_query.h"
+#include "../../../entities/entity_type.h"
 #include "../../core/system_manager.h"
 
 namespace system_manager {

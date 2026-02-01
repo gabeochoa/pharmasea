@@ -1,7 +1,7 @@
 
 #include "../engine/pathfinder.h"
-#include "../entity.h"
-#include "../entity_helper.h"
+#include "../entities/entity.h"
+#include "../entities/entity_helper.h"
 #include "../map_generation/map_generation.h"
 
 namespace test {

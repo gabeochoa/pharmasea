@@ -4,12 +4,12 @@
 #include <optional>
 //
 
-#include "../entity.h"
+#include "../entities/entity.h"
 //
 #include "../components/has_subtype.h"
 #include "../components/is_drink.h"
 #include "../components/is_item.h"
-#include "../entity_type.h"
+#include "../entities/entity_type.h"
 #include "ingredient.h"
 
 enum RespectFilter { All, ReqOnly, Ignore };

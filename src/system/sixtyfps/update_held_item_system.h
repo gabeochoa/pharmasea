@@ -4,7 +4,7 @@
 #include "../../components/can_hold_item.h"
 #include "../../components/custom_item_position.h"
 #include "../../components/transform.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 #include "afterhours_held_position_helpers.h"
 
 namespace system_manager {

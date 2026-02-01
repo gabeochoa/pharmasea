@@ -8,8 +8,8 @@
 #include "../../../components/has_day_night_timer.h"
 #include "../../../components/transform.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_helper.h"
-#include "../../../entity_query.h"
+#include "../../../entities/entity_helper.h"
+#include "../../../entities/entity_query.h"
 #include "../../core/system_manager.h"
 
 namespace system_manager {

@@ -9,7 +9,7 @@
 #include "engine/random_engine.h"
 #include "external_include.h"
 //
-#include "entity_helper.h"
+#include "entities/entity_helper.h"
 #include "system/core/system_manager.h"
 
 void Map::update_map(const Map& new_map) {

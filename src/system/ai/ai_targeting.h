@@ -2,8 +2,8 @@
 
 #include "../../components/has_waiting_queue.h"
 #include "../../components/transform.h"
-#include "../../entity.h"
-#include "../../entity_query.h"
+#include "../../entities/entity.h"
+#include "../../entities/entity_query.h"
 
 namespace system_manager::ai {
 // TODO merge into shared utilities

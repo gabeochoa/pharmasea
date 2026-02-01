@@ -5,8 +5,8 @@
 #include "../components/is_progression_manager.h"
 #include "../dataclass/ingredient.h"
 #include "../engine/input_utilities.h"
-#include "../entity_helper.h"
-#include "../entity_query.h"
+#include "../entities/entity_helper.h"
+#include "../entities/entity_query.h"
 #include "../libraries/recipe_library.h"
 #include "base_game_renderer.h"
 

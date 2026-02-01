@@ -6,7 +6,7 @@
 #include <functional>
 #include <vector>
 
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "atomic_queue.h"
 #include "singleton.h"
 

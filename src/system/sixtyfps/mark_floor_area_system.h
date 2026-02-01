@@ -4,8 +4,8 @@
 #include "../../components/is_floor_marker.h"
 #include "../../components/is_solid.h"
 #include "../../components/transform.h"
-#include "../../entity_helper.h"
-#include "../../entity_query.h"
+#include "../../entities/entity_helper.h"
+#include "../../entities/entity_query.h"
 #include "../core/system_manager.h"
 
 namespace system_manager {

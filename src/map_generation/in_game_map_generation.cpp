@@ -5,7 +5,7 @@
 
 #include "../ah.h"
 #include "../building_locations.h"
-#include "../entity_helper.h"
+#include "../entities/entity_helper.h"
 #include "map_generation.h"
 #include "pipeline.h"
 

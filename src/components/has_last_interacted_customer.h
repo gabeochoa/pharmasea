@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../entity_ref.h"
+#include "../entities/entity_ref.h"
 #include "base_component.h"
 
 struct HasLastInteractedCustomer : public BaseComponent {

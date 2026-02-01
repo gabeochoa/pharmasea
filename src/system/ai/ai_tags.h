@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../ah.h"
-#include "../../entity_type.h"
+#include "../../entities/entity_type.h"
 
 // Runtime tag IDs for gameplay and AI flow control.
 //

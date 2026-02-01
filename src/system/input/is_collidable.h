@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../entity.h"
-#include "../../entity_type.h"
+#include "../../entities/entity.h"
+#include "../../entities/entity_type.h"
 #include "../../vendor_include.h"
 
 namespace system_manager {

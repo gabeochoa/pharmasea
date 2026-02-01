@@ -7,7 +7,7 @@
 #include "../../ah.h"
 #include "../../engine/keymap.h"
 #include "../../engine/singleton.h"
-#include "../../entity.h"
+#include "../../entities/entity.h"
 
 using afterhours::Entities;
 

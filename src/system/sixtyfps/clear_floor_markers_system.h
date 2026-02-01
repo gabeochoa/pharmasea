@@ -2,7 +2,7 @@
 
 #include "../../ah.h"
 #include "../../components/is_floor_marker.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 
 namespace system_manager {
 

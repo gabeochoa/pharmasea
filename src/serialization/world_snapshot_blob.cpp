@@ -4,7 +4,7 @@
 
 #include "../components/all_components.h"
 #include "../engine/log.h"
-#include "../entity_helper.h"
+#include "../entities/entity_helper.h"
 #include "../zpp_bits_include.h"
 
 namespace snapshot_blob {

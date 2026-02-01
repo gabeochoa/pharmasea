@@ -7,8 +7,8 @@
 #include "../../components/is_progression_manager.h"
 #include "../../components/is_round_settings_manager.h"
 #include "../../dataclass/upgrades.h"
-#include "../../entity_helper.h"
-#include "../../entity_query.h"
+#include "../../entities/entity_helper.h"
+#include "../../entities/entity_query.h"
 #include "../core/system_manager.h"
 #include "magic_enum/magic_enum.hpp"
 

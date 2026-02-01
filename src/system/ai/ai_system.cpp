@@ -17,8 +17,8 @@
 #include "../../engine/assert.h"
 #include "../../engine/log.h"
 #include "../../engine/runtime_globals.h"
-#include "../../entity.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity.h"
+#include "../../entities/entity_helper.h"
 #include "../../libraries/recipe_library.h"
 #include "ai_entity_helpers.h"
 

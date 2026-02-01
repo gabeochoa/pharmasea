@@ -2,8 +2,8 @@
 #pragma once
 
 #include "../../dataclass/ingredient.h"
-#include "../../entity.h"
-#include "../../entity_type.h"
+#include "../../entities/entity.h"
+#include "../../entities/entity_type.h"
 #include "../../vendor_include.h"
 
 struct EntityTuple {

@@ -9,7 +9,7 @@
 #include "../../components/is_ai_controlled.h"
 #include "../../components/is_round_settings_manager.h"
 #include "../../engine/statemanager.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 #include "ai_entity_helpers.h"
 #include "ai_shared_utilities.h"
 #include "ai_system.h"

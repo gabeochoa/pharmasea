@@ -4,7 +4,7 @@
 #include "../../../components/can_hold_item.h"
 #include "../../../components/has_day_night_timer.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_helper.h"
+#include "../../../entities/entity_helper.h"
 #include "../../core/system_manager.h"
 
 namespace system_manager {

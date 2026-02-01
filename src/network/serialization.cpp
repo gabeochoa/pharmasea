@@ -1,7 +1,7 @@
 #include "serialization.h"
 
 #include "../engine/log.h"
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "../globals.h"
 #include "../serialization/world_snapshot_blob.h"
 

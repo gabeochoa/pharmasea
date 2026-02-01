@@ -4,7 +4,7 @@
 
 #include "../afterhours/afterhours_systems.h"
 #include "../helpers/store_management_helpers.h"
-#include "entity.h"
+#include "entities/entity.h"
 
 ///
 #include "../../building_locations.h"
@@ -31,7 +31,7 @@
 #include "../../components/transform.h"
 #include "../../dataclass/upgrades.h"
 #include "../../engine/util.h"
-#include "../../entity_id.h"
+#include "../../entities/entity_id.h"
 #include "raylib.h"
 #include "sophie.h"
 ///
@@ -39,8 +39,8 @@
 #include "../../engine/pathfinder.h"
 #include "../../engine/runtime_globals.h"
 #include "../../engine/tracy.h"
-#include "../../entity_helper.h"
-#include "../../entity_query.h"
+#include "../../entities/entity_helper.h"
+#include "../../entities/entity_query.h"
 #include "../../map.h"
 #include "../../network/server.h"
 #include "../ai/ai_system.h"

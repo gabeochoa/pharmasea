@@ -10,7 +10,7 @@
 #include "../engine/runtime_globals.h"
 #include "../engine/tracy.h"
 #include "../engine/trigger_on_dt.h"
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "types.h"
 //
 #include "internal/server.h"

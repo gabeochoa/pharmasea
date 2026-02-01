@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "../external_include.h"
 #include "../network/serialization.h"
 

@@ -3,8 +3,8 @@
 
 #include "../engine/assert.h"
 #include "../engine/log.h"
-#include "../entity.h"
-#include "../entity_type.h"
+#include "../entities/entity.h"
+#include "../entities/entity_type.h"
 
 HasWaitingQueue& HasWaitingQueue::add_customer(const Entity& customer) {
     log_info("we are adding {} {} to the line in position {}", customer.id,

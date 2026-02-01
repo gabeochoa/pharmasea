@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "base_component.h"
 
 struct IsItemContainer : public BaseComponent {

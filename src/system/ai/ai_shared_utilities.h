@@ -4,7 +4,7 @@
 #include "../../components/can_order_drink.h"
 #include "../../components/is_ai_controlled.h"
 #include "../../components/is_progression_manager.h"
-#include "../../entity_helper.h"
+#include "../../entities/entity_helper.h"
 #include "ai_entity_helpers.h"
 #include "ai_system.h"
 #include "ai_tags.h"

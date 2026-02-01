@@ -5,8 +5,8 @@
 #include "../components/can_hold_item.h"
 #include "../components/indexer.h"
 #include "../components/is_item_container.h"
-#include "../entity.h"
-#include "../entity_type.h"
+#include "entity.h"
+#include "entity_type.h"
 
 namespace furniture {
 // Forward declaration - defined in entity_makers.cpp

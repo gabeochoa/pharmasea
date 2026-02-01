@@ -7,8 +7,8 @@
 #include "../../components/ai_wait_in_queue_state.h"
 #include "../../components/can_pathfind.h"
 #include "../../components/is_ai_controlled.h"
-#include "../../entity.h"
-#include "../../entity_query.h"
+#include "../../entities/entity.h"
+#include "../../entities/entity_query.h"
 
 namespace system_manager::ai {
 

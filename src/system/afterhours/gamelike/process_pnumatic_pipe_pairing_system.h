@@ -3,7 +3,7 @@
 #include "../../../ah.h"
 #include "../../../components/is_pnumatic_pipe.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_query.h"
+#include "../../../entities/entity_query.h"
 
 namespace system_manager {
 

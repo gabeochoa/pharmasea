@@ -2,7 +2,7 @@
 #include "path_request_manager.h"
 
 #include "../components/can_pathfind.h"
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "../system/input/input_process_manager.h"
 #include "../system/input/is_collidable.h"
 #include "bfs.h"

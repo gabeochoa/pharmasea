@@ -8,8 +8,8 @@
 #include "../../../components/is_solid.h"
 #include "../../../engine/pathfinder.h"
 #include "../../../engine/statemanager.h"
-#include "../../../entity_helper.h"
-#include "../../../entity_type.h"
+#include "../../../entities/entity_helper.h"
+#include "../../../entities/entity_type.h"
 #include "../../../vec_util.h"
 #include "../../core/system_manager.h"
 

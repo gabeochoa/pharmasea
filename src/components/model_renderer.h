@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../engine/util.h"
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "../libraries/model_library.h"
 #include "base_component.h"
 

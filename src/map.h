@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "engine/assert.h"
-#include "entity_helper.h"
+#include "entities/entity_helper.h"
 #include "external_include.h"
 #include "serialization/world_snapshot_blob.h"
 

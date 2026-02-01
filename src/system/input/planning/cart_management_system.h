@@ -6,8 +6,8 @@
 #include "../../../components/is_floor_marker.h"
 #include "../../../components/is_free_in_store.h"
 #include "../../../components/is_store_spawned.h"
-#include "../../../entity_helper.h"
-#include "../../../entity_type.h"
+#include "../../../entities/entity_helper.h"
+#include "../../../entities/entity_type.h"
 #include "../../core/system_manager.h"
 
 namespace system_manager {

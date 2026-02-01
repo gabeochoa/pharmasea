@@ -5,7 +5,7 @@
 #include "../engine/assert.h"
 #include "../engine/statemanager.h"
 #include "../engine/util.h"
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "../libraries/model_library.h"
 #include "../vendor_include.h"
 #include "base_component.h"

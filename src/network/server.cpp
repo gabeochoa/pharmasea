@@ -17,7 +17,7 @@
 #include "../engine/random_engine.h"
 #include "../engine/thread_role.h"
 #include "../engine/time.h"
-#include "../entity_helper.h"
+#include "../entities/entity_helper.h"
 #include "../globals.h"  // for HASHED_VERSION
 #include "../save_game/save_game.h"
 #include "../system/core/system_manager.h"
