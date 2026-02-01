@@ -15,8 +15,7 @@
 #include "show_minimap_when_highlighted_system.h"
 #include "transform_snapper_system.h"
 #include "update_character_model_system.h"
-#include "update_held_handtruck_system.h"
-#include "update_held_item_system.h"
+#include "update_held_position_system.h"
 #include "update_settings_changer_system.h"
 
 void SystemManager::register_sixtyfps_systems() {
@@ -56,9 +55,9 @@ void SystemManager::register_sixtyfps_systems() {
     systems.register_update_system(
         std::make_unique<system_manager::ShowMinimapWhenHighlightedSystem>());
     systems.register_update_system(
-        std::make_unique<system_manager::UpdateHeldItemPositionSystem>());
+        std::make_unique<system_manager::UpdateHeldPositionSystem<CanHoldItem>>());
     systems.register_update_system(
-        std::make_unique<system_manager::UpdateHeldHandTruckPositionSystem>());
+        std::make_unique<system_manager::UpdateHeldPositionSystem<CanHoldHandTruck>>());
     systems.register_update_system(
         std::make_unique<
             system_manager::UpdateVisualsForSettingsChangerSystem>());
