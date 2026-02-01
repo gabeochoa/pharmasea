@@ -6,22 +6,27 @@
 #include "../vendor_include.h"
 #include "base_component.h"
 
-struct CanHoldFurniture : public BaseComponent {
-    [[nodiscard]] bool empty() const {
-        return held_furniture.id == entity_id::INVALID;
-    }
-    [[nodiscard]] bool is_holding_furniture() const { return !empty(); }
+// Tag types for distinguishing held entity types
+struct FurnitureHoldTag {};
+struct HandTruckHoldTag {};
 
-    void update(EntityID furniture_id, vec3 pickup_location) {
-        held_furniture.set_id(furniture_id);
+template <typename Tag>
+struct CanHoldEntityBase : public BaseComponent {
+    [[nodiscard]] bool empty() const {
+        return held_entity.id == entity_id::INVALID;
+    }
+    [[nodiscard]] bool is_holding() const { return !empty(); }
+
+    void update(EntityID entity_id, vec3 pickup_location) {
+        held_entity.set_id(entity_id);
         pos = pickup_location;
     }
 
-    [[nodiscard]] EntityID furniture_id() const { return held_furniture.id; }
+    [[nodiscard]] EntityID held_id() const { return held_entity.id; }
     [[nodiscard]] vec3 picked_up_at() const { return pos; }
 
    private:
-    EntityRef held_furniture{};
+    EntityRef held_entity{};
     vec3 pos;
 
    public:
@@ -29,8 +34,12 @@ struct CanHoldFurniture : public BaseComponent {
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                         //
             static_cast<BaseComponent&>(self),  //
-            self.held_furniture,                //
+            self.held_entity,                   //
             self.pos                            //
         );
     }
 };
+
+// Type aliases for specific use cases
+using CanHoldFurniture = CanHoldEntityBase<FurnitureHoldTag>;
+using CanHoldHandTruck = CanHoldEntityBase<HandTruckHoldTag>;

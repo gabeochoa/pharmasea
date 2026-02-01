@@ -1451,7 +1451,7 @@ void render_held_furniture_preview(const Entity& entity, float) {
         || (drop_location == chf.picked_up_at());
 
     if (walkable) {
-        EntityID furn_id = chf.furniture_id();
+        EntityID furn_id = chf.held_id();
         OptEntity hf = EntityHelper::getEntityForID(furn_id);
         if (hf->has<IsStoreSpawned>()) {
             if (!STORE_BUILDING.is_inside({drop_location.x, drop_location.z})) {
@@ -1464,7 +1464,7 @@ void render_held_furniture_preview(const Entity& entity, float) {
     // since the preview is just a box we can just use 0 for angle
     // but if we need in the future, then we can fetch the entity with:
     //
-    // OptEntity hf = EntityHelper::getEntityForID(chf.furniture_id());
+    // OptEntity hf = EntityHelper::getEntityForID(chf.held_id());
     // const Transform& furniture_transform = hf->get<Transform>();
 
     vec3 size = (transform.size() * 1.2f);

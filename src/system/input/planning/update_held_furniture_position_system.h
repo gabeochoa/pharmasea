@@ -42,7 +42,7 @@ struct UpdateHeldFurniturePositionSystem
         }
 
         OptEntity furniture =
-            EntityHelper::getEntityForID(can_hold_furniture.furniture_id());
+            EntityHelper::getEntityForID(can_hold_furniture.held_id());
         furniture->get<Transform>().update(new_pos);
     }
 };

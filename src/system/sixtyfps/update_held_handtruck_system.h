@@ -18,7 +18,7 @@ struct UpdateHeldHandTruckPositionSystem
         auto new_pos = transform.pos();
 
         OptEntity hand_truck =
-            EntityHelper::getEntityForID(can_hold_hand_truck.hand_truck_id());
+            EntityHelper::getEntityForID(can_hold_hand_truck.held_id());
         hand_truck->get<Transform>().update(new_pos);
     }
 };

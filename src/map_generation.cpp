@@ -569,7 +569,7 @@ void Map::generate_store_map() {
                          SystemManager::get().oldAll) {
                         if (!e) continue;
                         if (e->is_missing<CanHoldFurniture>()) continue;
-                        if (e->get<CanHoldFurniture>().is_holding_furniture()) {
+                        if (e->get<CanHoldFurniture>().is_holding()) {
                             all_empty = false;
                             break;
                         }

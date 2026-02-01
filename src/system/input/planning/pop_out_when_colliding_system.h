@@ -58,19 +58,19 @@ struct PopOutWhenCollidingSystem
 
         if (chht.is_holding()) {
             OptEntity hand_truck =
-                EntityHelper::getEntityForID(chht.hand_truck_id());
-            if (match->id == chht.hand_truck_id()) {
+                EntityHelper::getEntityForID(chht.held_id());
+            if (match->id == chht.held_id()) {
                 return;
             }
             if (chht.is_holding() &&
                 match->id ==
-                    hand_truck->get<CanHoldFurniture>().furniture_id()) {
+                    hand_truck->get<CanHoldFurniture>().held_id()) {
                 return;
             }
         }
 
-        if (chf.is_holding_furniture()) return;
-        if (chf.furniture_id() == match->id) return;
+        if (chf.is_holding()) return;
+        if (chf.held_id() == match->id) return;
 
         vec2 new_position = transform.as2();
 

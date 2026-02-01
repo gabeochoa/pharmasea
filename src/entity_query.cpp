@@ -20,7 +20,7 @@ EQ& EQ::whereIsHoldingAnyFurniture() {
         add_mod(new WhereHasComponent<CanHoldFurniture>())
             .add_mod(new WhereLambda([](const Entity& entity) {
                 const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
-                return chf.is_holding_furniture();
+                return chf.is_holding();
             }));
 }
 
@@ -30,9 +30,9 @@ EQ& EQ::whereIsHoldingAnyFurnitureThatMatches(
         add_mod(new WhereHasComponent<CanHoldFurniture>())
             .add_mod(new WhereLambda([&](const Entity& entity) {
                 const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
-                if (!chf.is_holding_furniture()) return false;
+                if (!chf.is_holding()) return false;
                 OptEntity furniture =
-                    EntityHelper::getEntityForID(chf.furniture_id());
+                    EntityHelper::getEntityForID(chf.held_id());
                 if (!furniture.has_value()) return false;
 
                 return filter(furniture.asE());
@@ -44,8 +44,8 @@ EQ& EQ::whereIsHoldingFurnitureID(EntityID entityID) {
         add_mod(new WhereHasComponent<CanHoldFurniture>())
             .add_mod(new WhereLambda([entityID](const Entity& entity) {
                 const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
-                return chf.is_holding_furniture() &&
-                       chf.furniture_id() == entityID;
+                return chf.is_holding() &&
+                       chf.held_id() == entityID;
             }));
 }
 

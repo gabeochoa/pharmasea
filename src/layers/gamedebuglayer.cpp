@@ -60,8 +60,8 @@ void GameDebugLayer::draw_debug_ui(float dt) {
             OptEntity player = map_ptr->get_remote_with_cui();
             if (player) {
                 EntityID furniture_id =
-                    player->get<CanHoldFurniture>().is_holding_furniture()
-                        ? player->get<CanHoldFurniture>().furniture_id()
+                    player->get<CanHoldFurniture>().is_holding()
+                        ? player->get<CanHoldFurniture>().held_id()
                         : -1;
                 OptEntity furniture =
                     EntityHelper::getEntityForID(furniture_id);
