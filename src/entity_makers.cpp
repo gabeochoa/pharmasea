@@ -707,24 +707,27 @@ void make_cupboard(Entity& cupboard, vec2 pos, int index) {
             break;
     }
 
-    furniture::make_itemcontainer(cupboard, {EntityType::Cupboard}, pos,
-                                  held_type);
+    ItemContainerBuilder(cupboard, pos, EntityType::Cupboard)
+        .holds(held_type)
+        .with_filter(
+            EntityFilter()
+                .set_enabled_flags(EntityFilter::FilterDatumType::Name |
+                                   EntityFilter::FilterDatumType::Ingredients)
+                .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+                                           held_type)
+                .set_filter_value_for_type(
+                    EntityFilter::FilterDatumType::Ingredients,
+                    // Only allow empty drinks
+                    IngredientBitSet())
+                .set_filter_strength(EntityFilter::FilterStrength::Requirement))
+        .build();
+
+    // TODO: Consider adding with_subtype() and with_dynamic_model_name() to
+    // ItemContainerBuilder if more entities need these
     cupboard.addComponent<HasSubtype>(
         0, (int) magic_enum::enum_count<CupType>(), index);
-
     cupboard.addComponent<HasDynamicModelName>().init(
         EntityType::Cupboard, HasDynamicModelName::DynamicType::OpenClosed);
-    cupboard.get<CanHoldItem>().set_filter(
-        EntityFilter()
-            .set_enabled_flags(EntityFilter::FilterDatumType::Name |
-                               EntityFilter::FilterDatumType::Ingredients)
-            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                       held_type)
-            .set_filter_value_for_type(
-                EntityFilter::FilterDatumType::Ingredients,
-                // Only allow empty drinks
-                IngredientBitSet())
-            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
 void make_soda_fountain(Entity& soda_fountain, vec2 pos) {
