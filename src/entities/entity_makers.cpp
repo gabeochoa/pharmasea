@@ -2,6 +2,7 @@
 #include "entity_makers.h"
 
 #include <ranges>
+#include <unordered_set>
 
 #include "entities/item_container_builder.h"
 
@@ -1596,165 +1597,105 @@ void make_interactive_settings_changet(
 
 }  // namespace furniture
 
+// Entity maker function type - returns true if entity was successfully created
+using EntityMaker = bool (*)(Entity&, vec2);
+
+// Factory map for entity creation - maps EntityType to maker function
+// clang-format off
+static const std::unordered_map<EntityType, EntityMaker> ENTITY_MAKERS = {
+    // Players
+    {EntityType::RemotePlayer, [](Entity& e, vec2 loc) { make_remote_player(e, vec::to3(loc)); return true; }},
+    {EntityType::Player, [](Entity& e, vec2 loc) { make_player(e, vec::to3(loc)); return true; }},
+
+    // Furniture
+    {EntityType::Table, [](Entity& e, vec2 loc) { furniture::make_table(e, loc); return true; }},
+    {EntityType::CharacterSwitcher, [](Entity& e, vec2 loc) { furniture::make_character_switcher(e, loc); return true; }},
+    {EntityType::MapRandomizer, [](Entity& e, vec2 loc) { furniture::make_map_randomizer(e, loc); return true; }},
+    {EntityType::Door, [](Entity& e, vec2 loc) { furniture::make_door(e, loc, Color{155, 75, 0, 255}); return true; }},
+    {EntityType::Wall, [](Entity& e, vec2 loc) { furniture::make_wall(e, loc, Color{155, 75, 0, 255}); return true; }},
+    {EntityType::Conveyer, [](Entity& e, vec2 loc) { furniture::make_conveyer(e, loc); return true; }},
+    {EntityType::Grabber, [](Entity& e, vec2 loc) { furniture::make_grabber(e, loc); return true; }},
+    {EntityType::Register, [](Entity& e, vec2 loc) { furniture::make_register(e, loc); return true; }},
+    {EntityType::ChampagneHolder, [](Entity& e, vec2 loc) { furniture::make_champagne_holder(e, loc); return true; }},
+    {EntityType::AlcoholCabinet, [](Entity& e, vec2 loc) { furniture::make_medicine_cabinet(e, loc); return true; }},
+    {EntityType::FruitBasket, [](Entity& e, vec2 loc) { furniture::make_fruit_basket(e, loc); return true; }},
+    {EntityType::Blender, [](Entity& e, vec2 loc) { furniture::make_blender(e, loc); return true; }},
+    {EntityType::SodaMachine, [](Entity& e, vec2 loc) { furniture::make_soda_machine(e, loc); return true; }},
+    {EntityType::SodaFountain, [](Entity& e, vec2 loc) { furniture::make_soda_fountain(e, loc); return true; }},
+    {EntityType::DraftTap, [](Entity& e, vec2 loc) { furniture::make_draft(e, loc); return true; }},
+    {EntityType::Cupboard, [](Entity& e, vec2 loc) { furniture::make_cupboard(e, loc); return true; }},
+    {EntityType::PitcherCupboard, [](Entity& e, vec2 loc) { furniture::make_cupboard(e, loc, 1); return true; }},
+    {EntityType::Squirter, [](Entity& e, vec2 loc) { furniture::make_squirter(e, loc); return true; }},
+    {EntityType::Trash, [](Entity& e, vec2 loc) { furniture::make_trash(e, loc); return true; }},
+    {EntityType::Toilet, [](Entity& e, vec2 loc) { furniture::make_toilet(e, loc); return true; }},
+    {EntityType::Guitar, [](Entity& e, vec2 loc) { furniture::make_guitar(e, loc); return true; }},
+    {EntityType::FilteredGrabber, [](Entity& e, vec2 loc) { furniture::make_filtered_grabber(e, loc); return true; }},
+    {EntityType::PnumaticPipe, [](Entity& e, vec2 loc) { furniture::make_pnumatic_pipe(e, loc); return true; }},
+    {EntityType::MopHolder, [](Entity& e, vec2 loc) { furniture::make_mop_holder(e, loc); return true; }},
+    {EntityType::MopBuddyHolder, [](Entity& e, vec2 loc) { furniture::make_mopbuddy_holder(e, loc); return true; }},
+    {EntityType::FastForward, [](Entity& e, vec2 loc) { furniture::make_fast_forward(e, loc); return true; }},
+    {EntityType::SimpleSyrupHolder, [](Entity& e, vec2 loc) { furniture::make_simple_syrup_holder(e, loc); return true; }},
+    {EntityType::IceMachine, [](Entity& e, vec2 loc) { furniture::make_ice_machine(e, loc); return true; }},
+    {EntityType::Face, [](Entity& e, vec2 loc) { make_face(e, vec::to3(loc)); return true; }},
+    {EntityType::Jukebox, [](Entity& e, vec2 loc) { furniture::make_jukebox(e, loc); return true; }},
+    {EntityType::HandTruck, [](Entity& e, vec2 loc) { make_hand_truck(e, loc); return true; }},
+    {EntityType::CustomerSpawner, [](Entity& e, vec2 loc) { furniture::make_customer_spawner(e, vec::to3(loc)); return true; }},
+    {EntityType::AITargetLocation, [](Entity& e, vec2 loc) { make_ai_target_location(e, vec::to3(loc)); return true; }},
+
+    // Items (TODO: is anyone even doing this?)
+    {EntityType::SimpleSyrup, [](Entity& e, vec2 loc) { items::make_simple_syrup(e, vec::to3(loc)); return true; }},
+
+    // Special cases that return false
+    {EntityType::Unknown, [](Entity& e, vec2 loc) { make_entity(e, DebugOptions{.type = EntityType::Unknown}, vec::to3(loc)); return false; }},
+    {EntityType::x, [](Entity& e, vec2 loc) { make_entity(e, DebugOptions{.type = EntityType::x}, vec::to3(loc)); return false; }},
+    {EntityType::y, [](Entity& e, vec2 loc) { make_entity(e, DebugOptions{.type = EntityType::y}, vec::to3(loc)); return false; }},
+    {EntityType::z, [](Entity& e, vec2 loc) { make_entity(e, DebugOptions{.type = EntityType::z}, vec::to3(loc)); return false; }},
+    {EntityType::Sophie, [](Entity& e, vec2 loc) { furniture::make_sophie(e, vec::to3(loc)); return false; }},
+    {EntityType::MopBuddy, [](Entity& e, vec2 loc) { make_mop_buddy(e, vec::to3(loc)); return false; }},
+    {EntityType::InteractiveSettingChanger, [](Entity&, vec2) {
+        log_warn("You should call 'make_interactive_setting_changer() manually instead of using convert to type");
+        return false;
+    }},
+};
+// clang-format on
+
+// Types that cannot be created through convert_to_type
+static const std::unordered_set<EntityType> UNSUPPORTED_ENTITY_TYPES = {
+    EntityType::SingleAlcohol,
+    EntityType::TriggerArea,
+    EntityType::FloorMarker,
+    EntityType::Vomit,
+    EntityType::SodaSpout,
+    EntityType::Drink,
+    EntityType::Alcohol,
+    EntityType::Customer,
+    EntityType::Fruit,
+    EntityType::FruitJuice,
+    EntityType::Mop,
+    EntityType::Pitcher,
+    EntityType::Champagne,
+};
+
 bool convert_to_type(const EntityType& entity_type, Entity& entity,
                      vec2 location) {
-    // TODO at some point just change all of these to match
-    auto pos = vec::to3(location);
-    switch (entity_type) {
-        case EntityType::RemotePlayer: {
-            make_remote_player(entity, pos);
-        } break;
-        case EntityType::Player: {
-            make_player(entity, pos);
-        } break;
-        case EntityType::Table: {
-            furniture::make_table(entity, location);
-        } break;
-        case EntityType::CharacterSwitcher: {
-            furniture::make_character_switcher(entity, location);
-        } break;
-        case EntityType::MapRandomizer: {
-            furniture::make_map_randomizer(entity, location);
-        } break;
-        case EntityType::Door: {
-            const auto d_color = Color{155, 75, 0, 255};
-            (furniture::make_door(entity, location, d_color));
-        } break;
-        case EntityType::Wall: {
-            const auto d_color = Color{155, 75, 0, 255};
-            (furniture::make_wall(entity, location, d_color));
-        } break;
-        case EntityType::Conveyer: {
-            furniture::make_conveyer(entity, location);
-        } break;
-        case EntityType::Grabber: {
-            furniture::make_grabber(entity, location);
-        } break;
-        case EntityType::Register: {
-            furniture::make_register(entity, location);
-        } break;
-        case EntityType::ChampagneHolder: {
-            furniture::make_champagne_holder(entity, location);
-        } break;
-        case EntityType::AlcoholCabinet: {
-            furniture::make_medicine_cabinet(entity, location);
-        } break;
-        case EntityType::FruitBasket: {
-            furniture::make_fruit_basket(entity, location);
-        } break;
-        case EntityType::Blender: {
-            furniture::make_blender(entity, location);
-        } break;
-        case EntityType::SodaMachine: {
-            furniture::make_soda_machine(entity, location);
-        } break;
-        case EntityType::SodaFountain: {
-            furniture::make_soda_fountain(entity, location);
-        } break;
-        case EntityType::DraftTap: {
-            furniture::make_draft(entity, location);
-        } break;
-        case EntityType::Cupboard: {
-            furniture::make_cupboard(entity, location);
-        } break;
-        case EntityType::PitcherCupboard: {
-            furniture::make_cupboard(entity, location, 1);
-        } break;
-        case EntityType::Squirter: {
-            furniture::make_squirter(entity, location);
-        } break;
-        case EntityType::Trash: {
-            furniture::make_trash(entity, location);
-        } break;
-        case EntityType::Toilet: {
-            furniture::make_toilet(entity, location);
-        } break;
-        case EntityType::Guitar: {
-            furniture::make_guitar(entity, location);
-        } break;
-        case EntityType::FilteredGrabber: {
-            furniture::make_filtered_grabber(entity, location);
-        } break;
-        case EntityType::PnumaticPipe: {
-            furniture::make_pnumatic_pipe(entity, location);
-        } break;
-        case EntityType::MopHolder: {
-            furniture::make_mop_holder(entity, location);
-        } break;
-        case EntityType::MopBuddyHolder: {
-            furniture::make_mopbuddy_holder(entity, location);
-        } break;
-        case EntityType::FastForward: {
-            furniture::make_fast_forward(entity, location);
-        } break;
-        case EntityType::SimpleSyrupHolder: {
-            furniture::make_simple_syrup_holder(entity, location);
-        } break;
-        case EntityType::IceMachine: {
-            furniture::make_ice_machine(entity, location);
-        } break;
-        case EntityType::Face: {
-            make_face(entity, pos);
-        } break;
-        case EntityType::Jukebox: {
-            furniture::make_jukebox(entity, location);
-        } break;
-        case EntityType::HandTruck: {
-            make_hand_truck(entity, location);
-        } break;
-
-        // These return false
-        case EntityType::Unknown:
-        case EntityType::x:
-        case EntityType::y:
-        case EntityType::z:
-            make_entity(entity, DebugOptions{.type = entity_type}, pos);
-            return false;
-        case EntityType::Sophie: {
-            furniture::make_sophie(entity, pos);
-            return false;
-        } break;
-
-        case EntityType::CustomerSpawner: {
-            furniture::make_customer_spawner(entity, pos);
-        } break;
-
-        case EntityType::AITargetLocation: {
-            make_ai_target_location(entity, pos);
-        } break;
-        case EntityType::InteractiveSettingChanger: {
-            log_warn(
-                "You should call 'make_interactive_setting_changer() manually "
-                "instead of using convert to type");
-            return false;
-        } break;
-
-        // TODO is anyone even doing this?
-        case EntityType::SimpleSyrup: {
-            items::make_simple_syrup(entity, pos);
-        } break;
-        case EntityType::MopBuddy: {
-            make_mop_buddy(entity, pos);
-            return false;
-        } break;
-        case EntityType::SingleAlcohol:
-        case EntityType::TriggerArea:
-        case EntityType::FloorMarker:
-        case EntityType::Vomit:
-        case EntityType::SodaSpout:
-        case EntityType::Drink:
-        case EntityType::Alcohol:
-        case EntityType::Customer:
-        case EntityType::Fruit:
-        case EntityType::FruitJuice:
-        case EntityType::Mop:
-        case EntityType::Pitcher:
-        case EntityType::Champagne:
-            log_warn("{} cant be created through 'convert_to_type'",
-                     entity_type);
-            return false;
-            break;
+    // Check if this type is explicitly unsupported
+    if (UNSUPPORTED_ENTITY_TYPES.contains(entity_type)) {
+        log_warn("{} cant be created through 'convert_to_type'", entity_type);
+        return false;
     }
+
+    // Look up the maker function in the factory map
+    auto it = ENTITY_MAKERS.find(entity_type);
+    if (it == ENTITY_MAKERS.end()) {
+        log_warn("Unknown entity type in convert_to_type: {}",
+                 magic_enum::enum_name(entity_type));
+        return false;
+    }
+
+    // Call the maker function
+    bool result = it->second(entity, location);
+
+    // Post-creation validation
     if (entity.has<CanHoldItem>()) {
         if (entity.get<CanHoldItem>().hb_type() == EntityType::Unknown) {
             log_warn(
@@ -1771,5 +1712,5 @@ bool convert_to_type(const EntityType& entity_type, Entity& entity,
             entity_type);
     }
 
-    return true;
+    return result;
 }
