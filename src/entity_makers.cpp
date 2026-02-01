@@ -3,6 +3,8 @@
 
 #include <ranges>
 
+#include "entities/item_container_builder.h"
+
 #include "afterhours/src/core/base_component.h"
 #include "afterhours/src/plugins/sound_system.h"
 #include "ah.h"
@@ -623,20 +625,18 @@ void make_ice_machine(Entity& machine, vec2 pos) {
 }
 
 void make_single_alcohol(Entity& container, vec2 pos, int alcohol_index) {
-    furniture::make_itemcontainer(container, {EntityType::SingleAlcohol}, pos,
-                                  EntityType::Alcohol);
-
-    container.get<IsItemContainer>().set_uses_indexer(true);
-    container.addComponent<Indexer>((int) ingredient::AlcoholsInCycle.size())
-        .set_value(alcohol_index);
+    ItemContainerBuilder(container, pos, EntityType::SingleAlcohol)
+        .holds(EntityType::Alcohol)
+        .with_indexer((int) ingredient::AlcoholsInCycle.size(), alcohol_index)
+        .build();
 }
 
 void make_medicine_cabinet(Entity& container, vec2 pos) {
-    furniture::make_itemcontainer(container, {EntityType::AlcoholCabinet}, pos,
-                                  EntityType::Alcohol);
-    container.get<IsItemContainer>().set_uses_indexer(true);
+    ItemContainerBuilder(container, pos, EntityType::AlcoholCabinet)
+        .holds(EntityType::Alcohol)
+        .with_indexer((int) ingredient::AlcoholsInCycle.size())
+        .build();
 
-    container.addComponent<Indexer>((int) ingredient::AlcoholsInCycle.size());
     container.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                               Entity&, float dt) {
         if (SystemManager::get().is_bar_open()) return;
@@ -668,13 +668,11 @@ void make_medicine_cabinet(Entity& container, vec2 pos) {
 }
 
 void make_fruit_basket(Entity& container, vec2 pos, int starting_index = 0) {
-    furniture::make_itemcontainer(container, {EntityType::FruitBasket}, pos,
-                                  EntityType::Fruit);
+    ItemContainerBuilder(container, pos, EntityType::FruitBasket)
+        .holds(EntityType::Fruit)
+        .with_indexer((int) ingredient::Fruits.size(), starting_index)
+        .build();
 
-    container.addComponent<Indexer>((int) ingredient::Fruits.size())
-        .set_value(starting_index);
-    container.get<IsItemContainer>().set_uses_indexer(true);
-    //
     container.addComponent<HasWork>().init([](Entity& owner, HasWork& hasWork,
                                               Entity&, float dt) {
         const float amt = 2.f;
@@ -736,39 +734,37 @@ void make_soda_fountain(Entity& soda_fountain, vec2 pos) {
 }
 
 void make_soda_machine(Entity& soda_machine, vec2 pos) {
-    furniture::make_itemcontainer(soda_machine,
-                                  DebugOptions{.type = EntityType::SodaMachine},
-                                  pos, EntityType::SodaSpout);
+    ItemContainerBuilder(soda_machine, pos, EntityType::SodaMachine)
+        .holds(EntityType::SodaSpout)
+        .max_generations(1)
+        .with_filter(EntityFilter()
+                         .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+                         .set_filter_value_for_type(
+                             EntityFilter::FilterDatumType::Name,
+                             EntityType::SodaSpout)
+                         .set_filter_strength(
+                             EntityFilter::FilterStrength::Requirement))
+        .build();
+
     soda_machine.addComponent<HasRopeToItem>();
-    soda_machine.get<IsItemContainer>().set_max_generations(1);
-    soda_machine.get<CanHoldItem>().set_filter(
-        EntityFilter()
-            .set_enabled_flags(EntityFilter::FilterDatumType::Name)
-            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                       EntityType::SodaSpout)
-            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
 }
 
 void make_simple_syrup_holder(Entity& simple_syrup_holder, vec2 pos) {
-    furniture::make_itemcontainer(
-        simple_syrup_holder,
-        DebugOptions{.type = EntityType::SimpleSyrupHolder}, pos,
-        EntityType::SimpleSyrup);
-
-    simple_syrup_holder.get<IsItemContainer>()
-        .set_max_generations(1)
-        .enable_table_when_enable();
+    ItemContainerBuilder(simple_syrup_holder, pos, EntityType::SimpleSyrupHolder)
+        .holds(EntityType::SimpleSyrup)
+        .max_generations(1)
+        .table_when_empty()
+        .build();
     // We are not setting a filter because we want this to just act like a
     // normal table if its empty
 }
 
 void make_mopbuddy_holder(Entity& mopbuddy_holder, vec2 pos) {
-    furniture::make_itemcontainer(
-        mopbuddy_holder, DebugOptions{.type = EntityType::MopBuddyHolder}, pos,
-        EntityType::MopBuddy);
-    mopbuddy_holder.get<IsItemContainer>()
-        .set_max_generations(1)
-        .enable_table_when_enable();
+    ItemContainerBuilder(mopbuddy_holder, pos, EntityType::MopBuddyHolder)
+        .holds(EntityType::MopBuddy)
+        .max_generations(1)
+        .table_when_empty()
+        .build();
 
     // TODO If we decide to make it only the roomba
     // mopbuddy_holder.get<CanHoldItem>().set_filter(
@@ -780,16 +776,16 @@ void make_mopbuddy_holder(Entity& mopbuddy_holder, vec2 pos) {
 }
 
 void make_mop_holder(Entity& mop_holder, vec2 pos) {
-    furniture::make_itemcontainer(mop_holder,
-                                  DebugOptions{.type = EntityType::MopHolder},
-                                  pos, EntityType::Mop);
-    mop_holder.get<IsItemContainer>().set_max_generations(1);
-    mop_holder.get<CanHoldItem>().set_filter(
-        EntityFilter()
-            .set_enabled_flags(EntityFilter::FilterDatumType::Name)
-            .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
-                                       EntityType::Mop)
-            .set_filter_strength(EntityFilter::FilterStrength::Requirement));
+    ItemContainerBuilder(mop_holder, pos, EntityType::MopHolder)
+        .holds(EntityType::Mop)
+        .max_generations(1)
+        .with_filter(
+            EntityFilter()
+                .set_enabled_flags(EntityFilter::FilterDatumType::Name)
+                .set_filter_value_for_type(EntityFilter::FilterDatumType::Name,
+                                           EntityType::Mop)
+                .set_filter_strength(EntityFilter::FilterStrength::Requirement))
+        .build();
 }
 
 void make_floor_marker(Entity& floor_marker, vec3 pos, float width,
@@ -1550,8 +1546,9 @@ void make_customer_spawner(Entity& customer_spawner, vec3 pos) {
 }
 
 void make_champagne_holder(Entity& container, vec2 pos) {
-    furniture::make_itemcontainer(container, {EntityType::ChampagneHolder}, pos,
-                                  EntityType::Champagne);
+    ItemContainerBuilder(container, pos, EntityType::ChampagneHolder)
+        .holds(EntityType::Champagne)
+        .build();
 }
 
 void make_jukebox(Entity& jukebox, vec2 pos) {
