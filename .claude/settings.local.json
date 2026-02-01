@@ -12,7 +12,10 @@
       "Bash(ls:*)",
       "Bash(xargs:*)",
       "Skill(10x-engineer:dispatching-parallel-agents)",
-      "Bash(sl status:*)"
+      "Bash(sl status:*)",
+      "Bash(for dir in /Users/gabeochoa/p/pharmasea/src/system/*/)",
+      "Bash(wc:*)",
+      "Bash(grep:*)"
     ]
   }
 }
