@@ -6,6 +6,7 @@
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
 #include "components/is_drink.h"
+#include "components/has_work.h"
 #include "components/is_store_spawned.h"
 #include "components/transform.h"
 #include "dataclass/ingredient.h"
@@ -32,6 +33,9 @@ struct EQ : public afterhours::EntityQuery<EQ> {
     explicit EQ(const ::Entities& entsIn)
         : afterhours::EntityQuery<EQ>(
               afterhours::Entities(entsIn.begin(), entsIn.end())) {}
+
+    // Copy constructor - preserves accumulated modifications
+    EQ(const EQ& other);
 
     // Game-specific type filtering
     struct WhereType : EntityQuery::Modification {
@@ -163,11 +167,32 @@ struct EQ : public afterhours::EntityQuery<EQ> {
             [type](const IsTriggerArea& ta) { return ta.type == type; });
     }
 
-    // Complex query methods
-    [[nodiscard]] OptEntity getClosestMatchingFurniture(
-        const Transform& transform, float range,
-        const std::function<bool(const Entity&)>& filter);
+    // Convenience filters for common patterns
+    EQ& whereHasActiveWork() {
+        return whereHasComponentAndLambda<HasWork>(
+            [](const HasWork& hw) { return hw.has_work(); });
+    }
 
+    EQ& whereCanBePickedUp() {
+        return whereHasComponentAndLambda<CanBeHeld>(
+            [](const CanBeHeld& cbh) { return cbh.is_not_set(); });
+    }
+
+    EQ& whereIsHoldingItem() {
+        return whereHasComponentAndLambda<CanHoldItem>(
+            [](const CanHoldItem& chi) { return chi.is_holding_item(); });
+    }
+
+    EQ& whereHasEmptySlot() {
+        return whereHasComponentAndLambda<CanHoldItem>(
+            [](const CanHoldItem& chi) { return chi.empty(); });
+    }
+
+    // Terminal method: find closest entity in front matching accumulated filters
+    [[nodiscard]] OptEntity gen_closestInFront(const Transform& transform,
+                                                float range);
+
+    // Complex query methods
     [[nodiscard]] bool doesAnyExistWithType(const EntityType& type) {
         return whereType(type).has_values();
     }

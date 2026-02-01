@@ -211,12 +211,9 @@ void process_player_movement_input(Entity& entity, float dt,
 void work_furniture(Entity& player, float frame_dt) {
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
-    OptEntity match = EQ().getClosestMatchingFurniture(
-        player.get<Transform>(), cho.reach(), [](const Entity& furniture) {
-            if (furniture.template is_missing<HasWork>()) return false;
-            const HasWork& hasWork = furniture.template get<HasWork>();
-            return hasWork.has_work();
-        });
+    OptEntity match = EQ()
+        .whereHasActiveWork()
+        .gen_closestInFront(player.get<Transform>(), cho.reach());
 
     if (!match) return;
 
@@ -257,10 +254,9 @@ void rotate_furniture(const Entity& player) {
 
     const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
 
-    OptEntity match = EQ().getClosestMatchingFurniture(
-        player.get<Transform>(), cho.reach(), [](const Entity& furniture) {
-            return furniture.template has<IsRotatable>();
-        });
+    OptEntity match = EQ()
+        .whereHasComponent<IsRotatable>()
+        .gen_closestInFront(player.get<Transform>(), cho.reach());
 
     if (!match) return;
     match->get<Transform>().rotate_facing_clockwise();
@@ -338,13 +334,9 @@ void handle_grab_or_drop(Entity& player) {
         // TODO support finding things in the direction the player is
         // facing, instead of in a box around him
 
-        OptEntity closest_furniture = EQ().getClosestMatchingFurniture(
-            player.get<Transform>(), cho.reach(), [](const Entity& f) {
-                // right now walls inherit this from furniture
-                // but eventually that should not be the case
-                if (f.is_missing<CanBeHeld>()) return false;
-                return f.get<CanBeHeld>().is_not_set();
-            });
+        OptEntity closest_furniture = EQ()
+            .whereCanBePickedUp()
+            .gen_closestInFront(player.get<Transform>(), cho.reach());
         // no match
         if (!closest_furniture) return;
 
@@ -542,9 +534,8 @@ void handle_drop(Entity& player) {
 
     const auto _place_item_onto_furniture =
         [&]() -> tl::expected<bool, std::string> {
-        OptEntity closest_furniture = EQ().getClosestMatchingFurniture(
-            player.get<Transform>(), cho.reach(),
-            [&player](const Entity& f) -> bool {
+        OptEntity closest_furniture = EQ()
+            .whereLambda([&player](const Entity& f) -> bool {
                 // This cant hold anything
                 if (f.is_missing<CanHoldItem>()) return false;
 
@@ -592,7 +583,8 @@ void handle_drop(Entity& player) {
                     // dont worry about suggested filters
                     // because we are a player and force drop
                     RespectFilter::ReqOnly);
-            });
+            })
+            .gen_closestInFront(player.get<Transform>(), cho.reach());
 
         // no matching furniture
         if (!closest_furniture)
@@ -661,8 +653,8 @@ void handle_grab(Entity& player) {
         const CanHighlightOthers& cho = player.get<CanHighlightOthers>();
         const Transform& playerT = player.get<Transform>();
 
-        OptEntity closest_furniture = EQ().getClosestMatchingFurniture(
-            playerT, cho.reach(), [&player](const Entity& furn) -> bool {
+        OptEntity closest_furniture = EQ()
+            .whereLambda([&player](const Entity& furn) -> bool {
                 // You should not be able to take from
                 // other player / customer
                 if (check_type(furn, EntityType::Customer)) return false;
@@ -681,7 +673,8 @@ void handle_grab(Entity& player) {
                 // Can we hold the item it has?
                 return player.get<CanHoldItem>().can_hold(item,
                                                           RespectFilter::All);
-            });
+            })
+            .gen_closestInFront(playerT, cho.reach());
 
         // No matching furniture that also can hold item
         if (!closest_furniture) return false;

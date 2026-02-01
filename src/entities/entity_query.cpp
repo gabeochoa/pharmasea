@@ -8,6 +8,19 @@
 #include "engine/pathfinder.h"
 #include "entity_helper.h"
 
+EQ::EQ(const EQ& other)
+    : afterhours::EntityQuery<EQ>(EntityHelper::get_current_collection(),
+                                  {.ignore_temp_warning = true}) {
+    // Copy filter by re-running on same entity set
+    // Note: We can't deep-copy mods, so we capture the entity IDs
+    // from the original query and filter by those IDs
+    auto ids = const_cast<EQ&>(other).gen_ids();
+    std::set<int> id_set(ids.begin(), ids.end());
+    add_mod(new WhereLambda([id_set = std::move(id_set)](const Entity& entity) {
+        return id_set.count(entity.id) > 0;
+    }));
+}
+
 bool EQ::WhereCanPathfindTo::operator()(const Entity& entity) const {
     return !pathfinder::find_path(
                 start, entity.get<Transform>().tile_directly_infront(),
@@ -79,12 +92,33 @@ EQ& EQ::whereHeldItemMatches(const std::function<bool(const Entity&)>& fn) {
         }));
 }
 
-OptEntity EQ::getClosestMatchingFurniture(
-    const Transform& transform, float range,
-    const std::function<bool(const Entity&)>& filter) {
-    // TODO :BE: should this really be using this?
-    return getMatchingEntityInFront(transform.as2(), transform.face_direction(),
-                                    range, filter);
+OptEntity EQ::gen_closestInFront(const Transform& transform, float range) {
+    TRACY_ZONE_SCOPED;
+    VALIDATE(range > 0, fmt::format("range has to be positive but was {}", range));
+
+    vec2 pos = transform.as2();
+    auto direction = transform.face_direction();
+
+    // First, get all entities matching the accumulated filters
+    auto matching = gen();
+
+    // Now search through positions from closest to farthest
+    int irange = static_cast<int>(range);
+    for (int cur_step = 0; cur_step <= irange; cur_step++) {
+        vec2 tile = Transform::tile_infront_given_pos(pos, cur_step, direction);
+        vec2 snapped_tile = vec::snap(tile);
+
+        for (auto& entity_ref : matching) {
+            Entity& entity = entity_ref.get();
+            if (entity.is_missing<Transform>()) continue;
+
+            vec2 entity_pos = vec::to2(entity.get<Transform>().snap_position());
+            if (entity_pos == snapped_tile) {
+                return entity;
+            }
+        }
+    }
+    return {};
 }
 
 OptEntity EQ::getMatchingEntityInFront(
