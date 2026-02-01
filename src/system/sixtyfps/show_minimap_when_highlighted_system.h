@@ -11,7 +11,7 @@ struct ShowMinimapWhenHighlightedSystem
     : public afterhours::System<
           CanBeHighlighted, afterhours::tags::All<EntityType::MapRandomizer>> {
     virtual void for_each_with(Entity&, CanBeHighlighted& cbh, float) override {
-        if (cbh.is_highlighted()) {
+        if (cbh.is_set()) {
             server_only::set_show_minimap();
         } else {
             server_only::set_hide_minimap();

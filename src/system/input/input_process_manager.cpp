@@ -300,7 +300,7 @@ void drop_held_furniture(Entity& player) {
             return;
     }
 
-    hf->get<CanBeHeld>().set_is_being_held(false);
+    hf->get<CanBeHeld>().update(false);
     Transform& hftrans = hf->get<Transform>();
     hftrans.update(drop_location);
 
@@ -343,7 +343,7 @@ void handle_grab_or_drop(Entity& player) {
                 // right now walls inherit this from furniture
                 // but eventually that should not be the case
                 if (f.is_missing<CanBeHeld>()) return false;
-                return f.get<CanBeHeld>().is_not_held();
+                return f.get<CanBeHeld>().is_not_set();
             });
         // no match
         if (!closest_furniture) return;
@@ -352,7 +352,7 @@ void handle_grab_or_drop(Entity& player) {
                       closest_furniture->get<Transform>().pos());
         OptEntity furniture =
             EntityHelper::getEntityForID(ourCHF.held_id());
-        furniture->get<CanBeHeld>().set_is_being_held(true);
+        furniture->get<CanBeHeld>().update(true);
 
         // Note: we expect thatr since ^ set is held is true,
         // the previous position this furniture was at before you picked it up
@@ -838,7 +838,7 @@ bool handle_hand_truck(Entity& player) {
 
         OptEntity hand_truck =
             EntityHelper::getEntityForID(chht.held_id());
-        hand_truck->get<CanBeHeld_HT>().set_is_being_held(true);
+        hand_truck->get<CanBeHeld_HT>().update(true);
 
         // Note: we expect thatr since ^ set is held is true,
         // the previous position this furniture was at before you picked it up

@@ -65,7 +65,7 @@ struct ProcessGrabberItemsSystem
                 // We only check CanBe when it exists because everyone else can
                 // always be taken from with a grabber
                 if (furn.is_missing<CanBeTakenFrom>()) return true;
-                return furn.get<CanBeTakenFrom>().can_take_from();
+                return furn.get<CanBeTakenFrom>().is_set();
             });
 
         // No furniture behind us

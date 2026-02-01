@@ -14,11 +14,11 @@ namespace input_process_manager {
 bool is_collidable(const Entity& entity, OptEntity other) {
     // by default we disable collisions when you are holding something
     // since its generally inside your bounding box
-    if (entity.has<CanBeHeld>() && entity.get<CanBeHeld>().is_held()) {
+    if (entity.has<CanBeHeld>() && entity.get<CanBeHeld>().is_set()) {
         return false;
     }
 
-    if (entity.has<CanBeHeld_HT>() && entity.get<CanBeHeld_HT>().is_held()) {
+    if (entity.has<CanBeHeld_HT>() && entity.get<CanBeHeld_HT>().is_set()) {
         return false;
     }
 

@@ -15,7 +15,8 @@
       "Bash(sl status:*)",
       "Bash(for dir in /Users/gabeochoa/p/pharmasea/src/system/*/)",
       "Bash(wc:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Skill(10x-engineer:executing-plans)"
     ]
   }
 }

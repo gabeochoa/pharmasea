@@ -221,7 +221,7 @@ struct EQ : public afterhours::EntityQuery<EQ> {
     EQ& whereIsNotBeingHeld() {
         return add_mod(new WhereHasComponent<CanBeHeld>())
             .add_mod(new WhereLambda([](const Entity& entity) {
-                return entity.get<CanBeHeld>().is_not_held();
+                return entity.get<CanBeHeld>().is_not_set();
             }));
     }
 

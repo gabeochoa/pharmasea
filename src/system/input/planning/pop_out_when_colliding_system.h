@@ -47,7 +47,7 @@ struct PopOutWhenCollidingSystem
                 .whereInRange(transform.as2(), 0.7f)
                 .whereLambdaExistsAndTrue([](const Entity& other) {
                     if (other.is_missing<CanBeHeld_HT>()) return true;
-                    return !other.get<CanBeHeld_HT>().is_held();
+                    return !other.get<CanBeHeld_HT>().is_set();
                 })
                 .include_store_entities()
                 .gen_first();

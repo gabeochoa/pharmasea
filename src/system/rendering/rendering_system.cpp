@@ -520,7 +520,7 @@ bool render_debug(const Entity& entity, float dt) {
 
     // Ghost player only render during debug mode
     if (entity.has<CanBeGhostPlayer>() &&
-        entity.get<CanBeGhostPlayer>().is_ghost()) {
+        entity.get<CanBeGhostPlayer>().is_set()) {
         render_simple_normal(entity, dt);
     }
     return render_bounding_box(entity, dt);
@@ -1258,7 +1258,7 @@ void render_normal(const Entity& entity, float dt) {
 
     // Ghost player cant render during normal mode
     if (entity.has<CanBeGhostPlayer>() &&
-        entity.get<CanBeGhostPlayer>().is_ghost()) {
+        entity.get<CanBeGhostPlayer>().is_set()) {
         return;
     }
 
@@ -1303,7 +1303,7 @@ void render_normal(const Entity& entity, float dt) {
     // store
 
     if (entity.has<CanBeHighlighted>() &&
-        entity.get<CanBeHighlighted>().is_highlighted()) {
+        entity.get<CanBeHighlighted>().is_set()) {
         bool used = render_model_highlighted(entity, dt);
         if (!used) {
             render_simple_highlighted(entity, dt);
