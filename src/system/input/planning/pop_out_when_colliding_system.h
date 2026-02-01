@@ -12,6 +12,7 @@
 #include "../../../entities/entity_query.h"
 #include "../../../entities/entity_type.h"
 #include "../../core/system_manager.h"
+#include "../../system_utilities.h"
 
 namespace system_manager {
 
@@ -20,14 +21,7 @@ namespace planning {
 struct PopOutWhenCollidingSystem
     : public afterhours::System<Transform, CanHoldHandTruck, CanHoldFurniture> {
     virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-            return hastimer.is_bar_closed();
-        } catch (...) {
-            return false;
-        }
+        return system_utils::should_run_planning_system();
     }
 
     virtual void for_each_with(Entity& entity, Transform& transform,

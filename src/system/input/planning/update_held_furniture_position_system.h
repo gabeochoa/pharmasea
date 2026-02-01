@@ -2,10 +2,10 @@
 
 #include "../../../ah.h"
 #include "../../../components/can_hold_furniture.h"
-#include "../../../components/has_day_night_timer.h"
 #include "../../../components/transform.h"
 #include "../../../entities/entity_helper.h"
 #include "../../core/system_manager.h"
+#include "../../system_utilities.h"
 
 namespace system_manager {
 
@@ -14,11 +14,7 @@ namespace planning {
 struct UpdateHeldFurniturePositionSystem
     : public afterhours::System<CanHoldFurniture, Transform> {
     virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-
-        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-        const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-        return hastimer.is_bar_closed();
+        return system_utils::should_run_planning_system();
     }
 
     virtual void for_each_with([[maybe_unused]] Entity& entity,

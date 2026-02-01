@@ -9,6 +9,7 @@
 #include "../../../entities/entity_helper.h"
 #include "../../../entities/entity_type.h"
 #include "../../core/system_manager.h"
+#include "../../system_utilities.h"
 
 namespace system_manager {
 
@@ -20,14 +21,9 @@ struct CartManagementSystem
     OptEntity sophie;
 
     virtual bool should_run(const float) override {
-        if (!GameState::get().is_game_like()) return false;
-        try {
-            sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
-            const HasDayNightTimer& hastimer = sophie->get<HasDayNightTimer>();
-            return hastimer.is_bar_closed();
-        } catch (...) {
-            return false;
-        }
+        if (!system_utils::should_run_planning_system()) return false;
+        sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        return true;
     }
 
     virtual void for_each_with(Entity&, IsFloorMarker& ifm, float) override {
