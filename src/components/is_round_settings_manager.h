@@ -9,6 +9,18 @@
 #include "base_component.h"
 
 struct IsRoundSettingsManager : public BaseComponent {
+    struct InteractiveSettings {
+        // Turn tutorial off by default for now :)
+        bool is_tutorial_active = false;
+
+        friend zpp::bits::access;
+        constexpr static auto serialize(auto& archive, auto& self) {
+            return archive(              //
+                self.is_tutorial_active  //
+            );
+        }
+    } interactive_settings;
+
     ConfigData config;
 
     std::vector<std::shared_ptr<UpgradeImpl>> selected_upgrades;
@@ -38,7 +50,7 @@ struct IsRoundSettingsManager : public BaseComponent {
                         ConfigKey::CustomerSpawnMultiplier, 1.f);
                     break;
                 case ConfigKey::NumStoreSpawns:
-                    config.permanent_set<int>(ConfigKey::NumStoreSpawns, 5);
+                    config.permanent_set<int>(ConfigKey::NumStoreSpawns, 10);
                     break;
                 case ConfigKey::PissTimer:
                     config.permanent_set<float>(ConfigKey::PissTimer, 2.5f);
@@ -61,13 +73,47 @@ struct IsRoundSettingsManager : public BaseComponent {
                 case ConfigKey::MaxDrinkTime:
                     config.permanent_set<float>(ConfigKey::MaxDrinkTime, 1.0f);
                     break;
+                case ConfigKey::MaxDwellTime:
+                    config.permanent_set<float>(ConfigKey::MaxDwellTime, 5.0f);
+                    break;
+                case ConfigKey::StoreRerollPrice:
+                    config.permanent_set<int>(ConfigKey::StoreRerollPrice, 50);
+                    break;
+                case ConfigKey::PayProcessTime:
+                    // TODO replace the other ones with key
+                    config.permanent_set<float>(key, 1.f);
+                    break;
             }
         });
     }
 
-    [[nodiscard]] bool is_upgrade_active(const UpgradeClass&) const {
-        // TODO add support
-        return true;
+    [[nodiscard]] bool is_upgrade_active(const UpgradeClass& upgrade) const {
+        switch (upgrade) {
+            case UpgradeClass::LongerDay:
+            case UpgradeClass::UnlockToilet:
+            case UpgradeClass::BigBladders:
+            case UpgradeClass::BigCity:
+            case UpgradeClass::SmallTown:
+            case UpgradeClass::Champagne:
+            case UpgradeClass::Pitcher:
+            case UpgradeClass::MeAndTheBoys:
+            case UpgradeClass::MainStreet:
+            case UpgradeClass::Speakeasy:
+            case UpgradeClass::Mocktails:
+            case UpgradeClass::HeavyHanded:
+            case UpgradeClass::PottyProtocol:
+            case UpgradeClass::SippyCups:
+            case UpgradeClass::DownTheHatch:
+            case UpgradeClass::Jukebox:
+            case UpgradeClass::CantEvenTell:
+                return true;
+                break;
+            case UpgradeClass::HappyHour:
+                // TODO add support for upgrades that arent active 100% of the
+                // time
+                break;
+        }
+        return false;
     }
 
     template<typename T>
@@ -125,10 +171,12 @@ struct IsRoundSettingsManager : public BaseComponent {
         return meets;
     }
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(config);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.config                         //
+        );
     }
 };

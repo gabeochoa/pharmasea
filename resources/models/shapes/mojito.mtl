@@ -1,0 +1,16 @@
+newmtl glass
+Kd 0.75 0.88 1.0
+Ks 0.2 0.2 0.2
+Ns 64
+Tr 0.25
+
+newmtl glass_inner
+Kd 0.7 0.85 0.95
+Ks 0.15 0.15 0.15
+Ns 32
+Tr 0.35
+
+newmtl lime
+Kd 0.5 0.9 0.4
+Ks 0.05 0.05 0.05
+Ns 8

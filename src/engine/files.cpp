@@ -1,5 +1,6 @@
 #include "files.h"
 
+#include "assert.h"
 #include "globals.h"
 
 #ifdef __APPLE__
@@ -25,7 +26,19 @@
 #pragma GCC diagnostic pop
 #endif
 
-std::shared_ptr<Files> Files_single;
+Files Files::instance;
+bool Files::created = false;
+
+void Files::create(const FilesConfig& config) {
+    if (created) {
+        log_error("Tryin to create Files twice");
+        return;
+    }
+    new (&instance) Files(config);
+    created = true;
+}
+
+Files& Files::get() { return instance; }
 
 Files::Files(const FilesConfig& config)
     : root(config.root_folder), settings_file(config.settings_file_name) {
@@ -42,8 +55,8 @@ bool Files::ensure_game_folder_exists() {
     if (fs::exists(fld)) {
         return true;
     }
-    bool created = fs::create_directories(fld);
-    if (created) {
+    bool was_created = fs::create_directories(fld);
+    if (was_created) {
         log_info("Created Game Folder: {}", fld);
         return true;
     }
@@ -71,7 +84,8 @@ std::string Files::fetch_resource_path(std::string_view group,
 
 void Files::for_resources_in_group(
     std::string_view group,
-    std::function<void(std::string, std::string, std::string)> cb) const {
+    const std::function<void(std::string, std::string, std::string)>& cb)
+    const {
     auto folder_path = (resource_folder() / fs::path(group));
 
     try {
@@ -89,7 +103,7 @@ void Files::for_resources_in_group(
 
 void Files::for_resources_in_folder(
     std::string_view group, std::string_view folder,
-    std::function<void(std::string, std::string)> cb) const {
+    const std::function<void(std::string, std::string)>& cb) const {
     auto folder_path = (resource_folder() / fs::path(group) / fs::path(folder));
 
     try {

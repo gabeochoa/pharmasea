@@ -5,7 +5,11 @@
             "filename": "banana.obj",
             "library_name": "invalid",
             "size_scale": 3.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 90.0
         },
         {
@@ -13,7 +17,11 @@
             "filename": "bread.obj",
             "library_name": "conveyer",
             "size_scale": 3.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 90.0
         },
         {
@@ -21,31 +29,43 @@
             "filename": "bread.obj",
             "library_name": "grabber",
             "size_scale": 3.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 90.0
         },
+        // {
+        //     "folder": "models",
+        //     "filename": "register.obj",
+        //     "library_name": "register",
+        //     "size_scale": 10.0,
+        //     "position_offset": [0,-0.5,0],
+        //     "rotation_angle": 0.0
+        // },
         {
-            "folder": "models",
-            "filename": "register.obj",
-            "library_name": "register",
-            "size_scale": 10.0,
-            "position_offset": [0,-0.5,0],
-            "rotation_angle": 0.0
-        },
-        {
-            "folder": "models/kennynl",
-            "filename": "boxOpen.glb",
+            "folder": "models/converted/kennynl",
+            "filename": "boxOpen.obj",
             "library_name": "open_cupboard",
             "size_scale": 4.0,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kennynl",
-            "filename": "box.glb",
+            "folder": "models/converted/kennynl",
+            "filename": "box.obj",
             "library_name": "cupboard",
             "size_scale": 4.0,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -53,7 +73,11 @@
             "filename": "mussel.obj",
             "library_name": "champagne",
             "size_scale": 5.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -61,7 +85,11 @@
             "filename": "musselOpen.obj",
             "library_name": "champagne_open",
             "size_scale": 5.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -69,7 +97,11 @@
             "filename": "sodaBottle.obj",
             "library_name": "beer",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -78,23 +110,35 @@
             "filename": "sodaBottle.obj",
             "library_name": "beer_pitcher",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kennynl",
-            "filename": "barrel.glb",
+            "folder": "models/converted/kennynl",
+            "filename": "barrel.obj",
             "library_name": "draft_tap",
             "size_scale": 2.0,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kennynl",
-            "filename": "barrel.glb",
+            "folder": "models/converted/kennynl",
+            "filename": "barrel.obj",
             "library_name": "medicine_cabinet",
             "size_scale": 2.0,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -102,7 +146,11 @@
             "filename": "me.glb",
             "library_name": "character_gabe",
             "size_scale": 2.5,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 180.0
         },
         {
@@ -110,7 +158,11 @@
             "filename": "me2.glb",
             "library_name": "character_gabe2",
             "size_scale": 2.5,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 180.0
         },
         {
@@ -118,7 +170,23 @@
             "filename": "ruth.glb",
             "library_name": "character_ruth",
             "size_scale": 2.5,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models",
+            "filename": "efb.glb",
+            "library_name": "character_efb",
+            "size_scale": 2.5,
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 180.0
         },
         {
@@ -126,7 +194,11 @@
             "filename": "character_bear.gltf",
             "library_name": "character_bear",
             "size_scale": 1.5,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 180.0
         },
         {
@@ -134,7 +206,11 @@
             "filename": "character_dog.gltf",
             "library_name": "character_dog",
             "size_scale": 1.5,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 180.0
         },
         {
@@ -142,7 +218,11 @@
             "filename": "character_duck.gltf",
             "library_name": "character_duck",
             "size_scale": 1.5,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 180.0
         },
         {
@@ -150,7 +230,11 @@
             "filename": "character_rogue.gltf",
             "library_name": "character_rogue",
             "size_scale": 1.5,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 180.0
         },
         {
@@ -158,7 +242,11 @@
             "filename": "crate.obj",
             "library_name": "soda_machine",
             "size_scale": 2.0,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -166,7 +254,11 @@
             "filename": "sodaGlass.obj",
             "library_name": "screwdriver",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -174,7 +266,11 @@
             "filename": "sodaGlass.obj",
             "library_name": "long_island",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -182,7 +278,11 @@
             "filename": "crate.obj",
             "library_name": "pill_dispenser",
             "size_scale": 2.0,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -190,7 +290,11 @@
             "filename": "banana.obj",
             "library_name": "soda_spout",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -198,7 +302,11 @@
             "filename": "cocktail.obj",
             "library_name": "margarita",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -206,7 +314,11 @@
             "filename": "cocktail.obj",
             "library_name": "mai_tai",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -214,7 +326,11 @@
             "filename": "cocktail.obj",
             "library_name": "cosmo",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -222,115 +338,167 @@
             "filename": "eggCup.obj",
             "library_name": "drink",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_A_brown.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_A_brown.gltf.obj",
             "library_name": "alcohol",
             "size_scale": 1.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_C_brown.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_C_brown.gltf.obj",
             "library_name": "rum",
             "size_scale": 1.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
-
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_A_labeled_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_A_labeled_green.gltf.obj",
             "library_name": "vodka",
             "size_scale": 1.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
-
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_B_brown.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_B_brown.gltf.obj",
             "library_name": "tequila",
             "size_scale": 1.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_B_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_B_green.gltf.obj",
             "library_name": "gin",
             "size_scale": 1.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
-
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_A_brown.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_A_brown.gltf.obj",
             "library_name": "bitters",
             "size_scale": 1.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
-
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_C_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_C_green.gltf.obj",
             "library_name": "triplesec",
             "size_scale": 1.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_C_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_C_green.gltf.obj",
             "library_name": "cointreau",
             "size_scale": 1.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
-            "folder": "models/kaykit",
-            "filename": "bottle_C_green.gltf.glb",
+            "folder": "models/converted/kaykit",
+            "filename": "bottle_C_green.gltf.obj",
             "library_name": "whiskey",
             "size_scale": 1.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
-        {
-            "folder": "models/kaykit",
-            "filename": "Barrel_A.obj",
-            "library_name": "barrel_a",
-            "size_scale": 1.0,
-            "position_offset": [0,0,0],
-            "rotation_angle": 0.0
-        },
-        {
-            "folder": "models/kaykit",
-            "filename": "Barrel_B.obj",
-            "library_name": "barrel_b",
-            "size_scale": 1.0,
-            "position_offset": [0,0,0],
-            "rotation_angle": 0.0
-        },
-        {
-            "folder": "models/kaykit",
-            "filename": "Barrel_C.obj",
-            "library_name": "barrel_c",
-            "size_scale": 1.0,
-            "position_offset": [0,0,0],
-            "rotation_angle": 0.0
-        },
+        // {
+        //     "folder": "models/kaykit",
+        //     "filename": "Barrel_A.obj",
+        //     "library_name": "barrel_a",
+        //     "size_scale": 1.0,
+        //     "position_offset": [
+        //         0,
+        //         0,
+        //         0
+        //     ],
+        //     "rotation_angle": 0.0
+        // },
+        // {
+        //     "folder": "models/kaykit",
+        //     "filename": "Barrel_B.obj",
+        //     "library_name": "barrel_b",
+        //     "size_scale": 1.0,
+        //     "position_offset": [
+        //         0,
+        //         0,
+        //         0
+        //     ],
+        //     "rotation_angle": 0.0
+        // },
+        // {
+        //     "folder": "models/kaykit",
+        //     "filename": "Barrel_C.obj",
+        //     "library_name": "barrel_c",
+        //     "size_scale": 1.0,
+        //     "position_offset": [
+        //         0,
+        //         0,
+        //         0
+        //     ],
+        //     "rotation_angle": 0.0
+        // },
         {
             "folder": "models/kennynl",
             "filename": "soda.obj",
             "library_name": "soda",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -338,7 +506,11 @@
             "filename": "sodaBottle.obj",
             "library_name": "coke",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -346,7 +518,11 @@
             "filename": "sodaCan.obj",
             "library_name": "soda_can",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -354,15 +530,23 @@
             "filename": "normal.obj",
             "library_name": "rum_and_coke",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
             "folder": "models/shapes",
             "filename": "mojito.obj",
             "library_name": "mojito",
-            "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "size_scale": 0.6,
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -370,7 +554,11 @@
             "filename": "sodaGlass.obj",
             "library_name": "old_fashioned",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -378,7 +566,11 @@
             "filename": "sodaGlass.obj",
             "library_name": "vodka_tonic",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -386,7 +578,11 @@
             "filename": "sodaGlass.obj",
             "library_name": "whiskey_sour",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -394,7 +590,11 @@
             "filename": "sodaGlass.obj",
             "library_name": "gin_and_tonic",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -402,7 +602,11 @@
             "filename": "sodaGlass.obj",
             "library_name": "pina_colada",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -410,7 +614,11 @@
             "filename": "sodaGlass.obj",
             "library_name": "soda_glass",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -418,7 +626,11 @@
             "filename": "sodaGlass.obj",
             "library_name": "daiquiri",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -426,7 +638,11 @@
             "filename": "pineapple.obj",
             "library_name": "pineapple",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -434,7 +650,11 @@
             "filename": "lemonHalf.obj",
             "library_name": "pina_juice",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -442,7 +662,11 @@
             "filename": "lime.obj",
             "library_name": "lime",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -450,7 +674,11 @@
             "filename": "limeHalf.obj",
             "library_name": "lime_juice",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -458,7 +686,11 @@
             "filename": "lemon.obj",
             "library_name": "lemon",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -466,7 +698,11 @@
             "filename": "lemonHalf.obj",
             "library_name": "lemon_juice",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -474,7 +710,11 @@
             "filename": "coconut.obj",
             "library_name": "coconut",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -482,7 +722,11 @@
             "filename": "coconutHalf.obj",
             "library_name": "coconut_cream",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -490,7 +734,11 @@
             "filename": "orange.obj",
             "library_name": "orange",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -498,7 +746,11 @@
             "filename": "orangeHalf.obj",
             "library_name": "orange_juice",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -506,7 +758,11 @@
             "filename": "cherries.obj",
             "library_name": "cranberries",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -514,7 +770,11 @@
             "filename": "can.obj",
             "library_name": "cranberry_juice",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -523,7 +783,11 @@
             "filename": "can.obj",
             "library_name": "moscow_mule",
             "size_scale": 2.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -531,7 +795,11 @@
             "filename": "kitchenBlender.obj",
             "library_name": "blender",
             "size_scale": 7.0,
-            "position_offset": [-0.5,-0.5,0.5],
+            "position_offset": [
+                -0.5,
+                -0.5,
+                0.5
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -539,7 +807,11 @@
             "filename": "bottleMusterd.obj",
             "library_name": "simple_syrup",
             "size_scale": 3.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -547,7 +819,11 @@
             "filename": "kitchenCoffeeMachine.obj",
             "library_name": "squirter",
             "size_scale": 4.0,
-            "position_offset": [-0.5,0.0,0.5],
+            "position_offset": [
+                -0.5,
+                0.0,
+                0.5
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -555,7 +831,11 @@
             "filename": "toilet.obj",
             "library_name": "toilet",
             "size_scale": 2.0,
-            "position_offset": [-0.25,-0.5,-0.5],
+            "position_offset": [
+                -0.25,
+                -0.5,
+                -0.5
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -563,7 +843,11 @@
             "filename": "trashcan.obj",
             "library_name": "trash",
             "size_scale": 2.2,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -571,7 +855,11 @@
             "filename": "chocolateWrapper.obj",
             "library_name": "filtered_grabber",
             "size_scale": 3.0,
-            "position_offset": [0,0,0],
+            "position_offset": [
+                0,
+                0,
+                0
+            ],
             "rotation_angle": 90.0
         },
         {
@@ -579,7 +867,11 @@
             "filename": "pylon.obj",
             "library_name": "pnumatic_pipe",
             "size_scale": 7.0,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -587,7 +879,11 @@
             "filename": "pizza.obj",
             "library_name": "vomit",
             "size_scale": 0.75,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -595,7 +891,11 @@
             "filename": "lollypop.obj",
             "library_name": "guitar",
             "size_scale": 5,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 90.0
         },
         {
@@ -603,7 +903,11 @@
             "filename": "pumpkinTallCarved.obj",
             "library_name": "mop_buddy",
             "size_scale": 5,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 180.0
         },
         {
@@ -611,7 +915,11 @@
             "filename": "lampSquareCeiling.obj",
             "library_name": "mop_holder",
             "size_scale": 5.0,
-            "position_offset": [-0.25,-0.5,0.25],
+            "position_offset": [
+                -0.25,
+                -0.5,
+                0.25
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -619,7 +927,11 @@
             "filename": "bathroomSinkSquare.obj",
             "library_name": "ice_machine",
             "size_scale": 1.2,
-            "position_offset": [0.0,-0.5,0.05],
+            "position_offset": [
+                0.0,
+                -0.5,
+                0.05
+            ],
             "rotation_angle": 0.0
         },
         {
@@ -627,7 +939,35 @@
             "filename": "chairRounded.obj",
             "library_name": "jukebox",
             "size_scale": 3.0,
-            "position_offset": [0.25,-0.5,0.0],
+            "position_offset": [
+                0.25,
+                -0.5,
+                0.0
+            ],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "chairRounded.obj",
+            "library_name": "hand_truck",
+            "size_scale": 3.0,
+            "position_offset": [
+                0.25,
+                -0.5,
+                0.0
+            ],
+            "rotation_angle": 180.0
+        },
+        {
+            "folder": "models/kennynl",
+            "filename": "vending-machine.obj",
+            "library_name": "soda_fountain",
+            "size_scale": 2.0,
+            "position_offset": [
+                0,
+                -0.5,
+                0.0
+            ],
             "rotation_angle": 180.0
         },
         {
@@ -635,16 +975,20 @@
             "filename": "lampRoundFloor.obj",
             "library_name": "mop",
             "size_scale": 3.0,
-            "position_offset": [0,-0.5,0],
+            "position_offset": [
+                0,
+                -0.5,
+                0
+            ],
             "rotation_angle": 0.0
-        //},
-        //{
-        //    "folder": "models/kennynl",
-        //    "filename": "wall.obj",
-        //    "library_name": "wall",
-        //    "size_scale": 1.0,
-        //    "position_offset": [-0.5,-0.5,0],
-        //    "rotation_angle": 0.0
+            //},
+            //{
+            //    "folder": "models/kennynl",
+            //    "filename": "wall.obj",
+            //    "library_name": "wall",
+            //    "size_scale": 1.0,
+            //    "position_offset": [-0.5,-0.5,0],
+            //    "rotation_angle": 0.0
         }
     ]
 }

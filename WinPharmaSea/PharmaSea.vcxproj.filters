@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -125,7 +125,7 @@
     <ClInclude Include="..\src\engine\gamepad_axis_with_dir.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\engine\globals_register.h">
+    <ClInclude Include="..\src\engine\runtime_globals.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\engine\is_server.h">
@@ -141,9 +141,6 @@
       <Filter>Source Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\engine\model_library.h">
-      <Filter>Source Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\engine\music_library.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\engine\navmesh.h">
@@ -162,9 +159,6 @@
       <Filter>Source Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\engine\singleton.h">
-      <Filter>Source Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\engine\sound_library.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\engine\texture_library.h">
@@ -191,9 +185,7 @@
     <ClInclude Include="..\src\system\system_manager.h">
       <Filter>Source Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\level_info.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <!-- level_info.h was removed; Map lives in map.h -->
     <ClInclude Include="..\src\system\input_process_manager.h">
       <Filter>Source Files\System</Filter>
     </ClInclude>
@@ -446,7 +438,10 @@
     <ClInclude Include="..\src\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\map_generation.h">
+    <ClInclude Include="..\src\map_generation\map_generation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map_generation\in_game_map_generation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\network\internal\channel.h">
@@ -560,7 +555,7 @@
     <ClInclude Include="..\src\tests\rect_split_tests.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\wave_collapse.h">
+    <ClInclude Include="..\src\map_generation\wave_collapse.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\system\ingredient_helper.h">
@@ -635,6 +630,99 @@
     <ClInclude Include="..\src\system\ai_system.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\engine\path_request_manager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\random_engine.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\svg_renderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\unreachable.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\building_locations.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lighting_runtime.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client_server_comm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\local_ui.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map_generation\simple.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\translation_en_rev.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\translation_en_us.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\translation_es_la.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\translation_ko_kr.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\polymorphic_components.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\ai_clean_vomit.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\ai_close_tab.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\ai_component.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\ai_drinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\ai_play_jukebox.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\ai_use_bathroom.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\ai_wait_in_queue.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\ai_wandering.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\can_change_settings_interactively.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\can_hold_handtruck.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\collects_customer_feedback.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\has_day_night_timer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\has_fishing_game.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\has_last_interacted_customer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\is_nux_manager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\is_store_spawned.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\responds_to_day_night.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\game.cpp">
@@ -661,7 +749,7 @@
     <ClCompile Include="..\src\preload.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\engine\globals_register.cpp">
+    <ClCompile Include="..\src\engine\runtime_globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\system\input_process_manager.cpp">
@@ -673,7 +761,7 @@
     <ClCompile Include="..\src\entity_makers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\level_info.cpp">
+    <ClCompile Include="..\src\map_generation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\network\server.cpp">
@@ -688,7 +776,10 @@
     <ClCompile Include="..\src\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\wave_collapse.cpp">
+    <ClCompile Include="..\src\map_generation\wave_collapse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\map_generation\in_game_map_generation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\system\ingredient_helper.cpp">
@@ -710,6 +801,63 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\dataclass\upgrades.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\is_progression_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\keymap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entity_query.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\system\ai_system.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\dataclass\configdata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\path_request_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\random_engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\system\ui_rendering_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client_server_comm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\recipe_library.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\layers\gamedebuglayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\layers\gamelayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lighting_runtime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\layers\networklayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\layers\pauselayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\layers\recipe_book_layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\layers\seedmanagerlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\has_dynamic_model_name.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

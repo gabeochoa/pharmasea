@@ -1,21 +1,19 @@
 
 #pragma once
 
+#include "../entities/entity_ref.h"
 #include "base_component.h"
 
-using EntityID = int;
-
 struct HasLastInteractedCustomer : public BaseComponent {
-    EntityID customer_id = -1;
-
-    virtual ~HasLastInteractedCustomer() {}
+    EntityRef customer{};
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(customer_id);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.customer                       //
+        );
     }
 };

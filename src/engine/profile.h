@@ -36,7 +36,7 @@ struct Samples {
     }
 };
 
-typedef std::pair<std::string, Samples> Sample;
+using Sample = std::pair<std::string, Samples>;
 
 SINGLETON_FWD(Profiler);
 struct Profiler {
@@ -69,19 +69,20 @@ struct function_raii {
     ~function_raii() {
         auto end = std::chrono::high_resolution_clock::now();
         float duration =
-            (float) std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
+            (float) std::chrono::duration_cast<std::chrono::nanoseconds>(end -
+                                                                         start)
                 .count();
         Profiler::get().add_sample(name, filename, duration);
     }
 };
 
-[[nodiscard]] inline const std::string fmt_filename(const std::string& file,
-                                                    int lineNum) {
+[[nodiscard]] inline std::string fmt_filename(const std::string& file,
+                                              int lineNum) {
     return fmt::format("{}:{} ", file, lineNum);
 }
 
 // https://stackoverflow.com/a/29856690
-[[nodiscard]] inline const std::string computeMethodName(
+[[nodiscard]] inline std::string computeMethodName(
     const std::string& function, const std::string& prettyFunction,
     const char* extra) {
     // If the input is a constructor, it gets the beginning of

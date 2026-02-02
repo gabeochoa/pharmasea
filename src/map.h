@@ -2,27 +2,39 @@
 
 #pragma once
 
-#include "components/collects_user_input.h"
-#include "engine.h"
-#include "engine/container_cast.h"
-#include "engine/log.h"
+#include <string>
+#include <type_traits>
+#include <vector>
+
+#include "engine/assert.h"
+#include "entities/entity_helper.h"
 #include "external_include.h"
-//
-#include "entity_helper.h"
-#include "level_info.h"
-#include "system/system_manager.h"
+#include "serialization/world_snapshot_blob.h"
+
+constexpr int MIN_MAP_SIZE = 10;
+constexpr int MAX_MAP_SIZE = 25;
+constexpr int MAX_SEED_LENGTH = 20;
+
+extern std::vector<std::string> EXAMPLE_MAP;
+
+namespace ps::concepts {
+
+template<typename Archive>
+concept HasZppBitsKind = requires { std::remove_cvref_t<Archive>::kind(); };
+
+template<typename Archive>
+concept ZppBitsOutArchive =
+    HasZppBitsKind<Archive> &&
+    (std::remove_cvref_t<Archive>::kind() == zpp::bits::kind::out);
+
+template<typename Archive>
+concept ZppBitsInArchive =
+    HasZppBitsKind<Archive> &&
+    (std::remove_cvref_t<Archive>::kind() == zpp::bits::kind::in);
+
+}  // namespace ps::concepts
 
 struct Map {
-    // Serialized
-    bool showMinimap = false;
-    LevelInfo game_info;
-
-    // No serialized
-    Entities local_players_NOT_SERIALIZED;
-    Entities remote_players_NOT_SERIALIZED;
-    std::string seed;
-    bool showSeedInputBox = false;
-
     // This gets called on every network frame because
     // the serializer uses the default contructor
     Map() {}
@@ -32,81 +44,91 @@ struct Map {
         update_seed(seed);
     }
 
-    void update_map(const Map& new_map) {
-        this->showMinimap = new_map.showMinimap;
-    }
+    // Serialized
+    bool showMinimap = false;
+    bool was_generated = false;
+    game::State last_generated = game::State::InMenu;
+    size_t hashed_seed = 0;
 
-    void update_seed(const std::string& s) {
-        seed = s;
-        game_info.update_seed(s);
-    }
+    // No serialized
+    Entities local_players_NOT_SERIALIZED;
+    Entities remote_players_NOT_SERIALIZED;
+    std::string seed;
+    bool showSeedInputBox = false;
 
-    OptEntity get_remote_with_cui() {
-        for (const auto& e : remote_players_NOT_SERIALIZED) {
-            if (e->has<CollectsUserInput>()) {
-                return *e;
-            }
-        }
-        return {};
-    }
+    void update_seed(const std::string& s);
 
-    Entities entities() const { return game_info.entities; }
+    OptEntity get_remote_with_cui();
+
+    void update_map(const Map& new_map);
 
     void onUpdate(float dt) {  //
         _onUpdate(remote_players_NOT_SERIALIZED, dt);
     }
 
-    void onUpdateLocalPlayers(float dt) {
-        // TODO for right now the only thing this does is collect input
-        // which we want to turn off until you close the box
-        if (showSeedInputBox) return;
-        SystemManager::get().update_local_players(local_players_NOT_SERIALIZED,
-                                                  dt);
-    }
+    void onUpdateLocalPlayers(float dt);
+    void onUpdateRemotePlayers(float dt);
 
     void _onUpdate(const std::vector<std::shared_ptr<Entity>>& players,
-                   float dt) {
-        TRACY_ZONE_SCOPED;
-        // TODO :BE: add to debug overlay
-        // log_info("num items {}", items().size());
+                   float dt);
 
-        game_info.ensure_generated_map(seed);
-        game_info.onUpdate(players, dt);
-    }
+    void onDraw(float dt) const;
+    void onDrawUI(float dt);
 
-    void onDraw(float dt) const {
-        TRACY_ZONE_SCOPED;
-        // TODO :INFRA: merge this into normal render pipeline
-        SystemManager::get().render_entities(
-            container_cast(remote_players_NOT_SERIALIZED,
-                           "converting sp<RemotePlayer> to sp<Entity> as these "
-                           "are not serialized and so not part of level info"),
-            dt);
+    void ensure_generated_map(const std::string& new_seed);
 
-        game_info.onDraw(dt);
-    }
+    // called by the server sometimes
+    void generate_model_test_map();
+    // called by the server sometimes
+    void generate_load_save_room_map();
 
-    void onDrawUI(float dt) {
-        TRACY_ZONE_SCOPED;
-
-        // TODO :INFRA: merge this into normal render pipeline
-        SystemManager::get().render_ui(
-            container_cast(remote_players_NOT_SERIALIZED,
-                           "converting sp<RemotePlayer> to sp<Entity> as these "
-                           "are not serialized and so not part of level info"),
-            dt);
-        game_info.onDrawUI(dt);
-    }
-
-    // These are called before every "send_map_state" when server
-    // sends everything over to clients
-    void grab_things() { game_info.grab_things(); }
-
+   public:
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.object(game_info);
-        s.value1b(showMinimap);
+    void generate_lobby_map();
+    void generate_progression_map();
+    void generate_store_map();
+    void generate_default_seed();
+
+    void generate_in_game_map();
+    auto get_rand_walkable();
+    auto get_rand_walkable_register();
+    void add_outside_triggers(vec2 origin);
+
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        // Pointer-free snapshot surface:
+        // - We serialize the entire world into a byte blob (no pointer
+        // linking).
+        // - Then we serialize map metadata (was_generated, seed, hashed_seed).
+        // - Then showMinimap.
+        //
+        // NOTE: This is intentionally a breaking change vs. the historical
+        // StdSmartPtr-based entity graph serialization.
+
+        std::string world_blob;
+        using ArchiveT = decltype(archive);
+        if constexpr (ps::concepts::ZppBitsOutArchive<ArchiveT>) {
+            world_blob = snapshot_blob::encode_current_world();
+        }
+
+        // Serialize as raw bytes: length + 1-byte chars.
+        // (Bitsery's `container4b`/`text4b` mean 4-bytes-per-element, which
+        // is NOT what we want for a byte blob.)
+        auto result = archive(   //
+            world_blob,          //
+            self.was_generated,  //
+            self.seed,           //
+            self.hashed_seed,    //
+            self.showMinimap     //
+        );
+
+        if constexpr (ps::concepts::ZppBitsInArchive<ArchiveT>) {
+            const bool ok =
+                snapshot_blob::decode_into_current_world(world_blob);
+            VALIDATE(ok, "failed to decode world snapshot blob");
+        }
+
+        return result;
     }
 };

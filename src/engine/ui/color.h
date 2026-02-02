@@ -1,110 +1,25 @@
-
 #pragma once
 
 #include "../../vec_util.h"
+#include "afterhours/src/plugins/color.h"
 
 namespace ui {
 namespace color {
 
-inline Color getOppositeColor(const Color& color) {
-    return Color{                                            //
-                 static_cast<unsigned char>(255 - color.r),  //
-                 static_cast<unsigned char>(255 - color.g),  //
-                 static_cast<unsigned char>(255 - color.b),  //
-                 color.a};
-}
-
-inline unsigned char comp_min(const Color& a) {
-    return (unsigned char) std::min({a.r, a.g, a.b});
-}
-
-inline unsigned char comp_max(const Color& a) {
-    return (unsigned char) std::max({a.r, a.g, a.b});
-}
-
-inline bool is_empty(const Color& c) {
-    return c.r == 0 && c.g == 0 && c.b == 0 && c.a == 0;
-}
-
-inline vec3 toHSL(const Color color) {
-    const unsigned char cmax = comp_max(color);
-    const unsigned char cmin = comp_min(color);
-    const unsigned char delta = cmax - cmin;
-
-    vec3 hsl = {0.f, 0.f, (cmax + cmin) / 2.f};
-
-    if (fabs(delta) <= EPSILON) {
-        return hsl;
-    }
-
-    if (fabs(cmax - color.r) <= EPSILON) {
-        hsl.x = static_cast<float>(std::fmod((color.g - color.b) / delta, 6.f));
-    } else if (fabs(cmax - color.g) <= EPSILON) {
-        hsl.x = (color.b - color.r) / delta + 2.f;
-    } else {
-        hsl.x = (color.r - color.g) / delta + 4.f;
-    }
-
-    hsl.y = static_cast<float>(delta / (1.f - fabs(2.f * hsl.z - 1.f)));
-    hsl.x /= 6.f;
-    hsl.x = std::fmod(hsl.x + 1.f, 1.f);
-    return hsl;
-}
-
-inline Color toRGB(const vec3& hsl) {
-    const float k = hsl.x * 6.f;
-    const float c = (1.f - std::abs(2.f * hsl.z - 1.f)) * hsl.y;
-    const float x = c * (1.f - std::abs(std::fmod(k, 2.f) - 1.f));
-    const float m = hsl.z - c / 2.f;
-    const int d = int(std::floor(k));
-
-    vec3 rgb;
-
-    switch (d) {
-        case 0:
-            rgb = {c, x, 0.f};
-            break;
-        case 1:
-            rgb = {x, c, 0.f};
-            break;
-        case 2:
-            rgb = {0.f, c, x};
-            break;
-        case 3:
-            rgb = {0.f, x, c};
-            break;
-        case 4:
-            rgb = {x, 0.f, c};
-            break;
-        default:
-            rgb = {c, 0.f, x};
-            break;
-    }
-
-    return Color{
-        (unsigned char) (255 * (rgb.x + m)),
-        (unsigned char) (255 * (rgb.y + m)),
-        (unsigned char) (255 * (rgb.z + m)),
-        (unsigned char) 255,
-    };
-}
-
-inline Color getHighlighted(const Color& color) {
-    auto hsl = toHSL(color);
-    hsl.z = (hsl.z + 0.01f);
-    return toRGB(hsl);
-}
-
-static const Color pacific_blue = Color{71, 168, 189, 255};
-static const Color oxford_blue = Color{12, 27, 51, 255};
-static const Color orange_soda = Color{240, 100, 73, 255};
-static const Color isabelline = Color{237, 230, 227, 255};
-static const Color tea_green = Color{195, 232, 189, 255};
+// Color constants - keeping Pharmasea versions for compatibility
+// Note: afterhours has similar constants but with slightly different values
+static constexpr Color transleucent_green = Color{0, 250, 50, 5};
+static constexpr Color transleucent_red = Color{250, 0, 50, 5};
+static constexpr Color pacific_blue = Color{71, 168, 189, 255};
+static constexpr Color oxford_blue = Color{12, 27, 51, 255};
+static constexpr Color orange_soda = Color{240, 100, 73, 255};
+static constexpr Color isabelline = Color{237, 230, 227, 255};
+static constexpr Color tea_green = Color{195, 232, 189, 255};
 
 // This is the original xkcd cerulean but i prefer the other one
 // static const Color cerulean = Color{4, 133, 209, 255};
 
-static const Color cerulean = Color{0, 126, 167, 255};
+static constexpr Color cerulean = Color{0, 126, 167, 255};
 
 // "secondary": [33, 158, 188, 255], // nice blue but too close to pacific
 

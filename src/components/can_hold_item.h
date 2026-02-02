@@ -1,13 +1,17 @@
 #pragma once
 
 #include <exception>
+#include <memory>
 #include <optional>
 //
 
-#include "../entity.h"
 #include "base_component.h"
 //
 #include "../dataclass/entity_filter.h"
+#include "../entities/entity.h"
+#include "../entities/entity_id.h"
+#include "../entities/entity_ref.h"
+#include "../entities/entity_type.h"
 #include "has_subtype.h"
 #include "is_item.h"
 
@@ -15,49 +19,49 @@ struct CanHoldItem : public BaseComponent {
     CanHoldItem() : held_by(EntityType::Unknown), filter(EntityFilter()) {}
     explicit CanHoldItem(EntityType hb) : held_by(hb), filter(EntityFilter()) {}
 
-    virtual ~CanHoldItem() {}
-
-    [[nodiscard]] bool empty() const { return held_item == nullptr; }
+    [[nodiscard]] bool empty() const {
+        // Treat stale IDs as empty to avoid asserting on missing entities.
+        return !item();
+    }
     // Whether or not this entity has something we can take from them
     [[nodiscard]] bool is_holding_item() const { return !empty(); }
 
     CanHoldItem& update(std::shared_ptr<Entity> item, int entity_id) {
-        if (held_item != nullptr && !held_item->cleanup &&
-            //
-            (held_item->has<IsItem>() && !held_item->get<IsItem>().is_held())
-            //
-        ) {
-            log_warn(
-                "you are updating the held item to null, but the old one isnt "
-                "marked cleanup (and not being held) , this might be an issue "
-                "if you are tring to "
-                "delete it");
-        }
+        if (!item) return update(nullptr, entity_id);
+        return update(*item, entity_id);
+    }
 
-        held_item = item;
-        if (held_item) {
-            held_item->get<IsItem>().set_held_by(held_by, entity_id);
-            last_held_id = held_item->id;
+    CanHoldItem& update(Entity& item, int entity_id) {
+        held_item.set(item);
+        // Defensive: this should always be an item, but avoid hard-crashing if
+        // an unexpected entity is passed in.
+        if (item.has<IsItem>()) {
+            item.get<IsItem>().set_held_by(held_by, entity_id);
+        } else {
+            log_error(
+                "CanHoldItem::update: entity {} was set as held item but is "
+                "missing IsItem",
+                item.id);
         }
-        if (held_item && held_by == EntityType::Unknown) {
+        last_held.set(item);
+        if (held_by == EntityType::Unknown) {
             log_warn(
                 "We never had our HeldBy set, so we are holding {}{}  by "
                 "UNKNOWN",
-                item->id, item->name());
+                item.id, str(get_entity_type(item)));
         }
         return *this;
     }
 
-    // TODO this isnt const because we want to write to the item
-    // we could make this const and then expose certain things that we want to
-    // change separately like 'held_by'
-    // (change to use update instead and make this const)
-    [[nodiscard]] std::shared_ptr<Entity>& item() { return held_item; }
-
-    // const?
-    [[nodiscard]] const std::shared_ptr<Entity> const_item() const {
-        return held_item;
+    CanHoldItem& update(std::nullptr_t, int) {
+        held_item.clear();
+        return *this;
     }
+
+    [[nodiscard]] OptEntity item() const;
+    [[nodiscard]] OptEntity const_item() const;
+
+    [[nodiscard]] EntityID item_id() const { return held_item.id; }
 
     CanHoldItem& set_filter(EntityFilter ef) {
         filter = ef;
@@ -86,22 +90,23 @@ struct CanHoldItem : public BaseComponent {
     [[nodiscard]] const EntityFilter& get_filter() const { return filter; }
     [[nodiscard]] EntityType hb_type() const { return held_by; }
 
-    [[nodiscard]] EntityID last_id() const { return last_held_id; }
+    [[nodiscard]] EntityID last_id() const { return last_held.id; }
 
    private:
-    EntityID last_held_id = -1;
-    std::shared_ptr<Entity> held_item = nullptr;
+    EntityRef last_held{};
+    EntityRef held_item{};
     EntityType held_by;
     EntityFilter filter;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(held_by);
-
-        // TODO we only need these for debug info
-        s.ext(held_item, bitsery::ext::StdSmartPtr{});
-        s.object(filter);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.held_by,                       //
+            self.held_item,                     //
+            self.last_held,                     //
+            self.filter                         //
+        );
     }
 };

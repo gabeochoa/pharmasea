@@ -1,0 +1,97 @@
+#pragma once
+
+#include "../../../ah.h"
+#include "../../../components/has_day_night_timer.h"
+#include "../../../components/is_floor_marker.h"
+#include "../../../components/is_progression_manager.h"
+#include "../../../components/is_round_settings_manager.h"
+#include "../../../components/is_store_spawned.h"
+#include "../../../components/transform.h"
+#include "../../../engine/log.h"
+#include "../../../engine/random_engine.h"
+#include "../../../engine/statemanager.h"
+#include "../../../entities/entity_helper.h"
+#include "../../../entities/entity_makers.h"
+#include "../../../entities/entity_query.h"
+#include "../../../entities/entity_type.h"
+#include "../../../libraries/config_key_library.h"
+#include "../../core/system_manager.h"
+
+namespace system_manager {
+
+struct GenerateStoreOptionsSystem : public afterhours::System<> {
+    virtual bool should_run(const float) override {
+        if (!GameState::get().is_game_like()) return false;
+        try {
+            Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+            const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
+            return timer.needs_to_process_change && timer.is_bar_closed();
+        } catch (...) {
+            return false;
+        }
+    }
+    virtual void once(float) override {
+        // Figure out what kinds of things we can spawn generally
+        // - what is spawnable?
+        // - are they capped by progression? (alcohol / fruits for sure
+        // right?) choose a couple options to spawn
+        // - how many?
+        // spawn them
+        // - use the place machine thing
+
+        OptEntity spawn_area =
+            EQ().whereFloorMarkerOfType(IsFloorMarker::Type::Store_SpawnArea)
+                .gen_first();
+
+        Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
+        const IsProgressionManager& ipp = sophie.get<IsProgressionManager>();
+        const EntityTypeSet& unlocked = ipp.enabled_entity_types();
+        IsRoundSettingsManager& irsm = sophie.get<IsRoundSettingsManager>();
+
+        int num_to_spawn = irsm.get<int>(ConfigKey::NumStoreSpawns);
+
+        // NOTE: areas expand outward so as2() refers to the center
+        // so we have to go back half the size
+        Transform& area_transform = spawn_area->get<Transform>();
+        vec2 area_origin = area_transform.as2();
+        float half_width = area_transform.sizex() / 2.f;
+        float half_height = area_transform.sizez() / 2.f;
+        float reset_x = area_origin.x - half_width;
+        float reset_y = area_origin.y - half_height;
+
+        vec2 spawn_position = vec2{reset_x, reset_y};
+
+        while (num_to_spawn) {
+            int entity_type_id = bitset_utils::get_random_enabled_bit(
+                unlocked, RandomEngine::rng());
+            EntityType etype =
+                magic_enum::enum_value<EntityType>(entity_type_id);
+            if (get_price_for_entity_type(etype) <= 0) continue;
+
+            log_info("generate_store_options: random: {}",
+                     magic_enum::enum_name<EntityType>(etype));
+
+            auto& entity = EntityHelper::createEntity();
+            entity.addComponent<IsStoreSpawned>();
+            bool success = convert_to_type(etype, entity, spawn_position);
+            if (success) {
+                num_to_spawn--;
+            } else {
+                entity.cleanup = true;
+            }
+
+            spawn_position.x += 2;
+
+            if (spawn_position.x > (area_origin.x + half_width)) {
+                spawn_position.x = reset_x;
+                spawn_position.y += 2;
+            } else if (spawn_position.y > (area_origin.y + half_height)) {
+                reset_x += 1;
+                spawn_position.x = reset_x;
+                spawn_position.y = reset_y;
+            }
+        }
+    }
+};
+
+}  // namespace system_manager

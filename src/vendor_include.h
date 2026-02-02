@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/concepts.h"
 #include "engine/graphics.h"
 
 namespace reasings {
@@ -20,12 +21,13 @@ namespace reasings {
 #endif
 
 #define FMT_HEADER_ONLY
+#include <fmt/args.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 // this is needed for wstring printing
 #include <fmt/xchar.h>
-//
-#include <expected.hpp>
+// Expected is now provided by afterhours
+// #include <expected.hpp>
 //
 
 // We redefine the max here because the max keyboardkey is in the 300s
@@ -34,35 +36,51 @@ namespace reasings {
 #include <magic_enum/magic_enum.hpp>
 // TODO :INFRA: cant use format yet due to no std::format yet (though not even
 // sure what its needed for) #include <magic_enum/magic_enum_format.hpp>
-#include <zpp_bits.h>
 
 #include <magic_enum/magic_enum_fuse.hpp>
 #include <nlohmann/json.hpp>
 
-#include "bitsery_include.h"
+#include "zpp_bits_include.h"
 
-namespace bitsery {
-template<typename S>
-void serialize(S& s, vec2& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
+constexpr auto serialize(auto& archive, vec2& data) {
+    return archive(  //
+        data.x,      //
+        data.y       //
+    );
 }
 
-template<typename S>
-void serialize(S& s, vec3& data) {
-    s.value4b(data.x);
-    s.value4b(data.y);
-    s.value4b(data.z);
+constexpr auto serialize(auto& archive, vec3& data) {
+    return archive(  //
+        data.x,      //
+        data.y,      //
+        data.z       //
+    );
 }
 
-template<typename S>
-void serialize(S& s, Color& data) {
-    s.value1b(data.r);
-    s.value1b(data.g);
-    s.value1b(data.b);
-    s.value1b(data.a);
+constexpr auto serialize(auto& archive, Color& data) {
+    return archive(  //
+        data.r,      //
+        data.g,      //
+        data.b,      //
+        data.a       //
+    );
 }
-}  // namespace bitsery
+
+constexpr auto serialize(auto& archive, Rectangle& data) {
+    return archive(  //
+        data.x,      //
+        data.y,      //
+        data.width,  //
+        data.height  //
+    );
+}
+
+constexpr auto serialize(auto& archive, BoundingBox& data) {
+    return archive(  //
+        data.min,    //
+        data.max     //
+    );
+}
 
 #include "engine/tracy.h"
 
@@ -81,47 +99,44 @@ void serialize(S& s, Color& data) {
 #endif
 
 // For bitwise operations
-template<typename T>
-constexpr auto operator~(T a) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return static_cast<T>(~static_cast<int>(a));
+template<ps::concepts::BitwiseEnum T>
+[[nodiscard]] constexpr T operator~(T a) noexcept {
+    using ps::concepts::to_underlying;
+    return static_cast<T>(~to_underlying(a));
 }
 
-template<typename T>
-constexpr auto operator|(T a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return static_cast<T>((static_cast<int>(a) | static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+[[nodiscard]] constexpr T operator|(T a, T b) noexcept {
+    using ps::concepts::to_underlying;
+    return static_cast<T>(to_underlying(a) | to_underlying(b));
 }
 
-template<typename T>
-constexpr auto operator&(T a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return static_cast<T>((static_cast<int>(a) & static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+[[nodiscard]] constexpr T operator&(T a, T b) noexcept {
+    using ps::concepts::to_underlying;
+    return static_cast<T>(to_underlying(a) & to_underlying(b));
 }
 
-template<typename T>
-constexpr auto operator^(T a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return static_cast<T>((static_cast<int>(a) ^ static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+[[nodiscard]] constexpr T operator^(T a, T b) noexcept {
+    using ps::concepts::to_underlying;
+    return static_cast<T>(to_underlying(a) ^ to_underlying(b));
 }
 
-template<typename T>
-constexpr auto operator|=(T& a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return reinterpret_cast<T&>(
-        (reinterpret_cast<int&>(a) |= static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+constexpr T& operator|=(T& a, T b) noexcept {
+    a = (a | b);
+    return a;
 }
 
-template<typename T>
-constexpr auto operator&=(T& a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return reinterpret_cast<T&>(
-        (reinterpret_cast<int&>(a) &= static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+constexpr T& operator&=(T& a, T b) noexcept {
+    a = (a & b);
+    return a;
 }
 
-template<typename T>
-constexpr auto operator^=(T& a, T b) ->
-    typename std::enable_if<std::is_enum<T>::value, T>::type {
-    return reinterpret_cast<T&>(
-        (reinterpret_cast<int&>(a) ^= static_cast<int>(b)));
+template<ps::concepts::BitwiseEnum T>
+constexpr T& operator^=(T& a, T b) noexcept {
+    a = (a ^ b);
+    return a;
 }

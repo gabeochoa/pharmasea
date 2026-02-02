@@ -2,26 +2,27 @@
 
 #pragma once
 
+#include "../entities/entity_ref.h"
 #include "base_component.h"
 
 struct IsPnumaticPipe : public BaseComponent {
     bool recieving = false;
     int item_id = -1;
 
-    int paired_id = -1;
+    EntityRef paired{};
 
-    virtual ~IsPnumaticPipe() {}
-
-    [[nodiscard]] bool has_pair() const { return paired_id != -1; }
+    [[nodiscard]] bool has_pair() const {
+        return paired.id != entity_id::INVALID;
+    }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(paired_id);
-
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // s.value4b(item_id);
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.paired                         //
+        );
     }
 };

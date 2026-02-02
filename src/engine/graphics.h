@@ -17,14 +17,44 @@
 namespace raylib {
 
 #include <raylib.h>
+#include <raymath.h>
 #include <rlgl.h>
 
-#undef RAYLIB_OP_OVERLOADS_RAYGUI
-#include <RaylibOpOverloads.h>
+#include <ostream>
 
 // NOTE: why doesnt RaylibOpOverloads do this?
 inline bool operator<(const Vector2& l, const Vector2& r) {
     return (l.x < r.x) || ((l.x == r.x) && (l.y < r.y));
+}
+
+// Stream operators to enable logging/formatting via fmt/ostream
+inline std::ostream& operator<<(std::ostream& os, const Vector2& v) {
+    os << "(" << v.x << "," << v.y << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const Vector3& v) {
+    os << "(" << v.x << "," << v.y << "," << v.z << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const Vector4& v) {
+    os << "(" << v.x << "," << v.y << "," << v.z << "," << v.w << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const Color& c) {
+    os << "(" << static_cast<unsigned int>(c.r) << ","
+       << static_cast<unsigned int>(c.g) << ","
+       << static_cast<unsigned int>(c.b) << ","
+       << static_cast<unsigned int>(c.a) << ")";
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const Rectangle& r) {
+    os << "Rectangle(" << r.x << "," << r.y << "," << r.width << "," << r.height
+       << ")";
+    return os;
 }
 
 }  // namespace raylib
@@ -48,8 +78,19 @@ typedef raylib::Vector4 vec4;
 #endif
 
 using raylib::BoundingBox;
-using raylib::Color;
 using raylib::Rectangle;
+// Use afterhours::Color instead of raylib::Color directly
+#ifndef AFTER_HOURS_USE_RAYLIB
+#define AFTER_HOURS_USE_RAYLIB
+#endif
+#include "afterhours/src/plugins/color.h"
+using Color = afterhours::Color;
+
+// Forward declaration for synthetic key state (bypass functionality)
+namespace input_injector {
+bool is_key_synthetically_down(int keycode);
+bool consume_synthetic_press(int keycode);
+}  // namespace input_injector
 
 namespace ext {
 
@@ -80,10 +121,16 @@ inline void set_clipboard_text(const char* text) {
 }
 
 [[nodiscard]] inline bool is_key_pressed(int keycode) {
-    return raylib::IsKeyPressed(keycode);
+    bool synthetic = input_injector::consume_synthetic_press(keycode);
+    bool real = raylib::IsKeyPressed(keycode);
+    return synthetic || real;
 }
 
 [[nodiscard]] inline bool is_key_down(int keycode) {
+    // Check synthetic key state first (for bypass)
+    if (input_injector::is_key_synthetically_down(keycode)) {
+        return true;
+    }
     return raylib::IsKeyDown(keycode);
 }
 

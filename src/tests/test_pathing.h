@@ -1,9 +1,8 @@
 
 #include "../engine/pathfinder.h"
-#include "../entity.h"
-#include "../entity_helper.h"
-#include "../level_info.h"
-#include "../map_generation.h"
+#include "../entities/entity.h"
+#include "../entities/entity_helper.h"
+#include "../map_generation/map_generation.h"
 
 namespace test {
 namespace neighbors {
@@ -100,13 +99,10 @@ inline std::pair<vec2, vec2> setup(const std::string& map) {
 
 inline void teardown() {
     for (auto& entity : ents) {
-        for (auto it = entity.componentArray.cbegin(), next_it = it;
-             it != entity.componentArray.cend(); it = next_it) {
-            ++next_it;
-            BaseComponent* comp = it->second;
-            if (comp) delete comp;
-            entity.componentArray.erase(it);
+        for (size_t i = 0; i < afterhours::max_num_components; ++i) {
+            entity.componentArray[i].reset();
         }
+        entity.componentSet.reset();
     }
 
     ents.clear();

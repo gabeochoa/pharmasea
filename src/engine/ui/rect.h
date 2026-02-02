@@ -13,10 +13,10 @@ inline Rectangle tpad(const Rectangle& r, float pct);
 inline Rectangle bpad(const Rectangle& r, float pct);
 
 inline raylib::Rectangle expand(const raylib::Rectangle& a, const vec4& b) {
-    return (Rectangle){a.x - b.x,            //
-                       a.y - b.y,            //
-                       a.width + b.x + b.z,  //
-                       a.height + b.y + b.w};
+    return (Rectangle) {a.x - b.x,            //
+                        a.y - b.y,            //
+                        a.width + b.x + b.z,  //
+                        a.height + b.y + b.w};
 }
 
 inline Rectangle expand_pct(const Rectangle& a, float pct) {
@@ -84,11 +84,15 @@ inline Rectangle bpad(const Rectangle& r, float pct) {
 }
 
 inline Rectangle vpad(const Rectangle& r, float pct) {
-    return tpad(bpad(r, pct), pct);
+    return tpad(bpad(r, 100 - pct), pct);
 }
 
 inline Rectangle hpad(const Rectangle& r, float pct) {
-    return rpad(lpad(r, pct), pct);
+    return rpad(lpad(r, pct), 100 - pct);
+}
+
+inline Rectangle all_pad(const Rectangle& r, float pct) {
+    return hpad(vpad(r, pct), pct);
 }
 
 template<size_t N>

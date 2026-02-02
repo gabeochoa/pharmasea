@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../entity.h"
+#include "../entities/entity.h"
 #include "base_component.h"
 
 struct IsItemContainer : public BaseComponent {
@@ -9,11 +9,9 @@ struct IsItemContainer : public BaseComponent {
 
     explicit IsItemContainer(EntityType type)
         : item_type(type), uses_indexer(false) {}
-    virtual ~IsItemContainer() {}
 
-    [[nodiscard]] virtual bool is_matching_item(
-        std::shared_ptr<Item> item) const {
-        return check_type(*item, item_type);
+    [[nodiscard]] virtual bool is_matching_item(const Item& item) const {
+        return check_type(item, item_type);
     }
 
     [[nodiscard]] EntityType type() const { return item_type; }
@@ -29,6 +27,11 @@ struct IsItemContainer : public BaseComponent {
         return *this;
     }
 
+    IsItemContainer& set_item_type(EntityType type) {
+        item_type = type;
+        return *this;
+    }
+
     [[nodiscard]] bool hit_max() const {
         return max_gens < 0 ? false : gens >= max_gens;
     }
@@ -40,18 +43,26 @@ struct IsItemContainer : public BaseComponent {
 
     void reset_generations() { gens = 0; }
 
+    void enable_table_when_enable() { is_table_when_empty = true; }
+    [[nodiscard]] bool table_when_empty() const { return is_table_when_empty; }
+
    private:
     int gens = 0;
     int max_gens = -1;
     EntityType item_type;
     bool uses_indexer;
+    bool is_table_when_empty = false;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        // s.text1b(item_type, MAX_ITEM_NAME);
-        // s.value4b(max_gens);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.gens,                          //
+            self.max_gens                       //
+        );
+        // item_type, uses_indexer, is_table_when_empty are set by entity type
+        // during creation and don't need to be serialized - containers reset
+        // empty on load
     }
 };

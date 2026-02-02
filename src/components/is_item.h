@@ -2,12 +2,10 @@
 
 #pragma once
 
-#include "../entity_type.h"
+#include "../entities/entity_type.h"
 #include "base_component.h"
 
 struct IsItem : public BaseComponent {
-    virtual ~IsItem() {}
-
     void set_held_by(EntityType hb, int entity_id) {
         held_by_id = entity_id;
         held_by = hb;
@@ -44,7 +42,7 @@ struct IsItem : public BaseComponent {
     }
 
     [[nodiscard]] bool is_held() const {
-        // TODO might need to do something more sophisticated
+        // might need to do something more sophisticated
         return held_by != EntityType::Unknown;
     }
 
@@ -56,9 +54,11 @@ struct IsItem : public BaseComponent {
     // Default to all
     EntityTypeSet hb_filter = EntityTypeSet().set();
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                        //
+            static_cast<BaseComponent&>(self)  //
+        );
     }
 };

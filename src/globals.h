@@ -1,11 +1,17 @@
 
 #pragma once
 
+#include <string>
+
 #include "engine/globals.h"
-#include "strings.h"
+
+// steam networking uses an "app id" that we dont have
+// also the code isnt written yet :)
+// TODO :IMPACT: add support for steam connections
+#define BUILD_WITHOUT_STEAM
 
 // YY / MM / DD (Monday of week)
-constexpr std::string_view VERSION = "alpha_0.24.04.06";
+constexpr std::string_view VERSION = "alpha_0.24.09.06";
 constexpr size_t HASHED_VERSION = hashString(VERSION);
 
 constexpr std::string_view SETTINGS_FILE_NAME = "settings.bin";
@@ -18,20 +24,29 @@ constexpr int MAP_H = 33;
 // if you change this here, then go in there and add support as well
 constexpr float TILESIZE = 1.0f;
 
-struct Entity;
-
 constexpr float GATHER_SPOT = -20.f;
 constexpr int MAX_SEARCH_RANGE = 100;
-
-constexpr float MODEL_TEST_ORIGIN = 100.f;
-constexpr float LOBBY_ORIGIN = 50.f;
-constexpr float PROGRESSION_ORIGIN = -50.f;
-constexpr float STORE_ORIGIN = -100.f;
 
 static bool ENABLE_MODELS = true;
 static bool ENABLE_SOUND = true;
 static bool TESTS_ONLY = false;
 static bool ENABLE_UI_TEST = false;
+extern bool BYPASS_MENU;
+extern int BYPASS_ROUNDS;
+extern bool EXIT_ON_BYPASS_COMPLETE;
+extern bool RECORD_INPUTS;
+extern std::string REPLAY_NAME;
+extern bool REPLAY_ENABLED;
+extern bool REPLAY_VALIDATE;
+extern bool SHOW_INTRO;
+extern bool SHOW_RAYLIB_INTRO;
+extern std::string LOAD_SAVE_TARGET;
+extern bool LOAD_SAVE_ENABLED;
+extern bool MAP_VIEWER;
+extern std::string MAP_VIEWER_SEED;
+extern bool TEST_MAP_GENERATION;
+extern bool GENERATE_MAP;
+extern std::string GENERATE_MAP_SEED;
 
 // TODO :BE: is there a way for us to move these to engine
 // and then let the game pass them in or something _while_ staying const?

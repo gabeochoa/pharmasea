@@ -55,30 +55,39 @@ struct Transform : public BaseComponent {
         return DirectionToFrontFaceMap.at(degreesOffset % 360);
     }
 
-    virtual ~Transform() {}
-
-    void init(vec3 pos, vec3 sz) {
+    auto& init(vec3 pos, vec3 sz) {
         raw_position = pos;
         position = pos;
 
         _size = sz;
+        return *this;
     }
 
-    void update(vec3 npos) {
+    auto& update(vec3 npos) {
         this->raw_position = npos;
         sync();
+        return *this;
     }
-    void update_x(float x) {
+    auto& update_x(float x) {
         this->raw_position.x = x;
         sync();
+        return *this;
     }
-    void update_y(float y) {
+    auto& update_y(float y) {
         this->raw_position.y = y;
         sync();
+        return *this;
     }
-    void update_z(float z) {
+    auto& update_z(float z) {
         this->raw_position.z = z;
         sync();
+        return *this;
+    }
+
+    auto& update_visual_offset(vec3 pos) {
+        this->visual_offset = pos;
+        sync();
+        return *this;
     }
 
     void update_face_direction(float ang) { facing = ang; }
@@ -93,13 +102,20 @@ struct Transform : public BaseComponent {
     [[nodiscard]] float sizey() const { return this->size().y; }
     [[nodiscard]] float sizez() const { return this->size().z; }
 
-    void update_size(vec3 sze) { this->_size = sze; }
+    [[nodiscard]] vec3 viz_offset() const { return this->visual_offset; }
+    [[nodiscard]] float viz_x() const { return this->visual_offset.x; }
+    [[nodiscard]] float viz_y() const { return this->visual_offset.y; }
+    [[nodiscard]] float viz_z() const { return this->visual_offset.z; }
+
+    auto& update_size(vec3 sze) {
+        this->_size = sze;
+        return *this;
+    }
 
     [[nodiscard]] BoundingBox raw_bounds() const {
         return get_bounds(this->raw_position, this->size());
     }
 
-    // TODO we should draw this during debug
     [[nodiscard]] BoundingBox expanded_bounds(vec3 inc) const {
         return get_bounds(this->raw_position, this->size() + inc);
     }
@@ -146,6 +162,8 @@ struct Transform : public BaseComponent {
      * */
     void rotate_facing_clockwise(int angle = 90) { facing += angle; }
 
+    vec2 tile_directly_infront() const { return tile_infront(1); }
+
     /*
      * Returns the location of the tile `distance` distance in front of the
      * entity
@@ -160,6 +178,17 @@ struct Transform : public BaseComponent {
         return tile_infront_given_pos(tile, distance, face_direction());
     }
 
+    vec2 tile_behind(int distance) const {
+        vec2 tile = vec::to2(snap_position());
+        return tile_infront_given_pos(
+            tile, distance, offsetFaceDirection(face_direction(), 180));
+    }
+    vec2 tile_behind(float distance) const {
+        vec2 tile = vec::to2(snap_position());
+        return tile_infront_given_pos(
+            tile, distance, offsetFaceDirection(face_direction(), 180));
+    }
+
     /*
      * Given a tile, distance, and direction, returns the location of the
      * tile `distance` distance in front of the tile
@@ -170,28 +199,36 @@ struct Transform : public BaseComponent {
      *
      * @returns vec2 the location `distance` tiles ahead
      * */
-    static vec2 tile_infront_given_pos(vec2 tile, int dist,
+    static vec2 tile_infront_given_pos(vec2 tile, float distance,
                                        FrontFaceDirection direction) {
-        float distance = static_cast<float>(dist);
+        // {0.3, 4.08}, 1, Transform::Forward
+        // {0.3, ceil(4.08 + 1)} => ceil(5.08) => {0.3, 6}
 
         if (direction & Transform::FORWARD) {
-            tile.y += distance * TILESIZE;
             tile.y = ceil(tile.y);
+            tile.y += distance * TILESIZE;
         }
+
         if (direction & Transform::BACK) {
-            tile.y -= distance * TILESIZE;
             tile.y = floor(tile.y);
+            tile.y -= distance * TILESIZE;
         }
 
         if (direction & Transform::RIGHT) {
-            tile.x += distance * TILESIZE;
             tile.x = ceil(tile.x);
+            tile.x += distance * TILESIZE;
         }
+
         if (direction & Transform::LEFT) {
-            tile.x -= distance * TILESIZE;
             tile.x = floor(tile.x);
+            tile.x -= distance * TILESIZE;
         }
         return tile;
+    }
+    static vec2 tile_infront_given_pos(vec2 tile, int dist,
+                                       FrontFaceDirection direction) {
+        float distance = static_cast<float>(dist);
+        return tile_infront_given_pos(tile, distance, direction);
     }
 
     void turn_to_face_pos(const vec2 goal) {
@@ -219,7 +256,7 @@ struct Transform : public BaseComponent {
     // This exists so that its easy to make sure the real location
     // matches the preview location
     [[nodiscard]] vec3 drop_location() const {
-        return vec::snap(vec::to3(tile_infront(1)));
+        return vec::snap(vec::to3(tile_directly_infront()));
     }
 
     // TODO private
@@ -235,23 +272,86 @@ struct Transform : public BaseComponent {
     }
 
     void sync() {
-        // TODO is there a way for us to figure out if this
-        // is a snappable entity?
+        // TODO neeed to add a component for snappable then we can just do
+        // if(parent->has<IsSnappedToGrid>()){
+        //  snap();
+        // }
         this->position = this->raw_position;
     }
 
     vec3 _size = {TILESIZE, TILESIZE, TILESIZE};
-    vec3 position;
-    vec3 raw_position;
+    vec3 position = {0, 0, 0};
+    vec3 raw_position = {0, 0, 0};
+    vec3 visual_offset = {0, 0, 0};
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(raw_position);
-        s.object(position);
-        s.value4b(facing);
-        s.object(_size);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        // Packed format: 5 x int16[3] + 1 x int16 = 32 bytes
+        // But we save by not serializing full floats
+        constexpr float kPosScale = 100.0f;        // 0.01 unit precision
+        constexpr float kAngScale = 10.0f;         // 0.1 degree precision
+        constexpr int16_t kWarnThreshold = 30000;  // Warn at ~300 units
+
+        using ArchiveKind = std::remove_cvref_t<decltype(archive)>;
+        constexpr bool is_writing = ArchiveKind::kind() == zpp::bits::kind::out;
+        constexpr bool is_reading = ArchiveKind::kind() == zpp::bits::kind::in;
+
+        // Pack all vec3 fields into int16 arrays
+        std::array<int16_t, 3> vo_packed{};       // visual_offset
+        std::array<int16_t, 3> raw_pos_packed{};  // raw_position
+        std::array<int16_t, 3> pos_packed{};      // position
+        std::array<int16_t, 3> size_packed{};     // _size
+        int16_t facing_packed = 0;
+
+        if constexpr (is_writing) {
+            // Helper to pack with range warning
+            auto pack = [&](vec3 v) -> std::array<int16_t, 3> {
+                for (int i = 0; i < 3; ++i) {
+                    float val = (i == 0) ? v.x : (i == 1) ? v.y : v.z;
+                    float scaled = val * kPosScale;
+                    if (std::abs(scaled) > kWarnThreshold) {
+                        log_warn(
+                            "NETSTAT: Transform near limit: axis={} val={}", i,
+                            val);
+                    }
+                }
+                return {static_cast<int16_t>(
+                            std::clamp(v.x * kPosScale, -32768.f, 32767.f)),
+                        static_cast<int16_t>(
+                            std::clamp(v.y * kPosScale, -32768.f, 32767.f)),
+                        static_cast<int16_t>(
+                            std::clamp(v.z * kPosScale, -32768.f, 32767.f))};
+            };
+
+            vo_packed = pack(self.visual_offset);
+            raw_pos_packed = pack(self.raw_position);
+            pos_packed = pack(self.position);
+            size_packed = pack(self._size);
+            facing_packed = static_cast<int16_t>(self.facing * kAngScale);
+        }
+
+        // Single archive call with all packed fields
+        auto result =
+            archive(static_cast<BaseComponent&>(self), vo_packed,
+                    raw_pos_packed, pos_packed, size_packed, facing_packed);
+
+        if constexpr (is_reading) {
+            // Unpack all fields
+            auto unpack = [&](const std::array<int16_t, 3>& p) -> vec3 {
+                return {static_cast<float>(p[0]) / kPosScale,
+                        static_cast<float>(p[1]) / kPosScale,
+                        static_cast<float>(p[2]) / kPosScale};
+            };
+
+            self.visual_offset = unpack(vo_packed);
+            self.raw_position = unpack(raw_pos_packed);
+            self.position = unpack(pos_packed);
+            self._size = unpack(size_packed);
+            self.facing = static_cast<float>(facing_packed) / kAngScale;
+        }
+
+        return result;
     }
 };
 

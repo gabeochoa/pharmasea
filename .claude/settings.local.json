@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(done)",
+      "Skill(10x-engineer:brainstorming)",
+      "Skill(10x-engineer:writing-plans)",
+      "Skill(10x-engineer:subagent-driven-development)",
+      "Bash(make:*)",
+      "Bash(clang++:*)",
+      "Bash(test:*)",
+      "Bash(ls:*)",
+      "Bash(xargs:*)",
+      "Skill(10x-engineer:dispatching-parallel-agents)",
+      "Bash(sl status:*)",
+      "Bash(for dir in /Users/gabeochoa/p/pharmasea/src/system/*/)",
+      "Bash(wc:*)",
+      "Bash(grep:*)",
+      "Skill(10x-engineer:executing-plans)",
+      "Skill(10x-engineer:finishing-a-development-branch)"
+    ]
+  }
+}
