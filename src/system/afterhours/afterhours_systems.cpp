@@ -7,12 +7,6 @@
 #include "../../game_actions.h"
 #include "../../input_mapping_setup.h"
 
-// Static singleton storage definitions for afterhours sound_system
-std::shared_ptr<afterhours::sound_system::SoundLibrary>
-    afterhours::sound_system::SoundLibrary_single;
-std::shared_ptr<afterhours::sound_system::MusicLibrary>
-    afterhours::sound_system::MusicLibrary_single;
-
 void SystemManager::register_afterhours_systems() {
     register_sixtyfps_systems();
     register_gamelike_systems();

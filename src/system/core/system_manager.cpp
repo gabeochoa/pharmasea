@@ -364,12 +364,7 @@ void SystemManager::process_inputs(const Entities& entities,
 }
 
 void SystemManager::render_entities(const Entities& entities, float dt) const {
-    // NOTE: Rendering is now handled by RenderEntitiesSystem
-    // The system's once() method handles on_frame_start() and
-    // render_walkable_spots() The system's for_each_with() method handles
-    // rendering each entity We use systems.render() which expects const
-    // Entities&
-    systems.render(entities, dt);
+    systems.render(const_cast<Entities&>(entities), dt);
 }
 
 void SystemManager::render_ui(const Entities& entities, float dt) const {

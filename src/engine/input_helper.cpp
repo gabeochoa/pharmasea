@@ -90,7 +90,7 @@ std::pair<afterhours::input::DeviceMedium, float> check_action_down(
 
         if (input.index() == 0) {
             temp_medium = Medium::Keyboard;
-            temp = check_key_down(std::get<0>(input));
+            temp = check_key_down(std::get<0>(input).key);
         } else if (input.index() == 1) {
             temp_medium = Medium::GamepadAxis;
             temp = check_axis(gamepad_id, std::get<1>(input));
@@ -120,7 +120,7 @@ std::pair<afterhours::input::DeviceMedium, float> check_action_pressed(
 
         if (input.index() == 0) {
             temp_medium = Medium::Keyboard;
-            temp = check_key_pressed(std::get<0>(input));
+            temp = check_key_pressed(std::get<0>(input).key);
         } else if (input.index() == 1) {
             // For axes, "pressed" means crossing the deadzone threshold
             // We use the down check for now (no edge detection for axes)

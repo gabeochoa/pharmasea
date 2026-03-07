@@ -15,19 +15,19 @@ inline nlohmann::json anyinput_to_json(
     const afterhours::input::AnyInput& input) {
     nlohmann::json j;
     if (input.index() == 0) {
-        // KeyCode (int)
+        const auto& chord = std::get<afterhours::input::KeyChord>(input);
         j["type"] = "key";
-        j["value"] = std::get<0>(input);
+        j["value"] = static_cast<int>(chord.key);
     } else if (input.index() == 1) {
-        // GamepadAxisWithDir
-        const auto& axis = std::get<1>(input);
+        const auto& axis =
+            std::get<afterhours::input::GamepadAxisWithDir>(input);
         j["type"] = "axis";
         j["axis"] = static_cast<int>(axis.axis);
         j["dir"] = axis.dir;
     } else if (input.index() == 2) {
-        // GamepadButton
         j["type"] = "button";
-        j["value"] = static_cast<int>(std::get<2>(input));
+        j["value"] =
+            static_cast<int>(std::get<afterhours::input::GamepadButton>(input));
     }
     return j;
 }

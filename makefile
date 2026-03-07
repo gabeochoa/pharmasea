@@ -32,7 +32,7 @@ ifeq ($(ENABLE_MCP),1)
     MCP_FLAGS = -DAFTER_HOURS_ENABLE_MCP
 endif
 
-FLAGS = -std=c++2a $(DEBUG_WARNING_FLAGS) -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TIMEFLAG) $(MCP_FLAGS)
+FLAGS = -std=c++2a $(DEBUG_WARNING_FLAGS) -g $(RAYLIB_FLAGS) -DTRACY_ENABLE $(TIMEFLAG) $(MCP_FLAGS) -DAFTERHOURS_SINGLE_RENDER_PASS
 
 # LEAKFLAGS = -fsanitize=address
 NOFLAGS = -Wno-deprecated-volatile -Wno-missing-field-initializers \

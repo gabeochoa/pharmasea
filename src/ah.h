@@ -5,6 +5,7 @@
 #define AFTER_HOURS_USE_RAYLIB
 #include "afterhours/ah.h"
 #include "afterhours/src/bitset_utils.h"
+#include "afterhours/src/core/key_codes.h"
 #include "afterhours/src/library.h"
 #include "afterhours/src/plugins/input_system.h"
 #include "afterhours/src/plugins/window_manager.h"
