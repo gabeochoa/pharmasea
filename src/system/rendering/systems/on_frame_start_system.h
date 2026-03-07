@@ -13,6 +13,7 @@ static size_t num_ents_drawn = 0;
 extern Frustum frustum;
 
 struct OnFrameStartSystem : public ::afterhours::System<> {
+    bool should_iterate() const override { return false; }
     virtual bool should_run(const float) override { return true; }
 
     virtual void once(const float) override {

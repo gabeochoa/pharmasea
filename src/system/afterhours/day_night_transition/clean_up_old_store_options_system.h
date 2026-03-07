@@ -12,6 +12,7 @@
 namespace system_manager {
 
 struct CleanUpOldStoreOptionsSystem : public afterhours::System<> {
+    bool should_iterate() const override { return false; }
     virtual bool should_run(const float) override {
         if (!GameState::get().is_game_like()) return false;
         try {

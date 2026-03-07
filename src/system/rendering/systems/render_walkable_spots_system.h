@@ -6,6 +6,7 @@
 #include "../../../entities/entity_helper.h"
 
 struct RenderWalkableSpotsSystem : public ::afterhours::System<> {
+    bool should_iterate() const override { return false; }
     virtual bool should_run(const float) override {
         return globals::debug_ui_enabled();
     }
