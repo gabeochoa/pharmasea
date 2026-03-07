@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../../globals.h"
 #include "../../strings.h"
 #include "afterhours/src/plugins/sound_system.h"
 
@@ -14,12 +15,17 @@ struct Sounds {
     }
 
     static void play(strings::sounds::SoundId id) {
+        if (!ENABLE_SOUND) return;
         get().play(strings::sounds::to_name(id));
     }
 
-    static void play(const char* name) { get().play(name); }
+    static void play(const char* name) {
+        if (!ENABLE_SOUND) return;
+        get().play(name);
+    }
 
     static void play_random_match(const std::string& prefix) {
+        if (!ENABLE_SOUND) return;
         get().play_random_match(prefix);
     }
 };

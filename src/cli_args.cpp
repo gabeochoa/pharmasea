@@ -40,6 +40,9 @@ std::string LOAD_SAVE_TARGET = "";
 bool LOAD_SAVE_ENABLED = false;
 bool MAP_VIEWER = false;
 std::string MAP_VIEWER_SEED = "";
+bool E2E_ENABLED = false;
+std::string E2E_SCRIPT = "";
+std::string E2E_DIR = "";
 
 #ifdef AFTER_HOURS_ENABLE_MCP
 bool MCP_ENABLED = false;
@@ -72,10 +75,11 @@ void process_dev_flags(int argc, char* argv[]) {
             "--test_map_generation",
             "--replay-validate",
             "--map-viewer",
-            "--mcp"};
+            "--mcp",
+            "--e2e-dir"};
         static const std::set<std::string> with_value = {
             "--replay",    "--bypass-rounds", "--generate-map",
-            "--load-save", "--seed",
+            "--load-save", "--seed",          "--e2e",
         };
 
         // Accept --flag=value form for value flags.
@@ -283,6 +287,35 @@ void process_dev_flags(int argc, char* argv[]) {
         log_warn("--mcp flag ignored: build was compiled without MCP support");
     }
 #endif
+
+    // Parse --e2e=script.e2e or --e2e script.e2e
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i] ? argv[i] : "";
+        const std::string prefix = "--e2e=";
+        if (arg.rfind(prefix, 0) == 0) {
+            E2E_SCRIPT = arg.substr(prefix.size());
+            E2E_ENABLED = true;
+            BYPASS_MENU = true;
+            ENABLE_SOUND = false;
+            log_info("--e2e script: {}", E2E_SCRIPT);
+            continue;
+        }
+        if (arg == "--e2e" && i + 1 < argc) {
+            E2E_SCRIPT = argv[++i] ? argv[i] : "";
+            E2E_ENABLED = true;
+            BYPASS_MENU = true;
+            ENABLE_SOUND = false;
+            log_info("--e2e script: {}", E2E_SCRIPT);
+        }
+    }
+
+    if (cmdl[{"--e2e-dir"}]) {
+        E2E_DIR = "tests/e2e";
+        E2E_ENABLED = true;
+        BYPASS_MENU = true;
+        ENABLE_SOUND = false;
+        log_info("--e2e-dir: running all .e2e scripts in {}", E2E_DIR);
+    }
 
     // Parse --seed=xyz or --seed xyz
     const auto parse_seed = [&](const std::string& val) {

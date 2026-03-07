@@ -10,6 +10,7 @@
 #include "../log.h"
 #include "../statemanager.h"
 #include "bypass_helper.h"
+#include "e2e_manager.h"
 
 namespace fs = std::filesystem;
 
@@ -72,6 +73,7 @@ void init() {
     register_state_recorders();
     start_record_if_requested();
     start_replay_for_bypass_menu_or_replay_flag();
+    e2e_manager::init();
 }
 
 void update(float dt) {
@@ -81,6 +83,7 @@ void update(float dt) {
     input_replay::update(dt);
     bypass_helper::inject_clicks_for_bypass(dt);
     input_injector::update_key_hold(dt);
+    e2e_manager::update(dt);
 }
 
 void stop() {
