@@ -29,11 +29,8 @@ struct SystemManager {
     // so that we run the first time always
     float timePassed = 0.016f;
 
-    // afterhours SystemManager for entity systems
-    // Note: mutable because render() is non-const but render_entities() is
-    // const
-    mutable afterhours::SystemManager systems;
-    mutable afterhours::SystemManager input_systems;
+    afterhours::SystemManager systems;
+    afterhours::SystemManager input_systems;
 
     SystemManager() {
         // Register afterhours systems
@@ -41,8 +38,8 @@ struct SystemManager {
         register_input_systems();
     }
 
-    void render_entities(const Entities& entities, float dt) const;
-    void render_ui(const Entities& entities, float dt) const;
+    void render_entities(Entities& entities, float dt);
+    void render_ui(const Entities& entities, float dt);
 
     void update_local_players(const Entities& players, float dt);
     void update_remote_players(const Entities& players, float dt);

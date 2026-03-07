@@ -53,12 +53,13 @@ void Map::_onUpdate(const std::vector<std::shared_ptr<Entity>>& players,
     SystemManager::get().update_all_entities(players, dt);
 }
 
-void Map::onDraw(float dt) const {
+void Map::onDraw(float dt) {
     TRACY_ZONE_SCOPED;
     // TODO :INFRA: merge this into normal render pipeline
     SystemManager::get().render_entities(remote_players_NOT_SERIALIZED, dt);
 
-    SystemManager::get().render_entities(EntityHelper::get_entities(), dt);
+    SystemManager::get().render_entities(EntityHelper::get_entities_for_mod(),
+                                         dt);
 }
 
 void Map::onDrawUI(float dt) {

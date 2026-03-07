@@ -72,7 +72,7 @@ struct Map {
     void _onUpdate(const std::vector<std::shared_ptr<Entity>>& players,
                    float dt);
 
-    void onDraw(float dt) const;
+    void onDraw(float dt);
     void onDrawUI(float dt);
 
     void ensure_generated_map(const std::string& new_seed);

@@ -359,15 +359,14 @@ void SystemManager::register_input_systems() {
 
 void SystemManager::process_inputs(const Entities& entities,
                                    const UserInputs&) {
-    // TODO think about why this is const
     input_systems.tick(const_cast<Entities&>(entities), 1 / 120.f);
 }
 
-void SystemManager::render_entities(const Entities& entities, float dt) const {
-    systems.render(const_cast<Entities&>(entities), dt);
+void SystemManager::render_entities(Entities& entities, float dt) {
+    systems.render(entities, dt);
 }
 
-void SystemManager::render_ui(const Entities& entities, float dt) const {
+void SystemManager::render_ui(const Entities& entities, float dt) {
     // const auto debug_mode_on =
     // GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
     system_manager::ui::render_normal(entities, dt);
