@@ -47,26 +47,24 @@ struct EQ : public afterhours::EntityQuery<EQ> {
     }
 
     // Range-based filtering
-    EQ& whereInRange(vec2 position, float range) {
-        return add_filter([position, range](const Entity& e) {
-            return vec::distance_sq(position, e.get<Transform>().as2()) <
-                   (range * range);
+    EQ& whereInRange(vec2 position, float range, bool snap = false) {
+        return add_filter([position, range, snap](const Entity& e) {
+            vec2 pos = e.get<Transform>().as2();
+            if (snap) pos = vec::snap(pos);
+            return vec::distance_sq(position, pos) < (range * range);
         });
     }
     EQ& whereNotInRange(vec2 position, float range) {
         return add_filter([position, range](const Entity& e) {
-            return vec::distance_sq(position, e.get<Transform>().as2()) >=
-                   (range * range);
+            return !(vec::distance_sq(position, e.get<Transform>().as2()) <
+                     (range * range));
         });
     }
     EQ& wherePositionMatches(const Entity& entity) {
         return whereInRange(entity.get<Transform>().as2(), 0.01f);
     }
     EQ& whereSnappedPositionMatches(vec2 position) {
-        return add_filter([position](const Entity& e) {
-            vec2 pos = vec::snap(e.get<Transform>().as2());
-            return vec::distance_sq(position, pos) < (0.01f * 0.01f);
-        });
+        return whereInRange(position, 0.01f, true);
     }
     EQ& whereSnappedPositionMatches(const Entity& entity) {
         return whereSnappedPositionMatches(entity.get<Transform>().as2());
