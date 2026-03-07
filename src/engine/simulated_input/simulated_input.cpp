@@ -60,7 +60,7 @@ void start_replay_for_bypass_menu_or_replay_flag() {
     if (!replay_path.has_value()) return;
 
     if (!fs::exists(*replay_path)) {
-        log_error("Replay file missing: {}", replay_path->string());
+        log_warn("Replay file missing (skipping): {}", replay_path->string());
         return;
     }
     input_replay::start(*replay_path);

@@ -1,8 +1,12 @@
 #include <chrono>
+#include <cmath>
 #include <fstream>
 #include <string>
 #include <vector>
 
+#include "../../components/transform.h"
+#include "../../entities/entity_helper.h"
+#include "../../entities/entity_query.h"
 #include "../app.h"
 #include "../log.h"
 #include "../statemanager.h"
@@ -14,7 +18,13 @@ namespace input_replay {
 namespace {
 struct ReplayEvent {
     long long timestamp_ms = 0;
-    enum class Type { Key, Mouse, MouseMove, State } type = Type::Key;
+    enum class Type {
+        Key,
+        Mouse,
+        MouseMove,
+        State,
+        PlayerPos
+    } type = Type::Key;
     int code = 0;
     std::string action;  // "down", "up", "x_y" for move, or state label
 };
@@ -34,6 +44,7 @@ ReplayEvent::Type type_from_string(const std::string& s) {
     if (s == "menu_state" || s == "game_state") return ReplayEvent::Type::State;
     if (s == "mouse") return ReplayEvent::Type::Mouse;
     if (s == "mouse_move") return ReplayEvent::Type::MouseMove;
+    if (s == "player_pos") return ReplayEvent::Type::PlayerPos;
     return ReplayEvent::Type::Key;
 }
 
@@ -47,6 +58,8 @@ const char* type_to_string(ReplayEvent::Type t) {
             return "mouse_move";
         case ReplayEvent::Type::State:
             return "state";
+        case ReplayEvent::Type::PlayerPos:
+            return "player_pos";
     }
     return "unknown";
 }
@@ -120,6 +133,37 @@ void dispatch(const ReplayEvent& ev) {
             }
         }
     }
+
+    if (ev.type == ReplayEvent::Type::PlayerPos) {
+        const std::string& coord = ev.action;
+        size_t sep = coord.find('_');
+        if (sep != std::string::npos) {
+            try {
+                float expected_x = std::stof(coord.substr(0, sep));
+                float expected_y = std::stof(coord.substr(sep + 1));
+                OptEntity sophie =
+                    EQ().whereType(EntityType::Sophie).gen_first();
+                if (sophie.valid() && sophie->has<Transform>()) {
+                    vec2 actual = sophie->get<Transform>().as2();
+                    float dx = actual.x - expected_x;
+                    float dy = actual.y - expected_y;
+                    float dist = std::sqrt(dx * dx + dy * dy);
+                    if (dist > 1.0f) {
+                        log_warn(
+                            "replay: POSITION DRIFT {:.1f} -- expected "
+                            "({:.1f},{:.1f}) actual ({:.1f},{:.1f})",
+                            dist, expected_x, expected_y, actual.x, actual.y);
+                    } else {
+                        log_info(
+                            "replay: position ok ({:.1f},{:.1f}) drift={:.2f}",
+                            actual.x, actual.y, dist);
+                    }
+                }
+            } catch (...) {
+                log_error("replay: failed to parse player_pos '{}'", coord);
+            }
+        }
+    }
 }
 }  // namespace
 
@@ -149,7 +193,8 @@ void start(const std::filesystem::path& path) {
             continue;
         }
         ev.type = type_from_string(line.substr(p1 + 1, p2 - p1 - 1));
-        if (ev.type == ReplayEvent::Type::MouseMove) {
+        if (ev.type == ReplayEvent::Type::MouseMove ||
+            ev.type == ReplayEvent::Type::PlayerPos) {
             ev.code = 0;
             ev.action = line.substr(p2 + 1, p3 - p2 - 1);  // x_y string
         } else {
@@ -222,8 +267,8 @@ void update(float) {
         last_debug_ms = state.elapsed_ms;
     }
 
-    if (state.idx < state.events.size() &&
-        state.elapsed_ms + 0.01f >= state.events[state.idx].timestamp_ms) {
+    while (state.idx < state.events.size() &&
+           state.elapsed_ms + 0.01f >= state.events[state.idx].timestamp_ms) {
         const ReplayEvent& ev = state.events[state.idx];
         log_info(
             "replay: dispatch idx={} at {:.1f}ms type={} code={} action={}",

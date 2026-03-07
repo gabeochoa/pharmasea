@@ -2,13 +2,19 @@
 #include <fstream>
 #include <string>
 
+#include "../../components/transform.h"
+#include "../../entities/entity_helper.h"
+#include "../../entities/entity_query.h"
 #include "../graphics.h"
 #include "../log.h"
+#include "../statemanager.h"
 #include "simulated_input.h"
 
 namespace input_recorder {
 
 namespace {
+constexpr float POSITION_LOG_INTERVAL_MS = 500.f;
+
 struct RecorderState {
     bool enabled = false;
     std::ofstream stream;
@@ -18,6 +24,7 @@ struct RecorderState {
     std::array<bool, 8> mouse_down{};  // buttons 0-7
     float last_mouse_x = 0.0f;
     float last_mouse_y = 0.0f;
+    float last_position_log_ms = -POSITION_LOG_INTERVAL_MS;
 };
 
 static RecorderState state;
@@ -50,6 +57,7 @@ void enable(const std::filesystem::path& path) {
     state.mouse_down.fill(false);
     state.last_mouse_x = 0.0f;
     state.last_mouse_y = 0.0f;
+    state.last_position_log_ms = -POSITION_LOG_INTERVAL_MS;
     state.enabled = true;
 }
 
@@ -114,6 +122,21 @@ void update_poll() {
             state.key_down[k] = false;
             write_line(timestamp, "key", std::to_string(k), "up");
             log_info("recorder: key {} up (poll)", k);
+        }
+    }
+
+    // Periodic player position snapshot (only when in-game)
+    float ts_f = static_cast<float>(timestamp);
+    if (ts_f - state.last_position_log_ms >= POSITION_LOG_INTERVAL_MS) {
+        state.last_position_log_ms = ts_f;
+        if (MenuState::get().in_game()) {
+            OptEntity sophie = EQ().whereType(EntityType::Sophie).gen_first();
+            if (sophie.valid() && sophie->has<Transform>()) {
+                vec2 pos = sophie->get<Transform>().as2();
+                write_line(timestamp, "player_pos",
+                           std::to_string(pos.x) + "_" + std::to_string(pos.y),
+                           "snapshot");
+            }
         }
     }
 }
