@@ -86,11 +86,7 @@ using raylib::Rectangle;
 #include "afterhours/src/plugins/color.h"
 using Color = afterhours::Color;
 
-// Forward declaration for synthetic key state (bypass functionality)
-namespace input_injector {
-bool is_key_synthetically_down(int keycode);
-bool consume_synthetic_press(int keycode);
-}  // namespace input_injector
+#include "simulated_input/input_injector.h"
 
 namespace ext {
 

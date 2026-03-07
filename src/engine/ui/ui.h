@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../simulated_input/input_injector.h"
 #include "color.h"
 #include "element_result.h"
 #include "focus.h"
@@ -8,11 +9,6 @@
 #include "theme.h"
 #include "ui_context.h"
 #include "widget.h"
-
-// Forward declare
-namespace input_injector {
-void inject_scheduled_click();
-}
 
 namespace ui {
 
@@ -29,6 +25,12 @@ inline void begin(std::shared_ptr<ui::UIContext> ui_context, float dt) {
 
     // Inject any scheduled clicks (after focus::begin() resets mouse state)
     input_injector::inject_scheduled_click();
+    // Bridge afterhours mouse state into pharmasea's UI focus system
+    auto& m = ah_injector::detail::mouse;
+    if (m.active) {
+        focus::mouse_info.pos = {m.pos.x, m.pos.y};
+        focus::mouse_info.leftDown = m.left_down;
+    }
 
     //
     context->begin(dt);

@@ -246,6 +246,9 @@ void App::loop(float dt) {
     }
 #endif
 
+    // Reset per-frame synthetic input state before polling
+    input_injector::reset_frame();
+
     // Poll input for all states (menu and game)
     input_helper::poll(dt);
 

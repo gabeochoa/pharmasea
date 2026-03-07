@@ -5,13 +5,9 @@
 #include <set>
 
 #include "../input_helper.h"
+#include "../simulated_input/input_injector.h"
 #include "ui_context.h"
 #include "widget.h"
-
-// Forward declare
-namespace input_injector {
-void release_scheduled_click();
-}
 
 namespace ui {
 
@@ -77,6 +73,9 @@ inline bool is_mouse_click(const Widget& widget) {
     // active), then is_mouse_click to see leftDown=false (detect the click)
     if (mouse_info.leftDown && is_active_and_hot(widget.id)) {
         input_injector::release_scheduled_click();
+        if (!ah_injector::detail::mouse.left_down) {
+            mouse_info.leftDown = false;
+        }
     }
 
     bool let_go_of_mouse = !mouse_info.leftDown;

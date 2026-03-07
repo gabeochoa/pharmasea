@@ -52,6 +52,9 @@ void end() {
     // Release any scheduled click after buttons have been checked
     // This allows is_mouse_click to detect the click (it requires !leftDown)
     input_injector::release_scheduled_click();
+    if (!ah_injector::detail::mouse.left_down) {
+        focus::mouse_info.leftDown = false;
+    }
 
     callback_registry.execute_callbacks();
     focus::end();
