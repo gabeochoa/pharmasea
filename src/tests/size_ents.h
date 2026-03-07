@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 
+#include "../components/all_components.h"
 #include "../entities/entity.h"
 #include "../external_include.h"
 #include "../network/serialization.h"
@@ -58,8 +59,8 @@ inline std::vector<SizeInfo> size_all_components_sorted() {
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
         CanOrderDrink,
         //
-        HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
-        HasBaseSpeed, HasRopeToItem,
+        HasWaitingQueue, HasSubtype, HasSpeechBubble, HasWork, HasBaseSpeed,
+        HasRopeToItem,
         // render
         ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
         //
@@ -80,8 +81,8 @@ inline std::vector<SizeInfo> size_all_components_sorted() {
             ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
             CanOrderDrink,
             //
-            HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
-            HasBaseSpeed, HasRopeToItem,
+            HasWaitingQueue, HasSubtype, HasSpeechBubble, HasWork, HasBaseSpeed,
+            HasRopeToItem,
             // render
             ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
             //

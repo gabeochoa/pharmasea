@@ -27,10 +27,10 @@ constexpr float TILESIZE = 1.0f;
 constexpr float GATHER_SPOT = -20.f;
 constexpr int MAX_SEARCH_RANGE = 100;
 
-static bool ENABLE_MODELS = true;
-static bool ENABLE_SOUND = true;
-static bool TESTS_ONLY = false;
-static bool ENABLE_UI_TEST = false;
+inline bool ENABLE_MODELS = true;
+inline bool ENABLE_SOUND = true;
+inline bool TESTS_ONLY = false;
+inline bool ENABLE_UI_TEST = false;
 extern bool BYPASS_MENU;
 extern int BYPASS_ROUNDS;
 extern bool EXIT_ON_BYPASS_COMPLETE;

@@ -209,13 +209,10 @@ inline void test_seed_suite_all_valid() {
 
 // Test that required entities exist for all seeds
 inline void test_seed_suite_required_entities() {
-    int passed = 0;
     int failed = 0;
 
     for (const auto& seed : REGRESSION_SEEDS) {
-        if (test_seed_has_required_entities(seed)) {
-            passed++;
-        } else {
+        if (!test_seed_has_required_entities(seed)) {
             failed++;
         }
     }
@@ -257,9 +254,6 @@ inline void test_seed_suite_connectivity() {
 
 // Test WFC layout provider specifically
 inline void test_wfc_seed_suite() {
-    int passed = 0;
-    int failed = 0;
-
     // Use wfc: prefix to force WFC layout
     for (const auto& seed : REGRESSION_SEEDS) {
         std::string wfc_seed = "wfc:" + seed;
@@ -267,13 +261,8 @@ inline void test_wfc_seed_suite() {
         mapgen::GeneratedAscii result = mapgen::generate_ascii(wfc_seed, ctx);
 
         auto report = mapgen::playability::validate_ascii_day1(result.lines);
-        if (report.ok() &&
-            mapgen::validate_day1_ascii_plus_routing(result.lines)) {
-            passed++;
-        } else {
-            // WFC may fall back to simple, which is acceptable
-            passed++;
-        }
+        (void) report;
+        (void) mapgen::validate_day1_ascii_plus_routing(result.lines);
     }
 
     // WFC is allowed to fall back to simple layout, so we just check it doesn't

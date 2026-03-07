@@ -15,7 +15,7 @@ namespace tests {
 inline void test_entity_serialization_roundtrip() {
     // Create an entity with various components and tags
     auto entity = std::make_shared<Entity>();
-    entity->entity_type = static_cast<int>(EntityType::Item);
+    entity->entity_type = static_cast<int>(EntityType::Unknown);
     entity->cleanup = false;
 
     // Add some tags
@@ -28,7 +28,7 @@ inline void test_entity_serialization_roundtrip() {
     entity->get<Transform>().update(vec3{1.0f, 2.0f, 3.0f});
 
     entity->addComponent<HasName>();
-    entity->get<HasName>().name = "TestEntity";
+    entity->get<HasName>().update("TestEntity");
 
     entity->addComponent<IsItem>();
 
@@ -36,8 +36,8 @@ inline void test_entity_serialization_roundtrip() {
     const int original_id = entity->id;
     const int original_type = entity->entity_type;
     const bool original_cleanup = entity->cleanup;
-    const vec3 original_pos = entity->get<Transform>().position;
-    const std::string original_name = entity->get<HasName>().name;
+    const vec3 original_pos = entity->get<Transform>().pos();
+    const std::string original_name = entity->get<HasName>().name();
     const bool had_tag_0 = entity->hasTag(0);
     const bool had_tag_5 = entity->hasTag(5);
     const bool had_tag_10 = entity->hasTag(10);
@@ -81,19 +81,18 @@ inline void test_entity_serialization_roundtrip() {
 
     // Verify component data
     VALIDATE(
-        deserialized_entity->get<Transform>().position.x == original_pos.x &&
-            deserialized_entity->get<Transform>().position.y ==
-                original_pos.y &&
-            deserialized_entity->get<Transform>().position.z == original_pos.z,
+        deserialized_entity->get<Transform>().pos().x == original_pos.x &&
+            deserialized_entity->get<Transform>().pos().y == original_pos.y &&
+            deserialized_entity->get<Transform>().pos().z == original_pos.z,
         "Transform position should match after roundtrip");
-    VALIDATE(deserialized_entity->get<HasName>().name == original_name,
+    VALIDATE(deserialized_entity->get<HasName>().name() == original_name,
              "HasName name should match after roundtrip");
 }
 
 inline void test_entity_serialization_empty_tags() {
     // Test entity with no tags set
     auto entity = std::make_shared<Entity>();
-    entity->entity_type = static_cast<int>(EntityType::Item);
+    entity->entity_type = static_cast<int>(EntityType::Unknown);
     entity->addComponent<Transform>();
 
     // Ensure no tags are set
@@ -118,7 +117,7 @@ inline void test_entity_serialization_empty_tags() {
 inline void test_entity_serialization_all_tags() {
     // Test entity with many tags set
     auto entity = std::make_shared<Entity>();
-    entity->entity_type = static_cast<int>(EntityType::Item);
+    entity->entity_type = static_cast<int>(EntityType::Unknown);
 
     // Set many tags
     for (size_t i = 0; i < 32; ++i) {
