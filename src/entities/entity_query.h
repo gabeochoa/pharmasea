@@ -5,8 +5,8 @@
 #include "components/can_be_held.h"
 #include "components/can_hold_furniture.h"
 #include "components/can_hold_item.h"
-#include "components/is_drink.h"
 #include "components/has_work.h"
+#include "components/is_drink.h"
 #include "components/is_store_spawned.h"
 #include "components/transform.h"
 #include "dataclass/ingredient.h"
@@ -30,9 +30,11 @@ struct EQ : public afterhours::EntityQuery<EQ> {
                                       {.ignore_temp_warning = true}) {}
 
     // Explicit constructor for Entities (pharmasea's Entities type)
+    // Both ::Entities and afterhours::Entities are
+    // std::vector<std::shared_ptr<Entity>> so we pass directly by reference to
+    // avoid creating a temporary (dangling ref).
     explicit EQ(const ::Entities& entsIn)
-        : afterhours::EntityQuery<EQ>(
-              afterhours::Entities(entsIn.begin(), entsIn.end())) {}
+        : afterhours::EntityQuery<EQ>(entsIn) {}
 
     // Copy constructor - preserves accumulated modifications
     EQ(const EQ& other);
@@ -188,9 +190,10 @@ struct EQ : public afterhours::EntityQuery<EQ> {
             [](const CanHoldItem& chi) { return chi.empty(); });
     }
 
-    // Terminal method: find closest entity in front matching accumulated filters
+    // Terminal method: find closest entity in front matching accumulated
+    // filters
     [[nodiscard]] OptEntity gen_closestInFront(const Transform& transform,
-                                                float range);
+                                               float range);
 
     // Complex query methods
     [[nodiscard]] bool doesAnyExistWithType(const EntityType& type) {

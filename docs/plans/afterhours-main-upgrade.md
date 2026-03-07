@@ -302,3 +302,10 @@ UI entities live in a dedicated `EntityCollection` so game ECS systems don't ite
 
 **TODO (backlog): migrate `add_mod()` queries to `add_filter(lambda)`**
 - 25 call sites across `entity_query.h` and `entity_query.cpp`
+
+**TODO (backlog): evaluate afterhours E2E testing framework**
+- afterhours provides a script-based E2E testing DSL (`vendor/afterhours/src/plugins/e2e_testing/`)
+- Features: `.e2e` script files, input injection, `expect_text` assertions, batch test runner, timeouts
+- pharmasea currently has its own `input_injector` + `input_replay` + `replay_validation` system
+- Options: (a) replace low-level input_injector only, (b) adopt `.e2e` DSL for new tests, (c) full migration
+- Significant overlap in input injection layer -- afterhours version is header-only vs pharmasea's .cpp-based
