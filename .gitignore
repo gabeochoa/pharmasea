@@ -31,6 +31,10 @@ build/
 # until they are used in the project, hiding the kennynl folder
 art_storage/*
 
+# Editor/tool config symlinks
+.claude
+.cursor
+
 # Ignore precompiled header cache
 src/pch.hpp.gch
 libGameNetworkingSockets.dylib.bak
