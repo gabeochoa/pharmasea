@@ -16,85 +16,79 @@ EQ::EQ(const EQ& other)
     // from the original query and filter by those IDs
     auto ids = const_cast<EQ&>(other).gen_ids();
     std::set<int> id_set(ids.begin(), ids.end());
-    add_mod(new WhereLambda([id_set = std::move(id_set)](const Entity& entity) {
+    add_filter([id_set = std::move(id_set)](const Entity& entity) {
         return id_set.count(entity.id) > 0;
-    }));
+    });
 }
 
-bool EQ::WhereCanPathfindTo::operator()(const Entity& entity) const {
-    return !pathfinder::find_path(
-                start, entity.get<Transform>().tile_directly_infront(),
-                std::bind(EntityHelper::isWalkable, std::placeholders::_1))
-                .empty();
+EQ& EQ::whereCanPathfindTo(const vec2& start) {
+    return add_filter([start](const Entity& entity) {
+        return !pathfinder::find_path(
+                    start, entity.get<Transform>().tile_directly_infront(),
+                    std::bind(EntityHelper::isWalkable, std::placeholders::_1))
+                    .empty();
+    });
 }
 
 EQ& EQ::whereIsHoldingAnyFurniture() {
-    return  //
-        add_mod(new WhereHasComponent<CanHoldFurniture>())
-            .add_mod(new WhereLambda([](const Entity& entity) {
-                const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
-                return chf.is_holding();
-            }));
+    return add_filter([](const Entity& entity) {
+        if (!entity.has<CanHoldFurniture>()) return false;
+        return entity.get<CanHoldFurniture>().is_holding();
+    });
 }
 
 EQ& EQ::whereIsHoldingAnyFurnitureThatMatches(
     const std::function<bool(const Entity&)>& filter) {
-    return  //
-        add_mod(new WhereHasComponent<CanHoldFurniture>())
-            .add_mod(new WhereLambda([&](const Entity& entity) {
-                const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
-                if (!chf.is_holding()) return false;
-                OptEntity furniture =
-                    EntityHelper::getEntityForID(chf.held_id());
-                if (!furniture.has_value()) return false;
-
-                return filter(furniture.asE());
-            }));
+    return add_filter([&filter](const Entity& entity) {
+        if (!entity.has<CanHoldFurniture>()) return false;
+        const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
+        if (!chf.is_holding()) return false;
+        OptEntity furniture = EntityHelper::getEntityForID(chf.held_id());
+        if (!furniture.has_value()) return false;
+        return filter(furniture.asE());
+    });
 }
 
 EQ& EQ::whereIsHoldingFurnitureID(EntityID entityID) {
-    return  //
-        add_mod(new WhereHasComponent<CanHoldFurniture>())
-            .add_mod(new WhereLambda([entityID](const Entity& entity) {
-                const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
-                return chf.is_holding() &&
-                       chf.held_id() == entityID;
-            }));
+    return add_filter([entityID](const Entity& entity) {
+        if (!entity.has<CanHoldFurniture>()) return false;
+        const CanHoldFurniture& chf = entity.get<CanHoldFurniture>();
+        return chf.is_holding() && chf.held_id() == entityID;
+    });
 }
 
 EQ& EQ::whereIsHoldingItemOfType(EntityType type) {
-    return  //
-        add_mod(new WhereHasComponent<CanHoldItem>())
-            .add_mod(new WhereLambda([type](const Entity& entity) {
-                const CanHoldItem& chi = entity.get<CanHoldItem>();
-                if (!chi.is_holding_item()) return false;
-                OptEntity held_opt = chi.item();
-                return held_opt && held_opt->hasTag(type);
-            }));
+    return add_filter([type](const Entity& entity) {
+        if (!entity.has<CanHoldItem>()) return false;
+        const CanHoldItem& chi = entity.get<CanHoldItem>();
+        if (!chi.is_holding_item()) return false;
+        OptEntity held_opt = chi.item();
+        return held_opt && held_opt->hasTag(type);
+    });
 }
 
 EQ& EQ::whereIsDrinkAndMatches(Drink recipe) {
-    return  //
-        add_mod(new WhereHasComponent<IsDrink>())
-            .add_mod(new WhereLambda([recipe](const Entity& entity) {
-                return entity.get<IsDrink>().matches_drink(recipe);
-            }));
+    return add_filter([recipe](const Entity& entity) {
+        if (!entity.has<IsDrink>()) return false;
+        return entity.get<IsDrink>().matches_drink(recipe);
+    });
 }
 
 EQ& EQ::whereHeldItemMatches(const std::function<bool(const Entity&)>& fn) {
-    return  //
-        add_mod(new WhereLambda([&fn](const Entity& entity) -> bool {
-            const CanHoldItem& chf = entity.get<CanHoldItem>();
-            if (!chf.is_holding_item()) return false;
-            OptEntity held_opt = chf.const_item();
-            if (!held_opt) return false;
-            return fn(held_opt.asE());
-        }));
+    return add_filter([&fn](const Entity& entity) -> bool {
+        if (!entity.has<CanHoldItem>()) return false;
+        const CanHoldItem& chf = entity.get<CanHoldItem>();
+        if (!chf.is_holding_item()) return false;
+        OptEntity held_opt = chf.const_item();
+        if (!held_opt) return false;
+        return fn(held_opt.asE());
+    });
 }
 
 OptEntity EQ::gen_closestInFront(const Transform& transform, float range) {
     TRACY_ZONE_SCOPED;
-    VALIDATE(range > 0, fmt::format("range has to be positive but was {}", range));
+    VALIDATE(range > 0,
+             fmt::format("range has to be positive but was {}", range));
 
     vec2 pos = transform.as2();
     auto direction = transform.face_direction();
