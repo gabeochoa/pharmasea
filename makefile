@@ -1,10 +1,18 @@
 
 
+# Ensure Homebrew's pkgconfig is found (non-interactive shells don't source .bashrc,
+# and MacPorts pkg-config may be first in PATH). ~/homebrew is Gabe's brew prefix.
+export PKG_CONFIG_PATH := $(HOME)/homebrew/lib/pkgconfig:$(PKG_CONFIG_PATH)
+
 # Prefer system raylib if available; otherwise fall back to vendored headers.
 # (Vendored repo includes headers but not a Linux lib, so full linking may still
 # require a system raylib install.)
 RAYLIB_FLAGS := $(shell pkg-config --cflags raylib 2>/dev/null) -Ivendor/raylib
 RAYLIB_LIB := $(shell pkg-config --libs raylib 2>/dev/null)
+
+# NOTE: pharmasea wraps raylib in `namespace raylib` and relies on raymath.h's
+# C++ operator overloads (vec2/float etc). Do NOT disable them with
+# RAYMATH_DISABLE_CPP_OPERATORS — unlike tetr/kart, there is no global collision.
 
 # Local GameNetworkingSockets paths (built from ~/p/GameNetworkingSockets)
 # Default to vendored copy; override if you have a local build.
