@@ -28,7 +28,7 @@ struct StreamerSafeLayer : public Layer {
             int y_pos = WIN_H() - streamer_box_size - streamer_box_padd;
             float FS = 20.f;
 
-            DrawRectangleRoundedLines(
+            DrawRectangleRoundedLinesEx(
                 Rectangle{(float) x_pos, (float) y_pos,
                           (float) streamer_box_size, (float) streamer_box_size},
                 0.25f /* roundness */, (int) (FS / 4.f) /* segments */,
