@@ -149,6 +149,12 @@ void init_app_core(const AppInitConfig& config = {}) {
     Settings::get().load_save_file();
     Settings::get().refresh_settings();
 
+    if (Settings::get().data.username.empty() && !USERNAME_OVERRIDE.empty()) {
+        Settings::get().data.username = USERNAME_OVERRIDE;
+        log_info("Username: applied override '{}' (no saved username)",
+                 USERNAME_OVERRIDE);
+    }
+
     // Load assets (requires init window for fonts)
     Preload::create();
 

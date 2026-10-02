@@ -50,6 +50,7 @@ extern std::string GENERATE_MAP_SEED;
 extern bool E2E_ENABLED;
 extern std::string E2E_SCRIPT;
 extern std::string E2E_DIR;
+extern std::string USERNAME_OVERRIDE;
 
 // TODO :BE: is there a way for us to move these to engine
 // and then let the game pass them in or something _while_ staying const?

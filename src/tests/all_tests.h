@@ -15,6 +15,7 @@
 #include "lerp_test.h"
 #include "rect_split_tests.h"
 #include "size_ents.h"
+#include "test_entity_makers.h"
 #include "test_entity_serialization.h"
 #include "test_map_playability.h"
 #include "test_pathing.h"
@@ -78,6 +79,7 @@ inline void run_all() {
     size_test();
     test_rect_split();
     test_entity_serialization();
+    test_entity_makers();
     test_replay_validation_smoke();
 
     // back to default , preload will set it as well

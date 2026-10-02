@@ -272,8 +272,10 @@ void make_mop_buddy(Entity& mop_buddy, vec3 pos) {
                                .enableCharacterModel = false},
                   pos);
 
-    mop_buddy.get<ModelRenderer>().update_model_name(
-        util::convertToSnakeCase(EntityType::MopBuddy));
+    if (mop_buddy.has<ModelRenderer>()) {
+        mop_buddy.get<ModelRenderer>().update_model_name(
+            util::convertToSnakeCase(EntityType::MopBuddy));
+    }
 
     mop_buddy.get<HasBaseSpeed>().update(1.5f);
     mop_buddy.get<IsAIControlled>()

@@ -43,6 +43,7 @@ std::string MAP_VIEWER_SEED = "";
 bool E2E_ENABLED = false;
 std::string E2E_SCRIPT = "";
 std::string E2E_DIR = "";
+std::string USERNAME_OVERRIDE = "";
 
 #ifdef AFTER_HOURS_ENABLE_MCP
 bool MCP_ENABLED = false;
@@ -80,6 +81,7 @@ void process_dev_flags(int argc, char* argv[]) {
         static const std::set<std::string> with_value = {
             "--replay",    "--bypass-rounds", "--generate-map",
             "--load-save", "--seed",          "--e2e",
+            "--username",
         };
 
         // Accept --flag=value form for value flags.
@@ -102,7 +104,7 @@ void process_dev_flags(int argc, char* argv[]) {
             // If this flag expects a value, skip the next token.
             if ((arg == "--replay" || arg == "--bypass-rounds" ||
                  arg == "--generate-map" || arg == "--load-save" ||
-                 arg == "--seed") &&
+                 arg == "--seed" || arg == "--username") &&
                 i + 1 < argc) {
                 ++i;
             }
@@ -213,6 +215,24 @@ void process_dev_flags(int argc, char* argv[]) {
         if (arg == "--load-save" && i + 1 < argc) {
             try_set_load_save(argv[i + 1] ? argv[i + 1] : "");
             ++i;  // consume value
+        }
+    }
+
+    auto try_set_username = [](const std::string& val) {
+        if (val.empty()) return;
+        USERNAME_OVERRIDE = val;
+        log_info("Username: override '{}'", USERNAME_OVERRIDE);
+    };
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i] ? argv[i] : "";
+        const std::string prefix = "--username=";
+        if (arg.rfind(prefix, 0) == 0) {
+            try_set_username(arg.substr(prefix.size()));
+            continue;
+        }
+        if (arg == "--username" && i + 1 < argc) {
+            try_set_username(argv[i + 1] ? argv[i + 1] : "");
+            ++i;
         }
     }
 

@@ -66,6 +66,9 @@ else
 BACKWARD_PLATFORM_LIBS := -ldl -Wl,--export-dynamic
 endif
 LIBS += $(BACKWARD_DW_LIBS) $(BACKWARD_UNWIND_LIBS) $(BACKWARD_PLATFORM_LIBS)
+ifeq ($(UNAME_S),Darwin)
+LIBS += -framework OpenGL
+endif
 
 # SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp)
 SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp src/network/**/*.cpp src/system/**/*.cpp)
@@ -126,7 +129,7 @@ release: clean all
 	cp -r vendor release/
 
 test: all
-	timeout 120 ./pharmasea.exe --local --replay=completed_first_day -M
+	timeout 120 ./pharmasea.exe --local --replay=completed_first_day -M --username=test
 
 modeltest:
 	$(CXX) -std=c++2a -g $(RAYLIB_FLAGS) $(RAYLIB_LIB) -Ivendor/ model_test.cpp;./a.out
