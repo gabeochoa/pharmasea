@@ -1,6 +1,7 @@
 
 #include "game.h"
 
+#include "afterhours/src/log_file.h"
 #include "cli_args.h"
 #include "engine/assert.h"
 #include "engine/input_helper.h"
@@ -144,6 +145,12 @@ void init_app_core(const AppInitConfig& config = {}) {
         strings::GAME_FOLDER,
         SETTINGS_FILE_NAME,
     });
+
+    {
+        const std::string log_path =
+            (Files::get().game_folder() / "pharmasea.log").string();
+        afterhours::log_file::open(log_path.c_str());
+    }
 
     // Load settings
     Settings::get().load_save_file();

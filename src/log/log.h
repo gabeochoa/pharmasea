@@ -11,6 +11,7 @@
 #include <utility>
 
 #include "../engine/globals.h"
+#include "afterhours/src/logging.h"
 #include "log_level.h"
 
 namespace log_internal {
@@ -44,6 +45,11 @@ inline void log_with_level(LogLevel level, fmt::format_string<Args...> fmt_str,
         fmt::print(std::cerr, "[{}] {}\n", label, message);
     } else {
         fmt::print(std::cout, "[{}] {}\n", label, message);
+    }
+
+    if (::log_sink_fn != nullptr) {
+        const std::string bracketed = std::string("[") + label + "]";
+        ::log_sink_fn(bracketed.c_str(), message.c_str());
     }
 }
 
