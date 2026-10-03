@@ -69,6 +69,10 @@ LIBS += $(BACKWARD_DW_LIBS) $(BACKWARD_UNWIND_LIBS) $(BACKWARD_PLATFORM_LIBS)
 ifeq ($(UNAME_S),Darwin)
 LIBS += -framework OpenGL
 endif
+ifeq ($(UNAME_S),Darwin)
+FLAGS += -DAFTER_HOURS_ENABLE_MACOS_GESTURES -fblocks
+LIBS += -framework AppKit
+endif
 
 # SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp vendor/tracy/TracyClient.cpp)
 SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp src/network/**/*.cpp src/system/**/*.cpp)

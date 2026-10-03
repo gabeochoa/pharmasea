@@ -1,6 +1,7 @@
 
 #include "camera.h"
 
+#include "afterhours/src/plugins/input_system.h"
 #include "engine/settings.h"
 
 void GameCam::angleMinMaxClamp() {
@@ -57,6 +58,11 @@ void GameCam::updateCamera() {
         target_distance -= (mouseWheelMove * scroll_sensitivity);
     } else if (mouseWheelMove > 0) {
         target_distance += (-mouseWheelMove * scroll_sensitivity);
+    }
+
+    const float pinch = afterhours::input::get_pinch_delta();
+    if (pinch != 0.f) {
+        target_distance /= (1.f + pinch);
     }
 
     if (target_distance < free_distance_min_clamp)

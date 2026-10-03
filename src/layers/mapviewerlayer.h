@@ -6,6 +6,7 @@
 
 #include "../building_locations.h"
 #include "../camera.h"
+#include "afterhours/src/plugins/input_system.h"
 #include "../engine/app.h"
 #include "../engine/layer.h"
 #include "../engine/runtime_globals.h"
@@ -132,6 +133,10 @@ struct MapViewerLayer : public Layer {
         // Mouse wheel for zoom
         float wheel = ext::get_mouse_wheel_move();
         camera_distance -= wheel * zoom_speed;
+        const float pinch = afterhours::input::get_pinch_delta();
+        if (pinch != 0.f) {
+            camera_distance /= (1.f + pinch);
+        }
         camera_distance = std::clamp(camera_distance, 5.f, 50.f);
 
         // Update camera position based on orbit controls

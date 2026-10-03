@@ -21,6 +21,7 @@
 
 #ifdef AFTER_HOURS_ENABLE_MCP
 #include <afterhours/src/plugins/mcp_server.h>
+#include "afterhours/src/gestures_macos.h"
 
 #include <condition_variable>
 
@@ -164,6 +165,8 @@ App::App(const AppSettings& settings) {
     height = settings.height;
 
     raylib::InitWindow(width, height, settings.title);
+
+    afterhours::gestures::install_pinch_monitor();
 
     KeyMap::create();
 
