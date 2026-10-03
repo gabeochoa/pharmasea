@@ -5,6 +5,7 @@
 #include <system_error>
 
 #include "../preload.h"
+#include "afterhours/src/plugins/files.h"
 
 Settings Settings::instance;
 bool Settings::created = false;
@@ -246,17 +247,13 @@ bool Settings::load_save_file() {
 // theres a way to write directly to the file
 // https://github.com/fraillt/bitsery/blob/master/examples/file_stream.cpp
 bool Settings::write_save_file() {
-    std::ofstream ofs(Files::get().settings_filepath(), std::ios::binary);
-    if (!ofs.is_open()) {
-        log_warn("Failed to find settings file (Write) {}",
-                 Files::get().settings_filepath());
-        return false;
-    }
     settings::Buffer buffer;
     settings::OutArchive out{buffer};
     (void) out(data);
-    ofs.write(buffer.data(), buffer.size());
-    ofs.close();
+    if (!afterhours::files::write_string_atomic(
+            Files::get().settings_filepath(), buffer)) {
+        return false;
+    }
 
     log_info("Wrote Settings File to {}", Files::get().settings_filepath());
     return true;

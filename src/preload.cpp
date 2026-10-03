@@ -9,6 +9,7 @@ extern bool disable_models_flag;
 #include <utility>
 
 #include "afterhours/src/font_helper.h"
+#include "afterhours/src/plugins/files.h"
 #include "dataclass/ingredient.h"
 #include "dataclass/settings.h"
 #include "engine/keymap.h"
@@ -223,18 +224,8 @@ void Preload::on_language_change(const char* lang_name, const char* fn) {
 
 void Preload::write_json_config_file(const char* filename,
                                      const nlohmann::json& configJSON) {
-    std::ofstream ofs(filename);
-    if (!ofs.good()) {
-        std::cerr << "write_json_config_file error: Couldn't open file "
-                     "for writing: "
-                  << filename << std::endl;
-        return;
-    }
-
     log_info("{}", filename);
-
-    ofs << configJSON.dump(4);  // Write the JSON to the file with formatting
-    ofs.close();
+    afterhours::files::write_string_atomic(filename, configJSON.dump(4));
 }
 
 void Preload::write_keymap() {
