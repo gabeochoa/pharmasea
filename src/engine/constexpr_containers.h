@@ -1,12 +1,15 @@
 
 #pragma once
 
+#include <algorithm>
 #include <array>
+#include <concepts>
 #include <functional>
 #include <stdexcept>
 #include <utility>  // for pair
 
 template<typename Key, typename Value, std::size_t Size>
+requires std::equality_comparable<Key>
 struct CEMap {
     std::array<std::pair<Key, Value>, Size> data;
     [[nodiscard]] constexpr Value at(const Key &key) const {
@@ -59,6 +62,7 @@ struct CEVector {
 };
 
 template<typename T, std::size_t Size>
+requires std::equality_comparable<T>
 [[nodiscard]] constexpr bool array_contains(std::array<T, Size> array,
                                             const T &key) {
     const auto itr = std::find_if(std::begin(array), std::end(array),
@@ -67,6 +71,7 @@ template<typename T, std::size_t Size>
 }
 
 template<typename T, std::size_t Size>
+requires std::equality_comparable<T>
 [[nodiscard]] constexpr int index_of(const std::array<T, Size> &array,
                                      const T &key) {
     const auto itr = std::find(std::begin(array), std::end(array), key);
@@ -93,4 +98,20 @@ template<typename T, std::size_t Size>
         // Item not found
         return -1;
     }
+}
+
+template<typename T, std::size_t Size>
+requires std::totally_ordered<T> && std::default_initializable<T>
+[[nodiscard]] constexpr bool array_contains_any_value(
+    const std::array<T, Size> &array) {
+    const auto itr = std::find_if(std::begin(array), std::end(array),
+                                  [](const auto &v) { return v > T(); });
+    return itr != std::end(array);
+}
+
+template<typename T, std::size_t Size>
+requires std::default_initializable<T>
+constexpr void array_reset(std::array<T, Size> &array) {
+    std::transform(array.begin(), array.end(), array.begin(),
+                   [](const auto &) { return T(); });
 }

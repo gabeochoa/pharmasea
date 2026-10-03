@@ -4,6 +4,8 @@
 #include <memory>
 #include <set>
 
+#include "../input_helper.h"
+#include "../simulated_input/input_injector.h"
 #include "ui_context.h"
 #include "widget.h"
 
@@ -12,8 +14,8 @@ namespace ui {
 extern std::shared_ptr<ui::UIContext> context;
 
 namespace focus {
-const int ROOT_ID = -1;
-const int FAKE_ID = -2;
+constexpr int ROOT_ID = -1;
+constexpr int FAKE_ID = -2;
 extern int focus_id;
 extern int last_processed;
 extern int hot_id;
@@ -65,6 +67,17 @@ inline void active_if_mouse_inside(const Widget& widget,
 }
 
 inline bool is_mouse_click(const Widget& widget) {
+    // If there's a pending injected click and widget is active_and_hot,
+    // release it now so we can detect the click
+    // This allows active_if_mouse_inside to see leftDown=true (set widget as
+    // active), then is_mouse_click to see leftDown=false (detect the click)
+    if (mouse_info.leftDown && is_active_and_hot(widget.id)) {
+        input_injector::release_scheduled_click();
+        if (!ah_injector::detail::mouse.left_down) {
+            mouse_info.leftDown = false;
+        }
+    }
+
     bool let_go_of_mouse = !mouse_info.leftDown;
     bool was_click = let_go_of_mouse && is_active_and_hot(widget.id);
     if (was_click) {
@@ -79,23 +92,27 @@ inline void handle_tabbing(const Widget& widget) {
     // Do we mark the widget type with "nextable"? (tab will always work but
     // not very discoverable
     if (matches(widget.id)) {
-        if (
-            //
-            context->pressed(InputName::WidgetNext) ||
-            context->pressed(InputName::ValueDown)
-            // TODO add support for holding down tab
-            // get().is_held_down_debounced(InputName::WidgetNext) ||
-            // get().is_held_down_debounced(InputName::ValueDown)
-        ) {
+        bool widget_next = context->pressed(InputName::WidgetNext);
+        bool value_down = context->pressed(InputName::ValueDown);
+        if (widget_next || value_down) {
+            // Consume the input so other widgets don't also respond to it
+            if (widget_next) {
+                input_helper::consume_pressed(InputName::WidgetNext);
+            }
+            if (value_down) {
+                input_helper::consume_pressed(InputName::ValueDown);
+            }
             set(ROOT_ID);
             if (context->is_held_down(InputName::WidgetMod)) {
                 set(last_processed);
             }
         }
         if (context->pressed(InputName::ValueUp)) {
+            input_helper::consume_pressed(InputName::ValueUp);
             set(last_processed);
         }
         if (context->pressed(InputName::WidgetBack)) {
+            input_helper::consume_pressed(InputName::WidgetBack);
             set(last_processed);
         }
     }

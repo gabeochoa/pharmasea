@@ -5,7 +5,7 @@
 
 #ifdef __APPLE__
 #include "../log.h"
-#else 
+#else
 #include "../log_fakelog.h"
 #endif
 

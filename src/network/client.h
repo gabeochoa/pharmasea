@@ -2,11 +2,10 @@
 
 #pragma once
 
+#include "../entities/entity.h"
 #include "internal/client.h"
 //
-#include "../engine/globals_register.h"
-#include "../engine/log.h"
-#include "../engine/sound_library.h"
+#include "types.h"
 
 namespace network {
 extern long long total_ping;
@@ -22,10 +21,12 @@ struct Client {
     } conn_info;
 
     int id = 0;
-    std::shared_ptr<internal::Client> client_p;
+    std::unique_ptr<internal::IClient> client_p;
     std::map<int, std::shared_ptr<Entity>> remote_players;
-    std::shared_ptr<Map> map;
+    std::unique_ptr<Map> map;
     std::vector<ClientPacket::AnnouncementInfo> announcements;
+
+    void send_packet_to_server(ClientPacket packet);
 
     float next_tick_reset = 0.04f;
     float next_tick = 0.0f;

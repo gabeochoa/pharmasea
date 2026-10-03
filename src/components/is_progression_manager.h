@@ -2,17 +2,19 @@
 
 #pragma once
 
-#include "../engine/bitset_utils.h"
+#include <random>
+
+#include "../ah.h"
+#include "../engine/random_engine.h"
 //
 #include "../dataclass/ingredient.h"
 #include "../dataclass/settings.h"
 #include "../dataclass/upgrade_class.h"
-#include "../recipe_library.h"
+#include "../libraries/recipe_library.h"
+#include "../strings.h"
 #include "base_component.h"
 
 struct IsProgressionManager : public BaseComponent {
-    virtual ~IsProgressionManager() {}
-
     IsProgressionManager() {}
 
     void init() {
@@ -22,8 +24,6 @@ struct IsProgressionManager : public BaseComponent {
         // Unlock all the starting store items
         magic_enum::enum_for_each<EntityType>([&](EntityType val) {
             StoreEligibilityType set = get_store_eligibility(val);
-            // TODO right now we also unlock time based things
-            // but need to figure out when to do this
             if (set == StoreEligibilityType::OnStart ||
                 set == StoreEligibilityType::TimeBased) {
                 unlock_entity(val);
@@ -49,11 +49,13 @@ struct IsProgressionManager : public BaseComponent {
                 Ingredient ig = magic_enum::enum_value<Ingredient>(index);
 
                 log_warn(
-                    "You are unlocking drink {} but were missing unlocking {}",
+                    "You are unlocking drink {} but were missing unlocking "
+                    "{}",
                     magic_enum::enum_name<Drink>(drink),
                     magic_enum::enum_name<Ingredient>(ig));
 
                 unlock_ingredient(ig);
+                return bitset_utils::ForEachFlow::NormalFlow;
             });
         }
 
@@ -91,7 +93,8 @@ struct IsProgressionManager : public BaseComponent {
 
     Drink get_random_unlocked_drink() const {
         log_trace("get random: {} {}", enabledDrinks, enabledIngredients);
-        int drinkSetBit = bitset_utils::get_random_enabled_bit(enabledDrinks);
+        int drinkSetBit = bitset_utils::get_random_enabled_bit(
+            enabledDrinks, RandomEngine::rng());
         if (drinkSetBit == -1) {
             log_warn("generated {} but we had {} enabled drinks", drinkSetBit,
                      enabledDrinks.count());
@@ -162,21 +165,20 @@ struct IsProgressionManager : public BaseComponent {
     EntityTypeSet unlockedEntityTypes;
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.ext(enabledDrinks, bitsery::ext::StdBitset{});
-        s.ext(enabledIngredients, bitsery::ext::StdBitset{});
-        s.ext(unlockedEntityTypes, bitsery::ext::StdBitset{});
-
-        s.value4b(drinkOption1);
-        s.value4b(drinkOption2);
-
-        s.value4b(upgradeOption1);
-        s.value4b(upgradeOption2);
-
-        s.value4b(upgrade_index);
-        s.value1b(collectedOptions);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.enabledDrinks,                 //
+            self.enabledIngredients,            //
+            self.unlockedEntityTypes,           //
+            self.drinkOption1,                  //
+            self.drinkOption2,                  //
+            self.upgradeOption1,                //
+            self.upgradeOption2,                //
+            self.upgrade_index,                 //
+            self.collectedOptions               //
+        );
     }
 };

@@ -6,7 +6,10 @@
 
 #include "../dataclass/ingredient.h"
 #include "../engine/log.h"
-#include "../entity.h"
+#include "../entities/entity.h"
+#include "../entities/entity_helper.h"
+#include "../entities/entity_id.h"
+#include "../entities/entity_ref.h"
 #include "base_component.h"
 
 struct AddsIngredient : public BaseComponent {
@@ -18,13 +21,12 @@ struct AddsIngredient : public BaseComponent {
     AddsIngredient() {}
     explicit AddsIngredient(const IngredientFetcherFn& ig) : fetcher(ig) {}
 
-    virtual ~AddsIngredient() {}
-
     [[nodiscard]] IngredientBitSet get(Entity& entity) const {
         if (!fetcher) {
             log_error("calling AddsIngredient::fetch() without initializing");
         }
-        return fetcher(*parent, entity);
+        Entity& parent_entity = parent.resolve_enforced();
+        return fetcher(parent_entity, entity);
     }
     void set(const IngredientFetcherFn& fn) { fetcher = fn; }
     auto& set_validator(const ValidationFn& fn) {
@@ -41,26 +43,37 @@ struct AddsIngredient : public BaseComponent {
     }
     void decrement_uses() {
         num_uses--;
-        if (on_decrement) on_decrement(*parent);
+        if (!on_decrement) return;
+        Entity& parent_entity = parent.resolve_enforced();
+        on_decrement(parent_entity);
     }
     [[nodiscard]] int uses_left() const { return num_uses; }
 
     [[nodiscard]] bool validate(Entity& entity) const {
         if (!validation) return true;
-        return validation(*parent, entity);
+        Entity& parent_entity = parent.resolve_enforced();
+        return validation(parent_entity, entity);
+    }
+
+    auto& set_parent(EntityID id) {
+        parent.set_id(id);
+        return *this;
     }
 
    private:
+    EntityRef parent{};
     IngredientFetcherFn fetcher = nullptr;
     ValidationFn validation = nullptr;
     OnDecrementFn on_decrement = nullptr;
     int num_uses = -1;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(num_uses);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.num_uses,                      //
+            self.parent                         //
+        );
     }
 };

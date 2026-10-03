@@ -5,9 +5,10 @@
 #include <iostream>
 #include <string>
 
-#include "../entity.h"
+#include "../components/all_components.h"
+#include "../entities/entity.h"
 #include "../external_include.h"
-#include "../network/shared.h"
+#include "../network/serialization.h"
 
 namespace tests {
 
@@ -53,13 +54,13 @@ inline std::vector<SizeInfo> size_all_components_sorted() {
         IsDrink, IsPnumaticPipe,
         //
         AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
-        CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
+        CanHoldFurniture, CanBeGhostPlayer, IsAIControlled, CanBePushed,
         CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
         ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
         CanOrderDrink,
         //
-        HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
-        HasBaseSpeed, HasRopeToItem,
+        HasWaitingQueue, HasSubtype, HasSpeechBubble, HasWork, HasBaseSpeed,
+        HasRopeToItem,
         // render
         ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
         //
@@ -75,13 +76,13 @@ inline std::vector<SizeInfo> size_all_components_sorted() {
             IsItemContainer, IsDrink, IsPnumaticPipe,
             //
             AddsIngredient, CanHoldItem, CanBeHighlighted, CanHighlightOthers,
-            CanHoldFurniture, CanBeGhostPlayer, CanPerformJob, CanBePushed,
+            CanHoldFurniture, CanBeGhostPlayer, IsAIControlled, CanBePushed,
             CustomHeldItemPosition, CanBeHeld, CanGrabFromOtherFurniture,
             ConveysHeldItem, CanBeTakenFrom, UsesCharacterModel, Indexer,
             CanOrderDrink,
             //
-            HasWaitingQueue, HasTimer, HasSubtype, HasSpeechBubble, HasWork,
-            HasBaseSpeed, HasRopeToItem,
+            HasWaitingQueue, HasSubtype, HasSpeechBubble, HasWork, HasBaseSpeed,
+            HasRopeToItem,
             // render
             ModelRenderer, HasDynamicModelName, SimpleColoredBoxRenderer
             //

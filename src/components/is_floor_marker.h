@@ -4,7 +4,7 @@
 #include "../engine/log.h"
 #include "base_component.h"
 
-const int MAX_FLOOR_MARKERS = 100;
+constexpr int MAX_FLOOR_MARKERS = 100;
 
 struct IsFloorMarker : public BaseComponent {
     enum Type {
@@ -13,6 +13,7 @@ struct IsFloorMarker : public BaseComponent {
         Planning_TrashArea,
         Store_SpawnArea,
         Store_PurchaseArea,
+        Store_LockedArea,
     } type = Unset;
 
     explicit IsFloorMarker(Type type) : type(type) {}
@@ -46,12 +47,13 @@ struct IsFloorMarker : public BaseComponent {
    private:
     std::vector<int> marked_entities;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value4b(type);
-
-        s.container4b(marked_entities, MAX_FLOOR_MARKERS);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.type,                          //
+            self.marked_entities                //
+        );
     }
 };

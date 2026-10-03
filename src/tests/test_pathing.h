@@ -1,9 +1,8 @@
 
 #include "../engine/pathfinder.h"
-#include "../entity.h"
-#include "../entity_helper.h"
-#include "../level_info.h"
-#include "../map_generation.h"
+#include "../entities/entity.h"
+#include "../entities/entity_helper.h"
+#include "../map_generation/map_generation.h"
 
 namespace test {
 namespace neighbors {
@@ -17,47 +16,47 @@ inline bool is_valid(std::vector<vec2> v, vec2 p) {
 inline void test_all_neighbors() {
     std::vector<vec2> invalid;
 
-    auto n = pathfinder::get_neighbors({1, 1}, [](auto&&) { return true; });
+    auto n = astar::get_neighbors({1, 1}, [](auto&&) { return true; });
     VALIDATE(n.size() == 8, "should have all neighbors");
 
     invalid.push_back({0, 0});
     auto f = std::bind(&is_valid, invalid, std::placeholders::_1);
-    n = pathfinder::get_neighbors({1, 1}, f);
+    n = astar::get_neighbors({1, 1}, f);
     VALIDATE(n.size() == 7, "should have 7 neighbors");
 
     invalid.push_back({0, 1});
     f = std::bind(&is_valid, invalid, std::placeholders::_1);
-    n = pathfinder::get_neighbors({1, 1}, f);
+    n = astar::get_neighbors({1, 1}, f);
     VALIDATE(n.size() == 6, "should have 6 neighbors");
 
     invalid.push_back({0, 2});
     f = std::bind(&is_valid, invalid, std::placeholders::_1);
-    n = pathfinder::get_neighbors({1, 1}, f);
+    n = astar::get_neighbors({1, 1}, f);
     VALIDATE(n.size() == 5, "should have 5 neighbors");
 
     invalid.push_back({1, 0});
     f = std::bind(&is_valid, invalid, std::placeholders::_1);
-    n = pathfinder::get_neighbors({1, 1}, f);
+    n = astar::get_neighbors({1, 1}, f);
     VALIDATE(n.size() == 4, "should have 4 neighbors");
 
     invalid.push_back({1, 2});
     f = std::bind(&is_valid, invalid, std::placeholders::_1);
-    n = pathfinder::get_neighbors({1, 1}, f);
+    n = astar::get_neighbors({1, 1}, f);
     VALIDATE(n.size() == 3, "should have 3 neighbors");
 
     invalid.push_back({2, 0});
     f = std::bind(&is_valid, invalid, std::placeholders::_1);
-    n = pathfinder::get_neighbors({1, 1}, f);
+    n = astar::get_neighbors({1, 1}, f);
     VALIDATE(n.size() == 2, "should have 2 neighbors");
 
     invalid.push_back({2, 1});
     f = std::bind(&is_valid, invalid, std::placeholders::_1);
-    n = pathfinder::get_neighbors({1, 1}, f);
+    n = astar::get_neighbors({1, 1}, f);
     VALIDATE(n.size() == 1, "should have 1 neighbors");
 
     invalid.push_back({2, 2});
     f = std::bind(&is_valid, invalid, std::placeholders::_1);
-    n = pathfinder::get_neighbors({1, 1}, f);
+    n = astar::get_neighbors({1, 1}, f);
     VALIDATE(n.size() == 0, "should have 0 neighbors");
 }
 }  // namespace neighbors
@@ -100,13 +99,10 @@ inline std::pair<vec2, vec2> setup(const std::string& map) {
 
 inline void teardown() {
     for (auto& entity : ents) {
-        for (auto it = entity.componentArray.cbegin(), next_it = it;
-             it != entity.componentArray.cend(); it = next_it) {
-            ++next_it;
-            BaseComponent* comp = it->second;
-            if (comp) delete comp;
-            entity.componentArray.erase(it);
+        for (size_t i = 0; i < afterhours::max_num_components; ++i) {
+            entity.componentArray[i].reset();
         }
+        entity.componentSet.reset();
     }
 
     ents.clear();

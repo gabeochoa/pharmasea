@@ -1,9 +1,20 @@
 
 #pragma once
 
+// NOTE: Despite the name, this is a thread-safe queue implementation.
+//
+// This is a minimal mutex-based queue with a safe API (no reference returned
+// after unlocking). It is intended to prevent UB/races in producer/consumer
+// paths without pulling in a heavier dependency.
+//
+// TODO(threading): Consider replacing with a dedicated MPMC queue (e.g.
+// moodycamel::ConcurrentQueue) if/when we want lock-free behavior. Tracy's
+// vendored concurrentqueue differs from upstream and isn't a drop-in.
+
+#include <cstddef>
 #include <deque>
-#include <thread>
 #include <mutex>
+#include <utility>
 
 template<typename T>
 struct AtomicQueue {
@@ -12,19 +23,18 @@ struct AtomicQueue {
         q.push_back(value);
     }
 
-    void pop() {
+    void push_back(T&& value) {
         std::lock_guard<std::mutex> lock(m_mutex);
-        q.pop();
+        q.push_back(std::move(value));
     }
 
-    void pop_front() {
+    // Pops an item if available. Returns false if empty.
+    bool try_pop_front(T& out) {
         std::lock_guard<std::mutex> lock(m_mutex);
+        if (q.empty()) return false;
+        out = std::move(q.front());
         q.pop_front();
-    }
-
-    [[nodiscard]] T& front() {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        return q.front();
+        return true;
     }
 
     [[nodiscard]] bool empty() const {
@@ -38,6 +48,6 @@ struct AtomicQueue {
     }
 
    private:
-    std::deque<T> q;
     mutable std::mutex m_mutex;
+    std::deque<T> q;
 };

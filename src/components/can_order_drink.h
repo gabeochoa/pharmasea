@@ -2,12 +2,10 @@
 
 #pragma once
 
-#include "bitsery/ext/std_bitset.h"
-//
+#include "../ah.h"
 #include "../dataclass/ingredient.h"
-#include "../engine/bitset_utils.h"
-#include "../engine/random.h"
-#include "../recipe_library.h"
+#include "../engine/random_engine.h"
+#include "../libraries/recipe_library.h"
 #include "base_component.h"
 
 struct CanOrderDrink : public BaseComponent {
@@ -23,8 +21,6 @@ struct CanOrderDrink : public BaseComponent {
         order_state = OrderState::NeedsReset;
     }
 
-    virtual ~CanOrderDrink() {}
-
     [[nodiscard]] IngredientBitSet recipe() const {
         return get_recipe_for_drink(current_order);
     }
@@ -33,12 +29,13 @@ struct CanOrderDrink : public BaseComponent {
 
     [[nodiscard]] bool current_order_has_alcohol() const {
         bool yes = false;
-        bitset_utils::for_each_enabled_bit(recipe(), [&](size_t index) {
-            // TODO add support for flow control
-            if (yes) return;
-            Ingredient ig = magic_enum::enum_value<Ingredient>(index);
-            yes |= ingredient::is_alcohol(ig);
-        });
+        bitset_utils::for_each_enabled_bit(
+            recipe(), [&](size_t index) -> bitset_utils::ForEachFlow {
+                if (yes) return bitset_utils::ForEachFlow::Break;
+                Ingredient ig = magic_enum::enum_value<Ingredient>(index);
+                yes |= ingredient::is_alcohol(ig);
+                return bitset_utils::ForEachFlow::NormalFlow;
+            });
         return yes;
     }
 
@@ -47,7 +44,6 @@ struct CanOrderDrink : public BaseComponent {
     }
 
     [[nodiscard]] std::string icon_name() const {
-        // TODO this doesnt work today
         if (order_state == OrderState::DrinkingNow) return "jug";
         return get_icon_name_for_drink(current_order);
     }
@@ -72,7 +68,48 @@ struct CanOrderDrink : public BaseComponent {
 
     void empty_bladder() { drinks_in_bladder = 0; }
 
-    // TODO make private
+    void set_order(Drink new_order) { current_order = new_order; }
+    [[nodiscard]] Drink get_order() const { return current_order; }
+
+    void increment_tab(int amount) { tab_cost += amount; }
+    void increment_tip(int amount) { tip += amount; }
+
+    void apply_tip_multiplier(float mult) {
+        tip = static_cast<int>(floor(tip * mult));
+    }
+
+    void reset_customer(int max_num_orders, Drink randomNextDrink) {
+        num_orders_rem = RandomEngine::get().get_int(1, max_num_orders);
+
+        num_orders_had = 0;
+        // If we have a forced order use that otherwise grab a random unlocked
+        // drink
+        Drink next_drink_order = forced_first_order.value_or(randomNextDrink);
+        current_order = next_drink_order;
+        order_state = CanOrderDrink::OrderState::Ordering;
+
+        forced_first_order = {};
+    }
+
+    [[nodiscard]] bool wants_more_drinks() const { return num_orders_rem > 0; }
+    [[nodiscard]] int get_drinks_in_bladder() const {
+        return drinks_in_bladder;
+    }
+
+    [[nodiscard]] int get_current_tab() { return tab_cost; }
+    [[nodiscard]] int get_current_tip() { return tip; }
+
+    void clear_tab_and_tip() {
+        tab_cost = 0;
+        tip = 0;
+    }
+
+    [[nodiscard]] int num_drinks_drank() const { return num_orders_had; }
+    [[nodiscard]] int num_alcoholic_drinks_drank() const {
+        return num_alcoholic_drinks_had;
+    }
+
+   private:
     int num_orders_rem = -1;
     int num_orders_had = 0;
     Drink current_order;
@@ -85,12 +122,13 @@ struct CanOrderDrink : public BaseComponent {
     int tip = 0;
     int drinks_in_bladder = 0;
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(current_order);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.current_order,                 //
+            self.order_state                    //
+        );
     }
 };

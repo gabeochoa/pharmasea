@@ -4,17 +4,18 @@
 
 #include "base_component.h"
 
-struct Entity;
+using afterhours::Entity;
 
 struct HasWork : public BaseComponent {
-    // TODO idk if false is a reasonable default
     HasWork()
-        : pct_work_complete(0.f),
+        :  // Start with 0% progress
+          pct_work_complete(0.f),
+          //  this forces the 'has more' to run by default
           more_to_do(true),
+          // TODO what breaks if we turn this on?
           reset_on_empty(false),
           hide_progress_bar_on_full(false),
           hide_progress_bar(false) {}
-    virtual ~HasWork() {}
 
     // Does this have work to be done?
     [[nodiscard]] bool is_work_complete() const {
@@ -80,15 +81,16 @@ struct HasWork : public BaseComponent {
     bool hide_progress_bar_on_full;
     bool hide_progress_bar;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(hide_progress_bar_on_full);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.hide_progress_bar_on_full,     //
+            self.pct_work_complete              //
+        );
         //
         // s.value1b(more_to_do);
         // s.value1b(reset_on_empty);
-
-        s.value4b(pct_work_complete);
     }
 };

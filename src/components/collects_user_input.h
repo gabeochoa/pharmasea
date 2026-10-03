@@ -1,26 +1,27 @@
 
 #pragma once
 
+#include "../engine/constexpr_containers.h"
 #include "../engine/keymap.h"
 #include "base_component.h"
 
 struct CollectsUserInput : public BaseComponent {
-    virtual ~CollectsUserInput() {}
-
     auto& reset() {
-        pressed.reset();
+        array_reset(current_frame.presses);
         return *this;
     }
 
-    auto& write(InputName input) {
+    auto& write(InputName input, float value) {
         int index = magic_enum::enum_integer<InputName>(input);
-        pressed[index] = true;
+        current_frame.presses[index] = value;
         return *this;
     }
 
     auto& publish(float dt, float camAngle) {
-        if (pressed.any()) {
-            inputs.push_back({pressed, dt, camAngle});
+        if (array_contains_any_value(current_frame.presses)) {
+            current_frame.frame_dt = dt;
+            current_frame.cam_angle = camAngle;
+            inputs.push_back(current_frame);
             reset();
         }
         return *this;
@@ -34,18 +35,25 @@ struct CollectsUserInput : public BaseComponent {
     [[nodiscard]] UserInputs& inputs_NETWORK_ONLY() { return inputs; }
     void clear() { inputs.clear(); }
 
-    [[nodiscard]] InputSet read() const { return pressed; }
+    [[nodiscard]] UserInputSnapshot read() const { return current_frame; }
+
+    void set_inputs_SERVER_ONLY(const UserInputs& new_inputs) {
+        this->inputs = new_inputs;
+    }
 
    private:
     // TODO I wonder if there is a way to combine all the inputs for the current
-    // frame into one InputSet but we need the dts
+    // frame into one InputPresses but we need the dts
     UserInputs inputs;
 
-    InputSet pressed;
+    UserInputSnapshot current_frame;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        (void) self;
+        return archive(                        //
+            static_cast<BaseComponent&>(self)  //
+        );
     }
 };

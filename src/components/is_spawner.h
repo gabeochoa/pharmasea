@@ -1,10 +1,12 @@
 
 #pragma once
 
-#include "base_component.h"
+#include "../engine/log.h"
+#include "../strings.h"
 #include "../vendor_include.h"
+#include "base_component.h"
 
-struct Entity;
+using afterhours::Entity;
 
 struct SpawnInfo {
     vec2 location;
@@ -15,26 +17,23 @@ using SpawnFn = std::function<void(Entity&, const SpawnInfo&)>;
 using ValidationSpawnFn = std::function<bool(Entity&, const SpawnInfo&)>;
 
 struct IsSpawner : public BaseComponent {
-    virtual ~IsSpawner() {}
-
     [[nodiscard]] bool hit_max() const { return num_spawned >= max_spawned; }
     [[nodiscard]] int get_num_spawned() const { return num_spawned; }
     [[nodiscard]] int get_max_spawned() const { return max_spawned; }
 
     auto& reset_num_spawned() {
-        // TODO add max to progression_manager
         num_spawned = 0;
         // set this to 0 so that the first guy immediately spawns
         countdown = 0.f;
         return *this;
     }
 
-    auto& set_fn(SpawnFn fn) {
+    auto& set_fn(const SpawnFn& fn) {
         spawn_fn = fn;
         return *this;
     }
 
-    auto& set_validation_fn(ValidationSpawnFn fn) {
+    auto& set_validation_fn(const ValidationSpawnFn& fn) {
         validation_spawn_fn = fn;
         return *this;
     }
@@ -54,7 +53,7 @@ struct IsSpawner : public BaseComponent {
         return *this;
     }
 
-    // TODO probably need a thing to specify the units
+    // might need a thing to specify the units
     auto& set_time_between(float s) {
         spread = s;
         countdown = 0.f;
@@ -84,6 +83,8 @@ struct IsSpawner : public BaseComponent {
         countdown += spread;
     }
 
+    [[nodiscard]] float get_pct() const { return countdown / (spread * 1.f); }
+
     void spawn(Entity& entity, SpawnInfo info) {
         spawn_fn(entity, info);
         num_spawned++;
@@ -97,16 +98,25 @@ struct IsSpawner : public BaseComponent {
         return prevent_duplicate_spawns;
     }
 
-    auto& set_spawn_sound(const std::string& str) {
+    auto& set_spawn_sound(strings::sounds::SoundId str) {
         spawn_sound = str;
         return *this;
     }
-    [[nodiscard]] bool has_spawn_sound() const { return !spawn_sound.empty(); }
-    [[nodiscard]] const std::string& get_spawn_sound() const {
+    [[nodiscard]] bool has_spawn_sound() const {
+        return spawn_sound != strings::sounds::SoundId::None;
+    }
+    [[nodiscard]] strings::sounds::SoundId get_spawn_sound() const {
         return spawn_sound;
     }
 
+    auto& enable_show_progress() {
+        showsProgressBar = true;
+        return *this;
+    }
+    [[nodiscard]] bool show_progress() const { return showsProgressBar; }
+
    private:
+    bool showsProgressBar = false;
     bool prevent_duplicate_spawns = false;
     int max_spawned = 0;
     float spread = 0;
@@ -116,20 +126,23 @@ struct IsSpawner : public BaseComponent {
     SpawnFn spawn_fn;
     ValidationSpawnFn validation_spawn_fn;
 
-    std::string spawn_sound;
+    strings::sounds::SoundId spawn_sound = strings::sounds::SoundId::None;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
         // We likely dont need to serialize anything because it should be
         // all server side info
-
+        //
         // TODO add macro to only show these for debug builds
         // Debug only
-
-        s.value4b(num_spawned);
-        s.value4b(max_spawned);
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.countdown,                     //
+            self.spread,                        //
+            self.num_spawned,                   //
+            self.max_spawned,                   //
+            self.showsProgressBar               //
+        );
     }
 };
