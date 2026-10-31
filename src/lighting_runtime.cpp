@@ -15,7 +15,7 @@ namespace {
 
 struct Phase1LightingTuning {
     // Ambient term
-    vec3 ambient = {0.20f, 0.20f, 0.22f};
+    vec3 ambient = {0.22f, 0.23f, 0.27f};
 
     // "Sun": user requested point-light-like sun (stylized).
     // Note: physically, the sun should be directional. We can swap later.
@@ -30,7 +30,7 @@ struct Phase1LightingTuning {
     // Intensity controls (to keep shader lighting subtle)
     float sun_diffuse_intensity = 0.45f;
     float sun_spec_intensity = 0.05f;
-    float point_diffuse_intensity = 0.65f;
+    float point_diffuse_intensity = 0.85f;
 };
 
 static const Phase1LightingTuning PHASE1{};
@@ -239,7 +239,8 @@ void update_lighting_shader(raylib::Shader& shader,
 
     // Sun
     const bool is_night = SystemManager::get().is_bar_open();
-    vec3 sun_color = is_night ? vec3{0.0f, 0.0f, 0.0f} : PHASE1.sun_color;
+    vec3 sun_color =
+        is_night ? vec3{0.10f, 0.12f, 0.18f} : PHASE1.sun_color;
     set_int(shader, u.lightType, PHASE1.light_type);
     set_vec3(shader, u.lightDir, PHASE1.sun_dir);
     set_vec3(shader, u.lightPos, PHASE1.sun_pos);
@@ -248,7 +249,7 @@ void update_lighting_shader(raylib::Shader& shader,
     float sun_diffuse_intensity = PHASE1.sun_diffuse_intensity;
     float sun_spec_intensity = PHASE1.sun_spec_intensity;
     if (!is_night) {
-        constexpr float kDayAmbientBoost = 1.35f;
+        constexpr float kDayAmbientBoost = 1.55f;
         constexpr float kDaySunDiffuseBoost = 1.95f;
         constexpr float kDaySunSpecBoost = 1.25f;
         constexpr float kDaySunColorBoost = 1.20f;
