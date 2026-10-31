@@ -256,8 +256,8 @@ void draw_valid_colored_box(const Transform& transform,
     }
 
     if (is_highlighted) {
-        f = afterhours::colors::get_highlighted(f);
-        b = afterhours::colors::get_highlighted(b);
+        f = afterhours::colors::lighten(f);
+        b = afterhours::colors::lighten(b);
     }
 
     DrawCubeCustom(transform.raw() + transform.viz_offset(), transform.sizex(),
