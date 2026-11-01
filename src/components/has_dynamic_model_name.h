@@ -3,10 +3,10 @@
 #pragma once
 
 #include "../engine/assert.h"
-#include "../engine/model_library.h"
 #include "../engine/statemanager.h"
 #include "../engine/util.h"
-#include "../entity.h"
+#include "../entities/entity.h"
+#include "../libraries/model_library.h"
 #include "../vendor_include.h"
 #include "base_component.h"
 
@@ -19,34 +19,10 @@ struct HasDynamicModelName : public BaseComponent {
         Ingredients
     };
 
-    virtual ~HasDynamicModelName() {}
     using ModelNameFetcher =
         std::function<std::string(const Entity&, const std::string&)>;
 
-    [[nodiscard]] std::string fetch(const Entity& owner) const {
-        if (!initialized)
-            log_warn(
-                "calling HasDynamicModelName::fetch() without initializing");
-
-        switch (dynamic_type) {
-            case OpenClosed: {
-                const bool in_planning =
-                    GameState::get().is(game::State::Planning);
-                if (in_planning) return base_name;
-                return fmt::format("open_{}", base_name);
-            } break;
-                // TODO eventually id like the logic to live in here assuming we
-                // have a ton using these. if its just one for each then fetcher
-                // (Custom:) is perfectly fine
-            case NoDynamicType:
-            case Ingredients:
-            case EmptyFull:
-            case Subtype: {
-                return fetcher(owner, base_name);
-            } break;
-        }
-        return base_name;
-    }
+    [[nodiscard]] std::string fetch(const Entity& owner) const;
 
     void init(EntityType type, DynamicType dyn_type,
               const ModelNameFetcher& fet = nullptr) {
@@ -62,10 +38,13 @@ struct HasDynamicModelName : public BaseComponent {
     bool initialized = false;
     ModelNameFetcher fetcher;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        (void) self;
+        return archive(                        //
+            static_cast<BaseComponent&>(self)  //
+        );
 
         // Not needed because this is only used to change the underlying model
         // inside <ModelRenderer>

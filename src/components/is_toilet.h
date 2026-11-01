@@ -5,8 +5,6 @@
 #include "base_component.h"
 
 struct IsToilet : public BaseComponent {
-    virtual ~IsToilet() {}
-
     enum State { Available, InUse, NeedsCleaning } state = Available;
     int total_uses = 3;
     int uses_remaining = 3;
@@ -15,8 +13,8 @@ struct IsToilet : public BaseComponent {
 
     [[nodiscard]] bool occupied() const { return state != Available; }
     [[nodiscard]] bool available() const {
-        log_info("current state is {}",
-                 magic_enum::enum_name<IsToilet::State>(state));
+        // log_info("current state is {}",
+        // magic_enum::enum_name<IsToilet::State>(state));
         return !occupied();
     }
     [[nodiscard]] bool is_user(int id) const { return user == id; }
@@ -42,13 +40,14 @@ struct IsToilet : public BaseComponent {
     }
 
    private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(state);
-        s.value4b(total_uses);
-        s.value4b(uses_remaining);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.state,                         //
+            self.total_uses,                    //
+            self.uses_remaining                 //
+        );
     }
 };

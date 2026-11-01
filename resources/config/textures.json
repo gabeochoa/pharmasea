@@ -52,6 +52,11 @@
         },
         {
             "folder": "images",
+            "filename": "character_gabe_mug.png",
+            "library_name": "character_efb_mug"
+        },
+        {
+            "folder": "images",
             "filename": "hand.png",
             "library_name": "hand"
         },
@@ -99,6 +104,46 @@
             "folder": "images",
             "filename": "poo.png",
             "library_name": "poo"
+        },
+        {
+            "folder": "ui",
+            "filename": "main_menu.png",
+            "library_name": "main_menu"
+        },
+        {
+            "folder": "ui",
+            "filename": "lobby_screen.png",
+            "library_name": "lobby_screen"
+        },
+        {
+            "folder": "ui",
+            "filename": "join_lobby_screen.png",
+            "library_name": "join_lobby_screen"
+        },
+        {
+            "folder": "ui",
+            "filename": "username_screen.png",
+            "library_name": "username_screen"
+        },
+        {
+            "folder": "ui",
+            "filename": "about_screen.png",
+            "library_name": "about_screen"
+        },
+        {
+            "folder": "images",
+            "filename": "lock.png",
+            "library_name": "lock"
+        },
+        {
+            "folder": "ui",
+            "filename": "network_selection_screen.png",
+            "library_name": "network_selection_screen"
+        },
+        {
+            "folder": "images",
+            "filename": "choicehoney_intro_atlas.png",
+            "library_name": "choicehoney_intro_atlas"
         }
         // TODO btw if you have two textures with the same name but in different folders 
         // only the first one loaded matters 

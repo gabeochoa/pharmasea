@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../engine/constexpr_containers.h"
-#include "../entity_helper.h"
+#include "../engine/input_helper.h"
+#include "../engine/input_utilities.h"
+#include "../engine/runtime_globals.h"
 #include "base_game_renderer.h"
 
 constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //
@@ -9,10 +11,7 @@ constexpr size_t CHOOSABLE_STATES = (magic_enum::enum_count<game::State>()  //
 );
 
 constexpr CEMap<int, game::State, CHOOSABLE_STATES> choosable_game_states = {{{
-    {2, game::State::InRound},
-    {3, game::State::Planning},
-    {5, game::State::Progression},
-    {6, game::State::Store},
+    {2, game::State::InGame},
     {7, game::State::ModelTest},
     {1, game::State::Lobby},
 }}};
@@ -24,80 +23,13 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     bool skip_ingredient_match = false;
 
     DebugSettingsLayer() : BaseGameRendererLayer("DebugSettings") {
-        GLOBALS.set("debug_ui_enabled", &debug_ui_enabled);
-        GLOBALS.set("no_clip_enabled", &no_clip_enabled);
-        GLOBALS.set("skip_ingredient_match", &skip_ingredient_match);
+        sync_globals();
     }
 
-    bool onGamepadButtonPressed(GamepadButtonPressedEvent& event) override {
-        if (KeyMap::get_button(menu::State::Game, InputName::ToggleDebug) ==
-            event.button) {
-            debug_ui_enabled = !debug_ui_enabled;
-            return true;
-        }
-        if (KeyMap::get_button(menu::State::Game,
-                               InputName::ToggleNetworkView) == event.button) {
-            no_clip_enabled = !no_clip_enabled;
-            return true;
-        }
-
-        if (KeyMap::get_button(menu::State::Game,
-                               InputName::SkipIngredientMatch) ==
-            event.button) {
-            skip_ingredient_match = !skip_ingredient_match;
-            return true;
-        }
-
-        if (!baseShouldRender()) return false;
-
-        if (KeyMap::get_button(menu::State::Game, InputName::Pause) ==
-            event.button) {
-            GameState::get().go_back();
-            return true;
-        }
-
-        return ui_context->process_gamepad_button_event(event);
-    }
-
-    bool onKeyPressed(KeyPressedEvent& event) override {
-        if (should_show_overlay &&
-            KeyMap::get_key_code(menu::State::Game, InputName::Pause) ==
-                event.keycode) {
-            should_show_overlay = false;
-            return true;
-        }
-
-        if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::ToggleDebugSettings) ==
-            event.keycode) {
-            should_show_overlay = !should_show_overlay;
-            return true;
-        }
-
-        // TODO can we catch if you are using get_button in onKeyPressed and
-        // warn?
-
-        if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::SkipIngredientMatch) ==
-            event.keycode) {
-            skip_ingredient_match = !skip_ingredient_match;
-            return true;
-        }
-
-        if (KeyMap::get_key_code(menu::State::Game, InputName::ToggleDebug) ==
-            event.keycode) {
-            debug_ui_enabled = !debug_ui_enabled;
-            return true;
-        }
-        if (KeyMap::get_key_code(menu::State::Game,
-                                 InputName::ToggleNetworkView) ==
-            event.keycode) {
-            no_clip_enabled = !no_clip_enabled;
-            return true;
-        }
-        if (!baseShouldRender()) return false;
-
-        return ui_context->process_keyevent(event);
+    void sync_globals() {
+        globals::set_debug_ui_enabled(debug_ui_enabled);
+        globals::set_no_clip_enabled(no_clip_enabled);
+        globals::set_skip_ingredient_match(skip_ingredient_match);
     }
 
     virtual ~DebugSettingsLayer() {}
@@ -105,7 +37,44 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
     virtual bool shouldSkipRender() override { return !shouldRender(); }
     bool shouldRender() { return should_show_overlay; }
 
-    virtual void onUpdate(float) override {}
+    void handleInput() {
+        // Polling-based debug toggles (replaces
+        // onKeyPressed/onGamepadButtonPressed handlers)
+
+        // Toggle debug UI
+        if (input_helper::was_pressed(InputName::ToggleDebug)) {
+            debug_ui_enabled = !debug_ui_enabled;
+            sync_globals();
+        }
+
+        // Toggle no-clip
+        if (input_helper::was_pressed(InputName::ToggleNetworkView)) {
+            no_clip_enabled = !no_clip_enabled;
+            sync_globals();
+        }
+
+        // Toggle skip ingredient match
+        if (input_helper::was_pressed(InputName::SkipIngredientMatch)) {
+            skip_ingredient_match = !skip_ingredient_match;
+            sync_globals();
+        }
+
+        // Toggle debug settings overlay
+        if (input_helper::was_pressed(InputName::ToggleDebugSettings)) {
+            should_show_overlay = !should_show_overlay;
+        }
+
+        // Close overlay with Pause key when showing - consume to prevent
+        // GameLayer from also pausing
+        if (should_show_overlay && baseShouldRender()) {
+            if (input_helper::was_pressed(InputName::Pause)) {
+                input_helper::consume_pressed(InputName::Pause);
+                should_show_overlay = false;
+            }
+        }
+    }
+
+    virtual void onUpdate(float) override { handleInput(); }
 
     void draw_game_state_controls(Rectangle container) {
         using namespace ui;
@@ -187,6 +156,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                              CheckboxData{.selected = debug_ui_enabled});
                 result) {
                 debug_ui_enabled = result.as<bool>();
+                sync_globals();
             }
         }
 
@@ -200,6 +170,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                     Widget{control}, CheckboxData{.selected = no_clip_enabled});
                 result) {
                 no_clip_enabled = result.as<bool>();
+                sync_globals();
             }
         }
 
@@ -214,6 +185,7 @@ struct DebugSettingsLayer : public BaseGameRendererLayer {
                              CheckboxData{.selected = skip_ingredient_match});
                 result) {
                 skip_ingredient_match = result.as<bool>();
+                sync_globals();
             }
         }
 

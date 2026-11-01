@@ -2,11 +2,15 @@
 
 #include "external_include.h"
 //
+#include "camera.h"
 #include "engine/log.h"
+#include "engine/runtime_globals.h"
 #include "engine/ui/color.h"
 #include "globals.h"
+#include "libraries/texture_library.h"
 #include "raylib.h"
 #include "rlgl.h"
+#include "strings.h"
 //
 #include "text_util.h"
 #include "vec_util.h"
@@ -17,7 +21,7 @@ static void DrawPctFilledCircle(const vec2 position, float radius,
                                 Color backgroundColor, Color foregroundColor,
                                 float pct_filled, float startAngle = 180) {
     const float endAngle = startAngle + (360 * pct_filled);
-    const int segments = 40;
+    constexpr int segments = 40;
 
     raylib::DrawCircle((int) position.x, (int) position.y, radius,
                        backgroundColor);
@@ -107,9 +111,12 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     // rlScalef(2.0f, 2.0f, 2.0f);
 
     rlBegin(RL_TRIANGLES);
+    // NOTE: Provide normals so lit shaders (Blinn-Phong/Half-Lambert) work.
+    // Normals are in local space; rotation is applied by the matrix stack.
     rlColor4ub(face_color.r, face_color.g, face_color.b, face_color.a);
 
     // Front Face -----------------------------------------------------
+    rlNormal3f(0.0f, 0.0f, 1.0f);
     rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
     rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
     rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
@@ -120,6 +127,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
 
     rlColor4ub(base_color.r, base_color.g, base_color.b, base_color.a);
     // Back Face ------------------------------------------------------
+    rlNormal3f(0.0f, 0.0f, -1.0f);
     rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Left
     rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
     rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
@@ -129,6 +137,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
 
     // Top Face -------------------------------------------------------
+    rlNormal3f(0.0f, 1.0f, 0.0f);
     rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
     rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Bottom Left
     rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Bottom Right
@@ -138,6 +147,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Bottom Right
 
     // Bottom Face ----------------------------------------------------
+    rlNormal3f(0.0f, -1.0f, 0.0f);
     rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Top Left
     rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
     rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
@@ -147,6 +157,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Top Left
 
     // Right face -----------------------------------------------------
+    rlNormal3f(1.0f, 0.0f, 0.0f);
     rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
     rlVertex3f(x + width / 2, y + height / 2, z - length / 2);  // Top Right
     rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Left
@@ -156,6 +167,7 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Left
 
     // Left Face ------------------------------------------------------
+    rlNormal3f(-1.0f, 0.0f, 0.0f);
     rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Right
     rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
     rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Right
@@ -167,14 +179,34 @@ static void DrawCubeCustom(Vector3 position, float width, float height,
     rlPopMatrix();
 }
 
-static void DrawFloatingText(const vec3& position, Font font, const char* text,
-                             int size = 96, Color color = BLACK) {
+static void DrawFloatingText(const vec3& position, const Font& font,
+                             const char* text, int size = 96,
+                             Color color = BLACK, bool backface = true,
+                             std::string texture_name = "",
+                             int texture_position = -1) {
+    vec3 text_size = MeasureText3D(font, text, size, 1.f, 1.f);
+    text_size /= 3.f;
+
     rlPushMatrix();
-    rlTranslatef(    //
-        position.x,  //
-        position.y,  //
-        position.z   //
+    rlTranslatef(                      //
+        position.x - text_size.x / 2,  //
+        position.y,                    //
+        position.z                     //
     );
+
+    if (!texture_name.empty()) {
+        vec3 t_size = MeasureText3D(
+            font, std::string(text).substr(0, texture_position).c_str(), size,
+            1.f, 1.f);
+        vec3 icon_pos = vec3{t_size.x * 0.9f, text_size.y * 9.f, 0.05f};
+        raylib::Texture texture = TextureLibrary::get().get(texture_name);
+        GameCam* cam = globals::game_cam();
+        if (!cam) return;
+        raylib::DrawBillboard(cam->camera, texture, icon_pos,
+                              (size / 96.f) / 3.f,  //
+                              color);
+    }
+
     rlRotatef(90.0f, 1.0f, 0.0f, 0.0f);
 
     rlTranslatef(          //
@@ -183,14 +215,18 @@ static void DrawFloatingText(const vec3& position, Font font, const char* text,
         -1.05f * TILESIZE  // this is Y
     );
 
-    DrawText3D(      //
-        font, text,  //
-        {0.f},       //
-        size,        // font size
-        4,           // font spacing
-        4,           // line spacing
-        true,        // backface
-        color);
+    raylib::DrawTextConfig titleConfig = {
+        .font = font,
+        .text = text,
+        .position = {0.f},
+        .fontSize = size * 1.f,
+        .fontSpacing = 4,
+        .lineSpacing = 4,
+        .backface = backface,
+        .color = color,
+    };
+
+    DrawText3D(titleConfig);
 
     rlPopMatrix();
 }

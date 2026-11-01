@@ -1,10 +1,47 @@
 
 #pragma once
+#include "../../game_actions.h"
 #include "../../vendor_include.h"
+#include "../input_helper.h"
+#include "../input_utilities.h"
 #include "../keymap.h"
+#include "../log.h"
+#include "afterhours/src/plugins/input_system.h"
 #include "sound.h"
 
 namespace ui {
+
+namespace detail {
+inline bool layer_contains_key(menu::State state, int keycode) {
+    for (auto name : magic_enum::enum_values<InputName>()) {
+        if (afterhours::input_ext::contains_key(
+                KeyMap::get_valid_inputs(state, name), keycode)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool layer_contains_button(menu::State state, GamepadButton button) {
+    for (auto name : magic_enum::enum_values<InputName>()) {
+        if (afterhours::input_ext::contains_button(
+                KeyMap::get_valid_inputs(state, name), button)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool layer_contains_axis(menu::State state, GamepadAxis axis) {
+    for (auto name : magic_enum::enum_values<InputName>()) {
+        if (afterhours::input_ext::contains_axis(
+                KeyMap::get_valid_inputs(state, name), axis)) {
+            return true;
+        }
+    }
+    return false;
+}
+}  // namespace detail
 
 struct IUIContextInputManager {
     const menu::State STATE = menu::State::UI;
@@ -22,6 +59,19 @@ struct IUIContextInputManager {
         yscrolled = ext::get_mouse_wheel_move();
 
         lastDt = dt;
+        poll_input();
+    }
+
+    void poll_input() {
+        // Reset per-frame state
+        chars_this_frame.clear();
+
+        // Buffer all characters pressed this frame (for text fields)
+        int ch = afterhours::input::get_char_pressed();
+        while (ch != 0) {
+            chars_this_frame += static_cast<char>(ch);
+            ch = afterhours::input::get_char_pressed();
+        }
     }
 
     virtual void cleanup() {
@@ -52,7 +102,8 @@ struct IUIContextInputManager {
     int mod = -1;
     GamepadButton button;
     GamepadAxisWithDir axis_info;
-    int keychar = -1;
+    int keychar = -1;  // Deprecated: use chars_this_frame
+    std::string chars_this_frame;
     int modchar = -1;
     float yscrolled;
     // TODO can we use timer stuff for this? we have tons of these around
@@ -68,98 +119,72 @@ struct IUIContextInputManager {
                mouse.y >= rect.y && mouse.y <= rect.y + rect.height;
     }
 
-    [[nodiscard]] bool process_char_press_event(const CharPressedEvent& event) {
-        keychar = event.keycode;
-        return true;
+    // Backwards-compatible getter for keychar
+    [[nodiscard]] int get_keychar() const {
+        return chars_this_frame.empty() ? 0
+                                        : static_cast<int>(chars_this_frame[0]);
     }
 
-    [[nodiscard]] bool process_keyevent(const KeyPressedEvent& event) {
-        int code = event.keycode;
-        anything_pressed = code;
-        if (!KeyMap::does_layer_map_contain_key(STATE, code)) {
-            return false;
-        }
-        // TODO make this a map if we have more
-        if (code == KeyMap::get_key_code(STATE, InputName::WidgetMod)) {
-            mod = code;
-            return true;
-        }
-        if (code == KeyMap::get_key_code(STATE, InputName::WidgetCtrl)) {
-            mod = code;
-            return true;
-        }
-
-        // TODO same as above, but a separate map
-        modchar = code;
-
-        key = code;
-        return true;
+    [[nodiscard]] const std::string& get_chars_this_frame() const {
+        return chars_this_frame;
     }
 
-    [[nodiscard]] bool process_gamepad_button_event(
-        const GamepadButtonPressedEvent& event) {
-        GamepadButton code = event.button;
-        anything_pressed = code;
-        if (!KeyMap::does_layer_map_contain_button(STATE, code)) {
-            return false;
+    // Polling-based input methods that use GameAction
+    [[nodiscard]] bool pressed(game::GameAction action) {
+        auto* collector = afterhours::EntityHelper::get_singleton_cmp<
+            afterhours::input::InputCollector>();
+        if (!collector) return false;
+
+        for (const auto& a : collector->inputs_pressed) {
+            if (a.action == static_cast<int>(action)) {
+                ui::sounds::select();
+                return true;
+            }
         }
-        button = code;
-        return true;
+        return false;
     }
 
-    [[nodiscard]] bool process_gamepad_axis_event(GamepadAxisMovedEvent event) {
-        GamepadAxisWithDir info = event.data;
-        anything_pressed = info;
-        if (!KeyMap::does_layer_map_contain_axis(STATE, info.axis)) {
+    [[nodiscard]] bool is_held_down(game::GameAction action) {
+        auto* collector = afterhours::EntityHelper::get_singleton_cmp<
+            afterhours::input::InputCollector>();
+        if (!collector) return false;
+
+        for (const auto& a : collector->inputs) {
+            if (a.action == static_cast<int>(action)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    [[nodiscard]] bool is_held_down_debounced(game::GameAction action) {
+        const bool is_held = is_held_down(action);
+        if (!is_held) return false;
+        if (keyHeldDownTimer < keyHeldDownTimerReset) {
+            keyHeldDownTimer += lastDt;
             return false;
         }
-        axis_info = info;
+        keyHeldDownTimer = 0.f;
         return true;
     }
 
     [[nodiscard]] bool _pressedButtonWithoutEat(GamepadButton butt) const {
         if (butt == raylib::GAMEPAD_BUTTON_UNKNOWN) return false;
-        return button == butt;
+        return afterhours::input::is_gamepad_button_pressed(0, butt);
     }
 
     [[nodiscard]] bool pressedButtonWithoutEat(const InputName& name) const {
-        GamepadButton code = KeyMap::get_button(STATE, name);
-        return _pressedWithoutEat(code);
+        return input_helper::was_pressed(name);
     }
 
     void eatButton() { button = raylib::GAMEPAD_BUTTON_UNKNOWN; }
 
     [[nodiscard]] bool pressed(const InputName& name) {
-        int code = KeyMap::get_key_code(STATE, name);
-        bool a = _pressedWithoutEat(code);
-        if (a) {
+        bool result = input_helper::was_pressed(name);
+        if (result) {
             ui::sounds::select();
-            eatKey();
-            return a;
         }
-
-        GamepadButton butt = KeyMap::get_button(STATE, name);
-        bool b = _pressedButtonWithoutEat(butt);
-        if (b) {
-            ui::sounds::select();
-            eatButton();
-            return b;
-        }
-
-        bool c = KeyMap::get_axis(STATE, name)
-                     .map([&](GamepadAxisWithDir axis) -> bool {
-                         return axis_info.axis == axis.axis &&
-                                ((axis.dir - axis_info.dir) >= EPSILON);
-                     })
-                     .map_error([&](auto exp) {
-                         this->handleBadGamepadAxis(exp, STATE, name);
-                     })
-                     .value_or(false);
-        if (c) {
-            ui::sounds::select();
-            eatAxis();
-        }
-        return c;
+        return result;
     }
 
     void handleBadGamepadAxis(const KeyMapInputRequestError&, menu::State,
@@ -173,12 +198,11 @@ struct IUIContextInputManager {
 
     [[nodiscard]] bool _pressedWithoutEat(int code) const {
         if (code == raylib::KEY_NULL) return false;
-        return key == code || mod == code;
+        return afterhours::input::is_key_pressed(code);
     }
     // TODO is there a better way to do eat(string)?
     [[nodiscard]] bool pressedWithoutEat(const InputName& name) const {
-        int code = KeyMap::get_key_code(STATE, name);
-        return _pressedWithoutEat(code);
+        return input_helper::was_pressed(name);
     }
 
     void eatKey() { key = int(); }
@@ -194,7 +218,7 @@ struct IUIContextInputManager {
     }
 
     [[nodiscard]] bool is_held_down(const InputName& name) {
-        return (bool) KeyMap::is_event(STATE, name);
+        return input_helper::is_down(name) > 0.f;
     }
 };
 }  // namespace ui

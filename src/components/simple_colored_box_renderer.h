@@ -4,8 +4,6 @@
 #include "base_component.h"
 
 struct SimpleColoredBoxRenderer : public BaseComponent {
-    virtual ~SimpleColoredBoxRenderer() {}
-
     auto& update_face(Color face) {
         face_color = face;
         return *this;
@@ -22,11 +20,13 @@ struct SimpleColoredBoxRenderer : public BaseComponent {
     Color face_color = PINK;
     Color base_color = PINK;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.object(face_color);
-        s.object(base_color);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.face_color,                    //
+            self.base_color                     //
+        );
     }
 };

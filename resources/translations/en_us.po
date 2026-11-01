@@ -257,3 +257,9 @@ msgstr "0123456789_-+=/[];,.<>?:"
 
 msgid "Pub Panic!"
 msgstr "Pub Panic!"
+
+msgid "Reset all settings"
+msgstr "Reset all settings"
+
+msgid "Save and exit"
+msgstr "Save and exit"

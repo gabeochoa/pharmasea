@@ -3,29 +3,36 @@
 
 #include <deque>
 
-#include "../engine/pathfinder.h"
-#include "../entity_helper.h"
+#include "../engine/path_request_manager.h"
+#include "../entities/entity_helper.h"
+#include "../entities/entity_id.h"
+#include "../entities/entity_ref.h"
 #include "../vendor_include.h"
 #include "base_component.h"
 
 struct CanPathfind : public BaseComponent {
-    virtual ~CanPathfind() {}
-
     [[nodiscard]] bool is_path_empty() const { return !!path.empty(); }
     [[nodiscard]] vec2 get_local_target() { return local_target.value(); }
 
     [[nodiscard]] bool travel_toward(vec2 end, float speed) {
+        Entity& parent_entity = this->parent.resolve_enforced();
+
         // Nothing to do we are already at the goal
         if (is_at_position(end)) return true;
 
-        Transform& transform = parent->get<Transform>();
+        // Waiting for our path request to be resolved
+        if (has_active_request) {
+            return false;
+        }
+
+        Transform& transform = parent_entity.get<Transform>();
         vec2 me = transform.as2();
 
-        // TODO always overwrite?
         global_target = end;
 
         if (is_path_empty()) {
             path_to(me, global_target.value());
+            return false;
         }
         ensure_active_local_target();
         move_transform_toward_local_target(speed);
@@ -47,19 +54,35 @@ struct CanPathfind : public BaseComponent {
 
     [[nodiscard]] size_t get_max_length() const { return max_path_length; }
 
+    void update_path(const std::deque<vec2>& new_path) {
+        path = new_path;
+        path_size = (int) path.size();
+
+        has_active_request = false;
+        max_path_length = std::max(max_path_length, path.size());
+        log_trace("{} recieved a path of length {}", parent.id, path.size());
+    }
+
+    auto& set_parent(EntityID id) {
+        parent.set_id(id);
+        return *this;
+    }
+
    private:
     [[nodiscard]] bool is_at_position(vec2 position) {
-        return vec::distance(parent->get<Transform>().as2(), position) <
+        const Entity& owner = parent.resolve_enforced();
+        return vec::distance(owner.get<Transform>().as2(), position) <
                (TILESIZE / 2.f);
     }
 
     void move_transform_toward_local_target(float speed) {
+        Entity& owner = parent.resolve_enforced();
         if (!local_target.has_value()) {
             log_warn("Tried to ensure local target but still dont have one");
             return;
         }
 
-        Transform& transform = parent->get<Transform>();
+        Transform& transform = owner.get<Transform>();
         vec2 new_pos = transform.as2();
         vec2 tar = local_target.value();
         if (tar.x > transform.raw().x) new_pos.x += speed;
@@ -70,45 +93,29 @@ struct CanPathfind : public BaseComponent {
 
         // TODO do we need to unr the whole person_update...() function with
         // collision?
+        // // TODO what does "unr" mean ?
 
         transform.update(vec::to3(new_pos));
     }
 
     void path_to(vec2 begin, vec2 end) {
+        if (has_active_request) {
+            // just keep waiting
+            return;
+        }
+
+        if (!path.empty()) {
+            return;
+        }
+
         start = begin;
         goal = end;
 
-        {
-            auto new_path = bfs::find_path(
-                start, goal,
-                std::bind(EntityHelper::isWalkable, std::placeholders::_1));
+        PathRequestManager::enqueue_request(PathRequestManager::PathRequest{
+            .entity_id = parent.id, .start = start, .end = goal});
 
-            update_path(new_path);
-
-            log_trace("gen path from {} to {} with {} steps", start, goal,
-                      path.size());
-        }
-
-        // TODO For now we are just going to let the customer noclip
-        if (path.empty()) {
-            // TODO we dont know how to get the entity we are at the moment
-            log_warn("Forcing {} {} to noclip in order to get valid path",
-                     "some entity with canpathfind", "idk");
-            // log_warn("Forcing {} {} to noclip in order to get valid path",
-            // entity.name(), entity.id);
-            auto new_path =
-                bfs::find_path(start, goal, [](auto&&) { return true; });
-            update_path(new_path);
-            // system_manager::logging_manager::announce(
-            // entity, fmt::format("gen path from {} to {} with {} steps", me,
-            // goal, p_size()));
-        }
-        // what happens if we get here and the path is still empty?
-        if (path.empty()) {
-            log_warn("no pathing even after noclip... {} {} {}=>{}", "my name",
-                     "my id", start, goal);
-        }
-        max_path_length = std::max(max_path_length, path.size());
+        has_active_request = true;
+        log_trace("{} requested path from {} to {} ", parent.id, start, goal);
     }
 
     void ensure_active_local_target() {
@@ -120,9 +127,11 @@ struct CanPathfind : public BaseComponent {
         local_target = path[0];
         path.pop_front();
     }
+
     std::optional<vec2> local_target;
     std::optional<vec2> global_target;
 
+    bool has_active_request = false;
     vec2 start;
     vec2 goal;
 
@@ -130,20 +139,17 @@ struct CanPathfind : public BaseComponent {
     std::deque<vec2> path;
     size_t max_path_length = 0;
 
-    void update_path(const std::deque<vec2>& new_path) {
-        path = new_path;
-        path_size = (int) path.size();
-    }
+    EntityRef parent{};
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(start);
-        s.object(goal);
-
-        s.value4b(path_size);
-        s.container(path, path_size, [](S& sv, vec2 pos) { sv.object(pos); });
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.parent,                        //
+            self.start,                         //
+            self.goal,                          //
+            self.path_size                      //
+        );
     }
 };
