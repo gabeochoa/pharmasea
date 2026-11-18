@@ -145,6 +145,45 @@ Full report: `docs/plans/afterhours-onboarding-report.md`. Submodule pulled to `
 - [ ] Opportunistic: upstream `src/image.h` (`image_size`/`decode_image`), `FrameRateStats`, `font_size_per_point`/`load_font_from_memory`
 - [ ] Skip (recorded in report): imm UI suite, house_of_cards (revisit after instancing), lit shader, sound wrappers, toast plugin, query indexes, expect_drawn capture asserts
 
+## e2e coverage expansion
+
+Today: 1 script (`tests/e2e/01_bypass_to_lobby.e2e`, wait-only, no assertions), `e2e_manager.h` understands only `wait`/`wait_frames`/`key`, and `-t` unit tests cover random/ui-widget/serialization/pathing/map-playability. Scripts run via `./pharmasea.exe --e2e <file>` or `--e2e-dir`. Enablers first — most scenarios below are one script once assertions exist.
+
+**Harness enablers (do first):**
+- [ ] Add assert commands to `e2e_manager` dispatch: `expect_menu_state <Root|Network|Settings|Game>`, `expect_game_state <InMenu|Lobby|InGame|Paused|LoadSaveRoom>` (read `MenuState`/`GameState` singletons; fail script + nonzero exit, not just log)
+- [ ] Add `expect_day <n>` + `expect_phase <day|night>` asserts (`HasDayNightTimer::days_passed()`/phase, same read the `completed_first_day` replay spec uses)
+- [ ] Add `expect_entity <ComponentName> <op> <count>` assert via `EQ().whereHasComponent<...>` for a small registered set (customers, drinks, furniture) — spawn/serve/cleanup smoke without UI text
+- [ ] Make failures fatal and legible: unknown command and failed assert exit nonzero with script name + line (today unknown commands only `log_warn` and the run still passes); print `[PASS]`/`[FAIL] <script>` summary per script in `--e2e-dir` mode
+- [ ] Screenshot-on-failure: capture one screenshot next to the script on assert failure/timeout so CI failures are debuggable without rerunning locally
+- [ ] Adopt upstream afterhours results JSON (`--results-json`, see afterhours onboarding) once the above lands, so `--e2e-dir` output is machine-readable in CI
+
+**Core loop scripts (need only the enablers above):**
+- [ ] `02_bypass_to_ingame.e2e` — extend 01 past lobby: bypass reaches `game::State::InGame`, player entity exists at spawn (bypass_helper already holds W in lobby/in-game)
+- [ ] `03_full_day_cycle.e2e` — `--bypass-rounds 1`: day starts, customers spawn, night falls, day counter increments to 1, transient entities cleaned up (assert day + customer count returns to 0)
+- [ ] `04_pause_resume.e2e` — in game: `key ESCAPE` -> `Paused`, again -> `InGame`; assert no day-timer advance while paused
+- [ ] `05_settings_roundtrip.e2e` — open Settings from Root, toggle a setting, back to Root, relaunch path: setting persists (assert via settings file/`settings::Data`, needs one `expect_setting` assert or a restart-and-check script pair)
+- [ ] `06_customer_serve_loop.e2e` — seeded (`--seed e2e-serve`): customer arrives, orders, is served, leaves happy; assert order state transitions + money/day stats changed (hardest script; split into spawn/order/serve asserts and mark `@slow`)
+
+**Determinism, save/load, replay:**
+- [ ] `07_seed_determinism.e2e` — same `--seed` twice via `--e2e-dir` harness or shell pair: identical map hash + first-customer spawn (needs `expect_map_hash` or position assert; guards the pcg seed path the `-t` random tests only cover at unit level)
+- [ ] `08_save_load_roundtrip.e2e` — in game day 1: trigger save slot write, `--load-save <path>` relaunch, assert day/phase/furniture count match pre-save (covers CLI `--load-save` reinit follow-up already in save/load section)
+- [ ] Add replay specs next to `completed_first_day` in `src/tests/replay_specs.cpp`: first customer served, first purchase placed, day-1 cleanup empty — replay validation today has exactly 1 spec
+- [ ] Record one new `.txt` replay per spec (`recorded_inputs/`) with the recording command documented in the file header, so specs don't silently rot when inputs change
+
+**Network (loopback, single machine):**
+- [ ] `09_host_lobby_loopback.e2e` — host creates lobby (`expect_game_state Lobby`), second process as client with `--username e2e-client` joins, host sees 2 players, client reaches Lobby (two-process script; needs a small shell runner under `tests/e2e/run_network.sh`, not the in-game parser)
+- [ ] `10_client_settings_isolation.e2e` — regression for the fixed "client can't change settings / host overrides menu state" bugs: client changes a local setting in lobby, assert host menu state unchanged
+
+**Negative + robustness:**
+- [ ] `11_corrupt_save.e2e` — `--load-save` on a truncated/garbage slot file: game reaches menu, logs the load failure, does not crash (assert exit code 0 + menu state)
+- [ ] `12_unknown_key_script.e2e` — script with a bogus `key` name and a bogus command fails fast with the line number (locks in the fatal-failure enabler above)
+- [ ] Map-gen sweep as e2e: `--generate-map` across 10 fixed seeds, assert every map passes the existing `test_map_playability` checks headlessly (move that check behind a CLI-reachable assert if needed)
+
+**CI/perf hygiene:**
+- [ ] Add `make e2e` target: rebuild if needed, run `--e2e-dir`, surface per-script PASS/FAIL + exit code (today e2e is manual-only)
+- [ ] Tag slow scripts (`03`, `06`, `09`) so a fast subset (`01,02,04,11,12`) can run per-commit and the full dir nightly
+- [ ] Frame-time smoke: reuse upstream `FrameRateStats` (afterhours onboarding) to fail `03_full_day_cycle` if avg frame time regresses past a generous threshold — catch perf cliffs, not frame-perfect timing
+
 ## code health
 
 - [ ] Create a precompiled header (pch.hpp) for heavyweight third-party headers
