@@ -128,6 +128,23 @@ Track features that should be in afterhours library rather than pharmasea:
 - [ ] vendor/afterhours: check for vendor component-registration utilities
 - [ ] vendor/afterhours: ensure submodule is initialized and pinned
 
+## afterhours onboarding (2026-11 bump 4c86b3a -> 4d8da9e)
+
+Full report: `docs/plans/afterhours-onboarding-report.md`. Submodule pulled to `4d8da9e`; no src changes made yet.
+
+- [ ] BLOCKER: fix `VALIDATE` undeclared build break (pch defines `AFTER_HOURS_REPLACE_VALIDATE`, `src/log/log.h` provides none; new vendor uses it in `core/system.h` + `input_system.h`) — include `engine/assert.h` before vendor headers, then build + `./pharmasea.exe -t` + one .e2e script
+- [ ] Replace vendored `src/engine/frustum.h` (raylibExtras copy) with afterhours `plugins/frustum.h` (`make_frustum` + sphere/box tests) in rendering_system
+- [ ] Pilot afterhours `InstanceBatcher`/`draw_model_instanced` (plugins/models.h) on most-repeated model; keep own ModelLibrary (glTF/fallback/lazy)
+- [ ] Add afterhours `plugins/lod.h` hysteresis LOD alongside frustum culling
+- [ ] Adopt afterhours `particles::Emitter` for drink/vomit particle effects (closes core-features particle item)
+- [ ] Evaluate `RngStream` (save/load state) for map generation; keep pcg for network/replay-critical paths
+- [ ] E2E: adopt upstream results JSON (`write_results_json`/`--results-json`) + `testing::is_e2e_running()`, then typed `register_command`; keep hand parser in e2e_manager.h until then
+- [ ] Use `files::TestRoots` in tests so they stop touching the real save folder; consider `files::get_cache_path()` for regenerable data
+- [ ] Settings remap: use upstream `actions_using` conflict checks + `input::Repeat` for held repeat; enum `is_held/is_pressed` for new code
+- [ ] Confirm fixed-tick wiring, then set `SystemManager::max_fixed_ticks` catch-up cap
+- [ ] Opportunistic: upstream `src/image.h` (`image_size`/`decode_image`), `FrameRateStats`, `font_size_per_point`/`load_font_from_memory`
+- [ ] Skip (recorded in report): imm UI suite, house_of_cards (revisit after instancing), lit shader, sound wrappers, toast plugin, query indexes, expect_drawn capture asserts
+
 ## code health
 
 - [ ] Create a precompiled header (pch.hpp) for heavyweight third-party headers

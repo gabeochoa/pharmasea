@@ -10,6 +10,7 @@
 #include <unordered_set>
 #include <utility>
 
+#include "../engine/assert.h"
 #include "../engine/globals.h"
 #include "afterhours/src/logging.h"
 #include "log_level.h"
