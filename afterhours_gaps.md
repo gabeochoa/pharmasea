@@ -143,6 +143,11 @@ counters or document which gameplay facts are host-only.
   `GenerateStoreOptionsSystem` with the same run condition, so
   each morning's fresh stock was deleted in the same tick.
   Registration order swapped (cleanup first).
-- One abort seen while idle in game: `thread::join failed:
-  Resource deadlock avoided` (some thread joining itself, likely
-  pathfinding or server teardown); no repro steps yet.
+- Fixed: the `thread::join failed: Resource deadlock avoided`
+  aborts were GameNetworkingSockets asserting on its service
+  thread (lock starvation under load), pharmasea's debug callback
+  calling `exit(1)` from that thread, and GNS static teardown
+  then joining the same thread. The callback now `abort()`s
+  instead (no static destructors), and the debug level dropped
+  from Msg to Warning so the callback stops starving the GNS
+  thread with per-message flushes.

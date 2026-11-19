@@ -30,11 +30,13 @@ static void log_debug(ESteamNetworkingSocketsDebugOutputType eType,
     SteamNetworkingMicroseconds time =
         SteamNetworkingUtils()->GetLocalTimestamp() - START_TIME;
     printf("%10.6f %s\n", time * 1e-6, pszMsg);
-    fflush(stdout);
     if (eType == k_ESteamNetworkingSocketsDebugOutputType_Bug) {
         fflush(stdout);
         fflush(stderr);
-        exit(1);
+        // Never exit() from a library callback thread: exit runs static
+        // destructors, and GNS teardown then tries to join the very
+        // thread this callback is running on (self-join deadlock).
+        std::abort();
     }
 }
 
@@ -152,7 +154,7 @@ struct Info : public RoleInfoMixin, UsernameInfoMixin {
         START_TIME = SteamNetworkingUtils()->GetLocalTimestamp();
         log_info("Setting debug output function");
         SteamNetworkingUtils()->SetDebugOutputFunction(
-            k_ESteamNetworkingSocketsDebugOutputType_Msg, log_debug);
+            k_ESteamNetworkingSocketsDebugOutputType_Warning, log_debug);
 
         reset_connections();
         log_info("Initializing GNS Network Connections");
