@@ -42,6 +42,7 @@ struct Client {
     void send_player_input_packet(int my_id);
     void send_current_menu_state();
     void send_updated_seed(const std::string& seed);
+    void send_save_slot_request(int slot);
     void client_process_message_string(const std::string& msg);
 };
 

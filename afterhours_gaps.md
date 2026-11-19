@@ -1,0 +1,105 @@
+# Afterhours gaps found by the e2e expansion
+
+Project: Pub Panic! (`pharmasea`). Context: hand-rolled e2e harness in
+[src/engine/simulated_input/e2e_manager.h](/Users/gabeochoa/p/pharmasea/src/engine/simulated_input/e2e_manager.h)
+was extended with fatal assertions before migrating to the upstream
+runner. Anything below is something the game needed from the library
+(or from the future multiplayer plugin) and had to work around, fake,
+or defer. The multiplayer plugin in `~/p/pumpkin-beachball`
+(`vendor/afterhours-online`) is the reference shape for the network
+items; pharmasea is not onboarding to it yet.
+
+## E2E harness
+
+### G-E1: No typed custom-command registration in the hand parser (upstream migration pending)
+Upstream already has the answer (`E2ERunner`, `register_command`,
+`wait_until`, `VisibleTextRegistry` behind `expect_text`,
+`--results-json` schema in `runner.h`/`harness.h`). Pharmasea still
+parses scripts by hand because its harness deliberately avoids the
+ECS command-handler stack. Plan: migrate once the hand-rolled asserts
+are proven in CI, then delete the local parser. Until then the game
+emits a minimal results JSON that is not the upstream schema.
+
+### G-E2: No time-scale / fast-forward for tests
+Upstream harness has `--time-scale` / `--e2e-speed`; the local parser
+does not. A full day cycle is 200s of real time (100s day + 100s
+night), so `03`/`06` are minutes-long `@slow` scripts. A dt
+multiplier that speeds the simulation (not `wait_frames`, which
+already counts ticks) would cut them to seconds.
+
+### G-E3: No scripted player interaction commands
+The serve half of `06_customer_serve_loop.e2e` (walk to a machine,
+grab a cup, fill it, hand it to the customer) cannot be driven.
+`bypass_helper` hardcodes one lobby trick (hold W). Needed from the
+library: semantic move/interact commands (walk-to entity/position,
+interact, hold/release) layered on `input_injector`, usable without
+the full UI command stack.
+
+### G-E4: `raylib::TakeScreenshot` drops the directory on macOS
+Passing `tests/e2e/name.png` writes `name.png` into the CWD. The
+harness now captures via `LoadImageFromTexture` +
+`ExportImageToMemory` instead. The raylib backend should honor the
+full path it is given.
+
+### G-E5: Perf assertions have no provider hookup locally
+Upstream `perf_commands` (`expect_fps_above`, `expect_p99_below`)
+plus `FrameRateStats` exist, but pharmasea's hand parser has no
+provider registration point, so the frame-time smoke item stays
+open. Resolved by G-E1's migration.
+
+## Multiplayer (needed before network e2e can grow)
+
+### G-M1: Main-thread -> authoritative-server command channel (save solved game-side)
+E2e runs on the client-main thread. Saving a slot, setting the seed,
+or forcing a phase all live behind `server_only::*`, which refuses
+non-server threads. The seed path already showed the shape
+(`Server::queue_packet`), and the save leg now uses it too: a
+`SaveSlot` client packet queued from the main thread and handled on
+the server thread (`process_save_slot_info` ->
+`save_game_to_slot`), verified by the `08` pair. Still missing for
+the plugin: a general queued test/command channel (force phase,
+teleport, spawn) with an observable completion signal, instead of
+one packet type per verb, plus host authorization on these verbs
+(the handlers still carry "validate this came from the host" TODOs).
+
+### G-M2: Players are not queryable from the client collection
+`EQ().whereType(EntityType::Player)` returns 0 on the client thread:
+players live in map-side lists (`local_players_NOT_SERIALIZED`,
+remote mirrors), not in the replicated entity collection that `EQ`
+reads, while customers and furniture do replicate. Tests need one
+documented, host/client-symmetric way to ask "how many players are
+in the world" (the future `expect_player_count`). Same shape as the
+replay-spec note: "Use EQ() so this works in both host/client
+contexts" only holds for replicated sets.
+
+### G-M3: CLI `--seed` never reaches the authoritative map
+`--seed` only feeds the map viewer and `--generate-map`; a normal
+game's seed is server-owned and set through the lobby UI packet
+flow. Seeded e2e (`06 --seed e2e-serve`) therefore cannot pin the
+world it asserts on. Needed: a pre-lobby seed entry point the host
+applies when the server starts (the plugin's session config is the
+natural home).
+
+### G-M4: No two-process network test orchestration
+Scripts `09` (host+client lobby loopback) and `10` (client settings
+isolation) need a runner that spawns two game processes, picks a
+fresh port, waits on log readiness instead of sleeps, and collects
+both exit codes. Pumpkin's `tests/online_e2e.py` is the reference.
+Deferred with the network milestone; nothing game-side blocks it
+except G-M1/G-M2/G-M3.
+
+### G-M5: Menu/Game state singletons are shared across threads
+`statemanager.h` already documents the race: the server thread can
+read `MenuState`/`GameState` while the main thread mutates them.
+E2e state assertions inherit that race (host is king in game, client
+is king in menus, one object serves both). The plugin's planned
+server-local state copy would give tests a clean, race-free read.
+
+## Game-side notes (not library asks, recorded so they are not lost)
+
+- `log_error` aborts in debug builds (assert in the logging header),
+  so e2e failure reporting must never use it; the harness reports
+  with `log_warn` + stderr.
+- Clean process exit required an explicit `Server::shutdown()` +
+  `network_info.reset()` in `main`; static destruction of the server
+  otherwise terminated the process (exit 134) after a passing run.

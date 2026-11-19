@@ -85,6 +85,12 @@ constexpr auto serialize(auto& archive, ClientPacket::PlayerRareInfo& info) {
     );
 }
 
+constexpr auto serialize(auto& archive, ClientPacket::SaveSlotInfo& info) {
+    return archive(  //
+        info.slot    //
+    );
+}
+
 constexpr auto serialize(auto& archive, ClientPacket::PlaySoundInfo& info) {
     return archive(        //
         info.location[0],  //

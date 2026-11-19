@@ -690,6 +690,18 @@ void Server::process_map_seed_info(const internal::Client_t&,
     pharmacy_map->update_seed(info.seed);
 }
 
+void Server::process_save_slot_info(const internal::Client_t&,
+                                    const ClientPacket& orig_packet) {
+    ClientPacket::SaveSlotInfo info =
+        std::get<ClientPacket::SaveSlotInfo>(orig_packet.msg);
+
+    // TODO eventually validate that the save request came from the host
+
+    log_info("process save slot info {}", info.slot);
+    bool ok = server_only::save_game_to_slot(info.slot);
+    if (!ok) log_warn("save slot {} request failed", info.slot);
+}
+
 void Server::server_enqueue_message_string(HSteamNetConnection conn,
                                            const std::string& msg) {
     incoming_message_queue.push_back(
@@ -775,6 +787,9 @@ void Server::server_process_packet(const internal::Client_t& incoming_client,
         } break;
         case ClientPacket::MsgType::MapSeed: {
             return process_map_seed_info(incoming_client, packet);
+        } break;
+        case ClientPacket::MsgType::SaveSlot: {
+            return process_save_slot_info(incoming_client, packet);
         } break;
         // case ClientPacket::MsgType::PlayerRare: {
         // return process_player_rare_packet(incoming_client, packet);

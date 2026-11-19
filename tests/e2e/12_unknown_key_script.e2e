@@ -1,0 +1,7 @@
+# @xfail
+# Test: a bogus key name must fail fast with a line number.
+# This script is EXPECTED TO FAIL. Run it standalone:
+# ./pharmasea.exe --e2e tests/e2e/12_unknown_key_script.e2e
+# Expected: exit code 1, output names this file and the key line.
+
+key NOT_A_REAL_KEY

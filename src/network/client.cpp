@@ -136,6 +136,16 @@ void Client::send_updated_seed(const std::string& seed) {
     Server::queue_packet(packet);
 }
 
+void Client::send_save_slot_request(int slot) {
+    ClientPacket packet{
+        .client_id = SERVER_CLIENT_ID,
+        .msg_type = ClientPacket::MsgType::SaveSlot,
+        .msg = ClientPacket::SaveSlotInfo{.slot = slot},
+    };
+
+    Server::queue_packet(packet);
+}
+
 void Client::client_process_message_string(const std::string& msg) {
     auto add_new_player = [&](int client_id, const std::string& username) {
         if (remote_players.contains(client_id)) {

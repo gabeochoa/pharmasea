@@ -36,6 +36,7 @@ struct ClientPacket {
         PlayerRare,
         Ping,
         PlaySound,
+        SaveSlot,
     } msg_type;
 
     struct PingInfo {
@@ -103,6 +104,10 @@ struct ClientPacket {
         strings::sounds::SoundId sound;
     };
 
+    struct SaveSlotInfo {
+        int slot = 0;
+    };
+
     using Msg =
         std::variant<ClientPacket::AnnouncementInfo,
                      ClientPacket::PlayerControlInfo,
@@ -110,7 +115,7 @@ struct ClientPacket {
                      ClientPacket::MapInfo, ClientPacket::MapSeedInfo,
                      ClientPacket::PlayerInfo, ClientPacket::PlayerLeaveInfo,
                      ClientPacket::PlayerRareInfo, ClientPacket::PingInfo,
-                     ClientPacket::PlaySoundInfo>;
+                     ClientPacket::PlaySoundInfo, ClientPacket::SaveSlotInfo>;
 
     Msg msg;
 };
@@ -159,6 +164,9 @@ inline std::ostream& operator<<(std::ostream& os,
             [&](const ClientPacket::PlaySoundInfo& info) {
                 return fmt::format("PlaySound({} {}, {})", info.location[0],
                                    info.location[1], (int) info.sound);
+            },
+            [&](const ClientPacket::SaveSlotInfo& info) {
+                return fmt::format("SaveSlot({})", info.slot);
             },
             [&](auto) { return std::string(" -- invalid operator<< --"); }},
         msgtype);

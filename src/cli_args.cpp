@@ -43,6 +43,8 @@ std::string MAP_VIEWER_SEED = "";
 bool E2E_ENABLED = false;
 std::string E2E_SCRIPT = "";
 std::string E2E_DIR = "";
+int E2E_EXIT_CODE = 0;
+std::string E2E_RESULTS_JSON = "";
 std::string USERNAME_OVERRIDE = "";
 
 #ifdef AFTER_HOURS_ENABLE_MCP
@@ -81,7 +83,7 @@ void process_dev_flags(int argc, char* argv[]) {
         static const std::set<std::string> with_value = {
             "--replay",    "--bypass-rounds", "--generate-map",
             "--load-save", "--seed",          "--e2e",
-            "--username",
+            "--username",  "--results-json",
         };
 
         // Accept --flag=value form for value flags.
@@ -335,6 +337,20 @@ void process_dev_flags(int argc, char* argv[]) {
         BYPASS_MENU = true;
         ENABLE_SOUND = false;
         log_info("--e2e-dir: running all .e2e scripts in {}", E2E_DIR);
+    }
+
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i] ? argv[i] : "";
+        const std::string prefix = "--results-json=";
+        if (arg.rfind(prefix, 0) == 0) {
+            E2E_RESULTS_JSON = arg.substr(prefix.size());
+            log_info("--results-json: {}", E2E_RESULTS_JSON);
+            continue;
+        }
+        if (arg == "--results-json" && i + 1 < argc) {
+            E2E_RESULTS_JSON = argv[++i] ? argv[i] : "";
+            log_info("--results-json: {}", E2E_RESULTS_JSON);
+        }
     }
 
     // Parse --seed=xyz or --seed xyz

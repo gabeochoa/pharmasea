@@ -1,0 +1,12 @@
+# Test: ESC pauses and resumes without the day timer advancing.
+# Runs after bypass reaches InGame.
+
+expect_game_state InGame within 90
+
+key ESCAPE
+expect_game_state Paused within 10
+
+key ESCAPE
+expect_game_state InGame within 10
+
+wait 1

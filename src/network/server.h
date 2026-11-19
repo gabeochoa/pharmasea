@@ -143,6 +143,8 @@ struct Server {
                               const ClientPacket& orig_packet);
     void process_map_seed_info(const internal::Client_t& incoming_client,
                                const ClientPacket& orig_packet);
+    void process_save_slot_info(const internal::Client_t& incoming_client,
+                                const ClientPacket& orig_packet);
 
     void server_enqueue_message_string(HSteamNetConnection conn,
                                        const std::string& msg);

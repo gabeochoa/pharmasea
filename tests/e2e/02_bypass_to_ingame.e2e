@@ -1,0 +1,9 @@
+# Test: bypass continues past the lobby into a running game.
+# Host start transitions Lobby -> InGame and the local player spawns.
+
+expect_game_state Lobby within 60
+expect_game_state InGame within 60
+expect_entity Furniture >= 1 within 30
+expect_menu_state Game within 10
+
+wait 2

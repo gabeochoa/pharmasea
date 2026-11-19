@@ -1,0 +1,12 @@
+# @slow
+# Test: a customer arrives and places an order.
+# The serve/drink/pay leg needs scripted player interaction
+# (walk, grab, fill, hand over) which the harness cannot drive
+# yet; see afterhours_gaps.md. Until then this asserts the
+# spawn -> order half of the loop.
+# Seeded launch: ./pharmasea.exe --e2e tests/e2e/06_customer_serve_loop.e2e --seed e2e-serve
+
+expect_game_state InGame within 90
+expect_phase night within 900
+expect_entity Customer >= 1 within 300
+expect_order Ordering >= 1 within 300

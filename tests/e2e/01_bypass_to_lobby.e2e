@@ -1,13 +1,9 @@
 # Test: bypass menu automation reaches the lobby
 # Requires --bypass-menu (auto-set by --e2e)
-# bypass_helper clicks through menus automatically,
-# so we just wait for the game to reach lobby state.
+# bypass_helper clicks through menus automatically.
 
-wait 8
-
-# Player should be at spawn position after bypass
-# (bypass_helper holds W briefly but player starts at ~4,13)
-# No expect_text yet since VisibleTextRegistry isn't wired up.
-# This test validates the e2e pipeline runs end-to-end without crashing.
+expect_menu_state Game within 60
+expect_game_state Lobby within 60
+expect_entity Furniture >= 1 within 30
 
 wait 2

@@ -328,6 +328,7 @@ int main(int argc, char* argv[]) {
         App::get().run();
     } catch (const std::exception& e) {
         std::cout << "App run exception: " << e.what() << std::endl;
+        return 1;
 #if !defined(NDEBUG)
         backward::StackTrace st;
         st.load_here(64);
@@ -337,5 +338,7 @@ int main(int argc, char* argv[]) {
         p.print(st);
 #endif
     }
-    return 0;
+    network::Server::shutdown();
+    network_info.reset();
+    return E2E_EXIT_CODE;
 }

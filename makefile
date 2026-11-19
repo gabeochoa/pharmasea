@@ -135,6 +135,12 @@ release: clean all
 test: all
 	timeout 120 ./pharmasea.exe --local --replay=completed_first_day -M --username=test
 
+e2e: all
+	sh tests/e2e/run_e2e.sh
+
+e2e-slow: all
+	sh tests/e2e/run_e2e.sh --slow
+
 modeltest:
 	$(CXX) -std=c++2a -g $(RAYLIB_FLAGS) $(RAYLIB_LIB) -Ivendor/ model_test.cpp;./a.out
 
