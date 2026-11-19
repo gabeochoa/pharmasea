@@ -1,12 +1,25 @@
 # @slow
 # Test: a customer arrives and places an order.
-# The serve/drink/pay leg needs scripted player interaction
-# (walk, grab, fill, hand over) which the harness cannot drive
-# yet; see afterhours_gaps.md. Until then this asserts the
-# spawn -> order half of the loop.
+# Full serving is covered end-to-end by 13_first_customer_served;
+# this script asserts the spawn -> order half with the debug
+# fast-forward driving the day phase.
 # Seeded launch: ./pharmasea.exe --e2e tests/e2e/06_customer_serve_loop.e2e --seed e2e-serve
 
-expect_game_state InGame within 90
-expect_phase night within 900
-expect_entity Customer >= 1 within 300
-expect_order Ordering >= 1 within 300
+wait_until 90 expect_game_state InGame
+
+key BACKSLASH
+wait_until 10 expect_debug true
+wait_until 20 walk_to 5 4
+wait_until 20 walk_to 4 4
+wait_until 20 walk_to 4 3
+wait_until 60 ffwd_phase night
+
+wait_until 20 walk_to 4 4
+wait_until 20 walk_to 0 4
+wait_until 20 walk_to -3 2
+wait_until 20 walk_to -6 1
+wait_until 20 walk_to -10 0
+wait_until 20 walk_to -10 -1
+
+wait_until 120 expect_entity Customer >= 1
+wait_until 120 expect_order Ordering >= 1

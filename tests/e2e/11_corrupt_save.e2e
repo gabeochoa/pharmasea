@@ -3,7 +3,7 @@
 # Launch: ./pharmasea.exe --e2e tests/e2e/11_corrupt_save.e2e --load-save tests/e2e/fixtures/corrupt_slot.bin
 # (without --load-save this still passes: it asserts reachability only)
 
-expect_menu_state Game within 60
-expect_game_state Lobby within 60
+wait_until 60 expect_menu_state Game
+wait_until 60 expect_game_state Lobby
 
 wait 1

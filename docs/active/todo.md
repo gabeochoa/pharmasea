@@ -138,7 +138,7 @@ Full report: `docs/plans/afterhours-onboarding-report.md`. Submodule pulled to `
 - [ ] Add afterhours `plugins/lod.h` hysteresis LOD alongside frustum culling
 - [ ] Adopt afterhours `particles::Emitter` for drink/vomit particle effects (closes core-features particle item)
 - [ ] Evaluate `RngStream` (save/load state) for map generation; keep pcg for network/replay-critical paths
-- [ ] E2E: adopt upstream results JSON (`write_results_json`/`--results-json`) + `testing::is_e2e_running()`, then typed `register_command`; keep hand parser in e2e_manager.h until then
+- [x] E2E: adopt upstream results JSON (`write_results_json`/`--results-json`) + `testing::is_e2e_running()`, then typed `register_command`; keep hand parser in e2e_manager.h until then — done: hand parser deleted, scripts use `wait_until`, pending commands isolated in the singleton default collection (client map generation wipes its own collection)
 - [ ] Use `files::TestRoots` in tests so they stop touching the real save folder; consider `files::get_cache_path()` for regenerable data
 - [ ] Settings remap: use upstream `actions_using` conflict checks + `input::Repeat` for held repeat; enum `is_held/is_pressed` for new code
 - [ ] Confirm fixed-tick wiring, then set `SystemManager::max_fixed_ticks` catch-up cap
@@ -155,7 +155,7 @@ Today: 1 script (`tests/e2e/01_bypass_to_lobby.e2e`, wait-only, no assertions), 
 - [x] Add `expect_entity <ComponentName> <op> <count>` assert via `EQ().whereHasComponent<...>` for a small registered set (customers, drinks, furniture) — spawn/serve/cleanup smoke without UI text — sets: Customer (`IsCustomer`), Drink (`IsDrink`), Furniture (`CanHoldItem`), Player (type tag; reads 0 on client thread, see `afterhours_gaps.md` G-M2)
 - [x] Make failures fatal and legible: unknown command and failed assert exit nonzero with script name + line (today unknown commands only `log_warn` and the run still passes); print `[PASS]`/`[FAIL] <script>` summary per script in `--e2e-dir` mode — exit code plumbed via `E2E_EXIT_CODE`; `@xfail` scripts are skipped in dir mode
 - [x] Screenshot-on-failure: capture one screenshot next to the script on assert failure/timeout so CI failures are debuggable without rerunning locally — via texture export; `raylib::TakeScreenshot` drops directories on macOS (G-E4)
-- [ ] Adopt upstream afterhours results JSON (`--results-json`, see afterhours onboarding) once the above lands, so `--e2e-dir` output is machine-readable in CI — hand-rolled minimal JSON emitted now; upstream schema waits on the runner migration (G-E1)
+- [x] Adopt upstream afterhours results JSON (`--results-json`, see afterhours onboarding) once the above lands, so `--e2e-dir` output is machine-readable in CI — harness migrated to upstream `E2ERunner` + `register_command`; `--results-json` now emits the upstream schema
 
 **Core loop scripts (need only the enablers above):**
 - [x] `02_bypass_to_ingame.e2e` — extend 01 past lobby: bypass reaches `game::State::InGame`, player entity exists at spawn (bypass_helper already holds W in lobby/in-game) — asserts InGame + furniture replicated; player probe blocked on G-M2

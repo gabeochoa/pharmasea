@@ -1,16 +1,24 @@
 # @slow
 # Test: one full day/night cycle.
-# Day (planning) runs, the bar opens at night, customers spawn,
-# the day counter increments, and transient customers clean up.
-# Round lengths are real-time, so this takes minutes.
+# Debug fast-forward (100x timer + spawner) drives the phases:
+# day starts, the bar opens at night, customers spawn, the day
+# counter increments, and transient customers clean up.
 
-expect_game_state InGame within 90
-expect_phase day within 30
-expect_day 0 within 10
+wait_until 120 expect_game_state InGame
+wait_until 30 expect_phase day
+wait_until 10 expect_day 0
 
-expect_phase night within 900
-expect_day >= 1 within 60
-expect_entity Customer >= 1 within 300
+key BACKSLASH
+wait_until 10 expect_debug true
 
-expect_entity Customer == 0 within 900
-expect_day >= 1 within 10
+wait_until 30 walk_to 0 4
+wait_until 20 walk_to 4 4
+wait_until 20 walk_to 4 3
+
+wait_until 120 ffwd_phase night
+wait_until 60 expect_day >= 1
+wait_until 120 expect_entity Customer >= 1
+
+wait_until 120 ffwd_phase day
+wait_until 120 expect_entity Customer == 0
+wait_until 10 expect_day >= 1

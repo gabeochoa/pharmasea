@@ -7,9 +7,9 @@
 # (SaveSlot packet); step 2 loads it via the CLI hook and lands
 # in planning on the saved day/furniture.
 
-expect_game_state InGame within 90
-expect_day 0 within 10
-expect_entity Furniture >= 1 within 30
+wait_until 90 expect_game_state InGame
+wait_until 10 expect_day 0
+wait_until 30 expect_entity Furniture >= 1
 
 save_slot 9
-expect_save_slot 9 within 30
+wait_until 30 expect_save_slot 9

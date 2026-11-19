@@ -11,14 +11,17 @@ items; pharmasea is not onboarding to it yet.
 
 ## E2E harness
 
-### G-E1: No typed custom-command registration in the hand parser (upstream migration pending)
-Upstream already has the answer (`E2ERunner`, `register_command`,
-`wait_until`, `VisibleTextRegistry` behind `expect_text`,
-`--results-json` schema in `runner.h`/`harness.h`). Pharmasea still
-parses scripts by hand because its harness deliberately avoids the
-ECS command-handler stack. Plan: migrate once the hand-rolled asserts
-are proven in CI, then delete the local parser. Until then the game
-emits a minimal results JSON that is not the upstream schema.
+### G-E1: Typed custom-command registration (migrated)
+Done: the hand parser is deleted. Scripts run on upstream
+`E2ERunner` with game asserts/actions registered via
+`register_command`, polling expressed as `wait_until`, and
+`--results-json` emitting the upstream schema. Two integration
+notes for the library: pending commands must not live in a
+collection the game rebuilds (`Map::ensure_generated_map` calls
+`delete_all_entities()`), so pharmasea ticks the handler pack
+against the singleton default collection; and the built-in `key`
+handler silently accepts unknown key names, so the game shadows
+it with a strict one registered before the builtins.
 
 ### G-E2: No time-scale / fast-forward for tests
 Upstream harness has `--time-scale` / `--e2e-speed`; the local parser

@@ -6,14 +6,27 @@
 # serves both night-1 customers: when the second takes their
 # drink, the first reaches the pay queue front and pays.
 
-expect_game_state InGame within 120
-walk_to 0 4 within 30
-walk_to -3 2 within 20
-walk_to -6 1 within 20
-walk_to -10 0 within 20
-walk_to -10 -1 within 20
+wait_until 120 expect_game_state InGame
+wait_until 30 walk_to 0 4
+wait_until 20 walk_to -3 2
+wait_until 20 walk_to -6 1
+wait_until 20 walk_to -10 0
+wait_until 20 walk_to -10 -1
 
-expect_phase night within 200
+key BACKSLASH
+wait_until 10 expect_debug true
+wait_until 20 walk_to -6 1
+wait_until 20 walk_to -3 2
+wait_until 20 walk_to 0 4
+wait_until 20 walk_to 4 4
+wait_until 20 walk_to 4 3
+wait_until 60 ffwd_phase night
+wait_until 20 walk_to 4 4
+wait_until 20 walk_to 0 4
+wait_until 20 walk_to -3 2
+wait_until 20 walk_to -6 1
+wait_until 20 walk_to -10 0
+wait_until 20 walk_to -10 -1
 
 wait 2
 hold_key W
@@ -22,7 +35,7 @@ release_key W
 key SPACE
 wait 2
 
-walk_to -9 3 within 30
+wait_until 30 walk_to -9 3
 wait 2
 hold_key S
 wait_frames 4
@@ -30,8 +43,8 @@ release_key S
 key SPACE
 wait 2
 
-walk_to -11 0 within 20
-walk_to -11 -1 within 20
+wait_until 20 walk_to -11 0
+wait_until 20 walk_to -11 -1
 wait 2
 hold_key W
 wait_frames 4
@@ -39,52 +52,7 @@ release_key W
 key SPACE
 wait 2
 
-walk_to -9 3 within 30
-wait 2
-hold_key S
-wait_frames 4
-release_key S
-hold_key R
-wait 5
-release_key R
-wait 2
-
-walk_to -11 0 within 20
-walk_to -11 -1 within 20
-wait 2
-hold_key W
-wait_frames 4
-release_key W
-key SPACE
-wait 2
-
-walk_to -10 0 within 20
-walk_to -10 -1 within 20
-wait 2
-hold_key W
-wait_frames 4
-release_key W
-key SPACE
-wait 2
-
-walk_to -9 3 within 30
-wait 2
-hold_key S
-wait_frames 4
-release_key S
-key SPACE
-wait 2
-
-walk_to -11 0 within 20
-walk_to -11 -1 within 20
-wait 2
-hold_key W
-wait_frames 4
-release_key W
-key SPACE
-wait 2
-
-walk_to -9 3 within 30
+wait_until 30 walk_to -9 3
 wait 2
 hold_key S
 wait_frames 4
@@ -94,21 +62,8 @@ wait 5
 release_key R
 wait 2
 
-expect_money >= 5 within 180
-expect_served >= 2 within 180
-
-expect_phase day within 300
-
-walk_to -6 1 within 30
-walk_to -3 2 within 20
-walk_to 0 4 within 20
-walk_to 5 4 within 20
-walk_to 6 -4 within 30
-walk_to 1 -7 within 30
-walk_to 0 -10 within 20
-walk_to -4 -16 within 30
-walk_to -7 -24 within 30
-walk_to -11 -26 within 20
+wait_until 20 walk_to -11 0
+wait_until 20 walk_to -11 -1
 wait 2
 hold_key W
 wait_frames 4
@@ -116,7 +71,16 @@ release_key W
 key SPACE
 wait 2
 
-walk_to -9 -19 within 30
+wait_until 20 walk_to -10 0
+wait_until 20 walk_to -10 -1
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+wait_until 30 walk_to -9 3
 wait 2
 hold_key S
 wait_frames 4
@@ -124,11 +88,60 @@ release_key S
 key SPACE
 wait 2
 
-expect_cart >= 1 within 30
+wait_until 20 walk_to -11 0
+wait_until 20 walk_to -11 -1
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
 
-walk_to -7 -18 within 20
-walk_to -9 -13 within 20
+wait_until 30 walk_to -9 3
+wait 2
+hold_key S
+wait_frames 4
+release_key S
+hold_key R
+wait 5
+release_key R
+wait 2
+
+wait_until 180 expect_money >= 5
+wait_until 180 expect_served >= 2
+
+wait_until 300 expect_phase day
+
+wait_until 30 walk_to -6 1
+wait_until 20 walk_to -3 2
+wait_until 20 walk_to 0 4
+wait_until 20 walk_to 5 4
+wait_until 30 walk_to 6 -4
+wait_until 30 walk_to 1 -7
+wait_until 20 walk_to 0 -10
+wait_until 30 walk_to -4 -16
+wait_until 30 walk_to -7 -24
+wait_until 20 walk_to -11 -26
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+wait_until 30 walk_to -9 -19
+wait 2
+hold_key S
+wait_frames 4
+release_key S
+key SPACE
+wait 2
+
+wait_until 30 expect_cart >= 1
+
+wait_until 20 walk_to -7 -18
+wait_until 20 walk_to -9 -13
 wait 6
 
-expect_furniture_near 9 1 within 60
-expect_cart == 0 within 30
+wait_until 60 expect_furniture_near 9 1
+wait_until 30 expect_cart == 0
