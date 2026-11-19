@@ -6,7 +6,6 @@ struct BypassAutomationState : public BaseComponent {
     int configured_rounds = 0;
     int remaining_rounds = 0;
     bool exit_on_complete = false;
-    bool recording_enabled = false;
     bool bypass_enabled = false;
     bool initialized = false;
     bool completed = false;
@@ -22,11 +21,10 @@ struct BypassAutomationState : public BaseComponent {
     bool ingame_w_held = false;
     float ingame_entry_time = -1.0f;
 
-    void configure(int rounds, bool exit_flag, bool recording_flag) {
+    void configure(int rounds, bool exit_flag) {
         configured_rounds = rounds;
         remaining_rounds = rounds;
         exit_on_complete = exit_flag;
-        recording_enabled = recording_flag;
         bypass_enabled = true;
         initialized = true;
         completed = false;

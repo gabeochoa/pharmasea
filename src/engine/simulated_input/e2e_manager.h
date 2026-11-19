@@ -15,16 +15,22 @@
 #include "../../client_server_comm.h"
 #include "../../network/network.h"
 #include "../../save_game/save_game.h"
+#include "../../system/core/system_manager.h"
 #include "../../components/can_hold_item.h"
 #include "../../components/can_order_drink.h"
 #include "../../components/has_day_night_timer.h"
 #include "../../components/is_bank.h"
+#include "../../components/is_ai_controlled.h"
 #include "../../components/is_customer.h"
 #include "../../components/is_drink.h"
+#include "../../components/is_floor_marker.h"
+#include "../../components/is_store_spawned.h"
+#include "../../components/is_trigger_area.h"
 #include "../../entities/entity_query.h"
 #include "../../globals.h"
 #include "../app.h"
 #include "../log.h"
+#include "../runtime_globals.h"
 #include "../settings.h"
 #include "../statemanager.h"
 
@@ -63,6 +69,9 @@ bool failed = false;
 std::string fail_message;
 int pending_idx = -1;
 float pending_elapsed = 0.f;
+int walk_idx = -1;
+vec2 walk_target{0.f, 0.f};
+float walk_elapsed = 0.f;
 
 namespace ah = afterhours::testing::input_injector;
 namespace fs = std::filesystem;
@@ -315,6 +324,79 @@ std::string eval_expect(const ParsedCmd& cmd) {
         return "expected money " + op + " " + std::to_string(expected) +
                " but was " + std::to_string(actual);
     }
+    if (cmd.name == "expect_served") {
+        std::string op;
+        long expected = 0;
+        if (!parse_op_count(cmd.args, 0, op, expected))
+            return "expect_served requires [op] <count>";
+        long actual = 0;
+        RefEntities ents = EQ(SystemManager::get().oldAll)
+                               .whereHasComponent<CanOrderDrink>()
+                               .gen();
+        if (ents.empty()) {
+            ents = EQ().whereHasComponent<CanOrderDrink>().gen();
+        }
+        for (Entity& e : ents) {
+            if (e.get<CanOrderDrink>().num_drinks_drank() > 0) actual++;
+        }
+        static long served_high_water = 0;
+        if (actual > served_high_water) served_high_water = actual;
+        actual = served_high_water;
+        if (apply_op(op, actual, expected)) return "";
+        return "expected served customers " + op + " " +
+               std::to_string(expected) + " but was " +
+               std::to_string(actual);
+    }
+    if (cmd.name == "expect_furniture_near") {
+        if (cmd.args.size() < 2)
+            return "expect_furniture_near requires <x> <z>";
+        float tx = 0.f;
+        float tz = 0.f;
+        try {
+            tx = std::stof(cmd.args[0]);
+            tz = std::stof(cmd.args[1]);
+        } catch (...) {
+            return "expect_furniture_near needs numeric coordinates";
+        }
+        RefEntities ents = EQ().whereHasComponent<CanHoldItem>().gen();
+        for (Entity& e : ents) {
+            vec2 pos = e.get<Transform>().as2();
+            float dx = pos.x - tx;
+            float dz = pos.y - tz;
+            if (dx * dx + dz * dz <= 2.5f * 2.5f) return "";
+        }
+        return "no furniture within 2.5 of (" + cmd.args[0] + ", " +
+               cmd.args[1] + ")";
+    }
+    if (cmd.name == "expect_withdrawals") {
+        std::string op;
+        long expected = 0;
+        if (!parse_op_count(cmd.args, 0, op, expected))
+            return "expect_withdrawals requires [op] <count>";
+        OptEntity e = EQ().whereHasComponent<IsBank>().gen_first();
+        if (!e.valid()) return "no IsBank entity";
+        long actual = 0;
+        const IsBank& bank = e->get<IsBank>();
+        for (const IsBank::Transaction& t : bank.get_transactions()) {
+            if (t.amount < 0) actual++;
+        }
+        if (apply_op(op, actual, expected)) return "";
+        return "expected withdrawals " + op + " " +
+               std::to_string(expected) + " but was " +
+               std::to_string(actual);
+    }
+    if (cmd.name == "expect_cart") {
+        std::string op;
+        long expected = 0;
+        if (!parse_op_count(cmd.args, 0, op, expected))
+            return "expect_cart requires [op] <amount>";
+        OptEntity e = EQ().whereHasComponent<IsBank>().gen_first();
+        if (!e.valid()) return "no IsBank entity";
+        long actual = e->get<IsBank>().cart();
+        if (apply_op(op, actual, expected)) return "";
+        return "expected cart " + op + " " + std::to_string(expected) +
+               " but was " + std::to_string(actual);
+    }
     if (cmd.name == "expect_save_slot") {
         if (cmd.args.empty()) return "expect_save_slot requires a slot number";
         int slot = 0;
@@ -480,6 +562,224 @@ bool dispatch_action(const ParsedCmd& cmd) {
         log_info("e2e: key {} (code {})", cmd.args[0], code);
         return true;
     }
+    if (cmd.name == "hold_key" || cmd.name == "release_key") {
+        if (cmd.args.empty()) {
+            fail_at(cmd, cmd.name + " requires a key name");
+            return false;
+        }
+        int code = key_name_to_code(cmd.args[0]);
+        if (code < 0) {
+            fail_at(cmd, "unknown key '" + cmd.args[0] + "'");
+            return false;
+        }
+        if (cmd.name == "hold_key") {
+            ah::set_key_down(code);
+        } else {
+            ah::set_key_up(code);
+        }
+        log_info("e2e: {} {} (code {})", cmd.name, cmd.args[0], code);
+        return true;
+    }
+    if (cmd.name == "whereami") {
+        Map* map = globals::world_map();
+        if (map && !map->local_players_NOT_SERIALIZED.empty()) {
+            Entity& player = *map->local_players_NOT_SERIALIZED[0];
+            vec2 pos = player.get<Transform>().as2();
+            std::string facing = std::string(magic_enum::enum_name(
+                player.get<Transform>().face_direction()));
+            log_info("e2e: whereami player at ({:.2f}, {:.2f}) facing {}",
+                     pos.x, pos.y, facing);
+            fmt::print(stderr,
+                       "whereami: player at ({:.2f}, {:.2f}) facing {}\n",
+                       pos.x, pos.y, facing);
+        } else {
+            log_warn("e2e: whereami found no local player");
+        }
+        return true;
+    }
+    if (cmd.name == "holding") {
+        Map* map = globals::world_map();
+        Entity* found = nullptr;
+        if (map) {
+            for (std::shared_ptr<Entity>& p :
+                 map->local_players_NOT_SERIALIZED) {
+                if (p && !p->is_missing<CanHoldItem>() &&
+                    p->get<CanHoldItem>().item().valid()) {
+                    found = p.get();
+                    break;
+                }
+            }
+            if (!found) {
+                for (std::shared_ptr<Entity>& p :
+                     map->remote_players_NOT_SERIALIZED) {
+                    if (p && !p->is_missing<CanHoldItem>() &&
+                        p->get<CanHoldItem>().item().valid()) {
+                        found = p.get();
+                        break;
+                    }
+                }
+            }
+        }
+        if (!found) {
+            RefEntities players = EQ().whereType(EntityType::Player).gen();
+            for (Entity& p : players) {
+                if (!p.is_missing<CanHoldItem>() &&
+                    p.get<CanHoldItem>().item().valid()) {
+                    found = &p;
+                    break;
+                }
+            }
+        }
+        if (!found) {
+            fmt::print(stderr, "holding: <empty>\n");
+            return true;
+        }
+        {
+            Entity& item = found->get<CanHoldItem>().item().asE();
+            std::string label = "Unknown";
+            for (size_t i = 0; i < magic_enum::enum_count<EntityType>(); i++) {
+                EntityType t = magic_enum::enum_value<EntityType>(i);
+                if (item.hasTag(t)) {
+                    label = std::string(magic_enum::enum_name(t));
+                    break;
+                }
+            }
+            std::string drink = "none";
+            if (item.has<IsDrink>() &&
+                item.get<IsDrink>().underlying.has_value()) {
+                drink = std::string(magic_enum::enum_name(
+                    item.get<IsDrink>().underlying.value()));
+            }
+            fmt::print(stderr, "holding: {} drink={}\n", label, drink);
+        }
+        return true;
+    }
+    if (cmd.name == "dump_areas") {
+        RefEntities markers = EQ()
+                                  .include_store_entities()
+                                  .whereHasComponent<IsFloorMarker>()
+                                  .gen();
+        for (Entity& e : markers) {
+            vec2 pos = e.get<Transform>().as2();
+            fmt::print(stderr, "marker: {} at ({:.1f}, {:.1f})\n",
+                       magic_enum::enum_name(e.get<IsFloorMarker>().type),
+                       pos.x, pos.y);
+        }
+        RefEntities triggers = EQ()
+                                   .include_store_entities()
+                                   .whereHasComponent<IsTriggerArea>()
+                                   .gen();
+        for (Entity& e : triggers) {
+            vec2 pos = e.get<Transform>().as2();
+            fmt::print(stderr, "trigger: {} at ({:.1f}, {:.1f})\n",
+                       magic_enum::enum_name(e.get<IsTriggerArea>().type),
+                       pos.x, pos.y);
+        }
+        return true;
+    }
+    if (cmd.name == "whereami_server") {
+        RefEntities players =
+            EQ(SystemManager::get().oldAll).whereType(EntityType::Player).gen();
+        for (Entity& p : players) {
+            vec2 pos = p.get<Transform>().as2();
+            std::string facing = std::string(
+                magic_enum::enum_name(p.get<Transform>().face_direction()));
+            fmt::print(stderr,
+                       "whereami_server: player at ({:.2f}, {:.2f}) facing "
+                       "{}\n",
+                       pos.x, pos.y, facing);
+        }
+        if (players.empty()) {
+            fmt::print(stderr, "whereami_server: no server players\n");
+        }
+        return true;
+    }
+    if (cmd.name == "orders") {
+        RefEntities ents = EQ().whereHasComponent<CanOrderDrink>().gen();
+        for (Entity& e : ents) {
+            const CanOrderDrink& cod = e.get<CanOrderDrink>();
+            std::string ai = "?";
+            if (e.has<IsAIControlled>()) {
+                ai = std::string(magic_enum::enum_name(
+                    e.get<IsAIControlled>().state));
+            }
+            fmt::print(stderr,
+                       "order: drink={} state={} ai={} drank={}\n",
+                       magic_enum::enum_name(cod.order()),
+                       magic_enum::enum_name(cod.order_state), ai,
+                       cod.num_drinks_drank());
+        }
+        return true;
+    }
+    if (cmd.name == "dump_store") {
+        RefEntities ents = EQ(EntityHelper::get_server_collection())
+                               .whereHasComponent<IsStoreSpawned>()
+                               .gen();
+        for (Entity& e : ents) {
+            vec2 pos = e.get<Transform>().as2();
+            std::string label = "Unknown";
+            int price = -1;
+            for (size_t i = 0; i < magic_enum::enum_count<EntityType>(); i++) {
+                EntityType t = magic_enum::enum_value<EntityType>(i);
+                if (e.hasTag(t)) {
+                    label = std::string(magic_enum::enum_name(t));
+                    price = get_price_for_entity_type(t);
+                    break;
+                }
+            }
+            fmt::print(stderr, "store: {} price={} at ({:.1f}, {:.1f})\n",
+                       label, price, pos.x, pos.y);
+        }
+        return true;
+    }
+    if (cmd.name == "dump_walls") {
+        RefEntities ents = EQ().whereType(EntityType::Wall).gen();
+        for (Entity& e : ents) {
+            vec2 pos = e.get<Transform>().as2();
+            fmt::print(stderr, "wall: ({:.1f}, {:.1f})\n", pos.x, pos.y);
+        }
+        return true;
+    }
+    if (cmd.name == "dump_entities") {
+        RefEntities ents = EQ().whereHasComponent<CanHoldItem>().gen();
+        for (Entity& e : ents) {
+            vec2 pos = e.get<Transform>().as2();
+            std::string label = "Unknown";
+            for (size_t i = 0; i < magic_enum::enum_count<EntityType>(); i++) {
+                EntityType t = magic_enum::enum_value<EntityType>(i);
+                if (e.hasTag(t)) {
+                    label = std::string(magic_enum::enum_name(t));
+                    break;
+                }
+            }
+            std::string held = "empty";
+            if (!e.is_missing<CanHoldItem>()) {
+                OptEntity item_opt = e.get<CanHoldItem>().item();
+                if (item_opt.valid()) {
+                    Entity& item = item_opt.asE();
+                    held = "Unknown";
+                    for (size_t j = 0;
+                         j < magic_enum::enum_count<EntityType>(); j++) {
+                        EntityType t = magic_enum::enum_value<EntityType>(j);
+                        if (item.hasTag(t)) {
+                            held = std::string(magic_enum::enum_name(t));
+                            break;
+                        }
+                    }
+                    if (item.has<IsDrink>() &&
+                        item.get<IsDrink>().underlying.has_value()) {
+                        held += "(" +
+                                std::string(magic_enum::enum_name(
+                                    item.get<IsDrink>().underlying.value())) +
+                                ")";
+                    }
+                }
+            }
+            fmt::print(stderr, "dump: {} at ({:.1f}, {:.1f}) holding {}\n",
+                       label, pos.x, pos.y, held);
+        }
+        return true;
+    }
     if (cmd.name == "screenshot") {
         std::string name = cmd.args.empty() ? "e2e_shot" : cmd.args[0];
         fs::path dir = fs::path(cmd.script).has_parent_path()
@@ -627,6 +927,56 @@ inline void update(float dt) {
         return;
     }
 
+    if (walk_idx >= 0) {
+        const ParsedCmd& cmd = commands[static_cast<size_t>(walk_idx)];
+        Map* map = globals::world_map();
+        if (!map || map->local_players_NOT_SERIALIZED.empty()) {
+            fail_at(cmd, "walk_to found no local player");
+            return;
+        }
+        Entity& player = *map->local_players_NOT_SERIALIZED[0];
+        vec2 pos = player.get<Transform>().as2();
+        float dx = walk_target.x - pos.x;
+        float dz = walk_target.y - pos.y;
+        float dist = std::sqrt(dx * dx + dz * dz);
+        auto set_move = [](const char* name, bool down) {
+            int code = key_name_to_code(name);
+            if (code < 0) return;
+            if (down) {
+                ah::set_key_down(code);
+            } else {
+                ah::set_key_up(code);
+            }
+        };
+        if (dist < 0.45f) {
+            set_move("W", false);
+            set_move("A", false);
+            set_move("S", false);
+            set_move("D", false);
+            log_info("e2e: walk_to arrived at ({:.1f}, {:.1f})", pos.x,
+                     pos.y);
+            walk_idx = -1;
+            walk_elapsed = 0.f;
+            cmd_idx++;
+            return;
+        }
+        walk_elapsed += dt;
+        if (walk_elapsed >= cmd.within_s) {
+            set_move("W", false);
+            set_move("A", false);
+            set_move("S", false);
+            set_move("D", false);
+            fail_at(cmd, "walk_to timed out at (" + std::to_string(pos.x) +
+                             ", " + std::to_string(pos.y) + ")");
+            return;
+        }
+        set_move("D", dx > 0.3f);
+        set_move("A", dx < -0.3f);
+        set_move("S", dz > 0.3f);
+        set_move("W", dz < -0.3f);
+        return;
+    }
+
     if (pending_idx >= 0) {
         const ParsedCmd& cmd = commands[static_cast<size_t>(pending_idx)];
         std::string mismatch = eval_expect(cmd);
@@ -665,6 +1015,22 @@ inline void update(float dt) {
     const ParsedCmd& cmd = commands[cmd_idx];
     log_info("e2e: [{}/{}] {} (line {})", cmd_idx + 1, commands.size(),
              cmd.name, cmd.line);
+
+    if (cmd.name == "walk_to") {
+        if (cmd.args.size() < 2) {
+            fail_at(cmd, "walk_to requires <x> <z>");
+            return;
+        }
+        try {
+            walk_target = vec2{std::stof(cmd.args[0]), std::stof(cmd.args[1])};
+        } catch (...) {
+            fail_at(cmd, "walk_to needs numeric coordinates");
+            return;
+        }
+        walk_idx = static_cast<int>(cmd_idx);
+        walk_elapsed = 0.f;
+        return;
+    }
 
     if (is_expect(cmd.name)) {
         std::string mismatch = eval_expect(cmd);

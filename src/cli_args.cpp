@@ -27,10 +27,6 @@ bool disable_models_flag = false;
 bool BYPASS_MENU = false;
 int BYPASS_ROUNDS = 0;
 bool EXIT_ON_BYPASS_COMPLETE = false;
-bool RECORD_INPUTS = false;
-std::string REPLAY_NAME = "";
-bool REPLAY_ENABLED = false;
-bool REPLAY_VALIDATE = false;
 bool SHOW_INTRO = false;
 bool SHOW_RAYLIB_INTRO = false;
 bool TEST_MAP_GENERATION = false;
@@ -45,6 +41,7 @@ std::string E2E_SCRIPT = "";
 std::string E2E_DIR = "";
 int E2E_EXIT_CODE = 0;
 std::string E2E_RESULTS_JSON = "";
+bool HEADLESS = false;
 std::string USERNAME_OVERRIDE = "";
 
 #ifdef AFTER_HOURS_ENABLE_MCP
@@ -73,17 +70,18 @@ void process_dev_flags(int argc, char* argv[]) {
             "--bypass-menu",
             "--local",
             "--exit-on-bypass-complete",
-            "--record-input",
             "--intro",
             "--test_map_generation",
-            "--replay-validate",
             "--map-viewer",
             "--mcp",
+            "--headless",
+            "--windowed",
             "--e2e-dir"};
         static const std::set<std::string> with_value = {
-            "--replay",    "--bypass-rounds", "--generate-map",
-            "--load-save", "--seed",          "--e2e",
-            "--username",  "--results-json",
+            "--bypass-rounds", "--generate-map",
+            "--load-save",     "--seed",
+            "--e2e",           "--username",
+            "--results-json",
         };
 
         // Accept --flag=value form for value flags.
@@ -104,7 +102,7 @@ void process_dev_flags(int argc, char* argv[]) {
         if (arg.empty() || arg[0] != '-') continue;
         if (is_known_flag(arg)) {
             // If this flag expects a value, skip the next token.
-            if ((arg == "--replay" || arg == "--bypass-rounds" ||
+            if ((arg == "--bypass-rounds" ||
                  arg == "--generate-map" || arg == "--load-save" ||
                  arg == "--seed" || arg == "--username") &&
                 i + 1 < argc) {
@@ -165,16 +163,6 @@ void process_dev_flags(int argc, char* argv[]) {
             "Bypass: --bypass-menu flag detected, BYPASS_MENU set to true");
     }
 
-    if (cmdl({"--replay"})) {
-        std::string name;
-        cmdl({"--replay"}) >> name;
-        if (!name.empty()) {
-            REPLAY_NAME = name;
-            REPLAY_ENABLED = true;
-            log_info("Replay: will load recorded_inputs/{}.txt", REPLAY_NAME);
-        }
-    }
-
     if (cmdl({"--load-save"})) {
         std::string target;
         cmdl({"--load-save"}) >> target;
@@ -186,12 +174,6 @@ void process_dev_flags(int argc, char* argv[]) {
     }
 
     // Fallback manual argv scan in case argh misses parameters
-    auto try_set_replay = [](const std::string& val) {
-        if (val.empty()) return;
-        REPLAY_NAME = val;
-        REPLAY_ENABLED = true;
-        log_info("Replay: parsed via argv fallback '{}'", REPLAY_NAME);
-    };
     auto try_set_load_save = [](const std::string& val) {
         if (val.empty()) return;
         LOAD_SAVE_TARGET = val;
@@ -200,19 +182,10 @@ void process_dev_flags(int argc, char* argv[]) {
     };
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i] ? argv[i] : "";
-        const std::string prefix = "--replay=";
-        if (arg.rfind(prefix, 0) == 0) {
-            try_set_replay(arg.substr(prefix.size()));
-            continue;
-        }
         const std::string load_prefix = "--load-save=";
         if (arg.rfind(load_prefix, 0) == 0) {
             try_set_load_save(arg.substr(load_prefix.size()));
             continue;
-        }
-        if (arg == "--replay" && i + 1 < argc) {
-            try_set_replay(argv[i + 1] ? argv[i + 1] : "");
-            ++i;  // consume value
         }
         if (arg == "--load-save" && i + 1 < argc) {
             try_set_load_save(argv[i + 1] ? argv[i + 1] : "");
@@ -270,18 +243,7 @@ void process_dev_flags(int argc, char* argv[]) {
         log_info("--exit-on-bypass-complete enabled");
     }
 
-    if (cmdl[{"--replay-validate"}]) {
-        REPLAY_VALIDATE = true;
-        log_info("--replay-validate enabled");
-    }
-
-    if (cmdl[{"--record-input"}]) {
-        RECORD_INPUTS = true;
-        log_info("--record-input enabled; inputs will be captured");
-    }
-
-    log_info("DevFlags: replay_enabled={} replay_name='{}' bypass_menu={}",
-             REPLAY_ENABLED, REPLAY_NAME, BYPASS_MENU);
+    log_info("DevFlags: bypass_menu={}", BYPASS_MENU);
 
     if (cmdl[{"--intro"}]) {
         SHOW_INTRO = true;
@@ -337,6 +299,19 @@ void process_dev_flags(int argc, char* argv[]) {
         BYPASS_MENU = true;
         ENABLE_SOUND = false;
         log_info("--e2e-dir: running all .e2e scripts in {}", E2E_DIR);
+    }
+
+    if (cmdl[{"--headless"}]) {
+        HEADLESS = true;
+        log_info("--headless: window will be hidden");
+    }
+    if (cmdl[{"--windowed"}]) {
+        HEADLESS = false;
+        log_info("--windowed: forcing a visible window");
+    }
+    if (E2E_ENABLED && HEADLESS == false && !cmdl[{"--windowed"}]) {
+        HEADLESS = true;
+        log_info("e2e: defaulting to headless (hidden window)");
     }
 
     for (int i = 1; i < argc; ++i) {

@@ -1,5 +1,8 @@
 # MCP screenshots
 mcp_screenshots/
+
+# E2E screenshots are local diagnostics; PASS/FAIL comes from scripts
+tests/e2e/*.png
 **/x64/Debug/*
 **/x64/.vs/*
 *.dSYM

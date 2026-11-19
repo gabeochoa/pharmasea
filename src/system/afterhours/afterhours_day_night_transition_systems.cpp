@@ -21,6 +21,9 @@ void SystemManager::register_day_night_transition_systems() {
         // Day start systems
         {
             systems.register_update_system(
+                std::make_unique<
+                    system_manager::CleanUpOldStoreOptionsSystem>());
+            systems.register_update_system(
                 std::make_unique<system_manager::GenerateStoreOptionsSystem>());
             systems.register_update_system(
                 std::make_unique<system_manager::OpenStoreDoorsSystem>());
@@ -48,8 +51,6 @@ void SystemManager::register_day_night_transition_systems() {
                 std::make_unique<system_manager::BypassInitSystem>());
 #endif
         }
-        systems.register_update_system(
-            std::make_unique<system_manager::CleanUpOldStoreOptionsSystem>());
         systems.register_update_system(
             std::make_unique<system_manager::OnDayEndedSystem>());
         // TODO: Add remaining systems when their headers are created

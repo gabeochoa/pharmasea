@@ -19,7 +19,6 @@
 #include "test_entity_serialization.h"
 #include "test_map_playability.h"
 #include "test_pathing.h"
-#include "test_replay_validation_smoke.h"
 #include "test_ui_widget.h"
 
 namespace tests {
@@ -80,7 +79,6 @@ inline void run_all() {
     test_rect_split();
     test_entity_serialization();
     test_entity_makers();
-    test_replay_validation_smoke();
 
     // back to default , preload will set it as well
     LOG_LEVEL = old_level;

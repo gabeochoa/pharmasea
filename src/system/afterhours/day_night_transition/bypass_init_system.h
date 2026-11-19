@@ -28,7 +28,7 @@ struct BypassInitSystem : public afterhours::System<BypassAutomationState> {
             rounds_to_run = 1;
         }
         if (rounds_to_run <= 0) return;
-        state.configure(rounds_to_run, EXIT_ON_BYPASS_COMPLETE, RECORD_INPUTS);
+        state.configure(rounds_to_run, EXIT_ON_BYPASS_COMPLETE);
         BYPASS_MENU = state.bypass_enabled;
     }
 };

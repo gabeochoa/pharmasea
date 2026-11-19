@@ -22,6 +22,8 @@
 // compilation times of this file by probably 1.6 seconds
 // (this is due to all the template code thats in network/shared
 #include "network/api.h"
+#include "network/network.h"
+#include "network/server.h"
 
 #if !defined(NDEBUG)
 #include "backward/backward.hpp"
@@ -102,6 +104,7 @@ void init_app_core(const AppInitConfig& config = {}) {
         WIN_H(),
         config.window_title,
         raylib::LOG_ERROR,
+        HEADLESS,
     });
 
     Entity& singleton_entity = ::EntityHelper::createPermanentEntity();

@@ -12,6 +12,7 @@ struct App {
         int height;
         const char* title;
         raylib::TraceLogLevel logLevel = raylib::LOG_ERROR;
+        bool headless = false;
     };
 
     static void create(const AppSettings& pt);

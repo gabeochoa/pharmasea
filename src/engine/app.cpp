@@ -160,6 +160,9 @@ App::App(const AppSettings& settings) {
     // This goes above Init since that loves to spew errors
     raylib::SetTraceLogLevel(settings.logLevel);
     raylib::SetTargetFPS(settings.fps);
+    if (settings.headless) {
+        raylib::SetConfigFlags(raylib::FLAG_WINDOW_HIDDEN);
+    }
     //
     width = settings.width;
     height = settings.height;

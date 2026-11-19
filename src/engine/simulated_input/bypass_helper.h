@@ -97,10 +97,15 @@ inline void inject_clicks_for_bypass(float dt) {
         constexpr float LOBBY_SPAWN_DELAY = 1.0f;
         if (!lobby_w_held && lobby_entry_time >= LOBBY_SPAWN_DELAY) {
             log_info(
-                "Bypass: Lobby spawn delay complete, holding W for 2.0s to "
-                "move to trigger area");
-            input_injector::hold_key_for_duration(raylib::KEY_W, 0.50f);
+                "Bypass: Lobby spawn delay complete, pulsing W toward "
+                "the trigger area");
+            input_injector::hold_key_for_duration(raylib::KEY_W, 0.40f);
             lobby_w_held = true;
+        }
+        if (lobby_w_held && lobby_entry_time >= LOBBY_SPAWN_DELAY + 3.5f) {
+            log_info("Bypass: Still in Lobby after settle, pulsing again");
+            lobby_w_held = false;
+            lobby_entry_time = 0.0f;
         }
         return;
     }

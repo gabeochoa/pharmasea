@@ -34,10 +34,6 @@ inline bool ENABLE_UI_TEST = false;
 extern bool BYPASS_MENU;
 extern int BYPASS_ROUNDS;
 extern bool EXIT_ON_BYPASS_COMPLETE;
-extern bool RECORD_INPUTS;
-extern std::string REPLAY_NAME;
-extern bool REPLAY_ENABLED;
-extern bool REPLAY_VALIDATE;
 extern bool SHOW_INTRO;
 extern bool SHOW_RAYLIB_INTRO;
 extern std::string LOAD_SAVE_TARGET;
@@ -52,6 +48,7 @@ extern std::string E2E_SCRIPT;
 extern std::string E2E_DIR;
 extern int E2E_EXIT_CODE;
 extern std::string E2E_RESULTS_JSON;
+extern bool HEADLESS;
 extern std::string USERNAME_OVERRIDE;
 
 // TODO :BE: is there a way for us to move these to engine

@@ -1,0 +1,55 @@
+# @slow
+# Test: first customer served, end to end (replaces the
+# first_customer_served replay spec).
+# Night only: build a coke on the register (cup, then soda work
+# with the spout) and the waiting customer takes it and finishes
+# it. Payment is not asserted here: the pay queue sits behind
+# the drink queue, so a lone served customer may not pay before
+# close. Interactions are tile+facing based, so each press
+# follows a walk_to an interact spot plus a facing tap.
+
+expect_game_state InGame within 120
+walk_to 0 4 within 30
+walk_to -3 2 within 20
+walk_to -6 1 within 20
+walk_to -10 0 within 20
+walk_to -10 -1 within 20
+
+expect_phase night within 200
+expect_order Ordering >= 1 within 200
+
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+walk_to -9 3 within 30
+wait 2
+hold_key S
+wait_frames 4
+release_key S
+key SPACE
+wait 2
+
+walk_to -11 0 within 20
+walk_to -11 -1 within 20
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+walk_to -9 3 within 30
+wait 2
+hold_key S
+wait_frames 4
+release_key S
+hold_key R
+wait 5
+release_key R
+wait 2
+
+expect_served >= 1 within 300

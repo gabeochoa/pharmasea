@@ -33,7 +33,24 @@ grab a cup, fill it, hand it to the customer) cannot be driven.
 `bypass_helper` hardcodes one lobby trick (hold W). Needed from the
 library: semantic move/interact commands (walk-to entity/position,
 interact, hold/release) layered on `input_injector`, usable without
-the full UI command stack.
+the full UI command stack. The game-side stopgaps
+(`hold_key`/`release_key`/`walk_to` in the local harness) work but
+expose how brittle raw keys are: interactions resolve through
+tile-in-front-of-facing checks, and client-predicted and
+server-authoritative copies of the same press can pick different
+furniture when their positions differ by half a tile, with only the
+server result persisting. A library walk-to/interact that steers
+and confirms on the authoritative side would remove a whole class
+of flake.
+
+### G-E6: No display-less mode for the game
+`--headless` hides the window (`FLAG_WINDOW_HIDDEN`) and e2e
+defaults to it, so runs stop stealing focus. It still creates a
+real window and GL context; a CI box with no WindowServer cannot
+run it. afterhours has a NONE backend (`backends/none`,
+`DisplayMode::Headless`) but pharmasea drives raylib directly from
+its `App`, so adopting it means routing window creation and the
+frame loop through the library graphics layer.
 
 ### G-E4: `raylib::TakeScreenshot` drops the directory on macOS
 Passing `tests/e2e/name.png` writes `name.png` into the CWD. The
@@ -95,6 +112,14 @@ E2e state assertions inherit that race (host is king in game, client
 is king in menus, one object serves both). The plugin's planned
 server-local state copy would give tests a clean, race-free read.
 
+### G-M6: Per-customer progress is not serialized to clients
+`CanOrderDrink::serialize` carries only `current_order` and
+`order_state`; `num_orders_had` (drinks finished) never reaches
+client mirrors, so a client-side "served" count always reads 0.
+The e2e harness reads the server collection on the host instead.
+The multiplayer plugin's state sync should either serialize these
+counters or document which gameplay facts are host-only.
+
 ## Game-side notes (not library asks, recorded so they are not lost)
 
 - `log_error` aborts in debug builds (assert in the logging header),
@@ -103,3 +128,18 @@ server-local state copy would give tests a clean, race-free read.
 - Clean process exit required an explicit `Server::shutdown()` +
   `network_info.reset()` in `main`; static destruction of the server
   otherwise terminated the process (exit 134) after a passing run.
+- Lobby triggers need 2s of standing to fill progress; the bypass
+  now pulses W and settles instead of one 0.5s hold, which crossed
+  the area before the server copy filled it (the client filled it,
+  flipped to InGame, and got reverted by the next state packet).
+- The customer pay queue shares the register line with the drink
+  queue, so a served customer cannot pay until everyone ahead has
+  their drink; if the bar closes first they leave unpaid.
+- Store stock never survived a day transition:
+  `CleanUpOldStoreOptionsSystem` was registered after
+  `GenerateStoreOptionsSystem` with the same run condition, so
+  each morning's fresh stock was deleted in the same tick.
+  Registration order swapped (cleanup first).
+- One abort seen while idle in game: `thread::join failed:
+  Resource deadlock avoided` (some thread joining itself, likely
+  pathfinding or server teardown); no repro steps yet.
