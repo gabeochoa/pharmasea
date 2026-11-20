@@ -368,7 +368,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 ### Phase 2 — Local machines (P2, each independent)
 
 - [x] M05: `enum class` + `transition_to()` + M04↔M05 coupling check (debug assert)
-- [ ] M06: `enum class` (same values) + `end_use` guard; resolve §6.3
+- [x] M06: `enum class` (same values) + `end_use` guard; resolve §6.3
 - [ ] M08: derived `ProgressionPhase` + `advance_cycle()` sole index writer
 - [ ] M12: `CaptureState` replaces popup `show` bool
 - [ ] M14: derived fishing `Phase`; bar/feedback readers use it

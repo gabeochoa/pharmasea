@@ -1212,7 +1212,7 @@ void render_smelly_toilet(const Entity& entity, float) {
 
     raylib::Texture texture;
     switch (istoilet.state) {
-        case IsToilet::Available: {
+        case IsToilet::State::Available: {
             float pct_filled = 1.f - istoilet.pct_empty();
             if (pct_filled > 0.5f) {
                 texture = TextureLibrary::get().get("toilet_half_filled");
@@ -1220,7 +1220,7 @@ void render_smelly_toilet(const Entity& entity, float) {
                 texture = TextureLibrary::get().get("unoccupied");
             }
         } break;
-        case IsToilet::InUse:
+        case IsToilet::State::InUse:
             texture = TextureLibrary::get().get("occupied");
             break;
         case IsToilet::State::NeedsCleaning:

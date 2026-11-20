@@ -21,6 +21,7 @@
 #include "test_has_work.h"
 #include "test_is_pnumatic_pipe.h"
 #include "test_is_spawner.h"
+#include "test_is_toilet.h"
 #include "test_can_order_drink.h"
 #include "test_connection_state.h"
 #include "test_network_session_state.h"
@@ -91,6 +92,7 @@ inline void run_all() {
     test_has_day_night_timer();
     test_has_work();
     test_is_pnumatic_pipe();
+    test_is_toilet();
     test_network_session_state();
     test_save_slot_state();
     test_connection_state();
