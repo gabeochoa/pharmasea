@@ -48,6 +48,7 @@ extern std::string E2E_SCRIPT;
 extern std::string E2E_DIR;
 extern int E2E_EXIT_CODE;
 extern std::string E2E_RESULTS_JSON;
+extern float E2E_TIME_SCALE;
 extern bool HEADLESS;
 extern std::string USERNAME_OVERRIDE;
 

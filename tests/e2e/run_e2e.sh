@@ -2,8 +2,14 @@
 # Run e2e scripts one process per script (fresh game state each).
 # Default: fast set (excludes @slow and @xfail scripts).
 # Usage: sh tests/e2e/run_e2e.sh [--slow] [script.e2e ...]
+# PHARMASEA_E2E_TIME_SCALE=N multiplies game dt in every run
+# (upstream --time-scale); leave unset for real-time runs.
 set -u
 EXE=${PHARMASEA_EXE:-./pharmasea.exe}
+time_scale_args=""
+if [ -n "${PHARMASEA_E2E_TIME_SCALE:-}" ]; then
+    time_scale_args="--time-scale $PHARMASEA_E2E_TIME_SCALE"
+fi
 include_slow=0
 scripts=""
 
@@ -25,7 +31,7 @@ fi
 fail=0
 for f in $scripts; do
     echo "=== $f"
-    if timeout 900 "$EXE" --local --e2e "$f"; then
+    if timeout 900 "$EXE" --local --e2e "$f" $time_scale_args; then
         echo "[PASS] $f"
     else
         echo "[FAIL] $f (exit $?)"

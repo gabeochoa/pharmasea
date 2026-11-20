@@ -4,6 +4,10 @@
 #include <set>
 #include <string>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
+#include "../vendor/afterhours/src/plugins/e2e_testing/harness.h"
+#pragma GCC diagnostic pop
 #include "engine/log.h"
 #include "globals.h"
 
@@ -41,6 +45,7 @@ std::string E2E_SCRIPT = "";
 std::string E2E_DIR = "";
 int E2E_EXIT_CODE = 0;
 std::string E2E_RESULTS_JSON = "";
+float E2E_TIME_SCALE = 1.f;
 bool HEADLESS = false;
 std::string USERNAME_OVERRIDE = "";
 
@@ -81,7 +86,8 @@ void process_dev_flags(int argc, char* argv[]) {
             "--bypass-rounds", "--generate-map",
             "--load-save",     "--seed",
             "--e2e",           "--username",
-            "--results-json",
+            "--results-json",  "--time-scale",
+            "--e2e-speed",
         };
 
         // Accept --flag=value form for value flags.
@@ -299,6 +305,17 @@ void process_dev_flags(int argc, char* argv[]) {
         BYPASS_MENU = true;
         ENABLE_SOUND = false;
         log_info("--e2e-dir: running all .e2e scripts in {}", E2E_DIR);
+    }
+
+    // Upstream spelling: --time-scale N / --e2e-speed N multiplies dt
+    // while e2e runs (see afterhours E2EArgs::time_scale).
+    {
+        afterhours::testing::E2EArgs e2e_args =
+            afterhours::testing::parse_e2e_args(argc, argv);
+        if (e2e_args.time_scale > 0.f) E2E_TIME_SCALE = e2e_args.time_scale;
+        if (E2E_ENABLED && E2E_TIME_SCALE != 1.f) {
+            log_info("--time-scale: {}", E2E_TIME_SCALE);
+        }
     }
 
     if (cmdl[{"--headless"}]) {

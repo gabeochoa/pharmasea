@@ -8,6 +8,7 @@
 #include "raylib.h"
 //
 
+#include "../globals.h"
 #include "../libraries/shader_library.h"
 #include "log.h"
 #include "settings.h"
@@ -208,6 +209,7 @@ void App::run() {
     running = true;
     while (running && !raylib::WindowShouldClose()) {
         float dt = raylib::GetFrameTime();
+        if (E2E_ENABLED) dt *= E2E_TIME_SCALE;
         this->loop(dt);
     }
 

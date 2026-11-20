@@ -202,7 +202,10 @@ void Server::run() {
                         .count();
 
         if (duration >= fixedTimeStep.count()) {
-            tick(fixedTimeStep.count());
+            // E2E time-scale speeds up the authoritative sim in step
+            // with the client (see App::run); normal play is 1x.
+            tick(fixedTimeStep.count() *
+                 (E2E_ENABLED ? E2E_TIME_SCALE : 1.f));
 
             // Update previous time to keep track of the next tick
             previousTime = currentTime;
