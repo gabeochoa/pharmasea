@@ -96,7 +96,7 @@ struct AIAtRegisterWaitForDrinkSystem
         HasAIQueueState& qs = entity.get<HasAIQueueState>();
         system_manager::ai::line_leave(qs.line_wait, reg, entity);
 
-        canOrderDrink.order_state = CanOrderDrink::OrderState::DrinkingNow;
+        canOrderDrink.transition_to(CanOrderDrink::OrderState::DrinkingNow);
         entity.get<HasSpeechBubble>().off();
         entity.get<HasPatience>().disable();
         entity.get<HasPatience>().reset();

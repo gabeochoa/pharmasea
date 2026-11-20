@@ -42,7 +42,15 @@ struct AIDrinkingSystem
             sophie.get<IsRoundSettingsManager>();
 
         CanOrderDrink& cod = entity.get<CanOrderDrink>();
-        if (cod.order_state != CanOrderDrink::OrderState::DrinkingNow) return;
+        if (cod.order_state != CanOrderDrink::OrderState::DrinkingNow) {
+            if (!order_matches_ai_state(cod.order_state, ctrl.state)) {
+                log_warn(
+                    "ai_drinking: order/AI state mismatch order={} ai={}",
+                    magic_enum::enum_name(cod.order_state),
+                    magic_enum::enum_name(ctrl.state));
+            }
+            return;
+        }
 
         HasAITargetLocation& tgt = entity.get<HasAITargetLocation>();
         HasAIDrinkState& ds = entity.get<HasAIDrinkState>();
@@ -73,7 +81,7 @@ struct AIDrinkingSystem
 
         bool want_another = cod.wants_more_drinks();
         if (!want_another) {
-            cod.order_state = CanOrderDrink::OrderState::DoneDrinking;
+            cod.transition_to(CanOrderDrink::OrderState::DoneDrinking);
             request_next_state(entity, ctrl, IsAIControlled::State::Pay);
             return;
         }

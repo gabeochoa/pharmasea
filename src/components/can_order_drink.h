@@ -7,14 +7,41 @@
 #include "../engine/random_engine.h"
 #include "../libraries/recipe_library.h"
 #include "base_component.h"
+#include "is_ai_controlled.h"
 
 struct CanOrderDrink : public BaseComponent {
-    enum OrderState {
-        NeedsReset,    // i dont know what i want
-        Ordering,      // i should go wait in line
-        DrinkingNow,   // im drinking
-        DoneDrinking,  // I dont want any more drinks im going home
+    enum class OrderState {
+        NeedsReset = 0,    // i dont know what i want
+        Ordering = 1,      // i should go wait in line
+        DrinkingNow = 2,   // im drinking
+        DoneDrinking = 3,  // I dont want any more drinks im going home
     } order_state;
+
+    [[nodiscard]] static constexpr bool is_legal_transition(OrderState from,
+                                                            OrderState to) {
+        if (from == to) return true;
+        switch (from) {
+            case OrderState::NeedsReset:
+                return to == OrderState::Ordering;
+            case OrderState::Ordering:
+                return to == OrderState::DrinkingNow;
+            case OrderState::DrinkingNow:
+                return to == OrderState::Ordering ||
+                       to == OrderState::DoneDrinking;
+            case OrderState::DoneDrinking:
+                return to == OrderState::Ordering;
+        }
+        return false;
+    }
+
+    void transition_to(OrderState next) {
+        if (!is_legal_transition(order_state, next)) {
+            log_warn("CanOrderDrink illegal order transition {} -> {}",
+                     magic_enum::enum_name(order_state),
+                     magic_enum::enum_name(next));
+        }
+        order_state = next;
+    }
 
     CanOrderDrink()
         : num_orders_rem(-1), num_orders_had(0), current_order(Drink::coke) {
@@ -56,9 +83,9 @@ struct CanOrderDrink : public BaseComponent {
         if (current_order_has_alcohol()) {
             num_alcoholic_drinks_had++;
         }
-        order_state = num_orders_rem > 0
+        transition_to(num_orders_rem > 0
                           ? CanOrderDrink::OrderState::Ordering
-                          : CanOrderDrink::OrderState::DoneDrinking;
+                          : CanOrderDrink::OrderState::DoneDrinking);
     }
 
     auto& set_first_order(Drink d) {
@@ -86,7 +113,7 @@ struct CanOrderDrink : public BaseComponent {
         // drink
         Drink next_drink_order = forced_first_order.value_or(randomNextDrink);
         current_order = next_drink_order;
-        order_state = CanOrderDrink::OrderState::Ordering;
+        transition_to(CanOrderDrink::OrderState::Ordering);
 
         forced_first_order = {};
     }
@@ -132,3 +159,22 @@ struct CanOrderDrink : public BaseComponent {
         );
     }
 };
+
+[[nodiscard]] inline bool order_matches_ai_state(
+    CanOrderDrink::OrderState order, IsAIControlled::State ai) {
+    using OrderState = CanOrderDrink::OrderState;
+    using AIState = IsAIControlled::State;
+    switch (order) {
+        case OrderState::NeedsReset:
+            return ai == AIState::Wander;
+        case OrderState::Ordering:
+            return ai == AIState::QueueForRegister ||
+                   ai == AIState::AtRegisterWaitForDrink;
+        case OrderState::DrinkingNow:
+            return ai == AIState::Drinking;
+        case OrderState::DoneDrinking:
+            return ai == AIState::Pay || ai == AIState::Leave ||
+                   ai == AIState::Wander;
+    }
+    return false;
+}
