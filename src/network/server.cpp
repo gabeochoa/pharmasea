@@ -186,6 +186,9 @@ void Server::run() {
     // Initialize time variables
     auto previousTime = std::chrono::high_resolution_clock::now();
     auto currentTime = previousTime;
+#ifndef NDEBUG
+    float step_credit = 0.f;
+#endif
 
     // Turn on pathfinding
     pathfinding_thread = PathRequestManager::start();
@@ -202,10 +205,16 @@ void Server::run() {
                         .count();
 
         if (duration >= fixedTimeStep.count()) {
-            // E2E time-scale speeds up the authoritative sim in step
-            // with the client (see App::run); normal play is 1x.
-            tick(fixedTimeStep.count() *
-                 (E2E_ENABLED ? E2E_TIME_SCALE : 1.f));
+#ifdef NDEBUG
+            tick(fixedTimeStep.count());
+#else
+            // E2E time-scale: substep the fixed step (exact 1x trajectory).
+            step_credit += E2E_ENABLED ? E2E_TIME_SCALE : 1.f;
+            while (step_credit >= 1.f) {
+                tick(fixedTimeStep.count());
+                step_credit -= 1.f;
+            }
+#endif
 
             // Update previous time to keep track of the next tick
             previousTime = currentTime;

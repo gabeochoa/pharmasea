@@ -207,10 +207,22 @@ void App::run() {
 #endif
 
     running = true;
+#ifndef NDEBUG
+    float step_credit = 0.f;
+#endif
     while (running && !raylib::WindowShouldClose()) {
         float dt = raylib::GetFrameTime();
-        if (E2E_ENABLED) dt *= E2E_TIME_SCALE;
-        this->loop(dt);
+        int steps = 1;
+#ifndef NDEBUG
+        // E2E time-scale: substep the update, draw once.
+        if (E2E_ENABLED && E2E_TIME_SCALE > 1.f) {
+            step_credit += E2E_TIME_SCALE;
+            steps = (int) step_credit;
+            step_credit -= (float) steps;
+        }
+#endif
+        for (int i = 0; i < steps; i++) update(dt);
+        draw(dt);
     }
 
 #ifdef AFTER_HOURS_ENABLE_MCP
@@ -223,7 +235,7 @@ void App::run() {
     raylib::CloseWindow();
 }
 
-void App::loop(float dt) {
+void App::update(float dt) {
     TRACY_ZONE_SCOPED;
 
     // Check for resolution changes via window_manager component
@@ -266,6 +278,10 @@ void App::loop(float dt) {
 
     // Replay recorded input and handle bypass injections/holds
     simulated_input::update(dt);
+}
+
+void App::draw(float dt) {
+    TRACY_ZONE_SCOPED;
 
     draw_all_to_texture(dt);
 #ifdef AFTER_HOURS_ENABLE_MCP

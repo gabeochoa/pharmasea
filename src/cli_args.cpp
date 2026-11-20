@@ -307,8 +307,7 @@ void process_dev_flags(int argc, char* argv[]) {
         log_info("--e2e-dir: running all .e2e scripts in {}", E2E_DIR);
     }
 
-    // Upstream spelling: --time-scale N / --e2e-speed N multiplies dt
-    // while e2e runs (see afterhours E2EArgs::time_scale).
+    // --time-scale/--e2e-speed (upstream E2EArgs).
     {
         afterhours::testing::E2EArgs e2e_args =
             afterhours::testing::parse_e2e_args(argc, argv);

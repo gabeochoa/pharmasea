@@ -27,7 +27,8 @@ struct App {
     void loadLayers(const std::vector<Layer*>& layers);
 
    private:
-    void loop(float dt);
+    void update(float dt);
+    void draw(float dt);
 
     std::array<Layer*, 32> layerstack;
     int max_layer = -1;
