@@ -143,11 +143,47 @@ struct GameState : public StateManager2<game::State> {
         return game::State::InMenu;
     }
 
+    [[nodiscard]] static constexpr bool is_legal_transition(
+        game::State from, game::State to) {
+        if (from == to) return true;
+        switch (from) {
+            case game::State::InMenu:
+                return to == game::State::Lobby;
+            case game::State::Lobby:
+                return to == game::State::InGame ||
+                       to == game::State::ModelTest ||
+                       to == game::State::LoadSaveRoom ||
+                       to == game::State::Paused;
+            case game::State::InGame:
+                return to == game::State::Lobby ||
+                       to == game::State::Paused;
+            case game::State::ModelTest:
+                return to == game::State::Lobby ||
+                       to == game::State::InGame;
+            case game::State::LoadSaveRoom:
+                return to == game::State::Lobby ||
+                       to == game::State::InGame;
+            case game::State::Paused:
+                return false;
+        }
+        return false;
+    }
+
+    bool transition_to(game::State next) {
+        const bool legal = is_legal_transition(read(), next);
+        if (!legal) {
+            log_warn("GameState illegal transition {} -> {}", tostring(),
+                     magic_enum::enum_name(next));
+        }
+        set(next);
+        return legal;
+    }
+
     game::State pause() {
         if (is_paused()) {
             return go_back();
         }
-        set(game::State::Paused);
+        transition_to(game::State::Paused);
         return read();
     }
 
@@ -182,7 +218,12 @@ struct GameState : public StateManager2<game::State> {
         return is(game::State::InGame);
     }
 
-    void transition_to_game() { return set(game::State::InGame); }
-    void transition_to_lobby() { return set(game::State::Lobby); }
-    void transition_to_model_test() { return set(game::State::ModelTest); }
+    void transition_to_game() { transition_to(game::State::InGame); }
+    void transition_to_lobby() { transition_to(game::State::Lobby); }
+    void transition_to_model_test() {
+        transition_to(game::State::ModelTest);
+    }
+    void transition_to_load_save_room() {
+        transition_to(game::State::LoadSaveRoom);
+    }
 };

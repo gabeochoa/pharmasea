@@ -230,7 +230,7 @@ void NetworkLayer::draw_connected_screen(float) {
             if (lobby_screen.button("StartButton",
                                     TranslatableString(strings::i18n::START))) {
                 MenuState::get().set(menu::State::Game);
-                GameState::get().set(game::State::Lobby);
+                GameState::get().transition_to_lobby();
                 network_info->send_current_menu_state();
             }
         }

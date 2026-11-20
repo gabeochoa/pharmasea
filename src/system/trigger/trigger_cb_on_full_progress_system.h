@@ -165,7 +165,7 @@ struct TriggerCbOnFullProgressSystem
     }
 
     void handle_lobby_loadsave() {
-        GameState::get().set(game::State::LoadSaveRoom);
+        GameState::get().transition_to_load_save_room();
         if (is_server()) {
             network::Server* server = globals::server();
             if (server) {
