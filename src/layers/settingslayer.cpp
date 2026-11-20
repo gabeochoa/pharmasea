@@ -474,7 +474,10 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
                 //
                 /*
                 key_binding_popup =
-                    KeyBindingPopup{.show = result.as<bool>(),
+                    KeyBindingPopup{.capture_state =
+                                        result.as<bool>()
+                                            ? CaptureState::Capturing
+                                            : CaptureState::Idle,
                                     .state = state,
                                     .input = kv.first};
                                     */
@@ -490,7 +493,7 @@ void SettingsLayer::draw_column(Rectangle column, int index, Rectangle screen) {
 
     // TODO pressing UI keys when this popup is open still uses them
 
-    if (key_binding_popup.show) {
+    if (key_binding_popup.is_capturing()) {
         auto [_t, middle, _b] = rect::hsplit<3>(screen);
         auto [_l, popup, _r] = rect::vsplit<3>(middle);
         if (auto windowresult = window(Widget{popup, -10}); windowresult) {

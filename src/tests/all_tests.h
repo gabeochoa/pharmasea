@@ -24,6 +24,7 @@
 #include "test_is_toilet.h"
 #include "test_can_order_drink.h"
 #include "test_connection_state.h"
+#include "test_key_binding_popup.h"
 #include "test_network_session_state.h"
 #include "test_progression_phase.h"
 #include "test_save_slot_state.h"
@@ -98,6 +99,7 @@ inline void run_all() {
     test_save_slot_state();
     test_connection_state();
     test_progression_phase();
+    test_key_binding_popup();
     test_can_order_drink();
 
     // back to default , preload will set it as well

@@ -17,10 +17,16 @@ struct SettingsLayer : public Layer {
         KeyBindings = 1,
     } activeWindow = ActiveWindow::Root;
 
+    enum class CaptureState : int { Idle = 0, Capturing = 1 };
+
     struct KeyBindingPopup {
-        bool show = false;
+        CaptureState capture_state = CaptureState::Idle;
         menu::State state = menu::State::UI;
         InputName input = InputName::Pause;
+
+        [[nodiscard]] bool is_capturing() const {
+            return capture_state == CaptureState::Capturing;
+        }
     } key_binding_popup;
 
     InputType selected_input_type = InputType::Keyboard;
