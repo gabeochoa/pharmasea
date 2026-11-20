@@ -392,7 +392,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 - [x] M17: `IsSpawner::state()` accessor
 - [ ] M22: `BypassPhase` + `advance()` (dev harness)
 - [ ] M23: optional `IntroPhase` log names only
-- [ ] M24: `ReplayPhase` log names only (file format untouched)
+- [x] M24: `ReplayPhase` log names only (file format untouched) — obsolete: replay system deleted in the e2e switch; nothing to convert
 - Verify: B + T
 
 Explicitly **not** in any phase: renumbering any enum in §4–§5; touching `vendor/afterhours`; converting §5 keep-bool rows; behaviour changes listed as “optional/flagged” (pause-as-data in M01, Settings yank fix beyond allowlist in M02, ConnectionLost UI in M09, slot labels in M11) — each needs its own approved change after the preserving step lands.
