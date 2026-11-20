@@ -23,6 +23,22 @@ struct IsNux : public BaseComponent {
 
     TranslatableString content;
 
+    enum class NuxPhase : int {
+        Dormant = 0,
+        Eligible = 1,
+        Active = 2,
+        Complete = 3,
+    };
+
+    [[nodiscard]] NuxPhase phase() const {
+        if (is_active) return NuxPhase::Active;
+        if (isComplete && isComplete(*this)) return NuxPhase::Complete;
+        if (shouldTrigger && shouldTrigger(*this)) return NuxPhase::Eligible;
+        return NuxPhase::Dormant;
+    }
+
+    [[nodiscard]] bool is_phase(NuxPhase p) const { return phase() == p; }
+
     [[nodiscard]] bool is_attached() const { return entityID != -1; }
 
     void pass_time(float dt) { time_shown += dt; }

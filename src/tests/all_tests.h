@@ -34,6 +34,7 @@
 #include "test_menu_state_transitions.h"
 #include "test_key_binding_popup.h"
 #include "test_network_session_state.h"
+#include "test_nux_phase.h"
 #include "test_progression_phase.h"
 #include "test_save_slot_state.h"
 #include "test_trigger_area_phase.h"
@@ -109,6 +110,7 @@ inline void run_all() {
     test_has_fishing_game();
     test_held_item_state();
     test_network_session_state();
+    test_nux_phase();
     test_save_slot_state();
     test_trigger_area_phase();
     test_connection_state();

@@ -34,7 +34,8 @@ struct ProcessNuxUpdatesSystem
         OptEntity active_nux = EntityQuery()
                                    .whereHasComponent<IsNux>()
                                    .whereLambda([](const Entity& entity) {
-                                       return entity.get<IsNux>().is_active;
+                                       return entity.get<IsNux>().is_phase(
+                                           IsNux::NuxPhase::Active);
                                    })
                                    // there should only ever be one
                                    .gen_first();
@@ -62,7 +63,8 @@ struct ProcessNuxUpdatesSystem
         }
 
         // if that one is still active, nothing else to do
-        if (active_nux.has_value() && active_nux->get<IsNux>().is_active)
+        if (active_nux.has_value() &&
+            active_nux->get<IsNux>().is_phase(IsNux::NuxPhase::Active))
             return;
 
         // find next active nux

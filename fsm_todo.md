@@ -376,7 +376,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 - [x] M16: derived squirter `Phase`; resolve §6.4 separately
 - [x] M18: sentinel named constants + derived `ContainerState` (debug/render only)
 - [x] M19: debug invariant holder↔item back-pointer check in `CanHoldItem::update`
-- [ ] M21: `NuxPhase` derived + driver switch (step table only if tutorial work is already scheduled)
+- [x] M21: `NuxPhase` derived + driver switch (step table only if tutorial work is already scheduled)
 - Verify per item: B + T + the machine’s soak listed in its record
 
 ### Phase 3 — Stored enums + save bumps (only with `save_version` bump, one machine per change)
