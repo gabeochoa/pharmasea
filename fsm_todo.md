@@ -372,7 +372,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 - [ ] M08: derived `ProgressionPhase` + `advance_cycle()` sole index writer
 - [ ] M12: `CaptureState` replaces popup `show` bool
 - [ ] M14: derived fishing `Phase`; bar/feedback readers use it
-- [ ] M15: derived `WorkPhase`; progress-bar readers use it
+- [x] M15: derived `WorkPhase`; progress-bar readers use it
 - [ ] M16: derived squirter `Phase`; resolve §6.4 separately
 - [ ] M18: sentinel named constants + derived `ContainerState` (debug/render only)
 - [ ] M19: debug invariant holder↔item back-pointer check in `CanHoldItem::update`

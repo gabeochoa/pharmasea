@@ -17,6 +17,15 @@ struct HasWork : public BaseComponent {
           hide_progress_bar_on_full(false),
           hide_progress_bar(false) {}
 
+    enum class Phase { Idle, Working, Complete };
+
+    [[nodiscard]] Phase phase() const {
+        if (pct_work_complete >= 1.f) return Phase::Complete;
+        return pct_work_complete > 0.f ? Phase::Working : Phase::Idle;
+    }
+
+    [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
+
     // Does this have work to be done?
     [[nodiscard]] bool is_work_complete() const {
         return pct_work_complete >= 1.f;
@@ -24,7 +33,8 @@ struct HasWork : public BaseComponent {
     [[nodiscard]] bool has_work() const { return more_to_do; }
     [[nodiscard]] bool doesnt_have_work() const { return !has_work(); }
     [[nodiscard]] bool can_show_progress_bar() const {
-        if (hide_progress_bar_on_full && is_work_complete()) return false;
+        if (hide_progress_bar_on_full && is_phase(Phase::Complete))
+            return false;
         return has_work() && pct_work_complete >= 0.01f;
     }
     [[nodiscard]] bool dont_show_progress_bar() const {
