@@ -284,7 +284,11 @@ void Client::client_process_message_string(const std::string& msg) {
                                               info.host_menu_state)) {
                 MenuState::get().set(info.host_menu_state);
             }
-            if (GameState::get().is_not(game::State::Paused)) {
+            // Host is authoritative; echoed state packets can be stale.
+            const bool is_host_copy =
+                network_info && network_info->is_host();
+            if (!is_host_copy &&
+                GameState::get().is_not(game::State::Paused)) {
                 GameState::get().set(info.host_game_state);
             }
 
