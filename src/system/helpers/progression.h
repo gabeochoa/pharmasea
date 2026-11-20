@@ -149,7 +149,7 @@ inline void collect_progression_options(Entity& entity, float) {
         case UpgradeType::None: {
             // If we arent in an upgrade round just go directly to planning
             log_info("not an upgrade round see ya next time");
-            ipm.next_round();
+            ipm.advance_cycle();
             skip_upgrade_visit();
             return;
         } break;

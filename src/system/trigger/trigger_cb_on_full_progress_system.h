@@ -342,7 +342,7 @@ struct TriggerCbOnFullProgressSystem
             } break;
         }
 
-        ipm.next_round();
+        ipm.advance_cycle();
         system_manager::progression::update_upgrade_variables();
     }
 

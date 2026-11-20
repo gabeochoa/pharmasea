@@ -133,6 +133,17 @@ struct IsProgressionManager : public BaseComponent {
         return unlockedEntityTypes.test(index);
     }
 
+    enum class ProgressionPhase { AwaitingOptions, OptionsReady };
+
+    [[nodiscard]] ProgressionPhase phase() const {
+        return collectedOptions ? ProgressionPhase::OptionsReady
+                                : ProgressionPhase::AwaitingOptions;
+    }
+
+    [[nodiscard]] bool is_phase(ProgressionPhase p) const {
+        return phase() == p;
+    }
+
     int upgrade_index = 0;
 
     [[nodiscard]] UpgradeType upgrade_type() const {
@@ -143,9 +154,11 @@ struct IsProgressionManager : public BaseComponent {
 
     [[nodiscard]] TranslatableString get_option_subtitle(bool is_first) const;
 
-    void next_round() {
+    void advance_cycle() {
+        if (upgrade_rounds.empty()) return;
         // Increment to the next upgrade type (drink -> upgrade etc)
-        upgrade_index = (upgrade_index + 1) % upgrade_rounds.size();
+        upgrade_index =
+            (upgrade_index + 1) % static_cast<int>(upgrade_rounds.size());
         collectedOptions = false;
     }
 
