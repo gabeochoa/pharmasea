@@ -4,6 +4,7 @@
 
 #include "../../ah.h"
 #include "../../building_locations.h"
+#include "../../components/has_load_save_mode.h"
 #include "../../components/has_subtype.h"
 #include "../../components/is_round_settings_manager.h"
 #include "../../components/is_trigger_area.h"
@@ -13,8 +14,6 @@
 #include "../ai/ai_tags.h"
 
 namespace system_manager {
-
-extern bool g_load_save_delete_mode;
 
 struct UpdateDynamicTriggerAreaSettingsSystem
     : public afterhours::System<
@@ -67,7 +66,10 @@ struct UpdateDynamicTriggerAreaSettingsSystem
                 return;
             } break;
             case IsTriggerArea::LoadSave_ToggleDeleteMode: {
-                const bool delete_mode = g_load_save_delete_mode;
+                Entity& sophie =
+                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
+                const bool delete_mode =
+                    sophie.get<HasLoadSaveMode>().is_delete_mode();
                 ita.update_title(delete_mode
                                      ? NO_TRANSLATE("Delete Mode: ON")
                                      : NO_TRANSLATE("Delete Mode: OFF"));
@@ -118,7 +120,10 @@ struct UpdateDynamicTriggerAreaSettingsSystem
                 // - loadable slots are green
                 // - in delete mode, loadable slots are red (empty slots remain
                 // grey)
-                bool delete_mode = g_load_save_delete_mode;
+                Entity& sophie =
+                    EntityHelper::getNamedEntity(NamedEntity::Sophie);
+                bool delete_mode =
+                    sophie.get<HasLoadSaveMode>().is_delete_mode();
                 int slot_num = entity.has<HasSubtype>()
                                    ? entity.get<HasSubtype>().get_type_index()
                                    : 1;

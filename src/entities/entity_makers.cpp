@@ -897,6 +897,7 @@ void make_sophie(Entity& sophie, vec3 pos) {
         irsm.get_for_init<float>(ConfigKey::RoundLength));
 
     sophie.addComponent<CollectsCustomerFeedback>();
+    sophie.addComponent<HasLoadSaveMode>();
 
     sophie.addComponent<IsProgressionManager>().init();
     sophie.addComponent<IsBank>();

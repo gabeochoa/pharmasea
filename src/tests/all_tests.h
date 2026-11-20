@@ -18,6 +18,7 @@
 #include "test_entity_makers.h"
 #include "test_entity_serialization.h"
 #include "test_has_day_night_timer.h"
+#include "test_has_load_save_mode.h"
 #include "test_has_work.h"
 #include "test_is_pnumatic_pipe.h"
 #include "test_has_fishing_game.h"
@@ -106,6 +107,7 @@ inline void run_all() {
     test_item_container();
     test_is_squirter();
     test_has_day_night_timer();
+    test_has_load_save_mode();
     test_has_work();
     test_is_pnumatic_pipe();
     test_is_toilet();

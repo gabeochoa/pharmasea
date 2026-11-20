@@ -33,9 +33,6 @@
 
 namespace system_manager {
 
-// Global state for load/save delete mode
-bool g_load_save_delete_mode = false;
-
 namespace store {
 void move_purchased_furniture() {
     // Grab the overlap area so we can see what it marked

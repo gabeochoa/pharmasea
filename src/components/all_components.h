@@ -52,6 +52,7 @@
 #include "has_dynamic_model_name.h"
 #include "has_fishing_game.h"
 #include "has_last_interacted_customer.h"
+#include "has_load_save_mode.h"
 #include "has_name.h"
 #include "has_patience.h"
 #include "has_progression.h"
@@ -118,7 +119,7 @@ using ComponentTypes = std::tuple<
     // ---- Consolidated AI (Part B) ----
     HasAICooldown, HasAITargetEntity, HasAITargetLocation, HasAIQueueState,
     HasAIDrinkState, HasAIBathroomState, HasAIPayState, HasAIJukeboxState,
-    HasAIWanderState, IsCustomer>;
+    HasAIWanderState, IsCustomer, HasLoadSaveMode>;
 
 namespace detail {
 constexpr std::uint64_t kFnv1aOffset = 14695981039346656037ull;

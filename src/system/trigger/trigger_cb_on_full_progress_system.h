@@ -3,6 +3,7 @@
 #include "../../ah.h"
 #include "../../building_locations.h"
 #include "../../client_server_comm.h"
+#include "../../components/has_load_save_mode.h"
 #include "../../components/has_subtype.h"
 #include "../../components/is_bank.h"
 #include "../../components/is_progression_manager.h"
@@ -22,7 +23,10 @@
 
 namespace system_manager {
 
-extern bool g_load_save_delete_mode;
+inline HasLoadSaveMode& load_save_mode() {
+    return EntityHelper::getNamedEntity(NamedEntity::Sophie)
+        .get<HasLoadSaveMode>();
+}
 
 void generate_machines_for_new_upgrades();
 void spawn_machines_for_newly_unlocked_drink_DONOTCALL(IsProgressionManager&,
@@ -197,7 +201,7 @@ struct TriggerCbOnFullProgressSystem
     void handle_loadsave_load_slot(Entity& entity) {
         int slot_num = loadsave_slot_num(entity);
 
-        const bool delete_mode = g_load_save_delete_mode;
+        const bool delete_mode = load_save_mode().is_delete_mode();
         if (delete_mode) {
             bool ok = server_only::delete_game_slot(slot_num);
             if (!ok) return;
@@ -222,13 +226,13 @@ struct TriggerCbOnFullProgressSystem
     }
 
     void handle_loadsave_toggle_delete_mode() {
-        g_load_save_delete_mode = !g_load_save_delete_mode;
+        const bool delete_mode = load_save_mode().toggle();
         for (RefEntity trigger_area :
              EntityQuery()
                  .whereTriggerAreaOfType(IsTriggerArea::LoadSave_LoadSlot)
                  .gen()) {
             Entity& entity = trigger_area.get();
-            if (g_load_save_delete_mode) {
+            if (delete_mode) {
                 entity.enableTag(
                     afterhours::tags::TriggerTag::GateTriggerWhileOccupied);
             } else {
@@ -244,10 +248,10 @@ struct TriggerCbOnFullProgressSystem
             .msg_type = network::ClientPacket::MsgType::Announcement,
             .msg =
                 network::ClientPacket::AnnouncementInfo{
-                    .message = g_load_save_delete_mode ? "Delete mode ON"
-                                                       : "Delete mode OFF",
-                    .type = g_load_save_delete_mode ? AnnouncementType::Warning
-                                                    : AnnouncementType::Message,
+                    .message = delete_mode ? "Delete mode ON"
+                                           : "Delete mode OFF",
+                    .type = delete_mode ? AnnouncementType::Warning
+                                        : AnnouncementType::Message,
                 },
         });
     }
