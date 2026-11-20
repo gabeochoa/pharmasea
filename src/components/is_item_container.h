@@ -32,8 +32,22 @@ struct IsItemContainer : public BaseComponent {
         return *this;
     }
 
+    static constexpr int INF_GENERATIONS = -1;
+
+    enum class ContainerState { Empty, Stocked, Exhausted };
+
+    [[nodiscard]] ContainerState container_state() const {
+        if (hit_max()) return ContainerState::Exhausted;
+        return gens > 0 ? ContainerState::Stocked : ContainerState::Empty;
+    }
+
+    [[nodiscard]] bool is_container_state(ContainerState state) const {
+        return container_state() == state;
+    }
+
     [[nodiscard]] bool hit_max() const {
-        return max_gens < 0 ? false : gens >= max_gens;
+        return max_gens == INF_GENERATIONS ? false
+                                                 : gens >= max_gens;
     }
 
     IsItemContainer& increment() {
@@ -48,7 +62,7 @@ struct IsItemContainer : public BaseComponent {
 
    private:
     int gens = 0;
-    int max_gens = -1;
+    int max_gens = INF_GENERATIONS;
     EntityType item_type;
     bool uses_indexer;
     bool is_table_when_empty = false;

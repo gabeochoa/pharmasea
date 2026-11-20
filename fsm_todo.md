@@ -374,7 +374,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 - [x] M14: derived fishing `Phase`; bar/feedback readers use it
 - [x] M15: derived `WorkPhase`; progress-bar readers use it
 - [x] M16: derived squirter `Phase`; resolve §6.4 separately
-- [ ] M18: sentinel named constants + derived `ContainerState` (debug/render only)
+- [x] M18: sentinel named constants + derived `ContainerState` (debug/render only)
 - [ ] M19: debug invariant holder↔item back-pointer check in `CanHoldItem::update`
 - [ ] M21: `NuxPhase` derived + driver switch (step table only if tutorial work is already scheduled)
 - Verify per item: B + T + the machine’s soak listed in its record
