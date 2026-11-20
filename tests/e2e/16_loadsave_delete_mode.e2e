@@ -1,0 +1,34 @@
+# @slow
+# Test: load/save room delete-mode toggle flips HasLoadSaveMode on
+# Sophie, and a slot pad then deletes instead of loads.
+# Flow: lobby -> LoadSave trigger (32.5, 27.5) -> load/save room
+# (land at 165, 5). Toggle pad at (175, 15); slot 8 pad at (170, -5);
+# back-to-lobby pad at (155, 15). The script creates slot 8 itself
+# (save_slot) and deletes it through the pad, so it is self-contained.
+
+wait_until 60 expect_game_state Lobby
+wait_until 60 walk_to 32.5 27.5
+wait_until 30 expect_game_state LoadSaveRoom
+wait_until 10 expect_delete_mode off
+
+wait_until 30 walk_to 175 15
+wait_until 20 expect_delete_mode on
+
+wait_until 30 walk_to 165 5
+wait 1
+wait_until 30 walk_to 175 15
+wait_until 20 expect_delete_mode off
+
+save_slot 8
+wait_until 30 expect_save_slot 8
+
+wait_until 30 walk_to 165 5
+wait 1
+wait_until 30 walk_to 175 15
+wait_until 20 expect_delete_mode on
+
+wait_until 30 walk_to 170 -5
+wait_until 30 expect_no_save_slot 8
+
+wait_until 30 walk_to 155 15
+wait_until 30 expect_game_state Lobby

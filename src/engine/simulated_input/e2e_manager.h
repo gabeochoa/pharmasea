@@ -17,6 +17,7 @@
 #include "../../components/can_hold_item.h"
 #include "../../components/can_order_drink.h"
 #include "../../components/has_day_night_timer.h"
+#include "../../components/has_load_save_mode.h"
 #include "../../components/is_ai_controlled.h"
 #include "../../components/is_bank.h"
 #include "../../components/is_customer.h"
@@ -267,6 +268,34 @@ EvalResult eval_expect(testing::PendingE2ECommand& cmd) {
         return mismatch("no valid save header in slot " + cmd.args[0] +
                         " yet");
     }
+    if (cmd.name == "expect_no_save_slot") {
+        if (cmd.args.empty())
+            return malformed("expect_no_save_slot requires a slot number");
+        int slot = 0;
+        try {
+            slot = std::stoi(cmd.args[0]);
+        } catch (...) {
+            return malformed("expect_no_save_slot needs a number");
+        }
+        std::optional<save_game::SaveGameHeader> header =
+            save_game::SaveGameManager::read_header(
+                save_game::SaveGameManager::slot_path(slot));
+        if (!header.has_value()) return passed();
+        return mismatch("slot " + cmd.args[0] + " still has a valid save");
+    }
+    if (cmd.name == "expect_delete_mode") {
+        if (cmd.args.empty())
+            return malformed("expect_delete_mode requires on|off");
+        std::string want = to_lower(cmd.args[0]);
+        if (want != "on" && want != "off")
+            return malformed("expect_delete_mode requires on|off");
+        OptEntity e = EQ().whereHasComponent<HasLoadSaveMode>().gen_first();
+        if (!e.valid()) return mismatch("no HasLoadSaveMode entity");
+        bool actual = e->get<HasLoadSaveMode>().is_delete_mode();
+        if (actual == (want == "on")) return passed();
+        return mismatch("expected delete mode " + want + " but was " +
+                        (actual ? "on" : "off"));
+    }
     if (cmd.name == "expect_furniture_near") {
         if (cmd.args.size() < 2)
             return malformed("expect_furniture_near requires <x> <z>");
@@ -432,6 +461,8 @@ void register_custom_commands(afterhours::SystemManager& sm) {
     testing::register_command(sm, "expect_cart", expect);
     testing::register_command(sm, "expect_withdrawals", expect);
     testing::register_command(sm, "expect_save_slot", expect);
+    testing::register_command(sm, "expect_no_save_slot", expect);
+    testing::register_command(sm, "expect_delete_mode", expect);
     testing::register_command(sm, "expect_furniture_near", expect);
     testing::register_command(sm, "expect_setting", expect);
 
