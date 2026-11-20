@@ -19,6 +19,16 @@ struct CanHoldItem : public BaseComponent {
     CanHoldItem() : held_by(EntityType::Unknown), filter(EntityFilter()) {}
     explicit CanHoldItem(EntityType hb) : held_by(hb), filter(EntityFilter()) {}
 
+    enum class HeldState { Empty, Holding };
+
+    [[nodiscard]] HeldState held_state() const {
+        return empty() ? HeldState::Empty : HeldState::Holding;
+    }
+
+    [[nodiscard]] bool is_held_state(HeldState state) const {
+        return held_state() == state;
+    }
+
     [[nodiscard]] bool empty() const {
         // Treat stale IDs as empty to avoid asserting on missing entities.
         return !item();
@@ -37,6 +47,17 @@ struct CanHoldItem : public BaseComponent {
         // an unexpected entity is passed in.
         if (item.has<IsItem>()) {
             item.get<IsItem>().set_held_by(held_by, entity_id);
+#ifndef NDEBUG
+            const IsItem& held = item.get<IsItem>();
+            if (!held.is_held_by(held_by) || held.holder() != entity_id) {
+                log_warn(
+                    "CanHoldItem invariant: item {} back-pointer disagrees "
+                    "with holder (expected held_by {}, holder {}; got "
+                    "holder {})",
+                    item.id, magic_enum::enum_name(held_by), entity_id,
+                    held.holder());
+            }
+#endif
         } else {
             log_error(
                 "CanHoldItem::update: entity {} was set as held item but is "

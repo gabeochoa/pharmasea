@@ -21,6 +21,7 @@
 #include "test_has_work.h"
 #include "test_is_pnumatic_pipe.h"
 #include "test_has_fishing_game.h"
+#include "test_held_item_state.h"
 #include "test_is_spawner.h"
 #include "test_item_container.h"
 #include "test_is_squirter.h"
@@ -106,6 +107,7 @@ inline void run_all() {
     test_is_pnumatic_pipe();
     test_is_toilet();
     test_has_fishing_game();
+    test_held_item_state();
     test_network_session_state();
     test_save_slot_state();
     test_trigger_area_phase();
