@@ -19,6 +19,7 @@ extern bool disable_models_flag;
 #include "intro/logo_intro_scene.h"
 #include "intro/primary_intro_scene.h"
 #include "intro/raylib_intro_scene.h"
+#include "globals.h"
 #include "libraries/config_key_library.h"
 #include "libraries/font_library.h"
 #include "libraries/recipe_library.h"
@@ -341,6 +342,8 @@ std::vector<std::unique_ptr<IntroScene>> make_logo_intro_scenes(
 
 void run_intro_animations(const raylib::Font& font,
                           bool show_intro_animations) {
+    // No default font exists headless (G-P10); intro text would crash.
+    if (HEADLESS) return;
     IntroRunner runner(make_logo_intro_scenes(font, show_intro_animations));
     while (!runner.empty()) {
         float dt = raylib::GetFrameTime();
@@ -364,7 +367,10 @@ struct LoadingProgress {
           total_units(0),
           completed(0) {}
 
-    void render_initial_frame() { runner.update(raylib::GetFrameTime(), 0.0F); }
+    void render_initial_frame() {
+        if (HEADLESS) return;
+        runner.update(raylib::GetFrameTime(), 0.0F);
+    }
 
     void set_total(int total) { total_units = total; }
 
@@ -380,12 +386,15 @@ struct LoadingProgress {
         }
         float progress =
             static_cast<float>(completed) / static_cast<float>(total_units);
-        float dt = raylib::GetFrameTime();
-        runner.update(dt, progress);
+        if (!HEADLESS) {
+            float dt = raylib::GetFrameTime();
+            runner.update(dt, progress);
+        }
         completed += 1;
     }
 
     void finish() {
+        if (HEADLESS) return;
         float dt = raylib::GetFrameTime();
         runner.update(dt, 1.0F);
         runner.finish_all();

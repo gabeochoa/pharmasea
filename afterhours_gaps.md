@@ -806,6 +806,35 @@ scaling) is the supported semantic. Non-blocking; pharmasea's
 wiring works at 2-4x, but the next consumer will rediscover the
 same two failure modes.
 
+#### G-P10: No default font in headless raylib mode `[PLUGIN]` — new request
+
+`RaylibHeadless::try_load_default_font()` probes for raylib's
+internal `LoadFontDefault`/`isGpuReady` symbols via `dlsym`; both
+are absent when raylib is dynamically linked (pharmasea links
+`libraylib.5.5.0.dylib`), so headless runs have no default font.
+That is load-bearing in raylib: `DrawTextEx`/`MeasureTextEx`
+silently substitute `GetFontDefault()` whenever a font's texture
+id is 0, so any consumer code that draws text with a
+not-yet-loaded font (pharmasea: intro/loading scenes during
+preload) segfaults inside raylib instead of drawing fallback
+text. Ask: the headless backend should provide a usable default
+font (embed a minimal font and `LoadFontFromMemory` it, or expose
+an explicit `set_default_font(Font)` the consumer supplies at
+init), and document that text drawing before that point is
+unsupported. Game-side workaround in the meantime: skip
+intro/loading text draws when headless. Non-blocking.
+
+Related, found by the same work: raylib 5.5's `LoadFontEx` only
+uploads the glyph atlas texture when a window has been created,
+so headless it returns a font with `texture.id == 0` and valid
+CPU-side glyphs whose images are already consumed — the atlas
+cannot be regenerated from that result. Consumers must redo the
+load (`LoadFileData` + `LoadFontData` + `GenImageFontAtlas` +
+`LoadTextureFromImage`, the pattern in upstream
+`backends/raylib/font_helper.h`) or crash in the default-font
+fallback above. Worth a note in the headless backend docs, or a
+small `load_font_headless_safe` helper next to `font_helper.h`.
+
 #### G-P7: Reusable intro cards and loading screens `[PLUGIN]` — new request
 
 Not yet tracked upstream. Pharmasea hand-rolls the whole intro

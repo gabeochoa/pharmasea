@@ -160,21 +160,36 @@ void App::end_post_processing() {
 App::App(const AppSettings& settings) {
     // This goes above Init since that loves to spew errors
     raylib::SetTraceLogLevel(settings.logLevel);
-    raylib::SetTargetFPS(settings.fps);
-    if (settings.headless) {
-        raylib::SetConfigFlags(raylib::FLAG_WINDOW_HIDDEN);
-    }
     //
     width = settings.width;
     height = settings.height;
+    use_headless = settings.headless;
 
-    raylib::InitWindow(width, height, settings.title);
+    if (use_headless) {
+        // No window at all (upstream headless GL backend); drawing
+        // goes to the backend's render texture, read via mainRT.
+        afterhours::graphics::Config cfg;
+        cfg.display = afterhours::graphics::DisplayMode::Headless;
+        cfg.width = width;
+        cfg.height = height;
+        cfg.target_fps = settings.fps;
+        cfg.title = settings.title;
+        if (headless_backend.init(cfg)) {
+            mainRT = headless_backend.get_render_texture();
+        } else {
+            log_warn("headless backend failed, falling back to window");
+            use_headless = false;
+        }
+    }
 
-    afterhours::gestures::install_pinch_monitor();
+    if (!use_headless) {
+        raylib::SetTargetFPS(settings.fps);
+        raylib::InitWindow(width, height, settings.title);
+        afterhours::gestures::install_pinch_monitor();
+        mainRT = raylib::LoadRenderTexture(width, height);
+    }
 
     KeyMap::create();
-
-    mainRT = raylib::LoadRenderTexture(width, height);
 }
 
 void App::loadLayers(const std::vector<Layer*>& layers) {
@@ -185,7 +200,11 @@ void App::loadLayers(const std::vector<Layer*>& layers) {
 }
 
 App::~App() {
-    UnloadRenderTexture(mainRT);
+    if (use_headless) {
+        headless_backend.shutdown();
+    } else {
+        UnloadRenderTexture(mainRT);
+    }
     // TODO do we need to / can we remove mainRT from globals
 }
 
@@ -210,8 +229,16 @@ void App::run() {
 #ifndef NDEBUG
     float step_credit = 0.f;
 #endif
-    while (running && !raylib::WindowShouldClose()) {
+    auto last_tick = std::chrono::high_resolution_clock::now();
+    while (running && (use_headless || !raylib::WindowShouldClose())) {
         float dt = raylib::GetFrameTime();
+        if (use_headless) {
+            // No window clock headless; use real elapsed time.
+            auto now = std::chrono::high_resolution_clock::now();
+            dt = std::chrono::duration<float>(now - last_tick).count();
+            last_tick = now;
+            if (dt > 0.1f) dt = 0.1f;
+        }
         int steps = 1;
 #ifndef NDEBUG
         // E2E time-scale: substep the update, draw once.
@@ -232,14 +259,14 @@ void App::run() {
 #endif
 
     simulated_input::stop();
-    raylib::CloseWindow();
+    if (!use_headless) raylib::CloseWindow();
 }
 
 void App::update(float dt) {
     TRACY_ZONE_SCOPED;
 
     // Check for resolution changes via window_manager component
-    {
+    if (!use_headless) {
         auto current_resolution =
             afterhours::window_manager::fetch_current_resolution();
         if (!(current_resolution == last_resolution)) {
@@ -312,6 +339,7 @@ void App::draw_all_to_texture(float dt) {
 
 void App::render_to_screen() {
     TRACY_ZONE_SCOPED;
+    if (use_headless) return;
 
     raylib::BeginDrawing();
     {

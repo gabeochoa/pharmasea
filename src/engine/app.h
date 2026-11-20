@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../../vendor/afterhours/src/backends/raylib/headless.h"
 #include "files.h"
 #include "layer.h"
 #include "singleton.h"
@@ -45,6 +46,8 @@ struct App {
     bool running = false;
     int width;
     int height;
+    bool use_headless = false;
+    afterhours::graphics::RaylibHeadless headless_backend;
 
     // Track last known resolution to detect changes
     afterhours::window_manager::Resolution last_resolution = {0, 0};
