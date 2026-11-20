@@ -15,7 +15,7 @@ struct OnDayEndedSystem : public afterhours::System<RespondsToDayNight> {
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_bar_open();
+            return timer.needs_to_process_change() && timer.is_bar_open();
         } catch (...) {
             return false;
         }

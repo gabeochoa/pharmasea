@@ -53,7 +53,7 @@ struct ProcessIsContainerAndShouldBackfillItemSystem
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
             // Skip during transitions to avoid creating hundreds of items
             // before transition logic completes
-            return !timer.needs_to_process_change;
+            return !timer.needs_to_process_change();
         } catch (...) {
             return true;
         }
@@ -112,7 +112,7 @@ struct ProcessIsContainerAndShouldUpdateItemSystem
             const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
-            if (hastimer.needs_to_process_change) return false;
+            if (hastimer.needs_to_process_change()) return false;
             return hastimer.is_bar_closed();
         } catch (...) {
             return false;
@@ -153,7 +153,7 @@ struct ProcessIsIndexedContainerHoldingIncorrectItemSystem
             const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
-            if (hastimer.needs_to_process_change) return false;
+            if (hastimer.needs_to_process_change()) return false;
             return hastimer.is_bar_closed();
         } catch (...) {
             return false;

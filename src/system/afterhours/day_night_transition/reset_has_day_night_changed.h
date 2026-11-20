@@ -17,7 +17,7 @@ struct ResetHasDayNightChanged : public afterhours::System<HasDayNightTimer> {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
             // Only run when the flag is set (meaning transition systems ran)
-            return timer.needs_to_process_change;
+            return timer.needs_to_process_change();
         } catch (...) {
             return false;
         }
@@ -26,7 +26,7 @@ struct ResetHasDayNightChanged : public afterhours::System<HasDayNightTimer> {
     virtual void for_each_with(Entity&, HasDayNightTimer& timer,
                                float) override {
         // Reset the flag after all transition systems have run
-        timer.needs_to_process_change = false;
+        timer.finish_transition();
     }
 };
 

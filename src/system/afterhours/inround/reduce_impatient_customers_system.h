@@ -22,7 +22,7 @@ struct ReduceImpatientCustomersSystem
             const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
             // Don't run during transitions to avoid spawners creating entities
             // before transition logic completes
-            if (hastimer.needs_to_process_change) return false;
+            if (hastimer.needs_to_process_change()) return false;
             return hastimer.is_bar_open();
         } catch (...) {
             return false;

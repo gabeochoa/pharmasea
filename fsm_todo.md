@@ -394,7 +394,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 
 ### Phase 3 — Stored enums + save bumps (only with `save_version` bump, one machine per change)
 
-- [ ] M03: store `Phase`, append last in `serialize()`, bools become derived shims → delete shims next release
+- [x] M03: store `Phase`, append last in `serialize()`, bools become derived shims → delete shims next release (stored phase is the authority; `is_day` kept as the settled-direction shim, `needs_to_process_change` is now a method)
 - [ ] M07: store trigger `Phase`; move delete-mode to room entity (`LoadSaveMode`)
 - [ ] M09: store `SessionState`; `desired_role` becomes boundary shim (optional M10-driven `ConnectionLost` UX follows, flagged behaviour change)
 - [ ] M14/M21: store phases if Phases 0–2 prove the derived forms insufficient (default: skip — derived is enough)

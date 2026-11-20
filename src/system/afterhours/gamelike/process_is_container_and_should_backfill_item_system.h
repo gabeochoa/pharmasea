@@ -32,7 +32,7 @@ struct ProcessIsContainerAndShouldBackfillItemSystem
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
             // Skip during transitions to avoid creating hundreds of items
             // before transition logic completes
-            return !timer.needs_to_process_change;
+            return !timer.needs_to_process_change();
         } catch (...) {
             return true;
         }

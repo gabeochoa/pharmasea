@@ -18,7 +18,7 @@ struct CleanUpOldStoreOptionsSystem : public afterhours::System<> {
         try {
             Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
             const HasDayNightTimer& timer = sophie.get<HasDayNightTimer>();
-            return timer.needs_to_process_change && timer.is_bar_closed();
+            return timer.needs_to_process_change() && timer.is_bar_closed();
         } catch (...) {
             return false;
         }

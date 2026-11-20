@@ -11,13 +11,18 @@ struct HasDayNightTimer : public BaseComponent {
 
     // TODO for now since we cant use game state change
     // we need some way
-    bool needs_to_process_change = false;
+    [[nodiscard]] bool needs_to_process_change() const {
+        return is_phase(Phase::Transitioning);
+    }
 
     [[nodiscard]] int days_passed() const { return day_count; }
 
-    [[nodiscard]] Phase phase() const {
-        if (needs_to_process_change) return Phase::Transitioning;
-        return is_day ? Phase::Planning : Phase::InRound;
+    [[nodiscard]] Phase phase() const { return current_phase; }
+
+    void transition_to(Phase next) { current_phase = next; }
+
+    void finish_transition() {
+        transition_to(is_day ? Phase::Planning : Phase::InRound);
     }
 
     [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
@@ -49,7 +54,7 @@ struct HasDayNightTimer : public BaseComponent {
         is_day = false;
         day_count++;
         current_length += night_length;
-        needs_to_process_change = true;
+        transition_to(Phase::Transitioning);
 
         days_until_rent_due--;
     }
@@ -57,7 +62,7 @@ struct HasDayNightTimer : public BaseComponent {
     void close_bar() {
         is_day = true;
         current_length += day_length;
-        needs_to_process_change = true;
+        transition_to(Phase::Transitioning);
     }
 
     HasDayNightTimer(float round_length)
@@ -86,7 +91,9 @@ struct HasDayNightTimer : public BaseComponent {
 
     // how much time remaining in the current state
     float current_length;
+    // settled direction; Transitioning resolves through finish_transition()
     bool is_day = true;
+    Phase current_phase = Phase::Planning;
 
    public:
     friend zpp::bits::access;
@@ -99,7 +106,8 @@ struct HasDayNightTimer : public BaseComponent {
             self.day_length,                    //
             self.night_length,                  //
             self.current_length,                //
-            self.is_day                         //
+            self.is_day,                        //
+            self.current_phase                  //
         );
     }
 };

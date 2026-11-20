@@ -23,7 +23,7 @@ struct AIForceLeaveCommitSystem : public afterhours::System<IsAIControlled> {
             // TODO: Refactor this duplicated day/night transition check into a
             // shared helper (many systems repeat this Sophie + HasDayNightTimer
             // lookup and condition).
-            return timer.needs_to_process_change && timer.is_bar_closed();
+            return timer.needs_to_process_change() && timer.is_bar_closed();
         } catch (...) {
             return false;
         }
