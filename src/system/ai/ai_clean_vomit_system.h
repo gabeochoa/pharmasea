@@ -45,7 +45,7 @@ struct AICleanVomitSystem
         if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
         if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
 #endif
-        if (ctrl.state != IsAIControlled::State::CleanVomit) return;
+        if (ctrl.state_doesnt_match(IsAIControlled::State::CleanVomit)) return;
         if (!ctrl.has_ability(IsAIControlled::AbilityCleanVomit)) return;
 
         HasAITargetEntity& tgt = entity.get<HasAITargetEntity>();

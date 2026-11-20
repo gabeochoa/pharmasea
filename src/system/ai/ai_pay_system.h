@@ -33,7 +33,7 @@ struct AIPaySystem
         if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
         if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
 #endif
-        if (ctrl.state != IsAIControlled::State::Pay) return;
+        if (ctrl.state_doesnt_match(IsAIControlled::State::Pay)) return;
         if (entity.is_missing<CanOrderDrink>()) return;
         if (!system_manager::ai::ai_tick_with_cooldown(entity, dt, 0.10f))
             return;

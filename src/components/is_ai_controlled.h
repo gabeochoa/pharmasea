@@ -2,6 +2,7 @@
 
 #include <optional>
 
+#include "../engine/log.h"
 #include "base_component.h"
 
 // Authoritative high-level AI controller state.
@@ -16,7 +17,59 @@ struct IsAIControlled : public BaseComponent {
         PlayJukebox,
         CleanVomit,
         Leave,
-    } state = State::Wander;
+    };
+
+    [[nodiscard]] State state_value() const { return state_; }
+
+    [[nodiscard]] bool state_matches(State s) const { return state_ == s; }
+
+    [[nodiscard]] bool state_doesnt_match(State s) const {
+        return !state_matches(s);
+    }
+
+    [[nodiscard]] static constexpr bool is_legal(State from, State to) {
+        if (from == to) return true;
+        switch (from) {
+            case State::Wander:
+                return to == State::QueueForRegister ||
+                       to == State::Bathroom || to == State::PlayJukebox ||
+                       to == State::CleanVomit || to == State::Leave;
+            case State::QueueForRegister:
+                return to == State::AtRegisterWaitForDrink ||
+                       to == State::Bathroom || to == State::Wander ||
+                       to == State::Leave;
+            case State::AtRegisterWaitForDrink:
+                return to == State::Drinking || to == State::Bathroom ||
+                       to == State::Leave;
+            case State::Drinking:
+                return to == State::Pay || to == State::QueueForRegister ||
+                       to == State::PlayJukebox || to == State::Leave;
+            case State::Bathroom:
+                return to == State::Wander ||
+                       to == State::QueueForRegister ||
+                       to == State::AtRegisterWaitForDrink ||
+                       to == State::Drinking || to == State::Pay ||
+                       to == State::PlayJukebox ||
+                       to == State::CleanVomit || to == State::Leave;
+            case State::Pay:
+                return to == State::Leave || to == State::Wander;
+            case State::PlayJukebox:
+                return to == State::QueueForRegister ||
+                       to == State::Wander || to == State::Bathroom ||
+                       to == State::Leave;
+            case State::CleanVomit:
+                return to == State::Wander || to == State::Bathroom ||
+                       to == State::Leave;
+            case State::Leave:
+                return to == State::Wander;
+        }
+        return false;
+    }
+
+   private:
+    State state_ = State::Wander;
+
+   public:
 
     // Staged transition target (for two-phase "decide then commit" updates).
     // When set, systems should avoid mutating the authoritative `state`
@@ -58,14 +111,19 @@ struct IsAIControlled : public BaseComponent {
 
     // Setup helper (for makers) so call sites can chain configuration.
     IsAIControlled& set_initial_state(State s) {
-        state = s;
+        state_ = s;
         return *this;
     }
 
     // Immediate setter (authoritative). Prefer `set_state(...)` for staged
     // transitions once the commit system is in place.
     IsAIControlled& set_state_immediately(State s) {
-        state = s;
+        if (!is_legal(state_, s)) {
+            log_warn("IsAIControlled illegal transition {} -> {}",
+                     magic_enum::enum_name(state_),
+                     magic_enum::enum_name(s));
+        }
+        state_ = s;
         return *this;
     }
 
@@ -101,7 +159,7 @@ struct IsAIControlled : public BaseComponent {
     constexpr static auto serialize(auto& archive, auto& self) {
         return archive(                         //
             static_cast<BaseComponent&>(self),  //
-            self.state,                         //
+            self.state_,                        //
             self.next_state,                    //
             self.abilities,                     //
             self.resume_state                   //

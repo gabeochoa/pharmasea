@@ -19,9 +19,9 @@ struct NeedsBathroomNowSystem : public afterhours::System<IsAIControlled> {
 
     void for_each_with(Entity& entity, IsAIControlled& ai, float) override {
         // Don't interrupt these states (matches previous logic).
-        if (ai.state == IsAIControlled::State::Bathroom ||
-            ai.state == IsAIControlled::State::Drinking ||
-            ai.state == IsAIControlled::State::Leave)
+        if (ai.state_matches(IsAIControlled::State::Bathroom) ||
+            ai.state_matches(IsAIControlled::State::Drinking) ||
+            ai.state_matches(IsAIControlled::State::Leave))
             return;
 
         if (!system_manager::ai::needs_bathroom_now(entity)) return;

@@ -30,7 +30,7 @@ struct AIWanderSystem
         if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
         if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
 #endif
-        if (ctrl.state != IsAIControlled::State::Wander) return;
+        if (ctrl.state_doesnt_match(IsAIControlled::State::Wander)) return;
 
         (void) system_manager::ai::ai_tick_with_cooldown(entity, dt, 0.25f);
 

@@ -43,7 +43,7 @@ struct AISetupStateComponentsSystem
             entity.removeComponentIfExists<T>();
         };
 
-        switch (ai.state) {
+        switch (ai.state_value()) {
             case IsAIControlled::State::Wander:
                 remove.template operator()<HasAITargetEntity>();
                 add_or_reset.template operator()<HasAITargetLocation>();

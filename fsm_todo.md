@@ -362,7 +362,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 - [x] M02: `MenuState` transition table + host-sync allowlist `{Network→Game}` (fixes the settings-override class, not just the one edge)
 - [x] M13: assert single `set_active_layer` call site (rides M02; no separate change)
 - [x] M07: derived trigger `Phase` accessor for render/debug; keep floats/tags as truth
-- [ ] M04: private `state` + accessor; `is_legal(from,to)` log-only check in commit; route `set_state_immediately` bypasses (spawn-init exempt)
+- [x] M04: private `state` + accessor; `is_legal(from,to)` log-only check in commit; route `set_state_immediately` bypasses (spawn-init exempt)
 - Verify: B + T + pause/resume + two-client settings soak + full lobby→game→progression→store loop
 
 ### Phase 2 — Local machines (P2, each independent)

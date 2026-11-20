@@ -51,7 +51,7 @@ struct AIBathroomSystem
         if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
         if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
 #endif
-        if (ctrl.state != IsAIControlled::State::Bathroom) return;
+        if (ctrl.state_doesnt_match(IsAIControlled::State::Bathroom)) return;
 
         if (entity.is_missing<CanOrderDrink>()) {
             request_next_state(entity, ctrl, IsAIControlled::State::Wander);

@@ -464,7 +464,7 @@ void render_debug_ai_info(const Entity& entity, float) {
     const Transform& transform = entity.get<Transform>();
 
     const IsAIControlled& ai = entity.get<IsAIControlled>();
-    const auto content = fmt::format("{}", magic_enum::enum_name(ai.state));
+    const auto content = fmt::format("{}", magic_enum::enum_name(ai.state_value()));
     DrawFloatingText(vec::raise(transform.raw(), 2.0f), Preload::get().font,
                      std::string(content).c_str(), 150);
 
@@ -1035,7 +1035,7 @@ void render_ai_info(const Entity& entity, float) {
     const vec3 icon_position = vec3{position.x + (TILESIZE * 0.05f),  //
                                     position.y + (TILESIZE * 2.f),    //
                                     position.z};
-    switch (ai.state) {
+    switch (ai.state_value()) {
         case IsAIControlled::State::Bathroom: {
             GameCam* cam = globals::game_cam();
             if (!cam) break;

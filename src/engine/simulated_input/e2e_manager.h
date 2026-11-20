@@ -685,7 +685,8 @@ void register_diagnostics(afterhours::SystemManager& sm) {
             std::string ai = "?";
             if (e.has<IsAIControlled>()) {
                 ai = std::string(
-                    magic_enum::enum_name(e.get<IsAIControlled>().state));
+                    magic_enum::enum_name(
+                        e.get<IsAIControlled>().state_value()));
             }
             fmt::print(stderr, "order: drink={} state={} ai={} drank={}\n",
                        magic_enum::enum_name(cod.order()),

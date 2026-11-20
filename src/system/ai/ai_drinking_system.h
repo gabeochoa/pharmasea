@@ -33,7 +33,7 @@ struct AIDrinkingSystem
         if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
         if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
 #endif
-        if (ctrl.state != IsAIControlled::State::Drinking) return;
+        if (ctrl.state_doesnt_match(IsAIControlled::State::Drinking)) return;
         if (entity.is_missing<CanOrderDrink>()) return;
         (void) system_manager::ai::ai_tick_with_cooldown(entity, dt, 0.25f);
 
@@ -43,11 +43,11 @@ struct AIDrinkingSystem
 
         CanOrderDrink& cod = entity.get<CanOrderDrink>();
         if (cod.order_state != CanOrderDrink::OrderState::DrinkingNow) {
-            if (!order_matches_ai_state(cod.order_state, ctrl.state)) {
+            if (!order_matches_ai_state(cod.order_state, ctrl.state_value())) {
                 log_warn(
                     "ai_drinking: order/AI state mismatch order={} ai={}",
                     magic_enum::enum_name(cod.order_state),
-                    magic_enum::enum_name(ctrl.state));
+                    magic_enum::enum_name(ctrl.state_value()));
             }
             return;
         }

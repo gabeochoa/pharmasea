@@ -24,6 +24,7 @@
 #include "test_is_spawner.h"
 #include "test_is_squirter.h"
 #include "test_is_toilet.h"
+#include "test_ai_controlled.h"
 #include "test_can_order_drink.h"
 #include "test_connection_state.h"
 #include "test_game_state_transitions.h"
@@ -110,6 +111,7 @@ inline void run_all() {
     test_progression_phase();
     test_key_binding_popup();
     test_can_order_drink();
+    test_ai_controlled();
     test_game_state_transitions();
     test_menu_state_transitions();
     test_menu_state_layer_sync();

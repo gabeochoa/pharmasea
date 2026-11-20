@@ -36,7 +36,7 @@ struct AICommitNextStateSystem
             return;
         }
 
-        const IsAIControlled::State old_state = ai.state;
+        const IsAIControlled::State old_state = ai.state_value();
         const IsAIControlled::State desired = ai.next_state.value();
 
         // Special handling: entering Bathroom must preserve the "return-to"

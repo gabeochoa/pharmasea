@@ -30,7 +30,7 @@ struct AIQueueForRegisterSystem
         if (entity.hasTag(afterhours::tags::AITag::AITransitionPending)) return;
         if (entity.hasTag(afterhours::tags::AITag::AINeedsResetting)) return;
 #endif
-        if (ctrl.state != IsAIControlled::State::QueueForRegister) return;
+        if (ctrl.state_doesnt_match(IsAIControlled::State::QueueForRegister)) return;
 
         (void) system_manager::ai::ai_tick_with_cooldown(entity, dt, 0.10f);
         if (entity.is_missing<CanOrderDrink>()) return;
