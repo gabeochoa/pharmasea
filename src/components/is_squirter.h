@@ -30,6 +30,15 @@ struct IsSquirter : public BaseComponent {
         return false;
     }
 
+    enum class Phase { Idle, Armed, Pouring };
+
+    [[nodiscard]] Phase phase() const {
+        if (item_id() == entity_id::INVALID) return Phase::Idle;
+        return sq_time < sq_time_reset ? Phase::Pouring : Phase::Armed;
+    }
+
+    [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
+
     [[nodiscard]] bool is_working() const { return working; }
     [[nodiscard]] float pct() const { return sq_time / sq_time_reset; }
     [[nodiscard]] float time() const { return sq_time; }

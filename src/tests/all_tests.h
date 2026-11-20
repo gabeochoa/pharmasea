@@ -22,6 +22,7 @@
 #include "test_is_pnumatic_pipe.h"
 #include "test_has_fishing_game.h"
 #include "test_is_spawner.h"
+#include "test_is_squirter.h"
 #include "test_is_toilet.h"
 #include "test_can_order_drink.h"
 #include "test_connection_state.h"
@@ -92,6 +93,7 @@ inline void run_all() {
     test_entity_serialization();
     test_entity_makers();
     test_is_spawner();
+    test_is_squirter();
     test_has_day_night_timer();
     test_has_work();
     test_is_pnumatic_pipe();

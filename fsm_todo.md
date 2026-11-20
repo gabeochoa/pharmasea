@@ -373,7 +373,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 - [x] M12: `CaptureState` replaces popup `show` bool
 - [x] M14: derived fishing `Phase`; bar/feedback readers use it
 - [x] M15: derived `WorkPhase`; progress-bar readers use it
-- [ ] M16: derived squirter `Phase`; resolve §6.4 separately
+- [x] M16: derived squirter `Phase`; resolve §6.4 separately
 - [ ] M18: sentinel named constants + derived `ContainerState` (debug/render only)
 - [ ] M19: debug invariant holder↔item back-pointer check in `CanHoldItem::update`
 - [ ] M21: `NuxPhase` derived + driver switch (step table only if tutorial work is already scheduled)
