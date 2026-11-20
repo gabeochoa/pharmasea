@@ -350,7 +350,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 ### Phase 0 — Guards without behaviour change (P0 safety, all S)
 
 - [x] M20: add derived `PairingState` accessor + log on transfer-state load (no serialize change yet; §6.1 decision requested)
-- [ ] M09: add derived `session_state()` + `log_warn` when `desired_role` holds both Host and Client bits
+- [x] M09: add derived `session_state()` + `log_warn` when `desired_role` holds both Host and Client bits
 - [ ] M11: add `SlotState`/`LoadResult` enums alongside existing bools; route trigger/CLI callers to log the specific failure
 - [ ] M10: add `to_connection_state()` mapper with exhaustive switch; call it (log-only) from both Steam callbacks
 - [x] M03: add derived `HasDayNightTimer::phase()`; point `system_utils::should_run_*` at it (single site, no stored state)

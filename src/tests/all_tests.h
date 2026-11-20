@@ -21,6 +21,7 @@
 #include "test_has_work.h"
 #include "test_is_pnumatic_pipe.h"
 #include "test_is_spawner.h"
+#include "test_network_session_state.h"
 #include "test_map_playability.h"
 #include "test_pathing.h"
 #include "test_ui_widget.h"
@@ -87,6 +88,7 @@ inline void run_all() {
     test_has_day_night_timer();
     test_has_work();
     test_is_pnumatic_pipe();
+    test_network_session_state();
 
     // back to default , preload will set it as well
     LOG_LEVEL = old_level;

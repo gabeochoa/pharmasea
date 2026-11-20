@@ -56,6 +56,21 @@ struct RoleInfoMixin {
     [[nodiscard]] bool has_role() { return is_host() || is_client(); }
     [[nodiscard]] bool missing_role() { return !has_role(); }
 
+    enum class SessionState : int {
+        NoRole = 0,
+        Hosting = 1,
+        Joining = 2,
+        InGame = 3,
+        ConnectionLost = 4,
+    };
+
+    [[nodiscard]] SessionState session_state() {
+        if (is_host() && is_client()) return SessionState::NoRole;
+        if (missing_role()) return SessionState::NoRole;
+        if (client && client->id != 0) return SessionState::InGame;
+        return is_host() ? SessionState::Hosting : SessionState::Joining;
+    }
+
     void set_role(Role role) {
         // This function runs on the main/client thread.
         thread_role::set(thread_role::Role::ClientMain);
@@ -66,6 +81,11 @@ struct RoleInfoMixin {
             client->update_username(Settings::get().data.username);
             log_info("_setup_client lambda completed");
         };
+
+        if ((role & Role::s_Host) && (role & Role::s_Client)) {
+            log_warn("set_role called with both Host and Client bits: {}",
+                     (int) role);
+        }
 
         // Local-only mode does not support joining by IP; treat "Client" as
         // "Host local" so the UI remains usable.
