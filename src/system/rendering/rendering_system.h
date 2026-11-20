@@ -52,6 +52,7 @@ void render_walkable_spots(float);
 void render(const Entity&, float, bool);
 
 void on_frame_start();
+void flush_model_instances();
 
 }  // namespace render_manager
 

@@ -11,6 +11,7 @@
 //
 #include "entities/entity_helper.h"
 #include "system/core/system_manager.h"
+#include "system/rendering/rendering_system.h"
 
 void Map::update_map(const Map& new_map) {
     this->showMinimap = new_map.showMinimap;
@@ -60,6 +61,8 @@ void Map::onDraw(float dt) {
 
     SystemManager::get().render_entities(EntityHelper::get_entities_for_mod(),
                                          dt);
+
+    system_manager::render_manager::flush_model_instances();
 }
 
 void Map::onDrawUI(float dt) {

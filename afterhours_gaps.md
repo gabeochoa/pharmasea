@@ -748,6 +748,64 @@ upstream, so this section is a watch list, not new requests.
 | G-P5 | Distribution: CI-built static GNS artifacts, verified fetch script, LICENSE, compatibility table | Open, library gaps item 7 / `OG-08`. Blocks release, not development onboarding; pharmasea must inspect its final binary (G-M8). |
 | G-P6 | Steam bootstrap split so a future `steam.cpp` can share the connection logic | Open, library gaps item 8 / `OG-09`. Future scope for pharmasea (no Steam AppID today). |
 
+#### G-P8: Instancing integration helpers `[PLUGIN]` — new request
+
+Not yet tracked upstream. Pharmasea is piloting
+`plugins/models.h` (`InstanceBatcher` + `draw_model_instanced`)
+for furniture/character models. The core draw works; the friction
+is all around it:
+
+1. **No per-instance tint.** `draw_model_instanced` draws one
+   material per group, so copies that differ only in tint
+   (pharmasea: normal `WHITE` vs highlighted `GRAY`, ghost
+   translucent) cannot share a batch and must keep a second
+   per-copy `DrawModelEx` path. An optional per-instance color
+   (attribute or group-level tint uniform set from the batcher's
+   existing `key`) would collapse that to one path.
+2. **No `DrawModelEx`-matching transform helper.** `model_transform`
+   exists, but its Y-rotation handedness relative to raylib's
+   `DrawModelEx(pos, axis=Y, angleDeg, scale)` is undocumented, so
+   a consumer who needs pixel-identical placement with existing
+   non-instanced draws hand-composes
+   `MatrixMultiply(MatrixMultiply(MatrixScale, MatrixRotate), MatrixTranslate)`
+   instead. Documenting/guaranteeing the equivalence (or offering
+   `model_transform_ex` with `DrawModelEx` semantics) removes the
+   guesswork.
+3. **Shader ownership is hand-rolled per consumer.**
+   `load_instancing_shader()` returns a bare shader; every consumer
+   writes the same lazy static + loaded-flag + never-unload block.
+   A batcher that optionally owns/caches the default instancing
+   shader (`InstanceBatcher::flush_default()`) would delete that.
+4. **No render-pass flush hook.** The batcher must be flushed
+   inside the caller's 3D pass; finding that boundary (and keeping
+   it correct across extra passes like minimaps) is per-game
+   archaeology. An afterhours render system/pass-end callback that
+   flushes a registered batcher would make adoption one line.
+
+Also already noted in the plugin's own source: `draw_model_instanced`
+cleans up instance attributes via raw `rlgl` calls (its TODO asks
+to move that behind a backend call); consumers currently have to
+trust that the VAO poisoning is fully undone before mixing instanced
+and non-instanced draws of the same mesh in one frame, which
+pharmasea does (highlighted copies). An explicit guarantee/test
+would help. Non-blocking; the pilot proceeds with dual paths.
+
+#### G-P9: E2E time-scale has no reference wiring `[PLUGIN]` — new request
+
+Upstream `E2EArgs` parses `--time-scale`/`--e2e-speed`
+(G-E2, adopted), but the value is inert: nothing in the harness
+applies it, so every consumer invents host-loop surgery.
+Pharmasea's version: substep the client `App::update` at real dt
+(draw once) plus substep the server's fixed 120 Hz tick, both
+gated to debug builds — after two failed iterations (enlarging dt
+broke AI cleanup on the server and key-hold/input timing on the
+client). Ask: a documented reference pattern or a small helper —
+e.g. `E2ERunner` exposing a scaled-dt/step-count the host feeds
+its update loop, or harness guidance that substepping (not dt
+scaling) is the supported semantic. Non-blocking; pharmasea's
+wiring works at 2-4x, but the next consumer will rediscover the
+same two failure modes.
+
 #### G-P7: Reusable intro cards and loading screens `[PLUGIN]` — new request
 
 Not yet tracked upstream. Pharmasea hand-rolls the whole intro
