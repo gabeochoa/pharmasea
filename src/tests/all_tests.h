@@ -19,6 +19,7 @@
 #include "test_entity_serialization.h"
 #include "test_has_day_night_timer.h"
 #include "test_has_work.h"
+#include "test_is_pnumatic_pipe.h"
 #include "test_is_spawner.h"
 #include "test_map_playability.h"
 #include "test_pathing.h"
@@ -85,6 +86,7 @@ inline void run_all() {
     test_is_spawner();
     test_has_day_night_timer();
     test_has_work();
+    test_is_pnumatic_pipe();
 
     // back to default , preload will set it as well
     LOG_LEVEL = old_level;

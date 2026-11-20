@@ -6,6 +6,8 @@
 #include "base_component.h"
 
 struct IsPnumaticPipe : public BaseComponent {
+    enum class PairingState { Unpaired, PairedIdle, Transferring };
+
     bool recieving = false;
     int item_id = -1;
 
@@ -13,6 +15,16 @@ struct IsPnumaticPipe : public BaseComponent {
 
     [[nodiscard]] bool has_pair() const {
         return paired.id != entity_id::INVALID;
+    }
+
+    [[nodiscard]] PairingState pairing_state() const {
+        if (!has_pair()) return PairingState::Unpaired;
+        return recieving ? PairingState::Transferring
+                         : PairingState::PairedIdle;
+    }
+
+    [[nodiscard]] bool is_pairing_state(PairingState state) const {
+        return pairing_state() == state;
     }
 
    private:

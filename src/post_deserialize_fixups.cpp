@@ -5,6 +5,7 @@
 #include "components/adds_ingredient.h"
 #include "components/can_hold_item.h"
 #include "components/can_pathfind.h"
+#include "components/is_pnumatic_pipe.h"
 #include "components/responds_to_day_night.h"
 #include "engine/log.h"
 #include "entities/entity_helper.h"
@@ -37,6 +38,16 @@ void run() {
         }
         if (e.has<AddsIngredient>()) {
             e.get<AddsIngredient>().set_parent(e.id);
+        }
+
+        if (e.has<IsPnumaticPipe>() &&
+            e.get<IsPnumaticPipe>().is_pairing_state(
+                IsPnumaticPipe::PairingState::Transferring)) {
+            log_warn(
+                "post_deserialize_fixups: pipe {} loaded in transfer "
+                "state; recieving/item_id are not serialized and will "
+                "be lost (FSM M20 pending owner decision)",
+                e.id);
         }
 
         // Clear broken handle references that used to be implicitly carried
