@@ -42,8 +42,19 @@ struct HasFishingGame : public BaseComponent {
 
     HasFishingGame() {}
 
+    enum class Phase : int { NotStarted = 0, Running = 1, Scored = 2 };
+
+    [[nodiscard]] Phase phase() const {
+        if (has_score()) return Phase::Scored;
+        return started ? Phase::Running : Phase::NotStarted;
+    }
+
+    [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
+
     [[nodiscard]] bool has_score() const { return score != -1; }
-    [[nodiscard]] bool show_progress_bar() const { return started; }
+    [[nodiscard]] bool show_progress_bar() const {
+        return is_phase(Phase::Running);
+    }
     [[nodiscard]] float get_score() const { return score; }
     [[nodiscard]] float pct() const { return progress; }
     [[nodiscard]] float best() const { return best_location; }

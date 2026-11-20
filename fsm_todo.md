@@ -371,7 +371,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 - [x] M06: `enum class` (same values) + `end_use` guard; resolve §6.3
 - [x] M08: derived `ProgressionPhase` + `advance_cycle()` sole index writer
 - [x] M12: `CaptureState` replaces popup `show` bool
-- [ ] M14: derived fishing `Phase`; bar/feedback readers use it
+- [x] M14: derived fishing `Phase`; bar/feedback readers use it
 - [x] M15: derived `WorkPhase`; progress-bar readers use it
 - [ ] M16: derived squirter `Phase`; resolve §6.4 separately
 - [ ] M18: sentinel named constants + derived `ContainerState` (debug/render only)
