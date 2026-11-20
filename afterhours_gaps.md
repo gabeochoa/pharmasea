@@ -748,6 +748,24 @@ upstream, so this section is a watch list, not new requests.
 | G-P5 | Distribution: CI-built static GNS artifacts, verified fetch script, LICENSE, compatibility table | Open, library gaps item 7 / `OG-08`. Blocks release, not development onboarding; pharmasea must inspect its final binary (G-M8). |
 | G-P6 | Steam bootstrap split so a future `steam.cpp` can share the connection logic | Open, library gaps item 8 / `OG-09`. Future scope for pharmasea (no Steam AppID today). |
 
+#### G-P7: Reusable intro cards and loading screens `[PLUGIN]` — new request
+
+Not yet tracked upstream. Pharmasea hand-rolls the whole intro
+sequence in `src/intro/`: an `IntroRunner` over ordered scenes, a
+studio logo card (`LogoIntroScene`), a raylib "powered by" card
+(`RaylibIntroScene`), and a loading scene driven by external
+progress plus status text (`PrimaryIntroScene`). Every raylib
+game rebuilds this same pipeline.
+
+Ask: an afterhours intro plugin with (1) a scene-sequence runner
+(ordered scenes, `update(dt, progress) -> done`, skip /
+`finish_all`), (2) built-in logo and engine-card scenes themed by
+colors, font, duration, and fade, and (3) a loading scene fed by
+an external progress value and status string, with no asset
+assumptions beyond a caller-supplied font/atlas. Pharmasea would
+keep only its scene list and theme, and delete the local scenes.
+Non-blocking for online onboarding.
+
 Explicitly not plugin work, despite earlier wording in this file:
 semantic walk/interact commands (G-E3), a general test-command queue
 (G-M1), player-count queries (G-M2), seed plumbing (G-M3), state
