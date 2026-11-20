@@ -61,6 +61,8 @@ void Client::tick(float dt) {
     }
 
     if (client_p->is_not_connected()) {
+        // Forget our join id so session_state() stops reporting InGame.
+        id = 0;
         announcements.push_back({
             .message = "Lost connection to Host",
             .type = AnnouncementType::Error,
