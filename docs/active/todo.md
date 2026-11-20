@@ -10,7 +10,7 @@ kanban-plugin: basic
 - Save/Load: 6 items
 - ECS Refactor: 4 items
 - Afterhours Migration: 10 items (8 done)
-- Afterhours Gaps: 12 items
+- Afterhours Vendor Move-Over: 33 items (1 done)
 - Infra Changes: 15 items
 - Code Health: 22 items
 - Low Priority: 14 items
@@ -111,39 +111,52 @@ Pointer-free serialization migration - see `docs/active/afterhours_pointer_free_
 - [ ] Temp entity behavior: "no handles until merge" vs "handles on create"
 - [ ] Save/load fixups: define when to resolve references after load
 
-## afterhours gaps
+## afterhours vendor move-over (consolidated)
 
-Track features that should be in afterhours library rather than pharmasea:
+Consolidated from the former gaps + onboarding sections, `afterhours_gaps.md` (G-E/G-M), `docs/plans/afterhours-onboarding-report.md` (bump `4c86b3a` -> `4d8da9e`), `docs/plans/afterhours-main-upgrade.md`, and `fsm_todo.md`. Tags: (a) move game code into afterhours, (b) adopt existing afterhours feature instead of local code, (c) delete local code after upstream replacement. Pointer-free/handle work stays in the migration section above; FSM conversions stay local (see last item).
 
-- [ ] UI offscreen warning system ("purpling" detection)
-- [ ] Entity key subscription (track which entities want which keys)
-- [ ] Arena allocators (already in afterhours, evaluate usage)
-- [ ] vendor/afterhours: switch all includes to local wrapper `src/ah.h`
-- [ ] vendor/afterhours: stop including internal headers
-- [ ] vendor/afterhours: centralize serialization on vendor implementations
-- [ ] vendor/afterhours: standardize on `afterhours::Entities`/`afterhours::RefEntity` aliases
-- [ ] vendor/afterhours: evaluate migrating `EntityHelper` functionality to vendor
-- [ ] vendor/afterhours: compare our `EntityQuery` to vendor query APIs
-- [ ] vendor/afterhours: review job/task facilities
-- [ ] vendor/afterhours: check for vendor component-registration utilities
-- [ ] vendor/afterhours: ensure submodule is initialized and pinned
+**Prerequisite:**
+- [ ] (b) BLOCKER: fix `VALIDATE` undeclared build break (pch defines `AFTER_HOURS_REPLACE_VALIDATE`, `src/log/log.h` provides none; new vendor uses it in `core/system.h` + `input_system.h`) — vendor cannot be consumed until this lands. First step: include `engine/assert.h` before vendor headers, then build + `./pharmasea.exe -t` + one .e2e script
 
-## afterhours onboarding (2026-11 bump 4c86b3a -> 4d8da9e)
+**Adopt upstream, then delete local (b/c):**
+- [ ] (b/c) Frustum: replace vendored `src/engine/frustum.h` (raylibExtras copy) with `plugins/frustum.h` (`make_frustum` + sphere/box tests) in rendering_system — same math, upstream-tested. First step: swap the `static Frustum` call site, then delete the local header
+- [ ] (b) Instancing: pilot `InstanceBatcher`/`draw_model_instanced` (`plugins/models.h`) on the most-repeated model; keep own ModelLibrary (glTF/fallback/lazy) — upstream ~8k instanced vs ~1.5k per-draw. First step: batch one furniture model beside ModelLibrary
+- [ ] (b) LOD: add `plugins/lod.h` hysteresis LOD alongside frustum culling — stops threshold flicker. First step: `update_sq` in the render loop after the frustum swap
+- [ ] (b) Particles: adopt `particles::Emitter` for drink/vomit effects — closes the core-features particle item with a tested pool. First step: one drink-effect emitter, no new hand-rolled system
+- [ ] (b) RNG: evaluate `RngStream` (save/load state) for map generation; keep pcg for network/replay-critical paths — per-domain streams isolate determinism. First step: map-gen stream only, compare seeded output
+- [ ] (b) Tests/files: use `files::TestRoots` so tests stop touching the real save folder; consider `files::get_cache_path()` for regenerable data. First step: wrap one `src/tests/` suite in `TestRoots`
+- [ ] (b) Settings input: use upstream `actions_using` conflict checks + `input::Repeat` for held repeat; enum `is_held/is_pressed` for new code. First step: conflict check in the settings remap screen (`settingslayer.cpp`)
+- [ ] (b) Fixed tick: confirm fixed-tick wiring, then set `SystemManager::max_fixed_ticks` catch-up cap — prevents spiral-of-death hitches. First step: find the tick path (no `fixed_tick` refs in `src/` today)
+- [ ] (b) Opportunistic: upstream `src/image.h` (`image_size`/`decode_image`), `FrameRateStats` (also unblocks the frame-time smoke item in e2e CI), `font_size_per_point`/`load_font_from_memory`. First step: `FrameRateStats` readout in e2e runs
+- [ ] (b) Arena allocators (already in afterhours, evaluate usage) — avoid per-frame allocation in hot queries. First step: profile one hot query, trial an arena there
+- [ ] (b) Query API: compare our `EntityQuery` to vendor query APIs; use `add_filter(lambda)` for new queries, leave existing `add_mod()` sites — avoids new `Modification` subclasses. First step: one new query in lambda form
+- [ ] (b) System hooks: add `should_iterate() { return false; }` to the 6 once-only systems — skips empty iteration. First step: `OnFrameStartSystem` + `GenerateStoreOptionsSystem`
+- [ ] (b) Pathfinding (evaluate only): compare local `astar.h`/`bfs.h`/`pathfinder.h` + `CanPathfind` against vendor `plugins/pathfinding.h` (`ProvidesPathfinding`, AStar/BFS) — both implement the same search. First step: API diff only; do not migrate without a parity test
+- [ ] (b) Timers (evaluate only): compare local cooldown/progress floats against vendor `plugins/timer.h` (`HasTimer`) before building the infra Progress/Cooldown item. First step: map `HasWork`/`CooldownInfo` fields to `HasTimer`
+- [ ] (b) E2E time-scale: adopt upstream `--time-scale`/`--e2e-speed` (G-E2) — cuts the 200s `@slow` day-cycle scripts to seconds. First step: enable in the e2e runner config, rerun `03`
+- [ ] (b) Headless: adopt the NONE backend (`DisplayMode::Headless`, G-E6) so CI without a WindowServer can run e2e — today `--headless` still creates a GL window. First step: spike routing `App` window creation through the library graphics layer
 
-Full report: `docs/plans/afterhours-onboarding-report.md`. Submodule pulled to `4d8da9e`; no src changes made yet.
+**Move game code upstream (a), then delete local stopgap (c):**
+- [ ] (a) UI offscreen warning system ("purpling" detection) — generic UI concern, belongs in the library. First step: spec the warning API from pharmasea's UI call sites
+- [ ] (a) Entity key subscription (track which entities want which keys) — input routing belongs with the vendor input system. First step: list current key-consumer call sites
+- [ ] (a/c) E2E interaction: semantic walk-to/interact commands on `input_injector` (G-E3) — local `hold_key`/`walk_to` stopgaps are brittle across client/server positions. First step: upstream `walk_to` prototype; delete stopgaps once authoritative confirm lands
+- [ ] (a) Test command channel: general queued main-thread -> server command channel (G-M1; save leg already solved game-side via the `SaveSlot` packet) — one packet type per verb does not scale. First step: design the queued verb + completion signal in the multiplayer plugin shape (`vendor/afterhours-online`)
+- [ ] (a) Player query: host/client-symmetric player count (G-M2, unblocks `expect_player_count` + network scripts `09`/`10`) — players are not in the client `EQ` collection today. First step: document one query that works on both sides
+- [ ] (a) Seed entry: pre-lobby `--seed` entry point in the plugin session config (G-M3) — CLI seed never reaches the authoritative map today. First step: host applies CLI seed at server start
+- [ ] (a) Two-process runner: host+client orchestration for scripts `09`/`10` (G-M4; pumpkin `tests/online_e2e.py` is the reference). First step: shell runner that spawns two processes on a fresh port
+- [ ] (a) Server state copy: server-local `MenuState`/`GameState` copy (G-M5) — singletons are currently shared/raced across threads. First step: plugin-owned server copy with a race-free test read
+- [ ] (a) Progress sync: serialize per-customer progress (`num_orders_had`, G-M6) via plugin state sync, or document it host-only — client mirrors always read 0 today. First step: decide serialize-vs-document with save owners
 
-- [ ] BLOCKER: fix `VALIDATE` undeclared build break (pch defines `AFTER_HOURS_REPLACE_VALIDATE`, `src/log/log.h` provides none; new vendor uses it in `core/system.h` + `input_system.h`) — include `engine/assert.h` before vendor headers, then build + `./pharmasea.exe -t` + one .e2e script
-- [ ] Replace vendored `src/engine/frustum.h` (raylibExtras copy) with afterhours `plugins/frustum.h` (`make_frustum` + sphere/box tests) in rendering_system
-- [ ] Pilot afterhours `InstanceBatcher`/`draw_model_instanced` (plugins/models.h) on most-repeated model; keep own ModelLibrary (glTF/fallback/lazy)
-- [ ] Add afterhours `plugins/lod.h` hysteresis LOD alongside frustum culling
-- [ ] Adopt afterhours `particles::Emitter` for drink/vomit particle effects (closes core-features particle item)
-- [ ] Evaluate `RngStream` (save/load state) for map generation; keep pcg for network/replay-critical paths
+**Vendor hygiene (c, local cleanup):**
+- [ ] (c) Includes: route all vendor includes through the local wrapper `src/ah.h` and stop including vendor internal headers (merged former pair) — one include surface to bump. First step: grep direct `afterhours/src/` includes outside `ah.h`
+- [ ] (c/b) Serialization: centralize serialization on vendor implementations and standardize on `afterhours::Entities`/`afterhours::RefEntity` aliases (merged former pair) — deletes local alias/serialization drift. First step: inventory local aliases in `src/entity.h`
+- [ ] (a/b) Evaluate migrating `EntityHelper` functionality to vendor; review vendor job/task facilities and component-registration utilities (merged former trio; evaluate only) — each may delete local helpers if upstream fits. First step: one-page API comparison per facility, no code
+- [ ] (c) Submodule: ensure `vendor/afterhours` is initialized and pinned (recorded pin `4d8da9e`) — reproducible bumps. First step: verify `.gitmodules` + recorded commit match
+
+**Done / not moving:**
 - [x] E2E: adopt upstream results JSON (`write_results_json`/`--results-json`) + `testing::is_e2e_running()`, then typed `register_command`; keep hand parser in e2e_manager.h until then — done: hand parser deleted, scripts use `wait_until`, pending commands isolated in the singleton default collection (client map generation wipes its own collection)
-- [ ] Use `files::TestRoots` in tests so they stop touching the real save folder; consider `files::get_cache_path()` for regenerable data
-- [ ] Settings remap: use upstream `actions_using` conflict checks + `input::Repeat` for held repeat; enum `is_held/is_pressed` for new code
-- [ ] Confirm fixed-tick wiring, then set `SystemManager::max_fixed_ticks` catch-up cap
-- [ ] Opportunistic: upstream `src/image.h` (`image_size`/`decode_image`), `FrameRateStats`, `font_size_per_point`/`load_font_from_memory`
-- [ ] Skip (recorded in report): imm UI suite, house_of_cards (revisit after instancing), lit shader, sound wrappers, toast plugin, query indexes, expect_drawn capture asserts
+- [ ] Skip (recorded in report): imm UI suite, house_of_cards (revisit after instancing), lit shader, sound wrappers, toast plugin (local `toastmanager.h` stays), query indexes, expect_drawn capture asserts, KeyChord input, auto gamepad-mapping load, separate UI entity collection
+- [ ] Keep local (FSM, per `fsm_todo.md` §3/§7): M01-M24 explicit-FSM conversions (`transition_to()` tables, derived phases) stay in pharmasea; vendor afterhours stays untouched — only consume its `System`/`should_run` patterns. First step: none; revisit only if a generic FSM helper emerges from two+ machines
 
 ## e2e coverage expansion
 
