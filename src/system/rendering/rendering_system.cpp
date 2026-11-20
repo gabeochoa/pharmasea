@@ -35,7 +35,6 @@
 #include "../core/system_manager.h"
 #include "raylib.h"
 //
-#include "../../engine/frustum.h"
 #include "../../libraries/shader_library.h"
 
 namespace system_manager {
@@ -1494,7 +1493,7 @@ bool is_some_player_near(const Entities& remote_players, vec2 spot,
 static size_t num_ents_drawn = 0;
 #endif
 
-static Frustum frustum;
+static afterhours::Frustum frustum;
 
 namespace system_manager {
 
@@ -1505,12 +1504,13 @@ void on_frame_start() {
     log_warn("num entities drawn: {}", num_ents_drawn);
     num_ents_drawn = 0;
 #endif
-    frustum.fetch_data();
+    frustum = afterhours::make_frustum(raylib::MatrixMultiply(
+        raylib::rlGetMatrixModelview(), raylib::rlGetMatrixProjection()));
 }
 
 bool should_cull(const Entity& entity) {
     auto bounds = entity.get<Transform>().expanded_bounds({0, 0, 0});
-    return !frustum.AABBoxIn(bounds.min, bounds.max);
+    return !frustum.intersects_box(bounds.min, bounds.max);
 }
 
 void render(const Entity& entity, float dt, bool is_debug) {
