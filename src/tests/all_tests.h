@@ -21,6 +21,7 @@
 #include "test_has_work.h"
 #include "test_is_pnumatic_pipe.h"
 #include "test_is_spawner.h"
+#include "test_connection_state.h"
 #include "test_network_session_state.h"
 #include "test_save_slot_state.h"
 #include "test_map_playability.h"
@@ -91,6 +92,7 @@ inline void run_all() {
     test_is_pnumatic_pipe();
     test_network_session_state();
     test_save_slot_state();
+    test_connection_state();
 
     // back to default , preload will set it as well
     LOG_LEVEL = old_level;

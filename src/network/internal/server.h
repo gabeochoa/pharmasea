@@ -11,6 +11,7 @@
 
 #include "../../engine/assert.h"
 #include "../../engine/toastmanager.h"
+#include "../connection_state.h"
 #include "channel.h"
 #include "local_hub.h"
 #include "steam/isteamnetworkingsockets.h"
@@ -298,6 +299,9 @@ struct Server {
     void connection_changed_callback(
         SteamNetConnectionStatusChangedCallback_t *info) {
         log_info("connection_changed_callback {}", info->m_info.m_eState);
+        log_info("server connection state: {}",
+                 connection_state_name(
+                     to_connection_state(info->m_info.m_eState)));
 
         // What's the state of the connection?
         switch (info->m_info.m_eState) {

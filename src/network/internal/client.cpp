@@ -9,6 +9,7 @@
 #include "../../engine/log.h"
 #include "../../globals.h"
 //
+#include "../connection_state.h"
 #include "../serialization.h"
 #include "local_hub.h"
 
@@ -135,6 +136,9 @@ bool GnsClient::run() {
 void GnsClient::on_steam_network_connection_status_changed(
     SteamNetConnectionStatusChangedCallback_t *info) {
     log_info("client on stream network connection status changed");
+    log_info("client connection state: {}",
+             connection_state_name(
+                 to_connection_state(info->m_info.m_eState)));
     VALIDATE(info->m_hConn == connection ||
                  connection == k_HSteamNetConnection_Invalid,
              "Connection Status Error");
