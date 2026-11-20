@@ -33,6 +33,7 @@
 #include "test_network_session_state.h"
 #include "test_progression_phase.h"
 #include "test_save_slot_state.h"
+#include "test_trigger_area_phase.h"
 #include "test_map_playability.h"
 #include "test_pathing.h"
 #include "test_ui_widget.h"
@@ -104,6 +105,7 @@ inline void run_all() {
     test_has_fishing_game();
     test_network_session_state();
     test_save_slot_state();
+    test_trigger_area_phase();
     test_connection_state();
     test_progression_phase();
     test_key_binding_popup();

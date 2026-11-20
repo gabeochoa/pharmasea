@@ -85,6 +85,25 @@ struct IsTriggerArea : public BaseComponent {
         return false;
     }
 
+    enum class Phase : int {
+        Idle = 0,
+        Filling = 1,
+        Full = 2,
+        Cooldown = 3,
+    };
+
+    [[nodiscard]] Phase phase() const {
+        if (completion_time_max > 0.f &&
+            completion_time_passed >= completion_time_max) {
+            return Phase::Full;
+        }
+        if (is_on_cooldown()) return Phase::Cooldown;
+        if (completion_time_passed > 0.f) return Phase::Filling;
+        return Phase::Idle;
+    }
+
+    [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
+
     [[nodiscard]] float progress() const {
         return completion_time_passed / completion_time_max;
     }
