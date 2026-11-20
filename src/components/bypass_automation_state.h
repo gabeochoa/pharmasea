@@ -3,6 +3,18 @@
 #include "base_component.h"
 
 struct BypassAutomationState : public BaseComponent {
+    enum class BypassPhase { Idle, Startup, Menu, Lobby, InGame, Done };
+
+    BypassPhase current_phase = BypassPhase::Idle;
+
+    void advance(BypassPhase next) { current_phase = next; }
+
+    [[nodiscard]] BypassPhase phase() const { return current_phase; }
+
+    [[nodiscard]] bool is_phase(BypassPhase p) const {
+        return current_phase == p;
+    }
+
     int configured_rounds = 0;
     int remaining_rounds = 0;
     bool exit_on_complete = false;
@@ -28,6 +40,7 @@ struct BypassAutomationState : public BaseComponent {
         bypass_enabled = true;
         initialized = true;
         completed = false;
+        advance(BypassPhase::Startup);
     }
 
     void mark_round_complete() {
@@ -37,6 +50,7 @@ struct BypassAutomationState : public BaseComponent {
         if (remaining_rounds <= 0) {
             completed = true;
             bypass_enabled = false;
+            advance(BypassPhase::Done);
         }
     }
 };

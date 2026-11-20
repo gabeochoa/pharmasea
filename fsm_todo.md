@@ -390,7 +390,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 ### Phase 4 — Trivial / dev-only (P3, anytime, no soak)
 
 - [x] M17: `IsSpawner::state()` accessor
-- [ ] M22: `BypassPhase` + `advance()` (dev harness)
+- [x] M22: `BypassPhase` + `advance()` (dev harness)
 - [ ] M23: optional `IntroPhase` log names only
 - [x] M24: `ReplayPhase` log names only (file format untouched) — obsolete: replay system deleted in the e2e switch; nothing to convert
 - Verify: B + T

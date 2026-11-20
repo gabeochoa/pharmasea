@@ -37,6 +37,19 @@ inline void inject_clicks_for_bypass(float dt) {
 
     if (!active) return;
 
+    if (state) {
+        using BypassPhase = BypassAutomationState::BypassPhase;
+        if (state->completed) {
+            state->advance(BypassPhase::Done);
+        } else if (GameState::get().is(game::State::InGame)) {
+            state->advance(BypassPhase::InGame);
+        } else if (GameState::get().is(game::State::Lobby)) {
+            state->advance(BypassPhase::Lobby);
+        } else if (state->initialized) {
+            state->advance(BypassPhase::Menu);
+        }
+    }
+
     static float fb_startup_delay = 0.0f;
     static float fb_host_role_set_time = -1.0f;
     static bool fb_play_clicked = false;
