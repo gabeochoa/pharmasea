@@ -558,6 +558,21 @@ bool render_model_highlighted(const Entity& entity, float) {
 }
 
 bool render_model_normal(const Entity& entity, float) {
+    // LOD impostor: far non-character models draw as their
+    // colored box instead (hysteresis via afterhours::Lod).
+    if (entity.has<ModelRenderer>() && entity.has<Transform>() &&
+        entity.has<SimpleColoredBoxRenderer>() &&
+        !entity.has<UsesCharacterModel>()) {
+        if (auto* cam = globals::game_cam()) {
+            const ModelRenderer& renderer = entity.get<ModelRenderer>();
+            vec3 d =
+                entity.get<Transform>().pos() - cam->camera.target;
+            float dist_sq = d.x * d.x + d.y * d.y + d.z * d.z;
+            afterhours::Lod lod{.level = renderer.lod_level};
+            renderer.lod_level = lod.update_sq(dist_sq, {26.f});
+            if (renderer.lod_level > 0) return false;
+        }
+    }
     return draw_internal_model(entity, WHITE);
 }
 

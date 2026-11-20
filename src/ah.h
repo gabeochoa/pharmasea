@@ -9,6 +9,7 @@
 #include "afterhours/src/library.h"
 #include "afterhours/src/plugins/frustum.h"
 #include "afterhours/src/plugins/input_system.h"
+#include "afterhours/src/plugins/lod.h"
 #include "afterhours/src/plugins/models.h"
 #include "afterhours/src/plugins/window_manager.h"
 

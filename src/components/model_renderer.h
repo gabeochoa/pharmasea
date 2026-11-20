@@ -32,6 +32,9 @@ struct ModelRenderer : public BaseComponent {
         source_type = EntityType::Unknown;  // Clear source since name changed
     }
 
+    // Hysteresis state for the distance impostor LOD (render-only).
+    mutable int lod_level = 0;
+
    private:
     std::string model_name;
     EntityType source_type = EntityType::Unknown;
@@ -44,8 +47,8 @@ struct ModelRenderer : public BaseComponent {
         using ArchiveKind = std::remove_cvref_t<decltype(archive)>;
         constexpr bool is_reading = ArchiveKind::kind() == zpp::bits::kind::in;
 
-        auto result =
-            archive(static_cast<BaseComponent&>(self), self.source_type);
+        auto result = archive(static_cast<BaseComponent&>(self),
+                              self.source_type, self.lod_level);
 
         // For custom models (string-based), also serialize the model_name
         if (self.source_type == EntityType::Unknown) {
