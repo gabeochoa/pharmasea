@@ -335,13 +335,26 @@ Safe migration sequence (every machine): (1) add enum + `transition_to()` alongs
 
 Key file links for the data-dispatch row: [src/entities/entity_type.h:9](/Users/gabeochoa/p/pharmasea/src/entities/entity_type.h:9) (`EntityType`), [src/dataclass/ingredient.h:9](/Users/gabeochoa/p/pharmasea/src/dataclass/ingredient.h:9) (`Drink`/`Ingredient`), [src/components/is_floor_marker.h:10](/Users/gabeochoa/p/pharmasea/src/components/is_floor_marker.h:10) (`IsFloorMarker::Type`), [src/network/types.h:27](/Users/gabeochoa/p/pharmasea/src/network/types.h:27) (`MsgType`), [src/components/has_dynamic_model_name.h:14](/Users/gabeochoa/p/pharmasea/src/components/has_dynamic_model_name.h:14) (`DynamicType`), [src/components/can_change_settings_interactively.h:7](/Users/gabeochoa/p/pharmasea/src/components/can_change_settings_interactively.h:7) (`Style`), [src/dataclass/settings.h:35](/Users/gabeochoa/p/pharmasea/src/dataclass/settings.h:35) (`ConfigKey`), [project_context.md](/Users/gabeochoa/p/pharmasea/project_context.md) (tag-over-bool convention).
 
-## 6. Open questions (need owner decision — do not guess-fix during FSM passes)
+## 6. Decisions (owner, 2026-11-19)
 
-1. **M20 serialization:** serialize `IsPnumaticPipe::recieving/item_id` (save bump) or reconstruct on load? Affects whether in-flight pipe items survive save/host-sync.
-2. **M05 counters:** is resetting `num_orders_rem/tab/tip` on load (only `current_order/order_state` serialized) intentional? If not, that is a save fix separate from FSM explicitness.
-3. **M06 orphan occupant:** loaded `InUse` toilet has `user=-1` (field unserialized). Clamp to `Available` on load, or serialize `user`?
-4. **M16 `working`:** wire it (set on `update()`), or delete the field (save bump)? Current code suggests an unfinished feature, not a bug with known intent.
-5. **M02 step 2:** split `menu::State::UI=99` into a separate `InputLayer` enum now, or only if a second input-layer consumer appears? (Recommendation: defer; step-1 table first.)
+Serialization rule: a field is serialized only if (1) it must be
+sent across the network to dumb clients, or (2) it must persist
+in the save file. Loads always restart at the beginning of a day,
+so mid-round transient state meets neither test. Pre-alpha:
+`save_version` bumps are not required for layout changes.
+
+1. **M20 serialization — re-derive / drop in-flight.** Quitting
+   while the bar is open loses the current day by design;
+   `recieving/item_id` stay unserialized.
+2. **M05 counters — accept reset on load.** Same rationale;
+   `num_orders_rem/tab/tip` stay unserialized.
+3. **M06 orphan occupant — cannot occur.** Loads start at day
+   start, never mid-day, so no toilet loads mid-use; no clamp
+   and no `user` serialization. The `end_use` guard stands.
+4. **M16 `working` — delete the dead field** (after one soak
+   confirms nothing reads it directly).
+5. **M02 step 2 — defer** the UI/input-layer split until input
+   remapping ships; the step-1 transition table stands.
 
 ## 7. Phased rollout (behaviour-preserving; build must stay green)
 

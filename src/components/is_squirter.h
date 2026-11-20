@@ -16,7 +16,6 @@ struct IsSquirter : public BaseComponent {
 
     void reset() {
         sq_time = sq_time_reset;
-        working = false;
         held_item.clear();
         pos = {0, 0, 0};
     }
@@ -39,7 +38,6 @@ struct IsSquirter : public BaseComponent {
 
     [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
 
-    [[nodiscard]] bool is_working() const { return working; }
     [[nodiscard]] float pct() const { return sq_time / sq_time_reset; }
     [[nodiscard]] float time() const { return sq_time; }
 
@@ -53,7 +51,6 @@ struct IsSquirter : public BaseComponent {
     EntityRef held_item{};
     EntityRef held_drink{};
 
-    bool working = false;
     float sq_time;
     float sq_time_reset;
 
@@ -65,7 +62,6 @@ struct IsSquirter : public BaseComponent {
             self.pos,                           //
             self.held_item,                     //
             self.held_drink,                    //
-            self.working,                       //
             self.sq_time,                       //
             self.sq_time_reset                  //
         );
