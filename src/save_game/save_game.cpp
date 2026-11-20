@@ -190,6 +190,32 @@ bool SaveGameManager::save_slot(int slot, const Map& authoritative_map) {
     return write_string_to_file_atomic(path, buffer);
 }
 
+SlotState SaveGameManager::classify_slot(int slot) {
+    SlotInfo info;
+    info.slot = slot;
+    info.path = slot_path(slot);
+    std::error_code ec;
+    info.exists = fs::exists(info.path, ec);
+    if (!ec && info.exists) {
+        info.header = read_header(info.path);
+    }
+    return info.state();
+}
+
+LoadResult SaveGameManager::load_slot_detailed(int slot, SaveGameFile& out) {
+    switch (classify_slot(slot)) {
+        case SlotState::Empty:
+            return LoadResult::Empty;
+        case SlotState::Corrupt:
+            return LoadResult::Corrupt;
+        case SlotState::VersionMismatch:
+            return LoadResult::VersionMismatch;
+        case SlotState::Valid:
+            break;
+    }
+    return load_slot(slot, out) ? LoadResult::Ok : LoadResult::IoError;
+}
+
 bool SaveGameManager::load_slot(int slot, SaveGameFile& out) {
     fs::path path = slot_path(slot);
     return load_file(path, out);

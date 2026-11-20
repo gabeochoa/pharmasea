@@ -102,7 +102,9 @@ bool load_game_from_slot(int slot) {
 
     save_game::SaveGameFile loaded;
     if (!save_game::SaveGameManager::load_slot(slot, loaded)) {
-        log_warn("Failed to load save slot {}", slot);
+        log_warn("Failed to load save slot {}: {}", slot,
+                 save_game::slot_state_name(
+                     save_game::SaveGameManager::classify_slot(slot)));
         return false;
     }
 

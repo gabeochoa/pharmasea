@@ -4,11 +4,13 @@
 #include <filesystem>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "../globals.h"
 #include "../map.h"
 #include "../zpp_bits_include.h"
+#include "magic_enum/magic_enum.hpp"
 
 namespace save_game {
 
@@ -71,11 +73,44 @@ struct SaveGameFile {
     }
 };
 
+enum class SlotState : int {
+    Empty = 0,
+    Valid = 1,
+    Corrupt = 2,
+    VersionMismatch = 3,
+};
+
+enum class LoadResult : int {
+    Ok = 0,
+    Empty = 1,
+    Corrupt = 2,
+    VersionMismatch = 3,
+    IoError = 4,
+};
+
+[[nodiscard]] inline std::string_view slot_state_name(SlotState state) {
+    return magic_enum::enum_name(state);
+}
+
+[[nodiscard]] inline std::string_view load_result_name(LoadResult result) {
+    return magic_enum::enum_name(result);
+}
+
 struct SlotInfo {
     int slot = 0;  // 1-based
     bool exists = false;
     std::optional<SaveGameHeader> header;
     fs::path path;
+
+    [[nodiscard]] SlotState state() const {
+        if (!exists) return SlotState::Empty;
+        if (!header.has_value()) return SlotState::Corrupt;
+        if (header->save_version != SaveGameHeader{}.save_version ||
+            header->hashed_build_version != HASHED_VERSION) {
+            return SlotState::VersionMismatch;
+        }
+        return SlotState::Valid;
+    }
 };
 
 struct SaveGameManager {
@@ -86,6 +121,10 @@ struct SaveGameManager {
 
     [[nodiscard]] static fs::path slot_path(int slot);
     [[nodiscard]] static bool delete_slot(int slot);
+
+    [[nodiscard]] static SlotState classify_slot(int slot);
+    [[nodiscard]] static LoadResult load_slot_detailed(int slot,
+                                                       SaveGameFile& out);
 
     // Snapshot-based save/load.
     [[nodiscard]] static bool save_slot(int slot, const Map& authoritative_map);
