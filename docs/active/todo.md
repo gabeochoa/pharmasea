@@ -193,7 +193,7 @@ Today: 1 script (`tests/e2e/01_bypass_to_lobby.e2e`, wait-only, no assertions), 
 - [x] Map-gen sweep as e2e: `--generate-map` across 10 fixed seeds, assert every map passes the existing `test_map_playability` checks headlessly (move that check behind a CLI-reachable assert if needed) — sweep covers generate-without-crash + determinism in `run_determinism.sh`; playability stays unit-level until a CLI-reachable assert exists
 
 **FSM follow-ups (found during the FSM explicit-state pass):**
-- [ ] Add an e2e script for the load/save room delete-mode toggle (`LoadSave_ToggleDeleteMode` trigger): toggling flips slot pads red/green and a slot trigger then deletes instead of loads — today the component toggle has only a unit test (`test_has_load_save_mode`) and the save/load scripts (`08`, `11`) never touch the toggle
+- [x] Add an e2e script for the load/save room delete-mode toggle — `tests/e2e/16_loadsave_delete_mode.e2e` (`@slow`): walks lobby -> load/save room, toggles delete mode on/off/on via the pad (new `expect_delete_mode` assert on `HasLoadSaveMode`), creates slot 8 via `save_slot`, then deletes it via the slot pad (new `expect_no_save_slot` assert); passes in ~31s (one abort in 3 runs was the known GNS service-thread flake under `nice`, after all steps completed)
 - [x] `network::Client::id` / `SessionState::InGame` — investigated: `id` is assigned on `PlayerJoin` (`is_you`) in `src/network/client.cpp`, so `InGame` is reachable; the actual gap was that disconnect never cleared `id`, so the derived state would keep reporting `InGame` after a lost connection — fixed by clearing `id` in `Client::tick`'s disconnect branch
 
 **CI/perf hygiene:**
