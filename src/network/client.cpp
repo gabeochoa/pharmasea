@@ -278,8 +278,8 @@ void Client::client_process_message_string(const std::string& msg) {
             // Menu::get().clear_history();
 
             // We actually only need to do this one
-            if (MenuState::get().read() == menu::State::Network &&
-                info.host_menu_state == menu::State::Game) {
+            if (MenuState::is_host_sync_legal(MenuState::get().read(),
+                                              info.host_menu_state)) {
                 MenuState::get().set(info.host_menu_state);
             }
             if (GameState::get().is_not(game::State::Paused)) {

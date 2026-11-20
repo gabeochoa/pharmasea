@@ -112,6 +112,44 @@ struct MenuState : public StateManager2<menu::State> {
     [[nodiscard]] bool is_in_menu() const { return is_not(menu::State::Game); }
     [[nodiscard]] bool in_game() const { return is(menu::State::Game); }
 
+    [[nodiscard]] static constexpr bool is_legal_transition(
+        menu::State from, menu::State to) {
+        if (from == to) return true;
+        switch (from) {
+            case menu::State::Root:
+                return to == menu::State::Network ||
+                       to == menu::State::Settings ||
+                       to == menu::State::About;
+            case menu::State::Network:
+                return to == menu::State::Game || to == menu::State::Root;
+            case menu::State::Settings:
+                return to == menu::State::Root;
+            case menu::State::Game:
+                return to == menu::State::Settings ||
+                       to == menu::State::Root;
+            case menu::State::About:
+                return to == menu::State::Root;
+            case menu::State::UI:
+                return false;
+        }
+        return false;
+    }
+
+    [[nodiscard]] static constexpr bool is_host_sync_legal(
+        menu::State from, menu::State to) {
+        return from == menu::State::Network && to == menu::State::Game;
+    }
+
+    bool transition_to(menu::State next) {
+        const bool legal = is_legal_transition(read(), next);
+        if (!legal) {
+            log_warn("MenuState illegal transition {} -> {}", tostring(),
+                     magic_enum::enum_name(next));
+        }
+        set(next);
+        return legal;
+    }
+
     [[nodiscard]] static bool s_in_game() { return MenuState::get().in_game(); }
     [[nodiscard]] static bool s_is_game(menu::State ms) {
         return ms == menu::State::Game;

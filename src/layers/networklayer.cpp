@@ -154,7 +154,7 @@ void NetworkLayer::draw_role_selector_screen(float) {
     if (network_selection_screen.button(
             "BackButton", TranslatableString(strings::i18n::BACK_BUTTON))) {
         MenuState::get().clear_history();
-        MenuState::get().set(menu::State::Root);
+        MenuState::get().transition_to(menu::State::Root);
     }
 
     // draw lobby username
@@ -229,7 +229,7 @@ void NetworkLayer::draw_connected_screen(float) {
         if (network_info->is_host()) {
             if (lobby_screen.button("StartButton",
                                     TranslatableString(strings::i18n::START))) {
-                MenuState::get().set(menu::State::Game);
+                MenuState::get().transition_to(menu::State::Game);
                 GameState::get().transition_to_lobby();
                 network_info->send_current_menu_state();
             }
@@ -243,7 +243,7 @@ void NetworkLayer::draw_connected_screen(float) {
                                 TranslatableString(disconnect_text))) {
             if (network::LOCAL_ONLY) {
                 MenuState::get().clear_history();
-                MenuState::get().set(menu::State::Root);
+                MenuState::get().transition_to(menu::State::Root);
             } else {
                 network::Info::reset_connections();
             }

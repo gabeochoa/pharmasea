@@ -48,15 +48,15 @@ struct UITestLayer : public Layer {
 
                 if (button(Widget{rect1, base_z_index},
                            TranslatableString(strings::i18n::Play))) {
-                    MenuState::get().set(menu::State::Network);
+                    MenuState::get().transition_to(menu::State::Network);
                 }
                 if (button(Widget{rect2, base_z_index},
                            TranslatableString(strings::i18n::About))) {
-                    MenuState::get().set(menu::State::About);
+                    MenuState::get().transition_to(menu::State::About);
                 }
                 if (button(Widget{rect3, base_z_index},
                            TranslatableString(strings::i18n::Settings))) {
-                    MenuState::get().set(menu::State::Settings);
+                    MenuState::get().transition_to(menu::State::Settings);
                 }
                 if (button(Widget{rect4, base_z_index},
                            TranslatableString(strings::i18n::Exit))) {

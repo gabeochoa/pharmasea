@@ -74,7 +74,7 @@ struct BasePauseLayer : public Layer {
         }
         if (button(Widget{settings},
                    TranslatableString(strings::i18n::Settings))) {
-            MenuState::get().set(menu::State::Settings);
+            MenuState::get().transition_to(menu::State::Settings);
         }
 
         if (button(Widget{config}, TranslatableString(strings::i18n::QUIT))) {

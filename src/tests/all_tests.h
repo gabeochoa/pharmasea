@@ -27,6 +27,7 @@
 #include "test_can_order_drink.h"
 #include "test_connection_state.h"
 #include "test_game_state_transitions.h"
+#include "test_menu_state_transitions.h"
 #include "test_key_binding_popup.h"
 #include "test_network_session_state.h"
 #include "test_progression_phase.h"
@@ -107,6 +108,7 @@ inline void run_all() {
     test_key_binding_popup();
     test_can_order_drink();
     test_game_state_transitions();
+    test_menu_state_transitions();
 
     // back to default , preload will set it as well
     LOG_LEVEL = old_level;
