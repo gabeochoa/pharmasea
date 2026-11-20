@@ -31,6 +31,7 @@
 #include "test_can_order_drink.h"
 #include "test_connection_state.h"
 #include "test_game_state_transitions.h"
+#include "test_intro_phase.h"
 #include "test_menu_state_layer_sync.h"
 #include "test_menu_state_transitions.h"
 #include "test_key_binding_popup.h"
@@ -121,6 +122,7 @@ inline void run_all() {
     test_ai_controlled();
     test_bypass_phase();
     test_game_state_transitions();
+    test_intro_phase();
     test_menu_state_transitions();
     test_menu_state_layer_sync();
 

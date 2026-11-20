@@ -2,10 +2,18 @@
 
 #include <utility>
 
+#include "../engine/log.h"
+#include "magic_enum/magic_enum.hpp"
+
 IntroRunner::IntroRunner(std::vector<std::unique_ptr<IntroScene>> scenes_in)
     : scenes(std::move(scenes_in)) {}
 
 bool IntroRunner::update(float dt, float external_progress) {
+    if (phase() != last_phase) {
+        last_phase = phase();
+        log_info("Intro phase: {}", magic_enum::enum_name(last_phase));
+    }
+
     if (scenes.empty()) {
         return true;
     }
