@@ -194,7 +194,7 @@ Today: 1 script (`tests/e2e/01_bypass_to_lobby.e2e`, wait-only, no assertions), 
 
 **FSM follow-ups (found during the FSM explicit-state pass):**
 - [ ] Add an e2e script for the load/save room delete-mode toggle (`LoadSave_ToggleDeleteMode` trigger): toggling flips slot pads red/green and a slot trigger then deletes instead of loads — today the component toggle has only a unit test (`test_has_load_save_mode`) and the save/load scripts (`08`, `11`) never touch the toggle
-- [ ] `network::Client::id` is never assigned (only declared `= 0` in `src/network/client.h` and read in `RoleInfoMixin::session_state()`), so `SessionState::InGame` is unreachable — either wire `id` up at join (server-assigned client id already exists as `HasClientID` on the player entity) or drop the `InGame` state from the derived session state
+- [x] `network::Client::id` / `SessionState::InGame` — investigated: `id` is assigned on `PlayerJoin` (`is_you`) in `src/network/client.cpp`, so `InGame` is reachable; the actual gap was that disconnect never cleared `id`, so the derived state would keep reporting `InGame` after a lost connection — fixed by clearing `id` in `Client::tick`'s disconnect branch
 
 **CI/perf hygiene:**
 - [x] Add `make e2e` target: rebuild if needed, run `--e2e-dir`, surface per-script PASS/FAIL + exit code (today e2e is manual-only) — `make e2e` (fast set) and `make e2e-slow`, one process per script via `tests/e2e/run_e2e.sh`

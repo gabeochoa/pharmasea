@@ -399,7 +399,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 
 - [x] M03: store `Phase`, append last in `serialize()`, bools become derived shims → delete shims next release (stored phase is the authority; `is_day` kept as the settled-direction shim, `needs_to_process_change` is now a method)
 - [x] M07: move delete-mode to room entity (`HasLoadSaveMode` on Sophie; stored trigger `Phase` skipped — derived from the serialized floats/tags is sufficient, same call as M14/M21)
-- [x] M09: resolved — derived `session_state()` kept, stored enum skipped. Storing it would require inventing the `InGame` transition: `Client::id` is read there but never assigned anywhere, so `InGame` is unreachable today (separate bug if that ever matters). The both-bits combo already collapses to `NoRole` in the derived form and is log-warned in `set_role`. Optional M10-driven `ConnectionLost` UX remains a flagged behaviour change for later.
+- [x] M09: resolved — derived `session_state()` kept, stored enum skipped; the derived form needs no extra writer sites. (`Client::id` is assigned on `PlayerJoin`; the one gap found — disconnect never cleared it — was fixed in `Client::tick`.) The both-bits combo already collapses to `NoRole` in the derived form and is log-warned in `set_role`. Optional M10-driven `ConnectionLost` UX remains a flagged behaviour change for later.
 - [x] M14/M21: resolved — skip. Derived phases proved sufficient through Phases 0–2; storing them would duplicate the serialized floats/bools for no network or save need (§6 rule).
 - Verify per item: B + T + old-save load probe (previous `save_version`) + host/client sync soak
 
