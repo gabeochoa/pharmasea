@@ -12,7 +12,7 @@ inline bool should_run_planning_system() {
     try {
         Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-        return hastimer.is_bar_closed();
+        return hastimer.is_phase(HasDayNightTimer::Phase::Planning);
     } catch (...) {
         return false;
     }
@@ -24,8 +24,7 @@ inline bool should_run_inround_system() {
     try {
         Entity& sophie = EntityHelper::getNamedEntity(NamedEntity::Sophie);
         const HasDayNightTimer& hastimer = sophie.get<HasDayNightTimer>();
-        if (hastimer.needs_to_process_change) return false;
-        return hastimer.is_bar_open();
+        return hastimer.is_phase(HasDayNightTimer::Phase::InRound);
     } catch (...) {
         return false;
     }

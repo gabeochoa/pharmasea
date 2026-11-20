@@ -353,7 +353,7 @@ Verification legend: **B** = `make` (repo root) succeeds · **T** = `./pharmasea
 - [ ] M09: add derived `session_state()` + `log_warn` when `desired_role` holds both Host and Client bits
 - [ ] M11: add `SlotState`/`LoadResult` enums alongside existing bools; route trigger/CLI callers to log the specific failure
 - [ ] M10: add `to_connection_state()` mapper with exhaustive switch; call it (log-only) from both Steam callbacks
-- [ ] M03: add derived `HasDayNightTimer::phase()`; point `system_utils::should_run_*` at it (single site, no stored state)
+- [x] M03: add derived `HasDayNightTimer::phase()`; point `system_utils::should_run_*` at it (single site, no stored state)
 - Verify: B + T + host/join/kill-host soak (GNS and LOCAL_ONLY) + save→load round-trip
 
 ### Phase 1 — Core flow tables (P1)

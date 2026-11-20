@@ -7,11 +7,20 @@
 #include "base_component.h"
 
 struct HasDayNightTimer : public BaseComponent {
+    enum class Phase : int { Planning = 0, InRound = 1, Transitioning = 2 };
+
     // TODO for now since we cant use game state change
     // we need some way
     bool needs_to_process_change = false;
 
     [[nodiscard]] int days_passed() const { return day_count; }
+
+    [[nodiscard]] Phase phase() const {
+        if (needs_to_process_change) return Phase::Transitioning;
+        return is_day ? Phase::Planning : Phase::InRound;
+    }
+
+    [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
 
     [[nodiscard]] bool is_bar_open() const { return !is_day; }
     [[nodiscard]] bool is_bar_closed() const { return is_day; }
