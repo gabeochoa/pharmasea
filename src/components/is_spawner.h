@@ -17,7 +17,13 @@ using SpawnFn = std::function<void(Entity&, const SpawnInfo&)>;
 using ValidationSpawnFn = std::function<bool(Entity&, const SpawnInfo&)>;
 
 struct IsSpawner : public BaseComponent {
+    enum class State { Exhausted, Ready, Cooling };
+
     [[nodiscard]] bool hit_max() const { return num_spawned >= max_spawned; }
+    [[nodiscard]] State state() const {
+        if (hit_max()) return State::Exhausted;
+        return countdown <= 0 ? State::Ready : State::Cooling;
+    }
     [[nodiscard]] int get_num_spawned() const { return num_spawned; }
     [[nodiscard]] int get_max_spawned() const { return max_spawned; }
 
