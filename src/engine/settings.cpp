@@ -235,6 +235,9 @@ bool Settings::load_save_file() {
         data = tmp;
     }
 
+    // Lighting is disabled until the style pass; ignore saved values.
+    data.enable_lighting = false;
+
     refresh_settings();
 
     log_info("Settings Loaded: {}", data);

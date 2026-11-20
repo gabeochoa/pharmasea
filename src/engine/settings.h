@@ -60,7 +60,7 @@ struct Data {
     std::string ui_theme;
     bool show_streamer_safe_box = false;
     bool enable_postprocessing = true;
-    bool enable_lighting = true;
+    bool enable_lighting = false;
     bool snapCameraTo90 = false;
     bool isFullscreen = false;
     bool vsync_enabled = true;
