@@ -1,5 +1,7 @@
 #include "files.h"
 
+#include <afterhours/src/plugins/files.h>
+
 #include "assert.h"
 #include "globals.h"
 
@@ -17,7 +19,23 @@
 #include "log_fakelog.h"
 #endif
 
-#include <sago/platform_folders.h>
+// sago is defined once by vendor/afterhours files.cpp; declare, don't include.
+namespace sago {
+std::string getConfigHome();
+std::string getDataHome();
+std::string getStateDir();
+std::string getCacheDir();
+std::string getDocumentsFolder();
+std::string getDesktopFolder();
+std::string getPicturesFolder();
+std::string getPublicFolder();
+std::string getMusicFolder();
+std::string getVideoFolder();
+std::string getDownloadFolder();
+std::string getSaveGamesFolder1();
+std::string getSaveGamesFolder2();
+void appendAdditionalDataDirectories(std::vector<std::string>&);
+}  // namespace sago
 
 #ifdef __APPLE__
 #pragma clang diagnostic pop
@@ -46,6 +64,10 @@ Files::Files(const FilesConfig& config)
 }
 
 fs::path Files::game_folder() const {
+    // Tests redirect every save/settings write under a temp root.
+    if (afterhours::files::active_test_roots) {
+        return afterhours::files::active_test_roots->save;
+    }
     const fs::path master_folder(sago::getSaveGamesFolder1());
     return master_folder / fs::path(root);
 }

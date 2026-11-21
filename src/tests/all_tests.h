@@ -39,6 +39,7 @@
 #include "test_network_session_state.h"
 #include "test_nux_phase.h"
 #include "test_progression_phase.h"
+#include "test_files_test_roots.h"
 #include "test_save_slot_state.h"
 #include "test_trigger_area_phase.h"
 #include "test_map_playability.h"
@@ -115,6 +116,7 @@ inline void run_all() {
     test_held_item_state();
     test_network_session_state();
     test_nux_phase();
+    test_files_test_roots();
     test_save_slot_state();
     test_trigger_area_phase();
     test_connection_state();
