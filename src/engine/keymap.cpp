@@ -1,7 +1,23 @@
 
 #include "keymap.h"
 
+#include <afterhours/src/plugins/input_system.h>
+
 #include "graphics.h"
+
+namespace {
+afterhours::input::AnyInput to_upstream_input(const AnyInput& input) {
+    if (std::holds_alternative<int>(input)) {
+        return afterhours::input::KeyChord{std::get<int>(input)};
+    }
+    if (std::holds_alternative<GamepadAxisWithDir>(input)) {
+        const auto axis = std::get<GamepadAxisWithDir>(input);
+        return afterhours::input::GamepadAxisWithDir{axis.axis,
+                                                     (int) axis.dir};
+    }
+    return std::get<GamepadButton>(input);
+}
+}  // namespace
 
 const AnyInputs KeyMap::get_valid_inputs(const menu::State& state,
                                          const InputName& name) {
@@ -243,12 +259,38 @@ AnyInput KeyMap::json_to_anyinput(const nlohmann::json& json) {
     return jvalue.get<int>();
 }
 
+std::vector<InputName> KeyMap::conflicts_in(const LayerMapping& layer,
+                                            InputName self,
+                                            const AnyInput& input) {
+    std::map<int, afterhours::input::ValidInputs> upstream;
+    for (const auto& [name, inputs] : layer) {
+        auto& out = upstream[(int) name];
+        for (const AnyInput& in : inputs) out.push_back(to_upstream_input(in));
+    }
+    std::vector<InputName> conflicts;
+    for (int action :
+         afterhours::input::actions_using(upstream, to_upstream_input(input))) {
+        if (action != (int) self) conflicts.push_back((InputName) action);
+    }
+    return conflicts;
+}
+
 void KeyMap::set_mapping(menu::State state, InputName input_name,
                          AnyInput input) {
+    LayerMapping& state_map = this->get_or_create_layer_map(state);
+
+    auto conflicts = conflicts_in(state_map, input_name, input);
+    if (!conflicts.empty()) {
+        for (InputName other : conflicts) {
+            log_warn("keybind conflict: {} is already bound to {}",
+                     magic_enum::enum_name(input_name),
+                     magic_enum::enum_name(other));
+        }
+        return;
+    }
+
     // For now we are just going to clear the old one and write the new
     // one...
-
-    LayerMapping& state_map = this->get_or_create_layer_map(state);
 
     auto& input_list = state_map[input_name];
 

@@ -171,6 +171,9 @@ struct KeyMap {
     AnyInput json_to_anyinput(const nlohmann::json& json);
 
    public:
+    // Other actions in `layer` already bound to `input` (excluding `self`).
+    [[nodiscard]] static std::vector<InputName> conflicts_in(
+        const LayerMapping& layer, InputName self, const AnyInput& input);
     void set_mapping(menu::State state, InputName input_name, AnyInput input);
     nlohmann::json serializeFullMap();
     // Function to deserialize JSON to FullMap

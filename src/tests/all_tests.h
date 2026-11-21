@@ -36,6 +36,7 @@
 #include "test_menu_state_layer_sync.h"
 #include "test_menu_state_transitions.h"
 #include "test_key_binding_popup.h"
+#include "test_keymap_conflicts.h"
 #include "test_network_session_state.h"
 #include "test_nux_phase.h"
 #include "test_progression_phase.h"
@@ -117,6 +118,7 @@ inline void run_all() {
     test_network_session_state();
     test_nux_phase();
     test_files_test_roots();
+    test_keymap_conflicts();
     test_save_slot_state();
     test_trigger_area_phase();
     test_connection_state();
