@@ -27,6 +27,13 @@ inline void test_files_test_roots() {
         out.close();
         VALIDATE(fs::exists(Files::get().settings_filepath()),
                  "writes should land under the test root");
+
+        afterhours::files::ProvidesResourcePaths paths("pharmasea",
+                                                       "resources");
+        VALIDATE(paths.get_save_path() == roots.save,
+                 "provider save path should follow the test root");
+        VALIDATE(paths.get_cache_path().filename() == "pharmasea",
+                 "cache path should be a per-game folder");
     }
     VALIDATE(Files::get().game_folder() == real_folder,
              "game folder should restore after test roots");

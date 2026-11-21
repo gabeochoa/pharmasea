@@ -2,6 +2,7 @@
 #include "game.h"
 
 #include "afterhours/src/log_file.h"
+#include "afterhours/src/plugins/files.h"
 #include "cli_args.h"
 #include "engine/assert.h"
 #include "engine/input_helper.h"
@@ -152,6 +153,10 @@ void init_app_core(const AppInitConfig& config = {}) {
         strings::GAME_FOLDER,
         SETTINGS_FILE_NAME,
     });
+
+    // Upstream resource-path provider (save path matches Files::game_folder;
+    // cache path is for regenerable data).
+    afterhours::files::init(strings::GAME_FOLDER, "resources");
 
     {
         const std::string log_path =

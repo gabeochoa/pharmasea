@@ -373,10 +373,9 @@ void SystemManager::render_ui(const Entities& entities, float dt) {
 }
 
 bool SystemManager::is_bar_open() const {
-    for (const auto& entity : oldAll) {
-        if (entity->is_missing<HasDayNightTimer>()) continue;
-        return entity->get<HasDayNightTimer>().is_bar_open();
-    }
-    return false;
+    OptEntity timer =
+        EQ().whereHasComponent<HasDayNightTimer>().gen_first();
+    if (!timer) return false;
+    return timer.asE().get<HasDayNightTimer>().is_bar_open();
 }
 bool SystemManager::is_bar_closed() const { return !is_bar_open(); }
