@@ -920,6 +920,194 @@ member vector as the intended pattern. Until upstream picks one,
 trialing `Arena` locally means changing `EntityQuery` result
 ownership engine-wide, which is not worth doing blind.
 
+#### G-P15: Data-bound UI scaffolding on the imm suite `[PLUGIN]` — new request
+
+Upstream ships the leaf widgets (`plugins/ui/imm_components.h`,
+`setting_row.h`, `imm_virtual_list.h`, `modal.h`, ~37k lines of
+UI) but no layer that turns a table of bindings into a screen:
+no form descriptor, no data-bound list beyond the scrolling
+primitive, no settings-screen shell, and no migration bridge for
+games with an existing rect-based UI. Pharmasea calls zero
+`imm::` APIs and hand-rolls the layer instead: `src/engine/ui/`
+is 3,912 lines (widget impls in `ui.cpp`, `autolayout.h`,
+`focus.h`, `ui_input_manager.h`), `settingslayer.cpp` repeats
+one label/control block 12 times wired field-by-field into
+`Settings::get()`, `networklayer.cpp` hand-advances a lobby list,
+and there are ~182 `rect::`/`button(`/`slider(` call sites in
+`src/layers`. (The todo "imm UI suite" skip declined adopting
+the suite wholesale; it never evaluated this missing layer.)
+
+Ask: a binding layer over the existing widgets — form rows from
+value pointers (`form.slider("Volume", data.master_volume)`),
+data-bound lists, a menu/settings shell (title, scrollable body,
+footer), and a bridge so a `Widget{Rectangle}` game can migrate
+screen-by-screen. Est. ~1,100 pharmasea lines deleted; every
+other game with menus re-derives this today.
+
+#### G-P16: Settings + key-remapping service `[PLUGIN]` — new request
+
+Upstream has the halves unjoined: `plugins/settings.h`
+(`ProvidesSettings`, load/save, `on_change`) and
+`plugins/input_system.h` (polling, `name_for_input`/
+`icon_for_input`) — but no version-tolerant settings store, and
+no press-any-key remap widget with conflict UI. Pharmasea
+hand-rolls all three stacks: `settings.cpp` (positional
+`zpp::bits` archive; header TODO admits adding a field breaks
+past saves), `keymap.{h,cpp}` + `input_mapping_persistence.h` +
+`input_mapping_setup.h` (~750 lines of layered binding JSON),
+and a remap popup in `settingslayer.cpp` that is commented out /
+disabled — only the `actions_using` conflict check landed.
+
+Ask: `settings::store<T>(path).version(n).migrate(old, fn)` so
+field additions stop breaking saves, plus a remap-capture widget
+(press-any-key, shows conflicts via `actions_using`, keyboard +
+gamepad labels/icons from the input plugin). Est. ~800 lines.
+
+#### G-P17: Prefab / component-bundle authoring `[PLUGIN]` — new request
+
+The ECS has components and queries but no bundle, archetype, or
+named-spawn concept (a search of `plugins/` finds none).
+Pharmasea's `src/entities/entity_makers.cpp` is 1,719 lines of
+`make_*` functions repeating one choreography (entity ->
+Transform -> model-or-box renderer fallback -> capability
+components -> `HasWork` wiring); the game's own
+`docs/plans/data-driven-entity-makers.md` estimates 400-500
+lines saved by game-side specs alone.
+
+Ask: named component bundles with spawn-with-overrides, usable
+from code or data (`prefabs::define("ice_machine", ...)` /
+`prefabs::spawn("ice_machine", pos)`), composing with the
+existing per-component `serialize` field order rather than
+bypassing it. Est. ~700 lines; every ECS game writes
+`make_goblin()` today.
+
+#### G-P18: Save-game versioning & migration framework `[PLUGIN]` — new request
+
+Saves are a versioned envelope with no migration path:
+`SaveGameHeader::save_version` mismatch yields `SlotState::
+VersionMismatch` (reject, never migrate), component payloads
+are positional `zpp::bits` in `ComponentTypes` tuple order
+(adding a field mid-tuple shifts everything after it), and
+repairs accumulate in `post_deserialize_fixups.cpp` +
+`save_file_load_fixers.cpp`. G-M12 already records that saves
+and network snapshots share this blob, so the format question
+is not game-local.
+
+Ask: an envelope API — current version, ordered migration
+chain (`.migrate(5, fn)`), header-only preview reads, and
+Ok/Migrated/Corrupt/TooNew results — format-agnostic in the
+engine, per-version lambdas in the game. Est. ~350 lines plus
+every future fixer.
+
+#### G-P19: Attachment system (held items, furniture, ropes) `[PLUGIN]` — new request
+
+No parenting/attachment facility exists upstream. Pharmasea
+re-implements "X holds Y" per pair: `CanHoldItem` (holder/item
+dual bookkeeping), `CanHoldFurniture`, `CanHoldHandTruck`,
+`HasRopeToItem` (ref chain), `CustomItemPosition`, plus
+grab/drop/place-validity spread through the 969-line
+`input_process_manager.cpp` and held-pose solving in
+`src/system/sixtyfps/`. Todo already names the consolidation
+(`AttachmentSystem: unify held item/furniture/handtruck/rope`).
+
+Ask: one parent->child attachment relation — sockets, type
+filters, pose inheritance, single-parent invariant, detach on
+cleanup (`attach::to(child, parent, {.socket="hand"})`,
+`attach::held_by<T>(holder)`). Est. ~450 lines; carrying and
+mounting are near-universal.
+
+#### G-P20: Trigger-volume + progress family `[PLUGIN]` — new request
+
+Distinct from G-P11 (a serialize hook for the countdown timer):
+this is the interaction pattern on top — entrant counting,
+activation phases, validation, and progress rendering.
+Pharmasea's `IsTriggerArea` (264 lines: 13-type enum,
+EntrantsRequired policy, derived Phase, a `ValidationFn` whose
+result must be cached in a `mutable` because `std::function`
+cannot serialize) plus `src/system/trigger/` (981 lines) and
+cube-based `DrawProgressBar` in `rendering_system.cpp`
+re-derive it all. Todo lists both infra items
+(`TriggerAreaSystem: own entrants counting, validation,
+progress/cooldown and activation`; `Progress/Cooldown +
+ProgressRender`).
+
+Ask: a `TriggerVolume` component (radius, entrant policy,
+fill seconds, validate hook) with entrant counting + phase as
+plugin systems, `on_trigger_full<T>` callbacks, and world/HUD
+progress-bar rendering. Multiplayer entrant semantics (who
+counts, who validates) get solved once. Est. ~600 lines.
+
+#### G-P21: NPC queue-interaction helper `[PLUGIN]` — new request
+
+Not an FSM framework (the M01-M24 conversions stay game-side):
+the shared utility *below* the states. Customer AI systems
+(register, pay, bathroom, jukebox) each drive the same find ->
+join -> advance -> interact-at-front -> leave skeleton around
+`line_add_to_queue`/`line_try_to_move_closer`/`line_leave` in
+`ai_system.cpp`; the game's own
+`docs/plans/generic-ai-queue-system.md` estimates ~270 lines
+saved extracting it.
+
+Ask: a small queue utility — ordered queue state on a
+component, `queue::tick(npc, config, dt)` that joins, advances,
+and fires the at-front callback once; state enums and decisions
+stay in the game. Est. ~300 lines; any game with a line.
+
+#### G-P22: World-space labels (billboard text/icons) `[PLUGIN]` — new request
+
+Upstream has text pieces (`curved_text.h`, stroke/units) but no
+world-anchored label component with billboarding, distance
+fade, and icon+text composition. Pharmasea draws floating text
+imperatively: the `render_debug_*` family and four-atlas
+`draw_billboard_from_texture_or_atlas` fallback in the
+1,596-line `rendering_system.cpp`, order icons gated ad hoc on
+`HasSpeechBubble`, and a filed priority bug ("text doesnt
+rotate based on the camera (should billboard properly)").
+
+Ask: a `WorldLabel` component ({text, icon, billboard,
+fade_beyond}) drawn by an engine system. Est. ~300 lines;
+nameplates, order bubbles, damage numbers, and debug labels
+become component data.
+
+#### G-P23: Tile-grid procgen toolkit `[PLUGIN]` — new request
+
+No grid/WFC/procgen plugin exists upstream (pathfinding, G-P13
+aside, consumes walkability; it does not generate it).
+Pharmasea's generic core — seeded tile grid, Wave Function
+Collapse solver, ASCII layout stamping, required-placement +
+reachability validation — is ~1,900 lines interleaved with
+bar-content rules in `src/map_generation/`. Caller supplies the
+RNG stream, so this is independent of G-P12.
+
+Ask: `procgen::wfc(tileset, size, rng)`, `procgen::stamp(
+grid, ascii, legend)`, and `procgen::validate(grid, required,
+reachable_from)` with engine tests, so determinism checks
+(same seed -> byte-identical map) are engine-guaranteed.
+Est. ~700 lines; roguelikes/builders/room games share the core.
+
+#### G-P24: Live debug inspector `[PLUGIN]` — new request
+
+Ingredients exist (`ui/layout_inspector.h`, `debug_overlay.h`,
+`profiling.h`, `system_timing.h`) but there is no ECS
+inspector: no world picking, no component view/edit, no
+"which systems touched this". Pharmasea answers each debugging
+question with bespoke code — `gamedebuglayer`, `debug_settings`,
+`uitestlayer`, and the `render_debug_*` in-world text family
+(entity IDs, AI states, drink contents drawn over models).
+
+Ask: `inspector::enable(systems)` — click an entity in the
+world, browse/edit its components in an overlay, pin fields to
+a watch list; edits apply next tick. Est. ~300 lines of debug
+layers per game, and whole classes of add-a-print-rebuild
+cycles disappear.
+
+Deliberately not filed (researched and judged game-side):
+drink recipes/order validation, customer decision policy, the
+M01-M24 FSM conversions, bar economy/pricing, map *content*
+(the toolkit in G-P23 is generic, the bar shapes are not),
+network packets/authority, tutorial step content, minigame
+scoring, intro art, and sound selection.
+
 #### G-P7: Reusable intro cards and loading screens `[PLUGIN]` — new request
 
 Not yet tracked upstream. Pharmasea hand-rolls the whole intro
