@@ -1,4 +1,6 @@
 
+# Compiling and linking live in build.zig; this file is shell glue
+# (run/test/e2e/release packaging, count, cppcheck, prof/leak/alloc).
 
 # Ensure Homebrew's pkgconfig is found (non-interactive shells don't source .bashrc,
 # and MacPorts pkg-config may be first in PATH). ~/homebrew is Gabe's brew prefix.
@@ -78,10 +80,6 @@ endif
 SRC_FILES := $(wildcard src/*.cpp src/**/*.cpp src/engine/**/*.cpp src/network/**/*.cpp src/system/**/*.cpp) vendor/afterhours/src/plugins/files.cpp
 H_FILES := $(wildcard src/**/*.h src/engine/**/*.h) 
 OBJ_DIR := ./output
-OBJ_FILES := $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
-
-# Precompiled header setup
-PCH_HEADER := src/pch.hpp
 PCH_GCH := src/pch.hpp.gch
 
 OUTPUT_EXE := pharmasea.exe
@@ -118,11 +116,13 @@ post-build: main-build
 # ./$(OUTPUT_EXE) -g 2>&1 $(GAME_LOG)
 
 
-$(OUTPUT_EXE): $(H_FILES) $(OBJ_FILES) 
-	$(CXX) $(FLAGS) $(LEAKFLAGS) $(NOFLAGS) $(INCLUDES) $(OBJ_FILES) $(LIBS) -o $(OUTPUT_EXE) 
+ZIG_FLAGS ?=
 
-release: FLAGS=$(RELEASE_FLAGS)
-release: NOFLAGS=
+$(OUTPUT_EXE): build.zig $(SRC_FILES) $(H_FILES)
+	zig build $(ZIG_FLAGS)
+	cp zig-out/bin/pharmasea $(OUTPUT_EXE)
+
+release: ZIG_FLAGS=-Doptimize=ReleaseFast
 release: clean all
 	rm -rf release
 	mkdir release
@@ -147,46 +147,9 @@ run: all
 modeltest:
 	$(CXX) -std=c++2a -g $(RAYLIB_FLAGS) $(RAYLIB_LIB) -Ivendor/ model_test.cpp;./a.out
 
-$(OBJ_DIR)/%.o: %.cpp makefile $(PCH_GCH)
-	@mkdir -p $(dir $@)
-	$(CXX) $(FLAGS) $(NOFLAGS) $(INCLUDES) -include $(PCH_HEADER) -Wno-deprecated-literal-operator -Wno-invalid-utf8 -Wno-implicit-float-conversion -Wno-c99-extensions -c $< -o $@ -MMD -MF $(@:.o=.d)
-
-%.d: %.cpp
-	$(MAKEDEPEND)
-
-# Build the precompiled header (GCC/Clang-compatible). Clang and GCC will
-# consume this automatically when using -include $(PCH_HEADER) if the .gch
-# is present next to the header path.
-# Note: PCH will be rebuilt automatically by make when pch.hpp or makefile changes.
-# If vendor files change and PCH becomes stale, run 'make clean' or delete $(PCH_GCH) manually.
-$(PCH_GCH): $(PCH_HEADER) makefile src/zpp_bits_include.h src/std_include.h src/log/log.h
-	$(CXX) $(FLAGS) $(INCLUDES) -DFMT_HEADER_ONLY -DFMT_USE_NONTYPE_TEMPLATE_PARAMETERS=0 -DFMT_CONSTEVAL= -Wno-deprecated-literal-operator -Wno-invalid-utf8 -Wno-implicit-float-conversion -Wno-c99-extensions -x c++-header -o $@ $<
-
 clean:
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR) zig-out .zig-cache
 	rm -f $(PCH_GCH)
-	mkdir -p $(OBJ_DIR)/src/network/
-	mkdir -p $(OBJ_DIR)/src/network/internal/
-	mkdir -p $(OBJ_DIR)/src/layers/
-	mkdir -p $(OBJ_DIR)/src/dataclass/
-	mkdir -p $(OBJ_DIR)/src/engine/
-	mkdir -p $(OBJ_DIR)/src/engine/network/
-	mkdir -p $(OBJ_DIR)/src/engine/simulated_input/
-	mkdir -p $(OBJ_DIR)/src/components/
-	mkdir -p $(OBJ_DIR)/src/engine/ui/
-	mkdir -p $(OBJ_DIR)/src/system/
-	mkdir -p $(OBJ_DIR)/src/system/afterhours/
-	mkdir -p $(OBJ_DIR)/src/system/ai/
-	mkdir -p $(OBJ_DIR)/src/system/core/
-	mkdir -p $(OBJ_DIR)/src/system/helpers/
-	mkdir -p $(OBJ_DIR)/src/system/input/
-	mkdir -p $(OBJ_DIR)/src/system/rendering/
-	mkdir -p $(OBJ_DIR)/src/system/sixtyfps/
-	mkdir -p $(OBJ_DIR)/src/system/trigger/
-	mkdir -p $(OBJ_DIR)/src/system/ui/
-	mkdir -p $(OBJ_DIR)/src/intro/
-	mkdir -p $(OBJ_DIR)/vendor/tracy/
-	mkdir -p $(OBJ_DIR)/vendor/backward/
 
 count: 
 	git ls-files | grep "src" | grep -v "ui_color.h" | grep -v "vendor" | grep -v "resources" | grep -v "color.h" | xargs wc -l | sort -rn | pr -2 -t -w 100
@@ -276,4 +239,3 @@ headermap:
 # then make and if you see protobuf or other dylib try installing the one you just added .
 # install_name_tool -id @executable_path/libGameNetworkingSockets.dylib libGameNetworkingSockets.dylib
 
--include $(OBJ_FILES:.o=.d)
