@@ -154,7 +154,7 @@ Consolidated from the former gaps + onboarding sections, `afterhours_gaps.md` (G
 - [ ] (c) Includes: route all vendor includes through the local wrapper `src/ah.h` and stop including vendor internal headers (merged former pair) — one include surface to bump. First step: grep direct `afterhours/src/` includes outside `ah.h`
 - [ ] (c/b) Serialization: centralize serialization on vendor implementations and standardize on `afterhours::Entities`/`afterhours::RefEntity` aliases (merged former pair) — deletes local alias/serialization drift. First step: inventory local aliases in `src/entity.h`
 - [ ] (a/b) Evaluate migrating `EntityHelper` functionality to vendor; review vendor job/task facilities and component-registration utilities (merged former trio; evaluate only) — each may delete local helpers if upstream fits. First step: one-page API comparison per facility, no code
-- [ ] (c) Submodule: ensure `vendor/afterhours` is initialized and pinned (recorded pin `4d8da9e`) — reproducible bumps. First step: verify `.gitmodules` + recorded commit match
+- [x] (c) Submodule: `vendor/afterhours` initialized and pinned — verified: `.gitmodules` present, gitlink and checked-out HEAD both `4d8da9e08c46d0c7f2a7004b746b7b31e28bdadd`
 
 **Done / not moving:**
 - [x] E2E: adopt upstream results JSON (`write_results_json`/`--results-json`) + `testing::is_e2e_running()`, then typed `register_command`; keep hand parser in e2e_manager.h until then — done: hand parser deleted, scripts use `wait_until`, pending commands isolated in the singleton default collection (client map generation wipes its own collection)
