@@ -826,6 +826,28 @@ load (`LoadFileData` + `LoadFontData` + `GenImageFontAtlas` +
 fallback above. Worth a note in the headless backend docs, or a
 small `load_font_headless_safe` helper next to `font_helper.h`.
 
+#### G-P11: `timer::HasTimer` cannot replace serialized countdown timers `[PLUGIN]` — new request
+
+Found evaluating `plugins/timer.h` against pharmasea's
+`CooldownInfo` (embedded in several components). Field mapping
+exists (`reset_to`↔`reset_time`, `remaining`↔`reset_time -
+current_time`, `enabled`↔`!paused`), but three gaps block adoption:
+
+- No serialization hook: `CooldownInfo` carries a zpp `serialize`
+  (it rides inside saved/networked components); `HasTimer` has
+  none, so adopting it silently drops timer state from saves.
+- Opposite direction: `HasTimer` counts up toward ready;
+  `CooldownInfo` counts down toward ready. Every consumer reads
+  `ready()`/`pct_remaining()` in countdown terms.
+- Shape: `HasTimer` is a standalone component;
+  `CooldownInfo` is an embedded value struct used several-per-
+  component. Adoption changes component layout everywhere.
+
+Ask (low priority): a countdown form with a `serialize` hook, or
+document `HasTimer` as UI/ephemeral-only. Pharmasea keeps
+`CooldownInfo` meanwhile; `HasWork` (progress % + work callback)
+is a different shape entirely and also stays local.
+
 #### G-P7: Reusable intro cards and loading screens `[PLUGIN]` — new request
 
 Not yet tracked upstream. Pharmasea hand-rolls the whole intro

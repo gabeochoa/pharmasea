@@ -48,13 +48,12 @@ int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
-constexpr float deg2rad(float deg) {
-    return deg * static_cast<float>(M_PI) / 180.0f;
-}
+// M_PI is not standard; mingw only exposes it with _USE_MATH_DEFINES.
+constexpr float PI_F = 3.14159265358979323846f;
 
-constexpr float rad2deg(float rad) {
-    return rad * (180.f / static_cast<float>(M_PI));
-}
+constexpr float deg2rad(float deg) { return deg * PI_F / 180.0f; }
+
+constexpr float rad2deg(float rad) { return rad * (180.f / PI_F); }
 
 constexpr bool in_range(int a, int b, int val) { return val >= a && val <= b; }
 

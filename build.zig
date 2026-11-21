@@ -66,6 +66,16 @@ pub fn build(b: *std.Build) void {
             "-fblocks",
         }) catch @panic("OOM");
     }
+    if (target.result.os.tag == .windows) {
+        // Keep windows.h from redeclaring raylib's CloseWindow/ShowCursor
+        // and the GDI surface (the standard raylib/win32 clash).
+        flags.appendSlice(b.allocator, &.{
+            "-DWIN32_LEAN_AND_MEAN",
+            "-DNOGDI",
+            "-DNOUSER",
+            "-D_USE_MATH_DEFINES",
+        }) catch @panic("OOM");
+    }
 
     var sources: std.ArrayList([]const u8) = .empty;
     collectCpp(b, &sources, "src", .recursive);
@@ -80,12 +90,24 @@ pub fn build(b: *std.Build) void {
         .language = .cpp,
     });
 
-    // System raylib via pkg-config (what the makefile links). The vendored
-    // vendor/raylib headers are 4.6-dev and must not shadow the 5.5 ones.
-    mod.linkSystemLibrary("raylib", .{ .use_pkg_config = .yes });
-    mod.addLibraryPath(b.path("vendor"));
-    mod.linkSystemLibrary("GameNetworkingSockets", .{});
-    mod.addRPathSpecial("$ORIGIN/../../vendor");
+    if (target.result.os.tag == .windows) {
+        // Blocked on vendored libs that don't exist yet: a Windows raylib
+        // (vendor/raylib ships 4.6 headers only) and a mingw-built
+        // GameNetworkingSockets (vendor/ ships the macOS dylib only).
+        // Until both land, this target fails at link by design.
+        mod.addIncludePath(b.path("vendor/raylib"));
+        mod.addObjectFile(b.path("vendor/raylib/libraylibdll.a"));
+        for ([_][]const u8{ "opengl32", "gdi32", "winmm", "ole32", "shell32", "ws2_32" }) |lib| {
+            mod.linkSystemLibrary(lib, .{});
+        }
+    } else {
+        // System raylib via pkg-config (what the makefile links). The vendored
+        // vendor/raylib headers are 4.6-dev and must not shadow the 5.5 ones.
+        mod.linkSystemLibrary("raylib", .{ .use_pkg_config = .yes });
+        mod.addLibraryPath(b.path("vendor"));
+        mod.linkSystemLibrary("GameNetworkingSockets", .{});
+        mod.addRPathSpecial("$ORIGIN/../../vendor");
+    }
     if (target.result.os.tag == .macos) {
         mod.linkFramework("OpenGL", .{});
         mod.linkFramework("AppKit", .{});
