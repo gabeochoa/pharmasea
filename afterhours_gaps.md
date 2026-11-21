@@ -207,25 +207,16 @@ captures through `LoadImageFromTexture` + `ExportImageToMemory`
 is not mistaken for plugin behavior; the fix, if ever taken, belongs
 to the raylib backend, not to afterhours-online.
 
-### G-E5: Perf assertions still have no provider hookup `[VERIFY]` — stale, reopened
+### G-E5: Perf assertions still have no provider hookup `[VERIFY]` — RESOLVED game-side
 
-Stale: the old note said this was resolved by the G-E1 migration. It
-was not. `perf_commands` (`expect_fps_above`, `expect_p99_below`,
-`FrameRateStats`) exists in the vendored afterhours
-([perf_commands.h](/Users/gabeochoa/p/pharmasea/vendor/afterhours/src/plugins/e2e_testing/perf_commands.h)),
-but `e2e_manager.h` `init()` registers only custom, diagnostic,
-builtin, unknown, and cleanup handlers; it never calls
-`perf_commands::set_provider` or `register_perf_commands`. No script
-can assert frame time today.
-
-- Pharma needs: a provider fed from pharmasea's frame timings on both
-  the client loop (`App::loop`) and, after onboarding, the server
-  tick, so a network perf regression is assertable.
-- Plugin provides: no perf surface; transport health is limited to
-  `Transport::connection_stats()` (G-M10).
-- Smallest unblock: register the perf commands with a provider backed
-  by a rolling frame-time ring, then add one `expect_fps_above` smoke
-  line to `01_bypass_to_lobby.e2e` to prove the wiring.
+Resolved: `e2e_manager.h` `init()` now calls
+`perf_commands::set_provider` + `register_perf_commands`. The provider
+is fed from the client loop: `App::note_frame` feeds
+`afterhours::FrameRateStats` (avg fps/ms) plus a 1024-frame ring for
+p99. Every e2e finish logs the readout, and
+`03_full_day_cycle.e2e` ends with `expect_fps_above 10` /
+`expect_p99_below 200` smoke asserts (measured: 74 fps, p99 25ms at
+2x). Server-tick perf stays open under the network milestone.
 
 ### G-E7: No two-process-ready binary surface `[ADAPTER]` — BLOCKING for G-M4
 

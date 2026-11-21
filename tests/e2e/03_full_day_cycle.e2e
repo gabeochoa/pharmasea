@@ -22,3 +22,7 @@ wait_until 120 expect_entity Customer >= 1
 wait_until 120 ffwd_phase day
 wait_until 120 expect_entity Customer == 0
 wait_until 10 expect_day >= 1
+
+# Frame-time smoke: generous cliffs only, not frame-perfect timing.
+expect_fps_above 10
+expect_p99_below 200

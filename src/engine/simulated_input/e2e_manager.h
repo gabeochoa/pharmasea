@@ -12,6 +12,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshadow"
 #include "../../../vendor/afterhours/src/plugins/e2e_testing/e2e_testing.h"
+#include "../../../vendor/afterhours/src/plugins/e2e_testing/perf_commands.h"
 #pragma GCC diagnostic pop
 #include "../../client_server_comm.h"
 #include "../../components/can_hold_item.h"
@@ -906,6 +907,19 @@ inline void init() {
         register_custom_commands(pack);
         register_diagnostics(pack);
         testing::register_builtin_handlers(pack);
+        testing::perf_commands::set_provider({
+            .get_fps =
+                []() -> std::optional<float> {
+                if (!App::get().frame_stats_ready()) return std::nullopt;
+                return App::get().avg_fps();
+            },
+            .get_p99_ms =
+                []() -> std::optional<float> {
+                return App::get().p99_frame_ms();
+            },
+            .top_entries = [](int) { return std::vector<testing::perf_commands::PerfEntry>{}; },
+        });
+        testing::perf_commands::register_perf_commands(pack);
         testing::register_unknown_handler(pack);
         testing::register_cleanup(pack);
         pack_ready = true;
@@ -975,6 +989,14 @@ inline void update(float dt) {
         } else {
             log_warn("e2e: failure screenshot failed for {}", out.string());
         }
+    }
+
+    if (App::get().frame_stats_ready()) {
+        auto p99 = App::get().p99_frame_ms();
+        log_info("e2e: frame stats avg {:.1f} fps, avg {:.2f} ms, "
+                 "p99 {:.2f} ms, max {:.2f} ms",
+                 App::get().avg_fps(), App::get().avg_frame_ms(),
+                 p99.value_or(-1.f), App::get().max_frame_ms());
     }
 
     runner.print_results();

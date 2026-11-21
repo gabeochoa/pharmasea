@@ -1,6 +1,9 @@
 
 #include "app.h"
 
+#include <algorithm>
+#include <cmath>
+
 #define ENABLE_TRACING 1
 #include "tracy.h"
 //
@@ -210,6 +213,21 @@ App::~App() {
 
 void App::close() { running = false; }
 
+void App::note_frame(float dt) {
+    frame_stats.add(dt);
+    frame_times[frame_time_next] = dt * 1000.f;
+    frame_time_next = (frame_time_next + 1) % (int) frame_times.size();
+    if (frame_time_count < (int) frame_times.size()) frame_time_count++;
+}
+
+std::optional<float> App::p99_frame_ms() const {
+    if (frame_time_count == 0) return std::nullopt;
+    std::array<float, 1024> sorted = frame_times;
+    std::sort(sorted.begin(), sorted.begin() + frame_time_count);
+    int idx = (int) std::ceil(0.99f * (float) frame_time_count) - 1;
+    return sorted[std::clamp(idx, 0, frame_time_count - 1)];
+}
+
 void App::run() {
 #ifdef ENABLE_TRACING
     log_info("Tracing is enabled");
@@ -239,6 +257,7 @@ void App::run() {
             last_tick = now;
             if (dt > 0.1f) dt = 0.1f;
         }
+        note_frame(dt);
         int steps = 1;
 #ifndef NDEBUG
         // E2E time-scale: substep the update, draw once.

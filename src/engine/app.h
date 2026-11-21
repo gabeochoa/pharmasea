@@ -1,7 +1,11 @@
 
 #pragma once
 
+#include <array>
+#include <optional>
+
 #include "../../vendor/afterhours/src/backends/raylib/headless.h"
+#include "../../vendor/afterhours/src/frame_rate_stats.h"
 #include "files.h"
 #include "layer.h"
 #include "singleton.h"
@@ -25,6 +29,19 @@ struct App {
     void run();
     void close();
 
+    void note_frame(float dt);
+    [[nodiscard]] bool frame_stats_ready() const {
+        return frame_stats.ready();
+    }
+    [[nodiscard]] float avg_fps() const { return frame_stats.fps(); }
+    [[nodiscard]] float avg_frame_ms() const {
+        return frame_stats.avg_frame_ms();
+    }
+    [[nodiscard]] float max_frame_ms() const {
+        return frame_stats.max_frame_ms();
+    }
+    [[nodiscard]] std::optional<float> p99_frame_ms() const;
+
     void loadLayers(const std::vector<Layer*>& layers);
 
    private:
@@ -46,6 +63,11 @@ struct App {
     bool running = false;
     int width;
     int height;
+
+    afterhours::FrameRateStats frame_stats{1.f};
+    std::array<float, 1024> frame_times{};
+    int frame_time_count = 0;
+    int frame_time_next = 0;
     bool use_headless = false;
     afterhours::graphics::RaylibHeadless headless_backend;
 

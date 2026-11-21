@@ -127,7 +127,8 @@ Consolidated from the former gaps + onboarding sections, `afterhours_gaps.md` (G
 - [ ] (b) Tests/files: use `files::TestRoots` so tests stop touching the real save folder; consider `files::get_cache_path()` for regenerable data. First step: wrap one `src/tests/` suite in `TestRoots`
 - [ ] (b) Settings input: use upstream `actions_using` conflict checks + `input::Repeat` for held repeat; enum `is_held/is_pressed` for new code. First step: conflict check in the settings remap screen (`settingslayer.cpp`)
 - [ ] (b) Fixed tick: confirm fixed-tick wiring, then set `SystemManager::max_fixed_ticks` catch-up cap — prevents spiral-of-death hitches. First step: find the tick path (no `fixed_tick` refs in `src/` today)
-- [ ] (b) Opportunistic: upstream `src/image.h` (`image_size`/`decode_image`), `FrameRateStats` (also unblocks the frame-time smoke item in e2e CI), `font_size_per_point`/`load_font_from_memory`. First step: `FrameRateStats` readout in e2e runs
+- [ ] (b) Opportunistic: upstream `src/image.h` (`image_size`/`decode_image`), `font_size_per_point`/`load_font_from_memory`. First step: none yet
+- [x] (b) `FrameRateStats` readout in e2e runs — done: `App::note_frame` feeds `afterhours::FrameRateStats` + a 1024-frame p99 ring; `e2e_manager` registers upstream `perf_commands` (`expect_fps_above`/`expect_p99_below`) with that provider and logs the readout at script finish (G-E5 closed)
 - [ ] (b) Arena allocators (already in afterhours, evaluate usage) — avoid per-frame allocation in hot queries. First step: profile one hot query, trial an arena there
 - [ ] (b) Query API: compare our `EntityQuery` to vendor query APIs; use `add_filter(lambda)` for new queries, leave existing `add_mod()` sites — avoids new `Modification` subclasses. First step: one new query in lambda form
 - [x] (b) System hooks: add `should_iterate() { return false; }` to the once-only systems — already done: every once-only system has it (`OnFrameStartSystem`, `GenerateStoreOptionsSystem`, `CleanUpOldStoreOptionsSystem`, `RenderWalkableSpotsSystem`); the remaining `once()` systems (`RenderEntitySystem`, both trigger-entrant counters, `ResetCustomersThatNeedResettingSystem`) do real per-entity work in `for_each_with`, so they must keep iterating
@@ -199,7 +200,7 @@ Today: 1 script (`tests/e2e/01_bypass_to_lobby.e2e`, wait-only, no assertions), 
 **CI/perf hygiene:**
 - [x] Add `make e2e` target: rebuild if needed, run `--e2e-dir`, surface per-script PASS/FAIL + exit code (today e2e is manual-only) — `make e2e` (fast set) and `make e2e-slow`, one process per script via `tests/e2e/run_e2e.sh`
 - [x] Tag slow scripts (`03`, `06`, `09`) so a fast subset (`01,02,04,11,12`) can run per-commit and the full dir nightly — `@slow`/`@xfail` header tags parsed; `run_e2e.sh` excludes both by default (`12` is `@xfail`, runs standalone)
-- [ ] Frame-time smoke: reuse upstream `FrameRateStats` (afterhours onboarding) to fail `03_full_day_cycle` if avg frame time regresses past a generous threshold — catch perf cliffs, not frame-perfect timing — blocked on G-E5 (no perf provider in hand parser)
+- [x] Frame-time smoke: `03_full_day_cycle` ends with `expect_fps_above 10` / `expect_p99_below 200` (upstream `perf_commands` fed by `App` frame stats, G-E5) — catch perf cliffs, not frame-perfect timing; measured 74 fps / p99 25ms at 2x
 
 ## code health
 
