@@ -848,6 +848,78 @@ document `HasTimer` as UI/ephemeral-only. Pharmasea keeps
 `CooldownInfo` meanwhile; `HasWork` (progress % + work callback)
 is a different shape entirely and also stays local.
 
+#### G-P12: `RngStream` sequences are not portable across STLs `[PLUGIN]` — new request
+
+Found evaluating `src/random_engine.h` for seeded map generation.
+`RngStream::set_seed(std::string)` hashes with
+`std::hash<std::string>` and `get_int`/`get_float` draw through
+`std::uniform_int_distribution`/`std::uniform_real_distribution`.
+Both are implementation-defined: the hash differs between
+libstdc++/libc++/MSVC, and the distribution algorithms are
+unspecified even though `mt19937` itself is standardized. So the
+same seed string yields different sequences on different
+compilers/platforms — `save()`/`load()` round-trips the text, but
+not the meaning. A host on one STL and a client on another would
+generate different maps from the same seed.
+
+Pharmasea's local engine (pcg32 + FNV-1a seed hash + explicit
+modulo/range math) is portable bit-for-bit, which host/client
+agreement and `run_determinism.sh` rely on, so `RngStream` stays
+unadopted here.
+
+Ask: make `RngStream` bit-stable — hash seed strings with a
+specified algorithm (e.g. FNV-1a) and implement the int/float
+draws with a specified algorithm (e.g. Lemire multiply-shift or
+rejection sampling over raw engine output) instead of
+`std::uniform_*_distribution`. Same ask would let the
+`RandomEngine` singleton be the one seeded RNG downstream games
+share. Note also the singleton is named `RandomEngine`, colliding
+with the global `RandomEngine` most consumers already have; a
+distinct name (`Rng`/`SeededRng`) would ease adoption.
+
+#### G-P13: `pathfinding` plugin is not adoptable by serialized/grid movers `[PLUGIN]` — new request
+
+Found in an API diff against pharmasea's
+`astar.h`/`bfs.h`/`pathfinder.h` + `CanPathfind`. The design
+matches (async request/response queue, `is_walkable` callback,
+AStar/BFS), but adoption is currently a rewrite, not a swap:
+
+- No serialization: local `CanPathfind` carries a zpp `serialize`
+  (parent, start, goal, path_size) because movers are saved and
+  networked; `ProvidesPathfinding` state has no hook.
+- Fixed grid model: upstream paths on `Vector2Type` with
+  Euclidean estimate/cost; local search snaps to the `TILESIZE`
+  grid (`vec::forEachNeighbor`) and movement/collision lives in
+  the component (`travel_toward`, local/global targets).
+- No parity harness: there is no worked example of the plugin
+  reproducing a known path set, so a consumer cannot verify
+  equivalence before migrating.
+
+Ask (low priority): a `serialize` hook for path/request state, a
+pluggable neighbor/step-cost provider so grid games keep their
+snapping, and a parity example (fixed map -> expected paths).
+Until then pharmasea keeps its local trio; no current pain, this
+only unblocks a future dedup.
+
+#### G-P14: No allocator/arena-backed way to materialize query results `[PLUGIN]` — new request
+
+Found evaluating `memory/arena.h` for hot queries. The arena is a
+standalone bump allocator used by UI rendering; nothing connects
+it to `ecs.h`. `EntityQuery::gen()` returns an owning
+`RefEntities` (heap vector + shared refs) — ~102 call sites in
+pharmasea run it per-frame — and while `for_each`/
+`for_each_stream` already avoid materializing, consumers that
+must sort, shuffle, index, or outlive the call still pay a heap
+allocation per query. There is no pmr/allocator-aware `gen()`
+variant and no documented frame-arena query pattern.
+
+Ask: an allocator-aware result path (e.g. `gen_into(std::pmr::
+vector<...>&)` or an arena-owning result type with explicit
+lifetime), or documentation blessing `for_each` + a scratch
+member vector as the intended pattern. Until upstream picks one,
+trialing `Arena` locally means changing `EntityQuery` result
+ownership engine-wide, which is not worth doing blind.
+
 #### G-P7: Reusable intro cards and loading screens `[PLUGIN]` — new request
 
 Not yet tracked upstream. Pharmasea hand-rolls the whole intro
