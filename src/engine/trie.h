@@ -132,7 +132,7 @@ inline void test_trie_insert_ten() {
     Trie trie;
 
     std::string sent("hello my name is john and I love you");
-    auto words = util::split_re(sent, " ");
+    auto words = util::split_string(sent, " ");
     for (auto word : words) trie.add(word);
     trie.add("a lot");
 }
@@ -141,7 +141,7 @@ inline void test_trie_insert_ten_and_found() {
     Trie trie;
 
     std::string sent("hello my name is john and I love you");
-    auto words = util::split_re(sent, " ");
+    auto words = util::split_string(sent, " ");
     for (auto word : words) trie.add(word);
     trie.add("a lot");
 
@@ -155,7 +155,7 @@ inline void test_trie_insert_ten_and_dump() {
     Trie trie;
 
     std::string sent("hello my name is john and I love you");
-    auto words = util::split_re(sent, " ");
+    auto words = util::split_string(sent, " ");
     for (auto word : words) trie.add(word);
     trie.add("a lot");
 
@@ -169,7 +169,7 @@ inline void test_trie_insert_ten_similar_and_dump_prefix() {
 
     std::string sent(
         "angel anger angle anglo angry angst anime anise annex anvil");
-    auto words = util::split_re(sent, " ");
+    auto words = util::split_string(sent, " ");
     for (auto word : words) trie.add(word);
 
     auto results = trie.dump();

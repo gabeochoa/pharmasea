@@ -1,14 +1,14 @@
 
 #include "upgrades.h"
 
-#include "../engine/bitset_utils.h"
+#include "../ah.h"
 #include "ingredient.h"
 #include "settings.h"
+#include "upgrade_class.h"
 
 [[nodiscard]] bool has_city_upgrade(const ConfigData& config) {
-    return bitset_utils::test(config.unlocked_upgrades,
-                              UpgradeClass::SmallTown) ||
-           bitset_utils::test(config.unlocked_upgrades, UpgradeClass::BigCity);
+    return config.has_upgrade_unlocked(UpgradeClass::SmallTown) ||
+           config.has_upgrade_unlocked(UpgradeClass::BigCity);
 }
 
 std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
@@ -92,8 +92,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     },
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
-                    return bitset_utils::test(config.unlocked_upgrades,
-                                              UpgradeClass::UnlockToilet);
+                    return config.has_upgrade_unlocked(
+                        UpgradeClass::UnlockToilet);
                 }};
             break;
         case UpgradeClass::Speakeasy:
@@ -313,8 +313,7 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
                     // Require that you have normal pitcher unlocked first
-                    return bitset_utils::test(config.unlocked_upgrades,
-                                              UpgradeClass::Pitcher);
+                    return config.has_upgrade_unlocked(UpgradeClass::Pitcher);
                 }};
             break;
         case UpgradeClass::Mocktails:
@@ -341,8 +340,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
                     // Make sure they dont have the other ingredient one
-                    return !bitset_utils::test(config.unlocked_upgrades,
-                                               UpgradeClass::CantEvenTell);
+                    return !config.has_upgrade_unlocked(
+                        UpgradeClass::CantEvenTell);
                 }};
             break;
         case UpgradeClass::HeavyHanded:
@@ -396,8 +395,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                 .onUnlock = [](ConfigData&, IsProgressionManager&) {},
                 .meetsPrereqs = [](const ConfigData& config,
                                    const IsProgressionManager&) -> bool {
-                    return bitset_utils::test(config.unlocked_upgrades,
-                                              UpgradeClass::UnlockToilet);
+                    return config.has_upgrade_unlocked(
+                        UpgradeClass::UnlockToilet);
                 }};
             break;
         case UpgradeClass::SippyCups:
@@ -455,6 +454,9 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     return true;
                 }};
             break;
+            // TODO what if while the song is playing, that persons patience
+            // doesnt drain? or what if playing the music refils their patience
+            // (slowly?)
         case UpgradeClass::Jukebox:
             ptr = new UpgradeImpl{
                 .type = uc,
@@ -509,8 +511,8 @@ std::shared_ptr<UpgradeImpl> make_upgrade(UpgradeClass uc) {
                     // because it doesnt matter if people cant actually have
                     // more drinks
                     return config.get<int>(ConfigKey::MaxNumOrders) >= 4 &&
-                           !bitset_utils::test(config.unlocked_upgrades,
-                                               UpgradeClass::Mocktails);
+                           !config.has_upgrade_unlocked(
+                               UpgradeClass::Mocktails);
                 }};
             break;
     }

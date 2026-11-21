@@ -1,0 +1,147 @@
+# @slow
+# Test: first purchase placed (replaces the first_purchase_placed
+# replay spec). On day 2 it buys the seeded $5 Table at
+# (-11, -27.5) in the store spawn rows.
+# The store exit validates balance >= cart, so the script first
+# serves both night-1 customers: when the second takes their
+# drink, the first reaches the pay queue front and pays.
+
+wait_until 120 expect_game_state InGame
+wait_until 30 walk_to 0 4
+wait_until 20 walk_to -3 2
+wait_until 20 walk_to -6 1
+wait_until 20 walk_to -10 0
+wait_until 20 walk_to -10 -1
+
+key BACKSLASH
+wait_until 10 expect_debug true
+wait_until 20 walk_to -6 1
+wait_until 20 walk_to -3 2
+wait_until 20 walk_to 0 4
+wait_until 20 walk_to 4 4
+wait_until 20 walk_to 4 3
+wait_until 60 ffwd_phase night
+wait_until 20 walk_to 4 4
+wait_until 20 walk_to 0 4
+wait_until 20 walk_to -3 2
+wait_until 20 walk_to -6 1
+wait_until 20 walk_to -10 0
+wait_until 20 walk_to -10 -1
+
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+wait_until 30 walk_to -9 3
+wait 2
+hold_key S
+wait_frames 4
+release_key S
+key SPACE
+wait 2
+
+wait_until 20 walk_to -11 0
+wait_until 20 walk_to -11 -1
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+wait_until 30 walk_to -9 3
+wait 2
+hold_key S
+wait_frames 4
+release_key S
+hold_key R
+wait 5
+release_key R
+wait 2
+
+wait_until 20 walk_to -11 0
+wait_until 20 walk_to -11 -1
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+wait_until 20 walk_to -10 0
+wait_until 20 walk_to -10 -1
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+wait_until 30 walk_to -9 3
+wait 2
+hold_key S
+wait_frames 4
+release_key S
+key SPACE
+wait 2
+
+wait_until 20 walk_to -11 0
+wait_until 20 walk_to -11 -1
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+wait_until 30 walk_to -9 3
+wait 2
+hold_key S
+wait_frames 4
+release_key S
+hold_key R
+wait 5
+release_key R
+wait 2
+
+wait_until 180 expect_money >= 5
+wait_until 180 expect_served >= 2
+
+wait_until 300 expect_phase day
+
+wait_until 30 walk_to -6 1
+wait_until 20 walk_to -3 2
+wait_until 20 walk_to 0 4
+wait_until 20 walk_to 5 4
+wait_until 30 walk_to 6 -4
+wait_until 30 walk_to 1 -7
+wait_until 20 walk_to 0 -10
+wait_until 30 walk_to -4 -16
+wait_until 30 walk_to -7 -24
+wait_until 20 walk_to -11 -26
+wait 2
+hold_key W
+wait_frames 4
+release_key W
+key SPACE
+wait 2
+
+wait_until 30 walk_to -9 -19
+wait 2
+hold_key S
+wait_frames 4
+release_key S
+key SPACE
+wait 2
+
+wait_until 30 expect_cart >= 1
+
+wait_until 20 walk_to -7 -18
+wait_until 20 walk_to -9 -13
+wait 6
+
+wait_until 60 expect_furniture_near 9 1
+wait_until 30 expect_cart == 0

@@ -1,0 +1,19 @@
+
+#define AFTER_HOURS_REPLACE_LOGGING
+#include "log/log.h"
+#define AFTER_HOURS_SYSTEM
+#define AFTER_HOURS_USE_RAYLIB
+#include "afterhours/ah.h"
+#include "afterhours/src/bitset_utils.h"
+#include "afterhours/src/core/key_codes.h"
+#include "afterhours/src/library.h"
+#include "afterhours/src/plugins/frustum.h"
+#include "afterhours/src/plugins/input_system.h"
+#include "afterhours/src/plugins/lod.h"
+#include "afterhours/src/plugins/models.h"
+#include "afterhours/src/plugins/window_manager.h"
+
+namespace afterhours {
+template<typename T>
+using Library = ::Library<T>;
+}

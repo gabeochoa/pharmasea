@@ -4,7 +4,7 @@
 
 #include "../vendor_include.h"
 //
-#include "../engine/random.h"
+#include "../engine/random_engine.h"
 #include "base_component.h"
 
 enum Subtype {
@@ -26,11 +26,10 @@ struct HasSubtype : public BaseComponent {
         : start(st_start), end(st_end), type_index(st_type) {
         if (type_index == -1) type_index = get_random_index();
     }
-    virtual ~HasSubtype() {}
 
     [[nodiscard]] int get_num_types() const { return end - start; }
     [[nodiscard]] int get_random_index() const {
-        int index = randIn(0, get_num_types());
+        int index = RandomEngine::get().get_int(0, get_num_types());
         return start + index;
     }
     [[nodiscard]] Subtype get_type() const {
@@ -57,13 +56,14 @@ struct HasSubtype : public BaseComponent {
     int end;
     int type_index;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value4b(start);
-        s.value4b(end);
-        s.value4b(type_index);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.start,                         //
+            self.end,                           //
+            self.type_index                     //
+        );
     }
 };

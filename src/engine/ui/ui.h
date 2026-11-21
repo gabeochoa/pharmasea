@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "../simulated_input/input_injector.h"
 #include "color.h"
 #include "element_result.h"
 #include "focus.h"
@@ -21,6 +22,16 @@ inline void begin(std::shared_ptr<ui::UIContext> ui_context, float dt) {
     }
 
     focus::begin();
+
+    // Inject any scheduled clicks (after focus::begin() resets mouse state)
+    input_injector::inject_scheduled_click();
+    // Bridge afterhours mouse state into pharmasea's UI focus system
+    auto& m = ah_injector::detail::mouse;
+    if (m.active) {
+        focus::mouse_info.pos = {m.pos.x, m.pos.y};
+        focus::mouse_info.leftDown = m.left_down;
+    }
+
     //
     context->begin(dt);
 }
@@ -29,9 +40,9 @@ void end();
 
 ElementResult hoverable(const Widget& widget);
 
-// TODO add rounded corners
-ElementResult div(const Widget& widget, Color c);
-ElementResult div(const Widget& widget, theme::Usage theme);
+ElementResult div(const Widget& widget, Color c, bool rounded = false);
+ElementResult div(const Widget& widget, theme::Usage theme,
+                  bool rounded = false);
 ElementResult colored_text(const Widget& widget,
                            const TranslatableString& content, Color c = WHITE);
 ElementResult window(const Widget& widget);
@@ -42,12 +53,14 @@ ElementResult text(const Widget& widget, const TranslatableString& content,
 
 );
 
-ElementResult scroll_window(const Widget& widget, Rectangle view,
-                            std::function<void(ScrollWindowResult)> children);
+ElementResult scroll_window(
+    const Widget& widget, Rectangle view,
+    const std::function<void(ScrollWindowResult)>& children);
 
 ElementResult button(const Widget& widget,
                      const TranslatableString& content = NO_TRANSLATE(""),
-                     bool background = true);
+                     bool background = true,
+                     bool draw_background_when_hot = true);
 ElementResult image(const Widget& widget, const std::string& texture_name);
 
 ElementResult image_button(const Widget& widget,

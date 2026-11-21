@@ -1,0 +1,28 @@
+# @slow
+# Test: one full day/night cycle.
+# Debug fast-forward (100x timer + spawner) drives the phases:
+# day starts, the bar opens at night, customers spawn, the day
+# counter increments, and transient customers clean up.
+
+wait_until 120 expect_game_state InGame
+wait_until 30 expect_phase day
+wait_until 10 expect_day 0
+
+key BACKSLASH
+wait_until 10 expect_debug true
+
+wait_until 30 walk_to 0 4
+wait_until 20 walk_to 4 4
+wait_until 20 walk_to 4 3
+
+wait_until 120 ffwd_phase night
+wait_until 60 expect_day >= 1
+wait_until 120 expect_entity Customer >= 1
+
+wait_until 120 ffwd_phase day
+wait_until 120 expect_entity Customer == 0
+wait_until 10 expect_day >= 1
+
+# Frame-time smoke: generous cliffs only, not frame-perfect timing.
+expect_fps_above 10
+expect_p99_below 200

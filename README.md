@@ -1,10 +1,28 @@
-# pharmasea
+# pharmasea (Pub Panic!)
+
+Code name: **PharmaSea**. In-game title string: **Pub Panic!** (`src/strings.h`).
+
+## Build
+
+- **macOS / Linux**: `make` (repo root `makefile`, lowercase)
+  - Output binary: `./pharmasea.exe`
+- **Windows**: open `WinPharmaSea/PharmaSea.sln` in Visual Studio
+
+## Save files
+
+The game uses `sago/platform_folders` and stores data under the OS “Save Games” folder:
+
+- **Settings**: `<SaveGamesFolder1>/pharmasea/settings.bin`
+- **Save slots**: `<SaveGamesFolder1>/pharmasea/saves/slot_XX.bin`
+
+If you’re unsure what your platform resolves to, run the game once and check the startup logs (it prints `intro: path=...` and `intro: game_folder=...`).
 
 libraries used:
 - raylib
 - Raylib Operator Overloads https://github.com/ProfJski/RaylibOpOverloads
     - Added a #define that removes all the raygui stuff 
     - Made every function inline since i globally include and the linker not happy with so many definitions (odr?)
+- Raylib Extras https://github.com/JeffM2501/raylibExtras 
 - AppData stuff https://github.com/sago007/PlatformFolders
 - Steam's GameNetworkingSockets https://github.com/ValveSoftware/GameNetworkingSockets
 - HTTPRequest https://github.com/elnormous/HTTPRequest
@@ -17,17 +35,20 @@ libraries used:
 - mo for translations http://number-none.com/blow/code/mo_file/index.html
 - nlomann json for JSON reading / writing https://github.com/nlohmann/json
 - reasings (some easing functions) https://github.com/raylib-extras/reasings
+- PCG Random (faster more repreducible random) https://www.pcg-random.org/ 
+- save file and network serialization https://github.com/eyalz800/zpp_bits 
 
 Models from 
 - https://www.kenney.nl/assets?q=3d 
 - https://kaylousberg.itch.io/kay-kit-mini-game-variety-pack 
 
-Consider Looking Into: 
-- https://github.com/eyalz800/zpp_bits 
+
+Font
+- https://m.blog.naver.com/bibimseol/222303267518 
 
 
-Save Files get stored to:  
-- Mac: "/Users/<user>/Library/Application Support/pharmasea/settings.bin" 
+Save Files get stored to: 
+- Mac: "/Users/<user>/Library/Application Support/pharmasea/settings.bin"
 - Windows: My Documents / My Games / Pharmasea/settings.bin
 
 
@@ -35,7 +56,7 @@ Info about the todo chart
 - full raw data is in todo.md and managed by obsidian
 - hide the "backlog" here but trust me theres lots more todo 
 - only show the most recent 10 done items
-- to regerate the table below run python kanban.py
+- to regenerate the table below run `python3 scripts/kanban.py` from the repo root (it rewrites this README between `## TODOs` and `## End TODO`)
 
 ## TODOs  
 
@@ -60,6 +81,124 @@ and then just checkout that hash (sorry im not doing releases / tags atm)
 
 I am publishing some releases on itch, you can find the url in the code or build the game and click the itch.io icon. 
 if you need the password join the discord and say hi!
+
+
+### alpha_0.24.09.06
+
+Its possible this version is spectaularly buggy since I havent tested that much over the network....
+maybe skip this one and try the next one if you can :) 
+
+design changes
+- Customer Spawner now spawns all customers by midday, so you have more time to serve them 
+- change so that you can only clean the toilet when its not in use
+- drinks can now be prepped in the daytime (make sure to buy some extra tables to store them)
+- make it so that the register is only spawned outside when you are in tutorial mode 
+- You now move furniture with the 'C' key or Triangle/Y on gamepad
+- Upgrades and Store no longer require all players to complete action 
+- You now have to walk to the store and upgrade areas 
+- No longer need to drop the cup into the beer machine to fill it up 
+
+impact
+- you will now get an estimate for how much you might make for a given day
+- Store now has a locker to save items day over day 
+- Customer Spawner now has a progress bar 
+- Customers will now wander where theres no space in the line
+
+bug fix 
+- Beer machine should be less flakey now
+- Settings page X and B buttons were reversed 
+- Store correctly validates cart contents now
+- Customers will now check to see if they can path to the register before choosing it 
+- Spawner will no longer spawn all customers instantly during first round
+- Fix bug where username would think it wasnt locked in when already locked 
+- Store spending animation should be more reliable 
+- Fix issue where UI was always drawn at 720p 
+
+better eng
+- Add better instructions for getting raylib4.5
+- most code will now run at 60fps on the backend 
+- only show validation errors when standing on trigger area 
+- add support for new types of trigger areas 
+- rewrite timer to split reason from timer 
+- remove most game states to simplify system 
+- bind -> lambda 
+- by default ignore entities in the store when running a query 
+- pathfinding should be much much faster now (+ its own thread) 
+- compilation speedups 
+- new randomizer engine with unittest to guarantee order
+- less dynamic allocations and more constexpr 
+- less layer code and more in rendering system
+- new translation system that supports formatting
+- better performance by running the map validation 2400x less often 
+- add script to validate that we have the right polymorphs setup 
+
+
+### alpha_0.24.05.11
+
+design changes
+
+impact 
+- Added a tutorial for the first two rounds (toggle it in the lobby) 
+- Controls now have icons instead of the underlying name (see settings page or tutorial)
+- better mouse hover graphics 
+- customers will now show a "dollar" icon when paying 
+- shop
+    - increase number of items in shop from 5 to 10
+    - add way to reroll, starts at 50 coins and goes up by 25 each use
+- toilet 
+    - needs to be cleaned at end of day 
+    - has a queue and those waiting in line to the bathroom will eventually go on the floor if they wait too long 
+    - customer patience will increase when they move up in line 
+
+bug fix 
+- fix bug where customers always thought they were second in line 
+- hide names for walls when in planning phase 
+- fix a crash that would happen when you close the game
+- fix issue where only UI keys were visible in the settings
+
+better eng
+- switch from bind to lambda to save 3 seconds on full build :) (120.3s -> 117.30s on m1 air) 
+- Query builder upgrades and new features 
+- move all components to unique_ptr instead of raw points
+- added the ablity to draw ghost blocks
+- better dylib commands 
+- more color utils 
+- eliminate a class of auto conversion make_entity bugs 
+- onboard onto sonar cloud: https://sonarcloud.io/summary/new_code?id=gabeochoa_pharmasea 
+
+
+### alpha_0.24.04.25
+
+New Upgrades
+- Jukebox: Customers will pay money to use and keeps their patience from draining (no actual music yet tho) 
+- Cant Event Tell: The more customers drink the less they care about the recipe's accuracy 
+
+impact
+- Menu UI fully redesigned (#thanks @steven for the design feedback) 
+- new icons for existing Upgrades that were using the default before 
+- customers now take time to pay (though no ui to show yet) 
+- customers will now walk somewhere to drink their drink (instead of standing at 0,0)
+- customers will now show a "need to pee" icon when they gotta go 
+- players now spawn outside near the delivery zone instead of at 0,0 
+- furniture names are now shown during design mode (more obvious what mode you are in and better tell what anything is) 
+- New map generator (should crash less often but i cant promise no inifinite loops :$) 
+
+
+bug fix
+- Players should get stuck in dropped furniture way less often (might i say solved?) 
+- fix issue where adding syrup to a drink would add salt and mint instead 
+- fix a crash that happened sometimes when adding solid fruits to a drink 
+- Progress bars will now dissapear if the drink was removed before complete
+- Fast Forward Box can no longer be used as a table 
+
+better eng
+- translations support for trigger areas
+- add more validation for missing items from model test 
+- deleted unused code & ran some fixes to avoid undefined behavior 
+- speed up entity overlapping check by 1000x
+- Rewrote AI system to be much more ergonomic and easier to read/develop for 
+- More debug ui for ai system 
+- Address a ton of floating todos that were mostly tech debt (still 630 in the codebase though) 
 
 
 ### alpha_0.24.04.06

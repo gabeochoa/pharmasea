@@ -3,16 +3,14 @@
 
 #include <bitset>
 
+#include "../ah.h"
 #include "../dataclass/ingredient.h"
-#include "../recipe_library.h"
+#include "../libraries/recipe_library.h"
 #include "../vendor_include.h"
 #include "base_component.h"
 
-using StdMap = bitsery::ext::StdMap;
-
 struct IsDrink : public BaseComponent {
     IsDrink() : _supports_multiple(false) {}
-    virtual ~IsDrink() {}
 
     auto& turn_on_support_multiple(int max) {
         _supports_multiple = true;
@@ -28,7 +26,9 @@ struct IsDrink : public BaseComponent {
     }
 
     [[nodiscard]] bool has_ingredient(Ingredient i) const {
-        return ingredients.contains(i) && ingredients.at(i) > 0;
+        return unique_igs[magic_enum::enum_integer<Ingredient>(i)];
+        // TODO figure out why this didnt work
+        // return ingredients.contains(i) && ingredients.at(i) > 0;
     }
 
     void add_ingredient(Ingredient i) {
@@ -80,6 +80,7 @@ struct IsDrink : public BaseComponent {
         bitset_utils::for_each_enabled_bit(recipe, [&](size_t bit) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
             ingredients[ig]--;
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
 
         underlying = calc_underlying();
@@ -108,6 +109,7 @@ struct IsDrink : public BaseComponent {
         bitset_utils::for_each_enabled_bit(recipe, [&](size_t bit) {
             Ingredient ig = magic_enum::enum_value<Ingredient>(bit);
             min_igs = std::min(min_igs, count_of_ingredient(ig));
+            return bitset_utils::ForEachFlow::NormalFlow;
         });
         return min_igs;
     }
@@ -132,24 +134,16 @@ struct IsDrink : public BaseComponent {
 
     float tip_multiplier = 1.f;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(_supports_multiple);
-
-        s.value4b(num_completed);
-
-        s.ext(ingredients, StdMap{magic_enum::enum_count<Ingredient>()},
-              [](S& sv, Ingredient& key, int value) {
-                  sv.value4b(key);
-                  sv.value4b(value);
-              });
-
-        s.ext(unique_igs, bitsery::ext::StdBitset{});
-
-        s.ext(underlying, bitsery::ext::StdOptional{},
-              [](S& sv, Drink& val) { sv.value4b(val); });
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self._supports_multiple,            //
+            self.num_completed,                 //
+            self.ingredients,                   //
+            self.unique_igs,                    //
+            self.underlying                     //
+        );
     }
 };

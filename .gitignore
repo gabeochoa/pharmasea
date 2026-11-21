@@ -1,11 +1,18 @@
+# MCP screenshots
+mcp_screenshots/
+
+# E2E screenshots are local diagnostics; PASS/FAIL comes from scripts
+tests/e2e/*.png
 **/x64/Debug/*
 **/x64/.vs/*
 *.dSYM
 .cache/
+.ccache/
 .DS_Store
 **/.vs
 .vscode/
 log
+!src/log/
 game.obj
 WinPharmaSea/**/
 pharmasea/WinPharmaSea/**/
@@ -22,5 +29,17 @@ a.out
 release*
 recording.trace/
 output/
+build/
+zig-out/
+.zig-cache/
+.xmake/
 # until they are used in the project, hiding the kennynl folder
 art_storage/*
+
+# Editor/tool config symlinks
+.claude
+.cursor
+
+# Ignore precompiled header cache
+src/pch.hpp.gch
+libGameNetworkingSockets.dylib.bak

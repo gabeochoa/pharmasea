@@ -42,8 +42,19 @@ struct HasFishingGame : public BaseComponent {
 
     HasFishingGame() {}
 
+    enum class Phase : int { NotStarted = 0, Running = 1, Scored = 2 };
+
+    [[nodiscard]] Phase phase() const {
+        if (has_score()) return Phase::Scored;
+        return started ? Phase::Running : Phase::NotStarted;
+    }
+
+    [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
+
     [[nodiscard]] bool has_score() const { return score != -1; }
-    [[nodiscard]] bool show_progress_bar() const { return started; }
+    [[nodiscard]] bool show_progress_bar() const {
+        return is_phase(Phase::Running);
+    }
     [[nodiscard]] float get_score() const { return score; }
     [[nodiscard]] float pct() const { return progress; }
     [[nodiscard]] float best() const { return best_location; }
@@ -54,7 +65,6 @@ struct HasFishingGame : public BaseComponent {
         countdown -= dt;
 
         if (countdown <= 0.f) {
-            // TODO figure out scoring
             float amount = abs(progress - best_location);
 
             int index = first_matching<Band, 4>(
@@ -111,19 +121,18 @@ struct HasFishingGame : public BaseComponent {
 
     int m_num_stars = 0;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.value1b(started);
-
-        s.value4b(direction);
-        s.value4b(m_num_stars);
-
-        s.value4b(best_location);
-        s.value4b(score);
-        s.value4b(progress);
-        s.value4b(countdown);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.started,                       //
+            self.direction,                     //
+            self.m_num_stars,                   //
+            self.best_location,                 //
+            self.score,                         //
+            self.progress,                      //
+            self.countdown                      //
+        );
     }
 };

@@ -1,5 +1,8 @@
 #include "files.h"
 
+#include <afterhours/src/plugins/files.h>
+
+#include "assert.h"
 #include "globals.h"
 
 #ifdef __APPLE__
@@ -16,7 +19,23 @@
 #include "log_fakelog.h"
 #endif
 
-#include <sago/platform_folders.h>
+// sago is defined once by vendor/afterhours files.cpp; declare, don't include.
+namespace sago {
+std::string getConfigHome();
+std::string getDataHome();
+std::string getStateDir();
+std::string getCacheDir();
+std::string getDocumentsFolder();
+std::string getDesktopFolder();
+std::string getPicturesFolder();
+std::string getPublicFolder();
+std::string getMusicFolder();
+std::string getVideoFolder();
+std::string getDownloadFolder();
+std::string getSaveGamesFolder1();
+std::string getSaveGamesFolder2();
+void appendAdditionalDataDirectories(std::vector<std::string>&);
+}  // namespace sago
 
 #ifdef __APPLE__
 #pragma clang diagnostic pop
@@ -25,7 +44,19 @@
 #pragma GCC diagnostic pop
 #endif
 
-std::shared_ptr<Files> Files_single;
+Files Files::instance;
+bool Files::created = false;
+
+void Files::create(const FilesConfig& config) {
+    if (created) {
+        log_error("Tryin to create Files twice");
+        return;
+    }
+    new (&instance) Files(config);
+    created = true;
+}
+
+Files& Files::get() { return instance; }
 
 Files::Files(const FilesConfig& config)
     : root(config.root_folder), settings_file(config.settings_file_name) {
@@ -33,6 +64,10 @@ Files::Files(const FilesConfig& config)
 }
 
 fs::path Files::game_folder() const {
+    // Tests redirect every save/settings write under a temp root.
+    if (afterhours::files::active_test_roots) {
+        return afterhours::files::active_test_roots->save;
+    }
     const fs::path master_folder(sago::getSaveGamesFolder1());
     return master_folder / fs::path(root);
 }
@@ -42,8 +77,8 @@ bool Files::ensure_game_folder_exists() {
     if (fs::exists(fld)) {
         return true;
     }
-    bool created = fs::create_directories(fld);
-    if (created) {
+    bool was_created = fs::create_directories(fld);
+    if (was_created) {
         log_info("Created Game Folder: {}", fld);
         return true;
     }
@@ -71,7 +106,8 @@ std::string Files::fetch_resource_path(std::string_view group,
 
 void Files::for_resources_in_group(
     std::string_view group,
-    std::function<void(std::string, std::string, std::string)> cb) const {
+    const std::function<void(std::string, std::string, std::string)>& cb)
+    const {
     auto folder_path = (resource_folder() / fs::path(group));
 
     try {
@@ -89,7 +125,7 @@ void Files::for_resources_in_group(
 
 void Files::for_resources_in_folder(
     std::string_view group, std::string_view folder,
-    std::function<void(std::string, std::string)> cb) const {
+    const std::function<void(std::string, std::string)>& cb) const {
     auto folder_path = (resource_folder() / fs::path(group) / fs::path(folder));
 
     try {

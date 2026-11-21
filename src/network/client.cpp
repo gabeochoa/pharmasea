@@ -1,21 +1,39 @@
 
-
 #include "client.h"
 
-#include "../engine/globals_register.h"
+#include "../building_locations.h"
+#include "../components/collects_user_input.h"
+#include "../components/has_client_id.h"
+#include "../components/has_name.h"
 #include "../engine/log.h"
-#include "../engine/sound_library.h"
+#include "../engine/runtime_globals.h"
+#include "../engine/time.h"
+#include "../engine/toastmanager.h"
+#include "../engine/ui/sound.h"
+#include "../post_deserialize_fixups.h"
 #include "network.h"
+#include "serialization.h"
 
 namespace network {
 
 Client::Client() {
-    client_p = std::make_shared<internal::Client>();
-    client_p->set_process_message(std::bind(
-        &Client::client_process_message_string, this, std::placeholders::_1));
+    // Ensure Afterhours' default collection matches the client thread's
+    // collection. (Some serialization paths call afterhours::EntityHelper
+    // directly.)
+    afterhours::EntityHelper::set_default_collection(
+        &EntityHelper::get_client_collection());
 
-    map = std::make_shared<Map>("default_seed");
-    GLOBALS.set("map", map.get());
+    if (network::LOCAL_ONLY) {
+        client_p = std::make_unique<internal::LocalClient>();
+    } else {
+        client_p = std::make_unique<internal::GnsClient>();
+    }
+    client_p->set_process_message([this](const std::string& msg) {
+        this->client_process_message_string(msg);
+    });
+
+    map = std::make_unique<Map>("default_seed");
+    globals::set_world_map(map.get());
 }
 
 void Client::update_username(const std::string& new_name) {
@@ -43,6 +61,8 @@ void Client::tick(float dt) {
     }
 
     if (client_p->is_not_connected()) {
+        // Forget our join id so session_state() stops reporting InGame.
+        id = 0;
         announcements.push_back({
             .message = "Lost connection to Host",
             .type = AnnouncementType::Error,
@@ -66,7 +86,13 @@ void Client::send_ping_packet(int my_id, float dt) {
             .pong = now::current_ms(),
         }),
     };
-    client_p->send_packet_to_server(packet);
+    send_packet_to_server(packet);
+}
+
+// TODO :DUPE: this is duplicated with the version in internal/client
+void Client::send_packet_to_server(ClientPacket packet) {
+    Buffer buffer = serialize_to_buffer(packet);
+    client_p->send_string_to_server(buffer, packet.channel);
 }
 
 void Client::send_player_input_packet(int my_id) {
@@ -87,7 +113,7 @@ void Client::send_player_input_packet(int my_id) {
         }),
     };
     cui.clear();
-    client_p->send_packet_to_server(packet);
+    send_packet_to_server(packet);
 }
 
 void Client::send_current_menu_state() {
@@ -112,6 +138,16 @@ void Client::send_updated_seed(const std::string& seed) {
     Server::queue_packet(packet);
 }
 
+void Client::send_save_slot_request(int slot) {
+    ClientPacket packet{
+        .client_id = SERVER_CLIENT_ID,
+        .msg_type = ClientPacket::MsgType::SaveSlot,
+        .msg = ClientPacket::SaveSlotInfo{.slot = slot},
+    };
+
+    Server::queue_packet(packet);
+}
+
 void Client::client_process_message_string(const std::string& msg) {
     auto add_new_player = [&](int client_id, const std::string& username) {
         if (remote_players.contains(client_id)) {
@@ -123,7 +159,7 @@ void Client::client_process_message_string(const std::string& msg) {
         // want this in the array that is serialized, this should only live
         // in remote_players
         Entity* entity = new Entity();
-        make_remote_player(*entity, {LOBBY_ORIGIN, 0, 0});
+        make_remote_player(*entity, LOBBY_BUILDING.to3());
         remote_players[client_id] = std::shared_ptr<Entity>(entity);
         const auto& rp = remote_players[client_id];
         rp->get<HasClientID>().update(client_id);
@@ -203,6 +239,9 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::AnnouncementInfo info =
                 std::get<ClientPacket::AnnouncementInfo>(packet.msg);
             announcements.push_back(info);
+            // Also surface immediately as an in-game toast.
+            TOASTS.push_back(
+                {.msg = info.message, .type = info.type, .timeToShow = 5});
         } break;
         case ClientPacket::MsgType::PlayerLeave: {
             ClientPacket::PlayerLeaveInfo info =
@@ -218,8 +257,7 @@ void Client::client_process_message_string(const std::string& msg) {
                 id = info.client_id;
                 log_info("my id is {}", id);
                 add_new_player(id, client_p->username);
-                GLOBALS.set("active_camera_target", remote_players[id].get());
-                // TODO make shared doesnt work here
+                globals::set_active_camera_target(remote_players[id].get());
                 map->local_players_NOT_SERIALIZED.push_back(remote_players[id]);
                 (*(map->local_players_NOT_SERIALIZED.rbegin()))
                     ->addComponent<CollectsUserInput>();
@@ -242,11 +280,15 @@ void Client::client_process_message_string(const std::string& msg) {
             // Menu::get().clear_history();
 
             // We actually only need to do this one
-            if (MenuState::get().read() == menu::State::Network &&
-                info.host_menu_state == menu::State::Game) {
+            if (MenuState::is_host_sync_legal(MenuState::get().read(),
+                                              info.host_menu_state)) {
                 MenuState::get().set(info.host_menu_state);
             }
-            if (GameState::get().is_not(game::State::Paused)) {
+            // Host is authoritative; echoed state packets can be stale.
+            const bool is_host_copy =
+                network_info && network_info->is_host();
+            if (!is_host_copy &&
+                GameState::get().is_not(game::State::Paused)) {
                 GameState::get().set(info.host_game_state);
             }
 
@@ -261,8 +303,7 @@ void Client::client_process_message_string(const std::string& msg) {
             ClientPacket::MapInfo info =
                 std::get<ClientPacket::MapInfo>(packet.msg);
 
-            client_entities_DO_NOT_USE.clear();
-            client_entities_DO_NOT_USE = info.map.entities();
+            post_deserialize_fixups::run();
 
             map->update_map(info.map);
 
@@ -296,7 +337,7 @@ void Client::client_process_message_string(const std::string& msg) {
             // info.location[1],
             // };
 
-            SoundLibrary::get().play(info.sound.c_str());
+            Sounds::play(info.sound);
 
         } break;
 

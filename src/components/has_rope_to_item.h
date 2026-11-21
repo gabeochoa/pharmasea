@@ -2,17 +2,15 @@
 
 #pragma once
 
-#include "../entity_helper.h"
+#include "../entities/entity_helper.h"
+#include "../entities/entity_id.h"
+#include "../entities/entity_ref.h"
 #include "base_component.h"
 
-using EntityID = int;
-
 struct HasRopeToItem : public BaseComponent {
-    virtual ~HasRopeToItem() {}
-
     void clear() {
-        for (EntityID id : rope) {
-            EntityHelper::markIDForCleanup(id);
+        for (EntityRef& ref : rope) {
+            EntityHelper::markIDForCleanup(ref.id);
         }
         rope.clear();
         rope_length = (int) rope.size();
@@ -26,7 +24,9 @@ struct HasRopeToItem : public BaseComponent {
     [[nodiscard]] bool was_generated() const { return generated; }
 
     void add(Item& i) {
-        rope.push_back(i.id);
+        EntityRef ref{};
+        ref.set(i);
+        rope.push_back(ref);
         rope_length = (int) rope.size();
     }
 
@@ -36,17 +36,17 @@ struct HasRopeToItem : public BaseComponent {
     vec2 path_to;
     bool generated = false;
     int rope_length = 0;
-    std::vector<EntityID> rope;
+    std::vector<EntityRef> rope;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-
-        s.object(path_to);
-        s.value1b(generated);
-        s.value4b(rope_length);
-
-        s.container4b(rope, rope_length);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.path_to,                       //
+            self.generated,                     //
+            self.rope_length,                   //
+            self.rope                           //
+        );
     }
 };

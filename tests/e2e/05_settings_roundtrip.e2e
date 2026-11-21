@@ -1,0 +1,18 @@
+# Test: a setting survives a save/reload cycle.
+# UI-click variant needs click_ui wiring (see afterhours_gaps.md);
+# this covers the persistence path the UI writes through.
+
+wait_until 30 expect_menu_state Root
+
+set_setting master_volume 0.25
+wait_until 5 expect_setting master_volume 0.25
+save_settings
+
+set_setting master_volume 0.9
+wait_until 5 expect_setting master_volume 0.9
+
+reload_settings
+wait_until 5 expect_setting master_volume 0.25
+
+set_setting master_volume 0.5
+save_settings

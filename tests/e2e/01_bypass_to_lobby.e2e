@@ -1,0 +1,9 @@
+# Test: bypass menu automation reaches the lobby
+# Requires --bypass-menu (auto-set by --e2e)
+# bypass_helper clicks through menus automatically.
+
+wait_until 60 expect_menu_state Game
+wait_until 60 expect_game_state Lobby
+wait_until 30 expect_entity Furniture >= 1
+
+wait 2

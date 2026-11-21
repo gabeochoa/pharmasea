@@ -1,0 +1,113 @@
+
+#pragma once
+
+#include "../engine/log.h"
+#include "../engine/statemanager.h"
+#include "../vec_util.h"
+#include "base_component.h"
+
+struct HasDayNightTimer : public BaseComponent {
+    enum class Phase : int { Planning = 0, InRound = 1, Transitioning = 2 };
+
+    // TODO for now since we cant use game state change
+    // we need some way
+    [[nodiscard]] bool needs_to_process_change() const {
+        return is_phase(Phase::Transitioning);
+    }
+
+    [[nodiscard]] int days_passed() const { return day_count; }
+
+    [[nodiscard]] Phase phase() const { return current_phase; }
+
+    void transition_to(Phase next) { current_phase = next; }
+
+    void finish_transition() {
+        transition_to(is_day ? Phase::Planning : Phase::InRound);
+    }
+
+    [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
+
+    [[nodiscard]] bool is_bar_open() const { return !is_day; }
+    [[nodiscard]] bool is_bar_closed() const { return is_day; }
+    [[nodiscard]] bool is_round_over() const { return current_length <= 0.f; }
+
+    auto& pass_time(float dt) {
+        if (current_length >= 0) current_length -= dt;
+        return *this;
+    }
+
+    [[nodiscard]] float get_current_length() const { return current_length; }
+
+    [[nodiscard]] float get_total_length() const {
+        return is_bar_open() ? night_length : day_length;
+    }
+
+    // slowly going down
+    [[nodiscard]] float pct() const {
+        return current_length / get_total_length();
+    }
+
+    void set_day_length(float trt) { day_length = trt; }
+    void set_night_length(float trt) { night_length = trt; }
+
+    void open_bar() {
+        is_day = false;
+        day_count++;
+        current_length += night_length;
+        transition_to(Phase::Transitioning);
+
+        days_until_rent_due--;
+    }
+
+    void close_bar() {
+        is_day = true;
+        current_length += day_length;
+        transition_to(Phase::Transitioning);
+    }
+
+    HasDayNightTimer(float round_length)
+        : day_count(0),
+          days_until_rent_due(5),
+          day_length(round_length),
+          night_length(round_length),
+          current_length(round_length) {}
+
+    HasDayNightTimer() : HasDayNightTimer(10.f) {}
+
+    [[nodiscard]] int days_until() const { return days_until_rent_due; }
+    [[nodiscard]] int rent_due() const { return amount_due; }
+    void reset_rent_days() { days_until_rent_due = 5; }
+
+    void update_amount_due(int new_amt) { amount_due = new_amt; }
+
+   private:
+    int day_count;
+    int days_until_rent_due;
+    // TODO - this should probably not live here but for now
+    int amount_due = 75;
+
+    float day_length;
+    float night_length;
+
+    // how much time remaining in the current state
+    float current_length;
+    // settled direction; Transitioning resolves through finish_transition()
+    bool is_day = true;
+    Phase current_phase = Phase::Planning;
+
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.day_count,                     //
+            self.days_until_rent_due,           //
+            self.amount_due,                    //
+            self.day_length,                    //
+            self.night_length,                  //
+            self.current_length,                //
+            self.is_day,                        //
+            self.current_phase                  //
+        );
+    }
+};

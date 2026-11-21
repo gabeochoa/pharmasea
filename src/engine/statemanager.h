@@ -1,14 +1,26 @@
 
 #pragma once
 
+#include <functional>
 #include <iostream>
 #include <stack>
+#include <vector>
 
 #include "log.h"
 #include "singleton.h"
 
 template<typename T>
 struct StateManager2 {
+    // TODO(threading): Today this is a process-wide singleton and the host runs
+    // a dedicated server thread. That means `MenuState`/`GameState` can be
+    // read on the server thread (e.g. for state packets) while being mutated
+    // on the main thread (UI/input/client receive), which is a data race.
+    //
+    // Planned fix (Option B): make the server thread NOT touch this singleton.
+    // Instead, send state transitions main->server via a queue, and keep a
+    // server-local cached copy for packet emission. This preserves "client is
+    // king in menus, host is king in game" without sharing the same object
+    // across threads.
     [[nodiscard]] T read() const { return state; }
     [[nodiscard]] T previous() const { return prev.top(); }
 
@@ -100,6 +112,44 @@ struct MenuState : public StateManager2<menu::State> {
     [[nodiscard]] bool is_in_menu() const { return is_not(menu::State::Game); }
     [[nodiscard]] bool in_game() const { return is(menu::State::Game); }
 
+    [[nodiscard]] static constexpr bool is_legal_transition(
+        menu::State from, menu::State to) {
+        if (from == to) return true;
+        switch (from) {
+            case menu::State::Root:
+                return to == menu::State::Network ||
+                       to == menu::State::Settings ||
+                       to == menu::State::About;
+            case menu::State::Network:
+                return to == menu::State::Game || to == menu::State::Root;
+            case menu::State::Settings:
+                return to == menu::State::Root;
+            case menu::State::Game:
+                return to == menu::State::Settings ||
+                       to == menu::State::Root;
+            case menu::State::About:
+                return to == menu::State::Root;
+            case menu::State::UI:
+                return false;
+        }
+        return false;
+    }
+
+    [[nodiscard]] static constexpr bool is_host_sync_legal(
+        menu::State from, menu::State to) {
+        return from == menu::State::Network && to == menu::State::Game;
+    }
+
+    bool transition_to(menu::State next) {
+        const bool legal = is_legal_transition(read(), next);
+        if (!legal) {
+            log_warn("MenuState illegal transition {} -> {}", tostring(),
+                     magic_enum::enum_name(next));
+        }
+        set(next);
+        return legal;
+    }
+
     [[nodiscard]] static bool s_in_game() { return MenuState::get().in_game(); }
     [[nodiscard]] static bool s_is_game(menu::State ms) {
         return ms == menu::State::Game;
@@ -110,12 +160,10 @@ namespace game {
 enum State {
     InMenu = 0,
     Lobby = 1,
-    InRound = 2,
-    Planning = 3,
+    InGame = 2,
     Paused = 4,
-    Progression = 5,
-    Store = 6,
     ModelTest = 7,
+    LoadSaveRoom = 8,
 };
 
 inline std::ostream& operator<<(std::ostream& os, const State& state) {
@@ -133,16 +181,49 @@ struct GameState : public StateManager2<game::State> {
         return game::State::InMenu;
     }
 
+    [[nodiscard]] static constexpr bool is_legal_transition(
+        game::State from, game::State to) {
+        if (from == to) return true;
+        switch (from) {
+            case game::State::InMenu:
+                return to == game::State::Lobby;
+            case game::State::Lobby:
+                return to == game::State::InGame ||
+                       to == game::State::ModelTest ||
+                       to == game::State::LoadSaveRoom ||
+                       to == game::State::Paused;
+            case game::State::InGame:
+                return to == game::State::Lobby ||
+                       to == game::State::Paused;
+            case game::State::ModelTest:
+                return to == game::State::Lobby ||
+                       to == game::State::InGame;
+            case game::State::LoadSaveRoom:
+                return to == game::State::Lobby ||
+                       to == game::State::InGame;
+            case game::State::Paused:
+                return false;
+        }
+        return false;
+    }
+
+    bool transition_to(game::State next) {
+        const bool legal = is_legal_transition(read(), next);
+        if (!legal) {
+            log_warn("GameState illegal transition {} -> {}", tostring(),
+                     magic_enum::enum_name(next));
+        }
+        set(next);
+        return legal;
+    }
+
     game::State pause() {
         if (is_paused()) {
             return go_back();
         }
-        set(game::State::Paused);
+        transition_to(game::State::Paused);
         return read();
     }
-
-    [[nodiscard]] bool in_round() const { return is(game::State::InRound); }
-    [[nodiscard]] bool in_planning() const { return is(game::State::Planning); }
 
     [[nodiscard]] bool is_paused() const { return is(game::State::Paused); }
 
@@ -169,27 +250,18 @@ struct GameState : public StateManager2<game::State> {
     // - world timer
     // - pipe matching
     // - map validation
-    [[nodiscard]] bool is_game_like() const {
-        return is(game::State::InRound) || is(game::State::Planning);
-    }
+    [[nodiscard]] bool is_game_like() const { return is(game::State::InGame); }
 
     [[nodiscard]] bool should_render_timer() const {
-        return is(game::State::InRound) || is(game::State::Planning);
+        return is(game::State::InGame);
     }
 
-    game::State toggle_planning() {
-        // TODO need logic here to stop loops
-        if (is(game::State::Planning)) {
-            set(game::State::InRound);
-        } else if (is(game::State::InRound)) {
-            set(game::State::Planning);
-        }
-        return read();
+    void transition_to_game() { transition_to(game::State::InGame); }
+    void transition_to_lobby() { transition_to(game::State::Lobby); }
+    void transition_to_model_test() {
+        transition_to(game::State::ModelTest);
     }
-
-    void transition_to_lobby() { return set(game::State::Lobby); }
-    void transition_to_model_test() { return set(game::State::ModelTest); }
-    void transition_to_planning() { return set(game::State::Planning); }
-    void transition_to_store() { return set(game::State::Store); }
-    void transition_to_inround() { return set(game::State::InRound); }
+    void transition_to_load_save_room() {
+        transition_to(game::State::LoadSaveRoom);
+    }
 };

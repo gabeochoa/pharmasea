@@ -17,10 +17,16 @@ struct SettingsLayer : public Layer {
         KeyBindings = 1,
     } activeWindow = ActiveWindow::Root;
 
+    enum class CaptureState : int { Idle = 0, Capturing = 1 };
+
     struct KeyBindingPopup {
-        bool show = false;
+        CaptureState capture_state = CaptureState::Idle;
         menu::State state = menu::State::UI;
         InputName input = InputName::Pause;
+
+        [[nodiscard]] bool is_capturing() const {
+            return capture_state == CaptureState::Capturing;
+        }
     } key_binding_popup;
 
     InputType selected_input_type = InputType::Keyboard;
@@ -55,9 +61,7 @@ struct SettingsLayer : public Layer {
         Preload::get().write_keymap();
     }
 
-    virtual bool onKeyPressed(KeyPressedEvent& event) override;
-    virtual bool onGamepadButtonPressed(
-        GamepadButtonPressedEvent& event) override;
+    void handleInput();
     virtual void onUpdate(float dt) override;
 
     void save_and_exit();
@@ -68,5 +72,6 @@ struct SettingsLayer : public Layer {
 
     virtual void onDraw(float dt) override;
 
+    void draw_column(Rectangle column, int index, Rectangle screen);
     void draw_keybinding_screen(float);
 };

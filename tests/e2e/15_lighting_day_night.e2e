@@ -1,0 +1,23 @@
+# Screenshot test: capture the same overlook in day and night
+# with the lighting shader enabled, for visual style review.
+# Outputs: lighting_day.png, lighting_night.png (gitignored).
+
+wait_until 120 expect_game_state InGame
+
+set_setting enable_lighting true
+wait_until 10 expect_setting enable_lighting true
+wait_until 30 expect_phase day
+screenshot lighting_day
+
+key BACKSLASH
+wait_until 10 expect_debug true
+wait_until 20 walk_to 5 4
+wait_until 20 walk_to 4 4
+wait_until 20 walk_to 4 3
+wait_until 60 ffwd_phase night
+
+key BACKSLASH
+wait_until 10 expect_debug false
+wait_until 20 walk_to 4 4
+wait_until 30 walk_to 9 4
+screenshot lighting_night

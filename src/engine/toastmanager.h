@@ -24,7 +24,8 @@ struct ToastMsg {
     }
 };
 
-static std::vector<ToastMsg> TOASTS;
+// C++17 inline variable: one shared instance across translation units.
+inline std::vector<ToastMsg> TOASTS;
 
 namespace toasts {
 

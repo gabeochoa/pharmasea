@@ -4,12 +4,12 @@
 #include <optional>
 //
 
-#include "../engine/type_name.h"
-#include "../entity.h"
+#include "../entities/entity.h"
 //
 #include "../components/has_subtype.h"
 #include "../components/is_drink.h"
 #include "../components/is_item.h"
+#include "../entities/entity_type.h"
 #include "ingredient.h"
 
 enum RespectFilter { All, ReqOnly, Ignore };
@@ -148,10 +148,11 @@ struct EntityFilter {
     T read_filter_value_from_entity(const Entity& entity,
                                     FilterDatumType type) const {
         if constexpr (std::is_same_v<T, std::string>) {
-            if (type & FilterDatumType::Name) return std::string(entity.name());
+            if (type & FilterDatumType::Name)
+                return std::string(str(get_entity_type(entity)));
         } else if constexpr (std::is_same_v<T, EntityType>) {
             if (type & FilterDatumType::Name) {
-                return entity.type;
+                return get_entity_type(entity);
             }
         } else if constexpr (std::is_same_v<T, int>) {
             if (type & FilterDatumType::Subtype) {
@@ -242,13 +243,13 @@ struct EntityFilter {
         return pass;
     }
 
-   private:
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.value4b(flags);
-        s.ext(entity_type, bitsery::ext::StdOptional{},
-              [](S& sv, EntityType& val) { sv.value4b(val); });
-        s.value4b(subtype_index);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(          //
+            self.subtype_index,  //
+            self.flags,          //
+            self.entity_type     //
+        );
     }
 };

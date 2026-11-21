@@ -1,0 +1,15 @@
+# @slow
+# Test: save on day 0, relaunch with the save, land on the same world.
+# Pair usage (the script asserts the same facts either way):
+#   1) ./pharmasea.exe --e2e tests/e2e/08_save_load_roundtrip.e2e
+#   2) ./pharmasea.exe --e2e tests/e2e/08_save_load_roundtrip.e2e --load-save 9
+# Step 1 writes slot 9 through the host's server thread
+# (SaveSlot packet); step 2 loads it via the CLI hook and lands
+# in planning on the saved day/furniture.
+
+wait_until 90 expect_game_state InGame
+wait_until 10 expect_day 0
+wait_until 30 expect_entity Furniture >= 1
+
+save_slot 9
+wait_until 30 expect_save_slot 9

@@ -1,12 +1,14 @@
 
 #pragma once
 
+#include "../components/collects_customer_feedback.h"
 #include "../components/collects_user_input.h"
-#include "../components/has_timer.h"
+#include "../components/has_day_night_timer.h"
 #include "../components/transform.h"
-#include "../entity.h"
-#include "../entity_helper.h"
-#include "../entity_query.h"
+#include "../engine/runtime_globals.h"
+#include "../entities/entity.h"
+#include "../entities/entity_helper.h"
+#include "../entities/entity_query.h"
 #include "../map.h"
 #include "base_game_renderer.h"
 
@@ -16,13 +18,13 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
     virtual ~RoundEndReasonLayer() {}
 
     OptEntity get_timer_entity() {
-        return EntityQuery().whereHasComponent<HasTimer>().gen_first();
+        return EntityQuery().whereHasComponent<HasDayNightTimer>().gen_first();
     }
 
     OptEntity get_player_entity() {
         // TODO why doesnt this work?
         // return EntityHelper::getFirstWithComponent<CollectsUserInput>();
-        auto map_ptr = GLOBALS.get_ptr<Map>(strings::globals::MAP);
+        auto* map_ptr = globals::world_map();
         if (!map_ptr) return {};
         return map_ptr->get_remote_with_cui();
     }
@@ -34,17 +36,14 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
 
         auto entity = get_timer_entity();
         if (!entity) return false;
-        const HasTimer& ht = entity->get<HasTimer>();
-        if (ht.type != HasTimer::Renderer::Round) return false;
+        // const HasDayNightTimer& ht = entity->get<HasDayNightTimer>();
+        const CollectsCustomerFeedback& feedback =
+            entity->get<CollectsCustomerFeedback>();
 
-        const auto debug_mode_on =
-            GLOBALS.get_or_default<bool>("debug_ui_enabled", false);
+        const auto debug_mode_on = globals::debug_ui_enabled();
         if (debug_mode_on) return true;
 
-        if (ht.get_current_round_time() <= 0) return true;
-
-        if (GameState::get().is(game::State::Planning) &&
-            ht.block_state_change_reasons.any()) {
+        if (feedback.block_state_change_reasons.any()) {
             return true;
         }
         return false;
@@ -61,36 +60,42 @@ struct RoundEndReasonLayer : public BaseGameRendererLayer {
 
         auto entity = get_timer_entity();
         if (!entity) return;
-        const HasTimer& ht = entity->get<HasTimer>();
-        if (ht.type != HasTimer::Renderer::Round) return;
+        const CollectsCustomerFeedback& feedback =
+            entity->get<CollectsCustomerFeedback>();
 
-        auto reason_spots =
-            rect::hsplit<HasTimer::WaitingReason::WaitingReasonLast>(content,
-                                                                     10);
+        auto reason_spots = rect::hsplit<
+            CollectsCustomerFeedback::WaitingReason::WaitingReasonLast>(content,
+                                                                        10);
         // Just make it so that only one reason will show at a time
         // this might be confusing but it avoids the issue where its covering
         // way too much of the screen
         const int max_reason_index =
             0;  // this should never be more than reason_spots.size()
 
-        if (ht.block_state_change_reasons.none()) {
-            TranslatableString countdown_ts = TODO_TRANSLATE(
-                fmt::format(
-                    "{}: {}", strings::i18n::NEXT_ROUND_COUNTDOWN,
-                    (int) ceil(util::trunc(ht.roundSwitchCountdown, 1))),
-                TodoReason::Format);
+        /*
+         * TODO delete
+        if (feedback.block_state_change_reasons.none()) {
+            auto time_remaining = fmt::format(
+                "{}", (int) ceil(util::trunc(ht.roundSwitchCountdown, 1)));
+            TranslatableString countdown_ts =
+                TranslatableString(strings::i18n::RoundEndLayer_Countdown)
+                    .set_param(strings::i18nParam::TimeRemaining,
+                               time_remaining);
             text(Widget{reason_spots[0]}, countdown_ts, theme::Usage::Font,
                  true);
             return;
         }
+        */
 
         std::vector<TranslatableString> active_reasons;
         std::vector<std::optional<vec2>> active_locations;
         // TODO Why does this start a 1?
-        for (int i = 1; i < HasTimer::WaitingReason::WaitingReasonLast; i++) {
-            if (ht.read_reason(i)) {
-                active_reasons.push_back(ht.text_reason(i));
-                active_locations.push_back(ht.reason_location(i));
+        for (int i = 1;
+             i < CollectsCustomerFeedback::WaitingReason::WaitingReasonLast;
+             i++) {
+            if (feedback.read_reason(i)) {
+                active_reasons.push_back(feedback.text_reason(i));
+                active_locations.push_back(feedback.reason_location(i));
             }
         }
 

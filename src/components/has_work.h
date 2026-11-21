@@ -4,17 +4,27 @@
 
 #include "base_component.h"
 
-struct Entity;
+using afterhours::Entity;
 
 struct HasWork : public BaseComponent {
-    // TODO idk if false is a reasonable default
     HasWork()
-        : pct_work_complete(0.f),
+        :  // Start with 0% progress
+          pct_work_complete(0.f),
+          //  this forces the 'has more' to run by default
           more_to_do(true),
+          // TODO what breaks if we turn this on?
           reset_on_empty(false),
           hide_progress_bar_on_full(false),
           hide_progress_bar(false) {}
-    virtual ~HasWork() {}
+
+    enum class Phase { Idle, Working, Complete };
+
+    [[nodiscard]] Phase phase() const {
+        if (pct_work_complete >= 1.f) return Phase::Complete;
+        return pct_work_complete > 0.f ? Phase::Working : Phase::Idle;
+    }
+
+    [[nodiscard]] bool is_phase(Phase p) const { return phase() == p; }
 
     // Does this have work to be done?
     [[nodiscard]] bool is_work_complete() const {
@@ -23,7 +33,8 @@ struct HasWork : public BaseComponent {
     [[nodiscard]] bool has_work() const { return more_to_do; }
     [[nodiscard]] bool doesnt_have_work() const { return !has_work(); }
     [[nodiscard]] bool can_show_progress_bar() const {
-        if (hide_progress_bar_on_full && is_work_complete()) return false;
+        if (hide_progress_bar_on_full && is_phase(Phase::Complete))
+            return false;
         return has_work() && pct_work_complete >= 0.01f;
     }
     [[nodiscard]] bool dont_show_progress_bar() const {
@@ -80,15 +91,16 @@ struct HasWork : public BaseComponent {
     bool hide_progress_bar_on_full;
     bool hide_progress_bar;
 
-    friend bitsery::Access;
-    template<typename S>
-    void serialize(S& s) {
-        s.ext(*this, bitsery::ext::BaseClass<BaseComponent>{});
-        s.value1b(hide_progress_bar_on_full);
+   public:
+    friend zpp::bits::access;
+    constexpr static auto serialize(auto& archive, auto& self) {
+        return archive(                         //
+            static_cast<BaseComponent&>(self),  //
+            self.hide_progress_bar_on_full,     //
+            self.pct_work_complete              //
+        );
         //
         // s.value1b(more_to_do);
         // s.value1b(reset_on_empty);
-
-        s.value4b(pct_work_complete);
     }
 };
