@@ -385,8 +385,8 @@ void render_animated_transactions(const Entity& entity, float) {
                     static_cast<int>(y_spacing * transaction.pct());
 
                 bool positive = transaction.amount >= 0;
-                unsigned char alpha =
-                    static_cast<unsigned char>(255 * transaction.pct());
+                unsigned char alpha = static_cast<unsigned char>(
+                    255.f * std::clamp(transaction.pct(), 0.f, 1.f));
 
                 auto tip_string = translation_lookup(
                     TranslatableString(strings::i18n::StoreTip)

@@ -13,6 +13,8 @@
 #pragma GCC diagnostic ignored "-Wshadow"
 #include "../../../vendor/afterhours/src/plugins/e2e_testing/e2e_testing.h"
 #include "../../../vendor/afterhours/src/plugins/e2e_testing/perf_commands.h"
+#include "../../../vendor/afterhours/src/plugins/e2e_testing/state_commands.h"
+#include "../../../vendor/afterhours/src/plugins/settings_table.h"
 #pragma GCC diagnostic pop
 #include "../../client_server_comm.h"
 #include "../../components/can_hold_item.h"
@@ -94,6 +96,29 @@ struct EvalResult {
     bool malformed = false;
     std::string message;
 };
+
+const std::vector<afterhours::SettingField<settings::Data>>&
+setting_table() {
+    static const std::vector<afterhours::SettingField<settings::Data>> fields =
+        afterhours::settings_fields<settings::Data>(
+            afterhours::setting_field("username", &settings::Data::username),
+            afterhours::setting_field("lang_name", &settings::Data::lang_name),
+            afterhours::setting_field("master_volume",
+                                      &settings::Data::master_volume),
+            afterhours::setting_field("music_volume",
+                                      &settings::Data::music_volume),
+            afterhours::setting_field("sound_volume",
+                                      &settings::Data::sound_volume),
+            afterhours::setting_field("vsync_enabled",
+                                      &settings::Data::vsync_enabled),
+            afterhours::setting_field("enable_postprocessing",
+                                      &settings::Data::enable_postprocessing),
+            afterhours::setting_field("enable_lighting",
+                                      &settings::Data::enable_lighting),
+            afterhours::setting_field("isFullscreen",
+                                      &settings::Data::isFullscreen));
+    return fields;
+}
 
 EvalResult mismatch(std::string msg) {
     return EvalResult{.pass = false, .malformed = false, .message = msg};
@@ -321,46 +346,27 @@ EvalResult eval_expect(testing::PendingE2ECommand& cmd) {
     if (cmd.name == "expect_setting") {
         if (cmd.args.size() < 2)
             return malformed("expect_setting requires <field> <value>");
-        const std::string& field = cmd.args[0];
+        const std::string& field_name = cmd.args[0];
+        const auto* field =
+            afterhours::find_setting(setting_table(), field_name);
+        if (!field)
+            return malformed("unknown setting field '" + field_name + "'");
         const settings::Data& d = Settings::get().data;
-        if (field == "username" || field == "lang_name") {
-            std::string actual =
-                field == "username" ? d.username : d.lang_name;
-            if (actual == cmd.args[1]) return passed();
-            return mismatch("expected setting " + field + " == " +
-                            cmd.args[1] + " but was " + actual);
+        settings::Data probe = d;
+        std::string err;
+        if (!field->set_string(probe, cmd.args[1], err)) {
+            return malformed(err);
         }
-        if (field == "master_volume" || field == "music_volume" ||
-            field == "sound_volume") {
-            float actual = field == "master_volume" ? d.master_volume
-                           : field == "music_volume" ? d.music_volume
-                                                     : d.sound_volume;
-            float expected = 0.f;
-            try {
-                expected = std::stof(cmd.args[1]);
-            } catch (...) {
-                return malformed("expect_setting " + field +
-                                 " needs a number");
-            }
-            if (std::fabs(actual - expected) < 0.001f) return passed();
-            return mismatch("expected setting " + field + " == " +
-                            cmd.args[1] + " but was " +
-                            std::to_string(actual));
+        const std::string expected = field->to_string(probe);
+        const std::string actual = field->to_string(d);
+        if (field->kind == afterhours::SettingKind::Float) {
+            if (std::fabs(std::stof(actual) - std::stof(expected)) < 0.001f)
+                return passed();
+        } else if (actual == expected) {
+            return passed();
         }
-        if (field == "vsync_enabled" || field == "enable_postprocessing" ||
-            field == "enable_lighting" || field == "isFullscreen") {
-            bool actual = field == "vsync_enabled" ? d.vsync_enabled
-                          : field == "enable_postprocessing"
-                              ? d.enable_postprocessing
-                              : field == "enable_lighting" ? d.enable_lighting
-                                                           : d.isFullscreen;
-            bool expected = cmd.args[1] == "true" || cmd.args[1] == "1";
-            if (actual == expected) return passed();
-            return mismatch("expected setting " + field + " == " +
-                            cmd.args[1] + " but was " +
-                            (actual ? "true" : "false"));
-        }
-        return malformed("unknown setting field '" + field + "'");
+        return mismatch("expected setting " + field_name + " == " + expected +
+                        " but was " + actual);
     }
     return malformed("unknown expect command '" + cmd.name + "'");
 }
@@ -627,34 +633,15 @@ void register_custom_commands(afterhours::SystemManager& sm) {
                 cmd.fail("set_setting requires <field> <value>");
                 return;
             }
-            const std::string& field = cmd.args[0];
-            settings::Data& d = Settings::get().data;
-            try {
-                if (field == "username") {
-                    d.username = cmd.args[1];
-                } else if (field == "lang_name") {
-                    d.lang_name = cmd.args[1];
-                } else if (field == "master_volume") {
-                    d.master_volume = std::stof(cmd.args[1]);
-                } else if (field == "music_volume") {
-                    d.music_volume = std::stof(cmd.args[1]);
-                } else if (field == "sound_volume") {
-                    d.sound_volume = std::stof(cmd.args[1]);
-                } else if (field == "vsync_enabled") {
-                    d.vsync_enabled =
-                        cmd.args[1] == "true" || cmd.args[1] == "1";
-                } else if (field == "enable_postprocessing") {
-                    d.enable_postprocessing =
-                        cmd.args[1] == "true" || cmd.args[1] == "1";
-                } else if (field == "enable_lighting") {
-                    d.enable_lighting =
-                        cmd.args[1] == "true" || cmd.args[1] == "1";
-                } else {
-                    cmd.fail("unknown setting field '" + field + "'");
-                    return;
-                }
-            } catch (...) {
-                cmd.fail("bad value for setting '" + field + "'");
+            const auto* field =
+                afterhours::find_setting(setting_table(), cmd.args[0]);
+            if (!field) {
+                cmd.fail("unknown setting field '" + cmd.args[0] + "'");
+                return;
+            }
+            std::string err;
+            if (!field->set_string(Settings::get().data, cmd.args[1], err)) {
+                cmd.fail(err);
                 return;
             }
             cmd.consume();
@@ -920,6 +907,22 @@ inline void init() {
             .top_entries = [](int) { return std::vector<testing::perf_commands::PerfEntry>{}; },
         });
         testing::perf_commands::register_perf_commands(pack);
+        testing::state_commands::register_state(
+            "menu", []() { return std::string(MenuState::get().tostring()); });
+        testing::state_commands::register_state(
+            "game", []() { return std::string(GameState::get().tostring()); });
+        testing::state_commands::register_state("day", []() {
+            OptEntity e = EQ().whereHasComponent<HasDayNightTimer>().gen_first();
+            if (!e.valid()) return std::string{};
+            return std::to_string(e->get<HasDayNightTimer>().days_passed());
+        });
+        testing::state_commands::register_state("phase", []() {
+            OptEntity e = EQ().whereHasComponent<HasDayNightTimer>().gen_first();
+            if (!e.valid()) return std::string{};
+            return std::string(
+                e->get<HasDayNightTimer>().is_bar_closed() ? "day" : "night");
+        });
+        testing::state_commands::register_state_commands(pack);
         testing::register_unknown_handler(pack);
         testing::register_cleanup(pack);
         pack_ready = true;
@@ -958,14 +961,14 @@ inline void init() {
 inline void update(float dt) {
     if (!active || finish_handled) return;
 
-    afterhours::EntityCollection& isolated =
-        afterhours::EntityHelper::get().default_collection;
-    afterhours::EntityHelper::set_default_collection(&isolated);
-    runner.tick(dt);
-    pack.tick(isolated.get_entities_for_mod(), dt);
-    isolated.cleanup();
-    afterhours::EntityHelper::set_default_collection(
-        &EntityHelper::get_client_collection());
+    {
+        afterhours::EntityCollection& isolated =
+            afterhours::EntityHelper::get().default_collection;
+        afterhours::EntityHelper::ScopedCollection guard(isolated);
+        runner.tick(dt);
+        pack.tick(isolated.get_entities_for_mod(), dt);
+        isolated.cleanup();
+    }
 
     if (!runner.is_finished()) return;
 

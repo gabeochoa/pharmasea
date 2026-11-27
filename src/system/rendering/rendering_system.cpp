@@ -265,8 +265,6 @@ void draw_valid_colored_box(const Transform& transform,
 }
 
 static afterhours::InstanceBatcher model_batcher;
-static raylib::Shader instancing_shader{};
-static bool instancing_shader_loaded = false;
 
 bool draw_transform_with_model(const Transform& transform,
                                const ModelRenderer& renderer, Color color) {
@@ -294,25 +292,19 @@ bool draw_transform_with_model(const Transform& transform,
 
         const bool lighting_enabled = Settings::get().data.enable_lighting;
 
-        // Instancing pilot: unlit white copies batch per model;
-        // tinted/lighting copies keep the DrawModelEx path below.
-        const bool is_white = color.r == 255 && color.g == 255 &&
-                              color.b == 255 && color.a == 255;
-        if (!lighting_enabled && is_white) {
-            if (!instancing_shader_loaded) {
-                instancing_shader = afterhours::load_instancing_shader();
-                instancing_shader_loaded = true;
+        // Unlit copies batch per model (with per-instance tint when non-white);
+        // lighting copies keep the DrawModelEx path below.
+        if (!lighting_enabled) {
+            const vec3 scale = transform.size() * model_info.size_scale;
+            const float yaw_deg = model_info.rotation_angle + rotation_angle;
+            const bool is_white = color.r == 255 && color.g == 255 &&
+                                  color.b == 255 && color.a == 255;
+            if (is_white) {
+                model_batcher.add(model_ref, position, yaw_deg, scale);
+            } else {
+                model_batcher.add(model_ref, position, yaw_deg, scale, 0,
+                                  color);
             }
-            vec3 scale = transform.size() * model_info.size_scale;
-            raylib::Matrix m = raylib::MatrixMultiply(
-                raylib::MatrixMultiply(
-                    raylib::MatrixScale(scale.x, scale.y, scale.z),
-                    raylib::MatrixRotate(
-                        vec3{0.f, 1.f, 0.f},
-                        (model_info.rotation_angle + rotation_angle) *
-                            (float) DEG2RAD)),
-                raylib::MatrixTranslate(position.x, position.y, position.z));
-            model_batcher.add(model_ref, m);
             return true;
         }
 
@@ -1542,8 +1534,8 @@ namespace system_manager {
 namespace render_manager {
 
 void flush_model_instances() {
-    if (!instancing_shader_loaded) return;
-    model_batcher.flush(instancing_shader);
+    if (model_batcher.copies() == 0) return;
+    model_batcher.flush();
 }
 
 void on_frame_start() {

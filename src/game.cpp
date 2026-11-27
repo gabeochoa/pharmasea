@@ -261,6 +261,8 @@ int main(int argc, char* argv[]) {
 
 #endif
 
+    afterhours::files::maybe_install_e2e_test_roots(argc, argv);
+
     if (GENERATE_MAP) {
         const auto archetype_to_string = [](mapgen::BarArchetype archetype) {
             switch (archetype) {
